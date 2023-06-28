@@ -11,7 +11,8 @@
                 <div class="swiper-wrapper">
                 @foreach ($beritas as $berita)
                   <div class="swiper-slide">
-                    <a href="#" class="img-bg d-flex align-items-end" style="background-image: url({{ url('storage/img/berita/'.$berita->foto)  }})">
+                    {{-- <a href="#" class="img-bg d-flex align-items-end" style="background-image: url({{ url('storage/img/berita/'.$berita->foto)  }})"> --}}
+                            <a href="#" class="img-bg d-flex align-items-end" style="background-image: url({{ url('storage/img/berita/',$berita->foto) }})">
                       <div class="img-bg-inner">
                         <h2>{{ $berita->judul }}</h2>
                         <p>{{ $berita->desc }}</p>
@@ -34,7 +35,7 @@
         </div>
     </section><!-- End Hero Slider Section -->
 
-    
+{{-- 
       <!-- ======= Post Grid Section ======= -->
       <section id="posts" class="posts">
         <div class="container" data-aos="fade-up">
@@ -459,5 +460,5 @@
 
           </div> <!-- End .row -->
         </div>
-      </section><!-- End Lifestyle Category Section -->
+      </section><!-- End Lifestyle Category Section --> --}}
 @endsection

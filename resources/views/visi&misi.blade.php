@@ -8,7 +8,7 @@
 
       <div class="row">
         <div class="col-lg-12 text-center mb-5">
-          <h1 class="page-title">Contact us</h1>
+          <h1 class="page-title">Visi & Misi</h1>
         </div>
       </div>
 

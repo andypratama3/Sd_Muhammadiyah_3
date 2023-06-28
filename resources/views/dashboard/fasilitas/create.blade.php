@@ -1,16 +1,16 @@
 @extends('layouts.dashboard')
-@section('title', 'Tambah Berita')
+@section('title', 'Tambah Fasilitas')
 @section('content')
     <div class="card mb-4">
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold text-primary">Tambah Berita</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Tambah Fasilitas</h6>
         </div>
         <div class="card-body">
-        <form action="{{ route('dashboard.berita.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('dashboard.fasilitas.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
-            <label for="judul">Judul</label>
-            <input type="text" class="form-control" name="judul" id="judul" aria-describedby="emailHelp" placeholder="Masukan Judul">
+            <label for="nama_fasilitas">Fasilitas</label>
+            <input type="text" class="form-control" name="nama_fasilitas" id="nama_fasilitas" aria-describedby="emailHelp" placeholder="Masukan Nama Fasilitas">
             </div>
             <div class="form-group">
             <label for="">Deskripsi</label>
@@ -23,9 +23,10 @@
                 <label class="custom-file-label" for="customFile">Choose file</label>
             </div>
             </div>
-            <button type="submit" class="btn btn-primary float-end">Submit</button>
+            <div class="form-group">
+            <button type="submit"  class="btn btn-primary float-end">Submit</button>
+        </div>
         </form>
         </div>
     </div>
-
 @endsection

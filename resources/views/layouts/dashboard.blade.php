@@ -34,7 +34,7 @@
       </li>
       <hr class="sidebar-divider">
       <div class="sidebar-heading">
-        Features
+        Fitur
       </div>
 
       <li class="nav-item {{ request()->is('dashboard/berita') ? 'active' : '' }}">
@@ -43,7 +43,17 @@
           <span>Berita</span>
         </a>
       </li>
+      <li class="nav-item {{ request()->is('dashboard/fasilitas') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('dashboard.fasilitas.index') }}">
+          <i class="fas fa-home"></i>
+          <span>Fasilitas</span>
+        </a>
+      </li>
       <hr class="sidebar-divider">
+
+      <div class="sidebar-heading">
+        Fitur
+      </div>
     </ul>
     <!-- Sidebar -->
     <div id="content-wrapper" class="d-flex flex-column">
