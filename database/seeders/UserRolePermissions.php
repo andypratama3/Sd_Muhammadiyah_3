@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class UserRolePermissions extends Seeder
@@ -16,7 +15,7 @@ class UserRolePermissions extends Seeder
 
         $users = User::create([
             'email' => 'Admin@gmail.com',
-            'username' => ''
+            'username' => '',
         ]);
 
     }

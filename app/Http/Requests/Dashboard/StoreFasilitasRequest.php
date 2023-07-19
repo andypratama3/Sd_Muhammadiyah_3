@@ -28,14 +28,12 @@ class StoreFasilitasRequest extends FormRequest
             'foto' => 'required',
         ];
 
-
     }
+
     public function message()
     {
         return [
-            'required' => 'Input Tidak Boleh Kosong'
+            'required' => 'Input Tidak Boleh Kosong',
         ];
     }
-
-
 }

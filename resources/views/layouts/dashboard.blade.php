@@ -34,24 +34,6 @@
       </li>
       <hr class="sidebar-divider">
       <div class="sidebar-heading">
-        Akses
-      </div>
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrap" aria-expanded="false" aria-controls="collapseBootstrap">
-          <i class="fa fa-user-alt"></i>
-          <span>Pengguna</span>
-        </a>
-        <div id="collapseBootstrap" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar" style="">
-          <div class="py-2 collapse-inner rounded">
-            <a class="collapse-item" href="{{ route('dashboard.role.index') }}">Role</a>
-            <a class="collapse-item" href="{{ route('dashboard.user.index') }}">User</a>
-          </div>
-        </div>
-      </li>
-
-      <hr class="sidebar-divider">
-
-      <div class="sidebar-heading">
         Fitur
       </div>
       <li class="nav-item {{ request()->is('dashboard/berita') ? 'active' : '' }}">
@@ -66,6 +48,22 @@
           <span>Fasilitas</span>
         </a>
       </li>
+      <hr class="sidebar-divider">
+      {{-- <div class="sidebar-heading">
+        Akses
+      </div>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrap" aria-expanded="false" aria-controls="collapseBootstrap">
+          <i class="fa fa-user-alt"></i>
+          <span>Pengguna</span>
+        </a>
+        <div id="collapseBootstrap" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar" style="">
+          <div class="py-2 collapse-inner rounded">
+            <a class="collapse-item" href="{{ route('dashboard.pengaturan.role.index') }}">Role</a>
+            <a class="collapse-item" href="{{ route('dashboard.pengaturan.user.index') }}">User</a>
+          </div>
+        </div>
+      </li> --}}
     </ul>
     <!-- Sidebar -->
     <div id="content-wrapper" class="d-flex flex-column">

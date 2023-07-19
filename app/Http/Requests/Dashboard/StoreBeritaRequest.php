@@ -28,10 +28,11 @@ class StoreBeritaRequest extends FormRequest
 
         ];
     }
+
     public function message()
     {
         return [
-            'required' => 'Input Tidak Boleh Kosong'
+            'required' => 'Input Tidak Boleh Kosong',
         ];
     }
 }

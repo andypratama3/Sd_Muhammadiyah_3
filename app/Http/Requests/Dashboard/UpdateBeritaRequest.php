@@ -27,6 +27,7 @@ class UpdateBeritaRequest extends FormRequest
             'foto' => 'required',
         ];
     }
+
     public function message()
     {
         return [

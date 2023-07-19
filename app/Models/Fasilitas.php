@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 
 class Fasilitas extends Model
 {
@@ -13,21 +13,24 @@ class Fasilitas extends Model
     use SoftDeletes;
     use \App\Http\Traits\UsesUuid;
     use HasFactory;
+
     protected $table = 'fasilitas';
+
     protected $guarded = ['id'];
+
     protected $fillable = [
-    'nama_fasilitas',
-    'desc',
-    'foto'
+        'nama_fasilitas',
+        'desc',
+        'foto',
     ];
 
     protected $dates = [
-        'deleted_at'
+        'deleted_at',
     ];
 
     public function setNamafasilitasAttribute($value)
     {
         $this->attributes['nama_fasilitas'] = $value;
-        $this->attributes['slug'] = Str::slug($value). "-" .Str::random(4);
+        $this->attributes['slug'] = Str::slug($value).'-'.Str::random(4);
     }
 }
