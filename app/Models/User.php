@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Traits\HasPermissionsTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -19,6 +20,7 @@ class User extends Authenticatable
     use Notifiable;
     use TwoFactorAuthenticatable;
     use SoftDeletes;
+    use HasPermissionsTrait;
     use \App\Http\Traits\UsesUuid;
 
     /**
@@ -66,10 +68,5 @@ class User extends Authenticatable
     {
         $this->attributes['name'] = $value;
         $this->attributes['slug'] = Str::slug($value).'-'.Str::random(4);
-    }
-
-    public function role()
-    {
-        return $this->belongsToMany(Role::class, 'users_roles');
     }
 }
