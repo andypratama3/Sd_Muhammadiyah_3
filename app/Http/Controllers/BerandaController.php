@@ -9,12 +9,12 @@ class BerandaController extends Controller
 {
     public function __invoke()
     {
-        $beritas = Berita::select(['judul','desc','foto'])->latest()->get();
+        $beritas = Berita::select(['judul','desc','foto','slug'])->latest()->get();
         return view('beranda', compact('beritas'));
     }
-
-    public function visi_misi()
+    public function detail($slug)
     {
-        return view('visi&misi');
+        $berita = Berita::where('slug',$slug)->firstOrFail();
+        return view('detail-berita',compact('berita'));
     }
 }

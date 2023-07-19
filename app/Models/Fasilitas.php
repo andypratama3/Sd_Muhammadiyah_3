@@ -25,7 +25,7 @@ class Fasilitas extends Model
         'deleted_at'
     ];
 
-    public function setNama_fasilitasAttribute($value)
+    public function setNamafasilitasAttribute($value)
     {
         $this->attributes['nama_fasilitas'] = $value;
         $this->attributes['slug'] = Str::slug($value). "-" .Str::random(4);

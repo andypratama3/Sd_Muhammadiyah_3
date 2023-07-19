@@ -40,22 +40,19 @@
   <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
 
-      <a href="index.html" class="logo d-flex align-items-center">
+      <a href="{{ route('index') }}" class="logo d-flex align-items-center">
         <!-- Uncomment the line below if you also wish to use an image logo -->
         <img src="{{asset('asset_user/assets/img/SD3_logo.png')}}" alt="">
         <h1>SD MUHAMMADIYAH 3</h1>
       </a>
       <nav id="navbar" class="navbar">
         <ul>
-          <li><a href="index.html">Beranda</a></li>
+          <li><a href="{{ route('index') }}">Beranda</a></li>
           <li class="dropdown"><a href="#"><span>Profil</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
             <ul>
-              <li><a href="#">Latar Belakang</a></li>
-              <li><a href="#">Visi & Misi</a></li>
-              <li><a href="#">Guru</a></li>
-              <li><a href="#">Fasilitas</a></li>
-              <li><a href="#">Ekstrakurikuler</a></li>
-              <li><a href="#">Akreditas</a></li>
+              <li><a href="/guru">Guru</a></li>
+              <li><a href="/fasilitas">Fasilitas</a></li>
+              <li><a href="/ekstrakurikuler">Ekstrakurikuler</a></li>
             </ul>
           </li>
           <li class="dropdown"><a href="#"><span>Informasi</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
@@ -103,38 +100,21 @@
 
             <div class="row g-5">
             <div class="col-lg-4">
-                <h3 class="footer-heading">About ZenBlog</h3>
+                <h3 class="footer-heading">Tentang SD Muhammadiyah 3 Samarinda</h3>
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam ab, perspiciatis beatae autem deleniti voluptate nulla a dolores, exercitationem eveniet libero laudantium recusandae officiis qui aliquid blanditiis omnis quae. Explicabo?</p>
-                <p><a href="about.html" class="footer-link-more">Learn More</a></p>
+                <p><a href="#about" class="footer-link-more">Learn More</a></p>
             </div>
             <div class="col-6 col-lg-2">
-                <h3 class="footer-heading">Navigation</h3>
+                <h3 class="footer-heading">Navigasi</h3>
                 <ul class="footer-links list-unstyled">
-                <li><a href="index.html"><i class="bi bi-chevron-right"></i> Home</a></li>
-                <li><a href="index.html"><i class="bi bi-chevron-right"></i> Blog</a></li>
-                <li><a href="category.html"><i class="bi bi-chevron-right"></i> Categories</a></li>
-                <li><a href="single-post.html"><i class="bi bi-chevron-right"></i> Single Post</a></li>
-                <li><a href="about.html"><i class="bi bi-chevron-right"></i> About us</a></li>
-                <li><a href="contact.html"><i class="bi bi-chevron-right"></i> Contact</a></li>
+                <li><a href="/"><i class="bi bi-chevron-right"></i> Home</a></li>
+                <li><a href="#about"><i class="bi bi-chevron-right"></i> Tentang</a></li>
+                <li><a href="#"><i class="bi bi-chevron-right"></i> Visi & Misi</a></li>
+                <li><a href="/kontak"><i class="bi bi-chevron-right"></i> Contact</a></li>
                 </ul>
             </div>
-            <div class="col-6 col-lg-2">
-                <h3 class="footer-heading">Categories</h3>
-                <ul class="footer-links list-unstyled">
-                <li><a href="category.html"><i class="bi bi-chevron-right"></i> Business</a></li>
-                <li><a href="category.html"><i class="bi bi-chevron-right"></i> Culture</a></li>
-                <li><a href="category.html"><i class="bi bi-chevron-right"></i> Sport</a></li>
-                <li><a href="category.html"><i class="bi bi-chevron-right"></i> Food</a></li>
-                <li><a href="category.html"><i class="bi bi-chevron-right"></i> Politics</a></li>
-                <li><a href="category.html"><i class="bi bi-chevron-right"></i> Celebrity</a></li>
-                <li><a href="category.html"><i class="bi bi-chevron-right"></i> Startups</a></li>
-                <li><a href="category.html"><i class="bi bi-chevron-right"></i> Travel</a></li>
-
-                </ul>
-            </div>
-
             <div class="col-lg-4">
-                <h3 class="footer-heading">Recent Posts</h3>
+                <h3 class="footer-heading">Postingan Terakhir</h3>
 
                 <ul class="footer-links footer-blog-entry list-unstyled">
                 <li>
@@ -191,7 +171,7 @@
             <div class="row justify-content-between">
             <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
                 <div class="copyright">
-                © Copyright <strong><span>ZenBlog</span></strong>. All Rights Reserved
+                © Copyright <strong><span>SD Muhammadiyah 3 Samarinda</span></strong>. All Rights Reserved
                 </div>
 
             </div>

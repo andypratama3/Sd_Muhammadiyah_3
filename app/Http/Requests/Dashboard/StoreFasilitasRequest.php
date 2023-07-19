@@ -11,7 +11,7 @@ class StoreFasilitasRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,6 +23,19 @@ class StoreFasilitasRequest extends FormRequest
     {
         return [
             //
+            'nama_fasilitas' => 'required',
+            'desc' => 'required',
+            'foto' => 'required',
+        ];
+
+
+    }
+    public function message()
+    {
+        return [
+            'required' => 'Input Tidak Boleh Kosong'
         ];
     }
+
+
 }

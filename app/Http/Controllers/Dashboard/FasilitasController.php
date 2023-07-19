@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Dashboard;
 use App\Models\Fasilitas;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Dashboard\StoreFasilitasRequest;
+use App\Actions\Dashboard\Fasilitas\StoreFasilitasAction;
+use App\Actions\Dashboard\Fasilitas\UpdateFasilitasAction;
 
 class FasilitasController extends Controller
 {
@@ -25,13 +28,13 @@ class FasilitasController extends Controller
         return redirect()->route('dashboard.fasilitas.index')->with('succes-insert','Fasilitas Berhasil Di Tambah');
     }
     public function show($slug){
-        $fasilitas = Fasilita::select(['nama_fasilitas','desc','foto',])->firstOrFail();
+        $fasilitas = Fasilitas::select(['nama_fasilitas','desc','foto','slug'])->firstOrFail();
 
         return view('dashboard.fasilitas.show',compact('fasilitas'));
     }
     public function edit(){
 
-        $fasilitas = Fasilita::select(['nama_fasilitas','desc','foto',])->firstOrFail();
+        $fasilitas = Fasilitas::select(['nama_fasilitas','desc','foto','slug'])->firstOrFail();
         return view('dashboard.fasilitas.edit',compact('fasilitas'));
     }
 
@@ -40,7 +43,6 @@ class FasilitasController extends Controller
         $updateFasilitasAction->excute($request,$slug);
 
         return redirect()->route('dashboard.fasilitas.index')->with('succes-update','Fasilitas Berhasil Di Update!');
-
     }
 
 }
