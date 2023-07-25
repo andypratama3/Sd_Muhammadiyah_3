@@ -33,4 +33,8 @@ class Task extends Model
     {
         return $this->hasMany(Permission::class, 'task_id')->orderBy('name');
     }
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 }

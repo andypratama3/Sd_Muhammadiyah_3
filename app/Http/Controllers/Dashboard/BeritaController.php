@@ -50,7 +50,7 @@ class BeritaController extends Controller
     {
 
         $updateBeritaAction->execute($request, $slug);
-        redirect()->route('dashboard.berita.index')->with('status-update', 'Berita Berhasil Di Updtae');
+        return redirect()->route('dashboard.berita.index')->with('status-update', 'Berita Berhasil Di Updtae');
     }
 
     public function destroy(DeleteBeritaAction $deleteBeritaAction, $slug)

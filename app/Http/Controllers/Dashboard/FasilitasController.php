@@ -52,4 +52,8 @@ class FasilitasController extends Controller
 
         return redirect()->route('dashboard.fasilitas.index')->with('succes-update', 'Fasilitas Berhasil Di Update!');
     }
+    public function destroy(): void
+    {
+        
+    }
 }

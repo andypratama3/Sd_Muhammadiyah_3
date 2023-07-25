@@ -1,48 +1,79 @@
-<x-guest-layout>
-    <x-authentication-card>
-        <x-slot name="logo">
-            <x-authentication-card-logo />
-        </x-slot>
+<!DOCTYPE html>
+<html lang="en">
 
-        <x-validation-errors class="mb-4" />
+<head>
 
-        @if (session('status'))
-            <div class="mb-4 font-medium text-sm text-green-600">
-                {{ session('status') }}
-            </div>
-        @endif
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link href="{{asset('assetimg/logo/logo.png')}}" rel="icon">
+  <title>RuangAdmin - Login</title>
+  <link href="{{asset('asset/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
+  <link href="{{asset('asset/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css">
+  <link href="{{asset('asset/css/ruang-admin.min.css') }}" rel="stylesheet">
 
-        <form method="POST" action="{{ route('login') }}">
-            @csrf
+</head>
 
-            <div>
-                <x-label for="email" value="{{ __('Email') }}" />
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            </div>
-
-            <div class="mt-4">
-                <x-label for="password" value="{{ __('Password') }}" />
-                <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
-            </div>
-
-            <div class="block mt-4">
-                <label for="remember_me" class="flex items-center">
-                    <x-checkbox id="remember_me" name="remember" />
-                    <span class="ml-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-                </label>
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                @if (Route::has('password.request'))
-                    <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                        {{ __('Forgot your password?') }}
+<body class="bg-gradient-login">
+  <!-- Login Content -->
+  <div class="container-login">
+    <div class="row justify-content-center">
+      <div class="col-xl-6 col-lg-12 col-md-9">
+        <div class="card shadow-sm my-5">
+          <div class="card-body p-0">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="login-form">
+                  <div class="text-center">
+                    <h1 class="h4 text-gray-900 mb-4">Login</h1>
+                  </div>
+                  <form class="user">
+                    <div class="form-group">
+                      <input type="email" class="form-control" id="exampleInputEmail" aria-describedby="emailHelp"
+                        placeholder="Enter Email Address">
+                    </div>
+                    <div class="form-group">
+                      <input type="password" class="form-control" id="exampleInputPassword" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                      <div class="custom-control custom-checkbox small" style="line-height: 1.5rem;">
+                        <input type="checkbox" class="custom-control-input" id="customCheck">
+                        <label class="custom-control-label" for="customCheck">Remember
+                          Me</label>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <a href="index.html" class="btn btn-primary btn-block">Login</a>
+                    </div>
+                    <hr>
+                    <a href="index.html" class="btn btn-google btn-block">
+                      <i class="fab fa-google fa-fw"></i> Login with Google
                     </a>
-                @endif
-
-                <x-button class="ml-4">
-                    {{ __('Log in') }}
-                </x-button>
+                    <a href="index.html" class="btn btn-facebook btn-block">
+                      <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
+                    </a>
+                  </form>
+                  <hr>
+                  <div class="text-center">
+                    <a class="font-weight-bold small" href="register.html">Create an Account!</a>
+                  </div>
+                  <div class="text-center">
+                  </div>
+                </div>
+              </div>
             </div>
-        </form>
-    </x-authentication-card>
-</x-guest-layout>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Login Content -->
+  <script src="{{asset('asset/vendor/jquery/jquery.min.js')}}"></script>
+  <script src="{{asset('asset/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+  <script src="{{asset('asset/vendor/jquery-easing/jquery.easing.min.js')}}"></script>
+  <script src="{{asset('asset/js/ruang-admin.min.js')}}"></script>
+</body>
+
+</html>

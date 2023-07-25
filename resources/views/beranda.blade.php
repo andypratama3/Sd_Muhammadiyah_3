@@ -11,7 +11,7 @@
                 <div class="swiper-wrapper">
                 @foreach ($beritas as $berita)
                   <div class="swiper-slide">
-                    <a href="{{ route('berita.detail',$berita->slug) }}" class="img-bg d-flex align-items-end" style="background-image: url({{ url('storage/img/berita/'.$berita->foto)  }})">
+                    <a href="{{ route('berita.show',$berita->slug) }}" class="img-bg d-flex align-items-end" style="background-image: url({{ url('storage/img/berita/'.$berita->foto)  }})">
                       <div class="img-bg-inner">
                         <h2>{{ $berita->judul }}</h2>
                         <p>{{ $berita->desc }}</p>

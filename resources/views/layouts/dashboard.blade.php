@@ -49,7 +49,7 @@
         </a>
       </li>
       <hr class="sidebar-divider">
-      {{-- <div class="sidebar-heading">
+      <div class="sidebar-heading">
         Akses
       </div>
       <li class="nav-item">
@@ -59,11 +59,12 @@
         </a>
         <div id="collapseBootstrap" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar" style="">
           <div class="py-2 collapse-inner rounded">
+            <a class="collapse-item" href="{{ route('dashboard.pengaturan.task.index') }}">Task</a>
             <a class="collapse-item" href="{{ route('dashboard.pengaturan.role.index') }}">Role</a>
             <a class="collapse-item" href="{{ route('dashboard.pengaturan.user.index') }}">User</a>
           </div>
         </div>
-      </li> --}}
+      </li>
     </ul>
     <!-- Sidebar -->
     <div id="content-wrapper" class="d-flex flex-column">
@@ -245,10 +246,13 @@
                 Activity Log
               </a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#logoutModal">
-                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                Logout
-              </a>
+              <a href="#" class="dropdown-item swal-logout" title="Logout">
+                <form action="{{ route('logout') }}" id="logout-form" method="POST" enctype="multipart/form-data">
+                    @csrf
+                </form>
+                <i class="fas fa-sign-out-alt mr-2"></i> <span class="d-none d-sm-inline-block">Logout</span>
+            </a>
+              
             </div>
           </li>
         </ul>
@@ -269,38 +273,10 @@
             </span>
           </div>
         </div>
-
-
       </footer>
       <!-- Footer -->
     </div>
   </div>
-
-
-     <!-- Modal Logout -->
-     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout"
-     aria-hidden="true">
-     <div class="modal-dialog" role="document">
-     <div class="modal-content">
-         <div class="modal-header">
-         <h5 class="modal-title" id="exampleModalLabelLogout">Ohh Tidak!</h5>
-         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-             <span aria-hidden="true">&times;</span>
-         </button>
-         </div>
-         <div class="modal-body">
-         <p>Apakah Anda Yakin Ingin Keluar?</p>
-         </div>
-         <div class="modal-footer">
-         <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancel</button>
-         <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <a href="{{ route('logout') }}" @click.prevent="$root.submit();" class="btn btn-primary">Logout</a>
-         </form>
-         </div>
-     </div>
-     </div>
- </div>
 
   <!-- Scroll to top -->
   <a class="scroll-to-top rounded" href="#page-top">
@@ -315,6 +291,26 @@
   <script src="{{asset('asset/js/demo/chart-area-demo.js')}}"></script>
   <script src="{{ asset('asset/js/SwetAlert/index.js') }}"></script>
   @include('layouts.script')
+
+  <script>
+        $(".swal-logout").click(function (e) {
+            slug = e.target.dataset.id;
+            swal({
+                    title: 'Yakin ingin keluar?',
+                    text: 'Anda akan dialihkan ke beranda.',
+                    icon: 'warning',
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willLogout) => {
+                    if (willLogout) {
+                        $(`#logout-form`).submit();
+                    } else {
+                        // Do Nothing
+                    }
+                });
+        });
+  </script>
 </body>
 
 </html>
