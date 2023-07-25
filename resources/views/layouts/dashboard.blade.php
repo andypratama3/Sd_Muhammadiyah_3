@@ -8,12 +8,12 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link href="{{ asset('asset_user/assets/img/SD3_logo.png') }}" rel="icon">
-    <link href="{{ asset('asset_user/assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
+    <link href="{{ asset('asset_dashboard/assets/img/SD3_logo.png') }}" rel="icon">
+    <link href="{{ asset('asset_dashboard/assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
     <title>@yield('title')</title>
-    <link href="{{ asset('asset/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
-    <link href="{{ asset('asset/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
-    <link href="{{ asset('asset/css/ruang-admin.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('asset_dashboard/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('asset_dashboard/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('asset_dashboard/css/ruang-admin.min.css') }}" rel="stylesheet">
 </head>
 
 <body id="page-top">
@@ -22,7 +22,7 @@
         <ul class="navbar-nav sidebar sidebar-light accordion" id="accordionSidebar">
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('dashboard') }}">
                 <div class="sidebar-brand-icon">
-                    <img src="{{ asset('asset_user/assets/img/SD3_logo.png') }}" alt="">
+                    <img src="{{ asset('asset_dashboard/assets/img/SD3_logo.png') }}" alt="">
                 </div>
                 <div class="sidebar-brand-text mx-3">SD Muhammadiyah 3</div>
             </a>
@@ -291,13 +291,13 @@
         <i class="fas fa-angle-up"></i>
     </a>
 
-    <script src="{{ asset('asset/vendor/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('asset/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('asset/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
-    <script src="{{ asset('asset/js/ruang-admin.min.js') }}"></script>
-    <script src="{{ asset('asset/vendor/chart.js/Chart.min.js') }}"></script>
-    <script src="{{ asset('asset/js/demo/chart-area-demo.js') }}"></script>
-    <script src="{{ asset('asset/js/SwetAlert/index.js') }}"></script>
+    <script src="{{ asset('asset_dashboard/vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('asset_dashboard/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('asset_dashboard/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+    <script src="{{ asset('asset_dashboard/js/ruang-admin.min.js') }}"></script>
+    <script src="{{ asset('asset_dashboard/vendor/chart.js/Chart.min.js') }}"></script>
+    <script src="{{ asset('asset_dashboard/js/demo/chart-area-demo.js') }}"></script>
+    <script src="{{ asset('asset_dashboard/js/SwetAlert/index.js') }}"></script>
     @include('layouts.script')
 
     <script>

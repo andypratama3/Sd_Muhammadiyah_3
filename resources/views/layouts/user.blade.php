@@ -10,8 +10,8 @@
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-  <link href="{{asset('asset_user/assets/img/SD3_logo.png')}}" rel="icon">
-  <link href="{{asset('asset_user/assets/img/apple-touch-icon.png')}}" rel="apple-touch-icon">
+  <link href="{{asset('assets/img/SD3_logo.png')}}" rel="icon">
+  <link href="{{asset('assets/img/apple-touch-icon.png')}}" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,15 +19,15 @@
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=Inter:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="{{asset('asset_user/assets/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
-  <link href="{{asset('asset_user/assets/vendor/bootstrap-icons/bootstrap-icons.css')}}" rel="stylesheet">
-  <link href="{{asset('asset_user/assets/vendor/swiper/swiper-bundle.min.css')}}" rel="stylesheet">
-  <link href="{{asset('asset_user/assets/vendor/glightbox/css/glightbox.min.css')}}" rel="stylesheet">
-  <link href="{{asset('asset_user/assets/vendor/aos/aos.css')}}" rel="stylesheet">
+  <link href="{{asset('assets/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+  <link href="{{asset('assets/vendor/bootstrap-icons/bootstrap-icons.css')}}" rel="stylesheet">
+  <link href="{{asset('assets/vendor/swiper/swiper-bundle.min.css')}}" rel="stylesheet">
+  <link href="{{asset('assets/vendor/glightbox/css/glightbox.min.css')}}" rel="stylesheet">
+  <link href="{{asset('assets/vendor/aos/aos.css')}}" rel="stylesheet">
 
   <!-- Template Main CSS Files -->
-  <link href="{{asset('asset_user/assets/css/variables.css')}}" rel="stylesheet">
-  <link href="{{asset('asset_user/assets/css/main.css')}}" rel="stylesheet">
+  <link href="{{asset('assets/css/variables.css')}}" rel="stylesheet">
+  <link href="{{asset('assets/css/main.css')}}" rel="stylesheet">
   <link
   rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"
@@ -42,7 +42,7 @@
 
       <a href="{{ route('index') }}" class="logo d-flex align-items-center">
         <!-- Uncomment the line below if you also wish to use an image logo -->
-        <img src="{{asset('asset_user/assets/img/SD3_logo.png')}}" alt="">
+        <img src="{{asset('assets/img/SD3_logo.png')}}" alt="">
         <h1>SD MUHAMMADIYAH 3</h1>
       </a>
       <nav id="navbar" class="navbar">
@@ -120,7 +120,7 @@
                 <li>
 
             <a href="single-post.html" class="d-flex align-items-center">
-                    <img src="{{asset('asset_user/assets/img/post-sq-1.jpg')}}" alt="" class="img-fluid me-3">
+                    <img src="{{asset('assets/img/post-sq-1.jpg')}}" alt="" class="img-fluid me-3">
                     <div>
                         <div class="post-meta d-block"><span class="date">Culture</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
                         <span>5 Great Startup Tips for Female Founders</span>
@@ -130,7 +130,7 @@
 
                 <li>
                     <a href="single-post.html" class="d-flex align-items-center">
-                    <img src="{{asset('asset_user/assets/img/post-sq-2.jpg')}}" alt="" class="img-fluid me-3">
+                    <img src="{{asset('assets/img/post-sq-2.jpg')}}" alt="" class="img-fluid me-3">
                     <div>
                         <div class="post-meta d-block"><span class="date">Culture</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
                         <span>What is the son of Football Coach John Gruden, Deuce Gruden doing Now?</span>
@@ -140,7 +140,7 @@
 
                 <li>
                     <a href="single-post.html" class="d-flex align-items-center">
-                    <img src="{{asset('asset_user/assets/img/post-sq-3.jpg')}}" alt="" class="img-fluid me-3">
+                    <img src="{{asset('assets/img/post-sq-3.jpg')}}" alt="" class="img-fluid me-3">
                     <div>
                         <div class="post-meta d-block"><span class="date">Culture</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
                         <span>Life Insurance And Pregnancy: A Working Mom’s Guide</span>
@@ -150,7 +150,7 @@
 
                 <li>
                     <a href="single-post.html" class="d-flex align-items-center">
-                    <img src="{{asset('asset_user/assets/img/post-sq-4.jpg')}}" alt="" class="img-fluid me-3">
+                    <img src="{{asset('assets/img/post-sq-4.jpg')}}" alt="" class="img-fluid me-3">
                     <div>
                         <div class="post-meta d-block"><span class="date">Culture</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
                         <span>How to Avoid Distraction and Stay Focused During Video Calls?</span>
@@ -197,14 +197,14 @@
   <a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->
-  <script src="{{asset('asset_user/assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-  <script src="{{asset('asset_user/assets/vendor/swiper/swiper-bundle.min.js')}}"></script>
-  <script src="{{asset('asset_user/assets/vendor/glightbox/js/glightbox.min.js')}}"></script>
-  <script src="{{asset('asset_user/assets/vendor/aos/aos.js')}}"></script>
-  <script src="{{asset('asset_user/assets/vendor/php-email-form/validate.js')}}"></script>
+  <script src="{{asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+  <script src="{{asset('assets/vendor/swiper/swiper-bundle.min.js')}}"></script>
+  <script src="{{asset('assets/vendor/glightbox/js/glightbox.min.js')}}"></script>
+  <script src="{{asset('assets/vendor/aos/aos.js')}}"></script>
+  <script src="{{asset('assets/vendor/php-email-form/validate.js')}}"></script>
 
   <!-- Template Main JS File -->
-  <script src="{{asset('asset_user/assets/js/main.js')}}"></script>
+  <script src="{{asset('assets/js/main.js')}}"></script>
 
 </body>
 
