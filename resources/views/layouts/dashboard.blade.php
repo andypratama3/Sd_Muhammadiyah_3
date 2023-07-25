@@ -27,8 +27,8 @@
                 <div class="sidebar-brand-text mx-3">SD Muhammadiyah 3</div>
             </a>
             <hr class="sidebar-divider my-0">
-            <li class="nav-item {{ request()->is('dashboard') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('dashboard') }}">
+            <li class="nav-item {{ Request::routeIs('dashboard.*') ? 'active' : '' }}">
+                <a class="nav-link  {{ Request::routeIs('dashboard.*') ? 'active' : '' }}" href="{{ route('dashboard') }}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -36,13 +36,13 @@
             <div class="sidebar-heading">
                 Fitur
             </div>
-            <li class="nav-item {{ request()->is('dashboard/berita') ? 'active' : '' }}">
+            <li class="nav-item {{ Request::routeIs('dashboard.berita.*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('dashboard.berita.index') }}">
                     <i class="fas fa-book"></i>
                     <span>Berita</span>
                 </a>
             </li>
-            <li class="nav-item {{ request()->is('dashboard/fasilitas') ? 'active' : '' }}">
+            <li class="nav-item {{ Request::routeIs('dashboard.fasilitas.*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('dashboard.fasilitas.index') }}">
                     <i class="fas fa-home"></i>
                     <span>Fasilitas</span>
@@ -53,17 +53,19 @@
                 Akses
             </div>
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrap"
+                <a class="nav-link {{ Request::routeIs('dashboard.pengaturan.*') ? 'collapsed' : ''  }}" href="#" data-toggle="collapse" data-target="#collapseBootstrap"
                     aria-expanded="false" aria-controls="collapseBootstrap">
                     <i class="fa fa-user-alt"></i>
                     <span>Pengguna</span>
                 </a>
-                <div id="collapseBootstrap" class="collapse" aria-labelledby="headingBootstrap"
+                <div id="collapseBootstrap" class="collapse {{ Request::routeIs('dashboard.pengaturan.*') ? 'show' : ''  }} }}" aria-labelledby="headingBootstrap"
                     data-parent="#accordionSidebar" style="">
                     <div class="py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="{{ route('dashboard.pengaturan.task.index') }}">Task</a>
-                        <a class="collapse-item" href="{{ route('dashboard.pengaturan.role.index') }}">Role</a>
-                        <a class="collapse-item" href="{{ route('dashboard.pengaturan.user.index') }}">User</a>
+                        @role('superadmin')
+                        <a class="collapse-item {{ Request::routeIs('dashboard.pengaturan.task.*') ? 'active' : ''  }}" href="{{ route('dashboard.pengaturan.task.index') }}">Task</a>
+                        @endrole
+                        <a class="collapse-item {{ Request::routeIs('dashboard.pengaturan.role.*') ? 'active' : ''  }}" href="{{ route('dashboard.pengaturan.role.index') }}">Role</a>
+                        <a class="collapse-item {{ Request::routeIs('dashboard.pengaturan.user.*') ? 'active' : ''  }}" href="{{ route('dashboard.pengaturan.user.index') }}">User</a>
                     </div>
                 </div>
             </li>

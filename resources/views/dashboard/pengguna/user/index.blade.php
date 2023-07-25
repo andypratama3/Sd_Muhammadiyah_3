@@ -7,7 +7,7 @@
       <div class="card">
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
           <h4 class="m-0 font-weight-bold text-primary text-center">User</h4>
-          <a href="{{ route('dashboard.user.create') }}" class="btn btn-success float-end">Tambah</a>
+          <a href="{{ route('dashboard.pengaturan.user.create') }}" class="btn btn-success float-end">Tambah</a>
         </div>
         {{-- <div class="table-responsive">
           <table class="table align-items-center table-flush text-center">

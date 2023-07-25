@@ -8,11 +8,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
-  <link href="{{ asset('asset/img/logo/logo.png') }}" rel="icon">
+  <link href="{{ asset('asset_dashboard/img/logo/logo.png') }}" rel="icon">
   <title>RuangAdmin - Login</title>
-  <link href="{{ asset('asset/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
-  <link href="{{ asset('asset/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
-  <link href="{{ asset('asset/css/ruang-admin.min.css') }}" rel="stylesheet">
+  <link href="{{ asset('asset_dashboard/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
+  <link href="{{ asset('asset_dashboard/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
+  <link href="{{ asset('asset_dashboard/css/ruang-admin.min.css') }}" rel="stylesheet">
 
 </head>
 
@@ -72,10 +72,10 @@
     </div>
   </div>
   <!-- Login Content -->
-  <script src="{{ asset('asset/vendor/jquery/jquery.min.js') }}"></script>
-  <script src="{{ asset('asset/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-  <script src="{{ asset('asset/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
-  <script src="{{ asset('asset/js/ruang-admin.min.js') }}"></script>
+  <script src="{{ asset('asset_dashboard/vendor/jquery/jquery.min.js') }}"></script>
+  <script src="{{ asset('asset_dashboard/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ asset('asset_dashboard/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+  <script src="{{ asset('asset_dashboard/js/ruang-admin.min.js') }}"></script>
 </body>
 
 </html>

@@ -34,8 +34,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
     Route::resource('fasilitas', FasilitasController::class, ['names' => 'dashboard.fasilitas']);
 
     Route::group(['prefix' => 'pengaturan'], function () {
-        Route::resource('user', UserController::class, ['names' => 'dashboard.pengaturan.user']);
-        Route::resource('role', RoleController::class, ['names' => 'dashboard.pengaturan.role']);
         Route::resource('task', TaskController::class, ['names' => 'dashboard.pengaturan.task']);
+        Route::resource('role', RoleController::class, ['names' => 'dashboard.pengaturan.role']);
+        Route::resource('user', UserController::class, ['names' => 'dashboard.pengaturan.user']);
     });
 });
