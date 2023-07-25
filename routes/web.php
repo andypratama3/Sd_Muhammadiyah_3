@@ -1,15 +1,14 @@
 <?php
 
 use App\Http\Controllers\BerandaController;
-use App\Http\Controllers\DetailBeritaController;
 use App\Http\Controllers\Dashboard\BeritaController as DashboardBeritaController;
-// use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\Dashboard\DashboardController;
+// use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\Dashboard\FasilitasController;
 use App\Http\Controllers\Dashboard\RoleController;
-use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\TaskController;
-use App\Http\Controllers\VisiMisiController;
+use App\Http\Controllers\Dashboard\UserController;
+use App\Http\Controllers\DetailBeritaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,9 +25,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', BerandaController::class)->name('index');
 
 // Berita
-Route::get('berita', [BeritaController::class, 'index'])->name('berita.index');
-Route::get('berita/{slug}', [DetailBeritaController::class, 'show'])->name('berita.show');
-
+// Route::get('berita', [BeritaController::class, 'index'])->name('berita.index');
+// Route::get('berita/{slug}', [DetailBeritaController::class, 'show'])->name('berita.show');
 
 Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], function () {
     Route::get('/', DashboardController::class)->name('dashboard');
