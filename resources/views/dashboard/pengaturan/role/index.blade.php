@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('title','Task')
+@section('title','role')
 @section('content')
 
 <div class="container-fluid">
@@ -9,9 +9,9 @@
                 <div class="card-header border-0">
                     <div class="d-flex justify-content-between">
                          <!-- SEARCH FORM -->
-                        <form class="form-inline ml-1" action="{{ route('dashboard.pengaturan.task.index') }}" method="GET">
+                        <form class="form-inline ml-1" action="{{ route('dashboard.pengaturan.role.index') }}" method="GET">
                             <div class="input-group input-group-sm">
-                                <input class="form-control form-control-navbar" type="text" id="search" name="search" placeholder="Nama Task" aria-label="Nama Task">
+                                <input class="form-control form-control-navbar" type="text" id="search" name="search" placeholder="Nama role" aria-label="Nama role">
                                 <div class="input-group-append">
                                     <button class="btn btn-navbar btn-default" type="submit">
                                         <i class="fas fa-search"></i>
@@ -19,9 +19,7 @@
                                 </div>
                             </div>
                         </form>
-                        @can('create-task')
-                        <a href="{{ route('dashboard.pengaturan.task.create') }}" class="ml-auto btn btn-primary btn-sm btn-flat text-bold text-light"><i class="fa fa-plus"></i> Tambah</a>
-                        @endcan
+                        <a href="{{ route('dashboard.pengaturan.role.create') }}" class="ml-auto btn btn-primary btn-sm btn-flat text-bold text-light"><i class="fa fa-plus"></i> Tambah</a>
                     </div>
                 </div>
                 <div class="card-body">
@@ -36,17 +34,17 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse($tasks as $task)
+                                @forelse($roles as $role)
                                 <tr>
                                     <td>{{ ++$no }}</td>
-                                    <td>{{ $task->name }}</td>
+                                    <td>{{ $role->name }}</td>
                                     <td>
-                                        @can('edit-task')
-                                        <a href="{{ route('dashboard.pengaturan.task.edit', $task->slug) }}" class="btn btn-warning btn-sm" title="Ubah"><i class="fa fa-edit"></i></a>
+                                        @can('edit-role')
+                                        <a href="{{ route('dashboard.pengaturan.role.edit', $role->slug) }}" class="btn btn-primary btn-sm" title="Ubah"><i class="fa fa-edit"></i></a>
                                         @endcan
-                                        @can('delete-task')
-                                        <a href="#" data-id="{{ $task->slug }}" class="btn btn-danger btn-sm swal-delete" title="Hapus">
-                                            <form action="{{ route('dashboard.pengaturan.task.destroy', $task->slug) }}" id="delete-{{ $task->slug }}" method="POST" enctype="multipart/form-data">
+                                        @can('delete-role')
+                                        <a href="#" data-id="{{ $role->slug }}" class="btn btn-danger btn-sm swal-delete" title="Hapus">
+                                            <form action="{{ route('dashboard.pengaturan.role.destroy', $role->slug) }}" id="delete-{{ $role->slug }}" method="POST" enctype="multipart/form-data">
                                                 @csrf
                                                 @method('delete')
                                             </form>
@@ -69,7 +67,7 @@
                         Jumlah Data: {{ $count }}
                     </ul>
                     <ul class="pagination pagination-sm m-0 float-right">
-                        {{ $tasks->onEachSide(1)->links() }}
+                        {{ $roles->onEachSide(1)->links() }}
                     </ul>
                 </div>
             </div>
@@ -77,8 +75,8 @@
     </div>
 </div>
 
-@push('javascript')
-@can('delete-task')
+@push('js')
+@can('delete-role')
     <script>
         $(".swal-delete").click(function (e) {
             slug = e.target.dataset.id;

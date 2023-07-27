@@ -11,6 +11,7 @@
     <link href="{{ asset('asset_dashboard/assets/img/SD3_logo.png') }}" rel="icon">
     <link href="{{ asset('asset_dashboard/assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
     <title>@yield('title')</title>
+    @stack('css')
     <link href="{{ asset('asset_dashboard/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('asset_dashboard/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('asset_dashboard/css/ruang-admin.min.css') }}" rel="stylesheet">
@@ -22,7 +23,7 @@
         <ul class="navbar-nav sidebar sidebar-light accordion" id="accordionSidebar">
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('dashboard') }}">
                 <div class="sidebar-brand-icon">
-                    <img src="{{ asset('asset_dashboard/assets/img/SD3_logo.png') }}" alt="">
+                    <img src="{{ asset('asset_dashboard/img/SD3_logo.png') }}" alt="">
                 </div>
                 <div class="sidebar-brand-text mx-3">SD Muhammadiyah 3</div>
             </a>
@@ -300,8 +301,8 @@
     <script src="{{ asset('asset_dashboard/vendor/chart.js/Chart.min.js') }}"></script>
     <script src="{{ asset('asset_dashboard/js/demo/chart-area-demo.js') }}"></script>
     <script src="{{ asset('asset_dashboard/js/SwetAlert/index.js') }}"></script>
+    @stack('js')
     @include('layouts.script')
-
     <script>
         $(".swal-logout").click(function (e) {
             slug = e.target.dataset.id;

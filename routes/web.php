@@ -25,8 +25,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', BerandaController::class)->name('index');
 
 // Berita
-// Route::get('berita', [BeritaController::class, 'index'])->name('berita.index');
-// Route::get('berita/{slug}', [DetailBeritaController::class, 'show'])->name('berita.show');
+Route::get('berita', [DetailBeritaController::class, 'index'])->name('berita.index');
+Route::get('berita/{slug}', [DetailBeritaController::class, 'show'])->name('berita.show');
 
 Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], function () {
     Route::get('/', DashboardController::class)->name('dashboard');
@@ -38,4 +38,5 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::resource('role', RoleController::class, ['names' => 'dashboard.pengaturan.role']);
         Route::resource('user', UserController::class, ['names' => 'dashboard.pengaturan.user']);
     });
+
 });

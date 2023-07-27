@@ -24,7 +24,7 @@
             </div>
             </div>
             <div class="form-group">
-            <button type="submit"  class="btn btn-primary float-end">Submit</button>
+            <button type="submit"  class="btn btn-primary float-lg-right">Submit</button>
         </div>
         </form>
         </div>

@@ -16,7 +16,9 @@
               <label for="name">Nama Task</label>
               <input type="text" class="form-control" id="name" aria-describedby="task" name="name" placeholder="Masukan Nama Task">
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <div class="col-sm-12">
+                <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
+              </div>
           </form>
         </div>
       </div>

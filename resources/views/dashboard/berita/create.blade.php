@@ -23,7 +23,7 @@
                 <label class="custom-file-label" for="customFile">Choose file</label>
             </div>
             </div>
-            <button type="submit" class="btn btn-primary float-end">Submit</button>
+            <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
         </form>
         </div>
     </div>

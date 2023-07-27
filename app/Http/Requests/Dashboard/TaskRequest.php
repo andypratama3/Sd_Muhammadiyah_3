@@ -25,6 +25,7 @@ class TaskRequest extends FormRequest
             'name' => 'required',
         ];
     }
+
     public function message()
     {
         return [

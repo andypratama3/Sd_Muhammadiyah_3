@@ -50,6 +50,7 @@ class BeritaController extends Controller
     {
 
         $updateBeritaAction->execute($request, $slug);
+
         return redirect()->route('dashboard.berita.index')->with('status-update', 'Berita Berhasil Di Updtae');
     }
 
