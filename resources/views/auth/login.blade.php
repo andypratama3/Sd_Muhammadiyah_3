@@ -9,7 +9,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
   <link href="{{ asset('asset_dashboard/img/logo/logo.png') }}" rel="icon">
-  <title>RuangAdmin - Login</title>
+  <title>Masuk</title>
   <link href="{{ asset('asset_dashboard/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
   <link href="{{ asset('asset_dashboard/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
   <link href="{{ asset('asset_dashboard/css/ruang-admin.min.css') }}" rel="stylesheet">
@@ -32,12 +32,22 @@
                   <form class="user" action="{{ route('login') }}" method="POST">
                     @csrf
                     <div class="form-group">
-                      <input type="email" class="form-control" id="exampleInputEmail" aria-describedby="emailHelp"
+                      <input type="email" class="form-control" :value="old('email')" required id="exampleInputEmail" aria-describedby="emailHelp"
                         placeholder="Enter Email Address" name="email">
                     </div>
+                    @if ($errors->has('password'))
+                    <div class="alert alert-primary alert-dismissible fade show text-center text-black" role="alert">
+                        <strong>{{ $errors->first('email') }}</strong>
+                    </div>
+                    @endif
                     <div class="form-group">
                       <input type="password" class="form-control" id="exampleInputPassword" name="password" placeholder="Password">
                     </div>
+                    @if ($errors->has('email'))
+                    <div class="alert alert-primary alert-dismissible fade show text-center text-black" role="alert">
+                        <strong>{{ $errors->first('email') }}</strong>
+                    </div>
+                    @endif
                     <div class="form-group">
                       <div class="custom-control custom-checkbox small" style="line-height: 1.5rem;">
                         <input type="checkbox" class="custom-control-input" id="customCheck">
@@ -50,16 +60,13 @@
                       <button type="submit" class="btn btn-primary btn-block">Login</button>
                     </div>
                     <hr>
-                    <a href="index.html" class="btn btn-google btn-block">
-                      <i class="fab fa-google fa-fw"></i> Login with Google
-                    </a>
-                    <a href="index.html" class="btn btn-facebook btn-block">
-                      <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
+                    <a href="{{ route('login.google') }}" class="btn btn-google btn-block">
+                      <i class="fab fa-google fa-fw"></i> Masuk Dengan Google
                     </a>
                   </form>
                   <hr>
                   <div class="text-center">
-                    <a class="font-weight-bold small" href="register.html">Create an Account!</a>
+                    <a class="font-weight-bold small" href="{{ route('register') }}">Buat Akun</a>
                   </div>
                   <div class="text-center">
                   </div>

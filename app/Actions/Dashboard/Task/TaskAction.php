@@ -13,6 +13,7 @@ class TaskAction
             ['slug' => $task->slug],
             [
                 'name' => $request->name,
+                'description' => $request->description,
             ]
         );
     }

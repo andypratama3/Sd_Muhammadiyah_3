@@ -67,6 +67,7 @@
                         @endrole
                         <a class="collapse-item {{ Request::routeIs('dashboard.pengaturan.role.*') ? 'active' : ''  }}" href="{{ route('dashboard.pengaturan.role.index') }}">Role</a>
                         <a class="collapse-item {{ Request::routeIs('dashboard.pengaturan.user.*') ? 'active' : ''  }}" href="{{ route('dashboard.pengaturan.user.index') }}">User</a>
+                        <a class="collapse-item {{ Request::routeIs('dashboard.pengaturan.karyawan.*') ? 'active' : ''  }}" href="{{ route('dashboard.pengaturan.karyawan.index') }}">karyawan</a>
                     </div>
                 </div>
             </li>

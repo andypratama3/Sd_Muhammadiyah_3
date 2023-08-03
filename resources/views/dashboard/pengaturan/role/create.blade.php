@@ -83,18 +83,30 @@
         </div>
     </div>
 </div>
-
 @endsection
 @push('js')
 <!-- Select2 -->
-<script src="{{ asset('asset_dashboard/vendor/select2/dist/js/select2.min.js') }}"></script>
 <script>
     $(document).ready(function () {
         // Select2 Multiple
-        $('.select2-multiple').select2();
-        var id = $(this).data('id');
-        $('#id').attr('value', id);
-
+        $('.checkAll').on('change', function (){
+            if($(this).is(':checked')) {
+                $(".check" + this.value).prop('checked', true);
+            } else {
+                $(".check" + this.value).prop('checked', false);
+            }
+        });
+        $(".hakakses").on('click', function () {
+            var header = $(this).attr('class');
+            var classParent = header.replace(" hakakses", "");
+            var countChecked = $('.' + classParent + ':checked').length;
+            var parentClass = $(this).closest('td').attr('class');
+            if (countChecked == 4) {
+                $(".checkAll" + parentClass).prop('checked', true);
+            } else {
+                $(".checkAll" + parentClass).prop('checked', false);
+            }
+        });
 
     });
 </script>

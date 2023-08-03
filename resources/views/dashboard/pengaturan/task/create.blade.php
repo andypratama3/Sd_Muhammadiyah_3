@@ -16,6 +16,10 @@
               <label for="name">Nama Task</label>
               <input type="text" class="form-control" id="name" aria-describedby="task" name="name" placeholder="Masukan Nama Task">
             </div>
+            <div class="form-group">
+              <label for="name">Deskripsi Task</label>
+              <input type="text" class="form-control" id="name" aria-describedby="task" name="description" placeholder="Masukan Deskripsi Task">
+            </div>
             <div class="col-sm-12">
                 <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
               </div>

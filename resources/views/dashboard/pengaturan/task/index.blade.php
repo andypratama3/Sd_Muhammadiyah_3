@@ -18,7 +18,7 @@
                                     </button>
                                 </div>
                             </div>
-                        </form>
+                         </form>
                         @can('create-task')
                         <a href="{{ route('dashboard.pengaturan.task.create') }}" class="ml-auto btn btn-primary btn-sm btn-flat text-bold text-light"><i class="fa fa-plus"></i> Tambah</a>
                         @endcan
@@ -26,7 +26,6 @@
                 </div>
                 <div class="card-body">
                     <div class="card-body table-responsive p-0">
-                        {{-- @include('layouts.flash-message') --}}
                         <table class="table table-hover" id="tabel">
                             <thead>
                                 <tr>

@@ -4,7 +4,7 @@ namespace App\Http\Requests\Dashboard;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateBeritaRequest extends FormRequest
+class RequestRole extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,16 +22,13 @@ class UpdateBeritaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'judul' => 'required',
-            'desc' => 'required',
-            'foto' => 'required',
+            'name' => 'required',
         ];
     }
-
     public function message()
     {
         return [
-            'required' => 'Input Tidak boleh Kosong',
+            'required' => 'Attribut Tidak Boleh Kosong!',
         ];
     }
 }

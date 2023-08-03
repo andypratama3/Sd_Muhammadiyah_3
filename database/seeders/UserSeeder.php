@@ -116,6 +116,7 @@ class UserSeeder extends Seeder
                 'name' => 'Superadmin',
                 'email' => 'superadmin@superadmin.com',
                 'nip' => '0000',
+                'sex' => 'laki-laki',
                 'password' => bcrypt('superadmin'),
                 'role_id' => $roleSuperAdmin->id,
             ],
@@ -127,6 +128,7 @@ class UserSeeder extends Seeder
             $email = $value['email'];
             $nip = $value['nip'];
             $avatar = "profile.jpg";
+            $sex = $value['sex'];
             $password = $value['password'];
             $role_id = $value['role_id'];
 
@@ -150,6 +152,8 @@ class UserSeeder extends Seeder
                 $karyawan[$key] = new Karyawan();
                 $karyawan[$key]->id = Str::uuid();
                 $karyawan[$key]->name = $name;
+                $karyawan[$key]->sex = $sex;
+
                 $karyawan[$key]->slug = Str::slug('superadmin-xxxx');
                 $karyawan[$key]->user_id = $user[$key]->id;
                 $karyawan[$key]->save();
