@@ -40,6 +40,7 @@
                                     <td>{{ ++$no }}</td>
                                     <td>{{ $task->name }}</td>
                                     <td>
+                                        <a href="{{ route('dashboard.pengaturan.task.show', $task->slug) }}" class="btn btn-primary btn-sm" title="Ubah"><i class="fa fa-eye"></i></a>
                                         @can('edit-task')
                                         <a href="{{ route('dashboard.pengaturan.task.edit', $task->slug) }}" class="btn btn-primary btn-sm" title="Ubah"><i class="fa fa-edit"></i></a>
                                         @endcan

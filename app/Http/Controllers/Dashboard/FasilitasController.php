@@ -28,7 +28,7 @@ class FasilitasController extends Controller
 
         $storeFasilitasAction->execute($request);
 
-        return redirect()->route('dashboard.fasilitas.index')->with('succes-insert', 'Fasilitas Berhasil Di Tambah');
+        return redirect()->route('dashboard.fasilitas.index')->with('success', 'Fasilitas Berhasil Di Tambah');
     }
 
     public function show($slug)
@@ -50,7 +50,7 @@ class FasilitasController extends Controller
     {
         $updateFasilitasAction->excute($request, $slug);
 
-        return redirect()->route('dashboard.fasilitas.index')->with('succes-update', 'Fasilitas Berhasil Di Update!');
+        return redirect()->route('dashboard.fasilitas.index')->with('success', 'Fasilitas Berhasil Di Update!');
     }
 
     public function destroy(): void

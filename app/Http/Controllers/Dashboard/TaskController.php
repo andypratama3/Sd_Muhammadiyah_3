@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Actions\Dashboard\Task\DeleteTaskAction;
-use App\Actions\Dashboard\Task\TaskAction;
+use App\Models\Task;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\TaskRequest;
-use App\Models\Task;
+use App\Actions\Dashboard\Task\TaskActionStore;
+use App\Actions\Dashboard\Task\DeleteTaskAction;
+use App\Actions\Dashboard\Task\TaskActionUpdate;
 
 class TaskController extends Controller
 {
@@ -34,29 +35,31 @@ class TaskController extends Controller
         return view('dashboard.pengaturan.task.create');
     }
 
-    public function store(TaskRequest $request, TaskAction $taskAction)
+    public function store(TaskRequest $request, TaskActionStore $TaskActionStore)
     {
-        $taskAction->execute($request, new Task);
+        $TaskActionStore->execute($request);
 
         return redirect()->route('dashboard.pengaturan.task.index')->with('status', 'Berhasil Menambahkan Task');
     }
-
-    public function edit(Task $task)
+    public function show(Task $task)
     {
         return view('dashboard.pengaturan.task.show', compact('task'));
     }
 
-    public function update(TaskRequest $request, TaskAction $taskAction, Task $task)
+    public function edit(Task $task)
     {
-        $taskAction->execute($request, $task);
+        return view('dashboard.pengaturan.task.edit', compact('task'));
+    }
 
+    public function update(TaskRequest $request, TaskActionUpdate $taskActionUpdate, Task $slug)
+    {
+        $taskActionUpdate->execute($request, $slug);
         return redirect()->route('dashboard.pengaturan.task.index')->with('success', 'Task Berhasil Di Update');
     }
 
     public function destroy(DeleteTaskAction $deletTaskAction, Task $task)
     {
         $deletTaskAction->execute($task);
-
         return redirect()->route('dashboard.pengaturan.task.index')->with('success', 'Task Berhasil Di Hapus');
     }
 }

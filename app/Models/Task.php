@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use Str;
+use App\Models\Permission;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Str;
 
 class Task extends Model
 {

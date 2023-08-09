@@ -44,7 +44,7 @@
                       <input type="password" class="form-control" id="exampleInputPassword" name="password" placeholder="Password">
                     </div>
                     @if ($errors->has('email'))
-                    <div class="alert alert-primary alert-dismissible fade show text-center text-black" role="alert">
+                    <div class="alert alert-danger alert-dismissible fade show text-center text-black" role="alert">
                         <strong>{{ $errors->first('email') }}</strong>
                     </div>
                     @endif

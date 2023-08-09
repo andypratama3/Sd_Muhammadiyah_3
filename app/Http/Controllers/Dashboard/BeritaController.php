@@ -12,6 +12,10 @@ use App\Models\Berita;
 
 class BeritaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role:admin');
+    }
     public function index()
     {
         $no = 0;
@@ -29,7 +33,7 @@ class BeritaController extends Controller
     {
         $storeBeritaAction->execute($request);
 
-        return redirect()->route('dashboard.berita.index')->with('status', 'Berita Berhasil Di Tambah');
+        return redirect()->route('dashboard.berita.index')->with('success', 'Berita Berhasil Di Tambah');
     }
 
     public function show($slug)
@@ -51,7 +55,7 @@ class BeritaController extends Controller
 
         $updateBeritaAction->execute($request, $slug);
 
-        return redirect()->route('dashboard.berita.index')->with('status-update', 'Berita Berhasil Di Updtae');
+        return redirect()->route('dashboard.berita.index')->with('success', 'Berita Berhasil Di Updtae');
     }
 
     public function destroy(DeleteBeritaAction $deleteBeritaAction, $slug)
@@ -59,6 +63,6 @@ class BeritaController extends Controller
 
         $deleteBeritaAction->execute($slug);
 
-        return view('dashboard.berita.index')->with('status-delete', 'berita berhasil di hapus');
+        return redirect()->route('dashboard.berita.index')->with('success', 'berita berhasil di hapus');
     }
 }

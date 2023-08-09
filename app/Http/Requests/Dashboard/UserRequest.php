@@ -4,7 +4,7 @@ namespace App\Http\Requests\Dashboard;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreBeritaRequest extends FormRequest
+class UserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,17 +22,15 @@ class StoreBeritaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'judul' => 'required',
-            'desc' => 'required',
-            'foto' => 'required',
-
+            'name' => 'required',
+            'email' => 'required',
+            'password' => 'required',
         ];
     }
-
     public function message()
     {
         return [
-            'required' => ':attribute tidak boleh kosong!',
+            'required' => 'Attribut Tida Boleh Kosong!',
         ];
     }
 }

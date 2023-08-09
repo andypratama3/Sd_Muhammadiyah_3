@@ -18,7 +18,6 @@ class Karyawan extends Model
     protected $fillable = [
         'name',
         'sex',
-        'birth_date',
         'phone',
         'slug',
         'user_id',
@@ -35,5 +34,9 @@ class Karyawan extends Model
     public function user()
     {
         return $this->hasOne(User::class, 'id', 'user_id');
+    }
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 }

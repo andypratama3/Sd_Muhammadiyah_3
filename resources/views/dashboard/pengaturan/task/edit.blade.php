@@ -1,0 +1,33 @@
+@extends('layouts.dashboard')
+@section('title','Edit Task')
+@section('content')
+
+<div class="row">
+    <div class="col-lg-12">
+      <!-- Form Basic -->
+      <div class="card mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary text-center">Edit Task</h6>
+        </div>
+        <div class="card-body">
+          <form action="{{ route('dashboard.pengaturan.task.update', $task->slug) }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+            <div class="form-group">
+              <label for="name">Nama Task</label>
+              <input type="text" class="form-control" id="name" aria-describedby="task" name="name" placeholder="Masukan Nama Task" value="{{ $task->name }}">
+            </div>
+            <div class="form-group">
+              <label for="name">Deskripsi Task</label>
+              <input type="text" class="form-control" id="name" aria-describedby="task" name="description" placeholder="Masukan Deskripsi Task" value="{{ $task->description }}">
+            </div>
+            <div class="col-sm-12">
+                <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
+              </div>
+          </form>
+        </div>
+      </div>
+  </div>
+</div>
+
+@endsection

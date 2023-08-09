@@ -15,7 +15,11 @@
                 @method('PUT')
             <div class="form-group">
               <label for="name">Nama Task</label>
-              <input type="text" class="form-control" id="name" aria-describedby="task" name="name" placeholder="Masukan Nama Task"  value="{{ $task->name }}">
+              <input type="text" class="form-control" id="name" aria-describedby="task" value="{{ $task->name }}" readonly>
+            </div>
+            <div class="form-group">
+              <label for="name">Deskripsi</label>
+              <input type="text" class="form-control" id="name" aria-describedby="task" value="{{ $task->description }}" readonly>
             </div>
             <a href="{{ route('dashboard.pengaturan.task.index') }}" class="btn btn-danger">Kembali</a>
             <button type="submit" class="btn btn-primary float-lg-right">Ubah Role</button>

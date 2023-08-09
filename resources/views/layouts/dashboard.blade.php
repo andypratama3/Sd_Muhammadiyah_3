@@ -66,8 +66,8 @@
                         <a class="collapse-item {{ Request::routeIs('dashboard.pengaturan.task.*') ? 'active' : ''  }}" href="{{ route('dashboard.pengaturan.task.index') }}">Task</a>
                         @endrole
                         <a class="collapse-item {{ Request::routeIs('dashboard.pengaturan.role.*') ? 'active' : ''  }}" href="{{ route('dashboard.pengaturan.role.index') }}">Role</a>
-                        <a class="collapse-item {{ Request::routeIs('dashboard.pengaturan.user.*') ? 'active' : ''  }}" href="{{ route('dashboard.pengaturan.user.index') }}">User</a>
                         <a class="collapse-item {{ Request::routeIs('dashboard.pengaturan.karyawan.*') ? 'active' : ''  }}" href="{{ route('dashboard.pengaturan.karyawan.index') }}">karyawan</a>
+                        <a class="collapse-item {{ Request::routeIs('dashboard.pengaturan.user.*') ? 'active' : ''  }}" href="{{ route('dashboard.pengaturan.user.index') }}">User</a>
                     </div>
                 </div>
             </li>
@@ -269,6 +269,7 @@
                     </ul>
                 </nav>
                 <!-- Topbar -->
+
                 <div class="container-fluid" id="container-wrapper">
                     @yield('content')
                 </div>

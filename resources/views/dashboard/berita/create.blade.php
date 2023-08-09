@@ -1,31 +1,33 @@
 @extends('layouts.dashboard')
 @section('title', 'Tambah Berita')
 @section('content')
-    <div class="card mb-4">
-        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+<div class="card mb-4">
+    @include('layouts.flashmessage')
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
         <h6 class="m-0 font-weight-bold text-primary">Tambah Berita</h6>
-        </div>
-        <div class="card-body">
+    </div>
+    <div class="card-body">
         <form action="{{ route('dashboard.berita.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
-            <label for="judul">Judul</label>
-            <input type="text" class="form-control" name="judul" id="judul" aria-describedby="emailHelp" placeholder="Masukan Judul">
+                <label for="judul">Judul</label>
+                <input type="text" class="form-control" name="judul" id="judul" aria-describedby="emailHelp"
+                    placeholder="Masukan Judul">
             </div>
             <div class="form-group">
-            <label for="">Deskripsi</label>
-            <input type="text" class="form-control" id="" name="desc" placeholder="Deskripsi">
+                <label for="">Deskripsi</label>
+                <input type="text" class="form-control" id="" name="desc" placeholder="Deskripsi">
             </div>
             <div class="form-group">
-            <label for="">Foto</label>
-            <div class="custom-file">
-                <input type="file" class="custom-file-input" name="foto" id="customFile">
-                <label class="custom-file-label" for="customFile">Choose file</label>
+                <label for="">Foto</label>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" name="foto" id="customFile">
+                    <label class="custom-file-label" for="customFile">Choose file</label>
+                </div>
             </div>
-            </div>
+            <a  href="{{ route('dashboard.berita.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
             <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
         </form>
-        </div>
     </div>
-
+</div>
 @endsection
