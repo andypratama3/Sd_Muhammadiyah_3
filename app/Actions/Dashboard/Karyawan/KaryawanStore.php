@@ -17,7 +17,6 @@ class KaryawanStore
         $user->avatar = 'profile.jpg';
         $user->save();
 
-
         $karyawan = new Karyawan();
         $karyawan->name = $request->name;
         $karyawan->sex = $request->sex;

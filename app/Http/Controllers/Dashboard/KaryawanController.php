@@ -9,7 +9,8 @@ use App\Models\Karyawan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Actions\Dashboard\Karyawan\KaryawanStore;
-use App\Http\Requests\Dashboard\StoreKaryawanRequest;
+use App\Actions\Dashboard\Karyawan\KaryawanUpdate;
+use App\Http\Requests\Dashboard\Karyawan\KaryawanRequest;
 
 class KaryawanController extends Controller
 {
@@ -40,7 +41,7 @@ class KaryawanController extends Controller
         $users = User::all();
         return view('dashboard.pengaturan.karyawan.create', compact('roles','users'));
     }
-    public function store(StoreKaryawanRequest $request, KaryawanStore $karyawanStore)
+    public function store(KaryawanRequest $request, KaryawanStore $karyawanStore)
     {
         $karyawanStore->execute($request);
         return redirect()->route('dashboard.pengaturan.karyawan.index')->with('Berhasil Menambahkan Karyawan!');
@@ -48,6 +49,16 @@ class KaryawanController extends Controller
     public function show(Karyawan $karyawan)
     {
         return view('dashboard.pengaturan.karyawan.show', compact('karyawan'));
+    }
+    public function edit(Karyawan $karyawan)
+    {
+        $roles = Role::where('slug', '!=', 'superadmin')->get();
+        return view('dashboard.pengaturan.karyawan.edit', compact('karyawan', 'roles'));
+    }
+    public function update(KaryawanUpdate $karyawanUpdate, KaryawanData $karyawanData)
+    {
+        $karyawanUpdate->execute($karyawanData);
+        return redirect()->route('dashboard.pengaturan.karyawan.index')->with('succes', 'Kayran Berhasil Di Update');
     }
     public function destroy(Karyawan $karyawan)
     {

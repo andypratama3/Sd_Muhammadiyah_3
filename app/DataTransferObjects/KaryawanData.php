@@ -2,7 +2,7 @@
 
 namespace App\DataTransferObjects;
 
-use App\Http\Requests\Karyawan\UpsertKaryawanRequest;
+use App\Http\Requests\Karyawan\KaryawanRequest;
 use Spatie\LaravelData\Data;
 
 class KaryawanData extends Data
@@ -16,7 +16,7 @@ class KaryawanData extends Data
         //
     }
 
-    public static function fromRequest(UpsertKaryawanRequest $request): self
+    public static function fromRequest(KaryawanRequest $request): self
     {
         return self::from([
             $request->getName(),

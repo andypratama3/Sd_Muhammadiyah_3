@@ -10,7 +10,7 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('role:admin');
+        $this->middleware('role:superadmin');
     }
     public function index()
     {
@@ -26,7 +26,7 @@ class UserController extends Controller
     }
     public function show()
     {
-
+        
     }
     public function update()
     {
