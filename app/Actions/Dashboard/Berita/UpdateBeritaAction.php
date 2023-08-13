@@ -4,7 +4,9 @@ namespace App\Actions\Dashboard\Berita;
 
 use App\Models\Berita;
 use Illuminate\Support\Str;
-use Symfony\Component\HttpFoundation\Request;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
 
 class UpdateBeritaAction
 {
@@ -13,7 +15,9 @@ class UpdateBeritaAction
         $berita = Berita::where('slug', $slug)->firstOrFail();
         $berita->judul = $request->judul;
         $berita->desc = $request->desc;
+
         if ($request->file('foto')) {
+            Storage::disk('berita')->delete('storage/img/berita/'. $berita->foto);
             $berita_picture = $request->file('foto');
             $ext = $berita_picture->getClientOriginalExtension();
 
@@ -22,6 +26,7 @@ class UpdateBeritaAction
             $berita_picture->move($upload_path, $picture_name);
         }
         $berita->foto = $picture_name;
-        $berita->save();
+        // $berita->save();
+        
     }
 }

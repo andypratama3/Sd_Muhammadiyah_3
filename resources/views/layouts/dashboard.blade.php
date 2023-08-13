@@ -8,8 +8,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link href="{{ asset('asset_dashboard/assets/img/SD3_logo.png') }}" rel="icon">
-    <link href="{{ asset('asset_dashboard/assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
+    <link href="{{ asset('assets/img/SD3_logo.png') }}" rel="icon">
+    <link href="{{ asset('assets/img/SD3_logo.png') }}" rel="apple-touch-icon">
     <title>@yield('title')</title>
     @stack('css')
     <link href="{{ asset('asset_dashboard/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
@@ -23,7 +23,7 @@
         <ul class="navbar-nav sidebar sidebar-light accordion" id="accordionSidebar">
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('dashboard') }}">
                 <div class="sidebar-brand-icon">
-                    <img src="{{ asset('asset_dashboard/img/SD3_logo.png') }}" alt="">
+                    <img src="{{ asset('assets/img/SD3_logo.png') }}" alt="">
                 </div>
                 <div class="sidebar-brand-text mx-3">SD Muhammadiyah 3</div>
             </a>
@@ -49,6 +49,16 @@
                     <span>Fasilitas</span>
                 </a>
             </li>
+            <li class="nav-item {{ Request::routeIs('dashboard.guru.*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('dashboard.guru.index') }}">
+                    <i class="fas fa-user"></i>
+                    <span>Guru</span>
+                </a>
+            </li>
+            <hr>
+            <div class="sidebar-heading">
+                Fitur
+            </div>
             <hr class="sidebar-divider">
             <div class="sidebar-heading">
                 Akses
@@ -162,7 +172,7 @@
                                 </h6>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/man.png" style="max-width: 60px" alt="">
+                                        {{-- <img class="rounded-circle" src="img/man.png" style="max-width: 60px" alt=""> --}}
                                         <div class="status-indicator bg-success"></div>
                                     </div>
                                     <div class="font-weight-bold">
@@ -174,7 +184,7 @@
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/girl.png" style="max-width: 60px" alt="">
+                                        {{-- <img class="rounded-circle" src="img/girl.png" style="max-width: 60px" alt=""> --}}
                                         <div class="status-indicator bg-default"></div>
                                     </div>
                                     <div>
@@ -238,7 +248,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img class="img-profile rounded-circle" src="img/boy.png" style="max-width: 60px">
+                                {{-- <img class="img-profile rounded-circle" src="{{ asset('assetimg/boy.png') }}" style="max-width: 60px"> --}}
                                 <span class="ml-2 d-none d-lg-inline text-white small"></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

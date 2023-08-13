@@ -25,56 +25,43 @@
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <div class="form-group">
-                                <table class="table table-bordered table-striped" border="10"
-                                    style=" text-align:center;">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" rowspan="2" class="text-center"
-                                                style="vertical-align:middle">Tugas</th>
-                                            <th scope="col" colspan="5" class="text-center">Hak Akses</th>
-                                        </tr>
-                                        <tr>
-                                            <th scope="col" class="text-center">
-                                                Pilih Semua
-                                            </th>
-                                            <th scope="col" class="text-center">
-                                                Tambah
-                                            </th>
-                                            <th scope="col" class="text-center">
-                                                Hapus
-                                            </th>
-                                            <th scope="col" class="text-center">
-                                                Edit
-                                            </th>
-                                            <th scope="col" class="text-center">
-                                                Lihat
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($tasks as $task)
-                                        <tr>
-                                            <td scope="row">{{ $task->description }}</td>
-                                            <th scope="col" class="text-center">
-                                                <input type="checkbox" name="izin" value="{{ $task->slug }}"
-                                                    class="checkAll checkAll{{ $task->slug }}" />
-                                            </th>
-                                            @foreach ($task->permissions as $permission)
-                                            <td class="{{ $task->slug }}">
-                                                <div class=" hak{{ $task->slug }}">
-                                                    <input type="checkbox" name="izin_akses[]"
-                                                        value="{{ $permission->id }}"
-                                                        class="check{{ $task->slug }} hakakses"
-                                                        id="{{ $permission->name }}" />
-                                                </div>
-                                            </td>
-                                            @endforeach
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                            <label>Pilih Hak Akses <code>*</code></label>
+                            @if ($errors->has('permissions'))
+                            <div class="row">
+                                <div class="text-danger">{{ $errors->first('permissions') }}</div>
                             </div>
+                            @endif
+                            <table class="table table-bordered table-striped" border='10' style=" text-align:center;">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="text-center" style="vertical-align:middle">Tugas</th>
+                                        <th scope="col" colspan="5" class="text-center">Hak Akses</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($tasks as $task)
+                                    <tr>
+                                        <td scope="row">{{ $task->description }}</td>
+                                        <th scope="col" class="text-center">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input {{ $errors->has('permissions') ? 'is-invalid' : '' }} checkAll checkAll{{ $task->slug }}" id="checkAllCustom{{ $task->slug }}" name="izin" value="{{ $task->slug }}">
+                                                <label for="checkAllCustom{{ $task->slug }}" class="form-check-label custom-control-label">Pilih Semua</label>
+                                            </div>
+                                        </th>
+                                        @foreach ($task->permissions as $permission)
+                                        <td class="{{ $task->slug }}">
+                                            <div class=" hak{{ $task->slug }}">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input {{ $errors->has('permissions') ? 'is-invalid' : '' }} check{{ $task->slug }} hakakses" id="{{ $permission->name }}" name="permissions[]" value="{{ $permission->id }}">
+                                                    <label for="{{ $permission->name }}" class="form-check-label custom-control-label">{{ explode(' ', $permission->name)[0] }}</label>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        @endforeach
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
@@ -88,6 +75,10 @@
 <!-- Select2 -->
 <script>
     $(document).ready(function () {
+        $("#nama").keypress(function () {
+            $("#nama").removeClass("is-invalid");
+            $("#textNama").html("");
+        });
         // Select2 Multiple
         $('.checkAll').on('change', function (){
             if($(this).is(':checked')) {

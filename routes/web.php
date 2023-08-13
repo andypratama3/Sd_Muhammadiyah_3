@@ -5,6 +5,7 @@ use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\Auth\GoogleController;
 // use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\DetailBeritaController;
+use App\Http\Controllers\Dashboard\GuruController;
 use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\TaskController;
 use App\Http\Controllers\Dashboard\UserController;
@@ -38,13 +39,13 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
     Route::get('/', DashboardController::class)->name('dashboard');
     Route::resource('berita', DashboardBeritaController::class, ['names' => 'dashboard.berita']);
     Route::resource('fasilitas', FasilitasController::class, ['names' => 'dashboard.fasilitas']);
+    Route::resource('guru', GuruController::class, ['names' => 'dashboard.guru']);
 
     Route::group(['prefix' => 'pengaturan'], function () {
         Route::resource('task', TaskController::class, ['names' => 'dashboard.pengaturan.task']);
         Route::resource('role', RoleController::class, ['names' => 'dashboard.pengaturan.role']);
         Route::resource('user', UserController::class, ['names' => 'dashboard.pengaturan.user']);
         Route::resource('karyawan', KaryawanController::class, ['names' => 'dashboard.pengaturan.karyawan']);
-
     });
 
 });

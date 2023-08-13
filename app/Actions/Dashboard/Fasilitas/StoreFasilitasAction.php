@@ -13,15 +13,22 @@ class StoreFasilitasAction
         $fasilitas = new Fasilitas();
         $fasilitas->nama_fasilitas = $request->nama_fasilitas;
         $fasilitas->desc = $request->desc;
-        if ($request->file('foto')) {
-            $fasilitas_picture = $request->file('foto');
-            $ext = $fasilitas_picture->getClientOriginalExtension();
 
-            $upload_path = 'storage/img/fasilitas/';
-            $picture_name = 'fasilitas_'.Str::slug($request->nama_fasilitas).'_'.date('YmdHis').".$ext";
-            $fasilitas_picture->move($upload_path, $picture_name);
+        $upload_path = 'storage/img/fasilitas/';
+
+        $picture_names = [];
+
+        if ($request->hasFile('foto')) {
+            foreach ($request->file('foto') as $fasilitas_picture) {
+                $ext = $fasilitas_picture->getClientOriginalExtension();
+                $picture_name = 'fasilitas_' . Str::slug($request->nama_fasilitas) . '_' . date('YmdHis') . "_" . uniqid() . ".$ext";
+                $fasilitas_picture->move($upload_path, $picture_name);
+                $picture_names[] = $picture_name;
+            }
         }
-        $fasilitas->foto = $picture_name;
+
+        $fasilitas->foto = implode(',', $picture_names);
         $fasilitas->save();
     }
+
 }

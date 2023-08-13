@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Actions\Dashboard\Fasilitas\StoreFasilitasAction;
-use App\Actions\Dashboard\Fasilitas\UpdateFasilitasAction;
+use App\Models\Fasilitas;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\StoreFasilitasRequest;
-use App\Models\Fasilitas;
+use App\Http\Requests\Dashboard\UpdateFasilitasRequest;
+use App\Actions\Dashboard\Fasilitas\StoreFasilitasAction;
+use App\Actions\Dashboard\Fasilitas\DeleteFasilitasAction;
+use App\Actions\Dashboard\Fasilitas\UpdateFasilitasAction;
 
 class FasilitasController extends Controller
 {
@@ -34,27 +36,28 @@ class FasilitasController extends Controller
     public function show($slug)
     {
         $fasilitas = Fasilitas::select(['nama_fasilitas', 'desc', 'foto', 'slug'])->firstOrFail();
-
-        return view('dashboard.fasilitas.show', compact('fasilitas'));
+        $images = explode(',', $fasilitas->foto);
+        return view('dashboard.fasilitas.show', compact('fasilitas','images'));
     }
 
     public function edit()
     {
 
         $fasilitas = Fasilitas::select(['nama_fasilitas', 'desc', 'foto', 'slug'])->firstOrFail();
-
-        return view('dashboard.fasilitas.edit', compact('fasilitas'));
+        $images = explode(',', $fasilitas->foto);
+        return view('dashboard.fasilitas.edit', compact('fasilitas','images'));
     }
 
-    public function update(StoreFasilitasRequest $request, UpdateFasilitasAction $updateFasilitasAction, $slug)
+    public function update(UpdateFasilitasRequest $request, UpdateFasilitasAction $updateFasilitasAction, $slug)
     {
-        $updateFasilitasAction->excute($request, $slug);
+        $updateFasilitasAction->execute($request, $slug);
 
         return redirect()->route('dashboard.fasilitas.index')->with('success', 'Fasilitas Berhasil Di Update!');
     }
 
-    public function destroy(): void
+    public function destroy(DeleteFasilitasAction $deleteFasilitasAction, $slug)
     {
-
+        $deleteFasilitasAction->execute($slug);
+        return redirect()->route('dashboard.fasilitas.index')->with('success', 'Fasilitas Berhasil Di Hapus!');
     }
 }

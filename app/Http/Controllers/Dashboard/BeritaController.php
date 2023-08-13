@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Http\Controllers\Controller;
+use App\Models\Berita;
 use App\Actions\Dashboard\Berita\DeleteBeritaAction;
 use App\Actions\Dashboard\Berita\StoreBeritaAction;
 use App\Actions\Dashboard\Berita\UpdateBeritaAction;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\StoreBeritaRequest;
 use App\Http\Requests\Dashboard\UpdateBeritaRequest;
-use App\Models\Berita;
 
 class BeritaController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('role:admin');
+        $this->middleware('role:superadmin');
     }
     public function index()
     {
@@ -50,11 +50,11 @@ class BeritaController extends Controller
         return view('dashboard.berita.edit', compact('berita'));
     }
 
-    public function update(UpdateBeritaRequest $request, UpdateBeritaAction $updateBeritaAction, $slug)
+    public function update(UpdateBeritaRequest $request, UpdateBeritaAction $updateBeritaAction,Berita $slug)
     {
 
         $updateBeritaAction->execute($request, $slug);
-
+        dd($updateBeritaAction);
         return redirect()->route('dashboard.berita.index')->with('success', 'Berita Berhasil Di Updtae');
     }
 

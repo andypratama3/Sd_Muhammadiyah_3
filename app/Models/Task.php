@@ -4,12 +4,17 @@ namespace App\Models;
 
 use Str;
 use App\Models\Permission;
+use App\Http\Traits\UsesUuid;
+use App\Http\Traits\NameHasSlug;
 use Illuminate\Database\Eloquent\Model;
+use App\Http\Traits\HasPermissionsTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Task extends Model
 {
-    use \App\Http\Traits\UsesUuid;
+    use UsesUuid;
+    use NameHasSlug;
+    use HasPermissionsTrait;
     use SoftDeletes;
 
     protected $table = 'tasks';

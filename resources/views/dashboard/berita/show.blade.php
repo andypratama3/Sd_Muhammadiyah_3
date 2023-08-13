@@ -14,6 +14,7 @@
             <input type="text" class="form-control" id="" value="{{ $berita->desc }}" readonly>
             </div>
             <div class="form-group">
+            <h6 class="text-center">Foto</h6>
             <img src="{{ asset('storage/img/berita/'.$berita->foto) }}" alt="" srcset="" style="width: 100%; height:">
             </div>
             <a href="{{ route('dashboard.berita.index') }}" class="btn btn-danger float-end">Kembali</a>

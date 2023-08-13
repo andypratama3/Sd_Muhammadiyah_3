@@ -2,13 +2,19 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Str;
+use App\Http\Traits\UsesUuid;
+use App\Http\Traits\NameHasSlug;
+use Illuminate\Database\Eloquent\Model;
+use App\Http\Traits\HasPermissionsTrait;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Role extends Model
 {
     use \App\Http\Traits\UsesUuid;
+    use UsesUuid;
+    use NameHasSlug;
+    use HasPermissionsTrait;
     use SoftDeletes;
 
     protected $table = 'roles';
