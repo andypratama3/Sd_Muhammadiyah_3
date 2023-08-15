@@ -6,6 +6,7 @@
         <form action="{{ route('dashboard.berita.update',$berita->slug) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
+            <input type="hidden" name="slug" value="{{ $berita->slug }}">
             <div class="form-group">
                 <label for="judul">Judul</label>
                 <input type="text" class="form-control" name="judul" id="judul" value="{{ $berita->judul }}" placeholder="Masukan Judul">

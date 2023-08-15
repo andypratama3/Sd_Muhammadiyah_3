@@ -2,17 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use App\Http\Traits\UsesUuid;
+use App\Http\Traits\NameHasSlug;
+use Illuminate\Database\Eloquent\Model;
+use App\Http\Traits\HasPermissionsTrait;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Fasilitas extends Model
 {
     use HasFactory;
+    use UsesUuid;
+    use NameHasSlug;
+    use HasPermissionsTrait;
     use SoftDeletes;
-    use \App\Http\Traits\UsesUuid;
-    use HasFactory;
+
 
     protected $table = 'fasilitas';
 

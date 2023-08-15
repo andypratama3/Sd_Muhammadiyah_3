@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Models\Fasilitas;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Dashboard\StoreFasilitasRequest;
+use App\DataTransferObjects\FasilitasData;
+use App\Actions\Dashboard\Fasilitas\FasilitasAction;
 use App\Http\Requests\Dashboard\UpdateFasilitasRequest;
-use App\Actions\Dashboard\Fasilitas\StoreFasilitasAction;
 use App\Actions\Dashboard\Fasilitas\DeleteFasilitasAction;
 use App\Actions\Dashboard\Fasilitas\UpdateFasilitasAction;
 
@@ -25,10 +25,10 @@ class FasilitasController extends Controller
         return view('dashboard.fasilitas.create');
     }
 
-    public function store(StoreFasilitasRequest $request, StoreFasilitasAction $storeFasilitasAction)
+    public function store(FasilitasAction $FasilitasAction, FasilitasData $FasilitasData)
     {
 
-        $storeFasilitasAction->execute($request);
+        $storeFasilitasAction->execute($FasilitasData);
 
         return redirect()->route('dashboard.fasilitas.index')->with('success', 'Fasilitas Berhasil Di Tambah');
     }

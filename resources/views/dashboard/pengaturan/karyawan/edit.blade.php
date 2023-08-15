@@ -11,9 +11,11 @@
                 <h6 class="m-0 font-weight-bold text-primary text-center">Tambah Karyawan</h6>
             </div>
             <div class="card-body">
-                <form action="{{ route('dashboard.pengaturan.karyawan.store') }}" method="POST"
+                <form action="{{ route('dashboard.pengaturan.karyawan.update', $karyawan->slug) }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
+                    @method('PUT')
+                    <input type="hidden" name="slug" value="{{ $karyawan->slug }}">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -63,9 +65,8 @@
                     </div>
             </div>
             <div class="card-footer">
-                <button type="submit" class="btn btn-sm btn-primary">Submit</button>
-                <button onclick="window.location.href='{{ route('dashboard.pengaturan.karyawan.index') }}'"
-                    type="button" class="btn btn-sm btn-danger" aria-hidden="true">Cancel</button>
+                <button onclick="window.location.href='{{ route('dashboard.pengaturan.karyawan.index') }}'" type="button" class="btn btn-sm btn-danger" aria-hidden="true">Cancel</button>
+                <button type="submit" class="btn btn-sm btn-primary  float-lg-right">Submit</button>
             </div>
             </form>
         </div>
@@ -76,13 +77,13 @@
 <!-- /.row -->
 @push('js')
 <script src="{{ asset('asset_dashboard/vendor/select2/dist/js/select2.min.js') }}"></script>
-<script>
+{{-- <script>
 $(function () {
     //Initialize Select2 Elements
     $('.select2bs4').select2({
         theme: 'bootstrap4'
     })
 })
-</script>
+</script> --}}
 @endpush
 @endsection

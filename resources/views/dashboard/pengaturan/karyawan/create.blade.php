@@ -72,9 +72,8 @@
                     </div>
             </div>
             <div class="card-footer">
-                <button type="submit" class="btn btn-sm btn-primary">Submit</button>
-                <button onclick="window.location.href='{{ route('dashboard.pengaturan.karyawan.index') }}'"
-                    type="button" class="btn btn-sm btn-danger" aria-hidden="true">Cancel</button>
+                <button onclick="window.location.href='{{ route('dashboard.pengaturan.karyawan.index') }}'" type="button" class="btn btn-sm btn-danger" aria-hidden="true">Cancel</button>
+                <button type="submit" class="btn btn-sm btn-primary  float-lg-right">Submit</button>
             </div>
             </form>
         </div>

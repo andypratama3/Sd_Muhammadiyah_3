@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignId('current_team_id')->nullable();
             $table->string('avatar', 2048)->nullable();
             $table->string('slug');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

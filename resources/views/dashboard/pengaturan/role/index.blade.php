@@ -1,11 +1,12 @@
 @extends('layouts.dashboard')
-@section('title','role')
+@section('title','Role')
 @section('content')
 
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card card-orange">
+                @include('layouts.flashmessage')
                 <div class="card-header border-0">
                     <div class="d-flex justify-content-between">
                          <!-- SEARCH FORM -->
@@ -98,5 +99,4 @@
     </script>
 @endcan
 @endpush
-
 @endsection

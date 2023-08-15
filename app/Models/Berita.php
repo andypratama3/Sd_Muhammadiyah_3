@@ -2,16 +2,21 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use App\Http\Traits\UsesUuid;
+use App\Http\Traits\NameHasSlug;
+use Illuminate\Database\Eloquent\Model;
+use App\Http\Traits\HasPermissionsTrait;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Berita extends Model
 {
     use HasFactory;
+    use UsesUuid;
+    use NameHasSlug;
+    use HasPermissionsTrait;
     use SoftDeletes;
-    use \App\Http\Traits\UsesUuid;
 
     protected $table = 'beritas';
 
@@ -27,13 +32,4 @@ class Berita extends Model
         'deleted_at',
     ];
 
-    public function setJudulAttribute($value)
-    {
-        $this->attributes['judul'] = $value;
-        $this->attributes['slug'] = Str::slug($value).'-'.Str::random(4);
-    }
-    public function getRouteKeyName()
-    {
-        return 'slug';
-    }
 }

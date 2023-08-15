@@ -2,20 +2,18 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Http\Controllers\Controller;
 use App\Models\Berita;
+use App\Http\Controllers\Controller;
+use App\DataTransferObjects\BeritaData;
+use App\Actions\Dashboard\Berita\ActionBerita;
 use App\Actions\Dashboard\Berita\DeleteBeritaAction;
-use App\Actions\Dashboard\Berita\StoreBeritaAction;
-use App\Actions\Dashboard\Berita\UpdateBeritaAction;
-use App\Http\Requests\Dashboard\StoreBeritaRequest;
-use App\Http\Requests\Dashboard\UpdateBeritaRequest;
 
 class BeritaController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('role:superadmin');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('role:superadmin');
+    // }
     public function index()
     {
         $no = 0;
@@ -29,9 +27,9 @@ class BeritaController extends Controller
         return view('dashboard.berita.create');
     }
 
-    public function store(StoreBeritaRequest $request, StoreBeritaAction $storeBeritaAction)
+    public function store(ActionBerita $ActionBerita, BeritaData $beritaData)
     {
-        $storeBeritaAction->execute($request);
+        $ActionBerita->execute($beritaData);
 
         return redirect()->route('dashboard.berita.index')->with('success', 'Berita Berhasil Di Tambah');
     }

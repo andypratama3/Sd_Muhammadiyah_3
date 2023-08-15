@@ -6,6 +6,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card card-orange">
+                @include('layouts.flashmessage')
                 <div class="card-header border-0">
                     <div class="d-flex justify-content-between">
                          <!-- SEARCH FORM -->
@@ -77,7 +78,6 @@
     </div>
 </div>
 
-@include('layouts.script')
 @push('js')
 @can('delete-task')
     <script>

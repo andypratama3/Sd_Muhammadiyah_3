@@ -5,6 +5,7 @@
     <div class="col-lg-12 mb-4">
         <!-- Simple Tables -->
         <div class="card">
+            @include('layouts.flashmessage')
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h4 class="m-0 font-weight-bold text-primary text-center">Karyawan</h4>
                 <a href="{{ route('dashboard.pengaturan.karyawan.create') }}"

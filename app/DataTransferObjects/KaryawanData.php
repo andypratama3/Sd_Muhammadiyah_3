@@ -10,6 +10,7 @@ class KaryawanData extends Data
     public function __construct(
         public readonly string $name,
         public readonly string $email,
+        public readonly string $sex,
         public readonly string $role_id,
         public readonly ?string $slug,
     ) {
@@ -21,6 +22,7 @@ class KaryawanData extends Data
         return self::from([
             $request->getName(),
             $request->getEmail(),
+            $request->getSex(),
             $request->getRole(),
             $request->getSlug(),
         ]);
@@ -30,6 +32,7 @@ class KaryawanData extends Data
     {
         return [
             'name.required' => 'Kolom nama tidak boleh kosong!',
+            'sex.required' => 'Kolom Jenis Kelamin tidak boleh kosong!',
             'email.required' => 'Kolom email tidak boleh kosong!',
             'email.email' => 'Format email salah!',
             'email.unique' => 'Email yang Anda masukkan sudah terdaftar!',

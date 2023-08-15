@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Support\Str;
+use App\Http\Traits\UsesUuid;
+use App\Http\Traits\NameHasSlug;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Jetstream\HasProfilePhoto;
 use App\Http\Traits\HasPermissionsTrait;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -17,9 +20,11 @@ class User extends Authenticatable
     use HasFactory;
     use HasProfilePhoto;
     use Notifiable;
-    use HasPermissionsTrait;
     use TwoFactorAuthenticatable;
-    use \App\Http\Traits\UsesUuid;
+    use UsesUuid;
+    use NameHasSlug;
+    use HasPermissionsTrait;
+    // use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -63,9 +68,6 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
-    public function setNameAttribute($value)
-    {
-        $this->attributes['name'] = $value;
-        $this->attributes['slug'] = Str::slug($value);
-    }
+    // protected $dates = ['deleted_at'];
+
 }

@@ -27,7 +27,7 @@
                                 <div class="text-danger">{{ $errors->first('permissions') }}</div>
                             </div>
                             @endif
-                            <table class="table table-bordered table-striped" border='10' style=" text-align:center;">
+                            <table class="table table-bordered table-striped mb-5" border='10' style=" text-align:center;">
                                 <thead>
                                     <tr>
                                         <th scope="col" class="text-center" style="vertical-align:middle">Tugas</th>
