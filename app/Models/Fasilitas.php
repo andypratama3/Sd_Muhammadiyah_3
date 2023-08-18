@@ -14,7 +14,6 @@ class Fasilitas extends Model
 {
     use HasFactory;
     use UsesUuid;
-    use NameHasSlug;
     use HasPermissionsTrait;
     use SoftDeletes;
 

@@ -1,4 +1,4 @@
-<style>
+{{-- <style>
     .alert {
         text-align: center;
         position: relative;
@@ -21,10 +21,10 @@
         z-index: 2;
         padding: 1.25rem 1rem;
     }
-</style>
+</style> --}}
 
 @if (count($errors) > 0)
-<div class="alert alert-danger alert-dismissible" delay=1>
+<div class="alert alert-danger alert-dismissible animation" delay=1>
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
     <h5><i class="icon fas fa-ban"></i> Alert!</h5>
     @foreach ($errors->all() as $error)

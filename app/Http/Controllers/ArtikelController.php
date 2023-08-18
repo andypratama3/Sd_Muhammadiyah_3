@@ -10,4 +10,8 @@ class ArtikelController extends Controller
     {
         return view('artikel.index');
     }
+    public function store()
+    {
+        
+    }
 }

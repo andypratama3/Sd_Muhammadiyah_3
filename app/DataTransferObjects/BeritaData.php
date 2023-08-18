@@ -2,11 +2,8 @@
 
 namespace App\DataTransferObjects;
 
-
-
 use Spatie\LaravelData\Data;
 use Illuminate\Http\UploadedFile;
-// use Illuminate\Support\Facades\File;
 use App\Http\Requests\Berita\BeritaRequest;
 
 class BeritaData extends Data

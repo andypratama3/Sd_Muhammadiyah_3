@@ -6,9 +6,7 @@ use App\Models\Fasilitas;
 use App\Http\Controllers\Controller;
 use App\DataTransferObjects\FasilitasData;
 use App\Actions\Dashboard\Fasilitas\FasilitasAction;
-use App\Http\Requests\Dashboard\UpdateFasilitasRequest;
 use App\Actions\Dashboard\Fasilitas\DeleteFasilitasAction;
-use App\Actions\Dashboard\Fasilitas\UpdateFasilitasAction;
 
 class FasilitasController extends Controller
 {
@@ -28,7 +26,7 @@ class FasilitasController extends Controller
     public function store(FasilitasAction $FasilitasAction, FasilitasData $FasilitasData)
     {
 
-        $storeFasilitasAction->execute($FasilitasData);
+        $FasilitasAction->execute($FasilitasData);
 
         return redirect()->route('dashboard.fasilitas.index')->with('success', 'Fasilitas Berhasil Di Tambah');
     }
@@ -48,9 +46,9 @@ class FasilitasController extends Controller
         return view('dashboard.fasilitas.edit', compact('fasilitas','images'));
     }
 
-    public function update(UpdateFasilitasRequest $request, UpdateFasilitasAction $updateFasilitasAction, $slug)
+    public function update(FasilitasAction $FasilitasAction,FasilitasData $FasilitasData )
     {
-        $updateFasilitasAction->execute($request, $slug);
+        $FasilitasAction->execute($FasilitasData);
 
         return redirect()->route('dashboard.fasilitas.index')->with('success', 'Fasilitas Berhasil Di Update!');
     }

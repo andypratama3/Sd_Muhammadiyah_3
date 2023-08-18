@@ -1,19 +1,25 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
+//User Access
+use App\Http\Controllers\GuruController;
 use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\BerandaController;
+use App\Http\Controllers\FasilitasController;
 use App\Http\Controllers\Auth\GoogleController;
+
+//Dashboard Access
 use App\Http\Controllers\DetailBeritaController;
-use App\Http\Controllers\Dashboard\GuruController;
 use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\TaskController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\KaryawanController;
 use App\Http\Controllers\Dashboard\DashboardController;
-use App\Http\Controllers\Dashboard\FasilitasController;
+use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
 use App\Http\Controllers\Dashboard\BeritaController as DashboardBeritaController;
 use App\Http\Controllers\Dashboard\ArtikelController as DashboardArtikelController;
+use App\Http\Controllers\Dashboard\FasilitasController as DashboardFasilitasController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,8 +37,10 @@ Route::get('/', BerandaController::class)->name('index');
 // Berita
 Route::get('berita', [DetailBeritaController::class, 'index'])->name('berita.index');
 Route::get('berita/{slug}', [DetailBeritaController::class, 'show'])->name('berita.show');
-
-
+//gurur
+Route::get('guru', [GuruController::class, 'index'])->name('guru.index');
+//fasilitas
+Route::get('fasilitas', [FasilitasController::class, 'index'])->name('fasilitas.index');
 //artikel
 Route::get('artikel', [ArtikelController::class, 'index'])->name('artikel');
 
@@ -43,9 +51,9 @@ Route::get('auth/google/callback', [GoogleController::class, 'callbackToGoogle']
 Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], function () {
     Route::get('/', DashboardController::class)->name('dashboard');
     Route::resource('berita', DashboardBeritaController::class, ['names' => 'dashboard.berita']);
-    Route::resource('fasilitas', FasilitasController::class, ['names' => 'dashboard.fasilitas']);
-    Route::resource('guru', GuruController::class, ['names' => 'dashboard.guru']);
-    Route::resource('artikel', ArtikelController::class, ['names' => 'dashboard.artikel']);
+    Route::resource('fasilitas', DashboardFasilitasController::class, ['names' => 'dashboard.fasilitas']);
+    Route::resource('guru', DashboardGuruController::class, ['names' => 'dashboard.guru']);
+    Route::resource('artikel', DashboardArtikelController::class, ['names' => 'dashboard.artikel']);
 
     Route::group(['prefix' => 'pengaturan'], function () {
         Route::resource('task', TaskController::class, ['names' => 'dashboard.pengaturan.task']);

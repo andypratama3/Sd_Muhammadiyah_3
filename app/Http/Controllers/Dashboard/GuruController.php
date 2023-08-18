@@ -6,6 +6,7 @@ use App\Models\Guru;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Actions\Dashboard\Guru\StoreGuruAction;
+use App\Actions\Dashboard\Guru\DeleteGuruAction;
 use App\Actions\Dashboard\Guru\UpdateGuruAction;
 use App\Http\Requests\Dashboard\StoreGuruRequest;
 use App\Http\Requests\Dashboard\UpdateGuruRequest;
@@ -20,10 +21,6 @@ class GuruController extends Controller
         $no = $limit * ($gurus->currentPage() - 1);
         return view('dashboard.guru.index', compact('gurus','count','no'));
     }
-    public function upsert(Guru $slug)
-    {
-        return view('dashboard.guru.upsert', compact('slug'));
-    }
     public function create()
     {
         return view('dashboard.guru.create');
@@ -31,7 +28,7 @@ class GuruController extends Controller
     public function store(StoreGuruRequest $request, StoreGuruAction $storeGuruAction)
     {
         $storeGuruAction->execute($request);
-        return redirect()->route('dashboard.guru.index')->with('Berhasil Menambahkan Guru!');
+        return redirect()->route('dashboard.guru.index')->with('success','Berhasil Menambahkan Guru!');
     }
     public function edit($slug)
     {
@@ -41,7 +38,12 @@ class GuruController extends Controller
     public function update(UpdateGuruRequest $request, UpdateGuruAction $updateGuruAction, $slug)
     {
         $updateGuruAction->execute($request, $slug);
-        return redirect()->route('dashboard.guru.index')->with('Berhasil Update Guru!');
+        return redirect()->route('dashboard.guru.index')->with('success','Berhasil Update Guru!');
+    }
+    public function destroy(DeleteGuruAction $DeleteGuruAction, $slug)
+    {
+        $DeleteGuruAction->execute($slug);
+        return redirect()->route('dashboard.guru.index')->with('Berhasil Hapus Guru!');
     }
 
 }

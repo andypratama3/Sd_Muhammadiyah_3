@@ -21,7 +21,7 @@ class FasilitasRequest extends FormRequest
      */
     public function getNama_fasilitas(): string
     {
-        return $this->name_;
+        return $this->nama_fasilitas;
     }
 
     public function getDesc(): string
@@ -47,9 +47,9 @@ class FasilitasRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
+            'nama_fasilitas' => 'required',
             'desc' => 'required',
-            'foto' => 'required|min:1',
+            'foto' => 'required',
         ];
     }
 }

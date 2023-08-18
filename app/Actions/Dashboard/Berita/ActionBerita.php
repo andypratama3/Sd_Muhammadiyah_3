@@ -9,20 +9,25 @@ class ActionBerita
 {
     public function execute($beritaData)
     {
-
+        //request foto
         $foto = $beritaData->foto;
-        $imageFile = 'Berita_'.Str::slug($beritaData->judul). $foto->getClientOriginalName();
-        $foto->storeAs('berita', $imageFile, 'public');
+        $ext = $foto->getClientOriginalExtension();
+
+        //upload foto to folder
+        $upload_path = 'storage/img/berita/';
+        $picture_name = 'Berita_'.Str::slug($beritaData->judul).'_'.date('YmdHis').".$ext";
+        $foto->move($upload_path, $picture_name);
 
         $berita = Berita::updateOrCreate(
             ['slug' => $beritaData->slug],
             [
                 'judul' => $beritaData->judul,
                 'desc' => $beritaData->desc,
-                'foto' => $imageFile,
+                'foto' => $picture_name,
             ]
         );
 
         return $berita;
     }
+
 }

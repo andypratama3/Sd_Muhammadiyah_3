@@ -2,7 +2,6 @@
 @section('title','Beranda')
 @section('content')
     <!-- ======= Hero Slider Section ======= -->
-
     <section id="hero-slider" class="hero-slider">
         <div class="container-md" data-aos="fade-in">
           <div class="row">
