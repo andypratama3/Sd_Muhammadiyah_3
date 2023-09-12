@@ -23,15 +23,10 @@ class FasilitasAction
             [
                 'nama_fasilitas' => $FasilitasData->nama_fasilitas,
                 'desc' => $FasilitasData->desc,
-                // 'foto' => $picture_name,
+                'foto' => $picture_name,
             ],
         );
 
-        foreach ($FasilitasData->foto as $key => $foto) {
-            $fasilitas = Fasilitas::create(
-            ['foto' => $foto],
-            );
-        }
 
         return $fasilitas;
     }

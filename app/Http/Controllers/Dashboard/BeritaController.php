@@ -31,7 +31,7 @@ class BeritaController extends Controller
     {
         $ActionBerita->execute($beritaData);
 
-        return redirect()->route('dashboard.berita.index')->with('success', 'Berita Berhasil Di Tambah');
+        return redirect()->route('dashboard.news.berita.index')->with('success', 'Berita Berhasil Di Tambah');
     }
 
     public function show($slug)
@@ -48,12 +48,12 @@ class BeritaController extends Controller
         return view('dashboard.berita.edit', compact('berita'));
     }
 
-    public function update(UpdateBeritaRequest $request, UpdateBeritaAction $updateBeritaAction,Berita $slug)
+    public function update(ActionBerita $ActionBerita, BeritaData $beritaData)
     {
 
-        $updateBeritaAction->execute($request, $slug);
-        dd($updateBeritaAction);
-        return redirect()->route('dashboard.berita.index')->with('success', 'Berita Berhasil Di Updtae');
+        $ActionBerita->execute($beritaData);
+        // dd($updateBeritaAction);
+        return redirect()->route('dashboard.news.berita.index')->with('success', 'Berita Berhasil Di Updtae');
     }
 
     public function destroy(DeleteBeritaAction $deleteBeritaAction, $slug)
@@ -61,6 +61,6 @@ class BeritaController extends Controller
 
         $deleteBeritaAction->execute($slug);
 
-        return redirect()->route('dashboard.berita.index')->with('success', 'berita berhasil di hapus');
+        return redirect()->route('dashboard.news.berita.index')->with('success', 'berita berhasil di hapus');
     }
 }

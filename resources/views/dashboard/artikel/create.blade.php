@@ -4,6 +4,8 @@
 @push('css')
     <link href="{{ asset('asset_dashboard/vendor/quill/quill.snow.css') }}" rel="stylesheet">
     <link href="{{ asset('asset_dashboard/vendor/quill/quill.bubble.css') }}" rel="stylesheet">
+    <link href="{{ asset('asset_dashboard/vendor/select2/dist/css/select2.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('asset_dashboard/vendor/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}" rel="stylesheet" type="text/css">
 @endpush
 <div class="card mb-4">
     @include('layouts.flashmessage')
@@ -11,21 +13,26 @@
         <h6 class="m-0 font-weight-bold text-primary">Tambah Artikel</h6>
     </div>
     <div class="card-body">
-        <form action="{{ route('dashboard.berita.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('dashboard.news.artikel.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
-                <label for="judul">Judul</label>
-                <input type="text" class="form-control" name="judul" id="judul" aria-describedby="emailHelp"
-                    placeholder="Masukan Judul">
+                <label for="name">Nama</label>
+                <input type="text" class="form-control" name="name" id="name" aria-describedby="emailHelp"
+                    placeholder="Masukan Nama">
             </div>
             <div class="form-group">
-                    <div class="quill-editor-full">
-                      <p>Hello World!</p>
-                      <p>This is Quill <strong>full</strong> editor</p>
-                    </div>
-
+                <label>Kategori Artikel</label>
+                    <select class="form-control select2" multiple="multiple" name="categorys" data-placeholder="Pilih Kategori artikel">
+                        <option disabled>Pilih Kategori</option>
+                        @foreach ($categorys as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                    </select>
             </div>
-            <a href="{{ route('dashboard.artikel.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
+            <div class="form-group">
+                <input class="quill-editor-full form-control" cols="30" rows="10" name="artikel">
+            </div>
+            <a href="{{ route('dashboard.news.artikel.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
             <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
         </form>
     </div>
@@ -33,6 +40,17 @@
 @push('js')
 <script src="{{ asset('asset_dashboard/vendor/quill/quill.min.js') }}"></script>
 <script src="{{ asset('asset_dashboard/vendor/quill/main.js') }}"></script>
+<script src="{{ asset('asset_dashboard/vendor/select2/dist/js/select2.js') }}"></script>
+<script>
+    $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2()
 
+        //Initialize Select2 Elements
+        $('.select2bs4').select2({
+          theme: 'bootstrap4'
+        });
+    });
+    </script>
 @endpush
 @endsection

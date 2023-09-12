@@ -14,6 +14,7 @@ use App\Http\Controllers\DetailBeritaController;
 use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\TaskController;
 use App\Http\Controllers\Dashboard\UserController;
+use App\Http\Controllers\Dashboard\CategoryArtikel;
 use App\Http\Controllers\Dashboard\KaryawanController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
@@ -50,16 +51,22 @@ Route::get('auth/google/callback', [GoogleController::class, 'callbackToGoogle']
 
 Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], function () {
     Route::get('/', DashboardController::class)->name('dashboard');
-    Route::resource('berita', DashboardBeritaController::class, ['names' => 'dashboard.berita']);
+
     Route::resource('fasilitas', DashboardFasilitasController::class, ['names' => 'dashboard.fasilitas']);
     Route::resource('guru', DashboardGuruController::class, ['names' => 'dashboard.guru']);
-    Route::resource('artikel', DashboardArtikelController::class, ['names' => 'dashboard.artikel']);
+    Route::group(['prefix' => 'news'], function () {
+        Route::resource('berita', DashboardBeritaController::class, ['names' => 'dashboard.news.berita']);
+        Route::resource('artikel', DashboardArtikelController::class, ['names' => 'dashboard.news.artikel']);
+        Route::resource('category', CategoryArtikel::class, ['names' => 'dashboard.news.category']);
 
+    });
     Route::group(['prefix' => 'pengaturan'], function () {
         Route::resource('task', TaskController::class, ['names' => 'dashboard.pengaturan.task']);
         Route::resource('role', RoleController::class, ['names' => 'dashboard.pengaturan.role']);
         Route::resource('user', UserController::class, ['names' => 'dashboard.pengaturan.user']);
         Route::resource('karyawan', KaryawanController::class, ['names' => 'dashboard.pengaturan.karyawan']);
     });
+
+
 
 });

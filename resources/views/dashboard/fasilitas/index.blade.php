@@ -99,8 +99,8 @@
                     </span>
                   </td>
                     <td>
-                        <a href="{{ route('dashboard.fasilitas.show', $fasilitas->slug) }}" class="btn btn-dark"><i class="bi bi-eye">Detail</i></a>
-                        <a href="{{ route('dashboard.fasilitas.edit', $fasilitas->slug) }}" class="btn btn-primary">Update</a>
+                        <a href="{{ route('dashboard.fasilitas.show', $fasilitas->slug) }}" class="btn btn-dark btn-sm"><i class="bi bi-eye">Detail</i></a>
+                        <a href="{{ route('dashboard.fasilitas.edit', $fasilitas->slug) }}" class="btn btn-primary btn-sm">Update</a>
                         <a href="#" data-id="{{ $fasilitas->slug }}" class="btn btn-danger delete" title="Hapus">
                             <form action="{{ route('dashboard.fasilitas.destroy', $fasilitas->slug) }}" id="delete-{{ $fasilitas->slug }}" method="POST" enctype="multipart/form-data">
                                 @csrf

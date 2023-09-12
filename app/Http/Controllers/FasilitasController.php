@@ -9,7 +9,7 @@ class FasilitasController extends Controller
 {
     public function index()
     {
-        $fasilitas = Fasilitas::select('nama_fasilitas','desc','foto','slug')->firstOrFail();
+        $fasilitas = Fasilitas::all();
         return view('profil.fasilitas', compact('fasilitas'));
     }
 }

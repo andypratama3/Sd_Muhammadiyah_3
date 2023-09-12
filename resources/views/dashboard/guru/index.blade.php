@@ -99,9 +99,9 @@
                                 <span class="btn fa fa-image" id="priview-image" data-foto="<?=$guru->foto ?>"><p>Lihat</p></span>
                             </td>
                             <td>
-                                <a href="{{ route('dashboard.guru.show', $guru->slug) }}" class="btn btn-dark"><i
+                                <a href="{{ route('dashboard.guru.show', $guru->slug) }}" class="btn btn-dark btn-sm"><i
                                         class="fas fa-info-circle"></i></a>
-                                <a href="{{ route('dashboard.guru.edit', $guru->slug) }}" class="btn btn-primary"><i
+                                <a href="{{ route('dashboard.guru.edit', $guru->slug) }}" class="btn btn-primary btn-sm"><i
                                         class="fa fa-pen"></i></a>
                                 <a href="#" data-id="{{ $guru->slug }}" class="btn btn-danger delete" title="Hapus">
                                     <form action="{{ route('dashboard.guru.destroy', $guru->slug) }}"

@@ -73,7 +73,7 @@
             @include('layouts.flashmessage')
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h4 class="m-0 font-weight-bold text-primary text-center">Data Berita</h5>
-                    <a href="{{ route('dashboard.berita.create') }}" class="btn btn-primary float-end">Tambah</a>
+                    <a href="{{ route('dashboard.news.berita.create') }}" class="btn btn-primary float-end">Tambah</a>
             </div>
             <div class="table-responsive">
                 <table class="table align-items-center table-flush text-center">
@@ -98,10 +98,11 @@
                                 </span>
 
                             <td>
-                                <a href="{{ route('dashboard.berita.show', $berita->slug) }}" class="btn btn-dark"><i
+                                <a href="{{ route('dashboard.news.berita.show', $berita->slug) }}" class="btn btn-dark btn-sm"><i
                                         class="fas fa-info-circle"></i></a>
+                                <a href="{{ route('dashboard.news.berita.edit', $berita->slug) }}" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
                                 <a href="#" data-id="{{ $berita->slug }}" class="btn btn-danger delete" title="Hapus">
-                                    <form action="{{ route('dashboard.berita.destroy', $berita->slug) }}"
+                                    <form action="{{ route('dashboard.news.berita.destroy', $berita->slug) }}"
                                         id="delete-{{ $berita->slug }}" method="POST" enctype="multipart/form-data">
                                         @csrf
                                         @method('delete')

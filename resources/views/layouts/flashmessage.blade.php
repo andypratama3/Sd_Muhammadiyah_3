@@ -1,27 +1,3 @@
-{{-- <style>
-    .alert {
-        text-align: center;
-        position: relative;
-        animation: floatImage 8s;
-    }
-    @keyframes floatImage {
-    0%{
-        width: 100%;
-    }
-    50%{
-        width: 50%;
-    }
-
-}
-
-    .btn-close {
-        position: absolute;
-        top: 0;
-        right: 0;
-        z-index: 2;
-        padding: 1.25rem 1rem;
-    }
-</style> --}}
 
 @if (count($errors) > 0)
 <div class="alert alert-danger alert-dismissible animation" delay=1>

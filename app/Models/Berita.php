@@ -13,7 +13,6 @@ class Berita extends Model
 {
     use HasFactory;
     use UsesUuid;
-    use HasPermissionsTrait;
     use SoftDeletes;
 
     protected $table = 'beritas';

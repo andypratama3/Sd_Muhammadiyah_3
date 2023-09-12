@@ -7,19 +7,21 @@ use App\Http\Traits\NameHasSlug;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Artikel extends Model
+class Category extends Model
 {
     use HasFactory;
     use UsesUuid;
     use NameHasSlug;
-    protected $table = 'artikels';
+    protected $table = 'categorys';
+
     protected $fillable = [
         'name',
-        'artikel',
         'slug',
     ];
-    public function categorys()
+
+    public function artikels(): BelongsToMany
     {
-        return $this->belongsToMany(Category::class, 'artikel_categorys');
+        return $this->belongsToMany(Artikel::class, 'artikel_categorys');
     }
+
 }

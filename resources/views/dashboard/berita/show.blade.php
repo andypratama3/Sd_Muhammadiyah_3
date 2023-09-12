@@ -3,7 +3,7 @@
 @section('content')
     <div class="card mb-4">
         <div class="card-body">
-        <form action="{{ route('dashboard.berita.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('dashboard.news.berita.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
             <label for="judul">Judul</label>
@@ -17,7 +17,7 @@
             <h6 class="text-center">Foto</h6>
             <img src="{{ asset('storage/img/berita/'.$berita->foto) }}" alt="" srcset="" style="width: 100%; height:">
             </div>
-            <a href="{{ route('dashboard.berita.index') }}" class="btn btn-danger float-end">Kembali</a>
+            <a href="{{ route('dashboard.news.berita.index') }}" class="btn btn-danger float-end">Kembali</a>
         </form>
         </div>
     </div>

@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('siswas', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->string('name');
+            $table->enum('jk', ['laki-laki', 'perempuan']);
+            $table->date('tgl_lahir');
+            $table->string('tmpt_lahir');
+            $table->string('nama_ortu');
+            $table->date('tgl_masuk');
+            $table->string('alamat');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -22,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('siswas');
+        //
     }
 };

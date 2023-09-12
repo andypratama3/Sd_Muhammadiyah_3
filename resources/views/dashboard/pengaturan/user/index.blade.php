@@ -26,8 +26,8 @@
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
                   <td>
-                      <a href="{{ route('dashboard.pengaturan.user.show', $user->slug) }}" class="btn btn-dark"><i class="bi bi-eye">Detail</i></a>
-                      <a href="{{ route('dashboard.pengaturan.user.edit', $user->slug) }}" class="btn btn-primary">Update</a>
+                      <a href="{{ route('dashboard.pengaturan.user.show', $user->slug) }}" class="btn btn-dark btn-sm"><i class="bi bi-eye">Detail</i></a>
+                      <a href="{{ route('dashboard.pengaturan.user.edit', $user->slug) }}" class="btn btn-primary btn-sm">Update</a>
                       <a href="#" data-id="{{ $user->slug }}" class="btn btn-danger delete" title="Hapus">
                           <form action="{{ route('dashboard.pengaturan.user.destroy', $user->slug) }}" id="delete-{{ $user->slug }}" method="POST" enctype="multipart/form-data">
                               @csrf
