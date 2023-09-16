@@ -52,12 +52,7 @@
         Fitur
     </div>
     </li>
-    <li class="nav-item {{ Request::routeIs('dashboard.guru.*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('dashboard.guru.index') }}">
-            <i class="fas fa-user"></i>
-            <span>Siswa</span>
-        </a>
-    </li>
+    @include('layouts.dashboard.partial.kelas')
     <hr class="sidebar-divider">
     <div class="sidebar-heading">
         Akses

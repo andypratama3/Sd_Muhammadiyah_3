@@ -10,10 +10,6 @@ use App\Actions\Dashboard\Berita\DeleteBeritaAction;
 
 class BeritaController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->middleware('role:superadmin');
-    // }
     public function index()
     {
         $no = 0;
@@ -52,7 +48,6 @@ class BeritaController extends Controller
     {
 
         $ActionBerita->execute($beritaData);
-        // dd($updateBeritaAction);
         return redirect()->route('dashboard.news.berita.index')->with('success', 'Berita Berhasil Di Updtae');
     }
 

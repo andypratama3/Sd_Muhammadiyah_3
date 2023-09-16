@@ -17,6 +17,7 @@ use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\CategoryArtikel;
 use App\Http\Controllers\Dashboard\KaryawanController;
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\KelasController;
 use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
 use App\Http\Controllers\Dashboard\BeritaController as DashboardBeritaController;
 use App\Http\Controllers\Dashboard\ArtikelController as DashboardArtikelController;
@@ -51,9 +52,11 @@ Route::get('auth/google/callback', [GoogleController::class, 'callbackToGoogle']
 
 Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], function () {
     Route::get('/', DashboardController::class)->name('dashboard');
+    Route::get('/kelas', [KelasController::class, 'index']);
 
     Route::resource('fasilitas', DashboardFasilitasController::class, ['names' => 'dashboard.fasilitas']);
     Route::resource('guru', DashboardGuruController::class, ['names' => 'dashboard.guru']);
+
     Route::group(['prefix' => 'news'], function () {
         Route::resource('berita', DashboardBeritaController::class, ['names' => 'dashboard.news.berita']);
         Route::resource('artikel', DashboardArtikelController::class, ['names' => 'dashboard.news.artikel']);

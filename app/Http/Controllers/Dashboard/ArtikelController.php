@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\DataTransferObjects\ArtikelData;
 use App\Actions\Dashboard\Artikel\ArtikelAction;
+use App\Actions\Dashboard\Artikel\ArtikelDeleteAction;
 
 class ArtikelController extends Controller
 {
@@ -28,5 +29,9 @@ class ArtikelController extends Controller
         $artikelAction->execute($artikelData);
         return redirect()->route('dashboard.news.artikel.index')->with('success','Berhasil Menambahkan Artikel');
     }
-
+    public function destroy(Artikel $artikel,ArtikelDeleteAction $artikelActionDelete)
+    {
+        $artikelActionDelete->execute($artikel);
+    return redirect()->route('dashboard.news.artikel.index')->with('success','Berhasil Menghapus Artikel');
+    }
 }
