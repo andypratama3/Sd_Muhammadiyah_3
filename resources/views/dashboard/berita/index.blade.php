@@ -101,7 +101,7 @@
                                 <a href="{{ route('dashboard.news.berita.show', $berita->slug) }}" class="btn btn-dark btn-sm"><i
                                         class="fas fa-info-circle"></i></a>
                                 <a href="{{ route('dashboard.news.berita.edit', $berita->slug) }}" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
-                                <a href="#" data-id="{{ $berita->slug }}" class="btn btn-danger delete" title="Hapus">
+                                <a href="#" data-id="{{ $berita->slug }}" class="btn btn-danger btn-sm delete" title="Hapus">
                                     <form action="{{ route('dashboard.news.berita.destroy', $berita->slug) }}"
                                         id="delete-{{ $berita->slug }}" method="POST" enctype="multipart/form-data">
                                         @csrf
