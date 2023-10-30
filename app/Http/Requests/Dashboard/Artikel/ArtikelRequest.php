@@ -25,6 +25,10 @@ class ArtikelRequest extends FormRequest
     {
         return $this->artikel;
     }
+    public function getImage()
+    {
+        return $this->image;
+    }
 
     /**
      * Get the validation rules that apply to the request.

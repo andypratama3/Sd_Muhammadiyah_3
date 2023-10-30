@@ -14,7 +14,7 @@ class PermissionMiddleware
      */
     public function handle(Request $request, Closure $next, $permission)
     {
-        if ($request->user()->hasRole('superadmin')) {
+        if($request->user()->hasRole('superadmin')) {
             return $next($request);
         }
         if (! $request->user()->can($permission)) {

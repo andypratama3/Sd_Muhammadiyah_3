@@ -16,10 +16,17 @@ class Artikel extends Model
     protected $fillable = [
         'name',
         'artikel',
+        'image',
+        'jumlah_klik',
         'slug',
     ];
     public function categorys()
     {
         return $this->belongsToMany(Category::class, 'artikel_categorys');
+    }
+    public function incrementClickCount()
+    {
+        $this->jumlah_klik++;
+        $this->save();
     }
 }

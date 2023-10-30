@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('title', 'Tambah Artikel')
+@section('title', 'Edit Artikel')
 @section('content')
 @push('css')
 <link href="{{ asset('asset_dashboard/vendor/select2/dist/css/select2.css') }}" rel="stylesheet" type="text/css">
@@ -10,32 +10,31 @@
 <div class="card mb-4">
     @include('layouts.flashmessage')
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold text-primary">Tambah Artikel</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Edit Artikel {{ $artikel->name }}</h6>
     </div>
     <div class="card-body">
-        <form action="{{ route('dashboard.news.artikel.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('dashboard.news.artikel.update', $artikel->slug) }}" method="POST" enctype="multipart/form-data">
             @csrf
+            @method('PUT')
+            <input type="hidden" name="slug" value="{{ $artikel->slug }}">
             <div class="form-group">
                 <label for="name">Nama</label>
-                <input type="text" class="form-control" name="name" id="name" aria-describedby="emailHelp"
-                    placeholder="Masukan Nama">
+                <input type="text" class="form-control" name="name" value="{{ $artikel->name }}" id="name" aria-describedby="name" placeholder="Masukan Nama" >
             </div>
             <div class="form-group">
                 <label>Kategori Artikel</label>
                 <select class="form-control select2" multiple="multiple" name="categorys"
                     data-placeholder="Pilih Kategori artikel">
-                    <option disabled>Pilih Kategori</option>
+                    @foreach ($artikel->categorys as $category)
+                    <option selected value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
                     @foreach ($categorys as $category)
                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                     @endforeach
                 </select>
             </div>
             <div class="form-group">
-                <label for="">Foto</label>
-                <input type="file" class="form-control" name="image" value="{{ old('image') }}">
-            </div>
-            <div class="form-group">
-                <div id="editor"></div>
+                <div id="editor">{!! $artikel->artikel !!}</div>
                 <textarea name="artikel" id="content-editor" style="display: none;"></textarea>
             </div>
 
@@ -114,7 +113,6 @@
             $('#content-editor').text($('.ql-editor').html());
             // console.log($(".ql-editor").html());
         });
-
 
     });
 </script>

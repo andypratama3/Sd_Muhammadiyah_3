@@ -14,7 +14,7 @@ class ActionBerita
         $ext = $foto->getClientOriginalExtension();
 
         //upload foto to folder
-        $upload_path = 'storage/img/berita/';
+        $upload_path = public_path('storage/img/berita/');
         $picture_name = 'Berita_'.Str::slug($beritaData->judul).'_'.date('YmdHis').".$ext";
         $foto->move($upload_path, $picture_name);
 

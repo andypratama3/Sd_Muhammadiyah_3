@@ -60,9 +60,9 @@
                       <button type="submit" class="btn btn-primary btn-block">Login</button>
                     </div>
                     <hr>
-                    <a href="{{ route('login.google') }}" class="btn btn-google btn-block">
+                    {{-- <a href="{{ route('login.google') }}" class="btn btn-google btn-block">
                       <i class="fab fa-google fa-fw"></i> Masuk Dengan Google
-                    </a>
+                    </a> --}}
                   </form>
                   <hr>
                   <div class="text-center">

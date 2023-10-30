@@ -44,8 +44,7 @@ Route::get('guru', [GuruController::class, 'index'])->name('guru.index');
 //fasilitas
 Route::get('fasilitas', [FasilitasController::class, 'index'])->name('fasilitas.index');
 //artikel
-Route::get('artikel', [ArtikelController::class, 'index'])->name('artikel');
-
+Route::resource('artikel', ArtikelController::class, ['names' => 'artikel']);
 //login with google
 Route::get('auth/google', [GoogleController::class, 'signGoogle'])->name('login.google');
 Route::get('auth/google/callback', [GoogleController::class, 'callbackToGoogle'])->name('google.callback');
@@ -61,6 +60,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::resource('berita', DashboardBeritaController::class, ['names' => 'dashboard.news.berita']);
         Route::resource('artikel', DashboardArtikelController::class, ['names' => 'dashboard.news.artikel']);
         Route::resource('category', CategoryArtikel::class, ['names' => 'dashboard.news.category']);
+        Route::get('artikel/records', [DashboardArtikelController::class, 'dashboard.news.artikel.getArtikel']);
 
     });
     Route::group(['prefix' => 'pengaturan'], function () {

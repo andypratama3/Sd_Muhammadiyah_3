@@ -16,7 +16,7 @@
         Fitur
     </div>
     <li class="nav-item">
-        <a class="nav-link {{ Request::routeIs('dashboard.news.*') ? 'collapsed' : ''  }}" href="#"
+        <a class="nav-link {{ Request::routeIs('dashboard.news.*') ? '' : 'collapsed'  }}" href="#"
             data-toggle="collapse" data-target="#news" aria-expanded="false"
             aria-controls="news">
             <i class="fas fa-book"></i>

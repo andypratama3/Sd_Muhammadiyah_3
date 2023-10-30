@@ -17,39 +17,13 @@
                         <tr>
                             <th>No</th>
                             <th>Nama</th>
-                            <th>Artikel</th>
                             <th>Kategori</th>
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach ($artikels as $artikel)
-                        <tr>
-                            <td>{{ ++$no }}</td>
-                            <td>{{ $artikel->name }}</td>
-                            <td>{{ $artikel->artikel }}</td>
-                            <td>
-                                @foreach ($artikel->categorys as $category)
-                                {{ $category->name }}
-                                @endforeach
-                            </td>
-                            <td>
-                                <a href="{{ route('dashboard.news.artikel.show', $artikel->slug) }}" class="btn btn-dark btn-sm"><i
-                                        class="fas fa-info-circle"></i></a>
-                                <a href="#" data-id="{{ $artikel->slug }}" class="btn btn-danger btn-sm delete" title="Hapus">
-                                    <form action="{{ route('dashboard.news.artikel.destroy', $artikel->slug) }}"
-                                        id="delete-{{ $artikel->slug }}" method="POST" enctype="multipart/form-data">
-                                        @csrf
-                                        @method('delete')
-                                    </form>
-                                    <i class="fas fa-trash"></i>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
                 </table>
             </div>
-            <div class="card-footer"></div>
+
         </div>
     </div>
 </div>

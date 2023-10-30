@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('artikels', function (Blueprint $table){
             $table->uuid('id')->primary();
             $table->string('name');
+            $table->string('image');
             $table->string('artikel');
             $table->string('slug');
+            $table->unsignedInteger('jumlah_klik')->default(0);
             $table->timestamps();
         });
     }
