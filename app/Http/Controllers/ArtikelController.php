@@ -11,13 +11,10 @@ class ArtikelController extends Controller
     {
         $no = 0;
         $maxClicks = Artikel::max('jumlah_klik');
-
-        $artikels = Artikel::where('jumlah_klik', $maxClicks)->select('id','name','artikel','image','created_at','slug')->orderBy('created_at','asc')->get();
-        $artikel_not_trending = Artikel::select('id','name','artikel','image','created_at','slug')->orderBy('created_at','asc')->get();
-
-
-        $artikel_trending_list = Artikel::select('id','name','artikel','image','created_at','slug')->orderBy('jumlah_klik','asc')->get();
-        return view('artikel.index', compact('no','artikels', 'maxClicks','artikel_not_trending','artikel_trending_list'));
+        $artikels_trending = Artikel::where('jumlah_klik', $maxClicks)->select('id','name','artikel','image','created_at','slug')->get();
+        $artikel_not_trending = Artikel::select('id','name','artikel','image','created_at','slug')->get();
+        $artikel_trending_list = Artikel::select('id','name','artikel','image','created_at','slug')->orderBy('jumlah_klik','DESC')->get();
+        return view('artikel.index', compact('no','artikels_trending','artikel_not_trending','artikel_trending_list', 'maxClicks'));
     }
     public function show(Artikel $artikel)
     {

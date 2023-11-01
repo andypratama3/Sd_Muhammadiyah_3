@@ -34,6 +34,13 @@
                 </select>
             </div>
             <div class="form-group">
+                <label for="">Foto</label>
+                <input type="file" class="form-control" name="image" value="{{ $artikel->image }}" placeholder="{{ $artikel->image }}">
+            </div>
+            <div class="form-group text-center">
+                <img src="{{ asset('storage/img/artikel/'. $artikel->image) }}" alt="" srcset="" width="200px">
+            </div>
+            <div class="form-group">
                 <div id="editor">{!! $artikel->artikel !!}</div>
                 <textarea name="artikel" id="content-editor" style="display: none;"></textarea>
             </div>

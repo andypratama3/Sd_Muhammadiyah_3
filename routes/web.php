@@ -60,7 +60,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::resource('berita', DashboardBeritaController::class, ['names' => 'dashboard.news.berita']);
         Route::resource('artikel', DashboardArtikelController::class, ['names' => 'dashboard.news.artikel']);
         Route::resource('category', CategoryArtikel::class, ['names' => 'dashboard.news.category']);
-        Route::get('artikel/records', [DashboardArtikelController::class, 'dashboard.news.artikel.getArtikel']);
+        Route::get('artikels/records', [DashboardArtikelController::class, 'data_table'])->name('dashboard.news.artikel.getArtikel');
+        // Route::post('artikels/destory', [DashboardArtikelController::class, 'destroy'])->name('dashboard.news.artikel.artikelsdestory');
 
     });
     Route::group(['prefix' => 'pengaturan'], function () {

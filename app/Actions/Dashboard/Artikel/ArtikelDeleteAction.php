@@ -1,10 +1,13 @@
 <?php
 namespace App\Actions\Dashboard\Artikel;
-use App\Actions\Dashboard\Artikel\ArtikelDeleteAction;
+
+use App\Models\Artikel;
+
 class ArtikelDeleteAction
 {
-    public function execute($artikel)
+    public function execute($slug)
     {
+        $artikel = Artikel::where('slug', $slug)->firstOrFail();
         $artikel->delete();
     }
 }
