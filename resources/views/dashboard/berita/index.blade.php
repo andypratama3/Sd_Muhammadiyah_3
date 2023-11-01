@@ -138,7 +138,7 @@
         var modal = document.getElementById("myModal");
         //take foto from folder
         var foto = $(this).data('foto');
-        var imageUrl = '/storage/img/berita/' + foto;
+        var imageUrl = '/storage/app/public/img/berita/' + foto;
 
         modal.style.display = "block";
         $('#foto').attr('src', imageUrl);

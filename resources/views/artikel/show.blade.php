@@ -15,7 +15,7 @@
             <span class="mx-1">&bullet;</span> <span>{{ $artikel->created_at->formatLocalized('%A %d %B %Y') }}</span></div>
               <h1 class="mb-5">{{ $artikel->name }}</h1>
               <figure class="my-4">
-                <img src="{{ asset('storage/img/artikel/'. $artikel->image) }}" alt="" class="img-fluid">
+                <img src="{{ asset('storage/app/public/img/artikel/'. $artikel->image) }}" alt="" class="img-fluid">
               </figure>
               <p><span class="firstcharacter">{{ $firstCharacter }}</span>{{ $contentWithoutFirstCharacter }}</p>
             </div>

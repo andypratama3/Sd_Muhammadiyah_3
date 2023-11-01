@@ -9,15 +9,13 @@
         @foreach ($artikels_trending as $artikel)
         <div class="col-lg-4">
             <div class="post-entry-1 lg">
-                <a href="{{ route('artikel.show', $artikel->slug) }}"><img
-                        src="{{ asset('storage/img/artikel/'. $artikel->image) }}" alt="" class="img-fluid"></a>
+                <a href="{{ route('artikel.show', $artikel->slug) }}"><img src="{{ asset('storage/app/public/img/artikel/'. $artikel->image) }}" alt="" class="img-fluid"></a>
                 <div class="post-meta"><span class="date">Di Posting</span> <span class="mx-1">&bullet;</span>
                     <span>{{ $artikel->created_at->formatLocalized('%A %d %B %Y') }}</span></div>
                 <h2><a href="{{ route('artikel.show', $artikel->slug) }}">{{ $artikel->name }}</a></h2>
                 {!! substr(strip_tags($artikel->artikel), 0, strpos(strip_tags($artikel->artikel), '</p>') + 4) !!}
 
                 <div class="d-flex align-items-center author">
-                    <div class="photo"><img src="assets/img/person-1.jpg" alt="" class="img-fluid"></div>
                     <div class="name mt-4">
                         <h3 class="author">Kategori : </h3>
                         @foreach ($artikel->categorys as $category)
@@ -35,7 +33,7 @@
               <div class="col-lg-4 border-start custom-border">
                     <div class="post-entry-1">
                         <a href="{{ route('artikel.show', $artikel->slug) }}">
-                            <img src="{{ asset('storage/img/artikel/'. $artikel->image) }}" alt="" class="img-fluid">
+                            <img src="{{ asset('storage/app/public/img/artikel/'. $artikel->image) }}" alt="" class="img-fluid">
                         </a>
                         <div class="post-meta"><span class="date">Di Posting</span> <span class="mx-1">&bullet;</span>
                             <span class="mt-2">{{ $artikel->created_at->formatLocalized('%A %d %B %Y') }}</span></div>
