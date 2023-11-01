@@ -13,7 +13,14 @@
                 <div class="post-meta"><span class="date">Di Posting</span> <span class="mx-1">&bullet;</span>
                     <span>{{ $artikel->created_at->formatLocalized('%A %d %B %Y') }}</span></div>
                 <h2><a href="{{ route('artikel.show', $artikel->slug) }}">{{ $artikel->name }}</a></h2>
-                {!! substr(strip_tags($artikel->artikel), 0, strpos(strip_tags($artikel->artikel), '</p>') + 4) !!}
+                @php
+                    $content = strip_tags($artikel->artikel);
+                    $secondParagraph = substr($content, strpos($content, '</p>') + 4);
+                @endphp
+
+                <p>{!! $secondParagraph !!}</p>
+                {{-- <p>{!! substr(strip_tags($artikel->artikel), 0, strpos(strip_tags($artikel->artikel), '</p>') + 4) !!}</p> --}}
+
 
                 <div class="d-flex align-items-center author">
                     <div class="name mt-4">
