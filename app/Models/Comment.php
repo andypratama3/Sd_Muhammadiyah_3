@@ -23,6 +23,6 @@ class Comment extends Model
     }
     public function artikels()
     {
-        return $this->belongsToMany(Artikel::class, 'comments_users');
+        return $this->belongsToMany(Artikel::class, 'comments_artikels');
     }
 }

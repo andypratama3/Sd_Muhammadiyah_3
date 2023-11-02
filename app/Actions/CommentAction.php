@@ -20,7 +20,7 @@ class CommentAction
             $comment->artikels()->attach($commentData->artikel);
             $comment->users()->attach($commentData->user);
         }else{
-            $comment->artikel()->sync($commentData->artikel);
+            $comment->artikels()->sync($commentData->artikel);
             $comment->users()->sync($commentData->user);
         }
         return $comment;

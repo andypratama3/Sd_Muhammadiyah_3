@@ -11,8 +11,14 @@ class CommentArtikelController extends Controller
     public function store(CommentData $commentData, CommentAction $action)
     {
         $action->execute($commentData);
-        return redirect()->route('artikel.show')->with('success','Berhasil Menambahkan Komentar!');
+        if($action){
+            return response()->json(['success' => 'Berhasil Menambahkana Komentar']);
+        }else{
+            return response()->json(['gagal' => 'Berhasil Menambahkana Komentar']);
+        }
     }
+
+
     public function destroy()
     {
 

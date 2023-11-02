@@ -27,8 +27,9 @@ class Artikel extends Model
 
     public function comments()
     {
-        return $this->belongsToMany(Comment::class, 'comments_users');
+        return $this->belongsToMany(Comment::class, 'comments_artikels');
     }
+
 
     public function incrementClickCount()
     {

@@ -23,6 +23,8 @@ class CommentData extends Data
     {
         return self::from([
             $request->getComment(),
+            $request->getArtikel(),
+            $request->getUser(),
             $request->getSlug(),
         ]);
     }

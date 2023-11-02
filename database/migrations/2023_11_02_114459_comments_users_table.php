@@ -13,12 +13,11 @@ return new class extends Migration
     {
         Schema::create('comments_users', function (Blueprint $table) {
             // Foreign Key Constraints
-            $table->foreignUuid('artikel_id')->references('id')->on('artikels')->onDelete('cascade');
             $table->foreignUuid('comment_id')->references('id')->on('comments')->onDelete('cascade');
             $table->foreignUuid('user_id')->references('id')->on('users')->onDelete('cascade');
 
             // Setting The Primary Keys
-            $table->primary(['artikel_id', 'comment_id','user_id']);
+            $table->primary(['comment_id', 'user_id']);
 
         });
     }

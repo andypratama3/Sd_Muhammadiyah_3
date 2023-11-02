@@ -23,82 +23,42 @@
                 </div>
                 <!-- ======= Comments ======= -->
                 <div class="comments my-5">
-                    <h5 class="comment-title py-4">2 Comments</h5>
-                    <div class="comment d-flex mb-4">
-                        <div class="flex-shrink-0">
-                            <div class="avatar avatar-sm rounded-circle">
-                                <img class="avatar-img" src="assets/img/person-5.jpg" alt="" class="img-fluid">
-                            </div>
-                        </div>
-                        <div class="flex-grow-1 ms-2 ms-sm-3">
-                            <div class="comment-meta d-flex align-items-baseline">
-                                <h6 class="me-2">Jordan Singer</h6>
-                                <span class="text-muted">2d</span>
-                            </div>
-                            <div class="comment-body">
-                                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Non minima ipsum at amet
-                                doloremque qui magni, placeat deserunt pariatur itaque laudantium impedit aliquam
-                                eligendi repellendus excepturi quibusdam nobis esse accusantium.
-                            </div>
-
-                            <div class="comment-replies bg-light p-3 mt-3 rounded">
-                                <h6 class="comment-replies-title mb-4 text-muted text-uppercase">2 replies</h6>
-
-                                <div class="reply d-flex mb-4">
-                                    <div class="flex-shrink-0">
-                                        <div class="avatar avatar-sm rounded-circle">
-                                            <img class="avatar-img" src="assets/img/person-4.jpg" alt=""
-                                                class="img-fluid">
-                                        </div>
-                                    </div>
-                                    <div class="flex-grow-1 ms-2 ms-sm-3">
-                                        <div class="reply-meta d-flex align-items-baseline">
-                                            <h6 class="mb-0 me-2">Brandon Smith</h6>
-                                            <span class="text-muted">2d</span>
-                                        </div>
-                                        <div class="reply-body">
-                                            Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="reply d-flex">
-                                    <div class="flex-shrink-0">
-                                        <div class="avatar avatar-sm rounded-circle">
-                                            <img class="avatar-img" src="assets/img/person-3.jpg" alt=""
-                                                class="img-fluid">
-                                        </div>
-                                    </div>
-                                    <div class="flex-grow-1 ms-2 ms-sm-3">
-                                        <div class="reply-meta d-flex align-items-baseline">
-                                            <h6 class="mb-0 me-2">James Parsons</h6>
-                                            <span class="text-muted">1d</span>
-                                        </div>
-                                        <div class="reply-body">
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Distinctio dolore
-                                            sed eos sapiente, praesentium.
-                                        </div>
-                                    </div>
+                    <h5 class="comment-title py-4">{{ $count }} Comments</h5>
+                    @foreach ($comments as $comment)
+                    @if ($count >= 0)
+                        <div class="comment d-flex mb-4">
+                            @foreach ($comment->users as $user)
+                            <div class="flex-shrink-0">
+                                <div class="avatar avatar-sm rounded-circle">
+                                    <img class="avatar-img" src="{{ asset('storgae/app/public/img/user', $user->foto) }}" alt="" class="img-fluid">
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="comment d-flex">
-                        <div class="flex-shrink-0">
-                            <div class="avatar avatar-sm rounded-circle">
-                                <img class="avatar-img" src="assets/img/person-2.jpg" alt="" class="img-fluid">
+
+                            <div class="flex-grow-1 ms-2 ms-sm-3">
+                                <div class="comment-meta d-flex align-items-baseline">
+
+                                    <h6 class="me-2">{{ $user->name }}</h6>
+                                    <span class="text-muted">{{ $comment->created_at->diffForHumans() }}</span>
+
+                                </div>
+                                @endforeach
+                                <div class="comment-body">
+                                    {{ $comment->comment }}
+                                </div>
+                                <div class="comment-meta">
+                                    <div class="comment-meta">
+                                        @if (auth()->check() && $comment->user_id === auth()->user()->id)
+                                            <a href="#" class="btn btn-primary btn-sm">Edit Data</a>
+                                        @endif
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
-                        <div class="flex-shrink-1 ms-2 ms-sm-3">
-                            <div class="comment-meta d-flex">
-                                <h6 class="me-2">Santiago Roberts</h6>
-                                <span class="text-muted">4d</span>
-                            </div>
-                            <div class="comment-body">
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto laborum in corrupti
-                                dolorum, quas delectus nobis porro accusantium molestias sequi.
-                            </div>
-                        </div>
-                    </div>
+                        @else
+                        <h2 class="text-muted">Tidak Ada Komentar</h2>
+                    @endif
+                    @endforeach
                 </div><!-- End Comments -->
 
                 <!-- ======= Comments Form ======= -->
@@ -110,8 +70,8 @@
                         <div class="row">
                             <form action="{{ route('post.comment') }}" method="post" enctype="multipart/form-data">
                             @csrf
-                            <input type="hidden" name="artikel_id" value="{{ $artikel->id }}">
-                            <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+                            <input type="hidden" name="artikel" value="{{ $artikel->id }}">
+                            <input type="hidden" name="user" value="{{ Auth::id() }}">
                                 <div class="col-12 mb-3">
                                     <label for="comment-message">Tambahkan Komentar</label>
                                     <textarea class="form-control" name="comment" id="comment-message" placeholder="Masukan Teks"
@@ -136,7 +96,6 @@
             <div class="col-md-3">
                 <!-- ======= Sidebar ======= -->
                 <div class="aside-block">
-
                     <ul class="nav nav-pills custom-tab-nav mb-4" id="pills-tab" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="pills-popular-tab" data-bs-toggle="pill"
