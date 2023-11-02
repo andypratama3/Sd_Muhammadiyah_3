@@ -11,13 +11,14 @@ use App\Http\Controllers\Auth\GoogleController;
 
 //Dashboard Access
 use App\Http\Controllers\DetailBeritaController;
+use App\Http\Controllers\CommentArtikelController;
 use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\TaskController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\CategoryArtikel;
+use App\Http\Controllers\Dashboard\KelasController;
 use App\Http\Controllers\Dashboard\KaryawanController;
 use App\Http\Controllers\Dashboard\DashboardController;
-use App\Http\Controllers\Dashboard\KelasController;
 use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
 use App\Http\Controllers\Dashboard\BeritaController as DashboardBeritaController;
 use App\Http\Controllers\Dashboard\ArtikelController as DashboardArtikelController;
@@ -48,10 +49,14 @@ Route::resource('artikel', ArtikelController::class, ['names' => 'artikel']);
 //login with google
 Route::get('auth/google', [GoogleController::class, 'signGoogle'])->name('login.google');
 Route::get('auth/google/callback', [GoogleController::class, 'callbackToGoogle'])->name('google.callback');
+Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], function () {
+    Route::post('artikel/comment', [CommentArtikelController::class, 'store'])->name('post.comment');
+});
 
 Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], function () {
     Route::get('/', DashboardController::class)->name('dashboard');
     Route::get('/kelas', [KelasController::class, 'index']);
+    //CommentArtikel
 
     Route::resource('fasilitas', DashboardFasilitasController::class, ['names' => 'dashboard.fasilitas']);
     Route::resource('guru', DashboardGuruController::class, ['names' => 'dashboard.guru']);

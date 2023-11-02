@@ -70,4 +70,8 @@ class User extends Authenticatable
     ];
     // protected $dates = ['deleted_at'];
 
+    public function comments()
+    {
+        return $this->belongsToMany(Comment::class, 'comments_users');
+    }
 }
