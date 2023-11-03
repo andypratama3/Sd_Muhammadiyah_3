@@ -5,7 +5,7 @@
   <script src="{{asset('assets/vendor/aos/aos.js')}}"></script>
   <script src="{{asset('assets/vendor/php-email-form/validate.js')}}"></script>
   <script src="{{ asset('asset_dashboard/vendor/jquery/jquery.min.js') }}"></script>
-  @stack('js')
+  @stack('js_user')
   <!-- Template Main JS File -->
   <script src="{{asset('assets/js/main.js')}}"></script>
   <script>

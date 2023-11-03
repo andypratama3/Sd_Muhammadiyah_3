@@ -47,9 +47,14 @@
                                 </div>
                                 <div class="comment-meta">
                                     <div class="comment-meta">
-                                        @if (auth()->check() && $comment->user_id === auth()->user()->id)
-                                            <a href="#" class="btn btn-primary btn-sm">Edit Data</a>
+                                        @foreach ($comment->users as $item)
+                                        @if ($item->id === Auth::user()->id)
+                                        <a href="#" class="btn btn-primary btn-sm">Edit Data</a>
+                                        @else
+                                                {{-- <label for=""><i class="fa fas-love"></i></label> --}}
+                                                <h2>Like</h2>
                                         @endif
+                                        @endforeach
                                     </div>
                                 </div>
 
@@ -67,15 +72,14 @@
                     <div class="col-lg-12">
                         <h5 class="comment-title">Komentar</h5>
                         @include('layouts.flashmessage')
-                        <div class="row">
-                            <form action="{{ route('post.comment') }}" method="post" enctype="multipart/form-data">
+                        <div class="row" id="reset_komen">
+                            <form id="comment-form" action="{{ route('post.comment') }}" method="post" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="artikel" value="{{ $artikel->id }}">
                             <input type="hidden" name="user" value="{{ Auth::id() }}">
                                 <div class="col-12 mb-3">
                                     <label for="comment-message">Tambahkan Komentar</label>
-                                    <textarea class="form-control" name="comment" id="comment-message" placeholder="Masukan Teks"
-                                        cols="30" rows="10"></textarea>
+                                    <textarea class="form-control" name="comment" id="comment-message" placeholder="Masukan Teks" cols="30" rows="10"></textarea>
                                 </div>
                                 @auth
                                 <div class="col-12">
@@ -91,7 +95,6 @@
                         </div>
                     </div>
                 </div><!-- End Comments Form -->
-
             </div>
             <div class="col-md-3">
                 <!-- ======= Sidebar ======= -->
@@ -169,56 +172,19 @@
                         </div> <!-- End Popular -->
 
                         <!-- Trending -->
-                        <div class="tab-pane fade" id="pills-trending" role="tabpanel"
-                            aria-labelledby="pills-trending-tab">
+                        <div class="tab-pane fade" id="pills-trending" role="tabpanel" aria-labelledby="pills-trending-tab">
+                            @foreach ($artikel_trending_list as $trending)
                             <div class="post-entry-1 border-bottom">
-                                <div class="post-meta"><span class="date">Lifestyle</span> <span
-                                        class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                                <h2 class="mb-2"><a href="#">17 Pictures of Medium Length Hair in Layers That Will
-                                        Inspire Your New Haircut</a></h2>
-                                <span class="author mb-3 d-block">Jenny Wilson</span>
+                                <div class="post-meta">
+                                    <span class="date"></span>
+                                <span class="mx-1">&bullet;</span> <span>{{ $trending->created_at->formatLocalized('%A %d %B %Y') }}</span></div>
+                                <h2 class="mb-2"><a href="{{ route('artikel.show', $trending->slug) }}">{{ $trending->name }}</a></h2>
+                                @foreach ($trending->categorys as $category)
+                                <span class="author mb-3 d-block">{{ $category->name }}</span>
+                                @endforeach
                             </div>
-
-                            <div class="post-entry-1 border-bottom">
-                                <div class="post-meta"><span class="date">Culture</span> <span
-                                        class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                                <h2 class="mb-2"><a href="#">9 Half-up/half-down Hairstyles for Long and Medium Hair</a>
-                                </h2>
-                                <span class="author mb-3 d-block">Jenny Wilson</span>
-                            </div>
-
-                            <div class="post-entry-1 border-bottom">
-                                <div class="post-meta"><span class="date">Lifestyle</span> <span
-                                        class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                                <h2 class="mb-2"><a href="#">Life Insurance And Pregnancy: A Working Mom’s Guide</a>
-                                </h2>
-                                <span class="author mb-3 d-block">Jenny Wilson</span>
-                            </div>
-
-                            <div class="post-entry-1 border-bottom">
-                                <div class="post-meta"><span class="date">Sport</span> <span
-                                        class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                                <h2 class="mb-2"><a href="#">How to Avoid Distraction and Stay Focused During Video
-                                        Calls?</a></h2>
-                                <span class="author mb-3 d-block">Jenny Wilson</span>
-                            </div>
-                            <div class="post-entry-1 border-bottom">
-                                <div class="post-meta"><span class="date">Business</span> <span
-                                        class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                                <h2 class="mb-2"><a href="#">The Best Homemade Masks for Face (keep the Pimples
-                                        Away)</a></h2>
-                                <span class="author mb-3 d-block">Jenny Wilson</span>
-                            </div>
-
-                            <div class="post-entry-1 border-bottom">
-                                <div class="post-meta"><span class="date">Lifestyle</span> <span
-                                        class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                                <h2 class="mb-2"><a href="#">10 Life-Changing Hacks Every Working Mom Should Know</a>
-                                </h2>
-                                <span class="author mb-3 d-block">Jenny Wilson</span>
-                            </div>
-                        </div> <!-- End Trending -->
-
+                            @endforeach
+                        </div>
                         <!-- Latest -->
                         <div class="tab-pane fade" id="pills-latest" role="tabpanel" aria-labelledby="pills-latest-tab">
                             <div class="post-entry-1 border-bottom">
@@ -316,5 +282,31 @@
         </div>
     </div>
 </section>
+@push('js_user')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.3.1/js.cookie.min.js"></script>
+<script src="{{ asset('asset_dashboard/js/SwetAlert/index.js') }}"></script>
+<script>
+    $(document).ready(function() {
+        $('#comment-form').submit(function(e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: $(this).attr('action'),
+            data: $(this).serialize(),
+            success: function(response) {
+                swal({
+                    title: response.success,
+                    icon: 'success',
+                });
+                $('.comments').load(location.href + " .comments");
+                $('#reset_komen').load(location.href + " #reset_komen");
+            },
+            error: function(error) {
 
+            }
+        });
+    });
+});
+</script>
+@endpush
 @endsection

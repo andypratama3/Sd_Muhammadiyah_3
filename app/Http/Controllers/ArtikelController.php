@@ -14,9 +14,7 @@ class ArtikelController extends Controller
         $maxClicks = Artikel::max('jumlah_klik');
         $artikels_trending = Artikel::where('jumlah_klik', $maxClicks)->select('id','name','artikel','image','created_at','slug')->get();
         $artikel_not_trending = Artikel::select('id','name','artikel','image','created_at','slug')->get();
-        $artikel_trending_list = Artikel::select('id','name','artikel','image','created_at','slug')->orderBy('jumlah_klik','DESC')->get();
-        //comments
-
+        $artikel_trending_list = Artikel::select('id','name','artikel','image','created_at','slug')->orderBy('jumlah_klik','DESC')->take(15)->get();
         return view('artikel.index', compact('no','artikels_trending','artikel_not_trending','artikel_trending_list', 'maxClicks'));
     }
     public function show(Artikel $artikel)
@@ -26,6 +24,7 @@ class ArtikelController extends Controller
         $contentWithoutFirstCharacter = substr(strip_tags($artikel->artikel), 1);
         $comments = $artikel->comments()->orderBy('created_at', 'desc')->get();
         $count = $comments->count();
-        return view('artikel.show', compact('artikel','firstCharacter','contentWithoutFirstCharacter','comments','count'));
-    }
+        $artikel_trending_list = Artikel::select('id','name','artikel','image','created_at','slug')->orderBy('jumlah_klik','DESC')->take(15)->get();
+        return view('artikel.show', compact('artikel','firstCharacter','contentWithoutFirstCharacter','comments','count','artikel_trending_list'));
+    }   
 }

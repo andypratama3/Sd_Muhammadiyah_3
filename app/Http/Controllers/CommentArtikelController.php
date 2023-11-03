@@ -8,16 +8,16 @@ use App\DataTransferObjects\CommentData;
 
 class CommentArtikelController extends Controller
 {
+
     public function store(CommentData $commentData, CommentAction $action)
     {
-        $action->execute($commentData);
-        if($action){
+        $result = $action->execute($commentData);
+        if($result){
             return response()->json(['success' => 'Berhasil Menambahkana Komentar']);
         }else{
-            return response()->json(['gagal' => 'Berhasil Menambahkana Komentar']);
+            return response()->json(['failure' => 'Gagal Menambahkana Komentar']);
         }
     }
-
 
     public function destroy()
     {
