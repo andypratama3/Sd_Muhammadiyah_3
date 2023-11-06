@@ -4,7 +4,8 @@
 <section class="single-post-content">
     <div class="container">
         <div class="row">
-            <div class="col-md-9 post-content" data-aos="fade-up">
+            {{-- data-aos="fade-up" --}}
+            <div class="col-md-9 post-content" >
 
                 <div class="single-post">
                     <div class="post-meta"><span class="date">
@@ -22,7 +23,7 @@
                     <p><span class="firstcharacter">{{ $firstCharacter }}</span>{{ $contentWithoutFirstCharacter }}</p>
                 </div>
                 <!-- ======= Comments ======= -->
-                <div class="comments my-5">
+                <div class="comments my-5" id="reset_form">
                     <h5 class="comment-title py-4">{{ $count }} Comments</h5>
                     @foreach ($comments as $comment)
                     @if ($count >= 0)
@@ -30,7 +31,7 @@
                             @foreach ($comment->users as $user)
                             <div class="flex-shrink-0">
                                 <div class="avatar avatar-sm rounded-circle">
-                                    <img class="avatar-img" src="{{ asset('storgae/app/public/img/user', $user->foto) }}" alt="" class="img-fluid">
+                                    <img class="avatar-img" src="{{ asset('storgae/app/public/img/user', $user->avatar) }}" alt="" class="img-fluid">
                                 </div>
                             </div>
 
@@ -39,25 +40,46 @@
 
                                     <h6 class="me-2">{{ $user->name }}</h6>
                                     <span class="text-muted">{{ $comment->created_at->diffForHumans() }}</span>
-
                                 </div>
                                 @endforeach
-                                <div class="comment-body">
+                                <div class="form-group">
+                                <div class="comment-body" id="comment-body">
                                     {{ $comment->comment }}
+                                    <form id="comment-form-update" action="{{ route('comment.update', $comment->id) }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                    <input type="hidden" name="slug" value="{{ $comment->slug }}">
+                                    <input type="hidden" name="artikel" value="{{ $artikel->id }}" id="artikel">
+                                    <input type="hidden" name="user" value="{{ Auth::id() }}" id="user">
+                                    <div class="col-12 mb-3" id="comment-form-{{ $comment->id }}" style="display: none;">
+                                        <label for="comment-message">Edit Komentar</label>
+                                        <textarea class="form-control" name="comment"  id="comment-message-show-{{ $comment->id }}" placeholder="Masukan Teks" cols="30" rows="10">{{ $comment->comment }}</textarea>
+                                        <div class="col-12 mt-2">
+                                            <input type="submit" class="btn btn-primary" value="Posting">
+                                        </div>
+                                    </div>
+                                </form>
                                 </div>
-                                <div class="comment-meta">
                                     <div class="comment-meta">
                                         @foreach ($comment->users as $item)
+                                        @auth
                                         @if ($item->id === Auth::user()->id)
-                                        <a href="#" class="btn btn-primary btn-sm">Edit Data</a>
+                                        <div class="form-group float-end">
+                                            <button class="btn btn-primary btn-sm commentar-edit" data-id="<?=$comment->id ?>" data-comment="<?=$comment->comment ?>" ><i class="bi bi-pen"></i></button>
+                                            <button class="btn btn-danger btn-sm commentar-delete"  data-id="<?=$comment->slug ?>"><i class="bi bi-trash"></i>
+
+                                            </button>
+                                        </div>
                                         @else
-                                                {{-- <label for=""><i class="fa fas-love"></i></label> --}}
-                                                <h2>Like</h2>
+                                        @endauth
+                                        <div class="form-group">
+                                            <i class="bi bi-heart-fill" id="like" style="color: #c2aeae; margin-right: 4px"></i>
+                                            <span>100</span>
+                                        </div>
                                         @endif
                                         @endforeach
                                     </div>
-                                </div>
-
+                            </div>
                             </div>
                         </div>
                         @else
@@ -73,15 +95,15 @@
                         <h5 class="comment-title">Komentar</h5>
                         @include('layouts.flashmessage')
                         <div class="row" id="reset_komen">
-                            <form id="comment-form" action="{{ route('post.comment') }}" method="post" enctype="multipart/form-data">
+                            <form id="comment-form" action="{{ route('comment.store') }}" method="post" enctype="multipart/form-data">
                             @csrf
-                            <input type="hidden" name="artikel" value="{{ $artikel->id }}">
-                            <input type="hidden" name="user" value="{{ Auth::id() }}">
-                                <div class="col-12 mb-3">
+                            <input type="hidden" name="artikel" value="{{ $artikel->id }}" id="artikel">
+                            <input type="hidden" name="user" value="{{ Auth::id() }}" id="user">
+                                @auth
+                                <div class="col-12 mb-3" id="comment-form">
                                     <label for="comment-message">Tambahkan Komentar</label>
                                     <textarea class="form-control" name="comment" id="comment-message" placeholder="Masukan Teks" cols="30" rows="10"></textarea>
                                 </div>
-                                @auth
                                 <div class="col-12">
                                     <input type="submit" class="btn btn-primary" value="Posting">
                                 </div>
@@ -283,10 +305,86 @@
     </div>
 </section>
 @push('js_user')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.3.1/js.cookie.min.js"></script>
 <script src="{{ asset('asset_dashboard/js/SwetAlert/index.js') }}"></script>
 <script>
     $(document).ready(function() {
+    // $.ajaxSetup({
+    //     headers: {
+    //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //     }
+    // });
+        $('.commentar-edit').on('click', function (e) {
+            e.preventDefault();
+        var id = $(this).data('id');
+        var commentForm = $('#comment-form-' + id);
+        commentForm.toggle();
+
+        // var commentText = $('#comment-message-show-' + id).text().trim();
+        $('#comment-message-show-' + id).on('input', function() {
+            var updatedComment = $(this).val();
+                var updatedComment = $('#comment-message-show-' + id).val();
+            });
+        });
+        $('.commentar-delete').on('click', function () {
+        var slug = $(this).data('id');
+        var url = '{{ route("comment.destroy", ":slug") }}'; // Use the correct route name "destroy"
+        url = url.replace(':slug', slug);
+        swal({
+            title: 'Anda yakin?',
+            text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                // Send a DELETE request
+                $.ajax({
+                    url: url,
+                    type: 'DELETE', // Use the DELETE method
+                    success: function (data) {
+                        $('#reset_komen').load(location.href + " #reset_komen");
+                        $('.comments').load(location.href + " .comments");
+                        $('.comment-meta').load(location.href + " .comment-meta");
+                    },
+                    error: function(data){
+                        
+                    }
+                });
+            } else {
+                // If the user cancels the deletion, do nothing
+            }
+        });
+    });
+        $('#like').click(function (e) {
+            var artikel_id = $('#artikel').val();
+
+            var user_id = $('#user').val();
+            alert(user_id);
+
+        //     $.ajax({
+        //     type: 'POST',
+        //     url: $(this).attr('action'),
+        //     data: $(this).serialize(),
+        //     success: function(response) {
+        //         swal({
+        //             title: response.success,
+        //             icon: 'success',
+        //         });
+        //         $('.comments').load(location.href + " .comments");
+        //         $('#reset_komen').load(location.href + " #reset_komen");
+        //     },
+        //     error: function(error) {
+
+        //     }
+        // });
+
+        });
+
         $('#comment-form').submit(function(e) {
         e.preventDefault();
         $.ajax({
@@ -294,12 +392,33 @@
             url: $(this).attr('action'),
             data: $(this).serialize(),
             success: function(response) {
-                swal({
-                    title: response.success,
-                    icon: 'success',
-                });
-                $('.comments').load(location.href + " .comments");
+                // swal({
+                //     title: response.success,
+                //     icon: 'success',
+                // });
                 $('#reset_komen').load(location.href + " #reset_komen");
+                $('.comments').load(location.href + " .comments");
+                $('.comment-meta').load(location.href + " .comment-meta");
+            },
+            error: function(error) {
+
+            }
+        });
+    });
+    $('#comment-form-update').submit(function(e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: $(this).attr('action'),
+            data: $(this).serialize(),
+            success: function(response) {
+                // swal({
+                //     title: response.success,
+                //     icon: 'success',
+                // });
+                $('#reset_komen').load(location.href + " #reset_komen");
+                $('.comments').load(location.href + " .comments");
+                $('.comment-meta').load(location.href + " .comment-meta");
             },
             error: function(error) {
 

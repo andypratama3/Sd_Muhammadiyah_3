@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
 use App\Http\Traits\UsesUuid;
 use App\Http\Traits\NameHasSlug;
 use Illuminate\Database\Eloquent\Model;
@@ -11,16 +12,23 @@ class Comment extends Model
 {
     use HasFactory;
     use UsesUuid;
-    use NameHasSlug;
+
     protected $table = 'comments';
     protected $fillable = [
         'comment',
         'slug',
     ];
+    public function setSlugAttribute($value)
+    {
+        $this->attributes['slug'] = Str::slug($value) . "-" . Str::random(4);
+    }
+
+    //users comment artikel
     public function users()
     {
         return $this->belongsToMany(User::class, 'comments_users');
     }
+    //comment artikel
     public function artikels()
     {
         return $this->belongsToMany(Artikel::class, 'comments_artikels');

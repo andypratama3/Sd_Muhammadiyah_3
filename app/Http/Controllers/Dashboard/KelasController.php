@@ -10,7 +10,9 @@ class KelasController extends Controller
 {
     public function index()
     {
-        $kelass = Kelas::select(['id','name','slug'])->get();
-        return view('layouts.dashboard.partial.kelas',compact('kelass'));
+        $no = 0;
+        $kelass = Kelas::select(['name','slug'])->get();
+
+        return view('dashboard.data.kelas.index', compact('no','kelass'));
     }
 }

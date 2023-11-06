@@ -20,6 +20,7 @@ class Artikel extends Model
         'jumlah_klik',
         'slug',
     ];
+    // category for articles
     public function categorys()
     {
         return $this->belongsToMany(Category::class, 'artikel_categorys');
@@ -29,8 +30,11 @@ class Artikel extends Model
     {
         return $this->belongsToMany(Comment::class, 'comments_artikels');
     }
-
-
+    //like for artikel
+    public function like(){
+        return $this->belongsToMany(User::class, 'artikel_likes');
+    }
+    //count when article click
     public function incrementClickCount()
     {
         $this->jumlah_klik++;

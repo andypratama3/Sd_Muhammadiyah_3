@@ -5,10 +5,10 @@
     @include('layouts.user.head')
 </head>
 
-<body>
-    {{-- <div class="loading-screen">
+<body class="body">
+    <div class="loading-screen">
         <img class="loading-image" src="{{asset('assets/img/SD3_logo.png')}}" alt="Loading">
-    </div> --}}
+    </div>
 
     @include('layouts.user.header')
     <main id="main">

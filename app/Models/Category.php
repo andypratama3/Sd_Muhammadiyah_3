@@ -18,7 +18,7 @@ class Category extends Model
         'name',
         'slug',
     ];
-
+    //category artikel
     public function artikels(): BelongsToMany
     {
         return $this->belongsToMany(Artikel::class, 'artikel_categorys');

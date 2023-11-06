@@ -22,9 +22,10 @@ class ArtikelController extends Controller
         $artikel->incrementClickCount();
         $firstCharacter = substr(strip_tags($artikel->artikel), 0, 1);
         $contentWithoutFirstCharacter = substr(strip_tags($artikel->artikel), 1);
-        $comments = $artikel->comments()->orderBy('created_at', 'desc')->get();
+        $comments = $artikel->comments()->orderBy('created_at', 'DESC')->get();
         $count = $comments->count();
         $artikel_trending_list = Artikel::select('id','name','artikel','image','created_at','slug')->orderBy('jumlah_klik','DESC')->take(15)->get();
         return view('artikel.show', compact('artikel','firstCharacter','contentWithoutFirstCharacter','comments','count','artikel_trending_list'));
-    }   
+    }
+    
 }

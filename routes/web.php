@@ -49,17 +49,16 @@ Route::resource('artikel', ArtikelController::class, ['names' => 'artikel']);
 //login with google
 Route::get('auth/google', [GoogleController::class, 'signGoogle'])->name('login.google');
 Route::get('auth/google/callback', [GoogleController::class, 'callbackToGoogle'])->name('google.callback');
-Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], function () {
-    Route::post('artikel/comment', [CommentArtikelController::class, 'store'])->name('post.comment');
+
+//users after login
+Route::group(['prefix' => 'artikel', 'middleware' => ['auth', 'verified']], function () {
+    //CommentArtikel
+    Route::resource('comment', CommentArtikelController::class, ['names' => 'comment']);
+
 });
 
 Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], function () {
     Route::get('/', DashboardController::class)->name('dashboard');
-    Route::get('/kelas', [KelasController::class, 'index']);
-    //CommentArtikel
-
-    Route::resource('fasilitas', DashboardFasilitasController::class, ['names' => 'dashboard.fasilitas']);
-    Route::resource('guru', DashboardGuruController::class, ['names' => 'dashboard.guru']);
 
     Route::group(['prefix' => 'news'], function () {
         Route::resource('berita', DashboardBeritaController::class, ['names' => 'dashboard.news.berita']);
@@ -69,6 +68,14 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         // Route::post('artikels/destory', [DashboardArtikelController::class, 'destroy'])->name('dashboard.news.artikel.artikelsdestory');
 
     });
+
+    Route::resource('fasilitas', DashboardFasilitasController::class, ['names' => 'dashboard.fasilitas']);
+    Route::resource('guru', DashboardGuruController::class, ['names' => 'dashboard.guru']);
+
+    Route::group(['prefix' => 'datamaster'], function () {
+        Route::resource('kelas', KelasController::class, ['names' => 'dashboard.datamaster.kelas']);
+    });
+
     Route::group(['prefix' => 'pengaturan'], function () {
         Route::resource('task', TaskController::class, ['names' => 'dashboard.pengaturan.task']);
         Route::resource('role', RoleController::class, ['names' => 'dashboard.pengaturan.role']);

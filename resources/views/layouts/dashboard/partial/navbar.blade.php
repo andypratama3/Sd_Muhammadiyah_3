@@ -51,8 +51,26 @@
     <div class="sidebar-heading">
         Fitur
     </div>
+    <li class="nav-item">
+        <a class="nav-link {{ Request::routeIs('dashboard.news.*') ? '' : 'collapsed'  }}" href="#"
+            data-toggle="collapse" data-target="#datamaster" aria-expanded="false"
+            aria-controls="datamaster">
+            <i class="fas fa-gear"></i>
+            <span>Data Master</span>
+        </a>
+        <div id="datamaster" class="collapse {{ Request::routeIs('dashboard.datamaster.*') ? 'show' : ''  }} }}"
+            aria-labelledby="headingBootstrap" data-parent="#accordionSidebar" style="">
+            <div class="py-2 collapse-inner rounded">
+                <a class="collapse-item {{ Request::routeIs('dashboard.datamaster.kelas.*') ? 'active' : ''  }}"
+                href="{{ route('dashboard.datamaster.kelas.index') }}">Kelas</a>
+                {{-- <a class="collapse-item {{ Request::routeIs('dashboard.news.category.*') ? 'active' : ''  }}"
+                href="{{ route('dashboard.news.category.index') }}">Kategori Artikel</a>
+                <a class="collapse-item {{ Request::routeIs('dashboard.news.artikel.*') ? 'active' : ''  }}"
+                href="{{ route('dashboard.news.artikel.index') }}">Artikel</a> --}}
+            </div>
+        </div>
     </li>
-    @include('layouts.dashboard.partial.kelas')
+
     <hr class="sidebar-divider">
     <div class="sidebar-heading">
         Akses
