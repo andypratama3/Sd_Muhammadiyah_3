@@ -1,12 +1,21 @@
 @extends('layouts.user')
 @section('title','Artikel')
+@push('css_user')
+    <style>
+        .like{
+            color: #da0000;
+        }
+        .unlike{
+            color: #c2aeae;
+        }
+    </style>
+@endpush
 @section('content')
 <section class="single-post-content">
     <div class="container">
         <div class="row">
             {{-- data-aos="fade-up" --}}
             <div class="col-md-9 post-content" >
-
                 <div class="single-post">
                     <div class="post-meta"><span class="date">
                             @foreach ($artikel->categorys as $category)
@@ -34,15 +43,13 @@
                                     <img class="avatar-img" src="{{ asset('storgae/app/public/img/user', $user->avatar) }}" alt="" class="img-fluid">
                                 </div>
                             </div>
-
                             <div class="flex-grow-1 ms-2 ms-sm-3">
                                 <div class="comment-meta d-flex align-items-baseline">
-
                                     <h6 class="me-2">{{ $user->name }}</h6>
                                     <span class="text-muted">{{ $comment->created_at->diffForHumans() }}</span>
                                 </div>
                                 @endforeach
-                                <div class="form-group">
+                            <div class="form-group comments-group">
                                 <div class="comment-body" id="comment-body">
                                     {{ $comment->comment }}
                                     <form id="comment-form-update" action="{{ route('comment.update', $comment->id) }}" method="POST">
@@ -64,18 +71,22 @@
                                         @foreach ($comment->users as $item)
                                         @auth
                                         @if ($item->id === Auth::user()->id)
-                                        <div class="form-group float-end">
+                                        <div class="form-group float-end" id="button_comment">
                                             <button class="btn btn-primary btn-sm commentar-edit" data-id="<?=$comment->id ?>" data-comment="<?=$comment->comment ?>" ><i class="bi bi-pen"></i></button>
-                                            <button class="btn btn-danger btn-sm commentar-delete"  data-id="<?=$comment->slug ?>"><i class="bi bi-trash"></i>
-
-                                            </button>
+                                            <button class="btn btn-danger btn-sm commentar-delete"  data-id="<?=$comment->slug ?>"><i class="bi bi-trash"></i></button>
                                         </div>
                                         @else
                                         @endauth
-                                        <div class="form-group">
-                                            <i class="bi bi-heart-fill" id="like" style="color: #c2aeae; margin-right: 4px"></i>
-                                            <span>100</span>
-                                        </div>
+                                        {{-- @foreach ($comment->like as $like) --}}
+                                            <div class="form-group">
+                                                {{-- @if () --}}
+                                                <i class="bi bi-heart-fill like" id="like" data-id="<?=$comment->id ?>"></i>
+                                                {{-- @else --}}
+                                                {{-- <i class="bi bi-heart-fill unlike" id="unlike" data-id="<?=$comment->id ?>"></i> --}}
+                                                {{-- @endif --}}
+                                                <span>100</span>
+                                            </div>
+                                        {{-- @endforeach --}}
                                         @endif
                                         @endforeach
                                     </div>
@@ -90,7 +101,6 @@
 
                 <!-- ======= Comments Form ======= -->
                 <div class="row justify-content-center mt-5">
-
                     <div class="col-lg-12">
                         <h5 class="comment-title">Komentar</h5>
                         @include('layouts.flashmessage')
@@ -118,6 +128,7 @@
                     </div>
                 </div><!-- End Comments Form -->
             </div>
+
             <div class="col-md-3">
                 <!-- ======= Sidebar ======= -->
                 <div class="aside-block">
@@ -308,26 +319,20 @@
 <script src="{{ asset('asset_dashboard/js/SwetAlert/index.js') }}"></script>
 <script>
     $(document).ready(function() {
-    // $.ajaxSetup({
-    //     headers: {
-    //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //     }
-    // });
-        $('.commentar-edit').on('click', function (e) {
+        $('.row').on('click','.commentar-edit', function (e) {
             e.preventDefault();
         var id = $(this).data('id');
         var commentForm = $('#comment-form-' + id);
         commentForm.toggle();
 
-        // var commentText = $('#comment-message-show-' + id).text().trim();
         $('#comment-message-show-' + id).on('input', function() {
-            var updatedComment = $(this).val();
+                var updatedComment = $(this).val();
                 var updatedComment = $('#comment-message-show-' + id).val();
             });
         });
-        $('.commentar-delete').on('click', function () {
+        $('.row').on('click', '.commentar-delete',function () {
         var slug = $(this).data('id');
-        var url = '{{ route("comment.destroy", ":slug") }}'; // Use the correct route name "destroy"
+        var url = '{{ route("comment.destroy", ":slug") }}';
         url = url.replace(':slug', slug);
         swal({
             title: 'Anda yakin?',
@@ -347,12 +352,11 @@
                     url: url,
                     type: 'DELETE', // Use the DELETE method
                     success: function (data) {
-                        $('#reset_komen').load(location.href + " #reset_komen");
                         $('.comments').load(location.href + " .comments");
                         $('.comment-meta').load(location.href + " .comment-meta");
                     },
                     error: function(data){
-                        
+
                     }
                 });
             } else {
@@ -360,64 +364,40 @@
             }
         });
     });
-        $('#like').click(function (e) {
-            var artikel_id = $('#artikel').val();
+    $('.row').on('click', '#like', function (e) {
+        var artikel_id = $('#artikel').val();
+        var comment_id = $(this).data('id');;
+        var user_id = $('#user').val();
 
-            var user_id = $('#user').val();
-            alert(user_id);
 
-        //     $.ajax({
-        //     type: 'POST',
-        //     url: $(this).attr('action'),
-        //     data: $(this).serialize(),
-        //     success: function(response) {
-        //         swal({
-        //             title: response.success,
-        //             icon: 'success',
-        //         });
-        //         $('.comments').load(location.href + " .comments");
-        //         $('#reset_komen').load(location.href + " #reset_komen");
-        //     },
-        //     error: function(error) {
+    });
 
-        //     }
-        // });
+    $('.row').on('submit','#comment-form',function(e) {
+    e.preventDefault();
+    $.ajax({
+        type: 'POST',
+        url: $(this).attr('action'),
+        data: $(this).serialize(),
+        success: function(response) {
+            $('.comments').load(location.href + " .comments");
+            $('#reset_komen').load(location.href + " #reset_komen");
+            $('.comment-meta').load(location.href + " .comment-meta");
 
-        });
-
-        $('#comment-form').submit(function(e) {
-        e.preventDefault();
-        $.ajax({
-            type: 'POST',
-            url: $(this).attr('action'),
-            data: $(this).serialize(),
-            success: function(response) {
-                // swal({
-                //     title: response.success,
-                //     icon: 'success',
-                // });
-                $('#reset_komen').load(location.href + " #reset_komen");
-                $('.comments').load(location.href + " .comments");
-                $('.comment-meta').load(location.href + " .comment-meta");
-            },
-            error: function(error) {
-
-            }
+        },
+        error: function(error) {
+        }
         });
     });
-    $('#comment-form-update').submit(function(e) {
+
+    $('.row').on('submit','#comment-form-update',function(e) {
         e.preventDefault();
         $.ajax({
             type: 'POST',
             url: $(this).attr('action'),
             data: $(this).serialize(),
             success: function(response) {
-                // swal({
-                //     title: response.success,
-                //     icon: 'success',
-                // });
-                $('#reset_komen').load(location.href + " #reset_komen");
                 $('.comments').load(location.href + " .comments");
+                $('#reset_komen').load(location.href + " #reset_komen");
                 $('.comment-meta').load(location.href + " .comment-meta");
             },
             error: function(error) {

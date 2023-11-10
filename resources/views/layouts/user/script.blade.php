@@ -9,9 +9,9 @@
   <!-- Template Main JS File -->
   <script src="{{asset('assets/js/main.js')}}"></script>
   <script>
-      $(document).ready(function () {
-          setTimeout(() => {
-              $('.loading-screen').fadeOut(1000);
-          }, 800);
-      });
+    //   $(document).ready(function () {
+    //       setTimeout(() => {
+    //           $('.loading-screen').fadeOut(1000);
+    //       }, 800);
+    //   });
 </script>
