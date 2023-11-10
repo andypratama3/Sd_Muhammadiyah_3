@@ -13,7 +13,7 @@
 @section('content')
 <section class="single-post-content">
     <div class="container">
-        <div class="row">
+        <div class="row row-not-refresh">
             {{-- data-aos="fade-up" --}}
             <div class="col-md-9 post-content" >
                 <div class="single-post">
@@ -101,10 +101,10 @@
 
                 <!-- ======= Comments Form ======= -->
                 <div class="row justify-content-center mt-5">
-                    <div class="col-lg-12">
+                    <div class="col-lg-12" id="reset_komen">
                         <h5 class="comment-title">Komentar</h5>
                         @include('layouts.flashmessage')
-                        <div class="row" id="reset_komen">
+                        <div class="row" >
                             <form id="comment-form" action="{{ route('comment.store') }}" method="post" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="artikel" value="{{ $artikel->id }}" id="artikel">
@@ -319,7 +319,7 @@
 <script src="{{ asset('asset_dashboard/js/SwetAlert/index.js') }}"></script>
 <script>
     $(document).ready(function() {
-        $('.row').on('click','.commentar-edit', function (e) {
+        $('.row-not-refresh').on('click','.commentar-edit', function (e) {
             e.preventDefault();
         var id = $(this).data('id');
         var commentForm = $('#comment-form-' + id);
@@ -330,7 +330,7 @@
                 var updatedComment = $('#comment-message-show-' + id).val();
             });
         });
-        $('.row').on('click', '.commentar-delete',function () {
+        $('.row-not-refresh').on('click', '.commentar-delete',function () {
         var slug = $(this).data('id');
         var url = '{{ route("comment.destroy", ":slug") }}';
         url = url.replace(':slug', slug);
@@ -364,15 +364,13 @@
             }
         });
     });
-    $('.row').on('click', '#like', function (e) {
-        var artikel_id = $('#artikel').val();
-        var comment_id = $(this).data('id');;
-        var user_id = $('#user').val();
+    // $('.row-not-refresh').on('click', '#like', function (e) {
+    //     var artikel_id = $('#artikel').val();
+    //     var comment_id = $(this).data('id');;
+    //     var user_id = $('#user').val();
+    // });
 
-
-    });
-
-    $('.row').on('submit','#comment-form',function(e) {
+    $('.row-not-refresh').on('submit','#comment-form',function(e) {
     e.preventDefault();
     $.ajax({
         type: 'POST',
@@ -389,7 +387,7 @@
         });
     });
 
-    $('.row').on('submit','#comment-form-update',function(e) {
+    $('.row-not-refresh').on('submit','#comment-form-update',function(e) {
         e.preventDefault();
         $.ajax({
             type: 'POST',
