@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class LikeControllerArtikel extends Controller
+class LikeArtikelController extends Controller
 {
     public function like()
     {

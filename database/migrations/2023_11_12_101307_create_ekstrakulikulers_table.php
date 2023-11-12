@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('artikels', function (Blueprint $table){
+        Schema::create('ekstrakulikulers', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
-            $table->string('image');
-            $table->string('artikel');
+            $table->string('desc');
+            $table->string('foto');
             $table->string('slug');
-            $table->unsignedInteger('like')->default(0);
-            $table->unsignedInteger('jumlah_klik')->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('ekstrakulikulers');
     }
 };

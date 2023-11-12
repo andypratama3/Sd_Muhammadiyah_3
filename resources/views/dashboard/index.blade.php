@@ -10,7 +10,7 @@
         <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
         </ol>
     </div>
-    <div class="col-lg-6">
+    <div class="col-lg-12">
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Artikel Post</h5>

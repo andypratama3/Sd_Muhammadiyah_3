@@ -23,6 +23,7 @@ use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
 use App\Http\Controllers\Dashboard\BeritaController as DashboardBeritaController;
 use App\Http\Controllers\Dashboard\ArtikelController as DashboardArtikelController;
 use App\Http\Controllers\Dashboard\FasilitasController as DashboardFasilitasController;
+use App\Http\Controllers\Dashboard\EkstrakulikulerController as DashboardEsktrakurikulerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +55,7 @@ Route::get('auth/google/callback', [GoogleController::class, 'callbackToGoogle']
 Route::group(['prefix' => 'artikel', 'middleware' => ['auth', 'verified']], function () {
     //CommentArtikel
     Route::resource('comment', CommentArtikelController::class, ['names' => 'comment']);
+    // Route::post('comment', LikeArtikelController::class, 'like');
 
 });
 
@@ -71,6 +73,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
 
     Route::resource('fasilitas', DashboardFasilitasController::class, ['names' => 'dashboard.fasilitas']);
     Route::resource('guru', DashboardGuruController::class, ['names' => 'dashboard.guru']);
+    Route::resource('ekstrakurikuler', DashboardEsktrakurikulerController::class, ['names' => 'dashboard.ekstrakurikuler']);
 
     Route::group(['prefix' => 'datamaster'], function () {
         Route::resource('kelas', KelasController::class, ['names' => 'dashboard.datamaster.kelas']);

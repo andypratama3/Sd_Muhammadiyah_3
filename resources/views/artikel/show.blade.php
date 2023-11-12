@@ -59,11 +59,13 @@
                                     <input type="hidden" name="artikel" value="{{ $artikel->id }}" id="artikel">
                                     <input type="hidden" name="user" value="{{ Auth::id() }}" id="user">
                                     <div class="col-12 mb-3" id="comment-form-{{ $comment->id }}" style="display: none;">
+                                    <div class="form-group">
                                         <label for="comment-message">Edit Komentar</label>
-                                        <textarea class="form-control" name="comment"  id="comment-message-show-{{ $comment->id }}" placeholder="Masukan Teks" cols="30" rows="10">{{ $comment->comment }}</textarea>
+                                        <textarea class="form-control" name="comment"  id="comment-message-show-{{ $comment->id }}" placeholder="Masukan Teks" cols="30" rows="1">{{ $comment->comment }}</textarea>
                                         <div class="col-12 mt-2">
                                             <input type="submit" class="btn btn-primary" value="Posting">
                                         </div>
+                                    </div>
                                     </div>
                                 </form>
                                 </div>

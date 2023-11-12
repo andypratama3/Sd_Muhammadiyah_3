@@ -47,6 +47,12 @@
             <span>Guru</span>
         </a>
     </li>
+    <li class="nav-item {{ Request::routeIs('dashboard.ekstrakurikuler.*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('dashboard.ekstrakurikuler.index') }}">
+            <i class="fas fa-user"></i>
+            <span>ekstrakurikuler</span>
+        </a>
+    </li>
     <hr>
     <div class="sidebar-heading">
         Fitur
