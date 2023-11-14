@@ -4,7 +4,7 @@
     <div class="card mb-4">
         <div class="card-body">
             <div class="form-group">
-            <label for="judul">Judul</label>
+            <label for="judul">Nama</label>
             <input type="text" class="form-control" id="judul" aria-describedby="emailHelp" value="{{ $fasilitas->nama_fasilitas }}" readonly>
             </div>
             <div class="form-group">

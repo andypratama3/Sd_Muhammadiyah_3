@@ -1,20 +1,20 @@
 @extends('layouts.dashboard')
-@section('title', 'Edit Berita')
+@section('title', 'Edit Ekstrakurikuler')
 @section('content')
 <div class="card mb-4">
     @include('layouts.flashmessage')
     <div class="card-body">
-        <form action="{{ route('dashboard.news.berita.update',$berita->slug) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('dashboard.ekstrakurikuler.update',$ekstrakurikuler->slug) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
-            <input type="hidden" name="slug" value="{{ $berita->slug }}">
+            <input type="hidden" name="slug" value="{{ $ekstrakurikuler->slug }}">
             <div class="form-group">
-                <label for="judul">Judul</label>
-                <input type="text" class="form-control" name="judul" id="judul" value="{{ $berita->judul }}" placeholder="Masukan Judul">
+                <label for="name">Nama Fasilitas</label>
+                <input type="text" class="form-control" name="name" id="name" value="{{ $ekstrakurikuler->name }}" placeholder="Masukan name">
             </div>
             <div class="form-group">
                 <label for="">Deskripsi</label>
-                <input type="text" class="form-control" id="" value="{{ $berita->desc }}" name="desc"
+                <input type="text" class="form-control" id="" value="{{ $ekstrakurikuler->desc }}" name="desc"
                     placeholder="Deskripsi">
             </div>
             <div class="form-group">
@@ -25,11 +25,11 @@
                 </div>
                 <div class="mt-3 text-center">
                     <h6 class="">Poto yang di pilih</h6>
-                    <img src="{{ asset('storage/img/berita/'.$berita->foto) }}" id="output" alt=""
+                    <img src="{{ asset('storage/img/ekstrakurikuler/'.$ekstrakurikuler->foto) }}" id="output" alt=""
                         style="width: 200px; height: 50%;">
                 </div>
             </div>
-            <a href="{{ route('dashboard.news.berita.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
+            <a href="{{ route('dashboard.ekstrakurikuler.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
             <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
         </form>
     </div>

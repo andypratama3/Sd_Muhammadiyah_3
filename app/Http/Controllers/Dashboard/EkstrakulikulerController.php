@@ -8,6 +8,7 @@ use App\Models\Esktrakurikuler;
 use App\Http\Controllers\Controller;
 use App\DataTransferObjects\EsktrakurikulerData;
 use App\Actions\Dashboard\Esktrakurikuler\ActionEkstrakurikuler;
+use App\Actions\Dashboard\Esktrakurikuler\DeleteEsktrakurikuler;
 
 class EkstrakulikulerController extends Controller
 {
@@ -26,4 +27,23 @@ class EkstrakulikulerController extends Controller
         $ActionEkstrakurikuler->execute($ekstrakurikulerData);
         return redirect()->route('dashboard.ekstrakurikuler.index')->with('success','Berhasil Menambahkan Esktrakurikuller');
     }
+    public function show(Esktrakurikuler $ekstrakurikuler)
+    {
+        return view('dashboard.esktrakurikuler.show', compact('ekstrakurikuler'));
+    }
+    public function edit(Esktrakurikuler $ekstrakurikuler)
+    {
+        return view('dashboard.esktrakurikuler.edit', compact('ekstrakurikuler'));
+    }
+    public function update(EsktrakurikulerData $ekstrakurikulerData, ActionEkstrakurikuler $ActionEkstrakurikuler)
+    {
+        $ActionEkstrakurikuler->execute($ekstrakurikulerData);
+        return redirect()->route('dashboard.ekstrakurikuler.index')->with('success','Berhasil Mengubah Esktrakurikuller');
+    }
+    public function destroy(DeleteEsktrakurikuler $DeleteEsktrakurikuler, $slug)
+    {
+        $DeleteEsktrakurikuler->execute($slug);
+        return redirect()->route('dashboard.ekstrakurikuler.index')->with('success', 'Esktrakurikuller Berhasil Di Hapus!');
+    }
+
 }

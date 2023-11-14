@@ -10,6 +10,7 @@ use App\Http\Controllers\FasilitasController;
 use App\Http\Controllers\Auth\GoogleController;
 
 //Dashboard Access
+use App\Http\Controllers\LikeArtikelController;
 use App\Http\Controllers\DetailBeritaController;
 use App\Http\Controllers\CommentArtikelController;
 use App\Http\Controllers\Dashboard\RoleController;
@@ -55,7 +56,7 @@ Route::get('auth/google/callback', [GoogleController::class, 'callbackToGoogle']
 Route::group(['prefix' => 'artikel', 'middleware' => ['auth', 'verified']], function () {
     //CommentArtikel
     Route::resource('comment', CommentArtikelController::class, ['names' => 'comment']);
-    // Route::post('comment', LikeArtikelController::class, 'like');
+    Route::post('like', [LikeArtikelController::class, 'like'])->name('like.comment');
 
 });
 

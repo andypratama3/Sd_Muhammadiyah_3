@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('title','Berita')
+@section('title','Esktrakurikuler')
 
 @section('content')
 <div class="row">

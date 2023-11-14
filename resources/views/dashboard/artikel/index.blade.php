@@ -21,7 +21,7 @@
                                 <th>No</th>
                                 <th>Nama / Judul</th>
                                 <th>Kategori</th>
-                                <th>Jumlah Klik</th>
+                                <th>Jumlah Pengunjung</th>
                                 <th>Action</th>
                             </tr>
                         </thead>

@@ -78,17 +78,19 @@
                                             <button class="btn btn-danger btn-sm commentar-delete"  data-id="<?=$comment->slug ?>"><i class="bi bi-trash"></i></button>
                                         </div>
                                         @else
+                                        <div class="form-group float-end">
+                                            <button class="btn btn-primary btn-sm">Replay</button>
+                                        </div>
                                         @endauth
-                                        {{-- @foreach ($comment->like as $like) --}}
-                                            <div class="form-group">
-                                                {{-- @if () --}}
-                                                <i class="bi bi-heart-fill like" id="like" data-id="<?=$comment->id ?>"></i>
-                                                {{-- @else --}}
-                                                {{-- <i class="bi bi-heart-fill unlike" id="unlike" data-id="<?=$comment->id ?>"></i> --}}
-                                                {{-- @endif --}}
-                                                <span>100</span>
-                                            </div>
-                                        {{-- @endforeach --}}
+                                        <div class="form-group">
+                                            @if ($comment->likes)
+                                            <i class="bi bi-heart-fill like" id="like" data-id="<?=$comment->id ?>"></i>
+                                            <span>{{ $comment->countLike() }}</span>
+                                            @else
+                                            <i class="bi bi-heart-fill unlike" id="like" data-id="<?=$comment->id ?>"></i>
+                                            <span>{{ $comment->countLike() }}</span>
+                                            @endif
+                                        </div>
                                         @endif
                                         @endforeach
                                     </div>
@@ -321,8 +323,28 @@
 <script src="{{ asset('asset_dashboard/js/SwetAlert/index.js') }}"></script>
 <script>
     $(document).ready(function() {
+        $('.row-not-refresh').on('click', '#like', function (e) {
+            const comment_id = $(this).data('id');
+            $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+            $.ajax({
+                type: "POST",
+                url: "{{ route('like.comment') }}",
+                data: {
+                    'comment_id': comment_id,
+                },
+                success: function (response) {
+                    $('.comments').load(location.href + " .comments");
+                    $('.comment-meta').load(location.href + " .comment-meta");
+
+                }
+            });
+        });
         $('.row-not-refresh').on('click','.commentar-edit', function (e) {
-            e.preventDefault();
+        e.preventDefault();
         var id = $(this).data('id');
         var commentForm = $('#comment-form-' + id);
         commentForm.toggle();
@@ -366,11 +388,6 @@
             }
         });
     });
-    // $('.row-not-refresh').on('click', '#like', function (e) {
-    //     var artikel_id = $('#artikel').val();
-    //     var comment_id = $(this).data('id');;
-    //     var user_id = $('#user').val();
-    // });
 
     $('.row-not-refresh').on('submit','#comment-form',function(e) {
     e.preventDefault();

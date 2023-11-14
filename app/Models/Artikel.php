@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\LikeArtikel;
 use App\Http\Traits\UsesUuid;
 use App\Http\Traits\NameHasSlug;
 use Illuminate\Database\Eloquent\Model;
@@ -30,9 +31,9 @@ class Artikel extends Model
     {
         return $this->belongsToMany(Comment::class, 'comments_artikels');
     }
-    //like for artikel
-    public function like(){
-        return $this->belongsToMany(User::class, 'artikel_likes');
+    public function likes()
+    {
+        return $this->hasMany(LikeArtikel::class);
     }
     //count when article click
     public function incrementClickCount()
