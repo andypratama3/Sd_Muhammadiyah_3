@@ -12,6 +12,7 @@
             <span>Dashboard</span></a>
     </li>
     <hr class="sidebar-divider">
+
     <div class="sidebar-heading">
         Fitur
     </div>
@@ -55,7 +56,7 @@
     </li>
     <hr>
     <div class="sidebar-heading">
-        Fitur
+        Data Master
     </div>
     <li class="nav-item">
         <a class="nav-link {{ Request::routeIs('dashboard.news.*') ? '' : 'collapsed'  }}" href="#"
@@ -69,10 +70,8 @@
             <div class="py-2 collapse-inner rounded">
                 <a class="collapse-item {{ Request::routeIs('dashboard.datamaster.kelas.*') ? 'active' : ''  }}"
                 href="{{ route('dashboard.datamaster.kelas.index') }}">Kelas</a>
-                {{-- <a class="collapse-item {{ Request::routeIs('dashboard.news.category.*') ? 'active' : ''  }}"
-                href="{{ route('dashboard.news.category.index') }}">Kategori Artikel</a>
-                <a class="collapse-item {{ Request::routeIs('dashboard.news.artikel.*') ? 'active' : ''  }}"
-                href="{{ route('dashboard.news.artikel.index') }}">Artikel</a> --}}
+                <a class="collapse-item {{ Request::routeIs('dashboard.datamaster.jadwal.*') ? 'active' : ''  }}"
+                href="{{ route('dashboard.datamaster.jadwal.index') }}">Jadwal</a>
             </div>
         </div>
     </li>

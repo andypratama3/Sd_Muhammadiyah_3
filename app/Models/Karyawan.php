@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Str;
+use App\Http\Traits\UsesUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Str;
 
 class Karyawan extends Model
 {
-    use \App\Http\Traits\UsesUuid;
+    use UsesUuid;
     use SoftDeletes;
 
     protected $table = 'karyawans';

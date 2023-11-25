@@ -19,6 +19,8 @@ const form = useForm({
     remember: false,
 });
 
+
+
 const submit = () => {
     form.transform(data => ({
         ...data,
@@ -31,7 +33,6 @@ const submit = () => {
 
 <template>
     <Head title="Log in" />
-
     <AuthenticationCard>
         <template #logo>
             <AuthenticationCardLogo />

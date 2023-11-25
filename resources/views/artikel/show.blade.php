@@ -13,8 +13,7 @@
 @section('content')
 <section class="single-post-content">
     <div class="container">
-        <div class="row row-not-refresh">
-            {{-- data-aos="fade-up" --}}
+        <div class="row row-not-refresh" data-aos="fade-up">
             <div class="col-md-9 post-content" >
                 <div class="single-post">
                     <div class="post-meta"><span class="date">
@@ -49,52 +48,62 @@
                                     <span class="text-muted">{{ $comment->created_at->diffForHumans() }}</span>
                                 </div>
                                 @endforeach
-                            <div class="form-group comments-group">
-                                <div class="comment-body" id="comment-body">
-                                    {{ $comment->comment }}
-                                    <form id="comment-form-update" action="{{ route('comment.update', $comment->id) }}" method="POST">
-                                    @csrf
-                                    @method('PUT')
-                                    <input type="hidden" name="slug" value="{{ $comment->slug }}">
-                                    <input type="hidden" name="artikel" value="{{ $artikel->id }}" id="artikel">
-                                    <input type="hidden" name="user" value="{{ Auth::id() }}" id="user">
-                                    <div class="col-12 mb-3" id="comment-form-{{ $comment->id }}" style="display: none;">
-                                    <div class="form-group">
-                                        <label for="comment-message">Edit Komentar</label>
-                                        <textarea class="form-control" name="comment"  id="comment-message-show-{{ $comment->id }}" placeholder="Masukan Teks" cols="30" rows="1">{{ $comment->comment }}</textarea>
-                                        <div class="col-12 mt-2">
-                                            <input type="submit" class="btn btn-primary" value="Posting">
+                                <div class="form-group comments-group">
+                                    <div class="comment-body" id="comment-body">
+                                        {{ $comment->comment }}
+
+                                        <form id="comment-form-update" action="{{ route('comment.update', $comment->id) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <input type="hidden" name="slug" value="{{ $comment->slug }}">
+                                        <input type="hidden" name="artikel" value="{{ $artikel->id }}" id="artikel">
+                                        <input type="hidden" name="user" value="{{ Auth::id() }}" id="user">
+                                        <div class="col-12 mb-3" id="comment-form-{{ $comment->id }}" style="display: none;">
+                                        <div class="form-group">
+                                            <label for="comment-message">Edit Komentar</label>
+                                            <textarea class="form-control" name="comment"  id="comment-message-show-{{ $comment->id }}" placeholder="Masukan Teks" cols="30" rows="1">{{ $comment->comment }}</textarea>
+                                            <div class="col-12 mt-2">
+                                                <input type="submit" class="btn btn-primary" value="Posting">
+                                            </div>
                                         </div>
+                                        </div>
+                                    </form>
                                     </div>
-                                    </div>
-                                </form>
-                                </div>
                                     <div class="comment-meta">
                                         @foreach ($comment->users as $item)
-                                        @auth
-                                        @if ($item->id === Auth::user()->id)
-                                        <div class="form-group float-end" id="button_comment">
-                                            <button class="btn btn-primary btn-sm commentar-edit" data-id="<?=$comment->id ?>" data-comment="<?=$comment->comment ?>" ><i class="bi bi-pen"></i></button>
-                                            <button class="btn btn-danger btn-sm commentar-delete"  data-id="<?=$comment->slug ?>"><i class="bi bi-trash"></i></button>
-                                        </div>
-                                        @else
-                                        <div class="form-group float-end">
-                                            <button class="btn btn-primary btn-sm">Replay</button>
-                                        </div>
-                                        @endauth
-                                        <div class="form-group">
-                                            @if ($comment->likes)
-                                            <i class="bi bi-heart-fill like" id="like" data-id="<?=$comment->id ?>"></i>
-                                            <span>{{ $comment->countLike() }}</span>
-                                            @else
-                                            <i class="bi bi-heart-fill unlike" id="like" data-id="<?=$comment->id ?>"></i>
-                                            <span>{{ $comment->countLike() }}</span>
-                                            @endif
-                                        </div>
-                                        @endif
+                                            @auth
+                                                @if ($item->id === Auth::user()->id)
+                                                    <!-- Edit and Delete Buttons for Comment Owner -->
+                                                    <div class="form-group float-end" id="button_comment">
+                                                        <button class="btn btn-primary btn-sm commentar-edit" data-id="<?=$comment->id ?>" data-comment="<?=$comment->comment ?>" ><i class="bi bi-pen"></i></button>
+                                                        <button class="btn btn-danger btn-sm commentar-delete"  data-id="<?=$comment->slug ?>"><i class="bi bi-trash"></i></button>
+                                                    </div>
+                                                @else
+                                                    <!-- Reply Button for Non-Comment Owner Users -->
+                                                    <div class="form-group float-end">
+                                                        <button class="btn btn-primary btn-sm">Reply</button>
+                                                    </div>
+                                                @endif
+                                            @endauth
+                                            <!-- Like Button for All Users -->
+                                            <div class="form-group">
+                                                @if (Auth::check())
+                                                    @if ($comment->likes)
+                                                        <i class="bi bi-heart-fill like" id="like" data-id="<?=$comment->id ?>"></i>
+                                                        <span id="like">{{ $comment->countLike() }} Like</span>
+                                                    @else
+                                                        <i class="bi bi-heart-fill unlike" id="like" data-id="<?=$comment->id ?>"></i>
+                                                        <span id="like">{{ $comment->countLike() }} Like</span>
+                                                    @endif
+                                                @else
+                                                    <i class="bi bi-heart-fill unlike" id="like" data-id="<?=$comment->id ?>"></i>
+                                                    <span id="like">{{ $comment->countLike() }} Like</span>
+                                                @endif
+                                            </div>
                                         @endforeach
                                     </div>
-                            </div>
+
+                                </div>
                             </div>
                         </div>
                         @else
@@ -102,7 +111,6 @@
                     @endif
                     @endforeach
                 </div><!-- End Comments -->
-
                 <!-- ======= Comments Form ======= -->
                 <div class="row justify-content-center mt-5">
                     <div class="col-lg-12" id="reset_komen">
@@ -132,7 +140,6 @@
                     </div>
                 </div><!-- End Comments Form -->
             </div>
-
             <div class="col-md-3">
                 <!-- ======= Sidebar ======= -->
                 <div class="aside-block">
@@ -339,8 +346,10 @@
                 success: function (response) {
                     $('.comments').load(location.href + " .comments");
                     $('.comment-meta').load(location.href + " .comment-meta");
-
-                }
+                },
+                error: function (response) {
+                    window.location.href = "{{ route('login') }}";
+                },
             });
         });
         $('.row-not-refresh').on('click','.commentar-edit', function (e) {

@@ -18,8 +18,10 @@ use App\Http\Controllers\Dashboard\TaskController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\CategoryArtikel;
 use App\Http\Controllers\Dashboard\KelasController;
+use App\Http\Controllers\Dashboard\JadwalController;
 use App\Http\Controllers\Dashboard\KaryawanController;
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\KelasCategoryController;
 use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
 use App\Http\Controllers\Dashboard\BeritaController as DashboardBeritaController;
 use App\Http\Controllers\Dashboard\ArtikelController as DashboardArtikelController;
@@ -78,6 +80,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
 
     Route::group(['prefix' => 'datamaster'], function () {
         Route::resource('kelas', KelasController::class, ['names' => 'dashboard.datamaster.kelas']);
+        Route::resource('jadwal', JadwalController::class, ['names' => 'dashboard.datamaster.jadwal']);
+        Route::post('kelas_category',[JadwalController::class, 'getCategoryKelas'])->name('dashboard.datamaster.jadwal.kelas_category');
     });
 
     Route::group(['prefix' => 'pengaturan'], function () {

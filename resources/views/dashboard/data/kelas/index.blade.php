@@ -8,7 +8,7 @@
         <div class="card">
             @include('layouts.flashmessage')
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h4 class="m-0 font-weight-bold text-primary text-center">Data Guru</h5>
+                <h4 class="m-0 font-weight-bold text-primary text-center">Data Kelas</h5>
                     <a href="{{ route('dashboard.datamaster.kelas.create') }}" class="btn btn-primary float-end">Tambah</a>
             </div>
             <div class="table-responsive">
@@ -17,6 +17,7 @@
                         <tr>
                             <th>No</th>
                             <th>Kelas</th>
+                            <th>Kategori Kelas</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -25,6 +26,11 @@
                         <tr>
                             <td>{{ ++$no }}</td>
                             <td>{{ $kelas->name }}</td>
+                            @php
+                                $categoryKelas = json_decode($kelas->category_kelas, true);
+                                sort($categoryKelas);
+                            @endphp
+                            <td>{{ implode(', ', $categoryKelas) }}</td>
                             <td>
                                 <a href="{{ route('dashboard.datamaster.kelas.show', $kelas->slug) }}" class="btn btn-dark btn-sm"><i
                                         class="fas fa-info-circle"></i></a>

@@ -30,9 +30,14 @@
                          <li><a href="#">Jadwal Sekolah</a></li>
                      </ul>
                  </li>
-                 <li><a href="{{ route('artikel.index') }}">Artikel</a></li>
-                 <li><a href="{{ route('login') }}">Masuk</a></li>
                  <li><a href="contact.html">Kontak</a></li>
+                 
+                 <li><a href="{{ route('artikel.index') }}">Artikel</a></li>
+                 @auth
+                    <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                 @else
+                    <li><a href="{{ route('login') }}">Masuk</a></li>
+                 @endauth
              </ul>
          </nav><!-- .navbar -->
          <div class="position-relative">

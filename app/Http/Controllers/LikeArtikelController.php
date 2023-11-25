@@ -9,21 +9,25 @@ use Illuminate\Support\Facades\Auth;
 class LikeArtikelController extends Controller
 {
     public function like(Request $request)
-{
-    $likeData = [
-        'comment_id' => $request->comment_id,
-        'user_id' => Auth::id(),
-    ];
+    {
+        if(Auth::check()){
+            $likeData = [
+                'comment_id' => $request->comment_id,
+                'user_id' => Auth::id(),
+            ];
 
-    $existingLike = LikeArtikel::where($likeData)->first();
+            $existingLike = LikeArtikel::where($likeData)->first();
 
-    if ($existingLike) {
-        $existingLike->delete();
-    } else {
-        LikeArtikel::create($likeData);
+            if ($existingLike) {
+                $existingLike->delete();
+            } else {
+                LikeArtikel::create($likeData);
+            }
+            return null;
+        }else{
+            return redirect()->route('login');
+        }
+
     }
-
-    return null;
-}
 
 }

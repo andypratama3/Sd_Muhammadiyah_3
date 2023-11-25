@@ -4,7 +4,7 @@
         <x-slot name="title">
             {{ __('Create API Token') }}
         </x-slot>
-
+        
         <x-slot name="description">
             {{ __('API tokens allow third-party services to authenticate with our application on your behalf.') }}
         </x-slot>

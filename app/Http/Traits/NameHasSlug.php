@@ -10,7 +10,7 @@ trait NameHasSlug
     public static function bootNameHasSlug()
     {
         static::creating(function (Model $model) {
-            $model->slug = Str::slug($model->name);
+            $model->slug = Str::slug($model->name."-".Str::random(4));
         });
     }
 
