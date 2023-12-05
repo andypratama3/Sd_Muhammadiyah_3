@@ -121,7 +121,7 @@
                             @csrf
                             <input type="hidden" name="artikel" value="{{ $artikel->id }}" id="artikel">
                             <input type="hidden" name="user" value="{{ Auth::id() }}" id="user">
-                                @auth
+                                {{-- @auth --}}
                                 <div class="col-12 mb-3" id="comment-form">
                                     <label for="comment-message">Tambahkan Komentar</label>
                                     <textarea class="form-control" name="comment" id="comment-message" placeholder="Masukan Teks" cols="30" rows="10"></textarea>
@@ -129,12 +129,12 @@
                                 <div class="col-12">
                                     <input type="submit" class="btn btn-primary" value="Posting">
                                 </div>
-                                @else
+                                {{-- @else
                                 <div class="col-12">
                                     <a href="{{ route('register') }}" class="btn btn-primary">Daftar</a>
                                     <a href="{{ route('login') }}" class="btn btn-primary">Masuk</a>
                                 </div>
-                                @endauth
+                                @endauth --}}
                             </form>
                         </div>
                     </div>

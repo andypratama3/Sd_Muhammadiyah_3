@@ -13,11 +13,15 @@ class CommentArtikelController extends Controller
 
     public function store(CommentData $commentData, CommentAction $action)
     {
-        $result = $action->execute($commentData);
-        if($result){
-            return response()->json(['success' => 'Berhasil Menambahkana Komentar']);
+        if(Auth::check()){
+            $result = $action->execute($commentData);
+            if($result){
+                return response()->json(['success' => 'Berhasil Menambahkana Komentar']);
+            }else{
+                return response()->json(['failure' => 'Gagal Menambahkana Komentar']);
+            }
         }else{
-            return response()->json(['failure' => 'Gagal Menambahkana Komentar']);
+            return redirect()->route('login')->with('status', 'Login Terlebih Dahulu');
         }
     }
     public function update(CommentData $commentData, CommentAction $action)
