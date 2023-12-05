@@ -8,6 +8,7 @@ use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\FasilitasController;
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\JadwalController;
 
 //Dashboard Access
 use App\Http\Controllers\LikeArtikelController;
@@ -18,11 +19,11 @@ use App\Http\Controllers\Dashboard\TaskController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\CategoryArtikel;
 use App\Http\Controllers\Dashboard\KelasController;
-use App\Http\Controllers\Dashboard\JadwalController;
 use App\Http\Controllers\Dashboard\KaryawanController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\KelasCategoryController;
 use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
+use App\Http\Controllers\Dashboard\JadwalController as DashboardJadwalController;
 use App\Http\Controllers\Dashboard\BeritaController as DashboardBeritaController;
 use App\Http\Controllers\Dashboard\ArtikelController as DashboardArtikelController;
 use App\Http\Controllers\Dashboard\FasilitasController as DashboardFasilitasController;
@@ -48,6 +49,7 @@ Route::get('berita/{slug}', [DetailBeritaController::class, 'show'])->name('beri
 Route::get('guru', [GuruController::class, 'index'])->name('guru.index');
 //fasilitas
 Route::get('fasilitas', [FasilitasController::class, 'index'])->name('fasilitas.index');
+Route::get('jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
 //artikel
 Route::resource('artikel', ArtikelController::class, ['names' => 'artikel']);
 //login with google
@@ -80,8 +82,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
 
     Route::group(['prefix' => 'datamaster'], function () {
         Route::resource('kelas', KelasController::class, ['names' => 'dashboard.datamaster.kelas']);
-        Route::resource('jadwal', JadwalController::class, ['names' => 'dashboard.datamaster.jadwal']);
-        Route::post('kelas_category',[JadwalController::class, 'getCategoryKelas'])->name('dashboard.datamaster.jadwal.kelas_category');
+        Route::resource('jadwal',  DashboardJadwalController::class, ['names' => 'dashboard.datamaster.jadwal']);
+        Route::post('kelas_category',[ DashboardJadwalController::class, 'getCategoryKelas'])->name('dashboard.datamaster.jadwal.kelas_category');
     });
 
     Route::group(['prefix' => 'pengaturan'], function () {

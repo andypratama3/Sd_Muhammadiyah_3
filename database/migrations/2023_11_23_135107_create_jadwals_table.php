@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('jadwal');
             $table->string('kelas');
             $table->string('category_kelas');
+            $table->string('slug');
             $table->timestamps();
         });
     }

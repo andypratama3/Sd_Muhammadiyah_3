@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Support\Str;
+use App\Http\Traits\UsesUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Guru extends Model
 {
-    use \App\Http\Traits\UsesUuid;
+    use UsesUuid;
     use HasFactory;
     protected $table = 'gurus';
 

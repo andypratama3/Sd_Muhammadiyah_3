@@ -2,7 +2,7 @@
 @section('title', 'Tambah Jadwal')
 @push('css')
     <link href="{{ asset('asset_dashboard/vendor/select2/dist/css/select2.css') }}" rel="stylesheet" type="text/css">
-    <link href="{{ asset('asset_dashboard/vendor/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}" rel="stylesheet"
+    <link href="{{ asset('asset_dashboard/vendor/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}" rel="stylesheet">
 @endpush
 @section('content')
 <div class="card mb-4">
@@ -14,8 +14,9 @@
         <form action="{{ route('dashboard.datamaster.jadwal.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
-                <label for="jadwal">Smester</label>
-                <select name="smester" id="" class="form-control">
+                <label for="smester">Smester</label>
+                <select name="smester" id="smester" class="form-control">
+                    <option selected disabled>Pilih Kategori Smester</option>
                     <option value="ganji">Ganjil</option>
                     <option value="genap">Genap</option>
                 </select>
@@ -34,7 +35,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="kategori_kelas">Kategori Kelas</label>
+                <label for="category_kelas">Kategori Kelas</label>
                 <select name="category_kelas" id="category_kelas" class="form-control select2" data-placeholder="Pilih Kategori Kelas">
                     <option selected disabled>Pilih Kategori Kelas</option>
                     <option value="" class="option_category"></option>

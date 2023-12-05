@@ -27,11 +27,11 @@
                          <li><a href="#">Nilai Siswa</a></li>
                          <li><a href="#">Berita</a></li>
                          <li><a href="#">Prestasi Siswa</a></li>
-                         <li><a href="#">Jadwal Sekolah</a></li>
+                         <li><a href="{{ route('jadwal.index') }}">Jadwal Sekolah</a></li>
                      </ul>
                  </li>
                  <li><a href="contact.html">Kontak</a></li>
-                 
+
                  <li><a href="{{ route('artikel.index') }}">Artikel</a></li>
                  @auth
                     <li><a href="{{ route('dashboard') }}">Dashboard</a></li>

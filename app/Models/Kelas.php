@@ -27,12 +27,10 @@ class Kelas extends Model
     {
         return $this->belongsToMany(Role::class, 'role_user_table', 'user_id', 'role_id');
     }
-
-    public function categoryKelas()
+    public function jadwal()
     {
-        return $this->belongsToMany(CategoryKelas::class, 'kelas_category');
+        return $this->hasMany(Jadwal::class,'kelas','id');
     }
-
 
 
 }

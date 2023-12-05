@@ -6,17 +6,20 @@ use App\Models\Kelas;
 use App\Models\Jadwal;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\DataTransferObjects\JadwalData;
+use App\Actions\Dashboard\Jadwal\JadwalAction;
 
 class JadwalController extends Controller
 {
     public function index()
     {
-        $jadwals = Jadwal::select('id','name','kelas','category_kelas','slug')->get();
-        return view('dashboard.data.jadwal.index', compact('jadwals'));
+        $no = 0;
+        $jadwals = Jadwal::with('kelas_jadwal')->select('id','smester','jadwal','kelas','category_kelas','slug')->get();
+        return view('dashboard.data.jadwal.index', compact('no','jadwals'));
     }
     public function create()
     {
-        $kelass = Kelas::select('id','name','category_kelas','slug')->get();
+        $kelass = Kelas::select('id','name','category_kelas','slug')->orderBy('name')->get();
         return view('dashboard.data.jadwal.create', compact('kelass'));
     }
     public function getCategoryKelas(Request $request)
@@ -24,10 +27,17 @@ class JadwalController extends Controller
         $kelasId = $request->input('id');
         $kelas = Kelas::find($kelasId);
 
+        
         $categoryKelas = json_decode($kelas->category_kelas, true);
         sort($categoryKelas);
         return response()->json($categoryKelas);
     }
-    
+    public function store(JadwalData $jadwalData , JadwalAction $jadwalAction)
+    {
+        $jadwalAction->execute($jadwalData);
+
+        $jadwalAction->execute($jadwalData);
+        return redirect()->route('dashboard.datamaster.jadwal.index')->with('success', 'Berhasil Menambahkan Jadwal');
+    }
 
 }

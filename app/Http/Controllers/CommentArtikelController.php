@@ -6,6 +6,7 @@ use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Actions\CommentAction;
 use App\Actions\CommentActionDelete;
+use Illuminate\Support\Facades\Auth;
 use App\DataTransferObjects\CommentData;
 
 class CommentArtikelController extends Controller

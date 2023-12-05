@@ -352,50 +352,50 @@
                 },
             });
         });
-        $('.row-not-refresh').on('click','.commentar-edit', function (e) {
-        e.preventDefault();
-        var id = $(this).data('id');
-        var commentForm = $('#comment-form-' + id);
-        commentForm.toggle();
 
-        $('#comment-message-show-' + id).on('input', function() {
-                var updatedComment = $(this).val();
-                var updatedComment = $('#comment-message-show-' + id).val();
-            });
+        $('.row-not-refresh').on('click','.commentar-edit', function (e) {
+            e.preventDefault();
+            var id = $(this).data('id');
+            var commentForm = $('#comment-form-' + id);
+            commentForm.toggle();
+                $('#comment-message-show-' + id).on('input', function() {
+                        var updatedComment = $(this).val();
+                        var updatedComment = $('#comment-message-show-' + id).val();
+                    });
         });
         $('.row-not-refresh').on('click', '.commentar-delete',function () {
-        var slug = $(this).data('id');
-        var url = '{{ route("comment.destroy", ":slug") }}';
-        url = url.replace(':slug', slug);
-        swal({
-            title: 'Anda yakin?',
-            text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
-            icon: 'warning',
-            buttons: true,
-            dangerMode: true,
-        }).then((willDelete) => {
-            if (willDelete) {
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-                // Send a DELETE request
-                $.ajax({
-                    url: url,
-                    type: 'DELETE', // Use the DELETE method
-                    success: function (data) {
-                        $('.comments').load(location.href + " .comments");
-                        $('.comment-meta').load(location.href + " .comment-meta");
-                    },
-                    error: function(data){
+            var slug = $(this).data('id');
+            var url = '{{ route("comment.destroy", ":slug") }}';
+            url = url.replace(':slug', slug);
+            swal({
+                title: 'Anda yakin?',
+                text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
+                icon: 'warning',
+                buttons: true,
+                dangerMode: true,
+            }).then((willDelete) => {
+                if (willDelete) {
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                    // Send a DELETE request
+                    $.ajax({
+                        url: url,
+                        type: 'DELETE', // Use the DELETE method
+                        success: function (data) {
+                            $('.comments').load(location.href + " .comments");
+                            $('.comment-meta').load(location.href + " .comment-meta");
+                        },
+                        error: function(data){
 
-                    }
-                });
-            } else {
-                // If the user cancels the deletion, do nothing
-            }
-        });
+                        }
+                    });
+                } else {
+                    // If the user cancels the deletion, do nothing
+                }
+            });
     });
 
     $('.row-not-refresh').on('submit','#comment-form',function(e) {
@@ -411,6 +411,11 @@
 
         },
         error: function(error) {
+            if(error.status = '401'){
+                window.location.href = '{{ route('login') }}';
+            }else{
+                
+            }
         }
         });
     });
