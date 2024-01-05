@@ -27,10 +27,17 @@ class JadwalController extends Controller
         $kelasId = $request->input('id');
         $kelas = Kelas::find($kelasId);
 
-        
         $categoryKelas = json_decode($kelas->category_kelas, true);
         sort($categoryKelas);
         return response()->json($categoryKelas);
+    }
+
+    public function getSmester(Request $request)
+    {
+        $category_kelas = $request->category_kelas;
+        $jadwal = Jadwal::where('category_kelas', $category_kelas)->first();
+
+        return response()->json($jadwal);
     }
     public function store(JadwalData $jadwalData , JadwalAction $jadwalAction)
     {

@@ -84,6 +84,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::resource('kelas', KelasController::class, ['names' => 'dashboard.datamaster.kelas']);
         Route::resource('jadwal',  DashboardJadwalController::class, ['names' => 'dashboard.datamaster.jadwal']);
         Route::post('kelas_category',[ DashboardJadwalController::class, 'getCategoryKelas'])->name('dashboard.datamaster.jadwal.kelas_category');
+        Route::post('getSmester',[ DashboardJadwalController::class, 'getSmester'])->name('dashboard.datamaster.jadwal.getSmester');
     });
 
     Route::group(['prefix' => 'pengaturan'], function () {

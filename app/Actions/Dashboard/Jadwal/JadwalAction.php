@@ -23,7 +23,7 @@ class JadwalAction
                 'smester' => $jadwalData->smester,
                 'jadwal' => $jadwalData->slug,
                 'kelas' => $jadwalData->kelas,
-                'jadwal' => $file,
+                'jadwal' => $picture_name,
                 'category_kelas' => $jadwalData->category_kelas,
             ]
 

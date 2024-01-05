@@ -14,18 +14,6 @@
         <form action="{{ route('dashboard.datamaster.jadwal.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
-                <label for="smester">Smester</label>
-                <select name="smester" id="smester" class="form-control">
-                    <option selected disabled>Pilih Kategori Smester</option>
-                    <option value="ganji">Ganjil</option>
-                    <option value="genap">Genap</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="jadwal">Jadwal</label>
-                <input type="file" class="form-control" name="jadwal" id="jadwal">
-            </div>
-            <div class="form-group">
                 <label for="kelas">Kelas</label>
                 <select name="kelas" id="kelas" class="form-control select2" data-placeholder="Pilih Kelas">
                     <option selected disabled>Pilih Kelas</option>
@@ -41,6 +29,19 @@
                     <option value="" class="option_category"></option>
                 </select>
             </div>
+            <div class="form-group">
+                <label for="smester">Smester</label>
+                <select name="smester" id="smester" class="form-control">
+                    <option selected disabled>Pilih Kategori Smester</option>
+                    <option value="ganjil">Ganjil</option>
+                    <option value="genap">Genap</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="jadwal">Jadwal</label>
+                <input type="file" class="form-control" name="jadwal" id="jadwal">
+            </div>
+
             <a  href="{{ route('dashboard.datamaster.jadwal.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
             <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
         </form>
@@ -74,12 +75,40 @@
                 success: function (response) {
                     let data_category = response.categoryKelas
                     $.each(response, function (index, category) {
-                        categoryKelasDropdown.append('<option value="' + category + '">' + category + '</option>');
+                        categoryKelasDropdown.append('<option data-id="' + category  +'" value="' + category + '">' + category + '</option>');
                     });
                 },
                 error: function (error) {
                     console.log(error);
                 }
+            });
+        });
+        $('#category_kelas').on('change',function (e) {
+            let category_kelas = $(this).children('option:selected').data('id');
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: "{{ route('dashboard.datamaster.jadwal.getSmester') }}",
+                data: {
+                    category_kelas : category_kelas,
+                },
+                success: function (response) {
+                    let smester = response.smester;
+
+                    $('#smester option').prop('disabled', false);
+
+                    if (smester === 'ganjil') {
+                        $('#smester option[value="ganjil"]').prop('disabled', true);
+                    }
+                    if (smester === 'genap') {
+                        $('#smester option[value="genap"]').prop('disabled', true);
+                    }
+                }
+
             });
         });
 

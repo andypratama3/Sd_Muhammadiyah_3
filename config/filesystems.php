@@ -75,6 +75,14 @@ return [
             // 'visibility' => 'public',
             // 'throw' => false,
         ],
+        'jadwal' => [
+            'driver' => 'local',
+            'root' => public_path(''),
+            // 'root' => public_path('app/public'),
+            // 'url' => env('APP_URL').'/storage/img/profile',
+            // 'visibility' => 'public',
+            // 'throw' => false,
+        ],
 
         's3' => [
             'driver' => 's3',
