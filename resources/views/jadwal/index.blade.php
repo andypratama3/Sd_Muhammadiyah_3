@@ -15,16 +15,12 @@
             </div>
           </div>
         </div>
-        <div class="row mb-4">
-            <input type="text" placeholder="Cari Jadwal" class="form-control">
-            <i class="bi bi-search"></i>
-        </div>
-        @foreach ($jadwals as $jadwal)
+        @foreach ($kelass as $kelas)
         <div class="col-lg-4 text-center mb-5">
           <img src="assets/img/person-1.jpg" alt="" class="img-fluid w-50 mb-4">
-          <h4>Cameron Williamson</h4>
-          <span class="d-block mb-3 text-uppercase">Founder &amp; CEO</span>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis, perspiciatis repellat maxime, adipisci non ipsam at itaque rerum vitae, necessitatibus nulla animi expedita cumque provident inventore? Voluptatum in tempora earum deleniti, culpa odit veniam, ea reiciendis sunt ullam temporibus aut!</p>
+          <h4>{{ $kelas->name }}</h4>
+          <span class="d-block mb-3 text-uppercase"><a href="{{ route('jadwal.show', $kelas->name) }}" class="btn btn-primary btn-sm">Pilih</a></span>
+
         </div>
         @endforeach
       </div>

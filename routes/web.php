@@ -49,7 +49,8 @@ Route::get('berita/{slug}', [DetailBeritaController::class, 'show'])->name('beri
 Route::get('guru', [GuruController::class, 'index'])->name('guru.index');
 //fasilitas
 Route::get('fasilitas', [FasilitasController::class, 'index'])->name('fasilitas.index');
-Route::get('jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
+Route::resource('jadwal', JadwalController::class, ['names' => 'jadwal']);
+Route::post('jadwal/getjadwal/smester', [JadwalController::class, 'jadwal_smester'])->name('jadwal.smester');
 //artikel
 Route::resource('artikel', ArtikelController::class, ['names' => 'artikel']);
 //login with google

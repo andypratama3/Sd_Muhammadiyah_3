@@ -11,17 +11,16 @@
             @csrf
             <div class="form-group">
                 <label for="judul">Judul</label>
-                <input type="text" class="form-control" name="judul" id="judul" aria-describedby="emailHelp"
-                    placeholder="Masukan Judul">
+                <input type="text" class="form-control" name="judul" id="judul" value="{{ old('judul') }}" placeholder="Masukan Judul">
             </div>
             <div class="form-group">
                 <label for="">Deskripsi</label>
-                <input type="text" class="form-control" id="" name="desc" placeholder="Deskripsi">
+                <input type="text" class="form-control" id="" name="desc" value="{{ old('desc') }}" placeholder="Deskripsi">
             </div>
             <div class="form-group">
                 <label for="">Foto</label>
                 <div class="custom-file">
-                    <input type="file" class="form-control" id="foto" name="foto" accept="image/*" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])">
+                    <input type="file" class="form-control" id="foto" name="foto" accept="image/jpeg,image/png,application/pdf,image" value="{{ old('foto') }}" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])">
                 </div>
                 <div class="mt-3 text-center">
                     <h6 class="">Poto yang di pilih</h6>

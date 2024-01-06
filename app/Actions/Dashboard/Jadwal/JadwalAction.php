@@ -16,7 +16,7 @@ class JadwalAction
         $upload_path = public_path('storage/file/jadwal/');
         $picture_name = 'Jadwal_'.Str::slug($jadwalData->kelas).'_'.date('YmdHis').".$ext";
         $file->move($upload_path, $picture_name);
-
+        
         $jadwal = Jadwal::updateOrCreate(
             [ 'slug' => $jadwalData->slug ],
             [

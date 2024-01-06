@@ -34,15 +34,22 @@ class JadwalController extends Controller
 
     public function getSmester(Request $request)
     {
+        $kelas = $request->kelas;
         $category_kelas = $request->category_kelas;
-        $jadwal = Jadwal::where('category_kelas', $category_kelas)->first();
 
-        return response()->json($jadwal);
+        $existingGenap = Jadwal::where('kelas', $kelas)->where('category_kelas', $category_kelas)->where('smester', 'genap')->exists();
+        $existingGanjil = Jadwal::where('kelas', $kelas)->where('category_kelas', $category_kelas)->where('smester', 'ganjil')->exists();
+
+        $response = [
+            'genap' => $existingGenap,
+            'ganjil' => $existingGanjil,
+        ];
+
+        return response()->json($response);
     }
+
     public function store(JadwalData $jadwalData , JadwalAction $jadwalAction)
     {
-        $jadwalAction->execute($jadwalData);
-
         $jadwalAction->execute($jadwalData);
         return redirect()->route('dashboard.datamaster.jadwal.index')->with('success', 'Berhasil Menambahkan Jadwal');
     }

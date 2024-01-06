@@ -12,25 +12,22 @@
     }
     .modal {
         display: none;
-        /* Hidden by default */
+        overflow-y: initial !important;
         position: fixed;
-        /* Stay in place */
         z-index: 1;
-        /* Sit on top */
-        padding-top: 100px;
-        /* Location of the box */
+        padding-top: 80px;
         left: 0;
         top: 0;
         width: 100%;
         height: 100%;
-        overflow: auto;
         background-color: rgb(0, 0, 0);
         background-color: rgba(0, 0, 0, 0.9);
     }
     .modal-content {
         margin: auto;
-        display: block;
+        display: flex;
         width: 80%;
+
         max-width: 500px;
     }
     @keyframes zoom {
@@ -99,15 +96,15 @@
                     </span>
                   </td>
                     <td>
-                        <a href="{{ route('dashboard.fasilitas.show', $fasilitas->slug) }}" class="btn btn-dark btn-sm"><i class="bi bi-eye">Detail</i></a>
-                        <a href="{{ route('dashboard.fasilitas.edit', $fasilitas->slug) }}" class="btn btn-primary btn-sm">Update</a>
-                        <a href="#" data-id="{{ $fasilitas->slug }}" class="btn btn-danger delete" title="Hapus">
+                        <a href="{{ route('dashboard.fasilitas.show', $fasilitas->slug) }}" class="btn btn-dark btn-sm"><i class="fas fa-eye"></i></a>
+                        <a href="{{ route('dashboard.fasilitas.edit', $fasilitas->slug) }}" class="btn btn-primary btn-sm"><i class="fas fa-pen"></i></a>
+                        <a href="#" data-id="{{ $fasilitas->slug }}" class="btn btn-danger btn-sm delete" title="Hapus">
                             <form action="{{ route('dashboard.fasilitas.destroy', $fasilitas->slug) }}" id="delete-{{ $fasilitas->slug }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 @method('delete')
                             </form>
                             <i class="fas fa-trash"></i>
-                            Hapus
+                            
                     </td>
                 </tr>
                 @endforeach

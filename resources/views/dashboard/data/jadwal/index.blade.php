@@ -28,7 +28,7 @@
                         <tr>
                             <td>{{ ++$no }}</td>
                             <td> {{ $jadwal->smester }} </td>
-                            <td><a href="{{ public_path('storage/file/jadwal/', $jadwal->jadwal) }}">Lihat Jadwal</a></td>
+                            <td><a href="{{ asset('storage/file/jadwal/'. $jadwal->jadwal) }}" target="_blank">Lihat Jadwal</a></td>
                             <td> {{ $jadwal->kelas_jadwal->name }} </td>
                             <td> {{ $jadwal->category_kelas }} </td>
                             <td>

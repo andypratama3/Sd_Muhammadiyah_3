@@ -84,7 +84,10 @@
             });
         });
         $('#category_kelas').on('change',function (e) {
+            $('select#smester').load(location.href + ' select#smester > option');
+            let kelas = $('#kelas').val();
             let category_kelas = $(this).children('option:selected').data('id');
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -95,17 +98,17 @@
                 url: "{{ route('dashboard.datamaster.jadwal.getSmester') }}",
                 data: {
                     category_kelas : category_kelas,
+                    kelas   : kelas,
                 },
                 success: function (response) {
                     let smester = response.smester;
+                    if (response.genap) {
+                        $('#smester option[value="genap"]').text('Genap (Sudah Terdata)').prop('disabled', true);
 
-                    $('#smester option').prop('disabled', false);
-
-                    if (smester === 'ganjil') {
-                        $('#smester option[value="ganjil"]').prop('disabled', true);
                     }
-                    if (smester === 'genap') {
-                        $('#smester option[value="genap"]').prop('disabled', true);
+                    if (response.ganjil) {
+                        $('#smester option[value="ganjil"]').text('Ganjil (Sudah Terdata)').prop('disabled', true);
+
                     }
                 }
 
