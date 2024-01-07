@@ -53,5 +53,14 @@ class JadwalController extends Controller
         $jadwalAction->execute($jadwalData);
         return redirect()->route('dashboard.datamaster.jadwal.index')->with('success', 'Berhasil Menambahkan Jadwal');
     }
+    public function edit(Jadwal $jadwal)
+    {
+        return view('dashboard.data.jadwal.edit', compact('jadwal'));
+    }
+    public function destroy(Jadwal $jadwal, JadwalActionDelete $jadwalActionDelete)
+    {
+        $jadwalActionDelete->execute($jadwal);
+        return redirect()->route('dashboard.datamaster.jadwal.index')->with('success', 'Data Jadwal Berhasil Di Hapus');
+    }
 
 }
