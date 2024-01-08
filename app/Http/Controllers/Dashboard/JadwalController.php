@@ -8,13 +8,14 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\DataTransferObjects\JadwalData;
 use App\Actions\Dashboard\Jadwal\JadwalAction;
+use App\Actions\Dashboard\Jadwal\JadwalActionDelete;
 
 class JadwalController extends Controller
 {
     public function index()
     {
         $no = 0;
-        $jadwals = Jadwal::with('kelas_jadwal')->select('id','smester','jadwal','kelas','category_kelas','slug')->get();
+        $jadwals = Jadwal::with('kelas_jadwal')->select('id','smester','jadwal','kelas','category_kelas','slug')->orderBy('kelas', 'desc')->get();
         return view('dashboard.data.jadwal.index', compact('no','jadwals'));
     }
     public function create()
@@ -55,11 +56,18 @@ class JadwalController extends Controller
     }
     public function edit(Jadwal $jadwal)
     {
-        return view('dashboard.data.jadwal.edit', compact('jadwal'));
+        $kelass = Kelas::all();
+        return view('dashboard.data.jadwal.edit', compact('jadwal', 'kelass'));
     }
-    public function destroy(Jadwal $jadwal, JadwalActionDelete $jadwalActionDelete)
+    public function update(JadwalData $jadwalData, JadwalAction $jadwalAction)
     {
-        $jadwalActionDelete->execute($jadwal);
+        $jadwalAction->execute($jadwalData);
+        return redirect()->route('dashboard.datamaster.jadwal.index')->with('success', 'Berhasil Update Jadwal');
+
+    }
+    public function destroy(JadwalActionDelete $jadwalActionDelete,$slug)
+    {
+        $jadwalActionDelete->execute($slug);
         return redirect()->route('dashboard.datamaster.jadwal.index')->with('success', 'Data Jadwal Berhasil Di Hapus');
     }
 

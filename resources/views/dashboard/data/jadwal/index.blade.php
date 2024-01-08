@@ -9,7 +9,7 @@
             @include('layouts.flashmessage')
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h4 class="m-0 font-weight-bold text-primary text-center">Data Jadwal</h5>
-                    <a href="{{ route('dashboard.datamaster.jadwal.create') }}" class="btn btn-primary float-end">Tambah</a>
+                    <a href="{{ route('dashboard.datamaster.jadwal.create') }}" class="btn btn-success float-right">Tambah <i class="fas fa-plus"></i></a>
             </div>
             <div class="table-responsive">
                 <table class="table align-items-center table-flush text-center">
@@ -53,9 +53,5 @@
     </div>
 </div>
 
-@push('user_js')
-<script>
 
-</script>
-@endpush
 @endsection

@@ -11,7 +11,7 @@ class EsktrakurikulerData extends Data
     public function __construct(
         public readonly string $name,
         public readonly string $desc,
-        public readonly UploadedFile $foto,
+        public readonly array $foto,
         public readonly ?string $slug,
 
     ) {

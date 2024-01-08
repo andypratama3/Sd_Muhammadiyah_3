@@ -10,7 +10,7 @@
 <div class="card mb-4">
     @include('layouts.flashmessage')
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold text-primary">Tambah Artikel</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Tambah</h6>
     </div>
     <div class="card-body">
         <form action="{{ route('dashboard.news.artikel.store') }}" method="POST" enctype="multipart/form-data">

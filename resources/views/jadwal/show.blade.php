@@ -67,8 +67,9 @@
     <div class="container" data-aos="fade-up">
         <div class="row">
             <div class="col-12 text-center mb-5">
+                <a href="{{ route('jadwal.index') }}" class="btn btn-primary" style="float: inline-start;"><i class="bi bi-arrow-left-circle"></i> Kembali</a>
                 <div class="row justify-content-center">
-                    <div class="col-lg-6">
+                    <div class="col-lg-6" >
                         <h4 class="display-4">Jadwal {{ $kelass->name }}</h2>
                         <p>Jadwal Sekolah Kini Bisa Di Lihat Secara Online</p>
                     </div>
@@ -89,7 +90,6 @@
                     </select>
                 </div>
                 <span class="d-block mb-3 text-uppercase" id="button_reload">
-
                     <button class="btn btn-primary btn-sm preview-image" type="button" data-foto="{{ $kelass->jadwal }}" data-category="{{ $category }}">Lihat Jadwal</button>
                 </span>
             </div>
@@ -111,6 +111,7 @@
     </div>
 </div>
 @push('js_user')
+<script src="{{ asset('asset_dashboard/js/SwetAlert/index.js') }}"></script>
 <script>
     $(document).ready(function () {
         function preview(data) {
@@ -153,12 +154,20 @@
                 success: function (response) {
                     let semester = response.smester;
                     let foto = response.jadwal;
-                    console.log(foto);
                     if (semester === 'genap' || semester === 'ganjil') {
                         preview(foto);
                     } else {
-
                         $('#preview-image').addClass('display-none');
+                        swal({
+                            title: 'Error',
+                            text: response.message,
+                            icon: 'warning',
+                            buttons: {
+                                    confirm: 'Yes',
+                            },
+                            dangerMode: true,
+                        });
+
                     }
                 }
             });

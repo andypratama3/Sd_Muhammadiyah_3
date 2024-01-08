@@ -28,6 +28,11 @@ class JadwalController extends Controller
 
         $kelas = Jadwal::where('kelas', $kelas)->where('smester', $smester)->where('category_kelas', $category_kelas)->first();
 
-        return response()->json($kelas);
+        if($kelas){
+            return response()->json($kelas);
+        }else{
+            return response()->json(['message' => 'Tidak Ada Data Jadwal']);
+
+        }
     }
 }

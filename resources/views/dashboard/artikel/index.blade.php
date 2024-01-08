@@ -12,7 +12,7 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title mb-4">Artikel
-                <a href="{{ route('dashboard.news.artikel.create') }}" class="btn btn-primary float-right">Tambah</a>
+                <a href="{{ route('dashboard.news.artikel.create') }}" class="btn btn-success float-right">Tambah <i class="fas fa-plus"></i></a>
                 </h4>
                 <div class="table-responsive">
                     <table class="table" id="artikel_table">
