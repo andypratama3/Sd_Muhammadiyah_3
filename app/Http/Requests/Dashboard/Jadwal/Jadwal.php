@@ -14,9 +14,9 @@ class Jadwal extends FormRequest
         return true;
     }
 
-    public function getSmester()
+    public function getTahun_Ajaran()
     {
-        return $this->smester;
+        return $this->tahun_ajaran;
     }
     public function getJadwal()
     {

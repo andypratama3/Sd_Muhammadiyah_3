@@ -30,11 +30,13 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="smester">Smester</label>
-                <select name="smester" id="smester" class="form-control">
-                    <option selected disabled>Pilih Kategori Smester</option>
-                    <option value="ganjil">Ganjil</option>
-                    <option value="genap">Genap</option>
+                <label for="tahun_ajaran">Tahun Ajaran</label>
+                <select name="tahun_ajaran" id="tahun_ajaran" class="form-control select2">
+                    <option selected disabled>Pilih Tahun Ajaran</option>
+                    <?php $years = range(2010, strftime("%Y", time())); ?>
+                    <?php foreach($years as $year) : ?>
+                    <option value="<?php echo $year; ?>"><?php echo $year; ?></option>
+                  <?php endforeach; ?>a>
                 </select>
             </div>
             <div class="form-group">

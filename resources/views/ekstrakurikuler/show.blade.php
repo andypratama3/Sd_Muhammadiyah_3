@@ -85,13 +85,11 @@
                 <div class="form-group mb-3">
                     <input type="hidden" class="kelas" id="kelas" name="kelas" value="{{ $kelass->id }}">
                     <input type="hidden" class="category_kelas" name="category_kelas" value="{{ $category }}">
-                    <label for="">Tahun</label>
-                    <select name="tahun_ajaran" class="form-control text-center" id="tahun_ajaran_{{ $category }}">
-                        <option selected disabled>Pilih Tahun</option>
-                        <?php $years = range(2010, strftime("%Y", time())); ?>
-                        <?php foreach($years as $year) : ?>
-                        <option value="<?php echo $year; ?>"><?php echo $year; ?></option>
-                      <?php endforeach; ?>a>
+                    <label for="">Semester</label>
+                    <select name="semester" class="form-control text-center" id="smester_{{ $category }}">
+                        <option selected disabled>Pilih Semester</option>
+                        <option value="ganjil">Ganjil</option>
+                        <option value="genap">Genap</option>
                     </select>
                 </div>
                 <span class="d-block mb-3 text-uppercase" id="button_reload">
@@ -141,7 +139,7 @@
         $('.preview-image').on('click', function () {
             let category = $(this).data('category');
             let kelas = $('#kelas').val();
-            let tahun_ajaran = $('#tahun_ajaran_' + category).val();
+            let smester = $('#smester_' + category).val();
 
 
             $.ajaxSetup({
@@ -152,16 +150,16 @@
 
             $.ajax({
                 type: "POST",
-                url: "{{ route('jadwal.tahun.ajaran') }}",
+                url: "{{ route('jadwal.smester') }}",
                 data: {
                     kelas: kelas,
-                    tahun_ajaran: tahun_ajaran,
+                    smester: smester,
                     category_kelas: category
                 },
                 success: function (response) {
-                    let tahun_ajaran = response.tahun_ajaran;
+                    let semester = response.smester;
                     let foto = response.jadwal;
-                    if (tahun_ajaran) {
+                    if (semester === 'genap' || semester === 'ganjil') {
                         preview(foto);
                     } else {
                         $('#preview-image').addClass('display-none');

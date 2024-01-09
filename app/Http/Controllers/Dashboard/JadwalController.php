@@ -15,7 +15,7 @@ class JadwalController extends Controller
     public function index()
     {
         $no = 0;
-        $jadwals = Jadwal::with('kelas_jadwal')->select('id','smester','jadwal','kelas','category_kelas','slug')->orderBy('kelas', 'desc')->get();
+        $jadwals = Jadwal::with('kelas_jadwal')->select('id','tahun_ajaran','jadwal','kelas','category_kelas','slug')->orderBy('kelas', 'desc')->get();
         return view('dashboard.data.jadwal.index', compact('no','jadwals'));
     }
     public function create()
@@ -38,7 +38,7 @@ class JadwalController extends Controller
         $kelas = $request->kelas;
         $category_kelas = $request->category_kelas;
 
-        $existingGenap = Jadwal::where('kelas', $kelas)->where('category_kelas', $category_kelas)->where('smester', 'genap')->exists();
+        $existingGenap = Jadwal::where('kelas', $kelas)->where('category_kelas', $category_kelas)->where('tahun_ajaran',)->exists();
         $existingGanjil = Jadwal::where('kelas', $kelas)->where('category_kelas', $category_kelas)->where('smester', 'ganjil')->exists();
 
         $response = [

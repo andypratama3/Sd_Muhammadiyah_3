@@ -20,13 +20,13 @@ class JadwalController extends Controller
         $category_kelas = json_decode($kelass->category_kelas);
         return view('jadwal.show', compact('kelass', 'category_kelas'));
     }
-    public function jadwal_smester(Request $request)
+    public function tahun_ajaran(Request $request)
     {
         $kelas = $request->kelas;
-        $smester = $request->smester;
+        $tahun_ajaran = $request->tahun_ajaran;
         $category_kelas = $request->category_kelas;
 
-        $kelas = Jadwal::where('kelas', $kelas)->where('smester', $smester)->where('category_kelas', $category_kelas)->first();
+        $kelas = Jadwal::where('kelas', $kelas)->where('tahun_ajaran', $tahun_ajaran)->where('category_kelas', $category_kelas)->first();
 
         if($kelas){
             return response()->json($kelas);

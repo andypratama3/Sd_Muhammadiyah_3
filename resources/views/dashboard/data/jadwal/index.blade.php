@@ -16,7 +16,7 @@
                     <thead class="thead-light">
                         <tr>
                             <th>No</th>
-                            <th>Smester</th>
+                            <th>Tahun</th>
                             <th>Jadwal</th>
                             <th>Kelas</th>
                             <th>Kategori Kelas</th>
@@ -27,7 +27,7 @@
                         @foreach ($jadwals as $jadwal)
                         <tr>
                             <td>{{ ++$no }}</td>
-                            <td> {{ $jadwal->smester }} </td>
+                            <td> {{ $jadwal->tahun_ajaran }} </td>
                             <td><a href="{{ asset('storage/file/jadwal/'. $jadwal->jadwal) }}" target="_blank">Lihat Jadwal</a></td>
                             <td> {{ $jadwal->kelas_jadwal->name }} </td>
                             <td> {{ $jadwal->category_kelas }} </td>

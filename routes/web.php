@@ -45,12 +45,12 @@ Route::get('/', BerandaController::class)->name('index');
 // Berita
 Route::get('berita', [DetailBeritaController::class, 'index'])->name('berita.index');
 Route::get('berita/{slug}', [DetailBeritaController::class, 'show'])->name('berita.show');
-//gurur
+//guru
 Route::get('guru', [GuruController::class, 'index'])->name('guru.index');
 //fasilitas
 Route::get('fasilitas', [FasilitasController::class, 'index'])->name('fasilitas.index');
 Route::resource('jadwal', JadwalController::class, ['names' => 'jadwal']);
-Route::post('jadwal/getjadwal/smester', [JadwalController::class, 'jadwal_smester'])->name('jadwal.smester');
+Route::post('jadwal/getjadwal/smester', [JadwalController::class, 'tahun_ajaran'])->name('jadwal.tahun.ajaran');
 //artikel
 Route::resource('artikel', ArtikelController::class, ['names' => 'artikel']);
 //login with google

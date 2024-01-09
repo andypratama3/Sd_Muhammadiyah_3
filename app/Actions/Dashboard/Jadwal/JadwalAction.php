@@ -20,7 +20,7 @@ class JadwalAction
         $jadwal = Jadwal::updateOrCreate(
             [ 'slug' => $jadwalData->slug ],
             [
-                'smester' => $jadwalData->smester,
+                'tahun_ajaran' => $jadwalData->tahun_ajaran,
                 'jadwal' => $jadwalData->slug,
                 'kelas' => $jadwalData->kelas,
                 'jadwal' => $picture_name,

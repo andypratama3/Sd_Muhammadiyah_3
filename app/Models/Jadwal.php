@@ -14,7 +14,7 @@ class Jadwal extends Model
     use NameHasSlug;
     protected $table = 'jadwals';
     protected $fillable = [
-        'smester',
+        'tahun_ajaran',
         'jadwal',
         'kelas',
         'category_kelas',
