@@ -10,19 +10,17 @@
         <form action="{{ route('dashboard.ekstrakurikuler.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
-                <label for="judul">Nama Esktrakurikuler</label>
-                <input type="text" class="form-control" name="name" id="name" aria-describedby="emailHelp"
-                    placeholder="Masukan name">
+                <label for="judul">Nama</label>
+                <input type="text" class="form-control" name="name" id="name" placeholder="Masukan name" value="{{ old('name') }}">
             </div>
-            {{-- EsktrakurikulerRequest --}}
             <div class="form-group">
                 <label for="">Deskripsi</label>
-                <input type="text" class="form-control" id="" name="desc" placeholder="Deskripsi">
+                <input type="text" class="form-control" id="" name="desc" value="{{ old('desc') }}" placeholder="Deskripsi">
             </div>
             <div class="form-group">
                 <label for="">Foto</label>
                 <div class="custom-file">
-                    <input type="file" class="form-control" id="foto" multiple name="foto[]" accept="image/*" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])">
+                    <input type="file" class="form-control" id="foto" multiple name="foto[]">
                 </div>
                 <div class="mt-3 text-center">
                     <h6 class="">Poto yang di pilih</h6>

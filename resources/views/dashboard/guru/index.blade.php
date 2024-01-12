@@ -69,12 +69,11 @@
 
 <div class="row">
     <div class="col-lg-12 mb-4">
-        <!-- Simple Tables -->
         <div class="card">
             @include('layouts.flashmessage')
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h4 class="m-0 font-weight-bold text-primary text-center">Data Guru</h5>
-                    <a href="{{ route('dashboard.guru.create') }}" class="btn btn-success float-right">Tambah <i class="fas fa-plus"></i></a>
+                    <a href="{{ route('dashboard.guru.create') }}" class="btn btn-success btn-sm float-right">Tambah <i class="fas fa-plus"></i></a>
             </div>
             <div class="table-responsive">
                 <table class="table align-items-center table-flush text-center">
@@ -118,9 +117,9 @@
             </div>
             <div class="card-footer clearfix">
                 <ul class="m-0 float-left">
-                    Jumlah Data: {{ $count }}
+                    <span class="badge badge-primary">Total : {{ $count }} Data</span>
                 </ul>
-                <ul class="pagination pagination-sm m-0 float-right">
+                <ul class="pagination m-0 float-right">
                     {{ $gurus->onEachSide(1)->links() }}
                 </ul>
             </div>

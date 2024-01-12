@@ -1829,6 +1829,9 @@ body.sidebar-toggled footer.sticky-footer {
 .bg-blue {
   background-color: #e8eaf6 !important
 }
+.bg-custom{
+    background: #f1f5f9!important;
+}
 
 .table-flush td,
 .table-flush th {

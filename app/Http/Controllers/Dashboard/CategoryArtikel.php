@@ -13,9 +13,11 @@ class CategoryArtikel extends Controller
 {
     public function index()
     {
-        $no = 0;
-        $categorys = Category::select(['name','slug'])->get();
-        return view('dashboard.artikel.category.index', compact('categorys','no'));
+        $limit = 15;
+        $categorys = Category::select(['name','slug'])->latest()->paginate($limit);
+        $count = Category::all()->count();
+        $no = $limit * ($categorys->currentPage() - 1);
+        return view('dashboard.artikel.category.index', compact('categorys','no','count'));
     }
     public function create()
     {

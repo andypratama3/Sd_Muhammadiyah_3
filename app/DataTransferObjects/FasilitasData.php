@@ -11,7 +11,7 @@ class FasilitasData extends Data
     public function __construct(
         public readonly string $nama_fasilitas,
         public readonly string $desc,
-        public readonly UploadedFile $foto,
+        public readonly array $foto,
         public readonly ?string $slug,
 
     ) {

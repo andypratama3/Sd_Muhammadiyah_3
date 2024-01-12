@@ -10,7 +10,7 @@
             @csrf
             <div class="form-group">
             <label for="nama_fasilitas">Fasilitas</label>
-            <input type="text" class="form-control" name="nama_fasilitas" id="nama_fasilitas" aria-describedby="emailHelp" placeholder="Masukan Nama Fasilitas">
+            <input type="text" class="form-control" name="nama_fasilitas" id="nama_fasilitas" aria-describedby="fasilitas" placeholder="Masukan Nama Fasilitas">
             </div>
             <div class="form-group">
             <label for="">Deskripsi</label>
@@ -19,11 +19,7 @@
             <div class="form-group">
                 <label for="">Foto</label>
                 <div class="custom-file">
-                    <input type="file" class="form-control" multiple id="foto" name="foto" accept="image/*" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])">
-                </div>
-                <div class="mt-3 text-center">
-                    <h6 class="">Poto yang di pilih</h6>
-                    <img src="" id="output" alt="" style="width: 200px; height: 50%;">
+                    <input type="file" class="form-control" id="foto" name="foto[]" multiple>
                 </div>
             </div>
             <div class="form-group">

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('jadwals', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->date('tahun_ajaran');
+            $table->string('tahun_ajaran');
             $table->string('jadwal');
             $table->string('kelas');
             $table->string('category_kelas');

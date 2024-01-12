@@ -12,10 +12,11 @@ class FasilitasController extends Controller
 {
     public function index()
     {
-        $no = 0;
-        $fasilitass = Fasilitas::select(['nama_fasilitas', 'desc', 'foto', 'slug'])->get();
-
-        return view('dashboard.fasilitas.index', compact('no', 'fasilitass'));
+        $limit = 15;
+        $fasilitass = Fasilitas::select(['nama_fasilitas', 'desc', 'foto', 'slug'])->orderBy('created_at', 'desc')->paginate($limit);
+        $count = Fasilitas::count();
+        $no = $limit * ($fasilitass->currentPage() - 1);
+        return view('dashboard.fasilitas.index', compact('no','count','fasilitass'));
     }
 
     public function create()
@@ -28,20 +29,20 @@ class FasilitasController extends Controller
 
         $FasilitasAction->execute($FasilitasData);
 
+
         return redirect()->route('dashboard.fasilitas.index')->with('success', 'Fasilitas Berhasil Di Tambah');
     }
 
     public function show($slug)
     {
-        $fasilitas = Fasilitas::select(['nama_fasilitas', 'desc', 'foto', 'slug'])->firstOrFail();
-        $images = explode(',', $fasilitas->foto);
-        return view('dashboard.fasilitas.show', compact('fasilitas','images'));
+        $fasilitas = Fasilitas::where('slug', $slug)->firstOrFail();
+        return view('dashboard.fasilitas.show', compact('fasilitas'));
     }
 
-    public function edit()
+    public function edit($slug)
     {
 
-        $fasilitas = Fasilitas::select(['nama_fasilitas', 'desc', 'foto', 'slug'])->firstOrFail();
+        $fasilitas = Fasilitas::where('slug', $slug)->firstOrFail();
         $images = explode(',', $fasilitas->foto);
         return view('dashboard.fasilitas.edit', compact('fasilitas','images'));
     }

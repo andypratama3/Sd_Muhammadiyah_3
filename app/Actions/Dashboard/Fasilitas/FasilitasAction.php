@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Actions\Dashboard\Fasilitas;
 
 use App\Models\Fasilitas;
@@ -10,12 +9,19 @@ class FasilitasAction
 {
     public function execute($FasilitasData)
     {
-        $foto = $FasilitasData->foto;
-        $ext = $foto->getClientOriginalExtension();
+        if ($FasilitasData->foto) {
+            $fotorFiles = $FasilitasData->foto;
+            $fasilitas_name = [];
 
-        $upload_path = 'storage/img/fasilitas/';
-        $picture_name = 'Fasilitas_'.Str::slug($FasilitasData->nama_fasilitas).'_'.date('YmdHis').".$ext";
-        $foto->move($upload_path, $picture_name);
+            foreach ($fotorFiles as $fotorFile) {
+                $ext = $fotorFile->getClientOriginalExtension();
+                $uniqueIdentifier = Str::random(8); 
+                $file_name = 'Fasilitas_' . Str::slug($FasilitasData->nama_fasilitas) . '_' . $uniqueIdentifier . '_' . date('YmdHis') . ".$ext";
+                $upload_path = public_path('storage/img/fasilitas/');
+                $fotorFile->move($upload_path, $file_name);
+                $fasilitas_name[] = $file_name;
+            }
+        }
 
 
         $fasilitas = Fasilitas::updateOrCreate(
@@ -23,13 +29,8 @@ class FasilitasAction
             [
                 'nama_fasilitas' => $FasilitasData->nama_fasilitas,
                 'desc' => $FasilitasData->desc,
-                'foto' => $picture_name,
-            ],
+                'foto' => implode(',', $fasilitas_name),
+            ]
         );
-
-
-        return $fasilitas;
     }
-
 }
-

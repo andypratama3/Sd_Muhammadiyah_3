@@ -11,11 +11,15 @@
             <label for="">Deskripsi</label>
             <input type="text" class="form-control" id="" value="{{ $fasilitas->desc }}" readonly>
             </div>
+            @php
+            $fasilitas_foto = explode(',',$fasilitas->foto);
+            $firstCover = reset($fasilitas_foto);
+            @endphp
             <div class="form-group">
                 <input type="text" readonly value="Foto" class="form-control mb-2 text-center">
                 <div class="" style="grid-template-columns: 60px 60px;">
-                @foreach ($images as $image)
-                <img src="{{ asset('storage/img/fasilitas/'.$image) }}" alt="" srcset="" style="width: 40%; height: 100%; margin-bottom: 40px;">
+                @foreach ($fasilitas_foto as $image => $i)
+                    <img src="{{ asset('storage/img/fasilitas/'. trim($i)) }}" alt="" srcset="" style="width: 40%; height: 100%; margin-bottom: 40px;">
                 @endforeach
                 </div>
             </div>

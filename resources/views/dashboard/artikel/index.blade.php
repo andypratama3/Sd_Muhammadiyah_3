@@ -11,8 +11,8 @@
         @include('layouts.flashmessage')
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title mb-4">Artikel
-                <a href="{{ route('dashboard.news.artikel.create') }}" class="btn btn-success float-right">Tambah <i class="fas fa-plus"></i></a>
+                <h4 class="card-title text-primary mb-4">Artikel
+                <a href="{{ route('dashboard.news.artikel.create') }}" class="btn btn-success btn-sm float-right">Tambah <i class="fas fa-plus"></i></a>
                 </h4>
                 <div class="table-responsive">
                     <table class="table" id="artikel_table">
@@ -21,7 +21,7 @@
                                 <th>No</th>
                                 <th>Nama / Judul</th>
                                 <th>Kategori</th>
-                                <th>Jumlah Pengunjung</th>
+                                <th>Jumlah View</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -35,7 +35,7 @@
 @push('js')
 <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
-    <script>
+<script>
 $(document).ready(function () {
     $('#artikel_table').DataTable({
         ordering: true,

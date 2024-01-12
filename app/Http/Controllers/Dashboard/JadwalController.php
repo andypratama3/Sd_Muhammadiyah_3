@@ -14,6 +14,9 @@ class JadwalController extends Controller
 {
     public function index()
     {
+        /*
+            ! ada ada saja
+        */
         $no = 0;
         $jadwals = Jadwal::with('kelas_jadwal')->select('id','tahun_ajaran','jadwal','kelas','category_kelas','slug')->orderBy('kelas', 'desc')->get();
         return view('dashboard.data.jadwal.index', compact('no','jadwals'));
@@ -51,9 +54,15 @@ class JadwalController extends Controller
 
     public function store(JadwalData $jadwalData , JadwalAction $jadwalAction)
     {
-        $jadwalAction->execute($jadwalData);
-        return redirect()->route('dashboard.datamaster.jadwal.index')->with('success', 'Berhasil Menambahkan Jadwal');
-    }
+        $jadwal = Jadwal::where('kelas', $jadwalData->kelas)->where('tahun_ajaran', $jadwalData->tahun_ajaran)->where('category_kelas', $jadwalData->category_kelas)->exists();
+        if($jadwalData != $jadwal){
+                $jadwalAction->execute($jadwalData);
+                return redirect()->route('dashboard.datamaster.jadwal.index')->with('success', 'Berhasil Menambahkan Jadwal');
+            }else{
+                return redirect()->route('dashboard.datamaster.jadwal.index')->with('error', 'Jadwal Telah Ada');
+            }
+        }
+
     public function edit(Jadwal $jadwal)
     {
         $kelass = Kelas::all();

@@ -70,6 +70,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
 
     Route::group(['prefix' => 'news'], function () {
         Route::resource('berita', DashboardBeritaController::class, ['names' => 'dashboard.news.berita']);
+        Route::get('beritas/records', [DashboardBeritaController::class, 'data_table'])->name('dashboard.news.berita.getBerita');
         Route::resource('artikel', DashboardArtikelController::class, ['names' => 'dashboard.news.artikel']);
         Route::resource('category', CategoryArtikel::class, ['names' => 'dashboard.news.category']);
         Route::get('artikels/records', [DashboardArtikelController::class, 'data_table'])->name('dashboard.news.artikel.getArtikel');

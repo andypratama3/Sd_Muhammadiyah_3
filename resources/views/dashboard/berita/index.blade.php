@@ -1,6 +1,7 @@
 @extends('layouts.dashboard')
 @section('title','Berita')
 @push('css')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
 <style>
     #myImg {
         border-radius: 5px;
@@ -67,54 +68,26 @@
 @endpush
 @section('content')
 <div class="row">
-    <div class="col-lg-12 mb-4">
-        <!-- Simple Tables -->
+    <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
-            @include('layouts.flashmessage')
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h4 class="m-0 font-weight-bold text-primary text-center">Data Berita</h5>
-                    <a href="{{ route('dashboard.news.berita.create') }}" class="btn btn-success float-right">Tambah <i class="fas fa-plus"></i></a>
+            <div class="card-body">
+                <h4 class="card-title text-primary mb-4">Berita
+                <a href="{{ route('dashboard.news.berita.create') }}" class="btn btn-success btn-sm float-right">Tambah <i class="fas fa-plus"></i></a>
+                </h4>
+                <div class="table-responsive">
+                    <table class="table" id="berita_table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Judul</th>
+                                <th>Deskripsi</th>
+                                <th>Foto</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
-            <div class="table-responsive">
-                <table class="table align-items-center table-flush text-center">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>No</th>
-                            <th>Judul</th>
-                            <th>Deskripsi</th>
-                            <th>Foto</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($beritas as $berita)
-                        <tr>
-                            <td>{{ ++$no }}</td>
-                            <td>{{ $berita->judul }}</td>
-                            <td>{{ $berita->desc }}</td>
-                            <td>
-                                <span class="btn fa fa-image" id="priview-image" data-foto="<?=$berita->foto ?>">
-                                    <p>Lihat</p>
-                                </span>
-
-                            <td>
-                                <a href="{{ route('dashboard.news.berita.show', $berita->slug) }}" class="btn btn-dark btn-sm"><i
-                                        class="fas fa-info-circle"></i></a>
-                                <a href="{{ route('dashboard.news.berita.edit', $berita->slug) }}" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
-                                <a href="#" data-id="{{ $berita->slug }}" class="btn btn-danger btn-sm delete" title="Hapus">
-                                    <form action="{{ route('dashboard.news.berita.destroy', $berita->slug) }}"
-                                        id="delete-{{ $berita->slug }}" method="POST" enctype="multipart/form-data">
-                                        @csrf
-                                        @method('delete')
-                                    </form>
-                                    <i class="fas fa-trash"></i>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-            <div class="card-footer"></div>
         </div>
     </div>
 </div>
@@ -130,26 +103,84 @@
     <!-- Modal Caption (Image Text) -->
     <div id="caption"></div>
 </div>
-<!--Row-->
+<input type="hidden" id="berita_table_value" value="{{ route('dashboard.news.berita.getBerita') }}">
 @push('js')
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
 <script>
-    $(document).on('click', '#priview-image', function () {
-        // Get the modal
-        var modal = document.getElementById("myModal");
-        //take foto from folder
-        var foto = $(this).data('foto');
-        var imageUrl = '/storage/app/public/img/berita/' + foto;
-
-        modal.style.display = "block";
-        $('#foto').attr('src', imageUrl);
-
-        // // Get the <span> element that closes the modal
-        var span = document.getElementsByClassName("closeheader")[0];
-        // // When the user clicks on <span> (x), close the modal
-        span.onclick = function () {
-            modal.style.display = "none";
-        }
+$(document).ready(function () {
+    $('#berita_table').DataTable({
+        ordering: true,
+        pagination: true,
+        deferRender: true,
+        serverSide: true,
+        responsive: true,
+        processing: true,
+        pageLength: 100,
+        ajax: {
+            'url': $('#berita_table_value').val(),
+        },
+        columns: [
+            { data: 'DT_RowIndex',name: 'DT_RowIndex',orderable: false,searchable: false},
+            { data: 'judul', name: 'judul'},
+            { data: 'desc', name: 'desc'},
+            { data: 'foto', name: 'foto', orderable: true},
+            { data: 'options',name: 'options', orderable: false, searchable: false }
+        ],
     });
+    $('#berita_table').on('click', '#btn-delete', function () {
+        var slug = $(this).data('id');
+        var url = '{{ route("dashboard.news.berita.destroy", ":slug") }}';
+        url = url.replace(':slug', slug);
+        swal({
+            title: 'Anda yakin?',
+            text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                // Send a DELETE request
+                $.ajax({
+                    url: url,
+                    type: 'DELETE', // Use the DELETE method
+                    success: function (data) {
+                        if (data.status === 'success') {
+                                window.location.href = "{{ route('dashboard.news.berita.index') }}";
+                        } else {
+                            window.location.href = "{{ route('dashboard.news.berita.index') }}";
+                        }
+                    },
+                });
+            } else {
+                // If the user cancels the deletion, do nothing
+            }
+        });
+    });
+});
+// $(document).on('click', '#priview-image', function () {
+//     // Get the modal
+//     var modal = document.getElementById("myModal");
+//     //take foto from folder
+//     var foto = $(this).data('foto');
+//     var imageUrl = '/storage/app/public/img/berita/' + foto;
+
+//     modal.style.display = "block";
+//     $('#foto').attr('src', imageUrl);
+
+//     // // Get the <span> element that closes the modal
+//     var span = document.getElementsByClassName("closeheader")[0];
+//     // // When the user clicks on <span> (x), close the modal
+//     span.onclick = function () {
+//         modal.style.display = "none";
+//     }
+// });
 </script>
 @endpush
 @endsection

@@ -12,7 +12,6 @@
             <span>Dashboard</span></a>
     </li>
     <hr class="sidebar-divider">
-
     <div class="sidebar-heading">
         Fitur
     </div>
@@ -27,34 +26,63 @@
             aria-labelledby="headingBootstrap" data-parent="#accordionSidebar" style="">
             <div class="py-2 collapse-inner rounded">
                 <a class="collapse-item {{ Request::routeIs('dashboard.news.berita.*') ? 'active' : ''  }}"
-                href="{{ route('dashboard.news.berita.index') }}">Berita</a>
+                href="{{ route('dashboard.news.berita.index') }}">
+                <i class="fas fa-solid fa-newspaper"></i>
+                <span>Berita</span>
+                </a>
                 <a class="collapse-item {{ Request::routeIs('dashboard.news.category.*') ? 'active' : ''  }}"
-                href="{{ route('dashboard.news.category.index') }}">Kategori Artikel</a>
+                href="{{ route('dashboard.news.category.index') }}">
+                <i class="fas fa-solid fa-book-open"></i>
+                <span>Kategori Artikel</span>
+                </a>
                 <a class="collapse-item {{ Request::routeIs('dashboard.news.artikel.*') ? 'active' : ''  }}"
-                href="{{ route('dashboard.news.artikel.index') }}">Artikel</a>
+                href="{{ route('dashboard.news.artikel.index') }}">
+                <i class="fas fa-book"></i>
+                <span>Artikel</span>
+                </a>
             </div>
         </div>
     </li>
-
-    <li class="nav-item {{ Request::routeIs('dashboard.fasilitas.*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('dashboard.fasilitas.index') }}">
-            <i class="fas fa-home"></i>
-            <span>Fasilitas</span>
+    <hr class="sidebar-divider">
+    <div class="sidebar-heading">
+        Data Sekolah
+    </div>
+    <li class="nav-item">
+        <a class="nav-link {{ Request::routeIs('dashboard.news.*') ? '' : 'collapsed'  }}" href="#"
+            data-toggle="collapse" data-target="#data_sekolah" aria-expanded="false"
+            aria-controls="data_sekolah">
+            <i class="fas fa-solid fa-city"></i>
+            <span>Data Sekolah</span>
         </a>
+        <div id="data_sekolah" class="collapse {{ Request::routeIs('dashboard.datamaster.*') ? 'show' : ''  }} }}"
+            aria-labelledby="headingBootstrap" data-parent="#accordionSidebar" style="">
+            <div class="py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{ route('dashboard.fasilitas.index') }}">
+                    <i class="fas fa-home"></i>
+                    <span>Fasilitas</span>
+                </a>
+                <a class="collapse-item " href="{{ route('dashboard.guru.index') }}">
+                    <i class="fas fa-solid fa-users"></i>
+                    <span>Guru</span>
+                </a>
+                <a class="collapse-item " href="{{ route('dashboard.ekstrakurikuler.index') }}">
+                    <i class="fas fa-user"></i>
+                    <span>Ekstrakurikuler</span>
+                </a>
+                <a class="collapse-item {{ Request::routeIs('dashboard.datamaster.kelas.*') ? 'active' : ''  }}"
+                href="{{ route('dashboard.datamaster.kelas.index') }}">
+                <i class="fas fa-home"></i>
+                <span>Kelas</span>
+                </a>
+                <a class="collapse-item {{ Request::routeIs('dashboard.datamaster.jadwal.*') ? 'active' : ''  }}"
+                href="{{ route('dashboard.datamaster.jadwal.index') }}">
+                <i class="fas fa-solid fa-list"></i>
+                <span>Jadwal</span>
+            </a>
+            </div>
+        </div>
     </li>
-    <li class="nav-item {{ Request::routeIs('dashboard.guru.*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('dashboard.guru.index') }}">
-            <i class="fas fa-user"></i>
-            <span>Guru</span>
-        </a>
-    </li>
-    <li class="nav-item {{ Request::routeIs('dashboard.ekstrakurikuler.*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('dashboard.ekstrakurikuler.index') }}">
-            <i class="fas fa-user"></i>
-            <span>ekstrakurikuler</span>
-        </a>
-    </li>
-    <hr>
+    <hr class="sidebar-divider">
     <div class="sidebar-heading">
         Data Master
     </div>
