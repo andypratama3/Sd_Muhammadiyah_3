@@ -113,6 +113,7 @@ class UserSeeder extends Seeder
         // List User
         $listUsers = [
             [
+                'id' => Str::uuid(),
                 'name' => 'Superadmin',
                 'email' => 'superadmin@superadmin.com',
                 'nip' => '0000',
