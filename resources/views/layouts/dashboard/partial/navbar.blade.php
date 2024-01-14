@@ -17,8 +17,7 @@
     </div>
     <li class="nav-item">
         <a class="nav-link {{ Request::routeIs('dashboard.news.*') ? '' : 'collapsed'  }}" href="#"
-            data-toggle="collapse" data-target="#news" aria-expanded="false"
-            aria-controls="news">
+            data-toggle="collapse" data-target="#news" aria-expanded="false" aria-controls="news">
             <i class="fas fa-book"></i>
             <span>News</span>
         </a>
@@ -26,19 +25,19 @@
             aria-labelledby="headingBootstrap" data-parent="#accordionSidebar" style="">
             <div class="py-2 collapse-inner rounded">
                 <a class="collapse-item {{ Request::routeIs('dashboard.news.berita.*') ? 'active' : ''  }}"
-                href="{{ route('dashboard.news.berita.index') }}">
-                <i class="fas fa-solid fa-newspaper"></i>
-                <span>Berita</span>
+                    href="{{ route('dashboard.news.berita.index') }}">
+                    <i class="fas fa-solid fa-newspaper"></i>
+                    <span>Berita</span>
                 </a>
                 <a class="collapse-item {{ Request::routeIs('dashboard.news.category.*') ? 'active' : ''  }}"
-                href="{{ route('dashboard.news.category.index') }}">
-                <i class="fas fa-solid fa-book-open"></i>
-                <span>Kategori Artikel</span>
+                    href="{{ route('dashboard.news.category.index') }}">
+                    <i class="fas fa-solid fa-book-open"></i>
+                    <span>Kategori Artikel</span>
                 </a>
                 <a class="collapse-item {{ Request::routeIs('dashboard.news.artikel.*') ? 'active' : ''  }}"
-                href="{{ route('dashboard.news.artikel.index') }}">
-                <i class="fas fa-book"></i>
-                <span>Artikel</span>
+                    href="{{ route('dashboard.news.artikel.index') }}">
+                    <i class="fas fa-book"></i>
+                    <span>Artikel</span>
                 </a>
             </div>
         </div>
@@ -49,8 +48,7 @@
     </div>
     <li class="nav-item">
         <a class="nav-link {{ Request::routeIs('dashboard.news.*') ? '' : 'collapsed'  }}" href="#"
-            data-toggle="collapse" data-target="#data_sekolah" aria-expanded="false"
-            aria-controls="data_sekolah">
+            data-toggle="collapse" data-target="#data_sekolah" aria-expanded="false" aria-controls="data_sekolah">
             <i class="fas fa-solid fa-city"></i>
             <span>Data Sekolah</span>
         </a>
@@ -61,6 +59,11 @@
                     <i class="fas fa-home"></i>
                     <span>Fasilitas</span>
                 </a>
+                <a class="collapse-item {{ Request::routeIs('dashboard.matapelajaran.*') ? 'active' : ''  }}"
+                    href="{{ route('dashboard.matapelajaran.index') }}">
+                    <i class="fas fa-solid fa-book"></i>
+                    <span>Mata Pelajaran</span>
+                </a>
                 <a class="collapse-item " href="{{ route('dashboard.guru.index') }}">
                     <i class="fas fa-solid fa-users"></i>
                     <span>Guru</span>
@@ -70,15 +73,14 @@
                     <span>Ekstrakurikuler</span>
                 </a>
                 <a class="collapse-item {{ Request::routeIs('dashboard.datamaster.kelas.*') ? 'active' : ''  }}"
-                href="{{ route('dashboard.datamaster.kelas.index') }}">
-                <i class="fas fa-home"></i>
-                <span>Kelas</span>
+                    href="{{ route('dashboard.datamaster.kelas.index') }}">
+                    <i class="fas fa-home"></i>
+                    <span>Kelas</span>
                 </a>
                 <a class="collapse-item {{ Request::routeIs('dashboard.datamaster.jadwal.*') ? 'active' : ''  }}"
-                href="{{ route('dashboard.datamaster.jadwal.index') }}">
-                <i class="fas fa-solid fa-list"></i>
-                <span>Jadwal</span>
-            </a>
+                    href="{{ route('dashboard.datamaster.jadwal.index') }}">
+                    <i class="fas fa-solid fa-list"></i>
+                    <span>Jadwal</span>
             </div>
         </div>
     </li>
@@ -88,22 +90,24 @@
     </div>
     <li class="nav-item">
         <a class="nav-link {{ Request::routeIs('dashboard.news.*') ? '' : 'collapsed'  }}" href="#"
-            data-toggle="collapse" data-target="#datamaster" aria-expanded="false"
-            aria-controls="datamaster">
+            data-toggle="collapse" data-target="#datamaster" aria-expanded="false" aria-controls="datamaster">
             <i class="fas fa-gear"></i>
             <span>Data Master</span>
         </a>
         <div id="datamaster" class="collapse {{ Request::routeIs('dashboard.datamaster.*') ? 'show' : ''  }} }}"
             aria-labelledby="headingBootstrap" data-parent="#accordionSidebar" style="">
             <div class="py-2 collapse-inner rounded">
-                <a class="collapse-item {{ Request::routeIs('dashboard.datamaster.kelas.*') ? 'active' : ''  }}"
-                href="{{ route('dashboard.datamaster.kelas.index') }}">Kelas</a>
+                {{-- <a class="collapse-item {{ Request::routeIs('dashboard.datamaster.kelas.*') ? 'active' : ''  }}"
+                    href="{{ route('dashboard.datamaster.kelas.index') }}">Kelas</a>
                 <a class="collapse-item {{ Request::routeIs('dashboard.datamaster.jadwal.*') ? 'active' : ''  }}"
-                href="{{ route('dashboard.datamaster.jadwal.index') }}">Jadwal</a>
+                    href="{{ route('dashboard.datamaster.jadwal.index') }}">Jadwal</a> --}}
+                    <a class="collapse-item {{ Request::routeIs('dashboard.datamaster.siswa.*') ? 'active' : ''  }}"
+                    href="{{ route('dashboard.datamaster.siswa.index') }}">
+                    <i class="fas fa-solid fa-user"></i>
+                    <span>siswa</span>
             </div>
         </div>
     </li>
-
     <hr class="sidebar-divider">
     <div class="sidebar-heading">
         Akses

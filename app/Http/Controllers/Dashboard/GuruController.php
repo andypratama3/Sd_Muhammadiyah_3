@@ -10,6 +10,7 @@ use App\Actions\Dashboard\Guru\DeleteGuruAction;
 use App\Actions\Dashboard\Guru\UpdateGuruAction;
 use App\Http\Requests\Dashboard\StoreGuruRequest;
 use App\Http\Requests\Dashboard\UpdateGuruRequest;
+use App\Models\Pelajaran;
 
 class GuruController extends Controller
 {
@@ -23,7 +24,8 @@ class GuruController extends Controller
     }
     public function create()
     {
-        return view('dashboard.guru.create');
+        $pelajarans = Pelajaran::all();
+        return view('dashboard.guru.create', compact('pelajarans'));
     }
     public function store(StoreGuruRequest $request, StoreGuruAction $storeGuruAction)
     {
@@ -33,7 +35,8 @@ class GuruController extends Controller
     public function edit($slug)
     {
         $guru = Guru::where('slug',$slug)->firstOrFail();
-        return view('dashboard.guru.edit', compact('guru'));
+        $pelajarans = Pelajaran::all();
+        return view('dashboard.guru.edit', compact('guru','pelajarans'));
     }
     public function update(UpdateGuruRequest $request, UpdateGuruAction $updateGuruAction, $slug)
     {

@@ -19,13 +19,13 @@
                     $images = explode(',',$ekstrakurikuler->foto);
                     $imgs = reset($images);
                 @endphp
-                @foreach ($images as $image)
-                <div class="card" style="width: 18rem;">
-                    <img src="{{ asset('storage/ekstrakurikuler/' . trim($image)) }}" class="card-img-top" alt="...">
+                 <div class="form-group text-center">
+                    <div class="" style="grid-template-columns: 60px 60px;">
+                    @foreach ($images as $image => $i)
+                        <img src="{{ asset('storage/ekstrakurikuler/'. trim($i)) }}" alt="" srcset="" style="width: 40%; height: 100%; margin-bottom: 40px;">
+                    @endforeach
+                    </div>
                 </div>
-                @endforeach
-                <img src="{{ asset('storage/img/ekstrakurikuler/'.$ekstrakurikuler->foto) }}" alt="" srcset=""
-                    style="width: 100%; height:">
             </div>
             <a href="{{ route('dashboard.ekstrakurikuler.index') }}" class="btn btn-danger float-end">Kembali</a>
         </div>

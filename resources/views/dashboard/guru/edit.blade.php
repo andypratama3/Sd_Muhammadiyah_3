@@ -1,8 +1,15 @@
 @extends('layouts.dashboard')
 @section('title', 'Edit guru')
+@push('css')
+<link href="{{ asset('asset_dashboard/vendor/select2/dist/css/select2.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ asset('asset_dashboard/vendor/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}" rel="stylesheet" type="text/css">
+@endpush
 @section('content')
     <div class="card mb-4">
         @include('layouts.flashmessage')
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Edit guru {{ $guru->name }}</h6>
+        </div>
         <div class="card-body">
         <form action="{{ route('dashboard.guru.update',$guru->slug) }}" method="POST" enctype="multipart/form-data">
             @csrf
@@ -21,6 +28,17 @@
                 <input type="text" class="form-control" id="" name="lulusan" placeholder="lulusan" value="{{ $guru->lulusan }}">
             </div>
             <div class="form-group">
+                <label for="">Pelajaran</label>
+                <select name="pelajarans[]" id="" multiple class="form-control select2">
+                    @foreach ($guru->pelajarans as $item)
+                    <option value="{{ $item->id }}" selected>{{ $item->name }}</option>
+                    @endforeach
+                    @foreach ($pelajarans as $pelajaran)
+                    <option value="{{ $pelajaran->id }}">{{ $pelajaran->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group">
                 <label for="">Foto</label>
                 <div class="custom-file">
                     <input type="file" class="form-control" id="foto" name="foto" accept="image/*" onchange="loadPreview(this)">
@@ -36,8 +54,12 @@
         </div>
     </div>
 @push('js')
+<script src="{{ asset('asset_dashboard/vendor/select2/dist/js/select2.js') }}"></script>
 <script type="text/javascript">
     $(document).ready(function (e) {
+        $('.select2').select2({
+            theme: 'bootstrap4'
+        });
         $('#foto').change(function () {
             let reader = new FileReader();
             reader.onload = (e) => {

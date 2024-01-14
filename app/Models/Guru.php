@@ -29,4 +29,8 @@ class Guru extends Model
         $this->attributes['name'] = $value;
         $this->attributes['slug'] = Str::slug($value).'-'.Str::random(4);
     }
+    public function pelajarans()
+    {
+        return $this->belongsToMany(Pelajaran::class, 'guru_matapelajaran');
+    }
 }

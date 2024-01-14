@@ -88,7 +88,6 @@
                             <th>No</th>
                             <th>Nama Fasilitas</th>
                             <th>Deskripsi</th>
-                            <th>Foto</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -98,11 +97,6 @@
                             <td>{{ ++$no }}</td>
                             <td>{{ $fasilitas->nama_fasilitas }}</td>
                             <td>{{ $fasilitas->desc }}</td>
-                            <td>
-                                <span class="btn fa fa-image" id="priview-image" data-foto="<?=$fasilitas->foto ?>">
-                                    <p>Lihat</p>
-                                </span>
-                            </td>
                             <td>
                                 <a href="{{ route('dashboard.fasilitas.show', $fasilitas->slug) }}"
                                     class="btn btn-dark btn-sm"><i class="fas fa-eye"></i></a>
@@ -134,39 +128,5 @@
         </div>
     </div>
 </div>
-</div>
-<!--Row-->
-<div id="myModal" class="modal">
 
-    <!-- The Close Button -->
-    <span class="closeheader">&times;</span>
-
-    <!-- Modal Content (The Image) -->
-    <img class="modal-content" id="foto" src="">
-
-    <!-- Modal Caption (Image Text) -->
-    <div id="caption"></div>
-</div>
-<!--Row-->
-@push('js')
-<script>
-    $(document).on('click', '#priview-image', function () {
-        // Get the modal
-        var modal = document.getElementById("myModal");
-        //take foto from folder
-        var foto = $(this).data('foto');
-        var imageUrl = '/storage/img/fasilitas/' + foto;
-
-        modal.style.display = "block";
-        $('#foto').attr('src', imageUrl);
-
-        // // Get the <span> element that closes the modal
-        var span = document.getElementsByClassName("closeheader")[0];
-        // // When the user clicks on <span> (x), close the modal
-        span.onclick = function () {
-            modal.style.display = "none";
-        }
-    });
-</script>
-@endpush
 @endsection

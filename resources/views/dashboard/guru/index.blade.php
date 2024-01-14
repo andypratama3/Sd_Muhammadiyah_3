@@ -102,7 +102,7 @@
                                         class="fas fa-info-circle"></i></a>
                                 <a href="{{ route('dashboard.guru.edit', $guru->slug) }}" class="btn btn-primary btn-sm"><i
                                         class="fa fa-pen"></i></a>
-                                <a href="#" data-id="{{ $guru->slug }}" class="btn btn-danger delete" title="Hapus">
+                                <a href="#" data-id="{{ $guru->slug }}" class="btn btn-danger delete btn-sm" title="Hapus">
                                     <form action="{{ route('dashboard.guru.destroy', $guru->slug) }}"
                                         id="delete-{{ $guru->slug }}" method="POST" enctype="multipart/form-data">
                                         @csrf

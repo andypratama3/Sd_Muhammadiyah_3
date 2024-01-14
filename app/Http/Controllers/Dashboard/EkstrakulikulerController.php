@@ -14,9 +14,11 @@ class EkstrakulikulerController extends Controller
 {
     public function index()
     {
-        $no = 0;
-        $ekstrakurikuler = Esktrakurikuler::select(['id','name','desc','foto','slug'])->get();
-        return view('dashboard.esktrakurikuler.index', compact('no','ekstrakurikuler'));
+        $limit = 15;
+        $ekstrakurikuler = Esktrakurikuler::select(['id','name','desc','foto','slug'])->orderBy('created_at', 'asc')->paginate($limit);
+        $count = Esktrakurikuler::count();
+        $no = $limit * ($ekstrakurikuler->currentPage() - 1);
+        return view('dashboard.esktrakurikuler.index', compact('no','ekstrakurikuler','count'));
     }
     public function create()
     {

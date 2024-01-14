@@ -26,5 +26,8 @@ class StoreGuruAction
         $guru->foto = $picture_name;
         $guru->save();
 
+        foreach ($request->pelajarans as $key => $pelajaran) {
+            $guru->pelajarans()->attach($pelajaran);
+        }
     }
 }

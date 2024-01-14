@@ -17,7 +17,8 @@ class ActionEkstrakurikuler
             foreach ($images_ekstrakurikuler as $img) {
                 $ext = $img->getClientOriginalExtension();
                 $upload_path = public_path('storage/ekstrakurikuler/');
-                $file_name = 'E_kurikuler' . Str::slug($ekstrakurikulerData->name) . '_' . date('YmdHis') . ".$ext";
+                $uniqueIdentifier = Str::random(8);
+                $file_name = 'E_kurikuler' . Str::slug($ekstrakurikulerData->name) . '_' . $uniqueIdentifier . '_' . date('YmdHis') . ".$ext";
                 $img->move($upload_path, $file_name);
                 $images[] = $file_name;
             }

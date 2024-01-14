@@ -29,7 +29,6 @@
             @endforeach
         </div>
     </div>
-
 </section><!-- End fasilitas Section -->
 @push('js')
 <script>

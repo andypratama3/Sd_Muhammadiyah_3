@@ -23,10 +23,12 @@ use App\Http\Controllers\Dashboard\KaryawanController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\KelasCategoryController;
 use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
+use App\Http\Controllers\Dashboard\SiswaController as DashboardSiswaController;
 use App\Http\Controllers\Dashboard\JadwalController as DashboardJadwalController;
 use App\Http\Controllers\Dashboard\BeritaController as DashboardBeritaController;
 use App\Http\Controllers\Dashboard\ArtikelController as DashboardArtikelController;
 use App\Http\Controllers\Dashboard\FasilitasController as DashboardFasilitasController;
+use App\Http\Controllers\Dashboard\MataPelajaranController as DashboardMataPelajaranController;
 use App\Http\Controllers\Dashboard\EkstrakulikulerController as DashboardEsktrakurikulerController;
 
 /*
@@ -81,12 +83,14 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
     Route::resource('fasilitas', DashboardFasilitasController::class, ['names' => 'dashboard.fasilitas']);
     Route::resource('guru', DashboardGuruController::class, ['names' => 'dashboard.guru']);
     Route::resource('ekstrakurikuler', DashboardEsktrakurikulerController::class, ['names' => 'dashboard.ekstrakurikuler']);
+    Route::resource('matapelajaran', DashboardMataPelajaranController::class, ['names' => 'dashboard.matapelajaran']);
 
     Route::group(['prefix' => 'datamaster'], function () {
         Route::resource('kelas', KelasController::class, ['names' => 'dashboard.datamaster.kelas']);
         Route::resource('jadwal',  DashboardJadwalController::class, ['names' => 'dashboard.datamaster.jadwal']);
         Route::post('kelas_category',[ DashboardJadwalController::class, 'getCategoryKelas'])->name('dashboard.datamaster.jadwal.kelas_category');
         Route::post('getSmester',[ DashboardJadwalController::class, 'getSmester'])->name('dashboard.datamaster.jadwal.getSmester');
+        Route::resource('siswa',  DashboardSiswaController::class, ['names' => 'dashboard.datamaster.siswa']);
     });
 
     Route::group(['prefix' => 'pengaturan'], function () {
