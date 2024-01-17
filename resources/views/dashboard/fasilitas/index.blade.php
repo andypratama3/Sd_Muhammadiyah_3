@@ -78,7 +78,7 @@
             @include('layouts.flashmessage')
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h4 class="m-0 font-weight-bold text-primary text-center">Fasilitas</h4>
-                <a href="{{ route('dashboard.fasilitas.create') }}" class="btn btn-success float-right">Tambah <i
+                <a href="{{ route('dashboard.datasekolah.fasilitas.create') }}" class="btn btn-success float-right">Tambah <i
                         class="fas fa-plus"></i></a>
             </div>
             <div class="table-responsive">
@@ -98,13 +98,13 @@
                             <td>{{ $fasilitas->nama_fasilitas }}</td>
                             <td>{{ $fasilitas->desc }}</td>
                             <td>
-                                <a href="{{ route('dashboard.fasilitas.show', $fasilitas->slug) }}"
+                                <a href="{{ route('dashboard.datasekolah.fasilitas.show', $fasilitas->slug) }}"
                                     class="btn btn-dark btn-sm"><i class="fas fa-eye"></i></a>
-                                <a href="{{ route('dashboard.fasilitas.edit', $fasilitas->slug) }}"
+                                <a href="{{ route('dashboard.datasekolah.fasilitas.edit', $fasilitas->slug) }}"
                                     class="btn btn-primary btn-sm"><i class="fas fa-pen"></i></a>
                                 <a href="#" data-id="{{ $fasilitas->slug }}" class="btn btn-danger btn-sm delete"
                                     title="Hapus">
-                                    <form action="{{ route('dashboard.fasilitas.destroy', $fasilitas->slug) }}"
+                                    <form action="{{ route('dashboard.datasekolah.fasilitas.destroy', $fasilitas->slug) }}"
                                         id="delete-{{ $fasilitas->slug }}" method="POST" enctype="multipart/form-data">
                                         @csrf
                                         @method('delete')

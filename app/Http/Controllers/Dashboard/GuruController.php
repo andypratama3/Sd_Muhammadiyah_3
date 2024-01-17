@@ -30,7 +30,7 @@ class GuruController extends Controller
     public function store(StoreGuruRequest $request, StoreGuruAction $storeGuruAction)
     {
         $storeGuruAction->execute($request);
-        return redirect()->route('dashboard.guru.index')->with('success','Berhasil Menambahkan Guru!');
+        return redirect()->route('dashboard.datasekolah.guru.index')->with('success','Berhasil Menambahkan Guru!');
     }
     public function edit($slug)
     {
@@ -41,12 +41,12 @@ class GuruController extends Controller
     public function update(UpdateGuruRequest $request, UpdateGuruAction $updateGuruAction, $slug)
     {
         $updateGuruAction->execute($request, $slug);
-        return redirect()->route('dashboard.guru.index')->with('success','Berhasil Update Guru!');
+        return redirect()->route('dashboard.datasekolah.guru.index')->with('success','Berhasil Update Guru!');
     }
     public function destroy(DeleteGuruAction $DeleteGuruAction, $slug)
     {
         $DeleteGuruAction->execute($slug);
-        return redirect()->route('dashboard.guru.index')->with('Berhasil Hapus Guru!');
+        return redirect()->route('dashboard.datasekolah.guru.index')->with('success','Berhasil Hapus Guru!');
     }
 
 }

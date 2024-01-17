@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
     {
         // Role
         $listRoles = [
-            'Superadmin',
+            'Superadminbaru',
             // Add more roles here
         ];
 
@@ -113,7 +113,6 @@ class UserSeeder extends Seeder
         // List User
         $listUsers = [
             [
-                'id' => Str::uuid(),
                 'name' => 'Superadmin',
                 'email' => 'superadmin@superadmin.com',
                 'nip' => '0000',

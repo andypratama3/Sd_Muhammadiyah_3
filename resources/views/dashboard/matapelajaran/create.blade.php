@@ -6,7 +6,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Tambah Pelajaran</h6>
     </div>
     <div class="card-body">
-        <form action="{{ route('dashboard.matapelajaran.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('dashboard.datasekolah.matapelajaran.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <label for="name">Mata Pelajaran</label>
@@ -14,7 +14,7 @@
                     placeholder="Masukan Nama pelajaran">
             </div>
             <div class="form-group">
-                <a href="{{ route('dashboard.matapelajaran.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
+                <a href="{{ route('dashboard.datasekolah.matapelajaran.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
                 <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
             </div>
         </form>

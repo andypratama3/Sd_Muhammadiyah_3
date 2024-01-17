@@ -11,7 +11,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Tambah Jadwal</h6>
     </div>
     <div class="card-body">
-        <form action="{{ route('dashboard.datamaster.jadwal.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('dashboard.datasekolah.jadwal.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <label for="kelas">Kelas</label>
@@ -44,7 +44,7 @@
                 <input type="file" class="form-control" name="jadwal" id="jadwal">
             </div>
 
-            <a  href="{{ route('dashboard.datamaster.jadwal.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
+            <a  href="{{ route('dashboard.datasekolah.jadwal.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
             <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
         </form>
     </div>
@@ -69,7 +69,7 @@
                 }
             });
             $.ajax({
-                url: '{{ route("dashboard.datamaster.jadwal.kelas_category") }}',
+                url: '{{ route("dashboard.datasekolah.jadwal.kelas_category") }}',
                 method: 'POST',
                 data: {
                     id: selectedKelasId
@@ -97,7 +97,7 @@
             });
             $.ajax({
                 type: "POST",
-                url: "{{ route('dashboard.datamaster.jadwal.getSmester') }}",
+                url: "{{ route('dashboard.datasekolah.jadwal.getSmester') }}",
                 data: {
                     category_kelas : category_kelas,
                     kelas   : kelas,

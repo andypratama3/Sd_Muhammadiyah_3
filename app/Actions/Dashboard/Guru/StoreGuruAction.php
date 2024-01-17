@@ -19,7 +19,7 @@ class StoreGuruAction
             $guru_picture = $request->file('foto');
             $ext = $guru_picture->getClientOriginalExtension();
 
-            $upload_path = 'storage/img/guru/';
+            $upload_path = public_path('storage/img/guru/');
             $picture_name = 'Guru_'.Str::slug($request->name).'_'.date('YmdHis').".$ext";
             $guru_picture->move($upload_path, $picture_name);
         }

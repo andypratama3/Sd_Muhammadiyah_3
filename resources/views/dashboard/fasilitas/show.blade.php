@@ -25,7 +25,7 @@
                 @endforeach
             </div>
         </div>
-        <a href="{{ route('dashboard.fasilitas.index') }}" class="btn btn-danger float-end">Kembali</a>
+        <a href="{{ route('dashboard.datasekolah.fasilitas.index') }}" class="btn btn-danger float-end">Kembali</a>
     </div>
 </div>
 @endsection

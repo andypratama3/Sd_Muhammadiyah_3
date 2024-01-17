@@ -30,7 +30,7 @@ class KelasController extends Controller
     public function store(KelasData $kelasData, KelasAction $kelasAction)
     {
         $kelasAction->execute($kelasData);
-        return redirect()->route('dashboard.datamaster.kelas.index')->with('succes','Berhasil Menambahkan Kelas');
+        return redirect()->route('dashboard.datasekolah.kelas.index')->with('succes','Berhasil Menambahkan Kelas');
     }
     public function edit($slug)
     {
@@ -41,11 +41,11 @@ class KelasController extends Controller
     public function update(KelasData $kelasData, KelasAction $kelasAction)
     {
         $kelasAction->execute($kelasData);
-        return redirect()->route('dashboard.datamaster.kelas.index')->with('succes','Berhasil Mengubah Kelas');
+        return redirect()->route('dashboard.datasekolah.kelas.index')->with('succes','Berhasil Mengubah Kelas');
     }
     public function destroy($slug, KelasDeleteAction $kelasDeleteAction)
     {
         $kelasDeleteAction->execute($slug);
-        return redirect()->route('dashboard.datamaster.kelas.index')->with('success', 'Berhasil Menghapus Kelas!');
+        return redirect()->route('dashboard.datasekolah.kelas.index')->with('success', 'Berhasil Menghapus Kelas!');
     }
 }

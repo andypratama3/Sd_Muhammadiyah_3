@@ -27,7 +27,7 @@
                     </div>
                 </div>
             </div>
-            <a href="{{ route('dashboard.ekstrakurikuler.index') }}" class="btn btn-danger float-end">Kembali</a>
+            <a href="{{ route('dashboard.datasekolah.ekstrakurikuler.index') }}" class="btn btn-danger float-end">Kembali</a>
         </div>
     </div>
 </div>

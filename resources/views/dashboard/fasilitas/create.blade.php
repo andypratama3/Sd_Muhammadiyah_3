@@ -6,7 +6,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Tambah Fasilitas</h6>
         </div>
         <div class="card-body">
-        <form action="{{ route('dashboard.fasilitas.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('dashboard.datasekolah.fasilitas.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
             <label for="nama_fasilitas">Fasilitas</label>
@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <a href="{{ route('dashboard.fasilitas.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
+                <a href="{{ route('dashboard.datasekolah.fasilitas.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
             <button type="submit"  class="btn btn-primary float-lg-right">Submit</button>
         </div>
         </form>

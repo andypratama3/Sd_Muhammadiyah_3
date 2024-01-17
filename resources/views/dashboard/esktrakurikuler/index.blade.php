@@ -9,7 +9,7 @@
             @include('layouts.flashmessage')
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h4 class="m-0 font-weight-bold text-primary text-center">Data Ekstrkurikuler</h5>
-                    <a href="{{ route('dashboard.ekstrakurikuler.create') }}" class="btn btn-success float-right">Tambah <i class="fas fa-plus"></i></a>
+                    <a href="{{ route('dashboard.datasekolah.ekstrakurikuler.create') }}" class="btn btn-success float-right">Tambah <i class="fas fa-plus"></i></a>
             </div>
             <div class="table-responsive">
                 <table class="table align-items-center table-flush text-center">
@@ -28,11 +28,11 @@
                             <td>{{ $item->name }}</td>
                             <td>{{ $item->desc }}</td>
                             <td>
-                                <a href="{{ route('dashboard.ekstrakurikuler.show', $item->slug) }}" class="btn btn-dark btn-sm"><i
+                                <a href="{{ route('dashboard.datasekolah.ekstrakurikuler.show', $item->slug) }}" class="btn btn-dark btn-sm"><i
                                         class="fas fa-info-circle"></i></a>
-                                <a href="{{ route('dashboard.ekstrakurikuler.edit', $item->slug) }}" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+                                <a href="{{ route('dashboard.datasekolah.ekstrakurikuler.edit', $item->slug) }}" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
                                 <a href="#" data-id="{{ $item->slug }}" class="btn btn-danger btn-sm delete" title="Hapus">
-                                    <form action="{{ route('dashboard.ekstrakurikuler.destroy', $item->slug) }}"
+                                    <form action="{{ route('dashboard.datasekolah.ekstrakurikuler.destroy', $item->slug) }}"
                                         id="delete-{{ $item->slug }}" method="POST" enctype="multipart/form-data">
                                         @csrf
                                         @method('delete')

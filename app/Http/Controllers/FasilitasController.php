@@ -9,7 +9,12 @@ class FasilitasController extends Controller
 {
     public function index()
     {
-        $fasilitas = Fasilitas::all();
-        return view('profil.fasilitas', compact('fasilitas'));
+        $fasilitass = Fasilitas::all();
+        return view('profil.fasilitas.index', compact('fasilitass'));
+    }
+    public function show($nama_fasilitas)
+    {
+        $fasilitas = Fasilitas::where('nama_fasilitas', $nama_fasilitas)->firstOrFail();
+        return view('profil.fasilitas.show', compact('fasilitas'));
     }
 }

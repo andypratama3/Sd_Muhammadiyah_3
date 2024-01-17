@@ -73,7 +73,7 @@
             @include('layouts.flashmessage')
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h4 class="m-0 font-weight-bold text-primary text-center">Data Guru</h5>
-                    <a href="{{ route('dashboard.guru.create') }}" class="btn btn-success btn-sm float-right">Tambah <i class="fas fa-plus"></i></a>
+                    <a href="{{ route('dashboard.datasekolah.guru.create') }}" class="btn btn-success btn-sm float-right">Tambah <i class="fas fa-plus"></i></a>
             </div>
             <div class="table-responsive">
                 <table class="table align-items-center table-flush text-center">
@@ -98,12 +98,12 @@
                                 <span class="btn fa fa-image" id="priview-image" data-foto="<?=$guru->foto ?>"><p>Lihat</p></span>
                             </td>
                             <td>
-                                <a href="{{ route('dashboard.guru.show', $guru->slug) }}" class="btn btn-dark btn-sm"><i
+                                <a href="{{ route('dashboard.datasekolah.guru.show', $guru->slug) }}" class="btn btn-dark btn-sm"><i
                                         class="fas fa-info-circle"></i></a>
-                                <a href="{{ route('dashboard.guru.edit', $guru->slug) }}" class="btn btn-primary btn-sm"><i
+                                <a href="{{ route('dashboard.datasekolah.guru.edit', $guru->slug) }}" class="btn btn-primary btn-sm"><i
                                         class="fa fa-pen"></i></a>
                                 <a href="#" data-id="{{ $guru->slug }}" class="btn btn-danger delete btn-sm" title="Hapus">
-                                    <form action="{{ route('dashboard.guru.destroy', $guru->slug) }}"
+                                    <form action="{{ route('dashboard.datasekolah.guru.destroy', $guru->slug) }}"
                                         id="delete-{{ $guru->slug }}" method="POST" enctype="multipart/form-data">
                                         @csrf
                                         @method('delete')

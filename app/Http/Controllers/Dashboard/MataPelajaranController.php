@@ -24,11 +24,11 @@ class MataPelajaranController extends Controller
     public function store(PelajaranData $pelajaranData, PelajaranAction $PelajaranAction)
     {
         $PelajaranAction->execute($pelajaranData);
-        return redirect()->route('dashboard.matapelajaran.index')->with('success','Berhasil Menambah MataPelajaran');
+        return redirect()->route('dashboard.datasekolah.matapelajaran.index')->with('success','Berhasil Menambah MataPelajaran');
     }
     public function destroy(PelajaranActionDelete $pelajaranActionDelete,$slug)
     {
         $pelajaranActionDelete->execute($slug);
-        return redirect()->route('dashboard.matapelajaran.index')->with('success', 'Barhasil Menghapus Mata Pelajaran');
+        return redirect()->route('dashboard.datasekolah.matapelajaran.index')->with('success', 'Barhasil Menghapus Mata Pelajaran');
     }
 }

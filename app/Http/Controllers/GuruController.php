@@ -10,6 +10,6 @@ class GuruController extends Controller
     public function index()
     {
         $gurus = Guru::all();
-        return view('profil.guru', compact('gurus'));
+        return view('profil.guru.guru', compact('gurus'));
     }
 }

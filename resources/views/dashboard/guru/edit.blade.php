@@ -11,7 +11,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Edit guru {{ $guru->name }}</h6>
         </div>
         <div class="card-body">
-        <form action="{{ route('dashboard.guru.update',$guru->slug) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('dashboard.datasekolah.guru.update',$guru->slug) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="form-group">
@@ -48,7 +48,7 @@
                     <img src="{{ asset('storage/img/guru/'.$guru->foto) }}" id="output" alt="" style="width: 200px; height: 50%;">
                 </div>
             </div>
-            <a href="{{ route('dashboard.guru.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
+            <a href="{{ route('dashboard.datasekolah.guru.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
             <button type="submit" class="btn btn-primary float-lg-right">Simpan</button>
         </form>
         </div>

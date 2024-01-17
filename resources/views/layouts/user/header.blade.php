@@ -17,7 +17,7 @@
                      <ul>
                          <li><a href="/guru">Guru</a></li>
                          <li><a href="/fasilitas">Fasilitas</a></li>
-                         <li><a href="/ekstrakurikuler">Ekstrakurikuler</a></li>
+                         <li><a href="{{ route('esktrakurikuler.index') }}">Ekstrakurikuler</a></li>
                      </ul>
                  </li>
                  <li class="dropdown"><a href="#"><span>Informasi</span> <i

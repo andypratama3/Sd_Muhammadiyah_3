@@ -21,19 +21,20 @@
                             <th class="w-75">Kategori Kelas</th>
                         </tr>
                         @php
-                            $categoryKelas = json_decode($kelas->category_kelas, true);
-                            sort($categoryKelas);
+                        $categoryKelas = json_decode($kelas->category_kelas, true);
+                        sort($categoryKelas);
                         @endphp
                         @foreach ($categoryKelas as $category)
                         <tr>
-                            <td><input type="text" readonly value="{{ $category }}" class="form-control" name="category_kelas[]" placeholder="Masukkan Kategori Kelas"></td>
+                            <td><input type="text" readonly value="{{ $category }}" class="form-control"
+                                    name="category_kelas[]" placeholder="Masukkan Kategori Kelas"></td>
                         </tr>
                         @endforeach
                     </table>
                 </div>
             </div>
         </div>
-        <a href="{{ route('dashboard.datamaster.kelas.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
+        <a href="{{ route('dashboard.datasekolah.kelas.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
     </div>
 </div>
 @endsection

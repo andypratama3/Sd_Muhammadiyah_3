@@ -7,7 +7,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Tambah Esktrakurikuler</h6>
     </div>
     <div class="card-body">
-        <form action="{{ route('dashboard.ekstrakurikuler.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('dashboard.datasekolah.ekstrakurikuler.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <label for="judul">Nama</label>
@@ -27,7 +27,7 @@
                     <img src="" id="output" alt="" style="width: 200px; height: 50%;">
                 </div>
             </div>
-            <a  href="{{ route('dashboard.ekstrakurikuler.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
+            <a  href="{{ route('dashboard.datasekolah.ekstrakurikuler.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
             <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
         </form>
     </div>

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name');
             $table->string('image');
-            $table->string('artikel');
+            $table->longText('artikel');
             $table->string('slug');
             $table->unsignedInteger('like')->default(0);
             $table->unsignedInteger('jumlah_klik')->default(0);

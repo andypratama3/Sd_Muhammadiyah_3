@@ -30,7 +30,7 @@ class FasilitasController extends Controller
         $FasilitasAction->execute($FasilitasData);
 
 
-        return redirect()->route('dashboard.fasilitas.index')->with('success', 'Fasilitas Berhasil Di Tambah');
+        return redirect()->route('dashboard.datasekolah.fasilitas.index')->with('success', 'Fasilitas Berhasil Di Tambah');
     }
 
     public function show($slug)
@@ -51,12 +51,12 @@ class FasilitasController extends Controller
     {
         $FasilitasAction->execute($FasilitasData);
 
-        return redirect()->route('dashboard.fasilitas.index')->with('success', 'Fasilitas Berhasil Di Update!');
+        return redirect()->route('dashboard.datasekolah.fasilitas.index')->with('success', 'Fasilitas Berhasil Di Update!');
     }
 
     public function destroy(DeleteFasilitasAction $deleteFasilitasAction, $slug)
     {
         $deleteFasilitasAction->execute($slug);
-        return redirect()->route('dashboard.fasilitas.index')->with('success', 'Fasilitas Berhasil Di Hapus!');
+        return redirect()->route('dashboard.datasekolah.fasilitas.index')->with('success', 'Fasilitas Berhasil Di Hapus!');
     }
 }

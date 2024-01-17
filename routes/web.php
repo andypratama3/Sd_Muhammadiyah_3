@@ -4,11 +4,11 @@ use Illuminate\Support\Facades\Route;
 
 //User Access
 use App\Http\Controllers\GuruController;
+use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\FasilitasController;
 use App\Http\Controllers\Auth\GoogleController;
-use App\Http\Controllers\JadwalController;
 
 //Dashboard Access
 use App\Http\Controllers\LikeArtikelController;
@@ -19,14 +19,16 @@ use App\Http\Controllers\Dashboard\TaskController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\CategoryArtikel;
 use App\Http\Controllers\Dashboard\KelasController;
+use App\Http\Controllers\EkstrakurikulerController;
 use App\Http\Controllers\Dashboard\KaryawanController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\KelasCategoryController;
 use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
 use App\Http\Controllers\Dashboard\SiswaController as DashboardSiswaController;
-use App\Http\Controllers\Dashboard\JadwalController as DashboardJadwalController;
 use App\Http\Controllers\Dashboard\BeritaController as DashboardBeritaController;
+use App\Http\Controllers\Dashboard\JadwalController as DashboardJadwalController;
 use App\Http\Controllers\Dashboard\ArtikelController as DashboardArtikelController;
+use App\Http\Controllers\Dashboard\PrestasiController as DashboardPrestasiController;
 use App\Http\Controllers\Dashboard\FasilitasController as DashboardFasilitasController;
 use App\Http\Controllers\Dashboard\MataPelajaranController as DashboardMataPelajaranController;
 use App\Http\Controllers\Dashboard\EkstrakulikulerController as DashboardEsktrakurikulerController;
@@ -47,14 +49,24 @@ Route::get('/', BerandaController::class)->name('index');
 // Berita
 Route::get('berita', [DetailBeritaController::class, 'index'])->name('berita.index');
 Route::get('berita/{slug}', [DetailBeritaController::class, 'show'])->name('berita.show');
+
 //guru
 Route::get('guru', [GuruController::class, 'index'])->name('guru.index');
+//ekstrakurikuler
+Route::get('ekstrakurikuler', [EkstrakurikulerController::class, 'index'])->name('esktrakurikuler.index');
+Route::get('ekstrakurikuler/{name}', [EkstrakurikulerController::class, 'show'])->name('esktrakurikuler.show');
+
 //fasilitas
 Route::get('fasilitas', [FasilitasController::class, 'index'])->name('fasilitas.index');
+Route::get('fasilitas/{nama_fasilitas}', [FasilitasController::class, 'show'])->name('fasilitas.show');
+
+//jadwal
 Route::resource('jadwal', JadwalController::class, ['names' => 'jadwal']);
 Route::post('jadwal/getjadwal/smester', [JadwalController::class, 'tahun_ajaran'])->name('jadwal.tahun.ajaran');
+
 //artikel
 Route::resource('artikel', ArtikelController::class, ['names' => 'artikel']);
+
 //login with google
 Route::get('auth/google', [GoogleController::class, 'signGoogle'])->name('login.google');
 Route::get('auth/google/callback', [GoogleController::class, 'callbackToGoogle'])->name('google.callback');
@@ -80,20 +92,23 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
 
     });
 
-    Route::resource('fasilitas', DashboardFasilitasController::class, ['names' => 'dashboard.fasilitas']);
-    Route::resource('guru', DashboardGuruController::class, ['names' => 'dashboard.guru']);
-    Route::resource('ekstrakurikuler', DashboardEsktrakurikulerController::class, ['names' => 'dashboard.ekstrakurikuler']);
-    Route::resource('matapelajaran', DashboardMataPelajaranController::class, ['names' => 'dashboard.matapelajaran']);
-
-    Route::group(['prefix' => 'datamaster'], function () {
-        Route::resource('kelas', KelasController::class, ['names' => 'dashboard.datamaster.kelas']);
-        Route::resource('jadwal',  DashboardJadwalController::class, ['names' => 'dashboard.datamaster.jadwal']);
-        Route::post('kelas_category',[ DashboardJadwalController::class, 'getCategoryKelas'])->name('dashboard.datamaster.jadwal.kelas_category');
-        Route::post('getSmester',[ DashboardJadwalController::class, 'getSmester'])->name('dashboard.datamaster.jadwal.getSmester');
-        Route::resource('siswa',  DashboardSiswaController::class, ['names' => 'dashboard.datamaster.siswa']);
+    Route::group(['prefix' => 'datasekolah'], function () {
+        Route::resource('fasilitas', DashboardFasilitasController::class, ['names' => 'dashboard.datasekolah.fasilitas']);
+        Route::resource('guru', DashboardGuruController::class, ['names' => 'dashboard.datasekolah.guru']);
+        Route::resource('ekstrakurikuler', DashboardEsktrakurikulerController::class, ['names' => 'dashboard.datasekolah.ekstrakurikuler']);
+        Route::resource('matapelajaran', DashboardMataPelajaranController::class, ['names' => 'dashboard.datasekolah.matapelajaran']);
+        Route::resource('prestasi', DashboardPrestasiController::class, ['names' => 'dashboard.datasekolah.prestasi']);
+        Route::resource('kelas', KelasController::class, ['names' => 'dashboard.datasekolah.kelas']);
+        Route::resource('jadwal',  DashboardJadwalController::class, ['names' => 'dashboard.datasekolah.jadwal']);
+        Route::post('kelas_category',[ DashboardJadwalController::class, 'getCategoryKelas'])->name('dashboard.datasekolah.jadwal.kelas_category');
+        Route::post('getSmester',[ DashboardJadwalController::class, 'getSmester'])->name('dashboard.datasekolah.jadwal.getSmester');
+        Route::resource('siswa',  DashboardSiswaController::class, ['names' => 'dashboard.datasekolah.siswa']);
     });
 
     Route::group(['prefix' => 'pengaturan'], function () {
+        //user settings
+        // Route::resource('users', UserController::class, ['names' => 'dashboard.pengaturan.task']);
+        //akses
         Route::resource('task', TaskController::class, ['names' => 'dashboard.pengaturan.task']);
         Route::resource('role', RoleController::class, ['names' => 'dashboard.pengaturan.role']);
         Route::resource('user', UserController::class, ['names' => 'dashboard.pengaturan.user']);

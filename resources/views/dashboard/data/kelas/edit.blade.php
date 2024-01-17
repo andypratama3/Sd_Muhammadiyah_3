@@ -7,7 +7,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Edit Kelas</h6>
     </div>
     <div class="card-body">
-        <form action="{{ route('dashboard.datamaster.kelas.update', $kelas->slug) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('dashboard.datasekolah.kelas.update', $kelas->slug) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <input type="hidden" name="slug" value="{{ $kelas->slug }}">
@@ -38,7 +38,7 @@
                     </div>
                 </div>
             </div>
-            <a  href="{{ route('dashboard.datamaster.kelas.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
+            <a  href="{{ route('dashboard.datasekolah.kelas.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
             <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
         </form>
     </div>

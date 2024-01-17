@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('title', 'Edit Artikel')
+@section('title', 'Detail Artikel')
 @section('content')
 @push('css')
 <link href="{{ asset('asset_dashboard/vendor/select2/dist/css/select2.css') }}" rel="stylesheet" type="text/css">

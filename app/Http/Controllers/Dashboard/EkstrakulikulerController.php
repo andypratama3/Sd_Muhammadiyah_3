@@ -27,7 +27,7 @@ class EkstrakulikulerController extends Controller
     public function store(EsktrakurikulerData $ekstrakurikulerData, ActionEkstrakurikuler $ActionEkstrakurikuler)
     {
         $ActionEkstrakurikuler->execute($ekstrakurikulerData);
-        return redirect()->route('dashboard.ekstrakurikuler.index')->with('success','Berhasil Menambahkan Esktrakurikuller');
+        return redirect()->route('dashboard.datasekolah.ekstrakurikuler.index')->with('success','Berhasil Menambahkan Esktrakurikuller');
     }
     public function show(Esktrakurikuler $ekstrakurikuler)
     {
@@ -40,12 +40,12 @@ class EkstrakulikulerController extends Controller
     public function update(EsktrakurikulerData $ekstrakurikulerData, ActionEkstrakurikuler $ActionEkstrakurikuler)
     {
         $ActionEkstrakurikuler->execute($ekstrakurikulerData);
-        return redirect()->route('dashboard.ekstrakurikuler.index')->with('success','Berhasil Mengubah Esktrakurikuller');
+        return redirect()->route('dashboard.datasekolah.ekstrakurikuler.index')->with('success','Berhasil Mengubah Esktrakurikuller');
     }
     public function destroy(DeleteEsktrakurikuler $DeleteEsktrakurikuler, $slug)
     {
         $DeleteEsktrakurikuler->execute($slug);
-        return redirect()->route('dashboard.ekstrakurikuler.index')->with('success', 'Esktrakurikuller Berhasil Di Hapus!');
+        return redirect()->route('dashboard.datasekolah.ekstrakurikuler.index')->with('success', 'Esktrakurikuller Berhasil Di Hapus!');
     }
 
 }

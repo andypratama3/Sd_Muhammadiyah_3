@@ -68,9 +68,9 @@ class ArtikelController extends Controller
         if($artikelActionDelete)
         {
             $artikelActionDelete->execute($slug);
-            return response()->json(['status' => 'success', 'message' => 'Berhasil Menghapus Peserta']);
+            return response()->json(['status' => 'success', 'message' => 'Berhasil Menghapus Artikel']);
         }else{
-            return response()->json(['status' => 'error', 'message' => 'Gagal Menghapus Peserta']);
+            return response()->json(['status' => 'error', 'message' => 'Gagal Menghapus Artikel']);
         }
     }
 }

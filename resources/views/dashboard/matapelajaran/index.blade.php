@@ -7,7 +7,7 @@
             @include('layouts.flashmessage')
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h4 class="m-0 font-weight-bold text-primary text-center">Data Mata Pelajaran</h5>
-                    <a href="{{ route('dashboard.matapelajaran.create') }}" class="btn btn-success btn-sm float-right">Tambah <i class="fas fa-plus"></i></a>
+                    <a href="{{ route('dashboard.datasekolah.matapelajaran.create') }}" class="btn btn-success btn-sm float-right">Tambah <i class="fas fa-plus"></i></a>
             </div>
             <div class="table-responsive">
                 <table class="table align-items-center table-flush text-center">
@@ -25,7 +25,7 @@
                             <td>{{ $matapelajaran->name }}</td>
                             <td>
                                 <a href="#" data-id="{{ $matapelajaran->slug }}" class="btn btn-danger btn-sm delete" title="Hapus">
-                                    <form action="{{ route('dashboard.matapelajaran.destroy', $matapelajaran->slug) }}"
+                                    <form action="{{ route('dashboard.datasekolah.matapelajaran.destroy', $matapelajaran->slug) }}"
                                         id="delete-{{ $matapelajaran->slug }}" method="POST" enctype="multipart/form-data">
                                         @csrf
                                         @method('delete')

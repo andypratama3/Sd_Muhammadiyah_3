@@ -57,9 +57,9 @@ class JadwalController extends Controller
         $jadwal = Jadwal::where('kelas', $jadwalData->kelas)->where('tahun_ajaran', $jadwalData->tahun_ajaran)->where('category_kelas', $jadwalData->category_kelas)->exists();
         if($jadwalData != $jadwal){
                 $jadwalAction->execute($jadwalData);
-                return redirect()->route('dashboard.datamaster.jadwal.index')->with('success', 'Berhasil Menambahkan Jadwal');
+                return redirect()->route('dashboard.datasekolah.jadwal.index')->with('success', 'Berhasil Menambahkan Jadwal');
             }else{
-                return redirect()->route('dashboard.datamaster.jadwal.index')->with('error', 'Jadwal Telah Ada');
+                return redirect()->route('dashboard.datasekolah.jadwal.index')->with('error', 'Jadwal Telah Ada');
             }
         }
 
@@ -71,13 +71,13 @@ class JadwalController extends Controller
     public function update(JadwalData $jadwalData, JadwalAction $jadwalAction)
     {
         $jadwalAction->execute($jadwalData);
-        return redirect()->route('dashboard.datamaster.jadwal.index')->with('success', 'Berhasil Update Jadwal');
+        return redirect()->route('dashboard.datasekolah.jadwal.index')->with('success', 'Berhasil Update Jadwal');
 
     }
     public function destroy(JadwalActionDelete $jadwalActionDelete,$slug)
     {
         $jadwalActionDelete->execute($slug);
-        return redirect()->route('dashboard.datamaster.jadwal.index')->with('success', 'Data Jadwal Berhasil Di Hapus');
+        return redirect()->route('dashboard.datasekolah.jadwal.index')->with('success', 'Data Jadwal Berhasil Di Hapus');
     }
 
 }

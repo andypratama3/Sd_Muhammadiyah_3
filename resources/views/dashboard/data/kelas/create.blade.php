@@ -7,7 +7,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Tambah Kelas</h6>
     </div>
     <div class="card-body">
-        <form action="{{ route('dashboard.datamaster.kelas.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('dashboard.datasekolah.kelas.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <label for="Kelas">Nama Kelas</label>
@@ -27,7 +27,7 @@
                     </div>
                 </div>
             </div>
-            <a  href="{{ route('dashboard.datamaster.kelas.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
+            <a  href="{{ route('dashboard.datasekolah.kelas.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
             <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
         </form>
     </div>

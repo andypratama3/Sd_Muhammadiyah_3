@@ -52,35 +52,41 @@
             <i class="fas fa-solid fa-city"></i>
             <span>Data Sekolah</span>
         </a>
-        <div id="data_sekolah" class="collapse {{ Request::routeIs('dashboard.datamaster.*') ? 'show' : ''  }} }}"
+        <div id="data_sekolah" class="collapse {{ Request::routeIs('dashboard.datasekolah.*') ? 'show' : ''  }} }}"
             aria-labelledby="headingBootstrap" data-parent="#accordionSidebar" style="">
             <div class="py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ route('dashboard.fasilitas.index') }}">
-                    <i class="fas fa-home"></i>
+                <a class="collapse-item" href="{{ route('dashboard.datasekolah.fasilitas.index') }}">
+                    <i class="fas fa-solid fa-warehouse"></i>
                     <span>Fasilitas</span>
                 </a>
-                <a class="collapse-item {{ Request::routeIs('dashboard.matapelajaran.*') ? 'active' : ''  }}"
-                    href="{{ route('dashboard.matapelajaran.index') }}">
+                <a class="collapse-item {{ Request::routeIs('dashboard.datasekolah.matapelajaran.*') ? 'active' : ''  }}"
+                    href="{{ route('dashboard.datasekolah.matapelajaran.index') }}">
                     <i class="fas fa-solid fa-book"></i>
                     <span>Mata Pelajaran</span>
                 </a>
-                <a class="collapse-item " href="{{ route('dashboard.guru.index') }}">
+                <a class="collapse-item {{ Request::routeIs('dashboard.datasekolah.guru.*') ? 'active' : ''  }}" href="{{ route('dashboard.datasekolah.guru.index') }}">
                     <i class="fas fa-solid fa-users"></i>
                     <span>Guru</span>
                 </a>
-                <a class="collapse-item " href="{{ route('dashboard.ekstrakurikuler.index') }}">
+                <a class="collapse-item {{ Request::routeIs('dashboard.datasekolah.ekstrakurikuler.*') ? 'active' : ''  }}" href="{{ route('dashboard.datasekolah.ekstrakurikuler.index') }}">
                     <i class="fas fa-user"></i>
                     <span>Ekstrakurikuler</span>
                 </a>
-                <a class="collapse-item {{ Request::routeIs('dashboard.datamaster.kelas.*') ? 'active' : ''  }}"
-                    href="{{ route('dashboard.datamaster.kelas.index') }}">
+                <a class="collapse-item {{ Request::routeIs('dashboard.datasekolah.kelas.*') ? 'active' : ''  }}"
+                    href="{{ route('dashboard.datasekolah.kelas.index') }}">
                     <i class="fas fa-home"></i>
                     <span>Kelas</span>
                 </a>
-                <a class="collapse-item {{ Request::routeIs('dashboard.datamaster.jadwal.*') ? 'active' : ''  }}"
-                    href="{{ route('dashboard.datamaster.jadwal.index') }}">
+                <a class="collapse-item {{ Request::routeIs('dashboard.datasekolah.jadwal.*') ? 'active' : ''  }}"
+                    href="{{ route('dashboard.datasekolah.jadwal.index') }}">
                     <i class="fas fa-solid fa-list"></i>
                     <span>Jadwal</span>
+                </a>
+                <a class="collapse-item {{ Request::routeIs('dashboard.datasekolah.prestasi.*') ? 'active' : ''  }}"
+                    href="{{ route('dashboard.datasekolah.prestasi.index') }}">
+                    <i class="fas fa-solid fa-trophy"></i>
+                    <span>Prestasi</span>
+                </a>
             </div>
         </div>
     </li>
@@ -102,9 +108,10 @@
                 <a class="collapse-item {{ Request::routeIs('dashboard.datamaster.jadwal.*') ? 'active' : ''  }}"
                     href="{{ route('dashboard.datamaster.jadwal.index') }}">Jadwal</a> --}}
                     <a class="collapse-item {{ Request::routeIs('dashboard.datamaster.siswa.*') ? 'active' : ''  }}"
-                    href="{{ route('dashboard.datamaster.siswa.index') }}">
+                    href="{{ route('dashboard.datasekolah.siswa.index') }}">
                     <i class="fas fa-solid fa-user"></i>
                     <span>siswa</span>
+                    </a>
             </div>
         </div>
     </li>

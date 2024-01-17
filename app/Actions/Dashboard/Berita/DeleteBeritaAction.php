@@ -6,7 +6,7 @@ use App\Models\Berita;
 
 class DeleteBeritaAction
 {
-    public function execute($slug): void
+    public function execute($slug)
     {
         $berita = Berita::where('slug', $slug)->firstOrFail();
         $berita->delete();

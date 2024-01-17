@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('beritas', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('judul');
-            $table->string('desc');
+            $table->longText('desc');
             $table->string('foto');
             $table->string('slug');
             $table->softDeletes();

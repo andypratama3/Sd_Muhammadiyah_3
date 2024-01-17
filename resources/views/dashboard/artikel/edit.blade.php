@@ -118,7 +118,7 @@
         });
         quill.on('text-change', function (delta, oldDelta, source){
             $('#content-editor').text($('.ql-editor').html());
-            // console.log($(".ql-editor").html());
+
         });
 
     });

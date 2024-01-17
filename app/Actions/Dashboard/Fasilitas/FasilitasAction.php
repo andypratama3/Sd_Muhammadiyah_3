@@ -15,7 +15,7 @@ class FasilitasAction
 
             foreach ($fotorFiles as $fotorFile) {
                 $ext = $fotorFile->getClientOriginalExtension();
-                $uniqueIdentifier = Str::random(8); 
+                $uniqueIdentifier = Str::random(8);
                 $file_name = 'Fasilitas_' . Str::slug($FasilitasData->nama_fasilitas) . '_' . $uniqueIdentifier . '_' . date('YmdHis') . ".$ext";
                 $upload_path = public_path('storage/img/fasilitas/');
                 $fotorFile->move($upload_path, $file_name);

@@ -68,7 +68,12 @@ class BeritaController extends Controller
 
     public function destroy(DeleteBeritaAction $deleteBeritaAction, $slug)
     {
-        $deleteBeritaAction->execute($slug);
-        return redirect()->route('dashboard.news.berita.index')->with('success', 'Berita berhasil di hapus');
+        if($deleteBeritaAction)
+        {
+            $deleteBeritaAction->execute($slug);
+            return response()->json(['status' => 'success', 'message' => 'Berhasil Menghapus Berita']);
+        }else{
+            return response()->json(['status' => 'error', 'message' => 'Gagal Menghapus Berita']);
+        }
     }
 }

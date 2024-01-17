@@ -6,7 +6,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Edit Fasilitas {{ $fasilitas->name }}</h6>
             </div>
         <div class="card-body">
-        <form action="{{ route('dashboard.fasilitas.update',$fasilitas->slug) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('dashboard.datasekolah.fasilitas.update',$fasilitas->slug) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <input type="hidden" name="slug" value="{{ $fasilitas->slug }}">
@@ -30,7 +30,7 @@
                 @endforeach
                 </div>
             </div>
-            <a href="{{ route('dashboard.fasilitas.index') }}" class="btn btn-danger btn-sm">Kembali</a>
+            <a href="{{ route('dashboard.datasekolah.fasilitas.index') }}" class="btn btn-danger btn-sm">Kembali</a>
             <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
         </form>
         </div>
