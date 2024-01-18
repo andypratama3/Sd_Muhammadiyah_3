@@ -29,8 +29,8 @@
             </div>
             <div class="form-group">
                 <label for="">Pelajaran</label>
-                <select name="pelajarans[]" id="" multiple class="form-control select2">
-                    <option selected disabled>Pilih Pelajaran</option>
+                <select name="pelajarans[]" multiple class="form-control select2" aria-placeholder="Pilih Pelajaran">
+                    <option disabled>Pilih Pelajaran</option>
                     @foreach ($pelajarans as $pelajaran)
                     <option value="{{ $pelajaran->id }}">{{ $pelajaran->name }}</option>
                     @endforeach
@@ -56,7 +56,9 @@
 <script>
     $(document).ready(function () {
         $('.select2').select2({
-            theme: 'bootstrap4'
+            theme: 'bootstrap4',
+            placeholder: "Pilih Mata Pelajaran",
+            allowClear: true,
         });
     });
 </script>

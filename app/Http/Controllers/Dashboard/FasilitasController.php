@@ -10,6 +10,11 @@ use App\Actions\Dashboard\Fasilitas\DeleteFasilitasAction;
 
 class FasilitasController extends Controller
 {
+    /**
+     * ! Fasilitas Change Name Sarana &  Prasarana
+     *
+     *
+     */
     public function index()
     {
         $limit = 15;

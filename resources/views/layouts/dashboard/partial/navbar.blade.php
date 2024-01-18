@@ -3,7 +3,7 @@
         <div class="sidebar-brand-icon">
             <img src="{{ asset('assets/img/SD3_logo.png') }}" alt="">
         </div>
-        <div class="sidebar-brand-text mx-3">SD Muhammadiyah 3</div>
+        <div class="sidebar-brand-text mx-2 font-weight-bold text-uppercase" style="font-size: 12px;">SD Muhammadiyah 3 Samarinda</div>
     </a>
     <hr class="sidebar-divider my-0">
     <li class="nav-item {{ Request::routeIs('dashboard.*') ? 'active' : '' }}">
@@ -57,7 +57,7 @@
             <div class="py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{{ route('dashboard.datasekolah.fasilitas.index') }}">
                     <i class="fas fa-solid fa-warehouse"></i>
-                    <span>Fasilitas</span>
+                    <span>Sarana &  Prasarana</span>
                 </a>
                 <a class="collapse-item {{ Request::routeIs('dashboard.datasekolah.matapelajaran.*') ? 'active' : ''  }}"
                     href="{{ route('dashboard.datasekolah.matapelajaran.index') }}">
@@ -67,6 +67,10 @@
                 <a class="collapse-item {{ Request::routeIs('dashboard.datasekolah.guru.*') ? 'active' : ''  }}" href="{{ route('dashboard.datasekolah.guru.index') }}">
                     <i class="fas fa-solid fa-users"></i>
                     <span>Guru</span>
+                </a>
+                <a class="collapse-item {{ Request::routeIs('dashboard.datasekolah.tenagapendidikan.*') ? 'active' : ''  }}" href="{{ route('dashboard.datasekolah.tenagapendidikan.index') }}">
+                    <i class="fas fa-solid fa-power"></i>
+                    <span>Tenaga Pendidikan</span>
                 </a>
                 <a class="collapse-item {{ Request::routeIs('dashboard.datasekolah.ekstrakurikuler.*') ? 'active' : ''  }}" href="{{ route('dashboard.datasekolah.ekstrakurikuler.index') }}">
                     <i class="fas fa-user"></i>
@@ -101,7 +105,7 @@
             <span>Data Master</span>
         </a>
         <div id="datamaster" class="collapse {{ Request::routeIs('dashboard.datamaster.*') ? 'show' : ''  }} }}"
-            aria-labelledby="headingBootstrap" data-parent="#accordionSidebar" style="">
+            aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
             <div class="py-2 collapse-inner rounded">
                 {{-- <a class="collapse-item {{ Request::routeIs('dashboard.datamaster.kelas.*') ? 'active' : ''  }}"
                     href="{{ route('dashboard.datamaster.kelas.index') }}">Kelas</a>

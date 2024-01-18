@@ -16,7 +16,7 @@
                      </a>
                      <ul>
                          <li><a href="/guru">Guru</a></li>
-                         <li><a href="/fasilitas">Fasilitas</a></li>
+                         <li><a href="{{ route('fasilitas.index')}}">Sarana &  Prasarana</a></li>
                          <li><a href="{{ route('esktrakurikuler.index') }}">Ekstrakurikuler</a></li>
                      </ul>
                  </li>

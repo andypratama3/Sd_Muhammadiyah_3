@@ -39,7 +39,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <a href="{{ route('dashboard.fasilitas.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
+                <a href="{{ route('dashboard.datasekolah.prestasi.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
                 <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
             </div>
         </form>
