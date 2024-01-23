@@ -30,15 +30,15 @@
                             <td>{{ $karyawan->name }}</td>
                             <td>{{ $karyawan->sex }}</td>
                             <td>{{ $karyawan->phone }}</td>
-                            @foreach ($karyawan->user->roles as $role)
-                            <td>{{ $role->name }}</td>
-                            @endforeach
+                                @foreach ($karyawan->user->roles as $role)
+                                        <td>{{ $role->name }}</td>
+                                @endforeach
                             <td>
                                 <a href="{{ route('dashboard.pengaturan.karyawan.show', $karyawan->slug) }}"
                                     class="btn btn-dark btn-sm"><i class="bi bi-eye">Detail</i></a>
                                 <a href="{{ route('dashboard.pengaturan.karyawan.edit', $karyawan->slug) }}"
                                     class="btn btn-primary btn-sm">Update</a>
-                                <a href="#" data-id="{{ $karyawan->slug }}" class="btn btn-danger delete" title="Hapus">
+                                <a href="#" data-id="{{ $karyawan->slug }}" class="btn btn-danger delete btn-sm" title="Hapus">
                                     <form action="{{ route('dashboard.pengaturan.karyawan.destroy', $karyawan->slug) }}"
                                         id="delete-{{ $karyawan->slug }}" method="POST" enctype="multipart/form-data">
                                         @csrf

@@ -10,8 +10,14 @@ trait NameHasSlug
     public static function bootNameHasSlug()
     {
         static::creating(function (Model $model) {
-            $model->slug = Str::slug($model->name."-".Str::random(4));
+            $model->slug = Str::slug($model->name);
         });
+
+        // //with random-str
+        // static::creating(function (Model $model) {
+        //     $model->slug = Str::slug($model->name."-".Str::random(4));
+        // });
+
     }
 
     public function getRouteKeyName()

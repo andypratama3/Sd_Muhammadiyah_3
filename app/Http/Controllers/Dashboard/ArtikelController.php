@@ -69,6 +69,7 @@ class ArtikelController extends Controller
         {
             $artikelActionDelete->execute($slug);
             return response()->json(['status' => 'success', 'message' => 'Berhasil Menghapus Artikel']);
+            // toaster()->sucess('Berhasil Menghapus Artikel');
         }else{
             return response()->json(['status' => 'error', 'message' => 'Gagal Menghapus Artikel']);
         }

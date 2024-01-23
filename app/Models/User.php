@@ -2,29 +2,29 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Str;
-use App\Http\Traits\UsesUuid;
-use App\Http\Traits\NameHasSlug;
-use Laravel\Sanctum\HasApiTokens;
-use Laravel\Jetstream\HasProfilePhoto;
 use App\Http\Traits\HasPermissionsTrait;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Laravel\Fortify\TwoFactorAuthenticatable;
+use App\Http\Traits\NameHasSlug;
+// use Illuminate\Notifications\Notifiable;
+// use Laravel\Fortify\TwoFactorAuthenticatable;
+// use Laravel\Jetstream\HasProfilePhoto;
+// use Laravel\Sanctum\HasApiTokens;
+use App\Http\Traits\UsesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens;
+    // use HasApiTokens;
     use HasFactory;
-    use HasProfilePhoto;
-    use Notifiable;
-    use TwoFactorAuthenticatable;
+
+    // use HasProfilePhoto;
+    // use Notifiable;
+    // use TwoFactorAuthenticatable;
     use UsesUuid;
     use NameHasSlug;
     use HasPermissionsTrait;
-    // use SoftDeletes;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -35,8 +35,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'gauth_id',
-        'gauth_type',
+        'avatar',
+        'slug',
     ];
 
     /**
@@ -58,17 +58,19 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'password_change_at' => 'datetime',
     ];
 
-    /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array<int, string>
-     */
-    protected $appends = [
-        'profile_photo_url',
-    ];
-    // protected $dates = ['deleted_at'];
+    // /**
+    //  * The accessors to append to the model's array form.
+    //  *
+    //  * @var array<int, string>
+    //  */
+    // protected $appends = [
+    //     'profile_photo_url',
+    // ];
+
+    protected $dates = ['deleted_at'];
 
     public function comments()
     {
@@ -76,6 +78,6 @@ class User extends Authenticatable
     }
     public function roles()
     {
-        return $this->belongsToMany(User::class, 'users_roles');
+        return $this->belongsToMany(Role::class, 'users_roles');
     }
 }

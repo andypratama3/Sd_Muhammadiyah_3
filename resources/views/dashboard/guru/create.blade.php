@@ -15,9 +15,13 @@
         <form action="{{ route('dashboard.datasekolah.guru.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
-                <label for="judul">Nama</label>
-                <input type="text" class="form-control" name="name" id="name" aria-describedby="emailHelp"
-                    placeholder="Masukan nama">
+                <label for="judul">Guru</label>
+                <select name="karyawan_id" id="" class="form-control select2">
+                    <option selected disabled>Pilih Guru</option>
+                    @foreach ($karyawans as $karyawan)
+                        <option value="{{ $karyawan->id }}">{{ $karyawan->name }}</option>
+                    @endforeach
+                </select>
             </div>
             <div class="form-group">
                 <label for="">Deskripsi</label>
@@ -59,6 +63,7 @@
             theme: 'bootstrap4',
             placeholder: "Pilih Mata Pelajaran",
             allowClear: true,
+
         });
     });
 </script>

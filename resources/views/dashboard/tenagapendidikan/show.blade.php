@@ -6,9 +6,9 @@
         <form action="{{ route('dashboard.datasekolah.guru.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
-                <label for="judul">Judul</label>
-                <input type="text" class="form-control" id="judul" aria-describedby="emailHelp"
-                    value="{{ $berita->judul }}" readonly>
+                <label for="name">Nama</label>
+                <input type="text" class="form-control" id="name" aria-describedby="emailHelp"
+                    value="{{ $berita->name }}" readonly>
             </div>
             <div class="form-group">
                 <label for="">Deskripsi</label>

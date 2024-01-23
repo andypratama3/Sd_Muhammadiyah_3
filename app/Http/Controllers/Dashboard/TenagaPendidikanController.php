@@ -28,9 +28,13 @@ class TenagaPendidikanController extends Controller
         $tenagaPendidikanAction->execute($tenagaPendidikanData);
         return redirect()->route('dashboard.datasekolah.tenagapendidikan.index')->with('success','Berhasil Menambah Tenaga Pendidikan');
     }
-    public function edit(TenagaPendidikan $tenagaPendidikan)
+    public function show(TenagaPendidikan $tenagaPendidikan)
     {
         return view('dashboard.tenagapendidikan.show', compact('tenagaPendidikan'));
+    }
+    public function edit(TenagaPendidikan $tenagapendidikan)
+    {
+        return view('dashboard.tenagapendidikan.edit', compact('tenagapendidikan'));
     }
     public function update(TenagaPendidikanData $tenagaPendidikanData, TenagaPendidikanAction $tenagaPendidikanAction)
     {
@@ -40,6 +44,6 @@ class TenagaPendidikanController extends Controller
     public function destroy(TenagaPendidikanActionDelete $tenagaPendidikanActionDelete,TenagaPendidikan $tenagaPendidikan)
     {
         $tenagaPendidikanActionDelete->execute($tenagaPendidikan);
-        return redirect()->route('dashboard.datasekoleh.tenagapendidikan.index')->with('success','Berhasil Menghapus Tenaga Pendidikan');
+        return redirect()->route('dashboard.datasekolah.tenagapendidikan.index')->with('success','Berhasil Menghapus Tenaga Pendidikan');
     }
 }

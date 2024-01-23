@@ -69,7 +69,7 @@
                     <span>Guru</span>
                 </a>
                 <a class="collapse-item {{ Request::routeIs('dashboard.datasekolah.tenagapendidikan.*') ? 'active' : ''  }}" href="{{ route('dashboard.datasekolah.tenagapendidikan.index') }}">
-                    <i class="fas fa-solid fa-power"></i>
+                    <i class="fas fa-solid fa-user-tie"></i>
                     <span>Tenaga Pendidikan</span>
                 </a>
                 <a class="collapse-item {{ Request::routeIs('dashboard.datasekolah.ekstrakurikuler.*') ? 'active' : ''  }}" href="{{ route('dashboard.datasekolah.ekstrakurikuler.index') }}">
@@ -101,7 +101,7 @@
     <li class="nav-item">
         <a class="nav-link {{ Request::routeIs('dashboard.news.*') ? '' : 'collapsed'  }}" href="#"
             data-toggle="collapse" data-target="#datamaster" aria-expanded="false" aria-controls="datamaster">
-            <i class="fas fa-gear"></i>
+            <i class="fas fa-database"></i>
             <span>Data Master</span>
         </a>
         <div id="datamaster" class="collapse {{ Request::routeIs('dashboard.datamaster.*') ? 'show' : ''  }} }}"
@@ -112,9 +112,14 @@
                 <a class="collapse-item {{ Request::routeIs('dashboard.datamaster.jadwal.*') ? 'active' : ''  }}"
                     href="{{ route('dashboard.datamaster.jadwal.index') }}">Jadwal</a> --}}
                     <a class="collapse-item {{ Request::routeIs('dashboard.datamaster.siswa.*') ? 'active' : ''  }}"
-                    href="{{ route('dashboard.datasekolah.siswa.index') }}">
+                    href="{{ route('dashboard.datamaster.siswa.index') }}">
                     <i class="fas fa-solid fa-user"></i>
                     <span>siswa</span>
+                    </a>
+                    <a class="collapse-item {{ Request::routeIs('dashboard.datamaster.nilai.*') ? 'active' : ''  }}"
+                    href="{{ route('dashboard.datamaster.nilai.index') }}">
+                    <i class="fas fa-solid fa-user"></i>
+                    <span>Nilai Siswa</span>
                     </a>
             </div>
         </div>

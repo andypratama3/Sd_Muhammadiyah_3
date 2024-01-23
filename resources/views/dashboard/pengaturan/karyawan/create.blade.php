@@ -59,8 +59,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Role Karyawan <code>*</code></label>
-                                <select class="form-control select2bs4" id="role_id" name="role_id"
-                                    style="width: 100%;">
+                                <select class="form-control select2bs4" id="role_id" name="role_id" style="width: 100%;">
                                     <option selected="selected" disabled>Pilih Role</option>
                                     <hr>
                                     @foreach ($roles as $role)

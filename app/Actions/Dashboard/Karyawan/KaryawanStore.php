@@ -24,7 +24,10 @@ class KaryawanStore
         $karyawan->user_id = $user->id;
         $karyawan->save();
 
-        $role = Role::where('id', $request->role_id)->firstOrFail();
+        $role_id = $request->role_id;
+
+
+        $role = Role::where('id', $role_id)->firstOrFail();
         $user->roles()->attach($role);
         $permissions = $role->permissions->pluck('id');
         $user->permissions()->attach($permissions);

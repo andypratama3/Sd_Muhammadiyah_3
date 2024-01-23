@@ -14,23 +14,41 @@ class KaryawanRequest extends FormRequest
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
-     */
+    public function getName()
+    {
+        $this->name;
+    }
+    public function getSex()
+    {
+        $this->sex;
+    }
+    public function getPhone()
+    {
+        $this->phone;
+    }
+    public function getSlug()
+    {
+        $this->slug;
+    }
+
+
+    //get role_id
+    public function getRole()
+    {
+        $this->role_id;
+    }
+    //get permissions
+
     public function rules(): array
     {
         return [
-            'name' => 'required',
-            'sex' => 'required',
-            'phone' => 'required',
+
         ];
     }
     public function message()
     {
         return [
-            'required' => 'Attribut Tidak Boleh Kosong!',
+
         ];
     }
 }

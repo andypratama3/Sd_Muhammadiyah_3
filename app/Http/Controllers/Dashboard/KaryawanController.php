@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\DataTransferObjects\KaryawanData;
 use App\Actions\Dashboard\Karyawan\KaryawanStore;
+use App\Actions\Dashboard\Karyawan\ActionKaryawan;
 use App\Actions\Dashboard\Karyawan\karyawanDelete;
 use App\Actions\Dashboard\Karyawan\KaryawanUpdate;
 use App\Http\Requests\Dashboard\Karyawan\KaryawanRequest;
@@ -30,11 +31,12 @@ class KaryawanController extends Controller
         $karyawans = Karyawan::select(['id','name','sex','phone','slug','user_id'])->where('slug', '!=', 'superadmin-xxxx')->with('user:id,email')->orderBy('name')->paginate($limit);
         $count = $karyawans->count();
         $no = $limit * ($karyawans->currentPage() - 1);
-
+        $roles = Role::where('slug', '!=', 'superadmin')->get();
         return view('dashboard.pengaturan.karyawan.index', compact(
             'karyawans',
             'count',
-            'no'
+            'no',
+            'roles'
         ));
     }
     public function create()
@@ -43,9 +45,9 @@ class KaryawanController extends Controller
         $users = User::all();
         return view('dashboard.pengaturan.karyawan.create', compact('roles','users'));
     }
-    public function store(KaryawanRequest $request, KaryawanStore $karyawanStore)
+    public function store(KaryawanData $karyawanData, ActionKaryawan $ActionKaryawan)
     {
-        $karyawanStore->execute($request);
+        $ActionKaryawan->execute($karyawanData);
         return redirect()->route('dashboard.pengaturan.karyawan.index')->with('success','Berhasil Menambahkan Karyawan!');
     }
     public function show(Karyawan $karyawan)
@@ -57,9 +59,9 @@ class KaryawanController extends Controller
         $roles = Role::where('slug', '!=', 'superadmin')->get();
         return view('dashboard.pengaturan.karyawan.edit', compact('karyawan', 'roles'));
     }
-    public function update(KaryawanUpdate $karyawanUpdate, KaryawanData $karyawanData)
+    public function update(KaryawanData $KaryawanData, ActionKaryawan $ActionKaryawan)
     {
-        $karyawanUpdate->execute($karyawanData);
+        $ActionKaryawan->execute($karyawanData);
         return redirect()->route('dashboard.pengaturan.karyawan.index')->with('success','Kayran Berhasil Di Update');
     }
     public function destroy(Karyawan $karyawan, karyawanDelete $karyawanDelete)

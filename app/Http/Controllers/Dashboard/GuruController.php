@@ -3,14 +3,12 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Models\Guru;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Actions\Dashboard\Guru\StoreGuruAction;
-use App\Actions\Dashboard\Guru\DeleteGuruAction;
-use App\Actions\Dashboard\Guru\UpdateGuruAction;
-use App\Http\Requests\Dashboard\StoreGuruRequest;
-use App\Http\Requests\Dashboard\UpdateGuruRequest;
+use App\Models\Karyawan;
 use App\Models\Pelajaran;
+use App\Http\Controllers\Controller;
+use App\DataTransferObjects\GuruData;
+use App\Actions\Dashboard\Guru\GuruAction;
+use App\Actions\Dashboard\Guru\DeleteGuruAction;
 
 class GuruController extends Controller
 {
@@ -25,22 +23,41 @@ class GuruController extends Controller
     public function create()
     {
         $pelajarans = Pelajaran::all();
-        return view('dashboard.guru.create', compact('pelajarans'));
+        $karyawans = Karyawan::select(['id','name','slug'])->get();
+        return view('dashboard.guru.create', compact('pelajarans','karyawans'));
     }
-    public function store(StoreGuruRequest $request, StoreGuruAction $storeGuruAction)
+    public function store(GuruData $GuruData, GuruAction $guruAction)
     {
-        $storeGuruAction->execute($request);
-        return redirect()->route('dashboard.datasekolah.guru.index')->with('success','Berhasil Menambahkan Guru!');
+        $karyawan = Karyawan::find($GuruData->karyawan_id);
+
+        if (!$karyawan) {
+            $guruAction->execute($GuruData);
+            return redirect()->route('dashboard.datasekolah.guru.index')->with('success', 'Berhasil Menambahkan Guru!');
+        } else {
+            return redirect()->route('dashboard.datasekolah.guru.index')->with('error', 'Gagal Guru Telah Ada!');
+        }
+    }
+
+
+
+    public function show(Guru $guru)
+    {
+      return view('dashboard.guru.show', compact('guru'));
     }
     public function edit($slug)
     {
-        $guru = Guru::where('slug',$slug)->firstOrFail();
+        $guru = Guru::with('karyawan')->where('slug',$slug)->firstOrFail();
+        $karyawans = Karyawan::select(['id','name','slug'])->get();
+        // if ($guru->karyawan) {
+        //     $karyawan = $guru->karyawan;
+        //     // dd($karyawan->name);
+        // }
         $pelajarans = Pelajaran::all();
-        return view('dashboard.guru.edit', compact('guru','pelajarans'));
+        return view('dashboard.guru.edit', compact('guru','pelajarans', 'karyawans'));
     }
-    public function update(UpdateGuruRequest $request, UpdateGuruAction $updateGuruAction, $slug)
+    public function update(GuruData $GuruData, GuruAction $guruAction)
     {
-        $updateGuruAction->execute($request, $slug);
+        $guruAction->execute($GuruData);
         return redirect()->route('dashboard.datasekolah.guru.index')->with('success','Berhasil Update Guru!');
     }
     public function destroy(DeleteGuruAction $DeleteGuruAction, $slug)

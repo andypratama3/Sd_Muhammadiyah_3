@@ -11,14 +11,23 @@
             <h6 class="m-0 font-weight-bold text-primary">Edit guru {{ $guru->name }}</h6>
         </div>
         <div class="card-body">
-        <form action="{{ route('dashboard.datasekolah.guru.update',$guru->slug) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('dashboard.datasekolah.guru.update', $guru->slug) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
+            <input type="hidden" name="slug" value="{{ $guru->slug }}">
             <div class="form-group">
-                <label for="judul">Nama</label>
-                <input type="text" class="form-control" name="name" id="name"  value="{{ $guru->name }}"
-                    placeholder="Masukan nama">
+                <label for="judul">Guru</label>
+                <input type="hidden" name="name" value="{{ $guru->karyawan->name }}">
+                <select name="karyawan_id" id="" class="form-control select2">
+                    @if ($guru->karyawan)
+                     <option selected value="{{ $guru->karyawan_id }}">{{ $guru->karyawan->name }}</option>
+                    @endif
+                    @foreach ($karyawans as $karyawanOption)
+                        <option value="{{ $karyawanOption->id }}">{{ $karyawanOption->name }} <input type="hidden" name="name" value="{{ $karyawanOption->name }}"></option>
+                    @endforeach
+                </select>
             </div>
+
             <div class="form-group">
                 <label for="">Deskripsi</label>
                 <input type="text" class="form-control" id="" name="description" placeholder="Deskripsi" value="{{ $guru->description }}">

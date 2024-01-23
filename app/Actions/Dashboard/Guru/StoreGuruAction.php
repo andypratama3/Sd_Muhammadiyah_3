@@ -12,6 +12,7 @@ class StoreGuruAction
     {
         $guru = new Guru;
         $guru->name = $request->name;
+        $guru->karyawan_id = $request->karyawan_id;
         $guru->description = $request->description;
         $guru->lulusan = $request->lulusan;
 
@@ -19,7 +20,7 @@ class StoreGuruAction
             $guru_picture = $request->file('foto');
             $ext = $guru_picture->getClientOriginalExtension();
 
-            $upload_path = public_path('storage/img/guru/');
+            $upload_path = public_path('guru');
             $picture_name = 'Guru_'.Str::slug($request->name).'_'.date('YmdHis').".$ext";
             $guru_picture->move($upload_path, $picture_name);
         }

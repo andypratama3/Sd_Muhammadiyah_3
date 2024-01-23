@@ -10,7 +10,7 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title text-primary mb-4">Siswa
-                <a href="{{ route('dashboard.news.artikel.create') }}" class="btn btn-success btn-sm float-right">Tambah <i class="fas fa-plus"></i></a>
+                <a href="{{ route('dashboard.datamaster.siswa.create') }}" class="btn btn-success btn-sm float-right">Tambah <i class="fas fa-plus"></i></a>
                 </h4>
                 <div class="table-responsive">
                     <table class="table" id="artikel_table">
@@ -33,7 +33,7 @@
         </div>
     </div>
 </div>
-<input type="hidden" id="artikel_data" value="{{ route('dashboard.news.artikel.getArtikel') }}">
+{{-- <input type="hidden" id="artikel_data" value="{{ route('dashboard.news.artikel.getArtikel') }}"> --}}
 @push('js')
 <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>

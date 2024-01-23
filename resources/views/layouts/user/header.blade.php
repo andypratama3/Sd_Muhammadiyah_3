@@ -15,9 +15,10 @@
                              class="bi bi-chevron-down dropdown-indicator"></i>
                      </a>
                      <ul>
-                         <li><a href="/guru">Guru</a></li>
+                         <li><a href="{{ route('guru.index') }}">Guru</a></li>
                          <li><a href="{{ route('fasilitas.index')}}">Sarana &  Prasarana</a></li>
                          <li><a href="{{ route('esktrakurikuler.index') }}">Ekstrakurikuler</a></li>
+                         <li><a href="{{ route('tenagapendidikan.index') }}">Tenaga Pendidikan</a></li>
                      </ul>
                  </li>
                  <li class="dropdown"><a href="#"><span>Informasi</span> <i

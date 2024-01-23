@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Models\TenagaPendidikan;
 
 //User Access
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\ArtikelController;
@@ -20,6 +21,7 @@ use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\CategoryArtikel;
 use App\Http\Controllers\Dashboard\KelasController;
 use App\Http\Controllers\EkstrakurikulerController;
+use App\Http\Controllers\TenagaPendidikanController;
 use App\Http\Controllers\Dashboard\KaryawanController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\KelasCategoryController;
@@ -30,9 +32,10 @@ use App\Http\Controllers\Dashboard\JadwalController as DashboardJadwalController
 use App\Http\Controllers\Dashboard\ArtikelController as DashboardArtikelController;
 use App\Http\Controllers\Dashboard\PrestasiController as DashboardPrestasiController;
 use App\Http\Controllers\Dashboard\FasilitasController as DashboardFasilitasController;
-use App\Http\Controllers\Dashboard\TenagaPendidikanController as DashboardTenagaPendidikanController;
+use App\Http\Controllers\Dashboard\NilaiSiswaController as DashboardNilaiSiswaController;
 use App\Http\Controllers\Dashboard\MataPelajaranController as DashboardMataPelajaranController;
 use App\Http\Controllers\Dashboard\EkstrakulikulerController as DashboardEsktrakurikulerController;
+use App\Http\Controllers\Dashboard\TenagaPendidikanController as DashboardTenagaPendidikanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,7 +63,8 @@ Route::get('ekstrakurikuler/{name}', [EkstrakurikulerController::class, 'show'])
 //fasilitas
 Route::get('fasilitas', [FasilitasController::class, 'index'])->name('fasilitas.index');
 Route::get('fasilitas/{nama_fasilitas}', [FasilitasController::class, 'show'])->name('fasilitas.show');
-
+//tenaga pendidikan
+Route::get('tenagapendidikan', [TenagaPendidikanController::class, 'index'])->name('tenagapendidikan.index');
 //jadwal
 Route::resource('jadwal', JadwalController::class, ['names' => 'jadwal']);
 Route::post('jadwal/getjadwal/smester', [JadwalController::class, 'tahun_ajaran'])->name('jadwal.tahun.ajaran');
@@ -104,9 +108,13 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::resource('jadwal',  DashboardJadwalController::class, ['names' => 'dashboard.datasekolah.jadwal']);
         Route::post('kelas_category',[ DashboardJadwalController::class, 'getCategoryKelas'])->name('dashboard.datasekolah.jadwal.kelas_category');
         Route::post('getSmester',[ DashboardJadwalController::class, 'getSmester'])->name('dashboard.datasekolah.jadwal.getSmester');
-        Route::resource('siswa',  DashboardSiswaController::class, ['names' => 'dashboard.datasekolah.siswa']);
     });
+    Route::group(['prefix' => 'datamaster'], function () {
+        Route::resource('siswa',  DashboardSiswaController::class, ['names' => 'dashboard.datamaster.siswa']);
 
+        Route::get('nilai', [DashboardNilaiSiswaController::class, 'index'])->name('dashboard.datamaster.nilai.index');
+        Route::get('nilai/matapelajaran', [DashboardNilaiSiswaController::class, 'matapelajaran']);
+    });
     Route::group(['prefix' => 'pengaturan'], function () {
         //user settings
         // Route::resource('users', UserController::class, ['names' => 'dashboard.pengaturan.task']);

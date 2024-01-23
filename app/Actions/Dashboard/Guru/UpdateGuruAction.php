@@ -13,6 +13,7 @@ class UpdateGuruAction
     {
         $guru = Guru::where('slug',$slug)->firstOrFail();
         $guru->name = $request->name;
+        $guru->karyawan_id = $request->karyawan_id;
         $guru->description = $request->description;
         $guru->lulusan = $request->lulusan;
 
@@ -22,13 +23,19 @@ class UpdateGuruAction
             $guru_picture = $request->file('foto');
             $ext = $guru_picture->getClientOriginalExtension();
 
-            $upload_path = 'storage/img/guru/';
+            $upload_path = public_path('guru');
 
             $picture_name = 'Guru_'.Str::slug($request->name).'_'.date('YmdHis').".$ext";
             $guru_picture->move($upload_path, $picture_name);
         }
         $guru->foto = $picture_name;
-        $guru->save();
+        $guru->update();
+        foreach ($guru->pelajarans as $key => $pelajaran) {
+            $pelajaranIds[] = $pelajaran->id;
+        }
+
+        $guru->pelajarans()->sync($pelajaranIds);
+
 
     }
 }

@@ -11,6 +11,7 @@ class KaryawanData extends Data
         public readonly string $name,
         public readonly string $email,
         public readonly string $sex,
+        public readonly string $phone,
         public readonly string $role_id,
         public readonly ?string $slug,
     ) {
@@ -23,6 +24,7 @@ class KaryawanData extends Data
             $request->getName(),
             $request->getEmail(),
             $request->getSex(),
+            $request->getPhone(),
             $request->getRole(),
             $request->getSlug(),
         ]);

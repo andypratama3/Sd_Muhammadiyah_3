@@ -13,27 +13,45 @@ class StoreGuruRequest extends FormRequest
     {
         return true;
     }
+    public function getName()
+    {
+        $this->name;
+    }
+    public function getLulusan()
+    {
+        $this->lulusan;
+    }
+    public function getDesc()
+    {
+        $this->description;
+    }
+    public function getFoto()
+    {
+        $this->foto;
+    }
+    public function getKaryawan_id()
+    {
+        $this->karyawan_id;
+    }
+    public function getSlug()
+    {
+        $this->slug;
+    }
+    public function getPelajarans()
+    {
+        $this->pelajarans;
+    }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
-     */
     public function rules(): array
     {
         return [
-            'name' => 'required',
-            'description' => 'required',
-            'lulusan' => 'required',
-            'foto' => 'required',
-
         ];
     }
 
     public function message()
     {
         return [
-            'required' => ':attribute tidak boleh kosong!',
+
         ];
     }
 }

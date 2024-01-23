@@ -81,8 +81,7 @@
                         <tr>
                             <th>No</th>
                             <th>Nama</th>
-                            <th>Deskripsi</th>
-                            <th>Lulusan</th>
+                            <th>Jabatan</th>
                             <th>Foto</th>
                             <th>Action</th>
                         </tr>
@@ -92,8 +91,7 @@
                         <tr>
                             <td>{{ ++$no }}</td>
                             <td>{{ $tenagapendidikan->name }}</td>
-                            <td>{{ $tenagapendidikan->description }}</td>
-                            <td>{{ $tenagapendidikan->lulusan }}</td>
+                            <td>{{ $tenagapendidikan->jabatan }}</td>
                             <td>
                                 <span class="btn fa fa-image" id="priview-image" data-foto="<?=$tenagapendidikan->foto ?>"><p>Lihat</p></span>
                             </td>
