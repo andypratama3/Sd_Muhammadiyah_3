@@ -12,6 +12,9 @@
         <h6 class="m-0 font-weight-bold text-primary">Tambah Siswa</h6>
     </div>
     <hr>
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-center">
+        <h6 class="m-0 font-weight-bold text-primary">Data Siswa</h6>
+    </div>
     <div class="card-body">
         <form action="{{ route('dashboard.datamaster.siswa.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
@@ -76,6 +79,28 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="beasiswa">Beasiswa</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control"  name="beasiswa" id="beasiswa"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="name">Foto</label>
+                        <div class="col-sm-9">
+                            <input type="file" class="form-control"  name="foto" id="foto"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <hr>
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-center">
+                        <h6 class="m-0 font-weight-bold text-primary">Alamat Tinggal</h6>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="rt">RT</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control"  name="rt" id="rt"/>
@@ -126,28 +151,21 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group row">
-                        <label class="col-sm-3 text-dark" for="hp">HP</label>
+                        <label class="col-sm-3 text-dark" for="nama_jalan">Nama Jalan</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control"  name="nama_jalan" id="nama_jalan"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="hp">HP Orang Tua</label>
                         <div class="col-sm-9">
                             <input type="tel" class="form-control"  name="hp" id="hp"/>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group row">
-                        <label class="col-sm-3 text-dark" for="beasiswa">Beasiswa</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control"  name="beasiswa" id="beasiswa"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group row">
-                        <label class="col-sm-3 text-dark" for="name">Foto</label>
-                        <div class="col-sm-9">
-                            <input type="file" class="form-control"  name="foto" id="foto"/>
-                        </div>
-                    </div>
-                </div>
+
                 <div class="col-md-12">
                     <div class="form-group row justify-content-end">
                         <a href="{{ route('dashboard.datamaster.siswa.index') }}" class="btn btn-danger float-lg-start mr-2">Kembali</a>
@@ -169,7 +187,9 @@
         $('#nik').on('change', function () {
             console.log("object");
         });
+
     });
+
 
 </script>
 @endpush

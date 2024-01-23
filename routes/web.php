@@ -14,6 +14,7 @@ use App\Http\Controllers\Auth\GoogleController;
 //Dashboard Access
 use App\Http\Controllers\LikeArtikelController;
 use App\Http\Controllers\DetailBeritaController;
+use App\Http\Controllers\Api\Dashboard\WilayahApi;
 use App\Http\Controllers\CommentArtikelController;
 use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\TaskController;
@@ -110,6 +111,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::post('getSmester',[ DashboardJadwalController::class, 'getSmester'])->name('dashboard.datasekolah.jadwal.getSmester');
     });
     Route::group(['prefix' => 'datamaster'], function () {
+        Route::get('provinsi',[WilayahApi::class, 'provinsi'])->name('provinsi');
         Route::resource('siswa',  DashboardSiswaController::class, ['names' => 'dashboard.datamaster.siswa']);
 
         Route::get('nilai', [DashboardNilaiSiswaController::class, 'index'])->name('dashboard.datamaster.nilai.index');
