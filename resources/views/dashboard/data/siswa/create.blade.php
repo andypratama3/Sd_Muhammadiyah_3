@@ -143,7 +143,7 @@
                         <label class="col-sm-3 text-dark" for="kecamatan">Kecamatan</label>
                         <div class="col-sm-9">
                              <select name="kecamatan" id="kecamatan" class="select2 form-control">
-                                <option selected disabled>Pilih Kecampatan</option>
+                                <option selected disabled>Pilih Kecamatan</option>
 
                             </select>
                         </div>
@@ -204,58 +204,61 @@
 <script src="{{ asset('asset_dashboard/vendor/select2/dist/js/select2.js') }}"></script>
 
 <script>
-    $(function () {
-        $('.select2').select2({
-            theme: 'bootstrap4'
-        });
-        $('#provinsi').on('change', function () {
-            let provinsi_id = $('#provinsi').val();
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.ajax({
-                type: "POST",
-                url: "{{ route('kabupaten.api') }}",
-                data: {
-                    provinsi_id: provinsi_id,
-                },
-                cache: false,
-                success: function (response) {
-                    const kabupaten = response.data;
-                    for (let i = 0; i < kabupaten.length; i++) {
-                        $('#kabupaten').append('<option value="' + kabupaten[i].id + '">' + kabupaten[i].name + '</option>');
-                     }
-                },
-            });
-        });
-        $('#kabupaten').on('change', function () {
-            let regency_id = $('#kabupaten').val();
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.ajax({
-                type: "POST",
-                url: "{{ route('kecamatan.api') }}",
-                data: {
-                    regency_id: regency_id,
-                },
-                cache: false,
-                success: function (response) {
-                    const kota = response.data;
-                    for (let i = 0; i < kecamatan.length; i++) {
-                        $('#kecamatan').append('<option value="' + kecamatan[i].id + '">' + kecamatan[i].name + '</option>');
-                     }
-                },
-            });
-        });
-
+$(function () {
+    $('.select2').select2({
+        theme: 'bootstrap4'
     });
-
-
+    $('#provinsi').on('change', function () {
+        let provinsi_id = $('#provinsi').val();
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            type: "POST",
+            url: "{{ route('kabupaten.api') }}",
+            data: {
+                provinsi_id: provinsi_id,
+            },
+            cache: false,
+            success: function (response) {
+                const kabupaten = response.data;
+                let selectElement = $('#kabupaten');
+                selectElement.empty();
+                selectElement.append('<option value="">Select Kabupaten</option>');
+                $.each(kabupaten, function(i, item) {
+                    selectElement.append('<option value="' + item.id + '">' + item.name + '</option>');
+                });
+            },
+        });
+    });
+    $('#kabupaten').on('change', function () {
+        let regency_id = $('#kabupaten').val();
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            type: "POST",
+            url: "{{ route('kecamatan.api') }}",
+            data: {
+                regency_id: regency_id,
+            },
+            cache: false,
+            success: function (response) {
+            const kota = response.data;
+            let selectElement = $('#kecamatan');
+            selectElement.empty();
+            selectElement.append('<option value="">Select Kecamatan</option>');
+            $.each(kota, function(i, item) {
+                selectElement.append('<option value="' + item.id + '">' + item.name + '</option>');
+            });
+            },
+        });
+    });
+});
 </script>
 @endpush
 @endsection
