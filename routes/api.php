@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\Dashboard\WilayahApi;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,4 +18,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+//get data from api wilayah github
+Route::get('provinsi',[WilayahApi::class, 'provinsi'])->name('provinsi.api');
+Route::post('kabupatenkota/{provinsi_id}',[WilayahApi::class, 'kabupatenkota'])->name('kabupatenkota.api');
 

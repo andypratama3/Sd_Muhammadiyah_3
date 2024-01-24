@@ -7,18 +7,26 @@ use App\Models\Siswa;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
+use App\Http\Controllers\Api\Dashboard\WilayahApi;
 
 class SiswaController extends Controller
 {
+    // protected $wilayahApi;
+    // public function __construct(WilayahApi $wilayahApi)
+    // {
+    //     $this->getprovinsi = $wilayahApi;
+    // }
     public function index()
     {
         return view('dashboard.data.siswa.index');
     }
     public function create()
     {
-        $provinces = Http::get('https://emsifa.github.io/api-wilayah-indonesia/api/regencies/64.json')->json();
+        // $result_provinsi = $this->getprovinsi->provinsi();
+        $result_provinsi = Http::get(route('provinsi.api'))->json();
+        dd($result_provinsi);
         $kelass = Kelas::all();
-        return view('dashboard.data.siswa.create', compact('kelass','provinces'));
+        return view('dashboard.data.siswa.create', compact('kelass','result_provinsi'));
     }
 
 }

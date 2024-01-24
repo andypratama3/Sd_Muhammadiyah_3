@@ -117,6 +117,19 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="provinsi">Provinsi</label>
+                        <div class="col-sm-9">
+                            <select name="provinsi" id="provinsi" class="select2 form-control">
+                                <option selected disabled>Pilih Provinsi</option>
+                                @foreach ($result_provinsi as $provinsi)
+                                    <option value="{{ $provinsi['id'] }}">{{ $provinsi['name'] }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="kelurahan">Kelurahan</label>
                         <div class="col-sm-9">
                             <select name="kelurahan" id="kelurahan" class="select2 form-control">
