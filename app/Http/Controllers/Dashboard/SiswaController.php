@@ -24,7 +24,6 @@ class SiswaController extends Controller
     {
         // $result_provinsi = $this->getprovinsi->provinsi();
         $result_provinsi = Http::get(route('provinsi.api'))->json();
-        dd($result_provinsi);
         $kelass = Kelas::all();
         return view('dashboard.data.siswa.create', compact('kelass','result_provinsi'));
     }
