@@ -130,11 +130,10 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group row">
-                        <label class="col-sm-3 text-dark" for="kelurahan">Kelurahan</label>
+                        <label class="col-sm-3 text-dark" for="kabupaten">Kabupaten / Kota</label>
                         <div class="col-sm-9">
-                            <select name="kelurahan" id="kelurahan" class="select2 form-control">
-                                <option selected disabled>Pilih Kelurahan</option>
-
+                             <select name="kabupaten" id="kabupaten" class="select2 form-control">
+                                <option selected disabled>Pilih Kabupaten</option>
                             </select>
                         </div>
                     </div>
@@ -150,6 +149,18 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="kelurahan">Kelurahan</label>
+                        <div class="col-sm-9">
+                            <select name="kelurahan" id="kelurahan" class="select2 form-control">
+                                <option selected disabled>Pilih Kelurahan</option>
+
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-md-6">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="name">Jenis Tinggal</label>
@@ -197,8 +208,49 @@
         $('.select2').select2({
             theme: 'bootstrap4'
         });
-        $('#nik').on('change', function () {
-            console.log("object");
+        $('#provinsi').on('change', function () {
+            let provinsi_id = $('#provinsi').val();
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: "{{ route('kabupaten.api') }}",
+                data: {
+                    provinsi_id: provinsi_id,
+                },
+                cache: false,
+                success: function (response) {
+                    const kabupaten = response.data;
+                    for (let i = 0; i < kabupaten.length; i++) {
+                        $('#kabupaten').append('<option value="' + kabupaten[i].id + '">' + kabupaten[i].name + '</option>');
+                     }
+                },
+            });
+        });
+        $('#kabupaten').on('change', function () {
+            let regency_id = $('#kabupaten').val();
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: "{{ route('kecamatan.api') }}",
+                data: {
+                    regency_id: regency_id,
+                },
+                cache: false,
+                success: function (response) {
+                    const kota = response.data;
+                    for (let i = 0; i < kecamatan.length; i++) {
+                        $('#kecamatan').append('<option value="' + kecamatan[i].id + '">' + kecamatan[i].name + '</option>');
+                     }
+                },
+            });
         });
 
     });

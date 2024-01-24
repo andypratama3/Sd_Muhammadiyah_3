@@ -14,15 +14,24 @@ class WilayahApi extends Controller
         $provinsi = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/provinces.json");
         return $provinsi;
     }
-    // public function kabupatenkota($provinsi_id)
-    // {
-    //     $url = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/regencies/`{$provinsi_id}`.json")->json();
-
-    //     dd($url);
-    //     // if($url){
-    //     //     return response()->json(['data' => $url, 'success', 'Data Wilayah Sukses Di Ambil']);
-    //     // }else{
-    //     //     return response()->json(['error', 'Data Wilayah Tidak Ada']);
-    //     // }
-    // }
+    public function kabupaten(Request $request)
+    {
+        $provinsi_id = $request->provinsi_id;
+        $url = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/regencies/$provinsi_id.json")->json();
+        if($url){
+            return response()->json(['data' => $url, 'success', 'Data Wilayah Sukses Di Ambil']);
+        }else{
+            return response()->json(['error', 'Data Wilayah Tidak Ada']);
+        }
+    }
+    public function kecamatan(Request $request)
+    {
+        $regency_id = $request->regency_id;
+        $url = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/districts/$regency_id.json")->json();
+        if($url){
+            return response()->json(['data' => $url, 'success', 'Data Kecamatan Sukses Di Ambil']);
+        }else{
+            return response()->json(['error', 'Data Wilayah Tidak Ada']);
+        }
+    }
 }

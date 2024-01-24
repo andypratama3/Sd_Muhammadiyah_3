@@ -21,5 +21,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 //get data from api wilayah github
 Route::get('provinsi',[WilayahApi::class, 'provinsi'])->name('provinsi.api');
-Route::post('kabupatenkota/{provinsi_id}',[WilayahApi::class, 'kabupatenkota'])->name('kabupatenkota.api');
+Route::post('kabupaten',[WilayahApi::class, 'kabupaten'])->name('kabupaten.api');
+Route::post('kecamatan',[WilayahApi::class, 'kecamatan'])->name('kecamatan.api');
 
