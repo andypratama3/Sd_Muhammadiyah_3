@@ -17,8 +17,8 @@ return new class extends Migration
             $table->enum('jk', ['laki-laki', 'perempuan']);
             $table->string('tmpt_lahir');
             $table->date('tgl_lahir');
-            $table->integer('nik', 16);
-            $table->integer('nisn', 16);
+            $table->string('nik', 16);
+            $table->string('nisn', 16);
             $table->string('agama');
             $table->string('rt');
             $table->string('rw');
