@@ -23,4 +23,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('provinsi',[WilayahApi::class, 'provinsi'])->name('provinsi.api');
 Route::post('kabupaten',[WilayahApi::class, 'kabupaten'])->name('kabupaten.api');
 Route::post('kecamatan',[WilayahApi::class, 'kecamatan'])->name('kecamatan.api');
+Route::post('kelurahan',[WilayahApi::class, 'kelurahan'])->name('kelurahan.api');
 

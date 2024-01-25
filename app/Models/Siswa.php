@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Http\Traits\UsesUuid;
+use App\Http\Traits\NameHasSlug;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -10,9 +11,11 @@ class Siswa extends Model
 {
     use HasFactory;
     use UsesUuid;
+    use NameHasSlug;
     protected $tables = 'siswas';
     protected $fillable = [
         'name',
+        'nisn',
         'jk',
         'tmpt_lahir',
         'tgl_lahir',
@@ -20,9 +23,11 @@ class Siswa extends Model
         'agama',
         'rt',
         'rw',
-        'kelurahan',
-        'kecamatan',
-        'kodepos',
+        'provinsi_id',
+        'kabupaten_id',
+        'kecamatan_id',
+        'kelurahan_id',
+        'nama_jalan',
         'jenis_tinggal',
         'no_hp',
         'beasiswa',
@@ -32,6 +37,6 @@ class Siswa extends Model
 
     public function kelas(): BelongsToMany
     {
-        return $this->belongsToMany(Role::class, 'siswas_kelas');
+        return $this->belongsToMany(Kelas::class, 'siswa_kelas');
     }
 }

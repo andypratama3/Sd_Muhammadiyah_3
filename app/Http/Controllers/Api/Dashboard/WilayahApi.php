@@ -34,4 +34,14 @@ class WilayahApi extends Controller
             return response()->json(['error', 'Data Wilayah Tidak Ada']);
         }
     }
+    public function kelurahan(Request $request)
+    {
+        $district_id = $request->district_id;
+        $url = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/villages/$district_id.json")->json();
+        if($url){
+            return response()->json(['data' => $url, 'success', 'Data Kecamatan Sukses Di Ambil']);
+        }else{
+            return response()->json(['error', 'Data Wilayah Tidak Ada']);
+        }
+    }
 }

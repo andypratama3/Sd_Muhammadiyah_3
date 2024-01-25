@@ -112,6 +112,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
     });
     Route::group(['prefix' => 'datamaster'], function () {
         Route::resource('siswa',  DashboardSiswaController::class, ['names' => 'dashboard.datamaster.siswa']);
+        Route::post('siswa/nik', [DashboardSiswaController::class,'checknik'])->name('siswa.check.nik');
+        Route::post('siswa/nisn', [DashboardSiswaController::class,'checknisn'])->name('siswa.check.nisn');
         Route::get('nilai', [DashboardNilaiSiswaController::class, 'index'])->name('dashboard.datamaster.nilai.index');
         Route::get('nilai/matapelajaran', [DashboardNilaiSiswaController::class, 'matapelajaran']);
     });

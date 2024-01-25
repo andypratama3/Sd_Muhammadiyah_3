@@ -17,15 +17,19 @@ class SiswaRequest extends FormRequest
     {
         $this->name;
     }
+    public function getNisn()
+    {
+        $this->nisn;
+    }
     public function getJk()
     {
         $this->jk;
     }
-    public function getTmpt_lahir()
+    public function getTmptlahir()
     {
         $this->tmpt_lahir;
     }
-    public function getTgl_lahir()
+    public function getTgllahir()
     {
         $this->tgl_lahir;
     }
@@ -45,23 +49,32 @@ class SiswaRequest extends FormRequest
     {
         $this->rw;
     }
-    public function getKelurahan()
+    public function getProvinsi()
     {
-        $this->kelurahan;
+        $this->provinsi_id;
+    }
+    public function getKabupaten()
+    {
+        $this->kabupaten_id;
     }
     public function getKecamatan()
     {
-        $this->kecamatan;
+        $this->kecamatan_id;
     }
-    public function getKodepos()
+    public function getKelurahan()
     {
-        $this->kodepos;
+        $this->kelurahan_id;
     }
-    public function getJenis_tinggal()
+
+    public function getNamaJalan()
+    {
+        $this->nama_jalan;
+    }
+    public function getJenistinggal()
     {
         $this->jenis_tinggal;
     }
-    public function getNo_hp()
+    public function getNoHp()
     {
         $this->no_hp;
     }
