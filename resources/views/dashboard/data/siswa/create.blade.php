@@ -31,8 +31,8 @@
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="nik">Nisn</label>
                         <div class="col-sm-9 d-flex relative">
-                            <input type="text" class="form-control icon-check"  name="nisn" id="nisn" value="{{ old('nisn') }}"/>
-                            <i class="fas fa-solid fa-check bg-success border-1" id="icon-check" style="font-size: 10px; position : absolute; margin-top: 6px; right: 15px; padding: 10px; border-radius: 50px; color: black;"></i>
+                            <input type="text" class="form-control" name="nisn" id="nisn" value="{{ old('nisn') }}"/>
+                            <i class="fas fa-solid fa-check bg-success border-1" id="icon-check-nisn" style="font-size: 10px; position : absolute; margin-top: 6px; right: 15px; padding: 10px; border-radius: 50px; color: black; display: none;"></i>
                         </div>
                     </div>
                 </div>
@@ -52,9 +52,10 @@
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="nik">NIK</label>
                         <div class="col-sm-9 d-flex relative">
-                            <input type="text" class="form-control icon-check"  name="nik" id="nik" value="{{ old('nik') }}"/>
-                            <i class="fas fa-solid fa-check bg-success border-1" id="icon-check" style="font-size: 10px; position : absolute; margin-top: 6px; right: 15px; padding: 10px; border-radius: 50px; color: black;"></i>
+                            <input type="text" class="form-control" name="nik" id="nik" value="{{ old('nik') }}"/>
+                            <i class="fas fa-solid bg-success border-1" data-toggle="tooltip" title="" id="icon-check-nik" style="font-size: 10px; position : absolute; margin-top: 6px; right: 15px; padding: 10px; border-radius: 50px; color: black; display:none; "></i>
                         </div>
+
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -96,12 +97,37 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="kelas">Kelas</label>
+                        <div class="col-sm-9">
+                            <select name="kelas" id="kelas" class="select2 form-control" data-placholder="Pilih Kelas">
+                                <option selected disabled>Pilih Kelas</option>
+                                @foreach ($kelass as $kelas)
+                                    <option value="{{ $kelas->id }}">{{ $kelas->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="category_kelas">Kategori Kelas</label>
+                        <div class="col-sm-9">
+                            <select name="category_kelas" id="category_kelas" class="select2 form-control" data-placholder="Pilih Kategori Kelas">
+                                <option selected disabled>Pilih Kategori Kelas</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="name">Foto</label>
                         <div class="col-sm-9">
                             <input type="file" class="form-control"  name="foto" id="foto" value="{{ old('foto') }}"/>
                         </div>
                     </div>
                 </div>
+
+                {{-- Data Detai lSiswa --}}
                 <div class="col-md-12">
                     <hr>
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-center">
@@ -214,10 +240,82 @@
 
 <script>
 $(function () {
+    //property
+    let nik_property = document.getElementById('icon-check-nik');
+    let nisn_property = document.getElementById('icon-check-nisn');
     $('.select2').select2({
         theme: 'bootstrap4'
     });
+    $('#kelas').on('change', function () {
+        var selectedKelasId = $('#kelas').val();
+        var categoryKelasDropdown = $('#category_kelas');
+        //clear area dropdown
+        categoryKelasDropdown.empty();
+        //add option for category_kelas
+        categoryKelasDropdown.append('<option selected disabled>Pilih Kategori Kelas</option>');
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url: '{{ route("dashboard.datasekolah.jadwal.kelas_category") }}',
+            method: 'POST',
+            data: {
+                id: selectedKelasId
+            },
+            success: function (response) {
+                let data_category = response.categoryKelas
+                $.each(response, function (index, category) {
+                    categoryKelasDropdown.append('<option data-id="' + category  +'" value="' + category + '">' + category + '</option>');
+                });
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    });
     $('#nik').on('input', function () {
+        let inputValue = $('#nik').val();
+        if (inputValue.length < 16) {
+            nik_property.className = 'fas fa-solid fa-xmark bg-danger border-1';
+            nik_property.style.display = 'block';
+            $('#icon-check-nik').attr('title', 'Nik Harus 16 Karakter');
+        } else if (inputValue.length > 16) {
+            $('#icon-check-nik').attr('title', 'Nik Lebih dari 16 Karakter');
+        } else {
+            nik_property.className = 'fas fa-solid fa-check bg-success border-1';
+            nik_property.style.display = 'block';
+            $('#icon-check-nik').attr('title', '');
+        }
+
+        // If you want to limit the input length to 16 characters, truncate the input
+        if (inputValue.length > 16) {
+            inputValue = inputValue.substring(0, 16);
+            $(this).val(inputValue);
+        }
+    });
+    $('#nisn').on('input', function () {
+        let inputValue = $('#nisn').val();
+        if (inputValue.length < 16) {
+            nisn_property.className = 'fas fa-solid fa-xmark bg-danger border-1';
+            nisn_property.style.display = 'block';
+            $('#icon-check-nisn').attr('title', 'Nisn Harus 16 Karakter');
+        } else if (inputValue.length > 16) {
+            $('#icon-check-nisn').attr('title', 'Nisn Lebih dari 16 Karakter');
+        } else {
+            nisn_property.className = 'fas fa-solid fa-check bg-success border-1';
+            nisn_property.style.display = 'block';
+            $('#icon-check-nisn').attr('title', '');
+        }
+
+        // If you want to limit the input length to 16 characters, truncate the input
+        if (inputValue.length > 16) {
+            inputValue = inputValue.substring(0, 16);
+            $(this).val(inputValue);
+        }
+    });
+    $('#nik').on('change', function () {
         let nik = $('#nik').val();
         $.ajaxSetup({
             headers: {
@@ -232,11 +330,22 @@ $(function () {
             },
             cache: false,
             success: function (response) {
-                console.log(response.siswa);
+                if(response[0] === 'error') {
+                    nik_property.className = 'fas fa-solid fa-xmark bg-danger border-1';
+                    nik_property.style.display = 'block';
+                    $('#icon-check-nik').attr('title', 'Nik Telah Ada');
+                    $('#nik').addClass('border-danger');
+                }else{
+                    nik_property.className = 'fas fa-solid fa-check bg-success border-1';
+                    nik_property.style.display = 'block';
+                    $('#icon-check-nik').attr('title', 'Nik Bisa Di Gunakan');
+                    $('#nik').removeClass('border-danger');
+                    $('#nik').addClass('border-success');
+                }
             }
         });
     });
-    $('#nisn').on('input', function () {
+    $('#nisn').on('change', function () {
         let nisn = $('#nisn').val();
         $.ajaxSetup({
             headers: {
@@ -251,7 +360,19 @@ $(function () {
             },
             cache: false,
             success: function (response) {
-                console.log(response.siswa);
+
+                if(response[0] === 'error') {
+                    nisn_property.className = 'fas fa-solid fa-xmark bg-danger border-1';
+                    nisn_property.style.display = 'block';
+                    $('#icon-check-nisn').attr('title', 'Nisn Telah Ada');
+                    $('#nisn').addClass('border-danger');
+                }else{
+                    nisn_property.className = 'fas fa-solid fa-check bg-success border-1';
+                    nisn_property.style.display = 'block';
+                    $('#icon-check-nisn').attr('title', 'Nisn Bisa Di Gunakan');
+                    $('#nisn').removeClass('border-danger');
+                    $('#nisn').addClass('border-success');
+                }
             }
         });
     });
@@ -304,7 +425,7 @@ $(function () {
             });
             },
         });
-    }); 
+    });
     $('#kecamatan').on('change', function () {
         let district_id = $('#kecamatan').val();
         $.ajaxSetup({

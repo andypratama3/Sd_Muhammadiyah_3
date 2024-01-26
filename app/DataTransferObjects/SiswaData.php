@@ -28,6 +28,8 @@ class SiswaData extends Data
         public readonly string $no_hp,
         public readonly string $beasiswa,
         public readonly UploadedFile $foto,
+        public readonly string $kelas,
+        public readonly string $category_kelas,
         public readonly ?string $slug,
 
     ) {
@@ -55,6 +57,8 @@ class SiswaData extends Data
             $request->getNoHp(),
             $request->getBeasiswa(),
             $request->getFoto(),
+            $request->getKelas(),
+            $request->getCategoryKelas(),
             $request->getSlug(),
         ]);
     }
@@ -80,6 +84,8 @@ class SiswaData extends Data
             'no_hp.required' => 'Kolom Hp tidak boleh kosong!',
             'beasiswa.required' => 'Kolom Beasiswa tidak boleh kosong!',
             'foto.required' => 'Kolom File Foto tidak boleh kosong!',
+            'kelas.required' => 'Kolom Kelas tidak boleh kosong!',
+            'category_kelas.required' => 'Kolom Category Kelas tidak boleh kosong!',
         ];
     }
 }

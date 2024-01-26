@@ -15,7 +15,7 @@ return new class extends Migration
             // Foreign Key Constraints
             $table->foreignUuid('siswa_id')->references('id')->on('siswas')->onDelete('cascade');
             $table->foreignUuid('kelas_id')->references('id')->on('kelas')->onDelete('cascade');
-
+            $table->string('category_kelas');
             // Setting The Primary Keys
             $table->primary(['siswa_id', 'kelas_id']);
 

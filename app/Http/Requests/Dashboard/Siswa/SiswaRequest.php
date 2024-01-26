@@ -86,10 +86,19 @@ class SiswaRequest extends FormRequest
     {
         $this->foto;
     }
+    public function getKelas()
+    {
+        $this->kelas;
+    }
+    public function getCategoryKelas()
+    {
+        $this->category_kelas;
+    }
     public function getSlug()
     {
         $this->slug;
     }
+
 
     /**
      * Get the validation rules that apply to the request.

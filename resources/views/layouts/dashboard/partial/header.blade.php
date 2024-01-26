@@ -9,5 +9,6 @@
 <title>@yield('title') | SD Muhammadiyah 3</title>
 @stack('css')
 <link href="{{ asset('asset_dashboard/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
+<script src="https://kit.fontawesome.com/2feee0b69e.js" crossorigin="anonymous"></script>
 <link href="{{ asset('asset_dashboard/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
 <link href="{{ asset('asset_dashboard/css/ruang-admin.min.css') }}" rel="stylesheet">

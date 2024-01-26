@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use App\DataTransferObjects\SiswaData;
+use Yajra\DataTables\Facades\DataTables;
+use Yajra\DataTables\Contracts\DataTable;
 use App\Actions\Dashboard\Siswa\SiswaAction;
 use App\Http\Controllers\Api\Dashboard\WilayahApi;
 
@@ -22,6 +24,25 @@ class SiswaController extends Controller
     public function index()
     {
         return view('dashboard.data.siswa.index');
+    }
+    public function data_table(Request $request)
+    {
+        $siswa = Siswa::select(['name','nisn','jk','foto','slug']);
+        return DataTables::of($siswa)
+                // ->addColumn('kategori.name', function ($artikel) {
+                //     $categoryNames = $artikel->categorys->pluck('name')->implode(', ');
+                //     return $categoryNames;
+                // })
+                ->addColumn('options', function ($row){
+                    return '
+                    <a href="' . route('dashboard.datamaster.siswa.show', $row->slug) . '" class="btn btn-sm btn-warning"><i class="fa fa-eye"></i></a>
+                    <a href="' . route('dashboard.datamaster.siswa.edit', $row->slug) . '" class="btn btn-sm btn-primary"><i class="fa fa-pen"></i></a>
+                    <button data-id="' . $row['slug'] . '" class="btn btn-sm btn-danger" id="btn-delete"><i class="fa fa-trash"></i></button>
+                ';
+                })
+                ->rawColumns(['options'])
+                ->addIndexColumn()
+                ->make(true);
     }
     public function create()
     {

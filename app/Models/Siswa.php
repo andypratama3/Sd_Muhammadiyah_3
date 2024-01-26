@@ -6,13 +6,14 @@ use App\Http\Traits\UsesUuid;
 use App\Http\Traits\NameHasSlug;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Siswa extends Model
 {
     use HasFactory;
     use UsesUuid;
     use NameHasSlug;
-    protected $tables = 'siswas';
+    protected $table = 'siswas';
     protected $fillable = [
         'name',
         'nisn',
@@ -37,6 +38,6 @@ class Siswa extends Model
 
     public function kelas(): BelongsToMany
     {
-        return $this->belongsToMany(Kelas::class, 'siswa_kelas');
+        return $this->belongsToMany(Kelas::class, 'siswa_kelas')->withPivot('category_kelas');
     }
 }

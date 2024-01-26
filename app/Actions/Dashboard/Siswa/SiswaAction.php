@@ -44,11 +44,14 @@ class SiswaAction {
                 'foto' => $picture_name,
             ]
         );
-        // if(empty($siswaData->slug)){
-        //     $siswa->kelas()->attach($siswaData->kelas);
-        // }else{
-        //     $sisi->kelas()->sync($siswaData->kelas);
-        // }
+        if(empty($siswaData->slug)){
+            // $siswa->kelas()->attach($siswaData->kelas);
+            $siswa->kelas()->attach([$siswaData->kelas => ['category_kelas' => $siswaData->category_kelas]]);
+        }else{
+            // $siswa->kelas()->sync($siswaData->kelas);
+            $siswa->kelas()->sync([$siswaData->kelas => ['category_kelas' => $siswaData->category_kelas]]);
+
+        }
 
     }
 

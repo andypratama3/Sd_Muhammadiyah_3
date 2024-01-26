@@ -8,6 +8,7 @@ use App\Http\Traits\NameHasSlug;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Kelas extends Model
 {
@@ -15,7 +16,7 @@ class Kelas extends Model
     use UsesUuid;
     use NameHasSlug;
     use SoftDeletes;
-    protected $tables = 'kelas';
+    protected $table = 'kelas';
 
     protected $fillable = [
         'name',
@@ -23,9 +24,9 @@ class Kelas extends Model
         'slug',
     ];
 
-    public function roles()
+    public function siswa(): BelongsToMany
     {
-        return $this->belongsToMany(Role::class, 'role_user_table', 'user_id', 'role_id');
+        return $this->belongsToMany(Siswa::class, 'siswa_kelas');
     }
     public function jadwal()
     {

@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('title','Artikel')
+@section('title','Siswa')
 @push('css')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
 @endpush
@@ -32,31 +32,31 @@
         </div>
     </div>
 </div>
-{{-- <input type="hidden" id="artikel_data" value="{{ route('dashboard.news.artikel.getArtikel') }}"> --}}
+<input type="hidden" id="siswa_data" value="{{ route('siswa.get.records') }}">
 @push('js')
 <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
 <script>
-// $(document).ready(function () {
-//     $('#siswa_table').DataTable({
-//         ordering: true,
-//         pagination: true,
-//         deferRender: true,
-//         serverSide: true,
-//         responsive: true,
-//         processing: true,
-//         pageLength: 100,
-//         ajax: {
-//             'url': $('#artikel_data').val(),
-//         },
-//         columns: [
-//             { data: 'DT_RowIndex',name: 'DT_RowIndex',orderable: false,searchable: false},
-//             { data: 'name', name: 'name'},
-//             { data: 'kategori.name', name: 'kategori.name'},
-//             { data: 'jumlah_klik', name: 'jumlah_klik', orderable: true},
-//             { data: 'options',name: 'options', orderable: false, searchable: false }
-//         ],
-//     });
+$(document).ready(function () {
+    $('#siswa_table').DataTable({
+        ordering: true,
+        pagination: true,
+        deferRender: true,
+        serverSide: true,
+        responsive: true,
+        processing: true,
+        pageLength: 100,
+        ajax: {
+            'url': $('#siswa_data').val(),
+        },
+        columns: [
+            { data: 'DT_RowIndex',name: 'DT_RowIndex',orderable: false,searchable: false},
+            { data: 'name', name: 'name'},
+            { data: 'nisn', name: 'nisn'},
+            { data: 'nik', name: 'nik', orderable: true},
+            { data: 'options',name: 'options', orderable: false, searchable: false }
+        ],
+    });
 //     $('#siswa_table').on('click', '#btn-delete', function () {
 //         var slug = $(this).data('id');
 //         var url = '{{ route("dashboard.news.artikel.destroy", ":slug") }}'; // Use the correct route name "destroy"
@@ -98,7 +98,7 @@
 //             }
 //         });
 //     });
-// });
+});
 </script>
 @endpush
 @endsection
