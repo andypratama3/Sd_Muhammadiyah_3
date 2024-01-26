@@ -27,7 +27,7 @@ class SiswaController extends Controller
     }
     public function data_table(Request $request)
     {
-        $siswa = Siswa::select(['name','nisn','jk','foto','slug']);
+        $siswa = Siswa::select(['name','nisn','nik','jk','foto','slug']);
         return DataTables::of($siswa)
                 // ->addColumn('kategori.name', function ($artikel) {
                 //     $categoryNames = $artikel->categorys->pluck('name')->implode(', ');
