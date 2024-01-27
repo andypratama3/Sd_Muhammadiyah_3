@@ -11,6 +11,7 @@ use App\DataTransferObjects\SiswaData;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Contracts\DataTable;
 use App\Actions\Dashboard\Siswa\SiswaAction;
+use App\Actions\Dashboard\Siswa\SiswaActionDelete;
 use App\Http\Controllers\Api\Dashboard\WilayahApi;
 
 class SiswaController extends Controller
@@ -73,8 +74,16 @@ class SiswaController extends Controller
     }
     public function destroy(Siswa $siswa, SiswaActionDelete $SiswaActionDelete)
     {
-        //do here
+        if($SiswaActionDelete)
+        {
+            $SiswaActionDelete->execute($siswa);
+            return response()->json(['status' => 'success', 'message' => 'Berhasil Menghapus Siswa']);
+        }else{
+            return response()->json(['status' => 'error', 'message' => 'Gagal Menghapus Siswa']);
+        }
+
     }
+
     public function checknik(Request $request)
     {
         $nik = $request->nik;

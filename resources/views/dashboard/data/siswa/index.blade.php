@@ -57,47 +57,47 @@ $(document).ready(function () {
             { data: 'options',name: 'options', orderable: false, searchable: false }
         ],
     });
-//     $('#siswa_table').on('click', '#btn-delete', function () {
-//         var slug = $(this).data('id');
-//         var url = '{{ route("dashboard.news.artikel.destroy", ":slug") }}'; // Use the correct route name "destroy"
-//         url = url.replace(':slug', slug);
-//         swal({
-//             title: 'Anda yakin?',
-//             text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
-//             icon: 'warning',
-//             buttons: true,
-//             dangerMode: true,
-//         }).then((willDelete) => {
-//             if (willDelete) {
-//                 $.ajaxSetup({
-//                     headers: {
-//                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//                     }
-//                 });
+    $('#siswa_table').on('click', '#btn-delete', function () {
+        var slug = $(this).data('id');
+        var url = '{{ route("dashboard.datamaster.siswa.destroy", ":slug") }}'; // Use the correct route name "destroy"
+        url = url.replace(':slug', slug);
+        swal({
+            title: 'Anda yakin?',
+            text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
 
-//                 // Send a DELETE request
-//                 $.ajax({
-//                     url: url,
-//                     type: 'DELETE', // Use the DELETE method
-//                     success: function (data) {
-//                         if (data.status === 'success') {
-//                             swal('Berhasil', data.message, 'success').then(() => {
-//                                 // Reload the page
-//                                 window.location.href = "{{ route('dashboard.news.artikel.index') }}";
-//                                 // Reload the page with a success message
-//                             });
-//                         } else {
-//                             // Reload the page with an error message
-//                             swal('Error', data.message, 'error');
-//                             window.location.href = "{{ route('dashboard.news.artikel.index') }}";
-//                         }
-//                     },
-//                 });
-//             } else {
-//                 // If the user cancels the deletion, do nothing
-//             }
-//         });
-//     });
+                // Send a DELETE request
+                $.ajax({
+                    url: url,
+                    type: 'DELETE', // Use the DELETE method
+                    success: function (data) {
+                        if (data.status === 'success') {
+                            swal('Berhasil', data.message, 'success').then(() => {
+                                // Reload the page
+                                window.location.href = "{{ route('dashboard.datamaster.siswa.index') }}";
+                                // Reload the page with a success message
+                            });
+                        } else {
+                            // Reload the page with an error message
+                            swal('Error', data.message, 'error');
+                            window.location.href = "{{ route('dashboard.datamaster.siswa.index') }}";
+                        }
+                    },
+                });
+            } else {
+                // If the user cancels the deletion, do nothing
+            }
+        });
+    });
 });
 </script>
 @endpush
