@@ -2,6 +2,8 @@
 @section('title','Siswa')
 @push('css')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jqc-1.12.3/dt-1.10.16/b-1.4.2/b-html5-1.4.2/datatables.min.css"/>
 @endpush
 @section('content')
 <div class="row">
@@ -13,7 +15,7 @@
                 <a href="{{ route('dashboard.datamaster.siswa.create') }}" class="btn btn-success btn-sm float-right">Tambah <i class="fas fa-plus"></i></a>
                 </h4>
                 <div class="table-responsive">
-                    <table class="table" id="siswa_table">
+                    <table class="table mt-4" id="siswa_table">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -36,9 +38,28 @@
 @push('js')
 <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jqc-1.12.3/dt-1.10.16/b-1.4.2/b-html5-1.4.2/datatables.min.js"></script>
 <script>
 $(document).ready(function () {
     $('#siswa_table').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            { extend: 'copyHtml5', text: '<i class="fa-solid fa-copy mr-1"></i> Copy', className: 'btn btn-danger' },
+            { extend: 'excelHtml5', text: '<i class="fa-solid fa-file-excel mr-1"></i> Excel', className: 'btn btn-success'},
+            // { extend: 'csvHtml5', text: 'CSV', className: 'btn btn-'},
+            { extend: 'pdfHtml5', text: '<i class="fa-solid fa-file-pdf mr-1"></i> PDF', className: 'btn btn-warning'},
+        ],
+        initComplete: function() {
+            var btns = $('.dt-button');
+            btns.removeClass('dt-button');
+        },
         ordering: true,
         pagination: true,
         deferRender: true,
