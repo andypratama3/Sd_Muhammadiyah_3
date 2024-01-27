@@ -230,7 +230,7 @@
 @push('js')
 <script>
     $(document).ready(function () {
-        function getProvinsi() {
+       async function getProvinsi() {
             provinsi_id = $('#provinsi_id').val();
             kabupaten_id = $('#kabupaten_id').val();
             kecamatan_id = $('#kecamatan_id').val();
