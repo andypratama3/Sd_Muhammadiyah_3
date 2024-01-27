@@ -62,7 +62,9 @@ class SiswaController extends Controller
     }
     public function edit(Siswa $siswa)
     {
-        return view('dashboard.data.siswa.edit',compact('siswa'));
+        $kelass = Kelas::all();
+        $result_provinsi = $this->getprovinsi->provinsi()->json();
+        return view('dashboard.data.siswa.edit',compact('siswa','kelass','result_provinsi'));
     }
     public function update(SiswaData $siswaData, SiswaAction $siswaAction)
     {
