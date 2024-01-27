@@ -71,7 +71,7 @@ class SiswaController extends Controller
         $siswaAction->execute($siswaData);
         return redirect()->route('dashboard.datamaster.siswa.index')->with('success','Berhasil Update Siswa');
     }
-    public function destroy(Siswa $siswa)
+    public function destroy(Siswa $siswa, SiswaActionDelete $SiswaActionDelete)
     {
         //do here
     }

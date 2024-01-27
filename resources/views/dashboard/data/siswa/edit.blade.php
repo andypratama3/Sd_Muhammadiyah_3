@@ -16,8 +16,10 @@
         <h6 class="m-0 font-weight-bold text-primary">Data Siswa</h6>
     </div>
     <div class="card-body">
-        <form action="{{ route('dashboard.datamaster.siswa.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('dashboard.datamaster.siswa.update', $siswa->slug) }}" method="POST" enctype="multipart/form-data">
             @csrf
+            @method('PUT')
+            <input type="hidden" name="slug" value="{{ $siswa->slug }}">
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group row">
@@ -159,7 +161,7 @@
                         <label class="col-sm-3 text-dark" for="provinsi">Provinsi</label>
                         <div class="col-sm-9">
                             <select name="provinsi_id" id="provinsi" class="select2 form-control">
-                                <option id="provinsi_select" value="{{ $siswa->provinsi_id }}" selected>{{ $siswa->provinsi_id }}</option>
+                                <option id="provinsi_select" value="{{ $siswa->provinsi_id }}" selected></option>
                                 @foreach ($result_provinsi as $provinsi)
                                     <option value="{{ $provinsi['id'] }}">{{ $provinsi['name'] }}</option>
                                 @endforeach
@@ -172,7 +174,7 @@
                         <label class="col-sm-3 text-dark" for="kabupaten">Kabupaten / Kota</label>
                         <div class="col-sm-9">
                              <select name="kabupaten_id" id="kabupaten" class="select2 form-control" data-placholder="Pilih Kabupaten">
-                                <option selected value="{{ $siswa->kabupaten_id }}">{{ $siswa->kabupaten_id }}</option>
+                                <option selected value="{{ $siswa->kabupaten_id }}"></option>
                             </select>
                         </div>
                     </div>
@@ -182,7 +184,7 @@
                         <label class="col-sm-3 text-dark" for="kecamatan">Kecamatan</label>
                         <div class="col-sm-9">
                              <select name="kecamatan_id" id="kecamatan" class="select2 form-control" data-placholder="Pilih Kecamatan">
-                                <option selected value="{{ $siswa->kecamatan_id }}">{{ $siswa->kecamatan_id }}</option>
+                                <option selected value="{{ $siswa->kecamatan_id }}"></option>
 
                             </select>
                         </div>
@@ -193,7 +195,7 @@
                         <label class="col-sm-3 text-dark" for="kelurahan">Kelurahan</label>
                         <div class="col-sm-9">
                             <select name="kelurahan_id" id="kelurahan" class="select2 form-control" data-placholder="Pilih Kelurahan">
-                                <option selected value="{{ $siswa->kelurahan_id }}">{{ $siswa->kelurahan_id }}</option>
+                                <option selected value="{{ $siswa->kelurahan_id }}"></option>
                             </select>
                         </div>
                     </div>
@@ -272,15 +274,22 @@
                     kabupaten_name = response.kabupaten.name;
                     kecamatan_name = response.kecamatan.name;
                     kelurahan_name = response.kelurahan.name;
-
-                    $('#kabupaten').attr('value',kabupaten_id);
-                    $('#kecamatan').attr('value',kecamatan_id);
-                    $('#kelurahan').attr('value',kelurahan_id);
-                    $("#provinsi_select").text('ANjay');
-
-                    $('#kabupaten').attr('title',kabupaten_name);
-                    $('#kecamatan').attr('title',kecamatan_name);
-                    $('#kelurahan').attr('title',kelurahan_name);
+                    // $('#kabupaten').attr('value',kabupaten_id);
+                    // $('#kecamatan').attr('value',kecamatan_id);
+                    // $('#kelurahan').attr('value',kelurahan_id);
+                    //provinsi
+                    let $selected_provinsi = $("<option selected='selected'></option>").val(provinsi_id).text(provinsi_name);
+                    $("#provinsi").append($selected_provinsi).trigger('change');
+                    //kabupaten
+                    let $selected_kabupaten = $("<option selected='selected'></option>").val(kabupaten_id).text(kabupaten_name);
+                    $("#kabupaten").append($selected_kabupaten).trigger('change');
+                    //kecamatan
+                    let $selected_kecamatan = $("<option selected='selected'></option>").val(kecamatan_id).text(kecamatan_name);
+                    $("#kecamatan").append($selected_kecamatan).trigger('change');
+                    //kelurahan
+                    let $selected_kelurahan = $("<option selected='selected'></option>").val(kelurahan_id).text(kelurahan_name);
+                    $("#kelurahan").append($selected_kelurahan).trigger('change');
+                   
 
                 }
             });
@@ -443,7 +452,6 @@ $(function () {
             success: function (response) {
                 const kabupaten = response.data;
                 let selectElement = $('#kabupaten');
-                selectElement.empty();
                 selectElement.append('<option value="">Pilih Kabupaten</option>');
                 $.each(kabupaten, function(i, item) {
                     selectElement.append('<option value="' + item.id + '">' + item.name + '</option>');
@@ -468,7 +476,6 @@ $(function () {
             success: function (response) {
             const kota = response.data;
             let selectElement = $('#kecamatan');
-            selectElement.empty();
             selectElement.append('<option value="">Pilih Kecamatan</option>');
             $.each(kota, function(i, item) {
                 selectElement.append('<option value="' + item.id + '">' + item.name + '</option>');
@@ -493,7 +500,6 @@ $(function () {
             success: function (response) {
             const kota = response.data;
             let selectElement = $('#kelurahan');
-            selectElement.empty();
             selectElement.append('<option value="">Pilih Kelurahan</option>');
             $.each(kota, function(i, item) {
                 selectElement.append('<option value="' + item.id + '">' + item.name + '</option>');
