@@ -8,7 +8,7 @@
         <div class="card">
             @include('layouts.flashmessage')
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h4 class="m-0 font-weight-bold text-primary text-center">Mata Pelajaran</h5>
+                <h4 class="m-0 font-weight-bold text-primary text-center">Pelajaran {{ $pelajaran->name }}</h5>
                     <a href="{{ route('dashboard.datasekolah.kelas.create') }}" class="btn btn-success float-right">Tambah <i class="fas fa-plus"></i></a>
             </div>
             <div class="table-responsive">
@@ -21,11 +21,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($guru->pelajarans as $pelajaran)
+                        @foreach ($kelass as $kelas)
                         <tr>
                             <td>{{ ++$no }}</td>
-                            <td>{{ $pelajaran->name }}</td>
-                            <td><a href="{{ route('nilai.matapelajaran', $pelajaran->name) }}" class="btn btn-primary"><i class="fas fa-eye"></i></a></td>
+                            <td>Kelas {{ $kelas->name }}</td>
+                            <td>
+                                <a href="{{ route('nilai.matapelajaran.siswa.genap') }}" class="btn btn-primary">Smester Genap</a>
+                                <a href="" class="btn btn-warning">Smester Ganjil</a>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -35,7 +38,7 @@
     </div>
 </div>
 
-@push('user_js')
+@push('js')
 <script>
 
 </script>

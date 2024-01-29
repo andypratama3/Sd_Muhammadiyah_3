@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\Dashboard\SiswaApi;
 use App\Http\Controllers\Api\Dashboard\WilayahApi;
 
 /*
@@ -26,4 +27,5 @@ Route::post('kecamatan',[WilayahApi::class, 'kecamatan'])->name('kecamatan.api')
 Route::post('kelurahan',[WilayahApi::class, 'kelurahan'])->name('kelurahan.api');
 Route::post('get/provinsi',[WilayahApi::class, 'getProvinsi'])->name('getprovinsi.api');
 Route::post('get/kabupaten',[WilayahApi::class, 'getKabupaten'])->name('getkabupaten.api');
-
+//siswa Data Json
+Route::get('siswas',[SiswaApi::class, 'siswa'])->name('siswa.api');

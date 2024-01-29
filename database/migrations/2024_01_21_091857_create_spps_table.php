@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('spps', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
+            $table->string('order_id');
+            $table->string('name');
             $table->timestamps();
         });
     }

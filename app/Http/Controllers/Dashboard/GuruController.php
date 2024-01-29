@@ -12,6 +12,10 @@ use App\Actions\Dashboard\Guru\DeleteGuruAction;
 
 class GuruController extends Controller
 {
+    // public function __construct()
+    // {
+    //     $this->middleware('role: guru');
+    // }
     public function index()
     {
         $limit = 15;
@@ -28,7 +32,10 @@ class GuruController extends Controller
     }
     public function store(GuruData $GuruData, GuruAction $guruAction)
     {
-        $karyawan = Karyawan::find($GuruData->karyawan_id);
+        /*
+            todo check karyawan at database with karyawan_id
+        */
+        $karyawan = Guru::where('karyawan_id',$GuruData->karyawan_id)->first();
 
         if (!$karyawan) {
             $guruAction->execute($GuruData);
