@@ -117,7 +117,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::get('siswas/records', [DashboardSiswaController::class,'data_table'])->name('siswa.get.records');
         Route::get('nilai', [DashboardNilaiSiswaController::class, 'index'])->name('dashboard.datamaster.nilai.index');
         Route::get('nilai/matapelajaran/{name}', [DashboardNilaiSiswaController::class, 'matapelajaran'])->name('nilai.matapelajaran');
-        Route::get('nilai/matapelajaran/get/siswas', [DashboardNilaiSiswaController::class, 'smesterGenap'])->name('nilai.matapelajaran.siswa.genap');
+        // Route::get('nilai/matapelajaran/get/siswas', [DashboardNilaiSiswaController::class, 'smesterGenap'])->name('nilai.matapelajaran.siswa.genap');
     });
     Route::group(['prefix' => 'pengaturan'], function () {
         //user settings

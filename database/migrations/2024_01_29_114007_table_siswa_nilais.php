@@ -1,0 +1,32 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('siswa_nilais', function (Blueprint $table) {
+            // Foreign Key Constraints
+            $table->foreignUuid('siswa_id')->references('id')->on('siswas')->onDelete('cascade');
+            $table->foreignUuid('nilai_id')->references('id')->on('nilais')->onDelete('cascade');
+            $table->string('category_kelas');
+            // Setting The Primary Keys
+            $table->primary(['siswa_id', 'nilai_id']);
+
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('siswa_nilais');
+    }
+};

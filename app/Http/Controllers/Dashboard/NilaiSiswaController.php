@@ -28,11 +28,19 @@ class NilaiSiswaController extends Controller
         $kelass = Kelas::select(['name'])->orderBy('name')->get();
         return view('dashboard.data.nilai.matapelajaran', compact('no','pelajaran','kelass'));
     }
-    public function smesterGenap()
+    public function nilai( )
     {
-        $siswas = Http::get(route('siswa.api'))->json();
-        dd($siswas);
+        if(route('siswa')){
 
+        }else{
+            
+        }
     }
+    // public function smesterGenap()
+    // {
+    //     $siswas = Http::get(route('siswa.api'))->json();
+    //     dd($siswas->name);
+
+    // }
 
 }

@@ -26,7 +26,7 @@
                             <td>{{ ++$no }}</td>
                             <td>Kelas {{ $kelas->name }}</td>
                             <td>
-                                <a href="{{ route('nilai.matapelajaran.siswa.genap') }}" class="btn btn-primary">Smester Genap</a>
+                                <a href="" class="btn btn-primary">Smester Genap</a>
                                 <a href="" class="btn btn-warning">Smester Ganjil</a>
                             </td>
                         </tr>
