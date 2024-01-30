@@ -121,6 +121,11 @@
                     <i class="fas fa-solid fa-user"></i>
                     <span>Nilai Siswa</span>
                     </a>
+                    <a class="collapse-item {{ Request::routeIs('dashboard.datamaster.spp.*') ? 'active' : ''  }}"
+                    href="{{ route('dashboard.datamaster.spp.index') }}">
+                    <i class="fa-solid fa-file-invoice"></i>
+                    <span>Spp Siswa</span>
+                    </a>
             </div>
         </div>
     </li>

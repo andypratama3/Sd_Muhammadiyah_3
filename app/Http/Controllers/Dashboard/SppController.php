@@ -9,7 +9,10 @@ class SppController extends Controller
 {
     public function index()
     {
-
         return view('dashboard.data.spp.index');
+    }
+    public function create()
+    {
+        return view('dashboard.data.spp.create');
     }
 }

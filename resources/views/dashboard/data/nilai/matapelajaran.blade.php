@@ -26,8 +26,8 @@
                             <td>{{ ++$no }}</td>
                             <td>Kelas {{ $kelas->name }}</td>
                             <td>
-                                <a href="" class="btn btn-primary">Smester Genap</a>
-                                <a href="" class="btn btn-warning">Smester Ganjil</a>
+                                <a href="{{ route('nilai.matapelajaran.kelas', $kelas->name) }}" class="btn btn-primary">Smester Ganjil</a>
+                                <a href="" class="btn btn-warning">Smester Genap</a>
                             </td>
                         </tr>
                         @endforeach
@@ -40,7 +40,10 @@
 
 @push('js')
 <script>
-
+    $(document).ready(function () {
+        let siswa_id = $(this).data('id');
+        console.log(siswa_id);
+    });
 </script>
 @endpush
 @endsection

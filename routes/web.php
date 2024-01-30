@@ -26,6 +26,7 @@ use App\Http\Controllers\TenagaPendidikanController;
 use App\Http\Controllers\Dashboard\KaryawanController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\KelasCategoryController;
+use App\Http\Controllers\Dashboard\SppController as DashboardSppController;
 use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
 use App\Http\Controllers\Dashboard\SiswaController as DashboardSiswaController;
 use App\Http\Controllers\Dashboard\BeritaController as DashboardBeritaController;
@@ -116,8 +117,11 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::post('siswa/nisn', [DashboardSiswaController::class,'checknisn'])->name('siswa.check.nisn');
         Route::get('siswas/records', [DashboardSiswaController::class,'data_table'])->name('siswa.get.records');
         Route::get('nilai', [DashboardNilaiSiswaController::class, 'index'])->name('dashboard.datamaster.nilai.index');
-        Route::get('nilai/matapelajaran/{name}', [DashboardNilaiSiswaController::class, 'matapelajaran'])->name('nilai.matapelajaran');
-        // Route::get('nilai/matapelajaran/get/siswas', [DashboardNilaiSiswaController::class, 'smesterGenap'])->name('nilai.matapelajaran.siswa.genap');
+        Route::get('nilai/{name}', [DashboardNilaiSiswaController::class, 'matapelajaran'])->name('nilai.matapelajaran');
+        Route::get('nilai/kelas/{kelas}', [DashboardNilaiSiswaController::class, 'kelas'])->name('nilai.matapelajaran.kelas');
+
+        //Pembayaran Spp
+        Route::resource('spp',  DashboardSppController::class, ['names' => 'dashboard.datamaster.spp']);
     });
     Route::group(['prefix' => 'pengaturan'], function () {
         //user settings

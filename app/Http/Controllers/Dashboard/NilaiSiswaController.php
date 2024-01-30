@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Models\Guru;
 use App\Models\Kelas;
+use App\Models\Siswa;
 use App\Models\Karyawan;
 use App\Models\Pelajaran;
 use Illuminate\Http\Request;
@@ -28,13 +29,14 @@ class NilaiSiswaController extends Controller
         $kelass = Kelas::select(['name'])->orderBy('name')->get();
         return view('dashboard.data.nilai.matapelajaran', compact('no','pelajaran','kelass'));
     }
-    public function nilai( )
+    public function kelas($kelas_name)
     {
-        if(route('siswa')){
-
-        }else{
-            
-        }
+        $no = 0;
+        $kelas = Kelas::where('name', $kelas_name)->firstOrFail();
+        $siswas = Siswa::whereHas('kelas', function($q) use ($kelas) {
+            $q->where('kelas_id', $kelas->id);
+        })->get();
+        return view('dashboard.data.nilai.ganjil', compact('no','siswas','kelas_name'));
     }
     // public function smesterGenap()
     // {
