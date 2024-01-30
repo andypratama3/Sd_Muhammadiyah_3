@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('siswas', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
-            $table->enum('jk', ['laki-laki', 'perempuan']);
+            $table->enum('jk', ['Laki-laki', 'Perempuan']);
             $table->string('tmpt_lahir');
             $table->date('tgl_lahir');
             $table->string('nik', 16);

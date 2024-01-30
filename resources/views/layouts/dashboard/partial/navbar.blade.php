@@ -121,10 +121,10 @@
                     <i class="fas fa-solid fa-user"></i>
                     <span>Nilai Siswa</span>
                     </a>
-                    <a class="collapse-item {{ Request::routeIs('dashboard.datamaster.spp.*') ? 'active' : ''  }}"
-                    href="{{ route('dashboard.datamaster.spp.index') }}">
+                    <a class="collapse-item {{ Request::routeIs('dashboard.datamaster.pembayaran.*') ? 'active' : ''  }}"
+                    href="{{ route('dashboard.datamaster.pembayaran.index') }}">
                     <i class="fa-solid fa-file-invoice"></i>
-                    <span>Spp Siswa</span>
+                    <span>Invoice</span>
                     </a>
             </div>
         </div>

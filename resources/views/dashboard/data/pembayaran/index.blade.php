@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('title','Siswa')
+@section('title','Pembayaran Siswa')
 @push('css')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
@@ -11,8 +11,8 @@
         @include('layouts.flashmessage')
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title text-primary mb-4"> Spp Siswa
-                <a href="{{ route('dashboard.datamaster.spp.create') }}" class="btn btn-success btn-sm float-right">Tambah <i class="fas fa-plus"></i></a>
+                <h4 class="card-title text-primary mb-4"> Pembayaran Siswa
+                <a href="{{ route('dashboard.datamaster.pembayaran.create') }}" class="btn btn-success btn-sm float-right">Tambah <i class="fas fa-plus"></i></a>
                 </h4>
                 <div class="table-responsive">
                     <table class="table mt-4" id="siswa_table">

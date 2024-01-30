@@ -26,7 +26,6 @@ use App\Http\Controllers\TenagaPendidikanController;
 use App\Http\Controllers\Dashboard\KaryawanController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\KelasCategoryController;
-use App\Http\Controllers\Dashboard\SppController as DashboardSppController;
 use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
 use App\Http\Controllers\Dashboard\SiswaController as DashboardSiswaController;
 use App\Http\Controllers\Dashboard\BeritaController as DashboardBeritaController;
@@ -34,6 +33,7 @@ use App\Http\Controllers\Dashboard\JadwalController as DashboardJadwalController
 use App\Http\Controllers\Dashboard\ArtikelController as DashboardArtikelController;
 use App\Http\Controllers\Dashboard\PrestasiController as DashboardPrestasiController;
 use App\Http\Controllers\Dashboard\FasilitasController as DashboardFasilitasController;
+use App\Http\Controllers\Dashboard\PembayaranController as DashboardPembayaranController;
 use App\Http\Controllers\Dashboard\NilaiSiswaController as DashboardNilaiSiswaController;
 use App\Http\Controllers\Dashboard\MataPelajaranController as DashboardMataPelajaranController;
 use App\Http\Controllers\Dashboard\EkstrakulikulerController as DashboardEsktrakurikulerController;
@@ -121,7 +121,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::get('nilai/kelas/{kelas}', [DashboardNilaiSiswaController::class, 'kelas'])->name('nilai.matapelajaran.kelas');
 
         //Pembayaran Spp
-        Route::resource('spp',  DashboardSppController::class, ['names' => 'dashboard.datamaster.spp']);
+        Route::resource('invoice',  DashboardPembayaranController::class, ['names' => 'dashboard.datamaster.pembayaran']);
     });
     Route::group(['prefix' => 'pengaturan'], function () {
         //user settings
