@@ -13,6 +13,8 @@ class KaryawanData extends Data
         public readonly string $sex,
         public readonly string $phone,
         public readonly string $role_id,
+        public readonly string $user_id,
+
         public readonly ?string $slug,
     ) {
         //

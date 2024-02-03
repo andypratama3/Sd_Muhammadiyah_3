@@ -31,13 +31,12 @@ class KaryawanRequest extends FormRequest
         $this->slug;
     }
 
-
     //get role_id
     public function getRole()
     {
         $this->role_id;
     }
-    //get permissions
+    //get 
 
     public function rules(): array
     {

@@ -14,13 +14,9 @@ class PembayaranRequest extends FormRequest
         return true;
     }
 
-    public function getName()
+    public function getSiswa()
     {
-        $this->name;
-    }
-    public function getGrossAmount()
-    {
-        $this->gross_amount;
+        $this->siswa_id;
     }
     public function getKelas()
     {
@@ -30,21 +26,14 @@ class PembayaranRequest extends FormRequest
     {
         $this->category_kelas;
     }
-    public function getOrderId()
+
+    public function getGrossAmount()
     {
-        $this->name;
+        $this->gross_amount;
     }
-    public function getName()
+    public function getSlug()
     {
-        $this->name;
-    }
-    public function getName()
-    {
-        $this->name;
-    }
-    public function getName()
-    {
-        $this->name;
+        $this->slug;
     }
 
     public function rules(): array

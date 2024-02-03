@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Models\Kelas;
 use App\Models\Siswa;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -15,12 +16,11 @@ class PembayaranController extends Controller
     public function create()
     {
         $siswas = Siswa::select(['id','name','slug'])->get();
-        return view('dashboard.data.pembayaran.create', compact('siswas'));
+        $kelass = Kelas::orderBy('name','asc')->get();
+        return view('dashboard.data.pembayaran.create', compact('siswas','kelass'));
     }
     public function store(PembayaranData $pembayaranData, PembayaranAction $pembayaranAction)
     {
-        $midtrans_data = $pembayaranData;
-
         $pembayaranAction->execute($pembayaranData);
         return redirect()->route('dashboard.datamaster.pembayaran.index')->with('success', 'Berhasil Menambahkan Pembayaran');
     }

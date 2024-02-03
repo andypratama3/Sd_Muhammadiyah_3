@@ -13,6 +13,7 @@ class ActionKaryawan
         /*
             todo User Action
         **/
+        // handle foto for user when update
 
         $user = new User();
         $user->name = $karyawanData->name;
@@ -33,11 +34,12 @@ class ActionKaryawan
                 'user_id' => $user->id,
             ]
         );
-        $roles = Role::where('id', $karyawanData->role_id)->firstOrFail();
+        
+        $roles = Role::findOrFail($karyawanData->role_id);
         $permissionsData = $roles->permissions->pluck('id');
         if(empty($karyawanData->slug)){
             $user->roles()->attach($roles);
-            $user->permissions()->attach($permissionsData);
+            $user->permissions()->attach($permissionsData->toArray());
         }else{
             $user->roles()->sync([$roles->id]);
             $user->permissions()->sync($permissionsData->toArray());

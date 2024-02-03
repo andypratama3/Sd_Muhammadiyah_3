@@ -28,9 +28,10 @@
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="tgl_lahir">Nama Siswa</label>
                         <div class="col-sm-9">
-                            <select class="form-control select2" name="siswa_name" id="">
+                            <select class="form-control select2" name="siswa_id" id="">
+                                <option selected disabled>Pilih Siswa</option>
                                 @foreach ($siswas as $siswa)
-                                <option value="{{ $siswa->name }}">{{ $siswa->name }}</option>
+                                <option value="{{ $siswa->id }}">{{ $siswa->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -42,10 +43,10 @@
                         <label class="col-sm-3 text-dark" for="kelas">Kelas</label>
                         <div class="col-sm-9">
                             <select name="kelas" id="kelas" class="select2 form-control" data-placholder="Pilih Kelas">
-                                {{-- <option selected disabled>Pilih Kelas</option>
+                                <option selected disabled>Pilih Kelas</option>
                                 @foreach ($kelass as $kelas)
                                     <option value="{{ $kelas->id }}">{{ $kelas->name }}</option>
-                                @endforeach --}}
+                                @endforeach
                             </select>
                         </div>
                     </div>
