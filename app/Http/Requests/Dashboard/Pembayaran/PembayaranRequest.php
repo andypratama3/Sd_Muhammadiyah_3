@@ -13,7 +13,10 @@ class PembayaranRequest extends FormRequest
     {
         return true;
     }
-
+    public function getName()
+    {
+        $this->name;
+    }
     public function getSiswa()
     {
         $this->siswa_id;

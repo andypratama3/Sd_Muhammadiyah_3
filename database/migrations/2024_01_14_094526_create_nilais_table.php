@@ -13,14 +13,7 @@ return new class extends Migration
     {
         Schema::create('nilais', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name');
-            $table->string('name');
-            $table->string('name');
-            $table->string('name');
-            $table->string('name');
-            $table->string('name');
-            $table->string('name');
-            $table->string('name');
+           
             $table->timestamps();
         });
     }

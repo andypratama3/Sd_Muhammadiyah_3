@@ -10,6 +10,10 @@ class SiswaAction {
 
     public function execute($siswaData)
     {
+        /*
+            ! change data compalate detail student
+            ! masuk sekolah, nama orang tua , pekerjaan, alamat orang tua, wali
+        */
         if($siswaData->foto){
             $foto = $siswaData->foto;
             $ext = $foto->getClientOriginalExtension();

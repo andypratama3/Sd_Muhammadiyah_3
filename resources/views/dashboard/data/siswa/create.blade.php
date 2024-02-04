@@ -51,18 +51,6 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group row">
-                        <label class="col-sm-3 text-dark" for="nik">NIK</label>
-                        <div class="col-sm-9 d-flex relative">
-                            <input type="text" class="form-control" name="nik" id="nik" value="{{ old('nik') }}" />
-                            <i class="fas fa-solid bg-success border-1" data-toggle="tooltip" title=""
-                                id="icon-check-nik"
-                                style="font-size: 10px; position : absolute; margin-top: 6px; right: 15px; padding: 10px; border-radius: 50px; color: black; display:none; "></i>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="tmpt_lahir">Tempat Lahir</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" name="tmpt_lahir" id="tmpt_lahir"
@@ -89,6 +77,24 @@
                                 <option value="kristen">Kristen</option>
                                 <option value="katolik">Katolik</option>
                             </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="tanggal_masuk">Tanggal Masuk</label>
+                        <div class="col-sm-9">
+                            <input type="date" class="form-control" name="tanggal_masuk" id="tanggal_masuk"
+                                value="{{ old('tanggal_masuk') }}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="kelas_tahun">Kelas  / Tahun Ajaran</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="kelas_tahun" id="kelas_tahun"
+                                value="{{ old('kelas_tahun') }}" />
                         </div>
                     </div>
                 </div>
@@ -134,7 +140,97 @@
                     </div>
                 </div>
 
-                {{-- Data Detai lSiswa --}}
+                {{-- Data Detail lSiswa --}}
+                <div class="col-md-12">
+                    <hr>
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-center">
+                        <h6 class="m-0 font-weight-bold text-primary">Data Orang Tua</h6>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="nama_ayah">Nama Ayah</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="nama_ayah" id="nama_ayah" value="{{ old('nama_ayah') }}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="nama_ibu">Nama Ibu</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="nama_ibu" id="nama_ibu" value="{{ old('nama_ibu') }}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="pendidikan_ayah">Pendidikan Ayah</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="pendidikan_ayah" id="pendidikan_ayah" value="{{ old('pendidikan_ayah') }}" />
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="pendidikan_ibu">Pendidikan Ibu</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="pendidikan_ibu" id="pendidikan_ibu" value="{{ old('pendidikan_ibu') }}" />
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="pendidikan_ayah">Pekerjaan Ayah</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="pekerjaan_ayah" id="pekerjaan_ayah" value="{{ old('pekerjaan_ayah') }}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="pekerjaan_ibu">Pekerjaan Ibu</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="pekerjaan_ibu" id="pekerjaan_ibu" value="{{ old('pekerjaan_ibu') }}" />
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Data detail Wali  --}}
+                <div class="col-md-12">
+                    <hr>
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-center">
+                        <h6 class="m-0 font-weight-bold text-primary">Data Wali</h6>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="nama_wali">Nama Wali</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="nama_wali" id="nama_wali" value="{{ old('nama_wali') }}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="pekerjaan_wali">Pekerjaan Wali</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="pekerjaan_wali" id="pekerjaan_wali" value="{{ old('pekerjaan_wali') }}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="alamat_wali">Alamat Wali</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="alamat_wali" id="alamat_wali" value="{{ old('alamat_wali') }}" />
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Data Detail lSiswa --}}
                 <div class="col-md-12">
                     <hr>
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-center">
@@ -231,13 +327,12 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group row">
-                        <label class="col-sm-3 text-dark" for="hp">HP Orang Tua</label>
+                        <label class="col-sm-3 text-dark" for="no_hp">No HP</label>
                         <div class="col-sm-9">
-                            <input type="tel" class="form-control" name="no_hp" id="hp" value="{{ old('no_hp') }}" />
+                            <input type="text" class="form-control" name="no_hp" id="no_hp" value="{{ old('no_hp') }}" />
                         </div>
                     </div>
                 </div>
-
                 <div class="col-md-12">
                     <div class="form-group row justify-content-end">
                         <a href="{{ route('dashboard.datamaster.siswa.index') }}"
@@ -291,22 +386,6 @@
                 }
             });
         });
-        $('#nik').on('input', function () {
-            let inputValue = $('#nik').val();
-            if (inputValue.length < 16) {
-                nik_property.className = 'fas fa-solid fa-xmark bg-danger border-1';
-                nik_property.style.display = 'block';
-                $('#icon-check-nik').attr('title', 'Nik Harus 16 Karakter');
-            } else {
-                nik_property.className = 'fas fa-solid fa-check bg-success border-1';
-                nik_property.style.display = 'block';
-                $('#icon-check-nik').attr('title', '');
-            }
-            if (inputValue.length > 16) {
-                inputValue = inputValue.substring(0, 16);
-                $(this).val(inputValue);
-            }
-        });
         $('#nisn').on('input', function () {
             let inputValue = $('#nisn').val();
             if (inputValue.length < 16) {
@@ -322,42 +401,6 @@
                 inputValue = inputValue.substring(0, 16);
                 $(this).val(inputValue);
             }
-        });
-        $('#nik').on('change', function () {
-            let nik = $('#nik').val();
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.ajax({
-                type: "POST",
-                url: "{{ route('siswa.check.nik') }}",
-                data: {
-                    nik: nik,
-                },
-                cache: false,
-                success: function (response) {
-                    if (nik.length < 16) {
-                        nik_property.className = 'fas fa-solid fa-xmark bg-danger border-1';
-                        nik_property.style.display = 'block';
-                        $('#icon-check-nik').attr('title', 'NIK Harus 16 Karakter');
-                    }else {
-                        if (response[0] === 'error') {
-                            nik_property.className = 'fas fa-solid fa-xmark bg-danger border-1';
-                            nik_property.style.display = 'block';
-                            $('#icon-check-nik').attr('title', 'NIK Telah Ada');
-                            $('#nik').addClass('border-danger');
-                        } else {
-                            nik_property.className = 'fas fa-solid fa-check bg-success border-1';
-                            nik_property.style.display = 'block';
-                            $('#icon-check-nik').attr('title', 'NIK Bisa Di Gunakan');
-                            $('#nik').removeClass('border-danger');
-                            $('#nik').addClass('border-success');
-                        }
-                    }
-                }
-            });
         });
         $('#nisn').on('change', function () {
             let nisn = $('#nisn').val();

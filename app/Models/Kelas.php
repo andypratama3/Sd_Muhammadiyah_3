@@ -32,6 +32,10 @@ class Kelas extends Model
     {
         return $this->hasMany(Jadwal::class,'kelas','id');
     }
+    public function pembayarans(): HasMany
+    {
+        return $this->hasMany(Pembayaran::class, 'kelas', 'id');
+    }
 
 
 }

@@ -9,9 +9,10 @@ use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\FasilitasController;
-use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\PembayaranController;
 
 //Dashboard Access
+use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\LikeArtikelController;
 use App\Http\Controllers\DetailBeritaController;
 use App\Http\Controllers\Api\Dashboard\WilayahApi;
@@ -30,12 +31,12 @@ use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
 use App\Http\Controllers\Dashboard\SiswaController as DashboardSiswaController;
 use App\Http\Controllers\Dashboard\BeritaController as DashboardBeritaController;
 use App\Http\Controllers\Dashboard\JadwalController as DashboardJadwalController;
-use App\Http\Controllers\Dashboard\ProfileController as DashboardProfileController;
 use App\Http\Controllers\Dashboard\ArtikelController as DashboardArtikelController;
+use App\Http\Controllers\Dashboard\ProfileController as DashboardProfileController;
 use App\Http\Controllers\Dashboard\PrestasiController as DashboardPrestasiController;
 use App\Http\Controllers\Dashboard\FasilitasController as DashboardFasilitasController;
-use App\Http\Controllers\Dashboard\PembayaranController as DashboardPembayaranController;
 use App\Http\Controllers\Dashboard\NilaiSiswaController as DashboardNilaiSiswaController;
+use App\Http\Controllers\Dashboard\PembayaranController as DashboardPembayaranController;
 use App\Http\Controllers\Dashboard\MataPelajaranController as DashboardMataPelajaranController;
 use App\Http\Controllers\Dashboard\EkstrakulikulerController as DashboardEsktrakurikulerController;
 use App\Http\Controllers\Dashboard\TenagaPendidikanController as DashboardTenagaPendidikanController;
@@ -62,7 +63,9 @@ Route::get('guru', [GuruController::class, 'index'])->name('guru.index');
 //ekstrakurikuler
 Route::get('ekstrakurikuler', [EkstrakurikulerController::class, 'index'])->name('esktrakurikuler.index');
 Route::get('ekstrakurikuler/{name}', [EkstrakurikulerController::class, 'show'])->name('esktrakurikuler.show');
-
+// pembayaran
+Route::get('pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
+Route::post('pembayaran/search', [PembayaranController::class, 'getOrder'])->name('pembayaran.search');
 //fasilitas
 Route::get('fasilitas', [FasilitasController::class, 'index'])->name('fasilitas.index');
 Route::get('fasilitas/{nama_fasilitas}', [FasilitasController::class, 'show'])->name('fasilitas.show');
@@ -71,7 +74,6 @@ Route::get('tenagapendidikan', [TenagaPendidikanController::class, 'index'])->na
 //jadwal
 Route::resource('jadwal', JadwalController::class, ['names' => 'jadwal']);
 Route::post('jadwal/getjadwal/smester', [JadwalController::class, 'tahun_ajaran'])->name('jadwal.tahun.ajaran');
-
 //artikel
 Route::resource('artikel', ArtikelController::class, ['names' => 'artikel']);
 

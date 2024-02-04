@@ -4,14 +4,24 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Models\Kelas;
 use App\Models\Siswa;
+use App\Models\Pembayaran;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\DataTransferObjects\PembayaranData;
+use App\Actions\Dashboard\Pembayaran\PembayaranAction;
+use App\Actions\Dashboard\Pembayaran\PembayaranActionDelete;
 
 class PembayaranController extends Controller
 {
     public function index()
     {
-        return view('dashboard.data.pembayaran.index');
+        $no = 0;
+        $pembayarans = Pembayaran::all();
+        return view('dashboard.data.pembayaran.index', compact('no','pembayarans'));
+    }
+    public function data_table()
+    {
+        // $query = Pembayaran::select([''])
     }
     public function create()
     {
@@ -28,9 +38,12 @@ class PembayaranController extends Controller
     {
         return view('dashboard.data.pembayaran.show', compact('pembayaran'));
     }
-    public function edit(Pembayaran $pembayaran)
+    public function edit($order_id)
     {
-        return view('dashboard.data.pembayaran.edit', compact('pembayaran'));
+        $pembayaran = Pembayaran::where('order_id', $order_id)->firstOrFail();
+        $siswas = Siswa::select(['id','name','slug'])->get();
+        $kelass = Kelas::orderBy('name','asc')->get();
+        return view('dashboard.data.pembayaran.edit', compact('siswas','kelass','pembayaran'));
     }
     public function update(PembayaranData $pembayaranData, PembayaranAction $pembayaranAction)
     {

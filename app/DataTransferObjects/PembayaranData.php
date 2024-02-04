@@ -3,11 +3,13 @@
 namespace App\DataTransferObjects;
 
 use Spatie\LaravelData\Data;
+use App\Http\Requests\Dashboard\Pembayaran\PembayaranRequest;
 
 
-class ArtikelData extends Data
+class PembayaranData extends Data
 {
     public function __construct(
+        public readonly string $name,
         public readonly string $siswa_id,
         public readonly string $kelas,
         public readonly string $category_kelas,
@@ -18,9 +20,10 @@ class ArtikelData extends Data
         //
     }
 
-    public static function fromRequest(ArtikelRequest $request): self
+    public static function fromRequest(PembayaranRequest $request): self
     {
         return self::from([
+            $request->getName(),
             $request->getSiswa(),
             $request->getKelas(),
             $request->getCategoryKelas(),
@@ -33,6 +36,7 @@ class ArtikelData extends Data
     public static function messages()
     {
         return [
+            'name.required' => 'Kolom Judul tidak boleh kosong!',
             'siswa.required' => 'Kolom Siswa tidak boleh kosong!',
             'kelas.required' => 'Kolom Kelas tidak boleh kosong!',
             'category_kelas.required' => 'Kolom Kategori Kelas tidak boleh kosong!',

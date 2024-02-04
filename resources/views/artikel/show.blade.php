@@ -412,9 +412,9 @@
         },
         error: function(error) {
             if(error.status = '401'){
-                window.location.href = '{{ route('login') }}';
+                window.location.href = "{ route('login') }}";
             }else{
-                
+
             }
         }
         });

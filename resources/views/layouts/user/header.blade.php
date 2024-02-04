@@ -24,7 +24,7 @@
                  <li class="dropdown"><a href="#"><span>Informasi</span> <i
                              class="bi bi-chevron-down dropdown-indicator"></i></a>
                      <ul>
-                         <li><a href="#">Pembayaran SPP</a></li>
+                         <li><a href="{{ route('pembayaran.index') }}">Pembayaran</a></li>
                          <li><a href="#">Nilai Siswa</a></li>
                          <li><a href="#">Berita</a></li>
                          <li><a href="#">Prestasi Siswa</a></li>

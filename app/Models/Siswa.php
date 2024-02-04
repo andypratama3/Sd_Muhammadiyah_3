@@ -40,4 +40,8 @@ class Siswa extends Model
     {
         return $this->belongsToMany(Kelas::class, 'siswa_kelas')->withPivot('category_kelas');
     }
+    public function pembayarans(): HasMany
+    {
+        return $this->hasMany(Pembayaran::class, 'siswa_id', 'id');
+    }
 }

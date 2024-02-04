@@ -27,8 +27,8 @@ class SiswaController extends Controller
         return view('dashboard.data.siswa.index');
     }
     public function data_table(Request $request)
-    {   
-        $siswa = Siswa::select(['id','name','nisn','nik','jk','foto','slug']);
+    {
+        $siswa = Siswa::select(['id','name','nisn','jk','foto','slug']);
         return DataTables::of($siswa)
                 // ->addColumn('kategori.name', function ($artikel) {
                 //     $categoryNames = $artikel->categorys->pluck('name')->implode(', ');
