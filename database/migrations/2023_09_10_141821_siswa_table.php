@@ -30,13 +30,13 @@ return new class extends Migration
             $table->string('nama_ibu')->nullable();
             $table->string('pendidikan_ayah')->nullable();
             $table->string('pendidikan_ibu')->nullable();
+            //pekerjaan
+            $table->string('pekerjaan_ayah')->nullable();
+            $table->string('pekerjaan_ibu')->nullable();
             //wali
             $table->string('nama_wali')->nullable();
             $table->string('pekerjaan_wali')->nullable();
             $table->string('alamat_wali')->nullable();
-            //pekerjaan
-            $table->string('pekerjaan_ayah');
-            $table->string('pekerjaan_ibu');
             //alamat
             $table->string('rt');
             $table->string('rw');
@@ -47,7 +47,6 @@ return new class extends Migration
             $table->longText('nama_jalan');
             $table->string('jenis_tinggal');
             $table->string('no_hp');
-
             $table->string('slug');
             $table->softDeletes();
             $table->timestamps();

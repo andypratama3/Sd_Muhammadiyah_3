@@ -13,34 +13,69 @@ class SiswaRequest extends FormRequest
     {
         return true;
     }
-    public function getName()
-    {
+    public function getName(){
         $this->name;
     }
-    public function getNisn()
-    {
-        $this->nisn;
-    }
-    public function getJk()
-    {
+    public function getJk(){
         $this->jk;
+
     }
-    public function getTmptlahir()
-    {
+    public function getTmptlahir(){
         $this->tmpt_lahir;
     }
-    public function getTgllahir()
-    {
+    public function getTgllahir(){
         $this->tgl_lahir;
     }
-    public function getNik()
-    {
-        $this->nik;
+    public function getNisn(){
+        $this->nisn;
     }
-    public function getAgama()
-    {
+    public function getAgama(){
         $this->agama;
     }
+    public function getKelasTahun(){
+        $this->kelas_tahun;
+    }
+    public function getTanggalMasuk(){
+        $this->tanggal_masuk;
+    }
+    public function getBeasiswa(){
+        $this->beasiswa;
+    }
+    public function getFoto(){
+        $this->foto;
+    }
+    //request data orang tua
+    public function getNamaAyah(){
+        $this->nama_ayah;
+    }
+    public function getNamaIbu(){
+        $this->nama_ibu;
+    }
+    public function getPendidikanAyah(){
+        $this->pendidikan_ayah;
+    }
+    public function getPendidikanIbu(){
+        $this->pendidikan_ibu;
+    }
+    public function getPekerjaanAyah(){
+        $this->pekerjaan_ayah;
+    }
+    public function getPekerjaanIbu(){
+        $this->pekerjaan_ibu;
+
+    }
+    public function getNamaWali(){
+        $this->nama_wali;
+    }
+    public function getPekerjaanWali(){
+        $this->pekerjaan_wali;
+
+    }
+    public function getAlamatWali(){
+        $this->alamat_wali;
+
+    }
+
     public function getRt()
     {
         $this->rt;
@@ -78,14 +113,7 @@ class SiswaRequest extends FormRequest
     {
         $this->no_hp;
     }
-    public function getBeasiswa()
-    {
-        $this->beasiswa;
-    }
-    public function getFoto()
-    {
-        $this->foto;
-    }
+
     public function getKelas()
     {
         $this->kelas;
