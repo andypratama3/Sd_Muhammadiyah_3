@@ -26,7 +26,6 @@ return new class extends Migration
             $table->string('bulkId')->nullable();
             $table->string('account_id')->nullable();
             $table->string('status')->default('pending');
-            $table->string('slug');
             $table->timestamps();
         });
     }

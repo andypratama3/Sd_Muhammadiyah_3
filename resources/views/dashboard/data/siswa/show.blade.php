@@ -16,8 +16,6 @@
         <h6 class="m-0 font-weight-bold text-primary">Data Siswa</h6>
     </div>
     <div class="card-body">
-        <form action="{{ route('dashboard.datamaster.siswa.store') }}" method="POST" enctype="multipart/form-data">
-            @csrf
             <div class="row">
                 <div class="col-md-6 justify-center d-block text-center">
                     <p>Foto</p>

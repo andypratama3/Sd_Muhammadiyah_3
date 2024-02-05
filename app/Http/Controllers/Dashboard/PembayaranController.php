@@ -34,8 +34,10 @@ class PembayaranController extends Controller
         $pembayaranAction->execute($pembayaranData);
         return redirect()->route('dashboard.datamaster.pembayaran.index')->with('success', 'Berhasil Menambahkan Pembayaran');
     }
-    public function show(Pembayaran $pembayaran)
+    public function show($order_id)
     {
+        $pembayaran = Pembayaran::where('order_id', $order_id)->firstOrFail();
+
         return view('dashboard.data.pembayaran.show', compact('pembayaran'));
     }
     public function edit($order_id)
@@ -50,9 +52,9 @@ class PembayaranController extends Controller
         $pembayaranAction->execute($pembayaranData);
         return redirect()->route('dashboard.datamaster.pembayaran.index')->with('success', 'Berhasil Update Pembayaran');
     }
-    public function destroy(PembayaranActionDelete $pembayaranActionDelete, Pembayaran $pembayaran)
+    public function destroy(PembayaranActionDelete $pembayaranActionDelete, $order_id)
     {
-        $pembayaranActionDelete->execute($pembayaran);
+        $pembayaranActionDelete->execute($order_id);
         return redirect()->route('dashboard.datamaster.pembayaran.index')->with('success', 'Berhasil Menghapus Pembayaran');
     }
 }

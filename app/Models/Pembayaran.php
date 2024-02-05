@@ -17,7 +17,7 @@ class Pembayaran extends Model
     protected $fillable = [
         'order_id',
         'siswa_id',
-        'kelas',
+        'kelas_id',
         'category_kelas',
         'name',
         'email',

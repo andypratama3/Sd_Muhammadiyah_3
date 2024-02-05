@@ -21,7 +21,6 @@
                                 <th>No</th>
                                 <th>Nama</th>
                                 <th>Nisn</th>
-                                <th>Nik</th>
                                 <!-- <th>Kelas</th> -->
                                 <!-- <th>Ketagori Kelas</th>
                                 <th>Tanggal Masuk</th> -->
@@ -72,7 +71,6 @@ $(document).ready(function () {
             { data: 'DT_RowIndex',name: 'DT_RowIndex',orderable: false,searchable: false},
             { data: 'name', name: 'name'},
             { data: 'nisn', name: 'nisn'},
-            { data: 'nik', name: 'nik'},
             { data: 'options',name: 'options', orderable: false, searchable: false }
         ],
     });

@@ -23,7 +23,7 @@
                                 <th>Nama Siswa</th>
                                 <th>Order ID</th>
                                 <th>Total</th>
-                                {{-- <th>Kelas</th> --}}
+                                <th>Kelas</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -37,7 +37,16 @@
                                     <td>{{ $pembayaran->order_id }}</td>
                                     <td>Rp. {{ $pembayaran->gross_amount }}</td>
                                     <td>{{ $pembayaran->kelas->name }}</td>
-                                    <td>{{ $pembayaran->status }}</td>
+                                    <td>
+                                        @if ($pembayaran->status === 'pending')
+                                            <span class="badge badge-warning">{{ $pembayaran->status }}</span>
+                                        @elseif ($pembayaran->status === 'failed')
+                                        <span class="badge badge-danger">{{ $pembayaran->status }}</span>
+                                        @elseif ($pembayaran->status === 'success')
+                                        <span class="badge badge-success">{{ $pembayaran->status }}</span>
+                                        {{-- @elseif ($pembayaran->status === '') --}}
+                                        @endif
+                                    </td>
                                     <td>
                                         <a href="{{ route('dashboard.datamaster.pembayaran.show', $pembayaran->order_id) }}"
                                             class="btn btn-dark btn-sm"><i class="fas fa-eye"></i></a>

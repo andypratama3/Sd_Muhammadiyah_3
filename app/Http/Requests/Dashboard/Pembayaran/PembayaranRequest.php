@@ -23,7 +23,7 @@ class PembayaranRequest extends FormRequest
     }
     public function getKelas()
     {
-        $this->kelas;
+        $this->kelas_id;
     }
     public function getCategoryKelas()
     {
@@ -34,9 +34,9 @@ class PembayaranRequest extends FormRequest
     {
         $this->gross_amount;
     }
-    public function getSlug()
+    public function getOrderID()
     {
-        $this->slug;
+        $this->order_id;
     }
 
     public function rules(): array

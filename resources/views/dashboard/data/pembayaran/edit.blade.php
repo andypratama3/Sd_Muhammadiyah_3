@@ -16,6 +16,7 @@
         <form action="{{ route('dashboard.datamaster.pembayaran.update', $pembayaran->order_id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
+            <input type="hidden" value="{{ $pembayaran->order_id }}" name="order_id">
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group row">
@@ -43,10 +44,10 @@
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="kelas">Kelas</label>
                         <div class="col-sm-9">
-                            <select name="kelas" id="kelas" class="select2 form-control" data-placholder="Pilih Kelas">
-                                <option selected value="{{ $pembayaran->kelas }}">{{ $pembayaran->kelas }}</option>
+                            <select name="kelas_id" id="kelas" class="select2 form-control" data-placholder="Pilih Kelas">
+                                <option selected value="{{ $pembayaran->kelas_id }}">{{ $pembayaran->kelas->name }}</option>
                                 @foreach ($kelass as $kelas)
-                                    <option value="{{ $kelas->id }}">{{ $kelas->name }}</option>
+                                    <option value="{{ $kelas->id }}" @if (old('kelas_id') == '{{ $kelas->id }}') {{ 'selected' }}  @endif>{{ $kelas->name }}</option>
                                 @endforeach
                             </select>
                         </div>
