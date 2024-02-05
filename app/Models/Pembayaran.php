@@ -26,6 +26,8 @@ class Pembayaran extends Model
         'enddate',
         'type_payment',
         'bulkId',
+        'SessionID',
+        'Url',
         'account_id',
         'status',
         'slug',

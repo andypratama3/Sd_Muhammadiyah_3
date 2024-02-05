@@ -36,22 +36,24 @@ class PembayaranController extends Controller
     {
         $order_id = $request->order_id;
         $pembayaran = Pembayaran::where('order_id', $order_id)->first();
+        // SAMPLE HIT API iPaymu v2 PHP
+        $va           = '0000002217160075'; //get on iPaymu dashboard
+        $apiKey       = 'SANDBOX9CAEF80A-BEE1-40DD-A0E4-A71F36393097'; //get on iPaymu dashboard
+
         $url          = 'https://sandbox.ipaymu.com/api/v2/payment'; // for development mode
-        // $url       = 'https://my.ipaymu.com/api/v2/payment'; // for production mode
+        // $url          = 'https://my.ipaymu.com/api/v2/payment'; // for production mode
+
         $method       = 'POST'; //method
 
-        $body = array([
-            'order_id' => $pembayaran->order_id,
-        ]);
         //Request Body//
-        // $body['product']    = array();
-        // $body['qty']        = array('1', '3');
-        // $body['price']      = array('100000', '20000');
-        // $body['returnUrl']  = 'https://your-website.com/thank-you-page';
-        // $body['cancelUrl']  = 'https://your-website.com/cancel-page';
-        // $body['notifyUrl']  = 'https://your-website.com/callback-url';
+        $body['product']    = array($pembayaran->name);
+        $body['price']      = array($pembayaran->gross_amount);
+        $body['qty']      = array('1');
+        $body['returnUrl']  = 'https://your-website.com/thank-you-page';
+        $body['cancelUrl']  = 'https://your-website.com/cancel-page';
+        $body['notifyUrl']  = 'https://your-website.com/callback-url';
         // $body['referenceId'] = '1234'; //your reference id
-        // //End Request Body//
+        //End Request Body//
 
         //Generate Signature
         // *Don't change this
@@ -84,13 +86,28 @@ class PembayaranController extends Controller
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         $err = curl_error($ch);
         $ret = curl_exec($ch);
-        curl_close($ch);
 
-        return response()->json(
-            [
-                'pembayaran' => $pembayaran,
-                'message' => 'Berhasil Mendapatkan Order ID'
-            ], 200);
+
+        $response = json_decode($ret, true);
+
+
+        if (isset($response['Data']['Url']) && isset($response['Data']['SessionID'])) {
+            $pembayaran->SessionID = $response['Data']['SessionID'];
+            $pembayaran->Url = $response['Data']['Url'];
+            $pembayaran->update();
+
+            $redirectUrl = $response['Data']['Url'];
+
+            return response()->json([
+                'redirect' => $redirectUrl,'Akan Mengalihkan'], 200);
+        } else {
+            // Handle the case where the response does not contain the expected URL
+            return response()->json([
+                'message' => 'Failed to get the redirect URL from the response',
+            ], 500);
+        }
+
+        curl_close($ch);
 
     }
 }

@@ -23,6 +23,8 @@ return new class extends Migration
             $table->string('startdate')->nullable();
             $table->string('enddate')->nullable();
             $table->string('type_payment')->nullable();
+            $table->string('SessionID')->nullable();
+            $table->longText('Url')->nullable();
             $table->string('bulkId')->nullable();
             $table->string('account_id')->nullable();
             $table->string('status')->default('pending');

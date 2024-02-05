@@ -129,9 +129,8 @@
                         category_kelas.text(response.data.category_kelas);
                         status_result.text(response.message);
                         order_id.text(response.data.order_id);
-                        gross_amount.val(response.data.gross_amount);
+                        gross_amount.text(response.data.gross_amount);
                         status.text(response.data.status);
-
                     } else {
                         content_result.css('display', 'none');
                         result_card.css('display', '');
@@ -141,7 +140,24 @@
             });
         });
         $('#posts').on('click', '#pay', function () {
-
+            const payment_id = $('#order_id').text();
+            const total = $('#gross_amount').text();
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: "{{ route('pembayaran.pay') }}",
+                data: {
+                    order_id : payment_id,
+                    total : total,
+                },
+                success: function (response) {
+                    window.location.href = response.redirect;
+                }
+            });
         });
     });
 </script>
