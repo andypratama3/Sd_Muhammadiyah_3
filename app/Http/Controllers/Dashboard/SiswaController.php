@@ -83,17 +83,6 @@ class SiswaController extends Controller
         }
 
     }
-
-    public function checknik(Request $request)
-    {
-        $nik = $request->nik;
-        $siswa = Siswa::where('nik', $nik)->first();
-        if(empty($siswa)){
-            return response()->json(['siswa' => $siswa, 'Nik Bisa Di gunakan']);
-        }else {
-            return response()->json(['error','Nik Telah Ada']);
-        }
-    }
     public function checknisn(Request $request)
     {
         $nisn = $request->nisn;
@@ -103,5 +92,12 @@ class SiswaController extends Controller
         }else {
             return response()->json(['error','nisn Telah Ada']);
         }
+    }
+    public function cetak_data($slug)
+    {
+        $siswa = Siswa::where('slug', $slug)->firstOrFail();
+        $result_provinsi = $this->getProvinsi->getprovinsi()->json();
+
+        return view('dashboard.data.siswa.cetak', compact('siswa'));
     }
 }

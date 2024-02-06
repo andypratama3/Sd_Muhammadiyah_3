@@ -118,7 +118,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
     });
     Route::group(['prefix' => 'datamaster'], function () {
         Route::resource('siswa',  DashboardSiswaController::class, ['names' => 'dashboard.datamaster.siswa']);
-        Route::post('siswa/nik', [DashboardSiswaController::class,'checknik'])->name('siswa.check.nik');
+        Route::get('siswa/cetak/{slug}', [DashboardSiswaController::class,'cetak_data'])->name('siswa.cetakData');
         Route::post('siswa/nisn', [DashboardSiswaController::class,'checknisn'])->name('siswa.check.nisn');
         Route::get('siswas/records', [DashboardSiswaController::class,'data_table'])->name('siswa.get.records');
         Route::get('nilai', [DashboardNilaiSiswaController::class, 'index'])->name('dashboard.datamaster.nilai.index');
@@ -127,6 +127,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
 
         //Pembayaran Spp
         Route::resource('invoice',  DashboardPembayaranController::class, ['names' => 'dashboard.datamaster.pembayaran']);
+        Route::get('invoices/records', [DashboardPembayaranController::class, 'data_table'])->name('dashboard.datamaster.get.records');
+
     });
     Route::group(['prefix' => 'pengaturan'], function () {
         //user settings

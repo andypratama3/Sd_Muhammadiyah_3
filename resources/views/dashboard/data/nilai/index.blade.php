@@ -12,6 +12,7 @@
                     <a href="{{ route('dashboard.datasekolah.kelas.create') }}" class="btn btn-success float-right">Tambah <i class="fas fa-plus"></i></a>
             </div>
             <div class="table-responsive">
+                @if ($guru && $guru->pelajarans > 0)
                 <table class="table align-items-center table-flush text-center">
                     <thead class="thead-light">
                         <tr>
@@ -29,6 +30,11 @@
                         </tr>
                         @endforeach
                     </tbody>
+                    @else
+                        <div class="container text-center">
+                            <h2>Tidak Ada Pelajaran</h2>
+                        </div>
+                    @endif
                 </table>
             </div>
         </div>

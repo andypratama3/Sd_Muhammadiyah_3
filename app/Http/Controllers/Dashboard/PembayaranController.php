@@ -21,7 +21,8 @@ class PembayaranController extends Controller
     }
     public function data_table()
     {
-        // $query = Pembayaran::select([''])
+        $query = Pembayaran::select(['name','order_id','gross_amount']);
+        
     }
     public function create()
     {

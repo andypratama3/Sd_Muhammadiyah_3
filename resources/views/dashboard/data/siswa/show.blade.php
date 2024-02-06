@@ -218,7 +218,7 @@
                 <div class="col-md-12">
                         <a href="{{ route('dashboard.datamaster.siswa.index') }}"
                             class="btn btn-danger float-lg-start mr-2">Kembali</a>
-                        <button class="btn btn-primary float-lg-right">Cetak Data</button>
+                        <a href="{{ route('siswa.cetakData', $siswa->slug) }}" class="btn btn-primary float-lg-right">Cetak Data</a>
                     </div>
                 </div>
             </div>

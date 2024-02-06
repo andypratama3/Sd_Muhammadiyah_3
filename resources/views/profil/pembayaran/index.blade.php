@@ -23,6 +23,9 @@
 
             </div>
         </div>
+
+
+        {{-- result for search code_payment --}}
         <div class="card w-100 mt-2 mb-3" id="result_order" style="display: none !important;">
             <div class="card-header text-center mb-2">
                 <h5 id="status_result"></h5>
