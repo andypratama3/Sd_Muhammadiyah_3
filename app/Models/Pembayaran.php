@@ -11,7 +11,6 @@ class Pembayaran extends Model
 {
     use HasFactory;
     use UsesUuid;
-    use NameHasSlug;
     protected $table = 'pembayarans';
 
     protected $fillable = [

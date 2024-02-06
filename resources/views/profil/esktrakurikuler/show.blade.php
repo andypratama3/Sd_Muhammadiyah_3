@@ -16,7 +16,7 @@
                 <div class="form-group">
                     <div class="d-flex" style="grid-template-columns: 60px 60px;">
                         @foreach ($ekstrakurikuler_foto as $image => $i)
-                        <img src="{{ asset('storage/ekstrakurikuler/'. trim($i)) }}" alt="" srcset=""
+                        <img src="{{ asset('storage/img/ekstrakurikuler/'. trim($i)) }}" alt="" srcset=""
                             style="width: 100%; height: 100%; margin: 20px;">
                         @endforeach
                     </div>

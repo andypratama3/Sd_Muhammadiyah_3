@@ -9,8 +9,11 @@ class IpaymuPaymentApi extends Controller
 {
     public function callback()
     {
-        $curl = curl_init();
+        /*
+            ! Payment Callback From Ipaymu And Update data at database
+        */
 
+        $curl = curl_init();
         curl_setopt_array($curl, array(
         CURLOPT_URL => 'https://yourcallbackurl.com',
         CURLOPT_RETURNTRANSFER => true,
@@ -24,8 +27,10 @@ class IpaymuPaymentApi extends Controller
 
         $response = curl_exec($curl);
 
+
+
         curl_close($curl);
-        echo $response;
+        
 
     }
 }

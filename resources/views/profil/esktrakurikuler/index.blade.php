@@ -14,7 +14,7 @@
                 $firstCover = reset($coverArray);
             @endphp
             <div class="col-lg-4 text-center mb-5" style="margin-top: 40px;">
-                <img src="{{ asset('storage/ekstrakurikuler/'. $firstCover )}}" alt="" class="img-fluid rounded w-100 mb-4">
+                <img src="{{ asset('storage/img/ekstrakurikuler/'. $firstCover )}}" alt="" class="img-fluid rounded w-100 mb-4">
                 <h4>{{ $ekstrakurikuler->name }}</h4>
                 <span class="d-block mb-3 text-uppercase">{{ $ekstrakurikuler->lulusan }}</span>
                 <p>{{ $ekstrakurikuler->desc }}</p>
