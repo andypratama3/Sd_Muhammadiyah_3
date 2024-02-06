@@ -227,67 +227,67 @@
 </div>
 @push('js')
 <script>
-    $(document).ready(function () {
-       async function getProvinsi() {
-            provinsi_id = $('#provinsi_id').val();
-            kabupaten_id = $('#kabupaten_id').val();
-            kecamatan_id = $('#kecamatan_id').val();
-            kelurahan_id = $('#kelurahan_id').val();
-            $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-            $.ajax({
-                type: "POST",
-                url: "{{ route('getprovinsi.api') }}",
-                data: {
-                    provinsi_id: provinsi_id,
-                    kabupaten_id: kabupaten_id,
-                    kecamatan_id: kecamatan_id,
-                    kelurahan_id: kelurahan_id,
 
-                },
-                dataType: "json",
-                success: function (response) {
-                    provinsi = response.provinsi.name;
-                    kabupaten = response.kabupaten.name;
-                    kecamatan = response.kecamatan.name;
-                    kelurahan = response.kelurahan.name;
-                    $('#provinsi').text(": " + provinsi);
-                    $('#kabupaten').text(": " + kabupaten);
-                    $('#kecamatan').text(": " + kecamatan);
-                    $('#kelurahan').text(": " + kelurahan);
+async function getProvinsi() {
+    provinsi_id = $('#provinsi_id').val();
+    kabupaten_id = $('#kabupaten_id').val();
+    kecamatan_id = $('#kecamatan_id').val();
+    kelurahan_id = $('#kelurahan_id').val();
+    $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    $.ajax({
+        type: "POST",
+        url: "{{ route('getprovinsi.api') }}",
+        data: {
+            provinsi_id: provinsi_id,
+            kabupaten_id: kabupaten_id,
+            kecamatan_id: kecamatan_id,
+            kelurahan_id: kelurahan_id,
 
-                }
-            });
-         }
-        // function getKabupaten() {
-        //     provinsi_id = $('#provinsi_id').val();
-        //     kabupaten_id = $('kabupaten_id').val();
-        //     $.ajaxSetup({
-        //             headers: {
-        //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //             }
-        //         });
+        },
+        dataType: "json",
+        success: function (response) {
+            provinsi = response.provinsi.name;
+            kabupaten = response.kabupaten.name;
+            kecamatan = response.kecamatan.name;
+            kelurahan = response.kelurahan.name;
+            $('#provinsi').text(": " + provinsi);
+            $('#kabupaten').text(": " + kabupaten);
+            $('#kecamatan').text(": " + kecamatan);
+            $('#kelurahan').text(": " + kelurahan);
 
-        //     $.ajax({
-        //         type: "POST",
-        //         url: "{{ route('getkabupaten.api') }}",
-        //         data: {
-        //             provinsi_id: provinsi_id,
-        //             kabupaten_id : kabupaten_id,
-        //         },
-        //         dataType: "json",
-        //         success: function (response) {
-        //             kabupaten = response.response.name;
-        //             $('#kabupaten').text(": " + kabupaten);
-        //         }
-        //     });
-        // }
-         getProvinsi();
-        //  getKabupaten();
+        }
     });
+    }
+// function getKabupaten() {
+//     provinsi_id = $('#provinsi_id').val();
+//     kabupaten_id = $('kabupaten_id').val();
+//     $.ajaxSetup({
+//             headers: {
+//                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+//             }
+//         });
+
+//     $.ajax({
+//         type: "POST",
+//         url: "{{ route('getkabupaten.api') }}",
+//         data: {
+//             provinsi_id: provinsi_id,
+//             kabupaten_id : kabupaten_id,
+//         },
+//         dataType: "json",
+//         success: function (response) {
+//             kabupaten = response.response.name;
+//             $('#kabupaten').text(": " + kabupaten);
+//         }
+//     });
+// }
+    getProvinsi();
+//  getKabupaten();
+
 </script>
 @endpush
 @endsection

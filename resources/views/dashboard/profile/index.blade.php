@@ -1,6 +1,9 @@
 @extends('layouts.dashboard')
 @section('title', 'Profile')
+@push('css')
+{{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> --}}
 
+@endpush
 @section('content')
 <!-- Container Fluid-->
 {{-- <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -18,8 +21,7 @@
 
             <div class="card">
                 <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-
-                    <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
+                    <img src="{{ asset('storage/img/siswa/Siswa_andy_20240204172926.jpg') }}" alt="Profile" class="rounded-circle mb-4" style="height: 180px; width: 60%;">
                     <h2>{{ Auth::user()->name }}</h2>
                     <h3>{{ Auth::user()->roles->first()->name }}</h3>
                     <div class="social-links mt-2">
@@ -37,27 +39,22 @@
 
             <div class="card">
                 <div class="card-body pt-3">
-                    <!-- Bordered Tabs -->
-                    <ul class="nav nav-tabs nav-tabs-bordered">
+                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                         <li class="nav-item">
-                            <button class="nav-link active" data-bs-toggle="tab"
-                                data-bs-target="#profile-overview">Overview</button>
+                          <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#profile-overview" role="tab" aria-controls="profile-overview" aria-selected="true">Overview</a>
                         </li>
                         <li class="nav-item">
-                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Edit
-                                Profile</button>
+                          <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#profile-edit" role="tab" aria-controls="profile-edit" aria-selected="false">Profile Edit</a>
                         </li>
                         <li class="nav-item">
-                            <button class="nav-link" data-bs-toggle="tab"
-                                data-bs-target="#profile-settings">Settings</button>
+                          <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#profile-settings" role="tab" aria-controls="profile-settings" aria-selected="false">Settings</a>
                         </li>
+                        <li class="nav-item">
+                          <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#profile-change-password" role="tab" aria-controls="profile-change-password" aria-selected="false">Change Password</a>
+                        </li>
+                      </ul>
+                    {{-- custstom --}}
 
-                        <li class="nav-item">
-                            <button class="nav-link" data-bs-toggle="tab"
-                                data-bs-target="#profile-change-password">Change Password</button>
-                        </li>
-
-                    </ul>
                     <div class="tab-content pt-2">
                         <div class="tab-pane fade show active profile-overview mt-3" id="profile-overview">
                             <h5 class="card-title">Profile Details</h5>
@@ -109,9 +106,9 @@
                                         <img src="assets/img/profile-img.jpg" alt="Profile">
                                         <div class="pt-2">
                                             <a href="#" class="btn btn-primary btn-sm"
-                                                title="Upload new profile image"><i class="bi bi-upload"></i></a>
+                                                title="Upload new profile image"><i class="fa fa-upload"></i></a>
                                             <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image"><i
-                                                    class="bi bi-trash"></i></a>
+                                                    class="fa fa-trash"></i></a>
                                         </div>
                                     </div>
                                 </div>
@@ -312,5 +309,14 @@
     </div>
 </section>
 @push('js')
+{{-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> --}}
+{{-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script> --}}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+<script>
+    $(document).ready(function () {
+
+    });
+</script>
 @endpush
 @endsection
