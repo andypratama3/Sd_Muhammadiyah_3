@@ -55,16 +55,6 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group row">
-                        <label class="col-sm-3 text-dark" for="nik">NIK </label>
-                        <div class="col-sm-9">
-                            <h6>: {{ $siswa->nik }}</h6>
-                            <hr>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="tmpt_lahir">Tempat Lahir</label>
                         <div class="col-sm-9">
                             <h6>: {{ $siswa->tmpt_lahir }}</h6>

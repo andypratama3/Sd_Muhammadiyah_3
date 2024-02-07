@@ -4,9 +4,11 @@ namespace App\Exports;
 
 use App\Models\Siswa;
 use Maatwebsite\Excel\Concerns\FromView;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class SiswaExport implements FromCollection, FromView
+use Illuminate\Contracts\View\View;
+
+class SiswaExport implements FromView,WithHeadings
 {
     /**
     * @return \Illuminate\Support\Collection
@@ -36,21 +38,21 @@ class SiswaExport implements FromCollection, FromView
                 "Nisn",
                 "Agama",
                 // data sekolah
-                "Kelas_tahun",
-                "Tanggal_masuk",
+                "Kelas/tahun",
+                "Tanggal Masuk",
                 "Beasiswa",
                 // data orang tua
-                "Nama_ayah",
-                "Nama_ibu",
-                "Pendidikan_ayah",
-                "Pendidikan_ibu",
+                "Nama Ayah",
+                "Nama Ibu",
+                "Pendidikan Ayah",
+                "Pendidikan Ibu",
                 //pekerjaan
-                "Pekerjaan_ayah",
-                "Pekerjaan_ibu",
+                "Pekerjaan_Ayah",
+                "Pekerjaan Ibu",
                 //wali
-                "Nama_wali",
-                "Pekerjaan_wali",
-                "Alamat_wali",
+                "Nama wali",
+                "Pekerjaan wali",
+                "Alamat wali",
                 //alamat
                 "Rt",
                 "Rw",
@@ -58,7 +60,7 @@ class SiswaExport implements FromCollection, FromView
                 "kabupaten",
                 "kecamatan",
                 "kelurahan",
-                "nama_jalan",
+                "Nama Jalan",
                 "Jenis Tinggal",
                 "No HP",
         ];

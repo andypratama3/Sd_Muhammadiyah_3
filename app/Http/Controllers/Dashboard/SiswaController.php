@@ -6,9 +6,11 @@ namespace App\Http\Controllers\Dashboard;
 use App\Models\Kelas;
 use App\Models\Siswa;
 use Barryvdh\DomPDF\PDF;
+use App\Exports\SiswaExport;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
+use Maatwebsite\Excel\Facades\Excel;
 use App\DataTransferObjects\SiswaData;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Contracts\DataTable;
@@ -30,12 +32,16 @@ class SiswaController extends Controller
     }
     public function data_table(Request $request)
     {
-        $siswa = Siswa::select(['id','name','nisn','jk','foto','slug']);
+        $siswa = Siswa::with('kelas')->select(['id','name','nisn','jk','foto','slug']);
         return DataTables::of($siswa)
-                // ->addColumn('kategori.name', function ($artikel) {
-                //     $categoryNames = $artikel->categorys->pluck('name')->implode(', ');
-                //     return $categoryNames;
-                // })
+                ->addColumn('kelas.name', function ($kelas) {
+                    $kelas_name = $kelas->kelas->pluck('name');
+                    return $kelas_name;
+                })
+                ->addColumn('kelas.category', function ($kelas) {
+                    $category_name = $kelas['kelas'][0]['pivot']['category_kelas'];
+                    return $category_name;
+                })
                 ->addColumn('options', function ($row){
                     return '
                     <a href="' . route('dashboard.datamaster.siswa.show', $row->slug) . '" class="btn btn-sm btn-warning"><i class="fa fa-eye"></i></a>
@@ -157,9 +163,16 @@ class SiswaController extends Controller
             'kecamatan_take' => $kecamatan_take,
             'kelurahan_take' => $kelurahan_take,
         ];
-        // $pdf = \PDF::loadView('dashboard.data.siswa.cetak', $data);
-
-        // return $pdf->download('siswa'. $siswa->name .'.pdf');
-        return view('dashboard.data.siswa.cetak', compact('siswa','provinsi_take','kabupaten_take','kecamatan_take','kelurahan_take'));
+        $pdf = \PDF::loadView('dashboard.data.siswa.cetak', $data);
+        return $pdf->download('siswa'. $siswa->name .'.pdf');
+        // return view('dashboard.data.siswa.cetak', compact('siswa','provinsi_take','kabupaten_take','kecamatan_take','kelurahan_take'));
+    }
+    public function export_pdf()
+    {
+        
+    }
+    public function export_excel()
+    {
+        return Excel::download(new SiswaExport, 'siswa-export-excel.xlsx');
     }
 }
