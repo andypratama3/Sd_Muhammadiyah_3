@@ -15,7 +15,7 @@
                 <a href="{{ route('dashboard.datamaster.pembayaran.create') }}" class="btn btn-success btn-sm float-right">Tambah <i class="fas fa-plus"></i></a>
                 </h4>
                 <div class="table-responsive">
-                    <table class="table mt-4" id="siswa_table">
+                    <table class="table mt-4" id="invoice_table">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -28,7 +28,7 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        {{-- <tbody>
                             @foreach ($pembayarans as $pembayaran)
                                 <tr>
                                     <td>{{ ++$no }}</td>
@@ -44,7 +44,7 @@
                                         <span class="badge badge-danger">{{ $pembayaran->status }}</span>
                                         @elseif ($pembayaran->status === 'success')
                                         <span class="badge badge-success">{{ $pembayaran->status }}</span>
-                                        {{-- @elseif ($pembayaran->status === '') --}}
+
                                         @endif
                                     </td>
                                     <td>
@@ -63,14 +63,14 @@
                                     </td>
                                 </tr>
                             @endforeach
-                        </tbody>
+                        </tbody> --}}
                     </table>
                 </div>
             </div>
         </div>
     </div>
 </div>
-{{-- <input type="hidden" id="siswa_data" value="{{ route('siswa.get.records') }}"> --}}
+<input type="hidden" id="invoice_data" value="{{ route('dashboard.datamaster.get.records') }}">
 @push('js')
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.0.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
@@ -82,77 +82,84 @@
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jqc-1.12.3/dt-1.10.16/b-1.4.2/b-html5-1.4.2/datatables.min.js"></script>
 <script>
 $(document).ready(function () {
-    // $('#siswa_table').DataTable({
-    //     dom: 'Bfrtip',
-    //     buttons: [
-    //         { extend: 'copyHtml5', text: '<i class="fa-solid fa-copy mr-1"></i> Copy', className: 'btn btn-danger' },
-    //         { extend: 'excelHtml5', text: '<i class="fa-solid fa-file-excel mr-1"></i> Excel', className: 'btn btn-success'},
-    //         // { extend: 'csvHtml5', text: 'CSV', className: 'btn btn-'},
-    //         { extend: 'pdfHtml5', text: '<i class="fa-solid fa-file-pdf mr-1"></i> PDF', className: 'btn btn-warning'},
-    //     ],
-    //     initComplete: function() {
-    //         var btns = $('.dt-button');
-    //         btns.removeClass('dt-button');
-    //     },
-    //     ordering: true,
-    //     pagination: true,
-    //     deferRender: true,
-    //     serverSide: true,
-    //     responsive: true,
-    //     processing: true,
-    //     pageLength: 100,
-    //     ajax: {
-    //         'url': $('#siswa_data').val(),
-    //     },
-    //     columns: [
-    //         { data: 'DT_RowIndex',name: 'DT_RowIndex',orderable: false,searchable: false},
-    //         { data: 'name', name: 'name'},
-    //         { data: 'nisn', name: 'nisn'},
-    //         { data: 'nik', name: 'nik'},
-    //         { data: 'options',name: 'options', orderable: false, searchable: false }
-    //     ],
-    // });
-    // $('#siswa_table').on('click', '#btn-delete', function () {
-    //     var slug = $(this).data('id');
-    //     var url = '{{ route("dashboard.datamaster.siswa.destroy", ":slug") }}'; // Use the correct route name "destroy"
-    //     url = url.replace(':slug', slug);
-    //     swal({
-    //         title: 'Anda yakin?',
-    //         text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
-    //         icon: 'warning',
-    //         buttons: true,
-    //         dangerMode: true,
-    //     }).then((willDelete) => {
-    //         if (willDelete) {
-    //             $.ajaxSetup({
-    //                 headers: {
-    //                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //                 }
-    //             });
+    $('#invoice_table').DataTable({
+        ordering: true,
+        pagination: true,
+        deferRender: true,
+        serverSide: true,
+        responsive: true,
+        processing: true,
+        pageLength: 100,
+        ajax: {
+            'url': $('#invoice_data').val(),
+        },
+        columns: [
+            { data: 'DT_RowIndex',name: 'DT_RowIndex',orderable: false,searchable: false},
+            { data: 'name', name: 'name'},
+            { data: 'siswa.name', name: 'siswa.name'},
+            { data: 'kelas.name', name: 'kelas.name'},
+            { data: 'order_id', name: 'order_id'},
+            { data: 'category_kelas', name: 'category_kelas'},
+            {
+                data: 'status', name: 'status',
+                render: function (data, type, full, meta) {
+                    if (data === 'pending') {
+                        return '<h5 style="color: black;"><span class="badge bg-warning">' + data + '</span></h5>';
+                    } else if (data === 'success') {
+                        return '<h5 style="color: black;"><span class="badge bg-success">' + data + '</span></h5>';
+                    } else if (data === 'failed') {
+                        return '<h5 style="color: black;"><span class="badge bg-danger">' + data + '</span></h5>';
+                    } else {
+                        return data;
+                    }
+                }
+            },
+            { data: 'options',name: 'options', orderable: false, searchable: false }
+        ],
+    });
+    $('#invoice_table').on('click', '#btn-delete', function () {
+        var order_id = $(this).data('id');
+        var url = '{{ route("dashboard.datamaster.pembayaran.destroy", ":order_id") }}'; // Use the correct route name "destroy"
+        url = url.replace(':order_id', order_id);
+        swal({
+            title: 'Anda yakin?',
+            text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
 
-    //             // Send a DELETE request
-    //             $.ajax({
-    //                 url: url,
-    //                 type: 'DELETE', // Use the DELETE method
-    //                 success: function (data) {
-    //                     if (data.status === 'success') {
-    //                         swal('Berhasil', data.message, 'success').then(() => {
-    //                             // Reload the page
-    //                             window.location.href = "{{ route('dashboard.datamaster.siswa.index') }}";
-    //                             // Reload the page with a success message
-    //                         });
-    //                     } else {
-    //                         // Reload the page with an error message
-    //                         swal('Error', data.message, 'error');
-    //                         window.location.href = "{{ route('dashboard.datamaster.siswa.index') }}";
-    //                     }
-    //                 },
-    //             });
-    //         } else {
-    //             // If the user cancels the deletion, do nothing
-    //         }
-    //     });
-    // });
+                // Send a DELETE request
+                $.ajax({
+                    url: url,
+                    type: 'DELETE', // Use the DELETE method
+                    success: function (data) {
+                        if (data.status === 'success') {
+                            swal('Berhasil', data.message, 'success').then(() => {
+                                // Reload the page
+                                // window.location.href = "{{ route('dashboard.datamaster.siswa.index') }}";
+                                // reload table
+                                reloadTable('#invoice_table');
+                                // Reload the page with a success message
+                            });
+                        } else {
+                            // Reload the page with an error message
+                            swal('Error', data.message, 'error');
+                            window.location.href = "{{ route('dashboard.datamaster.siswa.index') }}";
+                        }
+                    },
+                });
+            } else {
+                // If the user cancels the deletion, do nothing
+            }
+        });
+    });
 });
 </script>
 @endpush

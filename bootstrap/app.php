@@ -41,10 +41,16 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
+// $app->register(\Barryvdh\DomPDF\ServiceProvider::class);
+
+
+// $app->configure('dompdf');
+
 /*
 |--------------------------------------------------------------------------
 | Return The Application
-|--------------------------------------------------------------------------
+|-----------------------------------------------------
+---------------------
 |
 | This script returns the application instance. The instance is given to
 | the calling script so we can separate the building of the instances

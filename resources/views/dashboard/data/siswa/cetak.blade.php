@@ -150,8 +150,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="provinsi">Provinsi</label>
                         <div class="col-sm-9">
-                            <input type="hidden" id="provinsi_id" value="{{ $siswa->provinsi_id }}">
-                            <h6 id="provinsi">: {{ $siswa->provinsi_id }}</h6>
+                            <h6 id="provinsi">: {{ $provinsi_take['name'] }}</h6>
                             <hr>
                         </div>
                     </div>
@@ -160,8 +159,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="kabupaten">Kabupaten / Kota</label>
                         <div class="col-sm-9">
-                            <input type="hidden" id="kabupaten_id" value="{{ $siswa->kabupaten_id }}">
-                            <h6 id="kabupaten">: {{ $siswa->kabupaten_id }}</h6>
+                            <h6 id="kabupaten">: {{ $kabupaten_take['name'] }}</h6>
                             <hr>
                         </div>
                     </div>
@@ -170,8 +168,8 @@
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="kecamatan">Kecamatan</label>
                         <div class="col-sm-9">
-                            <input type="hidden" id="kecamatan_id" value="{{ $siswa->kecamatan_id }}">
-                            <h6 id="kecamatan">: {{ $siswa->kecamatan_id }}</h6>
+
+                            <h6 id="kecamatan">: {{ $kecamatan_take['name'] }}</h6>
                             <hr>
                         </div>
                     </div>
@@ -180,8 +178,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="kelurahan">Kelurahan</label>
                         <div class="col-sm-9">
-                            <input type="hidden" id="kalurahan_id" value="{{ $siswa->kalurahan_id }}">
-                            <h6 id="kelurahan">: {{ $siswa->kelurahan_id }}</h6>
+                            <h6 id="kelurahan">: {{ $kelurahan_take['name'] }}</h6>
                             <hr>
                         </div>
                     </div>
@@ -228,7 +225,7 @@
 @push('js')
 <script>
     $(document).ready(function () {
-       
+
 
     });
 </script>

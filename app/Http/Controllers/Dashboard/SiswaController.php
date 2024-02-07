@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+
 use App\Models\Kelas;
 use App\Models\Siswa;
+use Barryvdh\DomPDF\PDF;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
@@ -96,8 +98,68 @@ class SiswaController extends Controller
     public function cetak_data($slug)
     {
         $siswa = Siswa::where('slug', $slug)->firstOrFail();
-        $result_provinsi = $this->getProvinsi->getprovinsi()->json();
 
-        return view('dashboard.data.siswa.cetak', compact('siswa'));
+         /*
+          ! take Request data From jquery
+        */
+        $provinsi_id = $siswa->provinsi_id;
+        $kabupaten_id = $siswa->kabupaten_id;
+        $kecamatan_id = $siswa->kecamatan_id;
+
+        $response_provinsi = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/provinces.json");
+
+        if ($response_provinsi->successful()) {
+            /*
+                ! take provinsi data from Api
+             */
+            $provinsi = $response_provinsi->json();
+            $provinsi_take = collect($provinsi)->where('id', $provinsi_id)->first();
+
+             /*
+                ! take kabupaten data from Api
+             */
+            $response_kabupaten = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/regencies/$provinsi_id.json");
+            $kabupaten = $response_kabupaten->json();
+            $kabupaten_take = collect($kabupaten)->first();
+
+             /*
+                ! take kecamatan data from Api
+             */
+            $response_kecamatan = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/districts/$kabupaten_id.json");
+            $kecamatan = $response_kecamatan->json();
+            $kecamatan_take = collect($kecamatan)->first();
+
+             /*
+                ! take kelurahan data from Api
+             */
+            $response_kelurahan = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/villages/$kecamatan_id.json");
+            $kelurahan = $response_kelurahan->json();
+            $kelurahan_take = collect($kelurahan)->first();
+
+            // return response()->json([
+            //     'success' => true,
+            //     'message' => 'Data API Sukses Di Ambil',
+            //     'provinsi' => $provinsi_take,
+            //     'kabupaten' => $kabupaten_take,
+            //     'kecamatan' => $kecamatan_take,
+            //     'kelurahan' => $kelurahan_take,
+            // ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve data from the API',
+            ]);
+        }
+        $data = [
+            'siswa' => $siswa,
+            'provinsi_take'  => $provinsi_take,
+            'kabupaten_take' => $kabupaten_take,
+            'kecamatan_take' => $kecamatan_take,
+            'kelurahan_take' => $kelurahan_take,
+        ];
+        $pdf = \PDF::loadView('dashboard.data.siswa.cetak', $data);
+
+        return $pdf->download('siswa'. $siswa->name .'pdf');
+
     }
 }

@@ -82,8 +82,11 @@ $(document).ready(function () {
                         if (data.status === 'success') {
                             swal('Berhasil', data.message, 'success').then(() => {
                                 // Reload the page
-                                window.location.href = "{{ route('dashboard.news.artikel.index') }}";
+                                // window.location.href = "{{ route('dashboard.news.artikel.index') }}";
                                 // Reload the page with a success message
+                                // reload datatable
+                                reloadTable('#artikel_table');
+
                             });
                         } else {
                             // Reload the page with an error message

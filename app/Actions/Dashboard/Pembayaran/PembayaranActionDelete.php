@@ -1,6 +1,8 @@
 <?php
 namespace App\Actions\Dashboard\Pembayaran;
 
+use App\Models\Pembayaran;
+
 
 class PembayaranActionDelete
 {

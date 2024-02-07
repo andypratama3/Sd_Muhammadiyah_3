@@ -152,7 +152,10 @@ $(document).ready(function () {
                     type: 'DELETE', // Use the DELETE method
                     success: function (data) {
                         if (data.status === 'success') {
-                                window.location.href = "{{ route('dashboard.news.berita.index') }}";
+                                // redirect fucntion
+                                // window.location.href = "{{ route('dashboard.news.berita.index') }}";
+                                 // reload datatable
+                                 reloadTable('#artikel_table');
                         } else {
                             window.location.href = "{{ route('dashboard.news.berita.index') }}";
                         }

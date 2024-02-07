@@ -6,6 +6,11 @@
 @stack('js')
 
 <script>
+    function reloadTable(id){
+    var table = $(id).DataTable();
+    table.cleanData;
+    table.ajax.reload();
+    }
     $(document).ready(function () {
         $(".swal-logout").click(function (e) {
         slug = e.target.dataset.id;
