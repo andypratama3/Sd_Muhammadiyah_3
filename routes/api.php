@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\IpaymuPaymentApi;
 use App\Http\Controllers\Api\Dashboard\SiswaApi;
 use App\Http\Controllers\Api\Dashboard\WilayahApi;
 
@@ -29,3 +30,6 @@ Route::post('get/provinsi',[WilayahApi::class, 'getProvinsi'])->name('getprovins
 Route::post('get/kabupaten',[WilayahApi::class, 'getKabupaten'])->name('getkabupaten.api');
 //siswa Data Json
 // Route::get('siswas',[SiswaApi::class, 'siswa'])->name('siswa.api');
+// Api Payment
+Route::post('ipaymu/callback',[IpaymuPaymentApi::class, 'callback'])->name('ipaymu.api.callback');
+

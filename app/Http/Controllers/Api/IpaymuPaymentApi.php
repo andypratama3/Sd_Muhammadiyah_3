@@ -2,35 +2,30 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Models\Pembayaran;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class IpaymuPaymentApi extends Controller
 {
-    public function callback()
+    public function callback(Request $request)
     {
         /*
             ! Payment Callback From Ipaymu And Update data at database
         */
+        $trx_id = $request->trx_id;
+        $sessionID    = $request->sid;
+        $status    = $request->status;
+        $pembayaran = Pembayaran::where('sessionID', $sessionID)->first();
 
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://yourcallbackurl.com',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'POST',
-        ));
+        if($status == 'success'){
+            $pembayaran->status = $status;
+        }elseif($status == 'pending'){
 
-        $response = curl_exec($curl);
+        }else{
 
-
-
-        curl_close($curl);
-        
-
+        }
+        $pembayaran->update();
+        dd($pembayaran);
     }
 }

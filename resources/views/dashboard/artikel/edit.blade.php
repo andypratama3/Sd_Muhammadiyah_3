@@ -42,7 +42,7 @@
             </div>
             <div class="form-group">
                 <div id="editor">{!! $artikel->artikel !!}</div>
-                <textarea name="artikel" id="content-editor" style="display: none;"></textarea>
+                <textarea name="artikel" id="content-editor" style="display: none;">{{ $artikel->artikel }}</textarea>
             </div>
 
             <a href="{{ route('dashboard.news.artikel.index') }}" class="btn btn-danger float-lg-start">Kembali</a>

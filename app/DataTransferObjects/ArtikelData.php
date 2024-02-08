@@ -12,7 +12,7 @@ class ArtikelData extends Data
         public readonly string $name,
         public readonly string $categorys,
         public readonly string $artikel,
-        public readonly UploadedFile $image,
+        public readonly ?UploadedFile $image,
         public readonly ?string $slug,
 
     ) {

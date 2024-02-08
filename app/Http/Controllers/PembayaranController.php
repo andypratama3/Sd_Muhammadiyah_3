@@ -51,7 +51,7 @@ class PembayaranController extends Controller
         $body['qty']      = array('1');
         $body['returnUrl']  = 'https://your-website.com/cancel-page';
         $body['cancelUrl']  = 'https://your-website.com/cancel-page';
-        $body['notifyUrl']  = 'https://your-website.com/callback-url';
+        $body['notifyUrl']  =  route('ipaymu.api.callback');
         // $body['referenceId'] = '1234'; //your reference id
         //End Request Body//
 
@@ -108,7 +108,6 @@ class PembayaranController extends Controller
         }
 
         curl_close($ch);
-
     }
-  
+
 }

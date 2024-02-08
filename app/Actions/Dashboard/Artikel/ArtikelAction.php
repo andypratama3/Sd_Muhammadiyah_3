@@ -10,14 +10,20 @@ class ArtikelAction
 {
     public function execute(ArtikelData $artikelData)
     {
-        //request foto
-        $foto = $artikelData->image;
-        $ext = $foto->getClientOriginalExtension();
+        if($artikelData->image) {
+            //request foto
+            $foto = $artikelData->image;
+            $ext = $foto->getClientOriginalExtension();
 
-        //upload foto to folder
-        $upload_path = public_path('storage/img/artikel/');
-        $picture_name = 'Artikel_'.Str::slug($artikelData->name).'_'.date('YmdHis').".$ext";
-        $foto->move($upload_path, $picture_name);
+            //upload foto to folder
+            $upload_path = public_path('storage/img/artikel/');
+            $picture_name = 'Artikel_'.Str::slug($artikelData->name).'_'.date('YmdHis').".$ext";
+            $foto->move($upload_path, $picture_name);
+        }else{
+            $artikel = Artikel::where('slug', $artikelData->slug)->first();
+            $picture_name = $artikel->image;
+            
+        }
         $artikel = Artikel::updateOrCreate(
             ['slug' => $artikelData->slug],
             [
