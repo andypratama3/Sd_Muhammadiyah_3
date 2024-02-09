@@ -104,11 +104,11 @@ $(document).ready(function () {
                 data: 'status', name: 'status',
                 render: function (data, type, full, meta) {
                     if (data === 'pending') {
-                        return '<h5 style="color: black;"><span class="badge bg-warning">' + data + '</span></h5>';
-                    } else if (data === 'success') {
-                        return '<h5 style="color: black;"><span class="badge bg-success">' + data + '</span></h5>';
+                        return '<h5 style="color: black;"><span class="badge bg-warning"><i class="fa-solid fa-clock"></i> ' + data + '</span></h5>';
+                    } else if (data === 'berhasil') {
+                        return '<h5 style="color: black;"><span class="badge bg-success"><i class="fa-solid fa-circle-check"></i> ' + data + '</span></h5>';
                     } else if (data === 'failed') {
-                        return '<h5 style="color: black;"><span class="badge bg-danger">' + data + '</span></h5>';
+                        return '<h5 style="color: black;"><span class="badge bg-danger"><i class="fa-solid fa-xmark"></i> ' + data + '</span></h5>';
                     } else {
                         return data;
                     }

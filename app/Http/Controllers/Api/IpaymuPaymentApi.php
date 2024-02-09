@@ -18,14 +18,17 @@ class IpaymuPaymentApi extends Controller
         $status    = $request->status;
         $pembayaran = Pembayaran::where('sessionID', $sessionID)->first();
 
-        if($status == 'success'){
-            $pembayaran->status = $status;
+        if($status == 'berhasil'){
+            $pembayaran->trx_id = $trx_id;
+            $pembayaran->status = 'Berhasil';
+
         }elseif($status == 'pending'){
-
+            $pembayaran->trx_id = $trx_id;
+            $pembayaran->status = 'Pending';
         }else{
-
+            $pembayaran->trx_id = $trx_id;
+            $pembayaran->status = 'Expired';
         }
         $pembayaran->update();
-        dd($pembayaran);
     }
 }

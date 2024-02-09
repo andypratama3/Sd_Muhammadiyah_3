@@ -49,7 +49,7 @@ class PembayaranController extends Controller
         $body['product']    = array($pembayaran->name);
         $body['price']      = array($pembayaran->gross_amount);
         $body['qty']      = array('1');
-        $body['returnUrl']  = 'https://your-website.com/cancel-page';
+        $body['returnUrl']  = route('pembayaran.index')->with('failed', 'Pembayaran Di Batalkan');
         $body['cancelUrl']  = 'https://your-website.com/cancel-page';
         $body['notifyUrl']  =  route('ipaymu.api.callback');
         // $body['referenceId'] = '1234'; //your reference id
