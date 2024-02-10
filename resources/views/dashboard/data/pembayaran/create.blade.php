@@ -64,8 +64,8 @@
                 <div class="col-md-6">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="gross_amount">Total Pembayaran</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="gross_amount" class="form-control" id="gross_amount">
+                        <div class="col-sm-9" id="gross_amount">
+
                         </div>
                     </div>
                 </div>
@@ -86,6 +86,62 @@
         $('.select2').select2({
             theme: 'bootstrap4'
         });
+        // $('#gross_amount').on('input', function () {
+        //     let gross_amount = $(this).val();
+        //     gross_amount = gross_amount.replace(/[^0-9.]/g, '');
+        //     gross_amount = 'Rp. ' + parseFloat(gross_amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+
+        //     $(this).val(gross_amount);
+        // });
+        var hargaValue = '';
+        function renderInput() {
+            var template = `
+                <input type="hidden" name="gross_amount" id="harga" class="form-control" placeholder="Masukkan Harga" value="${formatRupiah(hargaValue)}" />
+                <input type="text" name="harga_format" id="harga_format" class="form-control" placeholder="Masukkan Harga" value="${formatRupiah(hargaValue)}" autofocus />
+            `;
+            $('#gross_amount').html(template);
+
+            $('#harga_format').on('keyup', function(e) {
+                hargaValue = this.value.replace('Rp. ', '');
+                console.log(hargaValue);
+                renderInput();
+            }).focus();
+
+            PosEnd($('#harga_format')[0]);
+        }
+
+        function formatRupiah(angka) {
+            var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                split = number_string.split(','),
+                sisa = split[0].length % 3,
+                rupiah = split[0].substr(0, sisa),
+                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+            if (ribuan) {
+                separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+            return rupiah;
+        }
+
+        function PosEnd(end) {
+            var len = end.value.length;
+
+            if (end.setSelectionRange) {
+                end.focus();
+                end.setSelectionRange(len, len);
+            } else if (end.createTextRange) {
+                var t = end.createTextRange();
+                t.collapse(true);
+                t.moveEnd('character', len);
+                t.moveStart('character', len);
+                t.select();
+            }
+        }
+
+        renderInput();
         $('#kelas').on('change', function () {
             var selectedKelasId = $('#kelas').val();
             var categoryKelasDropdown = $('#category_kelas');

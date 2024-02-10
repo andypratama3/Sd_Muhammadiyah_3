@@ -21,49 +21,14 @@
                                 <th>No</th>
                                 <th>Nama Pembayaran</th>
                                 <th>Nama Siswa</th>
+                                <th>Kelas</th>
+                                <th>Category Kelas</th>
                                 <th>Order ID</th>
                                 <th>Total</th>
-                                <th>Kelas</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        {{-- <tbody>
-                            @foreach ($pembayarans as $pembayaran)
-                                <tr>
-                                    <td>{{ ++$no }}</td>
-                                    <td>{{ $pembayaran->name }}</td>
-                                    <td>{{ $pembayaran->siswa->name }}</td>
-                                    <td>{{ $pembayaran->order_id }}</td>
-                                    <td>Rp. {{ $pembayaran->gross_amount }}</td>
-                                    <td>{{ $pembayaran->kelas->name }}</td>
-                                    <td>
-                                        @if ($pembayaran->status === 'pending')
-                                            <span class="badge badge-warning">{{ $pembayaran->status }}</span>
-                                        @elseif ($pembayaran->status === 'failed')
-                                        <span class="badge badge-danger">{{ $pembayaran->status }}</span>
-                                        @elseif ($pembayaran->status === 'success')
-                                        <span class="badge badge-success">{{ $pembayaran->status }}</span>
-
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <a href="{{ route('dashboard.datamaster.pembayaran.show', $pembayaran->order_id) }}"
-                                            class="btn btn-dark btn-sm"><i class="fas fa-eye"></i></a>
-                                        <a href="{{ route('dashboard.datamaster.pembayaran.edit', $pembayaran->order_id) }}"
-                                            class="btn btn-primary btn-sm"><i class="fas fa-pen"></i></a>
-                                        <a href="#" data-id="{{ $pembayaran->order_id }}" class="btn btn-danger btn-sm delete"
-                                            title="Hapus">
-                                            <form action="{{ route('dashboard.datamaster.pembayaran.destroy', $pembayaran->order_id) }}"
-                                                id="delete-{{ $pembayaran->order_id }}" method="POST" enctype="multipart/form-data">
-                                                @csrf
-                                                @method('delete')
-                                            </form>
-                                            <i class="fas fa-trash"></i>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody> --}}
                     </table>
                 </div>
             </div>
@@ -74,11 +39,6 @@
 @push('js')
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.0.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jqc-1.12.3/dt-1.10.16/b-1.4.2/b-html5-1.4.2/datatables.min.js"></script>
 <script>
 $(document).ready(function () {
@@ -98,8 +58,10 @@ $(document).ready(function () {
             { data: 'name', name: 'name'},
             { data: 'siswa.name', name: 'siswa.name'},
             { data: 'kelas.name', name: 'kelas.name'},
-            { data: 'order_id', name: 'order_id'},
             { data: 'category_kelas', name: 'category_kelas'},
+            { data: 'order_id', name: 'order_id'},
+            { data: 'gross_amount', name: 'gross_amount'},
+
             {
                 data: 'status', name: 'status',
                 render: function (data, type, full, meta) {

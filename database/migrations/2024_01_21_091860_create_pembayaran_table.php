@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('category_kelas');
             $table->string('name')->nullable();
             $table->string('email')->nullable();
-            $table->float('gross_amount',8, 2);
+            $table->decimal('gross_amount', 10, 2)->nullable();
             $table->string('startdate')->nullable();
             $table->string('enddate')->nullable();
             $table->string('type_payment')->nullable();
