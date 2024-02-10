@@ -15,7 +15,7 @@ class ArtikelFactory extends Factory
         return [
             'name' => $this->faker->sentence,
             'artikel' => $this->faker->paragraph,
-            'image' => asset('storage/img/artikel/Berita_a_20240210170052.jpg'),
+            'image' => 'Berita_a_20240210170052.jpg',
             'jumlah_klik' => $this->faker->numberBetween(1, 1000),
             'slug' => Str::slug($this->faker->sentence),
         ];
