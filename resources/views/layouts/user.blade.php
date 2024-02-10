@@ -12,7 +12,6 @@
 
     @include('layouts.user.header')
     <main id="main">
-
         @yield('content')
     </main>
 

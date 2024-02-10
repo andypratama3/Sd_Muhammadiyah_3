@@ -11,7 +11,7 @@
          <nav id="navbar" class="navbar">
              <ul>
                  <li><a href="{{ route('index') }}">Beranda</a></li>
-                 <li class="dropdown"><a href="#"><span>Profil</span> <i
+                 <li class="dropdown"><a href="#"><span>Profil</span><i
                              class="bi bi-chevron-down dropdown-indicator"></i>
                      </a>
                      <ul>

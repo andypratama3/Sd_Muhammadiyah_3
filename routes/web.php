@@ -92,7 +92,6 @@ Route::group(['prefix' => 'artikel', 'middleware' => ['auth', 'verified']], func
 
 Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], function () {
     Route::get('/', DashboardController::class)->name('dashboard');
-    Route::resource('profile', DashboardProfileController::class, ['names' => 'dashboard.profile']);
 
     Route::group(['prefix' => 'news'], function () {
         Route::resource('berita', DashboardBeritaController::class, ['names' => 'dashboard.news.berita']);
@@ -132,9 +131,9 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
 
     });
     Route::group(['prefix' => 'pengaturan'], function () {
-        //user settings
-        // Route::resource('users', UserController::class, ['names' => 'dashboard.pengaturan.task']);
-        //akses
+        // user settings
+        Route::resource('profile', DashboardProfileController::class, ['names' => 'dashboard.pengaturan.profile']);
+        // akses
         Route::resource('task', TaskController::class, ['names' => 'dashboard.pengaturan.task']);
         Route::resource('role', RoleController::class, ['names' => 'dashboard.pengaturan.role']);
         Route::resource('user', UserController::class, ['names' => 'dashboard.pengaturan.user']);

@@ -28,5 +28,7 @@ class UpdateUserPassword implements UpdatesUserPasswords
         $user->forceFill([
             'password' => Hash::make($input['password']),
         ])->save();
+
+        redirect()->route('dashboard.pengaturan.profile.index')->with('success','Success Change Password');
     }
 }

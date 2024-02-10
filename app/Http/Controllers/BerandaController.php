@@ -6,6 +6,7 @@ use App\Models\Guru;
 use App\Models\Siswa;
 use App\Models\Berita;
 use App\Models\Fasilitas;
+use App\Models\Esktrakurikuler;
 
 class BerandaController extends Controller
 {
@@ -15,12 +16,15 @@ class BerandaController extends Controller
     public function __invoke()
     {
         $beritas = Berita::select(['judul', 'desc', 'foto', 'slug'])->latest()->get();
-        // $siswa = Siswa::count();
+        $siswas = Siswa::count();
         $guru = Guru::count();
         $fasilitas = Fasilitas::count();
+        $esktrakurikuler = Esktrakurikuler::count();
         return view('beranda', compact(
             'beritas',
+            'siswas',
             'guru',
+            'esktrakurikuler',
             'fasilitas',
         ));
     }

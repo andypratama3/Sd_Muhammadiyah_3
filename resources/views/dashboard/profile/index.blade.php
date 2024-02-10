@@ -74,16 +74,6 @@
                             </div>
                             <hr>
                             <div class="row">
-                                <div class="col-lg-3 col-md-4 label">Country</div>
-                                <div class="col-lg-9 col-md-8">: USA</div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-lg-3 col-md-4 label">Address</div>
-                                <div class="col-lg-9 col-md-8">: A108 Adam Street, New York, NY 535022</div>
-                            </div>
-                            <hr>
-                            <div class="row">
                                 <div class="col-lg-3 col-md-4 label">Phone</div>
                                 <div class="col-lg-9 col-md-8">: (+62) {{ $karyawan->phone }}</div>
                             </div>
@@ -98,7 +88,7 @@
                         <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
 
                             <!-- Profile Edit Form -->
-                            <form>
+                            <form >
                                 <div class="row mb-3">
                                     <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile
                                         Image</label>
@@ -265,13 +255,15 @@
 
                         <div class="tab-pane fade pt-3" id="profile-change-password">
                             <!-- Change Password Form -->
-                            <form>
-
+                            @include('layouts.flashmessage');
+                            <form method="POST" action="{{ route('user-password.update') }}">
+                                @method('PUT')
+                                @csrf
                                 <div class="row mb-3">
                                     <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Current
                                         Password</label>
                                     <div class="col-md-8 col-lg-9">
-                                        <input name="password" type="password" class="form-control"
+                                        <input name="current_password" type="password" class="form-control"
                                             id="currentPassword">
                                     </div>
                                 </div>
@@ -280,7 +272,7 @@
                                     <label for="newPassword" class="col-md-4 col-lg-3 col-form-label">New
                                         Password</label>
                                     <div class="col-md-8 col-lg-9">
-                                        <input name="newpassword" type="password" class="form-control" id="newPassword">
+                                        <input name="password" type="password" class="form-control" id="newPassword">
                                     </div>
                                 </div>
 
@@ -288,8 +280,8 @@
                                     <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">Re-enter New
                                         Password</label>
                                     <div class="col-md-8 col-lg-9">
-                                        <input name="renewpassword" type="password" class="form-control"
-                                            id="renewPassword">
+                                        <input name="password_confirmation" type="password" class="form-control"
+                                            id="password_confirmation">
                                     </div>
                                 </div>
 

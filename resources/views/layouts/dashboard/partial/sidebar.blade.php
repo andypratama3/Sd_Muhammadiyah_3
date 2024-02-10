@@ -167,7 +167,7 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                         aria-labelledby="userDropdown">
-                        <a class="dropdown-item" href="{{ route('dashboard.profile.index') }}">
+                        <a class="dropdown-item" href="{{ route('dashboard.pengaturan.profile.index') }}">
                             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                             Profile
                         </a>
