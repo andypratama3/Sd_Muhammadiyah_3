@@ -36,7 +36,7 @@
         </div>
 
         <div class="col-xl-8">
-
+            
             <div class="card">
                 <div class="card-body pt-3">
                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
@@ -255,7 +255,7 @@
 
                         <div class="tab-pane fade pt-3" id="profile-change-password">
                             <!-- Change Password Form -->
-                            @include('layouts.flashmessage');
+
                             <form method="POST" action="{{ route('user-password.update') }}">
                                 @method('PUT')
                                 @csrf

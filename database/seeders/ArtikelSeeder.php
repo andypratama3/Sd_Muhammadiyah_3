@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Artikel;
+use App\Models\Category;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class ArtikelSeeder extends Seeder
 {
@@ -13,6 +13,15 @@ class ArtikelSeeder extends Seeder
      */
     public function run(): void
     {
-        Artikel::factory()->count(200)->create();
+        // Create 100 new Artikel instances
+        $artikels = Artikel::factory(100)->create();
+
+        // Create a new Category instance
+        $category = Category::factory()->create();
+
+        // Attach all Artikel instances to the Category
+        foreach ($artikels as $artikel) {
+            $category->artikels()->attach($artikel);
+        }
     }
 }

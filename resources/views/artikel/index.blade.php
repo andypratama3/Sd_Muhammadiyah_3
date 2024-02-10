@@ -3,7 +3,7 @@
 
 @section('content')
 
-<section id="posts" class="posts">
+<section id="posts" class="posts" style="margin-top: 95px;">
     <div class="container" data-aos="fade-up">
       <div class="row g-5">
         @foreach ($artikels_trending as $artikel)
@@ -50,6 +50,7 @@
             @endif
             @endforeach
           </div>
+            <button id="load-more">Load More</button>
         </div>
         <!-- Trending Section -->
         <div class="col-lg-2">
@@ -70,10 +71,39 @@
               </li>
               @endforeach
               </ul>
+
             </div>
           </div>
       </div> <!-- End .row -->
     </div>
   </section> <!-- End Post Grid Section -->
+@push('js_user')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        var page = 1;
+        var url = "{{ route('artikel.index') }}";
 
+        $('#load-more').click(function() {
+            page++;
+            $.ajax({
+                url: url + '?page=' + page,
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    if (response.data.length > 0) {
+                        $.each(response.data, function(index, artikel) {
+                            // Append the new artikel data to your HTML
+                        });
+                    } else {
+                        $('#load-more').hide();
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+
+@endpush
 @endsection
