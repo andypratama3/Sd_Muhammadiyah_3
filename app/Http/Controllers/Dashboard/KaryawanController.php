@@ -59,7 +59,7 @@ class KaryawanController extends Controller
         $roles = Role::where('slug', '!=', 'superadmin')->get();
         return view('dashboard.pengaturan.karyawan.edit', compact('karyawan', 'roles'));
     }
-    public function update(KaryawanData $KaryawanData, ActionKaryawan $ActionKaryawan)
+    public function update(KaryawanData $karyawanData, ActionKaryawan $ActionKaryawan)
     {
         $ActionKaryawan->execute($karyawanData);
         return redirect()->route('dashboard.pengaturan.karyawan.index')->with('success','Kayran Berhasil Di Update');

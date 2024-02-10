@@ -16,6 +16,7 @@
                     @csrf
                     @method('PUT')
                     <input type="hidden" name="slug" value="{{ $karyawan->slug }}">
+                    <input type="hidden" name="user_id" value="{{ $karyawan->user_id }}">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">

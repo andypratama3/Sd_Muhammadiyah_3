@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('type_payment')->nullable();
             $table->string('SessionID')->nullable();
             $table->longText('Url')->nullable();
+            $table->string('trx_id')->nullable();
             $table->string('bulkId')->nullable();
             $table->string('account_id')->nullable();
             $table->string('status')->default('pending');

@@ -5,7 +5,6 @@ use App\Models\Role;
 use App\Models\User;
 use App\Models\Karyawan;
 
-
 class ActionKaryawan
 {
     public function execute($karyawanData)
@@ -14,13 +13,20 @@ class ActionKaryawan
             todo User Action
         **/
         // handle foto for user when update
+        $userData = [
+            'name' => $karyawanData->name,
+            'email' => $karyawanData->email,
+            'password' => bcrypt('12345678'),
+            'avatar' => 'profile.jpg',
 
-        $user = new User();
-        $user->name = $karyawanData->name;
-        $user->email = $karyawanData->email;
-        $user->password = bcrypt('12345678');
-        $user->avatar = 'profile.jpg';
-        $user->save();
+        ];
+
+        $user = User::where('id', $karyawanData->user_id)->first();
+        if($user){
+            $user->update($userData);
+        }else{
+            $user = User::create($userData);
+        }
 
          /*
             todo Karyawan Action
@@ -34,7 +40,7 @@ class ActionKaryawan
                 'user_id' => $user->id,
             ]
         );
-        
+
         $roles = Role::findOrFail($karyawanData->role_id);
         $permissionsData = $roles->permissions->pluck('id');
         if(empty($karyawanData->slug)){

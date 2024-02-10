@@ -13,6 +13,7 @@
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary text-center">Tambah Karyawan</h6>
             </div>
+            @include('layouts.flashmessage')
             <div class="card-body">
                 <form action="{{ route('dashboard.pengaturan.karyawan.store') }}" method="POST"
                     enctype="multipart/form-data">
@@ -22,7 +23,7 @@
                             <div class="form-group">
                                 <label>Nama Karyawan <code>*</code></label>
                                 <input type="text" class="form-control" id="name" name="name"
-                                    placeholder="Masukkan Nama Karyawan">
+                                    placeholder="Masukkan Nama Karyawan" value="{{ old('name') }}">
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -30,8 +31,8 @@
                                 <label>Jenis Kelamin<code>*</code></label>
                                 <select name="sex" id="" class="form-control">
                                     <option disabled selected>Pilih Jenis Kelamin</option>
-                                    <option value="Laki-Laki">Laki Laki</option>
-                                    <option value="Perempuan">Perempuan</option>
+                                    <option value="Laki-Laki" {{ old('sex') == 'Laki-laki' ? 'selected' : '' }}>Laki Laki</option>
+                                    <option value="Perempuan" {{ old('sex') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
                                 </select>
                             </div>
                         </div>
@@ -40,7 +41,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Email Karyawan <code>*</code></label>
-                                <input type="text" class="form-control" name="email" placeholder="Email Karyawan">
+                                <input type="text" class="form-control" name="email" value="{{ old('email') }}" placeholder="Email Karyawan">
                                     {{-- <select class="select2-single-placeholder form-control" name="email" id="select2Single">
                                     <option selected disabled>Pilih Email Karyawan</option>
                                     @foreach ($users as $user)
@@ -53,7 +54,7 @@
                             <div class="form-group">
                                 <label>Nomor Hp <code>*</code></label>
                                 <input type="text" class="form-control" id="phone" name="phone"
-                                    placeholder="Masukkan Email Karyawan">
+                                    placeholder="Masukkan Email Karyawan" value="{{ old('phone') }}" >
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -63,7 +64,7 @@
                                     <option selected="selected" disabled>Pilih Role</option>
                                     <hr>
                                     @foreach ($roles as $role)
-                                    <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                    <option value="{{ $role->id }}" {{ old('role_id') == $role->id ? 'selected' : '' }}>{{ $role->name }}</option>
                                     @endforeach
                                 </select>
                             </div>

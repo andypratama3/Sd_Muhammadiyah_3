@@ -27,6 +27,7 @@ class Pembayaran extends Model
         'bulkId',
         'SessionID',
         'Url',
+        'trx_id',
         'account_id',
         'status',
         'slug',
