@@ -60,8 +60,13 @@ $(document).ready(function () {
             { data: 'kelas.name', name: 'kelas.name'},
             { data: 'category_kelas', name: 'category_kelas'},
             { data: 'order_id', name: 'order_id'},
-            { data: 'gross_amount', name: 'gross_amount'},
-
+            {
+                data: 'gross_amount', // Refers to the data field in your dataset
+                name: 'gross_amount', // Name of the column
+                render: function (data, type, full, meta) { // Custom rendering function
+                    return 'Rp. ' + data; // Formats the data with 'Rp.' prefix
+                }
+            },
             {
                 data: 'status', name: 'status',
                 render: function (data, type, full, meta) {

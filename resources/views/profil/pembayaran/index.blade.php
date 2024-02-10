@@ -139,12 +139,13 @@
                         result_card.css('display', '');
                         status_result.text(response.message);
                     }
+
                 },
             });
         });
         $('#posts').on('click', '#pay', function () {
             const payment_id = $('#order_id').text();
-            const total = $('#gross_amount').text();
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -155,11 +156,11 @@
                 url: "{{ route('pembayaran.pay') }}",
                 data: {
                     order_id : payment_id,
-                    total : total,
                 },
                 success: function (response) {
                     window.location.href = response.redirect;
                 }
+
             });
         });
     });

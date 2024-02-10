@@ -36,6 +36,7 @@ class PembayaranController extends Controller
     {
         $order_id = $request->order_id;
         $pembayaran = Pembayaran::where('order_id', $order_id)->first();
+        $gross_amount = str_replace('.', '', $pembayaran->gross_amount);
         // SAMPLE HIT API iPaymu v2 PHP
         $va           = '0000002217160075'; //get on iPaymu dashboard
         $apiKey       = 'SANDBOX9CAEF80A-BEE1-40DD-A0E4-A71F36393097'; //get on iPaymu dashboard
@@ -47,9 +48,10 @@ class PembayaranController extends Controller
 
         //Request Body//
         $body['product']    = array($pembayaran->name);
-        $body['price']      = array($pembayaran->gross_amount);
-        $body['qty']      = array('1');
-        $body['returnUrl']  = 'https://your-website.com/cancel-page';
+        $body['price']      = array($gross_amount);
+        $body['image']      = array(asset('assets/img/SD3_logo.png'));
+        $body['qty']        = array('1');
+        $body['returnUrl']  = route('pembayaran.index');
         $body['cancelUrl']  = 'https://your-website.com/cancel-page';
         $body['notifyUrl']  =  route('ipaymu.api.callback');
         // $body['referenceId'] = '1234'; //your reference id
@@ -63,8 +65,6 @@ class PembayaranController extends Controller
         $signature    = hash_hmac('sha256', $stringToSign, $apiKey);
         $timestamp    = Date('YmdHis');
         //End Generate Signature
-
-
         $ch = curl_init($url);
 
         $headers = array(
@@ -89,14 +89,11 @@ class PembayaranController extends Controller
 
 
         $response = json_decode($ret, true);
-
-
         if (isset($response['Data']['Url']) && isset($response['Data']['SessionID'])) {
             $pembayaran->SessionID = $response['Data']['SessionID'];
             $pembayaran->Url = $response['Data']['Url'];
             $pembayaran->update();
             $redirectUrl = $response['Data']['Url'];
-
             return response()->json([
                 'redirect' => $redirectUrl,'Akan Mengalihkan'], 200);
         } else {
@@ -105,7 +102,6 @@ class PembayaranController extends Controller
                 'message' => 'Failed to get the redirect URL from the response',
             ], 500);
         }
-
         curl_close($ch);
     }
 
