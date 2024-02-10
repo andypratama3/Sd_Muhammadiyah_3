@@ -87,12 +87,10 @@ class PembayaranController extends Controller
         $err = curl_error($ch);
         $ret = curl_exec($ch);
 
-
         $response = json_decode($ret, true);
         if (isset($response['Data']['Url']) && isset($response['Data']['SessionID'])) {
             $pembayaran->SessionID = $response['Data']['SessionID'];
             $pembayaran->Url = $response['Data']['Url'];
-            $pembayaran->update();
             $redirectUrl = $response['Data']['Url'];
             return response()->json([
                 'redirect' => $redirectUrl,'Akan Mengalihkan'], 200);
