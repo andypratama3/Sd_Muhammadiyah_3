@@ -78,7 +78,7 @@
 @endpush
 @section('content')
 
-<section class="guru">
+<section class="guru" style="margin-top: 95px;">
     <div class="container aos-init aos-animate" data-aos="fade-up">
         <div class="section-title text-center">
             <h2>Guru SD Muhammadiyah 4</h2>

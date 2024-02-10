@@ -49,7 +49,7 @@
 
             <div class="d-md-flex post-entry-2 half">
                 <a href="#" class="me-4 thumbnail">
-                    <img src="assets/img/post-landscape-2.jpg" alt="" class="img-fluid">
+                    <img src="{{ asset('storage/img/artikel/Berita_a_20240210170052.jpg') }}" alt="" class="img-fluid">
                 </a>
                 <div class="ps-md-5 mt-4 mt-md-0">
                     <div class="post-meta mt-4">Tentang</div>
@@ -68,7 +68,8 @@
 
             <div class="d-md-flex post-entry-2 half mt-5">
                 <a href="#" class="me-4 thumbnail order-2">
-                    <img src="assets/img/post-landscape-1.jpg" alt="" class="img-fluid">
+                    <img src="{{ asset('storage/img/artikel/Berita_a_20240210170052.jpg') }}" alt="" class="img-fluid">
+
                 </a>
                 <div class="pe-md-5 mt-4 mt-md-0">
                     <div class="post-meta mt-4">Visi &amp; Misi</div>

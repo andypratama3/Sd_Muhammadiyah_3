@@ -9,9 +9,8 @@ use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\KontakController;
 use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\BerandaController;
+use App\Http\Controllers\PrestasiController;
 use App\Http\Controllers\FasilitasController;
-
-//Dashboard Access
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\LikeArtikelController;
@@ -28,6 +27,7 @@ use App\Http\Controllers\TenagaPendidikanController;
 use App\Http\Controllers\Dashboard\KaryawanController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\KelasCategoryController;
+//Dashboard Access
 use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
 use App\Http\Controllers\Dashboard\SiswaController as DashboardSiswaController;
 use App\Http\Controllers\Dashboard\BeritaController as DashboardBeritaController;
@@ -52,37 +52,43 @@ use App\Http\Controllers\Dashboard\TenagaPendidikanController as DashboardTenaga
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::group(['prefix' => '/'], function () {
+    Route::get('/', BerandaController::class)->name('index');
 
-Route::get('/', BerandaController::class)->name('index');
+    // Berita
+    Route::get('berita', [DetailBeritaController::class, 'index'])->name('berita.index');
+    Route::get('berita/{slug}', [DetailBeritaController::class, 'show'])->name('berita.show');
 
-// Berita
-Route::get('berita', [DetailBeritaController::class, 'index'])->name('berita.index');
-Route::get('berita/{slug}', [DetailBeritaController::class, 'show'])->name('berita.show');
+    //guru
+    Route::get('guru', [GuruController::class, 'index'])->name('guru.index');
+    //ekstrakurikuler
+    Route::get('ekstrakurikuler', [EkstrakurikulerController::class, 'index'])->name('esktrakurikuler.index');
+    Route::get('ekstrakurikuler/{name}', [EkstrakurikulerController::class, 'show'])->name('esktrakurikuler.show');
+    // pembayaran
+    Route::get('pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
+    Route::post('pembayaran/search', [PembayaranController::class, 'getOrder'])->name('pembayaran.search');
+    Route::post('pembayaran/pay', [PembayaranController::class, 'pay'])->name('pembayaran.pay');
+    //fasilitas
+    Route::get('fasilitas', [FasilitasController::class, 'index'])->name('fasilitas.index');
+    Route::get('fasilitas/{nama_fasilitas}', [FasilitasController::class, 'show'])->name('fasilitas.show');
+    //tenaga pendidikan
+    Route::get('tenagapendidikan', [TenagaPendidikanController::class, 'index'])->name('tenagapendidikan.index');
+    //jadwal
+    Route::resource('jadwal', JadwalController::class, ['names' => 'jadwal']);
+    Route::post('jadwal/getjadwal/smester', [JadwalController::class, 'tahun_ajaran'])->name('jadwal.tahun.ajaran');
+    //artikel
+    Route::resource('artikel', ArtikelController::class, ['names' => 'artikel']);
+    //new fiture kontak and prestasi
+    Route::get('kontak', [KontakController::class, 'index'])->name('kontal.index');
+    Route::get('prestasi', [PrestasiController::class, 'index'])->name('prestasi.index');
+    Route::get('prestasi/{slug}', [PrestasiController::class, 'show'])->name('prestasi.show');
 
-//guru
-Route::get('guru', [GuruController::class, 'index'])->name('guru.index');
-//ekstrakurikuler
-Route::get('ekstrakurikuler', [EkstrakurikulerController::class, 'index'])->name('esktrakurikuler.index');
-Route::get('ekstrakurikuler/{name}', [EkstrakurikulerController::class, 'show'])->name('esktrakurikuler.show');
-// pembayaran
-Route::get('pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
-Route::post('pembayaran/search', [PembayaranController::class, 'getOrder'])->name('pembayaran.search');
-Route::post('pembayaran/pay', [PembayaranController::class, 'pay'])->name('pembayaran.pay');
-//fasilitas
-Route::get('fasilitas', [FasilitasController::class, 'index'])->name('fasilitas.index');
-Route::get('fasilitas/{nama_fasilitas}', [FasilitasController::class, 'show'])->name('fasilitas.show');
-//tenaga pendidikan
-Route::get('tenagapendidikan', [TenagaPendidikanController::class, 'index'])->name('tenagapendidikan.index');
-//jadwal
-Route::resource('jadwal', JadwalController::class, ['names' => 'jadwal']);
-Route::post('jadwal/getjadwal/smester', [JadwalController::class, 'tahun_ajaran'])->name('jadwal.tahun.ajaran');
-//artikel
-Route::resource('artikel', ArtikelController::class, ['names' => 'artikel']);
-Route::get('kontak', [KontakController::class, 'index'])->name('kontal.index');
+    //login with google
+    Route::get('auth/google', [GoogleController::class, 'signGoogle'])->name('login.google');
+    Route::get('auth/google/callback', [GoogleController::class, 'callbackToGoogle'])->name('google.callback');
 
-//login with google
-Route::get('auth/google', [GoogleController::class, 'signGoogle'])->name('login.google');
-Route::get('auth/google/callback', [GoogleController::class, 'callbackToGoogle'])->name('google.callback');
+});
+
 
 //users after login
 Route::group(['prefix' => 'artikel', 'middleware' => ['auth', 'verified']], function () {
