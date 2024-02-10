@@ -31,7 +31,7 @@
                          <li><a href="{{ route('jadwal.index') }}">Jadwal Sekolah</a></li>
                      </ul>
                  </li>
-                 <li><a href="contact.html">Kontak</a></li>
+                 <li><a href="{{ route('kontal.index') }}">Kontak</a></li>
 
                  <li><a href="{{ route('artikel.index') }}">Artikel</a></li>
                  @auth

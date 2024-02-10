@@ -9,7 +9,7 @@
         @foreach ($artikels_trending as $artikel)
         <div class="col-lg-4">
             <div class="post-entry-1 lg">
-                <a href="{{ route('artikel.show', $artikel->slug) }}"><img src="{{ asset('storage/app/public/img/artikel/'. $artikel->image) }}" alt="" class="img-fluid"></a>
+                <a href="{{ route('artikel.show', $artikel->slug) }}"><img src="{{ asset('storage/img/artikel/'. $artikel->image) }}" alt="" class="img-fluid"></a>
                 <div class="post-meta"><span class="date">Di Posting</span> <span class="mx-1">&bullet;</span>
                     <span>{{ $artikel->created_at->formatLocalized('%A %d %B %Y') }}</span></div>
                 <h2><a href="{{ route('artikel.show', $artikel->slug) }}">{{ $artikel->name }}</a></h2>

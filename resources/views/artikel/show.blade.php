@@ -11,7 +11,7 @@
     </style>
 @endpush
 @section('content')
-<section class="single-post-content">
+<section class="single-post-content" style="margin-top: 95px;">
     <div class="container">
         <div class="row row-not-refresh" data-aos="fade-up">
             <div class="col-md-9 post-content" >
@@ -25,7 +25,7 @@
                         <span>{{ $artikel->created_at->formatLocalized('%A %d %B %Y') }}</span></div>
                     <h1 class="mb-5">{{ $artikel->name }}</h1>
                     <figure class="my-4">
-                        <img src="{{ asset('storage/app/public/img/artikel/'. $artikel->image) }}" alt=""
+                        <img src="{{ asset('storage/img/artikel/'. $artikel->image) }}" alt=""
                             class="img-fluid">
                     </figure>
                     <p><span class="firstcharacter">{{ $firstCharacter }}</span>{{ $contentWithoutFirstCharacter }}</p>
@@ -166,53 +166,14 @@
                         <!-- Popular -->
                         <div class="tab-pane fade show active" id="pills-popular" role="tabpanel"
                             aria-labelledby="pills-popular-tab">
+                            @foreach ($artikel_trending_list as $trending)
                             <div class="post-entry-1 border-bottom">
-                                <div class="post-meta"><span class="date">Sport</span> <span
-                                        class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                                <h2 class="mb-2"><a href="#">How to Avoid Distraction and Stay Focused During Video
-                                        Calls?</a></h2>
-                                <span class="author mb-3 d-block">Jenny Wilson</span>
-                            </div>
-
-                            <div class="post-entry-1 border-bottom">
-                                <div class="post-meta"><span class="date">Lifestyle</span> <span
-                                        class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                                <h2 class="mb-2"><a href="#">17 Pictures of Medium Length Hair in Layers That Will
-                                        Inspire Your New Haircut</a></h2>
-                                <span class="author mb-3 d-block">Jenny Wilson</span>
-                            </div>
-
-                            <div class="post-entry-1 border-bottom">
-                                <div class="post-meta"><span class="date">Culture</span> <span
-                                        class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                                <h2 class="mb-2"><a href="#">9 Half-up/half-down Hairstyles for Long and Medium Hair</a>
-                                </h2>
-                                <span class="author mb-3 d-block">Jenny Wilson</span>
-                            </div>
-
-                            <div class="post-entry-1 border-bottom">
-                                <div class="post-meta"><span class="date">Lifestyle</span> <span
-                                        class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                                <h2 class="mb-2"><a href="#">Life Insurance And Pregnancy: A Working Mom’s Guide</a>
-                                </h2>
-                                <span class="author mb-3 d-block">Jenny Wilson</span>
-                            </div>
-
-                            <div class="post-entry-1 border-bottom">
-                                <div class="post-meta"><span class="date">Business</span> <span
-                                        class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                                <h2 class="mb-2"><a href="#">The Best Homemade Masks for Face (keep the Pimples
-                                        Away)</a></h2>
-                                <span class="author mb-3 d-block">Jenny Wilson</span>
-                            </div>
-
-                            <div class="post-entry-1 border-bottom">
-                                <div class="post-meta"><span class="date">Lifestyle</span> <span
-                                        class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                                <h2 class="mb-2"><a href="#">10 Life-Changing Hacks Every Working Mom Should Know</a>
-                                </h2>
-                                <span class="author mb-3 d-block">Jenny Wilson</span>
-                            </div>
+                                <div class="post-meta"><span class="date">Trending</span> <span
+                                    class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
+                                    <h2 class="mb-2"><a href="{{ route('artikel.show', $trending->slug) }}">{{ $trending->name }}</a></h2>
+                                    <span class="author mb-3 d-block">Jenny Wilson</span>
+                                </div>
+                            @endforeach
                         </div> <!-- End Popular -->
 
                         <!-- Trending -->
@@ -283,16 +244,6 @@
 
                     </div>
                 </div>
-
-                <div class="aside-block">
-                    <h3 class="aside-title">Video</h3>
-                    <div class="video-post">
-                        <a href="https://www.youtube.com/watch?v=AiFfDjmd0jU" class="glightbox link-video">
-                            <span class="bi-play-fill"></span>
-                            <img src="assets/img/post-landscape-5.jpg" alt="" class="img-fluid">
-                        </a>
-                    </div>
-                </div><!-- End Video -->
 
                 <div class="aside-block">
                     <h3 class="aside-title">Categories</h3>
@@ -412,7 +363,7 @@
         },
         error: function(error) {
             if(error.status = '401'){
-                window.location.href = "{ route('login') }}";
+                window.location.href = "{{ route('login') }}";
             }else{
 
             }

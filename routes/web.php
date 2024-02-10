@@ -6,12 +6,13 @@ use App\Models\TenagaPendidikan;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\JadwalController;
+use App\Http\Controllers\KontakController;
 use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\FasilitasController;
-use App\Http\Controllers\PembayaranController;
 
 //Dashboard Access
+use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\LikeArtikelController;
 use App\Http\Controllers\DetailBeritaController;
@@ -77,6 +78,7 @@ Route::resource('jadwal', JadwalController::class, ['names' => 'jadwal']);
 Route::post('jadwal/getjadwal/smester', [JadwalController::class, 'tahun_ajaran'])->name('jadwal.tahun.ajaran');
 //artikel
 Route::resource('artikel', ArtikelController::class, ['names' => 'artikel']);
+Route::get('kontak', [KontakController::class, 'index'])->name('kontal.index');
 
 //login with google
 Route::get('auth/google', [GoogleController::class, 'signGoogle'])->name('login.google');
