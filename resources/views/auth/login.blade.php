@@ -9,7 +9,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
   <link href="{{ asset('asset_dashboard/img/logo/logo.png') }}" rel="icon">
-  <title>Masuk</title>
+  <title>Login</title>
   <link href="{{ asset('asset_dashboard/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
   <link href="{{ asset('asset_dashboard/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
   <link href="{{ asset('asset_dashboard/css/ruang-admin.min.css') }}" rel="stylesheet">
@@ -32,7 +32,7 @@
                   <form class="user" action="{{ route('login') }}" method="POST">
                     @csrf
                     <div class="form-group">
-                      <input type="email" class="form-control" :value="old('email')" required id="exampleInputEmail" aria-describedby="emailHelp"
+                      <input type="email" class="form-control" :value="old('email')" value="{{ old('email') }}" required id="exampleInputEmail" aria-describedby="emailHelp"
                         placeholder="Enter Email Address" name="email">
                     </div>
                     @if ($errors->has('password'))
