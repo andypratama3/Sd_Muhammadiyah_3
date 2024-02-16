@@ -8,14 +8,24 @@ class ProfileAction
 {
     public function execute($profileData)
     {
+
+        // 'name',
+        // 'sex',
+        // 'phone',
+        // 'slug',
+        // 'user_id',
         $user = User::find(auth()->id());
         $karyawan = Karyawan::where('user_id', $user->id)->firstOrFail();
 
-        $user->name = $profileData->name;
-        $user->email = $profileData->email;
-        $user->save();
+        $karyawan = Karyawan::updateOrCreate(
+            ['slug' => $profileData->slug],
+            [
+                'name' => $profileData->name,
+                'sex' => $profileData->sex,
+                'phone' => $profileData->phone,
 
-        $karyawan->name = $profileData->name;
-        $karyawan->save();
+            ]);
+        $user->name = $profileData->name;
+        $user->save();
     }
 }

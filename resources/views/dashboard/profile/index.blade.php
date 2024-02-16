@@ -68,12 +68,12 @@
                 <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
                     @if(Auth::user()->avatar != 'default.jpg')
                     <img src="{{ asset('storage/img/profile/'. Auth::user()->avatar) }}" alt="Profile" id="profile">
-                    @else
-                    @if($karyawan->sex === 'laki-laki')
+                    @elseif($karyawan->sex === 'laki-laki')
                     <img src="{{ asset('asset_dashboard/img/boy.png') }}" alt="Profile" id="">
-                    @else
+                    @elseif($karyawan->sex === 'perempuan')
                     <img src="{{ asset('asset_dashboard/img/girl.png') }}" alt="Profile" id="" class=" w-25">
-                    @endif
+                    @elseif(Auth::user()->avatar == null)
+                    <img src="{{ asset('asset_dashboard/img/default.png') }}" alt="Profile" id="" class=" w-25">
                     @endif
                     <h2>{{ Auth::user()->name }}</h2>
                     <h3>{{ Auth::user()->roles->first()->name }}</h3>
@@ -168,8 +168,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <form action="" method="POST" enctype="multipart/form-data">
+                            <form action="{{ route('dashboard.pengaturan.profile.update', $karyawan->slug) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
+                                @method('PUT')
+                                <input type="hidden" name="slug" value="{{ $karyawan->slug }}">
                                 <div class="row mb-3">
                                     <form action="">
                                         <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Nama</label>
@@ -196,7 +198,7 @@
                                 <div class="row mb-3">
                                     <label for="company" class="col-md-4 col-lg-3 col-form-label">phone</label>
                                     <div class="col-md-8 col-lg-9">
-                                        <input name="tel" type="text" class="form-control" id="phone"
+                                        <input name="phone" type="text" class="form-control" id="phone"
                                             value="{{ $karyawan->phone }}" readonly>
                                     </div>
                                 </div>

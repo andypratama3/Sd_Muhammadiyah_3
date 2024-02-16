@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\DataTransferObjects\ProfileData;
 use App\Actions\Dashboard\Profile\ProfileAction;
 use App\Actions\Dashboard\Profile\ProfileActionCrop;
 
@@ -25,7 +26,9 @@ class ProfileController extends Controller
     }
     public function update(ProfileData $profileData, ProfileAction $profileAction)
     {
+      
         $profileAction->execute($profileData);
+        return redirect()->route('dashboard.pengaturan.profile.index')->with('succes', 'Profile Berhasil Di Update');
     }
     public function crop_image(Request $request, ProfileActionCrop $profileActionCrop)
     {
