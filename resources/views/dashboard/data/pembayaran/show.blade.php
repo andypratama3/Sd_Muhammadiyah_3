@@ -65,6 +65,26 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-6">
+                <div class="form-group row">
+                    <label class="col-sm-3 text-dark" for="gross_amount">Status</label>
+                    <div class="col-sm-9">
+                        @if ($pembayaran->status == 'success')
+                        <h5 class="text-black"><span class="badge bg-success"><i class="fa-solid fa-clock"></i>
+                                {{ $pembayaran->status }}</span></h5>
+                        @elseif ($pembayaran->status == 'pending')
+                        <h5 class="text-black"><span class="badge bg-warning"><i class="fa-solid fa-clock"></i>
+                                {{ $pembayaran->status }}</span></h5>
+                        @elseif ($pembayaran->status == 'error')
+                        <h5 class="text-black"><span class="badge bg-warning"><i class="fa-solid fa-clock"></i>
+                                {{ $pembayaran->status }}</span></h5>
+                        @else
+                        <h5 class="text-black"><span class="badge bg-danger"><i class="fa-solid fa-clock"></i>
+                                {{ $pembayaran->status }}</span></h5>
+                        @endif
+                    </div>
+                </div>
+            </div>
             <div class="col-md-12">
                 <div class="form-group">
                     <a href="{{ route('dashboard.datamaster.pembayaran.index') }}" class="btn btn-danger">Kembali</a>

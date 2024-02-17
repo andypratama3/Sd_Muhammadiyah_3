@@ -22,7 +22,7 @@
                                 <th>Nama Pembayaran</th>
                                 <th>Nama Siswa</th>
                                 <th>Kelas</th>
-                                <th>Category Kelas</th>
+                                {{-- <th>Category Kelas</th> --}}
                                 <th>Order ID</th>
                                 <th>Total</th>
                                 <th>Status</th>
@@ -58,7 +58,7 @@ $(document).ready(function () {
             { data: 'name', name: 'name'},
             { data: 'siswa.name', name: 'siswa.name'},
             { data: 'kelas.name', name: 'kelas.name'},
-            { data: 'category_kelas', name: 'category_kelas'},
+            // { data: 'category_kelas', name: 'category_kelas'},
             { data: 'order_id', name: 'order_id'},
             {
                 data: 'gross_amount', // Refers to the data field in your dataset

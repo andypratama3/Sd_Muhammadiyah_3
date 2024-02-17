@@ -2,7 +2,6 @@
 @section('title', 'Dashboard')
 @push('css')
 <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
-
 @endpush
 @section('content')
 <!-- Container Fluid-->
@@ -27,7 +26,7 @@
     <div class="card">
         <div class="card-body">
             <!-- Bar Chart -->
-                
+
             <!-- End Bar CHart -->
         </div>
     </div>

@@ -17,18 +17,18 @@ class ProfileController extends Controller
     public function index()
     {
         $auth_id = Auth::id();
-        if(!$auth_id){
-            $karyawan = Karyawan::where('user_id', $auth_id)->firstOrFail();
+        if($auth_id){
+            $karyawan = Karyawan::where('user_id', $auth_id)->first();
         }else{
-            $karyawan = User::where('id', $auth_id)->first();
+            $user = User::where('id', $auth_id)->first();
         }
+
         return view('dashboard.profile.index',compact('karyawan'));
     }
     public function update(ProfileData $profileData, ProfileAction $profileAction)
     {
-      
         $profileAction->execute($profileData);
-        return redirect()->route('dashboard.pengaturan.profile.index')->with('succes', 'Profile Berhasil Di Update');
+        return redirect()->route('dashboard.pengaturan.profile.index')->with('success', 'Profile Berhasil Di Update');
     }
     public function crop_image(Request $request, ProfileActionCrop $profileActionCrop)
     {

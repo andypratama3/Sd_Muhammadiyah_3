@@ -1,7 +1,8 @@
 @extends('layouts.dashboard')
 @section('title', 'Profile')
 @push('css')
-{{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> --}}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.css" />
 <style>
     .image {
@@ -10,6 +11,7 @@
         transition: .5s ease;
         backface-visibility: hidden;
     }
+
     .label {
         transition: .5s ease;
         opacity: 0;
@@ -66,29 +68,25 @@
         <div class="col-xl-4">
             <div class="card">
                 <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-                    @if(Auth::user()->avatar != 'default.jpg')
-                    <img src="{{ asset('storage/img/profile/'. Auth::user()->avatar) }}" alt="Profile" id="profile">
-                    @elseif($karyawan->sex === 'laki-laki')
-                    <img src="{{ asset('asset_dashboard/img/boy.png') }}" alt="Profile" id="">
-                    @elseif($karyawan->sex === 'perempuan')
-                    <img src="{{ asset('asset_dashboard/img/girl.png') }}" alt="Profile" id="" class=" w-25">
-                    @elseif(Auth::user()->avatar == null)
-                    <img src="{{ asset('asset_dashboard/img/default.png') }}" alt="Profile" id="" class=" w-25">
+                    @if(Auth::user()->avatar === 'default.jpg')
+                    <img src="{{ asset('asset_dashboard/img/default.jpg') }}" alt="Profile" id="" class=" w-25">
+                    @else
+                    <img src="{{ asset('storage/img/profile/'. Auth::user()->avatar) }}" class=" w-25" alt="Profile"
+                        id="profile">
                     @endif
                     <h2>{{ Auth::user()->name }}</h2>
+                    @if (empty(Auth::user()->roles->first()->name))
+                    <h3>User</h3>
+                    @else
                     <h3>{{ Auth::user()->roles->first()->name }}</h3>
-                    <div class="social-links mt-2">
-                        <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
-                        <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
-                        <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-                        <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
-                    </div>
+                    @endif
                 </div>
             </div>
         </div>
         <div class="col-xl-8">
             <div class="card">
                 <div class="card-body pt-3">
+                    {{-- tab option --}}
                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#profile-overview"
@@ -110,7 +108,7 @@
                     </ul>
                     {{-- custstom --}}
                     <div class="tab-content pt-2">
-                        <div class="tab-pane fade show active profile-overview mt-3" id="profile-overview">
+                        <div class="tab-pane fade  profile-overview mt-3" id="profile-overview">
                             <h5 class="card-title">Profile Details</h5>
                             <div class="row mt-2">
                                 <div class="col-md-4 col-lg-3 col-form-label">Nama</div>
@@ -118,9 +116,15 @@
                             </div>
                             <hr>
                             <div class="row">
+                                @if (empty(Auth::user()->roles->first()->name))
+                                <div class="col-lg-3 col-md-4 col-form-label">Status</div>
+                                <div class="col-lg-9 col-md-8">: User</div>
+                                @else
                                 <div class="col-lg-3 col-md-4 col-form-label">Jabatan</div>
                                 <div class="col-lg-9 col-md-8">: {{ Auth::user()->roles->first()->name }}</div>
+                                @endif
                             </div>
+                            @can('role: karyawan' || 'role: admin')
                             <hr>
                             <div class="row">
                                 <div class="col-lg-3 col-md-4 col-form-label">Jenis Kelamin</div>
@@ -131,6 +135,7 @@
                                 <div class="col-lg-3 col-md-4 col-form-label">HP</div>
                                 <div class="col-lg-9 col-md-8">: (+62) {{ $karyawan->phone }}</div>
                             </div>
+                            @endcan
                             <hr>
                             <div class="row">
                                 <div class="col-lg-3 col-md-4 col-form-label">Email</div>
@@ -138,26 +143,31 @@
                             </div>
                         </div>
 
-                        <div class="tab-pane fade profile-edit pt-3" id="profile-edit" id="profile_edit">
+                        <div class="tab-pane fade show active profile-edit pt-3" id="profile-edit" id="profile_edit">
                             <!-- Profile Edit Form -->
+                            @if($karyawan && Auth::id() == $karyawan->user_id)
                             <button class="btn btn-primary float-right" id="button_edit_profile">
                                 <i class="fas fa-gear"></i> Edit Data
                             </button>
+                            @else
+                            <button class="btn btn-primary float-right" id="button_edit_profile_user">
+                                <i class="fas fa-gear"></i> Edit Data
+                            </button>
+                            @endif
                             <div class="row mb-3">
                                 <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile
                                     Image</label>
                                 <div class="col-md-8 col-lg-9">
-                                    @if(Auth::user()->avatar != 'default.jpg')
-                                    <img src="{{ asset('storage/img/profile/'. Auth::user()->avatar) }}" alt="Profile" id="profile">
+                                    @if(Auth::user()->avatar === 'default.jpg')
+                                    <img src="{{ asset('asset_dashboard/img/default.jpg') }}" alt="Profile" id="" class=" w-25">
                                     @else
-                                    @if($karyawan->sex === 'laki-laki')
-                                    <img src="{{ asset('asset_dashboard/img/boy.png') }}" alt="Profile" id="">
-                                    @else
-                                    <img src="{{ asset('asset_dashboard/img/girl.png') }}" alt="Profile" id="" class=" w-25">
+                                    <img src="{{ asset('storage/img/profile/'. Auth::user()->avatar) }}" class=" w-25" alt="Profile"
+                                        id="profile">
                                     @endif
-                                    @endif
+
                                     <div class="pt-2">
-                                        <label for="profileImage" class="btn btn-primary btn-sm" title="Upload new profile image">
+                                        <label for="profileImage" class="btn btn-primary btn-sm"
+                                            title="Upload new profile image">
                                             <i class="fa fa-upload"></i> Upload Image
                                         </label>
                                         <input type="file" id="profileImage" name="profileImage" style="display: none;">
@@ -168,23 +178,23 @@
                                     </div>
                                 </div>
                             </div>
-                            <form action="{{ route('dashboard.pengaturan.profile.update', $karyawan->slug) }}" method="POST" enctype="multipart/form-data">
+                            @if($karyawan && Auth::id() == $karyawan->user_id)
+                            <form action="{{ route('dashboard.pengaturan.profile.update', Auth::user()->id) }}"
+                                method="POST" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
-                                <input type="hidden" name="slug" value="{{ $karyawan->slug }}">
                                 <div class="row mb-3">
-                                    <form action="">
-                                        <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Nama</label>
-                                        <div class="col-md-8 col-lg-9">
-                                            <input name="name" type="text" class="form-control" id="fullName"
-                                                value="{{ $karyawan->name }}" readonly>
-                                        </div>
+                                    <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Nama</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input name="name" type="text" class="form-control" id="fullName"
+                                            value="{{ $karyawan->name }}" readonly>
+                                    </div>
                                 </div>
                                 <div class="row mb-3">
                                     <label for="sex" class="col-md-4 col-lg-3 col-form-label">Jenis Kelamin</label>
                                     <div class="col-md-8 col-lg-9">
                                         <select name="sex" class="form-control" id="sex" disabled>
-                                            @if($karyawan->sex == null)
+                                            @if(empty($karyawan->sex))
                                             <option selected disabled>Pilih Jenis Kelamin</option>
                                             @else
                                             <option value="{{ $karyawan->sex }}" selected>{{ $karyawan->sex }}</option>
@@ -207,13 +217,39 @@
                                     <label for="email" class="col-md-4 col-lg-3 col-form-label">Email</label>
                                     <div class="col-md-8 col-lg-9">
                                         <input name="email" type="text" class="form-control" id="email"
-                                            value="{{ $karyawan->email }}" readonly>
+                                            value="{{ Auth::user()->email }}" readonly>
                                     </div>
                                 </div>
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-primary" id="submit">Save Changes</button>
                                 </div>
                             </form><!-- End Profile Edit Form -->
+                            @else
+                            <form action="{{ route('dashboard.pengaturan.profile.update', Auth::user()->id) }}"
+                                method="POST" enctype="multipart/form-data">
+                                @csrf
+                                @method('PUT')
+                                <div class="row mb-3">
+                                    <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Nama</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input name="name" type="text" class="form-control" id="fullName"
+                                            value="{{ Auth::user()->name }}" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="email" class="col-md-4 col-lg-3 col-form-label">Email</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input name="email" type="text" class="form-control" id="email"
+                                            value="{{ Auth::user()->email }}" readonly>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary" id="submit">Save Changes</button>
+                                </div>
+                            </form><!-- End Profile Edit Form -->
+                            @endif
+
                         </div>
                         <div class="tab-pane fade pt-3" id="profile-settings">
                             <!-- Settings Form -->
@@ -310,7 +346,8 @@
                         <div class="img-container">
                             <div class="row">
                                 <div class="col-md-8">
-                                    <img class="img" id="image-crop" src="{{ asset('storage/img/profile/original/profile.jpg') }}">
+                                    <img class="img" id="image-crop"
+                                        src="{{ asset('storage/img/profile/original/profile.jpg') }}">
                                 </div>
                                 <div class="col-md-4">
                                     <div class="preview"></div>
@@ -320,7 +357,7 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
-                        <button type="button"  class="btn btn-primary" id="crop">Simpan</button>
+                        <button type="button" class="btn btn-primary" id="crop">Simpan</button>
                     </div>
                 </div>
             </div>
@@ -336,6 +373,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.js"></script>
 <script>
     $(document).ready(function () {
+
+        // cropp foto
         var $modal = $('#modal');
         var image = document.getElementById('image-crop');
         var cropper;
@@ -385,7 +424,8 @@
                     var base64data = reader.result;
                     $.ajaxSetup({
                         headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                'content')
                         }
                     });
 
@@ -398,7 +438,7 @@
                             'image': base64data
                         },
                         success: function (data) {
-                             $modal.modal('hide');
+                            $modal.modal('hide');
                             swal({
                                     title: 'Success!',
                                     text: data['success'],
@@ -417,29 +457,61 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const button_edit_profile = document.querySelector('#button_edit_profile');
+        const button_edit_profile_user = document.querySelector('#button_edit_profile_user');
         const inputElements = document.querySelectorAll("input");
         const selectOptions = document.getElementById('sex');
         const button_submit = document.querySelector('button[type="submit"]');
 
-        button_submit.disabled = true;
+        if (button_edit_profile) {
+            button_edit_profile.addEventListener('click', function () {
+                toggleEditMode(button_submit, selectOptions, inputElements, button_edit_profile);
+            });
+        }
 
-        button_edit_profile.addEventListener('click', function () {
-            if (button_edit_profile.classList.contains('editing')) {
-                button_submit.disabled = false;
-                selectOptions.disabled = false;
-                inputElements.forEach(element => {
-                    element.removeAttribute('readonly');
-                });
-                button_edit_profile.classList.remove('editing');
-            } else {
-                button_submit.disabled = true;
-                selectOptions.disabled = true;
-                inputElements.forEach(element => {
-                    element.setAttribute('readonly', false);
-                });
-                button_edit_profile.classList.add('editing');
+        if (button_edit_profile_user) {
+            button_edit_profile_user.addEventListener('click', function () {
+                toggleEditMode(button_submit, selectOptions, inputElements, button_edit_profile_user);
+            });
+        }
+
+        // Function to toggle edit mode
+        function toggleEditMode(submitButton, selectOptions, inputElements, editButton) {
+            if (editButton.id === 'button_edit_profile') {
+                if (editButton.classList.contains('editing')) {
+                    submitButton.disabled = false;
+                    selectOptions.disabled = false;
+                    inputElements.forEach(element => {
+                        element.removeAttribute('readonly');
+                    });
+                    editButton.classList.remove('editing');
+                } else {
+                    submitButton.disabled = true;
+                    selectOptions.disabled = true;
+                    inputElements.forEach(element => {
+                        element.setAttribute('readonly', true);
+                    });
+                    editButton.classList.add('editing');
+                }
+            } else if (editButton.id === 'button_edit_profile_user') {
+                if (editButton.classList.contains('editing')) {
+                    submitButton.disabled = false;
+
+                    inputElements.forEach(element => {
+                        element.removeAttribute('readonly');
+                    });
+                    editButton.classList.remove('editing');
+                } else {
+                    submitButton.disabled = true;
+                    inputElements.forEach(element => {
+                        element.setAttribute('readonly', true);
+                    });
+                    editButton.classList.add('editing');
+                }
             }
-        });
+
+        }
+
+
 
         // delete profile button
         const deleteProfileButton = document.getElementById('profile_delete');

@@ -36,11 +36,7 @@ class ProfileUpdateRequest extends FormRequest
     {
         $this->email;
     }
-    public function getSlug()
-    {
-        $this->slug;
-    }
-  
+
     public function rules(): array
     {
         return [

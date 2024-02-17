@@ -108,6 +108,7 @@
 
             rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
             return rupiah;
+
         }
 
 

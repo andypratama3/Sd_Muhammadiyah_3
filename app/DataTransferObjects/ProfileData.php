@@ -14,7 +14,6 @@ class ProfileData extends Data
         public readonly ?string $sex,
         public readonly ?string $phone,
         public readonly ?string $email,
-        public readonly ?string $slug,
 
     ) {
         //
@@ -27,7 +26,6 @@ class ProfileData extends Data
             $request->getJk(),
             $request->getPhone(),
             $request->getEmail(),
-            $request->getSlug(),
         ]);
     }
 

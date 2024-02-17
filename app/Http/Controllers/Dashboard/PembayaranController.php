@@ -28,11 +28,11 @@ class PembayaranController extends Controller
             $siswa_name = $siswa->siswa->name;
             return $siswa_name;
         })
-        ->addColumn('kelas.name', function ($kelas) {
-            $kelas_name = $kelas->kelas->name;
-            return $kelas_name;
-        })
-       
+        // ->addColumn('kelas.name', function ($kelas) {
+        //     $kelas_name = $kelas->kelas->name;
+        //     return $kelas_name;
+        // })
+
         ->addColumn('options', function ($row){
             return '
             <a href="' . route('dashboard.datamaster.pembayaran.show', $row->order_id) . '" class="btn btn-sm btn-warning"><i class="fa fa-eye"></i></a>
