@@ -162,6 +162,12 @@
                 <li class="nav-item dropdown no-arrow">
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        @if(Auth::user()->avatar === 'default.jpg')
+                        <img src="{{ asset('asset_dashboard/img/default.jpg') }}" alt="Profile" id=""style="max-width: 30px">
+                        @else
+                        <img src="{{ asset('storage/img/profile/'. Auth::user()->avatar) }}"style="max-width: 30px" alt="Profile"
+                            id="profile">
+                        @endif
                         {{-- <img class="img-profile rounded-circle" src="{{ asset('assetimg/boy.png') }}" style="max-width: 60px"> --}}
                         <span class="ml-2 d-none d-lg-inline text-white small"></span>
                     </a>

@@ -108,7 +108,7 @@
                     </ul>
                     {{-- custstom --}}
                     <div class="tab-content pt-2">
-                        <div class="tab-pane fade  profile-overview mt-3" id="profile-overview">
+                        <div class="tab-pane fade show active profile-overview mt-3" id="profile-overview">
                             <h5 class="card-title">Profile Details</h5>
                             <div class="row mt-2">
                                 <div class="col-md-4 col-lg-3 col-form-label">Nama</div>
@@ -143,7 +143,7 @@
                             </div>
                         </div>
 
-                        <div class="tab-pane fade show active profile-edit pt-3" id="profile-edit" id="profile_edit">
+                        <div class="tab-pane fade profile-edit pt-3" id="profile-edit" id="profile_edit">
                             <!-- Profile Edit Form -->
                             @if($karyawan && Auth::id() == $karyawan->user_id)
                             <button class="btn btn-primary float-right" id="button_edit_profile">
@@ -254,39 +254,16 @@
                         <div class="tab-pane fade pt-3" id="profile-settings">
                             <!-- Settings Form -->
                             <form>
-
                                 <div class="row mb-3">
-                                    <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Email
-                                        Notifications</label>
-                                    <div class="col-md-8 col-lg-9">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="changesMade" checked>
-                                            <label class="form-check-label" for="changesMade">
-                                                Changes made to your account
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="newProducts" checked>
-                                            <label class="form-check-label" for="newProducts">
-                                                Information on new products and services
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="proOffers">
-                                            <label class="form-check-label" for="proOffers">
-                                                Marketing and promo offers
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="securityNotify" checked
-                                                disabled>
-                                            <label class="form-check-label" for="securityNotify">
-                                                Security alerts
-                                            </label>
-                                        </div>
+                                    <div class="form-group">
+                                  
                                     </div>
+                                        <label for="email" class="col-md-4 col-lg-3 col-form-label">Email</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="email" type="text" class="form-control" id="email"
+                                                value="{{ Auth::user()->email }}" readonly>
+                                        </div>
                                 </div>
-
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-primary">Save Changes</button>
                                 </div>
