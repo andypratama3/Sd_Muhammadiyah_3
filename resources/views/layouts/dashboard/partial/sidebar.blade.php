@@ -163,13 +163,13 @@
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         @if(Auth::user()->avatar === 'default.jpg')
-                        <img src="{{ asset('asset_dashboard/img/default.jpg') }}" alt="Profile" id=""style="max-width: 30px">
+                        <img src="{{ asset('asset_dashboard/img/default.jpg') }}" alt="Profile" id="" class="img-profile rounded-circle">
                         @else
-                        <img src="{{ asset('storage/img/profile/'. Auth::user()->avatar) }}"style="max-width: 30px" alt="Profile"
+                        <img src="{{ asset('storage/img/profile/'. Auth::user()->avatar) }}" class="img-profile rounded-circle" alt="Profile"
                             id="profile">
                         @endif
                         {{-- <img class="img-profile rounded-circle" src="{{ asset('assetimg/boy.png') }}" style="max-width: 60px"> --}}
-                        <span class="ml-2 d-none d-lg-inline text-white small"></span>
+                        <span class="ml-2 d-none d-lg-inline text-white small">{{ Auth::user()->name }}</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                         aria-labelledby="userDropdown">

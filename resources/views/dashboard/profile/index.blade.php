@@ -69,9 +69,9 @@
             <div class="card">
                 <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
                     @if(Auth::user()->avatar === 'default.jpg')
-                    <img src="{{ asset('asset_dashboard/img/default.jpg') }}" alt="Profile" id="" class=" w-25">
+                    <img src="{{ asset('asset_dashboard/img/default.jpg') }}" alt="Profile" id="" class="w-25 img-profile rounded-circle">
                     @else
-                    <img src="{{ asset('storage/img/profile/'. Auth::user()->avatar) }}" class=" w-25" alt="Profile"
+                    <img src="{{ asset('storage/img/profile/'. Auth::user()->avatar) }}" class=" img-profile rounded-circle" alt="Profile"
                         id="profile">
                     @endif
                     <h2>{{ Auth::user()->name }}</h2>
@@ -256,7 +256,7 @@
                             <form>
                                 <div class="row mb-3">
                                     <div class="form-group">
-                                  
+
                                     </div>
                                         <label for="email" class="col-md-4 col-lg-3 col-form-label">Email</label>
                                         <div class="col-md-8 col-lg-9">
