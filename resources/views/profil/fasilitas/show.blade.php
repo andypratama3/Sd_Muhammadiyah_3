@@ -17,15 +17,16 @@
             $fasilitas_foto = explode(',',$fasilitas->foto);
             $firstCover = reset($fasilitas_foto);
             @endphp
+
             @foreach ($fasilitas_foto as $image => $i)
-            <div class="col-lg-4 mt-3">
+            <div class="col-lg-4 mt-3" data-aos="zoom-in" data-aos-delay="50">
                 <div class="d-flex align-content-center">
                     <img src="{{ asset('storage/img/fasilitas/'. trim($i)) }}" alt="" srcset=""
                         style="width: 100%; height: 100%; margin: 1rem;">
                 </div>
             </div>
             @endforeach
-
         </div>
+    </div>
 </section>
 @endsection

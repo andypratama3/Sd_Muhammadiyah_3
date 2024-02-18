@@ -26,30 +26,6 @@
                         <a href="" class="btn btn-primary"><i class="bi bi-whatsapp"></i> Admin2</a>
                     </div>
                     <hr>
-                    <h2 class="text-primary text-center">Form Pesan</h2>
-                    <hr>
-                    <form action="">
-                        <div class="form-group row mb-1">
-                            <label for="">Nama</label>
-                            <input type="text" class="form-control">
-                        </div>
-                        <div class="form-group row mb-1">
-                            <label for="">Email</label>
-                            <input type="text" class="form-control">
-                        </div>
-                        <div class="form-group row mb-1">
-                            <label for="">Hp</label>
-                            <input type="text" class="form-control">
-                        </div>
-                        <div class="form-group row mb-1">
-                            <label for="">Pesan</label>
-                            <textarea class="form-control" name="" id="" cols="30" rows="5"></textarea>
-                        </div>
-                        <div class="form-group text-center mt-3">
-                            <button type="reset" class="btn btn-danger">Reset</button>
-                            <button type="submit" class="btn btn-primary" style="margin-left: 100px;">Submit</button>
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>

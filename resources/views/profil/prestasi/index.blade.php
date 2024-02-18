@@ -11,7 +11,7 @@
             </header>
             @foreach ($prestasis as $prestasi)
             <div class="col-lg-4 text-center mb-5" style="margin-top: 40px;">
-                <img src="{{ asset('storage/img/prestasi/'. $prestasi->foto) }}" alt="" class="img-fluid rounded w-50 mb-4">
+                <img src="{{ asset('storage/img/prestasi/'. $prestasi->foto) }}" alt="" class="img-fluid rounded w-80 mb-4">
                 <h4>{{ $prestasi->name }}</h4>
                 <div class="form-group">
                     <a href="{{ route('prestasi.show', $prestasi->slug) }}" class="btn btn-primary">Detail</a>

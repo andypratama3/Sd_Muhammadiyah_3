@@ -2,7 +2,7 @@
 @section('title','Ekstrakurikuler')
 @section('content')
 <section>
-    <div class="container aos-init aos-animate" data-aos="fade-up">
+    <div class="container aos-init aos-animate" style="margin-top: 65px;" data-aos="fade-up">
         <div class="row">
             <header class="section-header text-center">
                 <h2>Ekstrakurikuler</h2>

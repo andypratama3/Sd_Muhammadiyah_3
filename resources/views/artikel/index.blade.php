@@ -6,10 +6,13 @@
 <section id="posts" class="posts" style="margin-top: 95px;">
     <div class="container" data-aos="fade-up">
       <div class="row g-5">
-        @foreach ($artikels_trending as $artikel)
-        <div class="col-lg-4">
-            <div class="post-entry-1 lg">
-                <a href="{{ route('artikel.show', $artikel->slug) }}"><img src="{{ asset('storage/img/artikel/'. $artikel->image) }}" alt="" class="img-fluid"></a>
+          <div class="col-lg-4">
+              <div class="post-entry-1 lg">
+                @foreach ($artikels_trending as $artikel)
+                <a href="{{ route('artikel.show', $artikel->slug) }}">
+                    {{-- <img src="{{ asset('storage/img/artikel/'. $artikel->image) }}" alt="" class="img-fluid"> --}}
+                    <img src="{{ asset('storage/img/artikel/Artikel_aksn_20240127134725.jpg') }}" alt="" class="img-fluid">
+                </a>
                 <div class="post-meta"><span class="date">Di Posting</span> <span class="mx-1">&bullet;</span>
                     <span>{{ $artikel->created_at->formatLocalized('%A %d %B %Y') }}</span></div>
                 <h2><a href="{{ route('artikel.show', $artikel->slug) }}">{{ $artikel->name }}</a></h2>
@@ -21,7 +24,6 @@
                 <p>{!! $secondParagraph !!}</p>
                 {{-- <p>{!! substr(strip_tags($artikel->artikel), 0, strpos(strip_tags($artikel->artikel), '</p>') + 4) !!}</p> --}}
 
-
                 <div class="d-flex align-items-center author">
                     <div class="name mt-4">
                         <h3 class="author">Kategori : </h3>
@@ -30,9 +32,9 @@
                         @endforeach
                     </div>
                 </div>
+                @endforeach
             </div>
-        </div>
-        @endforeach
+            </div>
         <div class="col-lg-6">
           <div class="row g-5">
               @foreach ($artikel_not_trending as $artikel)
@@ -40,40 +42,66 @@
               <div class="col-lg-4 border-start custom-border">
                     <div class="post-entry-1">
                         <a href="{{ route('artikel.show', $artikel->slug) }}">
-                            <img src="{{ asset('storage/app/public/img/artikel/'. $artikel->image) }}" alt="" class="img-fluid">
+                            {{-- <img src="{{ asset('storage/app/public/img/artikel/'. $artikel->image) }}" alt="" class="img-fluid"> --}}
+                            <img src="{{ asset('storage/img/artikel/Artikel_aksn_20240127134725.jpg') }}" alt="" class="img-fluid">
                         </a>
-                        <div class="post-meta"><span class="date">Di Posting</span> <span class="mx-1">&bullet;</span>
-                            <span class="mt-2">{{ $artikel->created_at->formatLocalized('%A %d %B %Y') }}</span></div>
+                        <div class="post-meta"><span class="date">Di Posting</span>
+                            <span class="mx-1">&bullet;</span>
+                            <span class="mt-2">{{ $artikel->created_at->formatLocalized('%A %d %B %Y') }}</span>
+                        </div>
                         <h2><a href="{{ route('artikel.show', $artikel->slug) }}">{{ $artikel->name }}</a></h2>
                     </div>
                 </div>
             @endif
             @endforeach
           </div>
-            <button id="load-more">Load More</button>
         </div>
         <!-- Trending Section -->
         <div class="col-lg-2">
-            <div class="trending">
-              <h3>Trending</h3>
-              <ul class="trending-post">
-                  @foreach ($artikel_trending_list as $item)
-                <li>
-                  <a href="{{ route('artikel.show', $artikel->slug) }}">
-                      <span class="number">{{ ++$no }}</span>
-                      <h3>{{ $item->name }}</h3>
-                      <span class="author">
-                          @foreach ($item->categorys as $category)
-                          {{ $category->name }}
-                          @endforeach
-                      </span>
-                  </a>
-              </li>
-              @endforeach
-              </ul>
+            <div class="aside-block">
+                <ul class="nav nav-pills custom-tab-nav mb-4" id="pills-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-latest-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-latest" type="button" role="tab" aria-controls="pills-latest"
+                            aria-selected="false">Latest</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-trending-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-trending" type="button" role="tab" aria-controls="pills-trending"
+                            aria-selected="false">Trending</button>
+                    </li>
 
+                </ul>
+
+                <div class="tab-content" id="pills-tabContent">
+
+                    <!-- latest -->
+                    <div class="tab-pane fade show active" id="pills-latest" role="tabpanel" aria-labelledby="pills-latest-tab">
+                        @foreach ($populers as $populer)
+                        <div class="post-entry-1 border-bottom">
+                            <div class="post-meta"><span class="date">Popupler</span> <span
+                                class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
+                                <h2 class="mb-2"><a href="{{ route('artikel.show', $populer->slug) }}"></a></h2>
+                            </div>
+                        @endforeach
+                    </div> <!-- End latest -->
+                    <!-- Trending -->
+                    <div class="tab-pane fade" id="pills-trending" role="tabpanel" aria-labelledby="pills-trending-tab">
+                        @foreach ($artikel_trending_list as $trending)
+                        <div class="post-entry-1 border-bottom">
+                            <div class="post-meta">
+                                <span class="date"></span>
+                            <span class="mx-1">&bullet;</span> <span>{{ $trending->created_at->formatLocalized('%A %d %B %Y') }}</span></div>
+                            {{-- <h2 class="mb-2"><a href="{{ route('artikel.show', $trending->slug) }}">{{ $trending->name }}</a></h2> --}}
+                            @foreach ($trending->categorys as $category)
+                            <span class="author mb-3 d-block">{{ $category->name }}</span>
+                            @endforeach
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
             </div>
-          </div>
+        </div>
       </div> <!-- End .row -->
     </div>
   </section> <!-- End Post Grid Section -->

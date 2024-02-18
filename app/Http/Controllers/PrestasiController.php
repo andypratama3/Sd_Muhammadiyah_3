@@ -12,8 +12,9 @@ class PrestasiController extends Controller
         $prestasis = Prestasi::where('status',1)->get();
         return view('profil.prestasi.index', compact('prestasis'));
     }
-    public function show(Prestasi $prestasi)
+    public function show($slug)
     {
+        $prestasi = Prestasi::where('slug', $slug)->firstOrFail();
         return view('profil.prestasi.show', compact('prestasi'));
     }
 }

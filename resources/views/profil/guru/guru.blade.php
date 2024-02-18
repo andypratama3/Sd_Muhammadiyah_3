@@ -38,7 +38,7 @@
 .guru .member .member-info-content span {
   font-style: italic;
   display: block;
-  font-size: 13px;
+  font-size: 17px;
   color: #fff;
 }
 
@@ -92,6 +92,8 @@
                     <div class="member-info">
                         <div class="member-info-content">
                             <h3>{{ $guru->name }}</h3>
+                            <span>{{ $guru->lulusan }}</span>
+                            <label for="" style="color: #fff;">Pelajaran</label>
                             @foreach ($guru->pelajarans as $pelajaran)
                             <span>{{ $pelajaran->name }}</span>
                             @endforeach
