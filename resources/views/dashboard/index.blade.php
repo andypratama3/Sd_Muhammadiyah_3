@@ -30,10 +30,10 @@
                 <div class="col mr-2">
                   <div class="text-xs font-weight-bold text-uppercase mb-1">Siswa</div>
                   <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $siswa }}</div>
-                  <div class="mt-2 mb-0 text-muted text-xs">
+                  {{-- <div class="mt-2 mb-0 text-muted text-xs">
                     <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
                     <span>Since last month</span>
-                  </div>
+                  </div> --}}
                 </div>
                 <div class="col-auto">
                   <i class="fas fa-users fa-2x text-primary"></i>
@@ -50,59 +50,58 @@
                 <div class="col mr-2">
                   <div class="text-xs font-weight-bold text-uppercase mb-1">Guru</div>
                   <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $guru }}</div>
-                  <div class="mt-2 mb-0 text-muted text-xs">
+                  {{-- <div class="mt-2 mb-0 text-muted text-xs">
                     <span class="text-success mr-2"><i class="fas fa-arrow-up"></i> 12%</span>
                     <span>Since last years</span>
-                  </div>
+                  </div> --}}
                 </div>
                 <div class="col-auto">
-                  <i class="fas fa-shopping-cart fa-2x text-success"></i>
+                  <i class="fas fa-person-chalkboard fa-2x text-success"></i>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <!-- Prestasi -->
+        <!-- Tenaga Pendidikan -->
         <div class="col-xl-3 col-md-6 mb-4">
           <div class="card h-100">
             <div class="card-body">
               <div class="row no-gutters align-items-center">
                 <div class="col mr-2">
-                  <div class="text-xs font-weight-bold text-uppercase mb-1">Prestasi</div>
-                  <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ $prestasi }}</div>
-                  <div class="mt-2 mb-0 text-muted text-xs">
-                    <span class="text-success mr-2"><i class="fas fa-arrow-up"></i> 20.4%</span>
-                    <span>Since last month</span>
-                  </div>
-                </div>
-                <div class="col-auto">
-                  <i class="fas fa-users fa-2x text-info"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Pending Requests -->
-        <div class="col-xl-3 col-md-6 mb-4">
-          <div class="card h-100">
-            <div class="card-body">
-              <div class="row no-gutters align-items-center">
-                <div class="col mr-2">
-                  <div class="text-xs font-weight-bold text-uppercase mb-1">Pending Requests</div>
-                  <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
-                  <div class="mt-2 mb-0 text-muted text-xs">
+                  <div class="text-xs font-weight-bold text-uppercase mb-1">Tenaga Kependidikan</div>
+                  <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $tenagakependidikan }}</div>
+                  {{-- <div class="mt-2 mb-0 text-muted text-xs">
                     <span class="text-danger mr-2"><i class="fas fa-arrow-down"></i> 1.10%</span>
                     <span>Since yesterday</span>
-                  </div>
+                  </div> --}}
                 </div>
                 <div class="col-auto">
-                  <i class="fas fa-comments fa-2x text-warning"></i>
+                    <i class="fa-solid fa-chalkboard-user fa-2x text-warning"></i>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
+         <!-- Prestasi -->
+         <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card h-100">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-uppercase mb-1">Prestasi</div>
+                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ $prestasi }}</div>
+                    {{-- <div class="mt-2 mb-0 text-muted text-xs">
+                      <span class="text-success mr-2"><i class="fas fa-arrow-up"></i> 20.4%</span>
+                      <span>Since last month</span>
+                    </div> --}}
+                  </div>
+                  <div class="col-auto">
+                    <i class="fas fa-trophy fa-2x text-info"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         <!-- Area Chart -->
         <div class="col-xl-8 col-lg-7">
           <div class="card mb-4">
@@ -132,7 +131,7 @@
         <div class="col-xl-4 col-lg-5">
           <div class="card mb-4">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-              <h6 class="m-0 font-weight-bold text-primary">Products Sold</h6>
+              <h6 class="m-0 font-weight-bold text-primary text-center">Pengunjung Artikel / Click</h6>
               <div class="dropdown no-arrow">
                 <a class="dropdown-toggle btn btn-primary btn-sm" href="#" role="button" id="dropdownMenuLink"
                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

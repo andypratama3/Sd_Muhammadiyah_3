@@ -6,6 +6,7 @@ use App\Models\Guru;
 use App\Models\Siswa;
 use App\Models\Prestasi;
 use App\Charts\ArtikelView;
+use App\Models\TenagaPendidikan;
 use App\Http\Controllers\Controller;
 
 class DashboardController extends Controller
@@ -16,10 +17,12 @@ class DashboardController extends Controller
         $siswa = Siswa::count();
         $guru = Guru::count();
         $prestasi = Prestasi::count();
+        $tenagakependidikan = TenagaPendidikan::count();
         return view('dashboard.index', ['ArtikelChart' => $ArtikelChart->build()], compact(
             'siswa',
             'guru',
             'prestasi',
+            'tenagakependidikan',
         ));
     }
 

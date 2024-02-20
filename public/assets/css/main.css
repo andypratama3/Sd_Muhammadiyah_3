@@ -876,7 +876,7 @@ section {
     padding-top: 18%;
     padding-left: 18%;
   }
-  
+
 }
 
 .custom-swiper-button-next,
@@ -1052,7 +1052,7 @@ section {
 .aside-block .custom-tab-nav .nav-item button {
   color: var(--color-black);
   text-transform: uppercase;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 2px;
   border-radius: 0;
