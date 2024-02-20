@@ -45,6 +45,7 @@ class ArtikelController extends Controller
     public function store(ArtikelData $artikelData, ArtikelAction $artikelAction)
     {
         $artikelAction->execute($artikelData);
+        activity()->log('Menambahkan Artikel');
         return redirect()->route('dashboard.news.artikel.index')->with('success','Berhasil Menambahkan Artikel');
     }
     public function show(Artikel $artikel)

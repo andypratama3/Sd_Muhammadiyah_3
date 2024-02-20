@@ -9,12 +9,12 @@ use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\KontakController;
 use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\BerandaController;
-use App\Http\Controllers\PrestasiController;
 use App\Http\Controllers\FasilitasController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\LikeArtikelController;
 use App\Http\Controllers\DetailBeritaController;
+use App\Http\Controllers\PrestasiSiswaController;
 use App\Http\Controllers\Api\Dashboard\WilayahApi;
 use App\Http\Controllers\CommentArtikelController;
 use App\Http\Controllers\Dashboard\RoleController;
@@ -23,11 +23,13 @@ use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\CategoryArtikel;
 use App\Http\Controllers\Dashboard\KelasController;
 use App\Http\Controllers\EkstrakurikulerController;
+use App\Http\Controllers\PrestasiSekolahController;
 use App\Http\Controllers\TenagaPendidikanController;
+use App\Http\Controllers\Dashboard\ActivityController;
+//Dashboard Access
 use App\Http\Controllers\Dashboard\KaryawanController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\KelasCategoryController;
-//Dashboard Access
 use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
 use App\Http\Controllers\Dashboard\SiswaController as DashboardSiswaController;
 use App\Http\Controllers\Dashboard\BeritaController as DashboardBeritaController;
@@ -80,8 +82,11 @@ Route::group(['prefix' => '/'], function () {
     Route::resource('artikel', ArtikelController::class, ['names' => 'artikel']);
     //new fiture kontak and prestasi
     Route::get('kontak', [KontakController::class, 'index'])->name('kontal.index');
-    Route::get('prestasi', [PrestasiController::class, 'index'])->name('prestasi.index');
-    Route::get('prestasi/{slug}', [PrestasiController::class, 'show'])->name('prestasi.show');
+    Route::get('prestasi-siswa', [PrestasiSiswaController::class, 'index'])->name('prestasi.siswa.index');
+    Route::get('prestasi-siswa/{slug}', [PrestasiSiswaController::class, 'show'])->name('prestasi.siswa.show');
+    //prestasi sekolah
+    Route::get('prestasi-sekolah', [PrestasiSekolahController::class, 'index'])->name('prestasi.sekolah.index');
+    Route::get('prestasi-sekolah/{slug}', [PrestasiSekolahController::class, 'show'])->name('prestasi.sekolah.show');
 
     //login with google
     Route::get('auth/google', [GoogleController::class, 'signGoogle'])->name('login.google');
@@ -136,6 +141,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         //Pembayaran Spp or invoice
         Route::resource('invoice',  DashboardPembayaranController::class, ['names' => 'dashboard.datamaster.pembayaran']);
         Route::get('invoices/records', [DashboardPembayaranController::class, 'data_table'])->name('dashboard.datamaster.get.records');
+        //activity user
+        Route::resource('activity',  ActivityController::class, ['names' => 'dashboard.datamaster.activity']);
 
     });
     Route::group(['prefix' => 'pengaturan'], function () {

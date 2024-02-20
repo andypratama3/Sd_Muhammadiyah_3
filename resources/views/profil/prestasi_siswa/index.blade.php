@@ -6,7 +6,7 @@
     <div class="container aos-init aos-animate" data-aos="fade-up">
         <div class="row">
             <header class="section-header text-center">
-                <h2>Prestasi Sekolah</h2>
+                <h2>Prestasi Siswa</h2>
                 <h4>SD Muhammadiyah 3 Samarinda</h4>
             </header>
             @foreach ($prestasis as $prestasi)
@@ -14,7 +14,7 @@
                 <img src="{{ asset('storage/img/prestasi/'. $prestasi->foto) }}" alt="" class="img-fluid rounded w-80 mb-4">
                 <h4>{{ $prestasi->name }}</h4>
                 <div class="form-group">
-                    <a href="{{ route('prestasi.show', $prestasi->slug) }}" class="btn btn-primary">Detail</a>
+                    <a href="{{ route('prestasi.siswa.show', $prestasi->slug) }}" class="btn btn-primary">Detail</a>
                 </div>
             </div>
             @endforeach

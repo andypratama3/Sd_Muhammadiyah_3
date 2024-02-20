@@ -51,7 +51,7 @@ class WilayahApi extends Controller
     {
         /*
           ! take Request data From jquery
-        */  
+        */
         $provinsi_id = $request->provinsi_id;
         $kabupaten_id = $request->kabupaten_id;
         $kecamatan_id = $request->kecamatan_id;

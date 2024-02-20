@@ -26,7 +26,8 @@
                      <ul>
                          <li><a href="{{ route('pembayaran.index') }}">Pembayaran</a></li>
                          <li><a href="#">Nilai Siswa</a></li>
-                         <li><a href="{{ route('prestasi.index') }}">Prestasi Siswa</a></li>
+                         <li><a href="{{ route('prestasi.siswa.index') }}">Prestasi Siswa</a></li>
+                         <li><a href="{{ route('prestasi.sekolah.index') }}">Prestasi Sekolah</a></li>
                          <li><a href="{{ route('jadwal.index') }}">Jadwal Sekolah</a></li>
                      </ul>
                  </li>

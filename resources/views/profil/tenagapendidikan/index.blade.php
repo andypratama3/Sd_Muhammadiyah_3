@@ -3,10 +3,10 @@
 @section('content')
 
 <section>
-    <div class="container aos-init aos-animate" data-aos="fade-up">
+    <div class="container aos-init aos-animate" data-aos="fade-up" style="margin-top: 95px;">
         <div class="row">
             <header class="section-header text-center">
-                <h2>Tenaga Pendidikan</h2>
+                <h2>Tenaga Kependidikan</h2>
                 <h4>SD Muhammadiyah 3 Samarinda</h4>
             </header>
             @foreach ($datas as $tenagapendidikan)
