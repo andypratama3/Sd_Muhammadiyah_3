@@ -92,13 +92,14 @@
                         data-glightbox="title: {{ $tenagapendidikan->name }}; description: Jabatan Sebagai {{ $tenagapendidikan->name }}; type: image; effect: fade; width: 900px; height: auto; zoomable: true; draggable: true;">
                         <img src="{{ asset('storage/img/tenagapendidikan/'. $tenagapendidikan->foto) }}"
                             class="img-fluid" alt="">
-                    </a>
+
                     <div class="member-info">
                         <div class="member-info-content">
                             <h3>{{ $tenagapendidikan->name }}</h3>
                             <span>{{ $tenagapendidikan->jabatan }}</span>
                         </div>
                     </div>
+                </a>
                 </div>
             </div>
             @endforeach

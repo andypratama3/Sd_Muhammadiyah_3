@@ -91,7 +91,7 @@
                     <a href="{{ asset('storage/img/guru/'. $guru->foto) }}" class="glightbox"
                         data-glightbox="title: {{ $guru->name }}; description: Jabatan Sebagai {{ $guru->name }}; type: image; effect: fade; width: 900px; height: auto; zoomable: true; draggable: true;">
                         <img src="{{ asset('storage/img/guru/'. $guru->foto) }}" class="img-fluid" alt="">
-                    </a>
+
                     <div class="member-info">
                         <div class="member-info-content">
                             <h3>{{ $guru->name }}</h3>
@@ -102,6 +102,7 @@
                             @endforeach
                         </div>
                     </div>
+                    </a>
                 </div>
             </div>
             @endforeach
