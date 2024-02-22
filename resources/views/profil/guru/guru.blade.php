@@ -89,7 +89,7 @@
             <div class="col-lg-4 col-md-6">
                 <div class="member" data-aos="zoom-in" data-aos-delay="100">
                     <a href="{{ asset('storage/img/guru/'. $guru->foto) }}" class="glightbox"
-                        data-glightbox="title: {{ $guru->name }}; description: Jabatan Sebagai {{ $guru->name }}; type: image; effect: fade; width: 900px; height: auto; zoomable: true; draggable: true;">
+                        data-glightbox="title: {{ $guru->name }}; description: Lulusan Dari {{ $guru->lulusan }}; type: image; effect: fade; width: 900px; height: auto; zoomable: true; draggable: true;">
                         <img src="{{ asset('storage/img/guru/'. $guru->foto) }}" class="img-fluid" alt="">
 
                     <div class="member-info">

@@ -20,13 +20,43 @@ class SiswaExport implements FromView,WithHeadings
     public function view(): view
     {
         $siswas = Siswa::all();
-        $siswas->transform(function ($siswa) {
+         // Retrieve all students
+
+        // Fetch province data
+        $response_provinsi = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/provinces.json");
+        $provinsi = $response_provinsi->successful() ? collect($response_provinsi->json()) : [];
+
+        // Fetch regency (kabupaten) data
+        $response_kabupaten = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/regencies.json");
+        $kabupaten = $response_kabupaten->successful() ? collect($response_kabupaten->json()) : [];
+
+        // Fetch district (kecamatan) data
+        $response_kecamatan = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/districts.json");
+        $kecamatan = $response_kecamatan->successful() ? collect($response_kecamatan->json()) : [];
+
+        // Fetch village (kelurahan) data
+        $response_kelurahan = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/villages.json");
+        $kelurahan = $response_kelurahan->successful() ? collect($response_kelurahan->json()) : [];
+
+        // Transform student data
+        $siswas->transform(function ($siswa) use ($provinsi, $kabupaten, $kecamatan, $kelurahan) {
             $siswa->umur = now()->diffInYears($siswa->tgl_lahir);
+
+            $provinsi_take = $provinsi->where('id', $siswa->provinsi_id)->first();
+            $kabupaten_take = $kabupaten->where('id', $siswa->kabupaten_id)->first();
+            $kecamatan_take = $kecamatan->where('id', $siswa->kecamatan_id)->first();
+            $kelurahan_take = $kelurahan->where('id', $siswa->kelurahan_id)->first();
+
+            $siswa->provinsi = $provinsi_take ? $provinsi_take['name'] : '';
+            $siswa->kabupaten = $kabupaten_take ? $kabupaten_take['name'] : '';
+            $siswa->kecamatan = $kecamatan_take ? $kecamatan_take['name'] : '';
+            $siswa->kelurahan = $kelurahan_take ? $kelurahan_take['name'] : '';
+
             return $siswa;
         });
-        return view('dashboard.data.siswa.excel', [
-            'siswas' => $siswas,
-        ]);
+        // Pass data to the view
+        return view('dashboard.data.siswa.excel', compact('siswas'));
+
     }
     public function headings(): array
     {

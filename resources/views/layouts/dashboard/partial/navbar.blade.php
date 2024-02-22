@@ -73,13 +73,13 @@
                     <span>Tenaga Pendidikan</span>
                 </a>
                 <a class="collapse-item {{ Request::routeIs('dashboard.datasekolah.ekstrakurikuler.*') ? 'active' : ''  }}" href="{{ route('dashboard.datasekolah.ekstrakurikuler.index') }}">
-                    <i class="fas fa-user"></i>
+                    <i class="fa-solid fa-school-circle-check"></i>
                     <span>Ekstrakurikuler</span>
                 </a>
                 <a class="collapse-item {{ Request::routeIs('dashboard.datasekolah.kelas.*') ? 'active' : ''  }}"
                     href="{{ route('dashboard.datasekolah.kelas.index') }}">
-                    <i class="fas fa-home"></i>
-                    <span>Kelas</span>
+                    <i class="fa-solid fa-building"></i>
+                    <span> Kelas</span>
                 </a>
                 <a class="collapse-item {{ Request::routeIs('dashboard.datasekolah.jadwal.*') ? 'active' : ''  }}"
                     href="{{ route('dashboard.datasekolah.jadwal.index') }}">

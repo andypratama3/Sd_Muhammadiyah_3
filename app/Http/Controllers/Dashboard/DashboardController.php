@@ -6,6 +6,7 @@ use App\Models\Guru;
 use App\Models\Siswa;
 use App\Models\Artikel;
 use App\Models\Prestasi;
+use App\Charts\SiswaChart;
 use App\Charts\ArtikelView;
 use App\Models\TenagaPendidikan;
 use App\Http\Controllers\Controller;
@@ -13,24 +14,36 @@ use App\Http\Controllers\Controller;
 class DashboardController extends Controller
 {
 
-    public function __invoke(ArtikelView $ArtikelChart)
+    public function __invoke(ArtikelView $ArtikelChart, SiswaChart $siswaChart)
     {
         $siswa = Siswa::count();
         $guru = Guru::count();
         $prestasi = Prestasi::count();
         $tenagakependidikan = TenagaPendidikan::count();
+        //chart
+        $ArtikelChart = $ArtikelChart->build();
+        $siswaChart = $siswaChart->build();
+
         //count artikel data
+        $artikel_sum_total_klik = Artikel::sum('jumlah_klik');
+        $artikel_like_max = Artikel::orderBy('jumlah_klik','desc')->first();
 
-        $artikels = Artikel::select(['name','jumlah_klik'])->take(5)->get();
-        // $like_artikel = Artikel::where('jumlah_klik');
+        $artikels = Artikel::orderBy('jumlah_klik','desc')->take(5)->get();
 
-        return view('dashboard.index', ['ArtikelChart' => $ArtikelChart->build()], compact(
+        // convert to percent
+        $percent_artikel = ($artikel_like_max->jumlah_klik  / $artikel_sum_total_klik) * 100;
+
+
+        return view('dashboard.index', compact(
             'siswa',
             'guru',
             'prestasi',
             'tenagakependidikan',
+            'ArtikelChart',
+            'siswaChart',
             'artikels',
-
+            'artikel_sum_total_klik',
+            'percent_artikel',
         ));
     }
 
