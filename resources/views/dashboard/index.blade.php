@@ -148,15 +148,17 @@
               </div>
             </div>
             <div class="card-body">
-              <div class="mb-3">
-                <div class="small text-gray-500">Oblong T-Shirt
-                  <div class="small float-right"><b>600 of 800 Items</b></div>
+            @foreach ($artikels as $artikel)
+            <div class="mb-3">
+                <div class="small text-gray-500">{{ $artikel->name }}
+                    <div class="small float-right"><b>{{ $artikel->jumlah_klik }} of 800</b></div>
                 </div>
                 <div class="progress" style="height: 12px;">
-                  <div class="progress-bar bg-warning" role="progressbar" style="width: 80%" aria-valuenow="80"
+                    <div class="progress-bar bg-warning" role="progressbar" style="width: 80%" aria-valuenow="80"
                     aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
-              </div>
+            </div>
+            @endforeach
               <div class="mb-3">
                 <div class="small text-gray-500">Gundam 90'Editions
                   <div class="small float-right"><b>500 of 800 Items</b></div>

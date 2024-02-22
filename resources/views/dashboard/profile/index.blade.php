@@ -439,6 +439,9 @@
         const selectOptions = document.getElementById('sex');
         const button_submit = document.querySelector('button[type="submit"]');
 
+        // button submit disabled
+        button_submit.disabled = true;
+
         if (button_edit_profile) {
             button_edit_profile.addEventListener('click', function () {
                 toggleEditMode(button_submit, selectOptions, inputElements, button_edit_profile);

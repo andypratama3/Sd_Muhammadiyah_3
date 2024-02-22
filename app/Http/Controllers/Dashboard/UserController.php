@@ -24,9 +24,9 @@ class UserController extends Controller
         $userAction->execute($request, new User);
         return redirect()->route('dashboard.pengaturan.user.index')->with('success','Berhasil Menambahkan User!');
     }
-    public function show()
+    public function show(User $user)
     {
-        
+        return view('dashboard.pengaturan.user.show', compact('user'));
     }
     public function update()
     {

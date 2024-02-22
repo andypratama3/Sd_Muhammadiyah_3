@@ -11,6 +11,11 @@
         </header>
         @foreach ($gurus as $guru)
         <div class="col-lg-4 text-center mb-5" style="margin-top: 40px;">
+            <a href="{{ asset('storage/img/guru/'. $guru->foto) }}" class="glightbox"
+                data-glightbox="title: {{ $tenagapendidikan->name }}; description: Jabatan Sebagai {{ $tenagapendidikan->name }}; type: image; effect: fade; width: 900px; height: auto; zoomable: true; draggable: true;">
+                <img src="{{ asset('storage/img/guru/'. $guru->foto) }}"
+                    class="img-fluid rounded w-50 mb-4" alt="">
+            </a>
           <img src="{{ asset('storage/img/guru/'. $guru->foto) }}" alt="" class="img-fluid rounded w-50 mb-4">
           <h4>{{ $guru->name }}</h4>
           <span class="d-block mb-3 text-uppercase">{{ $guru->lulusan }}</span>

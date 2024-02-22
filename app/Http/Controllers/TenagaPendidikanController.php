@@ -9,7 +9,7 @@ class TenagaPendidikanController extends Controller
 {
     public function index()
     {
-        $datas = TenagaPendidikan::all();
-        return view('profil.tenagapendidikan.index', compact('datas'));
+        $tenagakependidikans = TenagaPendidikan::all();
+        return view('profil.tenagapendidikan.index', compact('tenagakependidikans'));
     }
 }
