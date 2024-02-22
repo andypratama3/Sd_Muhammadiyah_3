@@ -6,7 +6,7 @@
     <div class="container aos-init aos-animate" data-aos="fade-up">
         <div class="row">
             <header class="section-header text-center">
-                <h2>Prestasi </h2>
+                <h2>Prestasi Sekolah</h2>
                 <h4>SD Muhammadiyah 3 Samarinda</h4>
             </header>
             @foreach ($prestasis as $prestasi)

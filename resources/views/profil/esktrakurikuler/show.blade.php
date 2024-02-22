@@ -21,8 +21,11 @@
 
             <div class="col-lg-4 mt-3" data-aos="zoom-in" data-aos-delay="50">
                 <div class="d-flex align-content-center">
-                    <img src="{{ asset('storage/img/ekstrakurikuler/'. trim($i)) }}" alt="" srcset=""
-                        style="width: 100%; height: 100%; margin: 1rem;">
+                    <a href="{{ asset('storage/img/ekstrakurikuler/'. trim($i)) }}" class="glightbox" title="Esktrakurikuler : {{ $ekstrakurikuler->name }}">
+                        <img src="{{ asset('storage/img/ekstrakurikuler/'. trim($i)) }}" alt="" srcset=""
+                            style="width: 100%; height: 100%; margin: 1rem;">
+                        </a>
+
                 </div>
             </div>
             @endforeach

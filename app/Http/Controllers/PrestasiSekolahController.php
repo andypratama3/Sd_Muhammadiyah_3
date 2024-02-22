@@ -10,10 +10,10 @@ class PrestasiSekolahController extends Controller
     public function index()
     {
         $prestasis = Prestasi::where('status', 2)->get();
-        return view('profil.prestasi_siswa.index',compact('prestasis'));
+        return view('profil.prestasi_sekolah.index',compact('prestasis'));
     }
     public function show(Prestasi $prestasi)
     {
-        return view('profil.prestasi_siswa.index', compact('prestasi'));
+        return view('profil.prestasi_sekolah.show', compact('prestasi'));
     }
 }
