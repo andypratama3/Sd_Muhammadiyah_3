@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
-use App\Http\Traits\HasPermissionsTrait;
+use App\Http\Traits\UsesUuid;
 use App\Http\Traits\NameHasSlug;
 // use Illuminate\Notifications\Notifiable;
 // use Laravel\Fortify\TwoFactorAuthenticatable;
 // use Laravel\Jetstream\HasProfilePhoto;
 // use Laravel\Sanctum\HasApiTokens;
-use App\Http\Traits\UsesUuid;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Activitylog\Models\Activity;
+use App\Http\Traits\HasPermissionsTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -80,5 +81,10 @@ class User extends Authenticatable
     public function roles()
     {
         return $this->belongsToMany(Role::class, 'users_roles');
+    }
+
+    public function activity()
+    {
+        return $this->hasMany(Activity::class,'causer_id','id');
     }
 }

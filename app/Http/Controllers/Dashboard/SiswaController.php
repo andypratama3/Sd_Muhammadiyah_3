@@ -163,13 +163,13 @@ class SiswaController extends Controller
             'kecamatan_take' => $kecamatan_take,
             'kelurahan_take' => $kelurahan_take,
         ];
-        $pdf = \PDF::loadView('dashboard.data.siswa.cetak', $data);
-        return $pdf->download('siswa'. $siswa->name .'.pdf');
-        // return view('dashboard.data.siswa.cetak', compact('siswa','provinsi_take','kabupaten_take','kecamatan_take','kelurahan_take'));
+        // $pdf = \PDF::loadView('dashboard.data.siswa.cetak', $data);
+        // return $pdf->download('siswa'. $siswa->name .'.pdf');
+        return view('dashboard.data.siswa.cetak', compact('siswa','provinsi_take','kabupaten_take','kecamatan_take','kelurahan_take'));
     }
     public function export_pdf()
     {
-        
+
     }
     public function export_excel()
     {

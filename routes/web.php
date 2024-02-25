@@ -143,6 +143,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::get('invoices/records', [DashboardPembayaranController::class, 'data_table'])->name('dashboard.datamaster.get.records');
         //activity user
         Route::resource('activity',  ActivityController::class, ['names' => 'dashboard.datamaster.activity']);
+        Route::get('get/activitys', [ActivityController::class, 'activitys'])->name('dashboard.datamaster.get.activitys');
 
     });
     Route::group(['prefix' => 'pengaturan'], function () {

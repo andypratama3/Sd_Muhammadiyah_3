@@ -17,7 +17,7 @@
     </div>
     <div class="card-body">
             <div class="row">
-                <div class="col-md-6 justify-center d-block text-center">
+                <div class="col-md-6 justify-center d-block text-center mb-5">
                     <p>Foto</p>
                     <img src="{{ asset('storage/img/siswa/'. $siswa->foto)  }}" alt="" class="h-40" style="width: 50%;">
                 </div>

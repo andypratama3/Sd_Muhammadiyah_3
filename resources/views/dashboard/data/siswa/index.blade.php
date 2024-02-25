@@ -16,13 +16,13 @@
                     <div class="col-md-12 mx-3">
                         <div class="form-group row">
                             <div class="gap-4">
-                                <a href="{{ route('siswa.export_excel') }}" class="btn btn-warning btn-sm"><i class="fas fa-file-pdf"></i> Export PDF</a>
-                                <a href="" class="btn btn-success btn-sm"><i class="fas fa-file-excel"></i> Export Excel</a> 
-                            </div>                            
+                                {{-- <a href="{{ route('siswa.export_excel') }}" class="btn btn-warning btn-sm"><i class="fas fa-file-pdf"></i> Export PDF</a> --}}
+                                <a href="{{ route('siswa.export_excel') }}" class="btn btn-success btn-sm"><i class="fas fa-file-excel"></i> Export Excel</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-               
+
                 <div class="table-responsive">
                     <table class="table mt-4" id="siswa_table">
                         <thead>
@@ -30,7 +30,7 @@
                                 <th>No</th>
                                 <th>Nama</th>
                                 <th>Nisn</th>
-                                <th>Kelas</th> 
+                                <th>Kelas</th>
                                 <th>Ketagori Kelas</th>
                                 {{-- <th>Tanggal Masuk</th>  --}}
                                 <th>Action</th>
