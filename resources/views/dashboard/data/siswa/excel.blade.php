@@ -76,10 +76,10 @@
                 <td>{{ $siswa->alamat_wali}}</td>
                 <td>{{ $siswa->rt}}</td>
                 <td>{{ $siswa->rw}}</td>
-                <td>{{ $siswa->provinsi_id}}</td>
-                <td>{{ $siswa->kabupaten_id}}</td>
-                <td>{{ $siswa->kecamatan_id}}</td>
-                <td>{{ $siswa->kelurahan_id}}</td>
+                <td>{{ $siswa->provinsi}}</td>
+                <td>{{ $siswa->kabupaten}}</td>
+                <td>{{ $siswa->kecamatan}}</td>
+                <td>{{ $siswa->kelurahan}}</td>
                 <td>{{ $siswa->nama_jalan}}</td>
                 <td>{{ $siswa->jenis_tinggal}}</td>
                 <td>{{ $siswa->no_hp}}</td>
