@@ -63,6 +63,7 @@
                     <td>Pendidikan Sebelumnya</td>
                     <th></th>
                     <td></td>
+                </tr>
                 <tr>
                     <td colspan="2"> - TK/PAUD/SD</td>
                     <th>:</th>
@@ -79,6 +80,7 @@
                     <td>Masuk Di Sekolah</td>
                     <th></th>
                     <td></td>
+                </tr>
                 <tr>
                     <td colspan="2"> - Kelas/Tahun/Ajaran</td>
                     <th>:</th>
@@ -94,6 +96,7 @@
                     <td>Alamat Peserta Didik</td>
                     <th></th>
                     <td></td>
+                </tr>
                 <tr>
                     <td colspan="2"> - Jalan</td>
                     <th>:</th>
@@ -120,6 +123,7 @@
                     <td>Nama Orang Tua</td>
                     <th></th>
                     <td></td>
+                </tr>
                 <tr>
                     <td colspan="2"> - Ayah</td>
                     <th>:</th>
@@ -144,6 +148,7 @@
                     <td>Pendidikan Orang Tua</td>
                     <th></th>
                     <td></td>
+                </tr>
                 <tr>
                     <td colspan="2"> - Ayah</td>
                     <th>:</th>
@@ -167,6 +172,7 @@
                     <td>Pekerjaan Orang Tua</td>
                     <th></th>
                     <td></td>
+                </tr>
                 <tr>
                     <td colspan="2"> - Ayah</td>
                     <th>:</th>
@@ -185,7 +191,7 @@
                         <td>{{ $siswa->pekerjaan_ibu }}</td>
                     @endif
                 </tr>
-                <tr>
+                <r>
                     <td>L.</td>
                     <td>Alamat Orang Tua</td>
                     <th></th>
@@ -209,6 +215,7 @@
                     <td>M.</td>
                     <td>Wali Peserta Didik</td>
                     <th></th>
+                </tr>
                 <tr>
                     <td colspan="2"> - Nama</td>
                     <th>:</th>
@@ -235,7 +242,6 @@
                     @else
                         <td>{{ $siswa->alamat_wali }}</td>
                     @endif
-                </tr>
                 </tr>
             </table>
             <div class="row">
