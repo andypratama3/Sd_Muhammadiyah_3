@@ -180,56 +180,38 @@
           <div class="card">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
               <h6 class="m-0 font-weight-bold text-primary">Invoice</h6>
-              <a class="m-0 float-right btn btn-danger btn-sm" href="#">View More <i
+              <a class="m-0 float-right btn btn-danger btn-sm" href="{{ route('dashboard.datamaster.pembayaran.index') }}">View More <i
                   class="fas fa-chevron-right"></i></a>
             </div>
-            <div class="table-responsive">
+            <div class="table-responsive text-center">
               <table class="table align-items-center table-flush">
                 <thead class="thead-light">
                   <tr>
                     <th>Order ID</th>
-                    <th>Customer</th>
-                    <th>Item</th>
+                    <th>Nama Pembayaran</th>
+                    <th>Kelas</th>
                     <th>Status</th>
                     <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
+                @foreach ($invoice_list as $invoice)
                   <tr>
-                    <td><a href="#">RA0449</a></td>
-                    <td>Udin Wayang</td>
-                    <td>Nasi Padang</td>
-                    <td><span class="badge badge-success">Delivered</span></td>
-                    <td><a href="#" class="btn btn-sm btn-primary">Detail</a></td>
+                    <td>{{ $invoice->order_id}}</td>
+                    <td>{{ $invoice->name }}</td>
+                    <td>{{ $invoice->kelas->name }}</td>
+                    <td>
+                        @if($invoice->status === 'pending')
+                        <span class="badge badge-warning"><i class="fas fa-solid fa-clock"></i> {{ $invoice->status }}</span>
+                        @elseif($invoice->status === 'berhasil')
+                        <span class="badge badge-success"><i class="fas fa-solid fa-circle-check"></i> {{ $invoice->status }}</span>
+                        @else
+                        <span class="badge badge-danger"><i class="fas fa-xmark"></i> {{ $invoice->status }}</span>
+                        @endif
+                    </td>
+                    <td><a href="{{ route('dashboard.datamaster.pembayaran.show', $invoice->order_id) }}" class="btn btn-sm btn-primary">Detail</a></td>
                   </tr>
-                  <tr>
-                    <td><a href="#">RA5324</a></td>
-                    <td>Jaenab Bajigur</td>
-                    <td>Gundam 90' Edition</td>
-                    <td><span class="badge badge-warning">Shipping</span></td>
-                    <td><a href="#" class="btn btn-sm btn-primary">Detail</a></td>
-                  </tr>
-                  <tr>
-                    <td><a href="#">RA8568</a></td>
-                    <td>Rivat Mahesa</td>
-                    <td>Oblong T-Shirt</td>
-                    <td><span class="badge badge-danger">Pending</span></td>
-                    <td><a href="#" class="btn btn-sm btn-primary">Detail</a></td>
-                  </tr>
-                  <tr>
-                    <td><a href="#">RA1453</a></td>
-                    <td>Indri Junanda</td>
-                    <td>Hat Rounded</td>
-                    <td><span class="badge badge-info">Processing</span></td>
-                    <td><a href="#" class="btn btn-sm btn-primary">Detail</a></td>
-                  </tr>
-                  <tr>
-                    <td><a href="#">RA1998</a></td>
-                    <td>Udin Cilok</td>
-                    <td>Baby Powder</td>
-                    <td><span class="badge badge-success">Delivered</span></td>
-                    <td><a href="#" class="btn btn-sm btn-primary">Detail</a></td>
-                  </tr>
+                @endforeach
                 </tbody>
               </table>
             </div>

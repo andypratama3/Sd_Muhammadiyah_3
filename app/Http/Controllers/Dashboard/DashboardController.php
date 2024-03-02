@@ -7,6 +7,7 @@ use App\Models\Siswa;
 use App\Models\Artikel;
 use App\Models\Prestasi;
 use App\Charts\SiswaChart;
+use App\Models\Pembayaran;
 use App\Charts\ArtikelView;
 use App\Models\TenagaPendidikan;
 use App\Http\Controllers\Controller;
@@ -33,6 +34,7 @@ class DashboardController extends Controller
         // convert to percent
         $percent_artikel = ($artikel_like_max->jumlah_klik  / $artikel_sum_total_klik) * 100;
 
+        $invoice_list = Pembayaran::orderBy('updated_at')->take(10)->get();
 
         return view('dashboard.index', compact(
             'siswa',
@@ -44,6 +46,7 @@ class DashboardController extends Controller
             'artikels',
             'artikel_sum_total_klik',
             'percent_artikel',
+            'invoice_list'
         ));
     }
 

@@ -43,12 +43,14 @@
                 <div class="form-group row">
                     <label class="col-sm-3 text-dark" for="tgl_lahir">Password</label>
                     <div class="col-sm-9">
-                        <input type="password" class="form-control" name="password" id="password"
+                        <input type="text" class="form-control" name="password" id="password"
                             value="{{ $user->password }}" readonly />
                     </div>
                 </div>
             </div>
-
+            <div class="col-md-6">
+                <button class="btn btn-secondary btn-sm mt-1" id="show_password"><i class="bi bi-eye"></i>Lihat Password</button>
+            </div>
             <div class="col-md-12">
                 <div class="form-group row ml-1">
                     <a href="{{ route('dashboard.pengaturan.user.index') }}"
@@ -59,6 +61,12 @@
     </div>
 </div>
 @push('js')
+<script>
+    $(document).ready(function () {
+        button_show_password = $('#show_password');
 
+
+    });
+</script>
 @endpush
 @endsection

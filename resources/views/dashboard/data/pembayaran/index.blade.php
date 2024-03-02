@@ -4,6 +4,11 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jqc-1.12.3/dt-1.10.16/b-1.4.2/b-html5-1.4.2/datatables.min.css"/>
+<style>
+    table.dataTable td {
+    font-size: 0.9em;
+}
+</style>
 @endpush
 @section('content')
 <div class="row">
@@ -48,13 +53,14 @@ $(document).ready(function () {
         deferRender: true,
         serverSide: true,
         responsive: true,
+        
         processing: true,
         pageLength: 100,
         ajax: {
             'url': $('#invoice_data').val(),
         },
         columns: [
-            { data: 'DT_RowIndex',name: 'DT_RowIndex',orderable: false,searchable: false},
+            { data: 'DT_RowIndex',name: 'DT_RowIndex', orderable: false, searchable: false, ordering: false},
             { data: 'name', name: 'name'},
             { data: 'siswa.name', name: 'siswa.name'},
             { data: 'kelas.name', name: 'kelas.name'},
@@ -108,13 +114,17 @@ $(document).ready(function () {
                     type: 'DELETE', // Use the DELETE method
                     success: function (data) {
                         if (data.status === 'success') {
-                            swal('Berhasil', data.message, 'success').then(() => {
+                            swal({
+                                title: 'Berhasil',
+                                text: data.message,
+                                icon: 'success',
+                                buttons: false // This will remove the button
+                            });
                                 // Reload the page
                                 // window.location.href = "{{ route('dashboard.datamaster.siswa.index') }}";
                                 // reload table
-                                reloadTable('#invoice_table');
-                                // Reload the page with a success message
-                            });
+                            reloadTable('#invoice_table');
+
                         } else {
                             // Reload the page with an error message
                             swal('Error', data.message, 'error');

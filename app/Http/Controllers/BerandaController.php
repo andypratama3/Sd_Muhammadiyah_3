@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Guru;
+use App\Models\Kelas;
 use App\Models\Siswa;
 use App\Models\Berita;
 use App\Models\Fasilitas;
@@ -19,6 +20,7 @@ class BerandaController extends Controller
         $siswas = Siswa::count();
         $guru = Guru::count();
         $fasilitas = Fasilitas::count();
+        $kelas_name = Kelas::orderBy('name');
         $esktrakurikuler = Esktrakurikuler::count();
         return view('beranda', compact(
             'beritas',
@@ -26,6 +28,8 @@ class BerandaController extends Controller
             'guru',
             'esktrakurikuler',
             'fasilitas',
+            'kelas_name',
+            
         ));
     }
 }

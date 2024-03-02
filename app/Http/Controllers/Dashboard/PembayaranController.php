@@ -18,6 +18,7 @@ class PembayaranController extends Controller
     {
         $no = 0;
         $pembayarans = Pembayaran::all();
+        // dd($pembayarans);
         return view('dashboard.data.pembayaran.index', compact('no','pembayarans'));
     }
     public function data_table()
@@ -28,10 +29,10 @@ class PembayaranController extends Controller
             $siswa_name = $siswa->siswa->name;
             return $siswa_name;
         })
-        // ->addColumn('kelas.name', function ($kelas) {
-        //     $kelas_name = $kelas->kelas->name;
-        //     return $kelas_name;
-        // })
+        ->addColumn('kelas.name', function ($kelas) {
+            $kelas_name = $kelas->kelas->name;
+            return $kelas_name;
+        })
 
         ->addColumn('options', function ($row){
             return '
