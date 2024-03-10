@@ -80,6 +80,26 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="kelas_tahun">Nama Pendidikan</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="nama_pendidikan" id="nama_pendidikan"
+                                value="{{ old('nama_pendidikan') }}" placeholder="Nama Pendidikan Sebelumnya | Boleh Di Kosongkan" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="kelas_tahun">Alamat Pendidikan</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="nama_jalan_pendidikan" id="nama_jalan_pendidikan"
+                                value="{{ old('nama_jalan_pendidikan') }}"  placeholder="Alamat Pendidikan Sebelumnya | Boleh Di Kosongkan" />
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-md-6">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="kelas_tahun">Kelas  / Tahun Ajaran</label>
@@ -358,7 +378,7 @@
         //property
         let nik_property = document.getElementById('icon-check-nik');
         let nisn_property = document.getElementById('icon-check-nisn');
-        
+
         function formdata_data_wali() {
             const title = $('#title_data_orang_tua');
             let wali = $('#wali');

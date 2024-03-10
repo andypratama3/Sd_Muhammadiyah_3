@@ -91,6 +91,24 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="kelas_tahun">Nama Pendidikan</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="nama_pendidikan" id="nama_pendidikan"
+                                value="{{ $siswa->nama_pendidikan }}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="kelas_tahun">Alamat Pendidikan</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="nama_jalan_pendidikan" id="nama_jalan_pendidikan"
+                                value="{{ $siswa->nama_jalan_pendidikan }}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="beasiswa">Beasiswa</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control"  name="beasiswa" id="beasiswa" value="{{ $siswa->beasiswa }}"/>
@@ -289,7 +307,7 @@
                     //kelurahan
                     let $selected_kelurahan = $("<option selected='selected'></option>").val(kelurahan_id).text(kelurahan_name);
                     $("#kelurahan").append($selected_kelurahan).trigger('change');
-                   
+
 
                 }
             });

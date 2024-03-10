@@ -18,7 +18,6 @@ class Pembayaran extends Model
         'siswa_id',
         'kelas_id',
         'category_kelas',
-        'name',
         'email',
         'gross_amount',
         'startdate',
@@ -29,6 +28,7 @@ class Pembayaran extends Model
         'Url',
         'trx_id',
         'account_id',
+        'judul_id',
         'status',
         'slug',
     ];
@@ -43,5 +43,10 @@ class Pembayaran extends Model
     {
         return $this->belongsTo(Kelas::class, 'kelas_id', 'id');
     }
+    public function judul()
+    {
+        return $this->belongsTo(JudulPembayaran::class, 'judul_id', 'id');
+    }
+
 
 }

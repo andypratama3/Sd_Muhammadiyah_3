@@ -6,7 +6,10 @@ use App\Models\Kelas;
 use App\Models\Siswa;
 use App\Models\Pembayaran;
 use Illuminate\Http\Request;
+use App\Exports\InvoiceExcel;
+use App\Models\JudulPembayaran;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 use App\DataTransferObjects\PembayaranData;
 use App\Actions\Dashboard\Pembayaran\PembayaranAction;
@@ -18,13 +21,22 @@ class PembayaranController extends Controller
     {
         $no = 0;
         $pembayarans = Pembayaran::all();
-        // dd($pembayarans);
-        return view('dashboard.data.pembayaran.index', compact('no','pembayarans'));
+        $juduls = JudulPembayaran::all();
+        return view('dashboard.data.pembayaran.index', compact('no','pembayarans','juduls'));
     }
-    public function data_table()
+    public function data_table(Request $request)
     {
-        $query = Pembayaran::with('kelas','siswa')->select(['name','order_id','gross_amount','siswa_id','status','kelas_id','category_kelas']);
+        $query = Pembayaran::with('kelas','siswa','judul')->select(['order_id','gross_amount','siswa_id','status','kelas_id','judul_id','category_kelas']);
+
+        if($request->judul_pembayaran){
+            $query->where('judul_id', $request->judul_pembayaran);
+        }
+
         return DataTables::of($query)
+        ->addColumn('name', function ($judul) {
+            $judul_pembayaran = $judul->judul->name;
+            return $judul_pembayaran;
+        })
         ->addColumn('siswa.name', function ($siswa) {
             $siswa_name = $siswa->siswa->name;
             return $siswa_name;
@@ -47,9 +59,10 @@ class PembayaranController extends Controller
     }
     public function create()
     {
+        $juduls = JudulPembayaran::all();
         $siswas = Siswa::select(['id','name','slug'])->get();
         $kelass = Kelas::orderBy('name','asc')->get();
-        return view('dashboard.data.pembayaran.create', compact('siswas','kelass'));
+        return view('dashboard.data.pembayaran.create', compact('siswas','kelass','juduls'));
     }
     public function store(PembayaranData $pembayaranData, PembayaranAction $pembayaranAction)
     {
@@ -85,4 +98,15 @@ class PembayaranController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Gagal Menghapus Artikel']);
         }
     }
+    public function exportExcel(Request $request)
+    {
+        $judulId = $request->judul_id;
+
+        if ($judulId != null) {
+            return Excel::download(new InvoiceExcel($judulId), 'siswa-invoice-excel.xlsx');
+        } else {
+            return redirect()->route('dashboard.datamaster.pembayaran.index')->with('error', 'Silahkan Pilih Judul');
+        }
+    }
+
 }

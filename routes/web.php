@@ -1,8 +1,9 @@
 <?php
 
-use App\Models\TenagaPendidikan;
+use App\Models\JudulPembayaran;
 
 //User Access
+use App\Models\TenagaPendidikan;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\JadwalController;
@@ -25,8 +26,8 @@ use App\Http\Controllers\Dashboard\KelasController;
 use App\Http\Controllers\EkstrakurikulerController;
 use App\Http\Controllers\PrestasiSekolahController;
 use App\Http\Controllers\TenagaPendidikanController;
-use App\Http\Controllers\Dashboard\ActivityController;
 //Dashboard Access
+use App\Http\Controllers\Dashboard\ActivityController;
 use App\Http\Controllers\Dashboard\KaryawanController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\KelasCategoryController;
@@ -41,6 +42,7 @@ use App\Http\Controllers\Dashboard\FasilitasController as DashboardFasilitasCont
 use App\Http\Controllers\Dashboard\NilaiSiswaController as DashboardNilaiSiswaController;
 use App\Http\Controllers\Dashboard\PembayaranController as DashboardPembayaranController;
 use App\Http\Controllers\Dashboard\MataPelajaranController as DashboardMataPelajaranController;
+use App\Http\Controllers\Dashboard\JudulPembayaranController as DashboardJudulPembayaranController;
 use App\Http\Controllers\Dashboard\EkstrakulikulerController as DashboardEsktrakurikulerController;
 use App\Http\Controllers\Dashboard\TenagaPendidikanController as DashboardTenagaPendidikanController;
 
@@ -130,6 +132,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
     });
     Route::group(['prefix' => 'datamaster'], function () {
         Route::resource('siswa',  DashboardSiswaController::class, ['names' => 'dashboard.datamaster.siswa']);
+        Route::resource('kategori-pembayaran',  DashboardJudulPembayaranController::class, ['names' => 'dashboard.datamaster.judul.pembayaran']);
         Route::get('siswas/export-excel', [DashboardSiswaController::class,'export_excel'])->name('siswa.export_excel');
         Route::get('siswas/export-pdf', [DashboardSiswaController::class,'export_pdf'])->name('siswa.export_pdf');
         Route::get('siswa/cetak/{slug}', [DashboardSiswaController::class,'cetak_data'])->name('siswa.cetakData');
@@ -142,6 +145,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         //Pembayaran Spp or invoice
         Route::resource('invoice',  DashboardPembayaranController::class, ['names' => 'dashboard.datamaster.pembayaran']);
         Route::get('invoices/records', [DashboardPembayaranController::class, 'data_table'])->name('dashboard.datamaster.get.records');
+        Route::post('invoices/export', [DashboardPembayaranController::class, 'exportExcel'])->name('dashboard.datamaster.pembayaran.exportExcel');
         //activity user
         Route::resource('activity',  ActivityController::class, ['names' => 'dashboard.datamaster.activity']);
         Route::get('get/activitys', [ActivityController::class, 'activitys'])->name('dashboard.datamaster.get.activitys');

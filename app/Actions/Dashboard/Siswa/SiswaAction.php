@@ -34,6 +34,8 @@ class SiswaAction {
                 'tgl_lahir' => $siswaData->tgl_lahir,
                 'nisn' => $siswaData->nisn,
                 'agama' => $siswaData->agama,
+                'nama_pendidikan' => $siswaData->nama_pendidikan,
+                'nama_jalan_pendidikan' => $siswaData->nama_jalan_pendidikan,
                 'kelas_tahun' => $siswaData->kelas_tahun,
                 'tanggal_masuk' => $siswaData->tanggal_masuk,
                 'beasiswa' => $siswaData->beasiswa,

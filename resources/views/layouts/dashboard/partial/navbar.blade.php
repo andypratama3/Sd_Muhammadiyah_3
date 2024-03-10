@@ -107,9 +107,7 @@
         <div id="datamaster" class="collapse {{ Request::routeIs('dashboard.datamaster.*') ? 'show' : ''  }} }}"
             aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
             <div class="py-2 collapse-inner rounded">
-                {{-- <a class="collapse-item {{ Request::routeIs('dashboard.datamaster.kelas.*') ? 'active' : ''  }}"
-                    href="{{ route('dashboard.datamaster.kelas.index') }}">Kelas</a>
-                <a class="collapse-item {{ Request::routeIs('dashboard.datamaster.jadwal.*') ? 'active' : ''  }}"
+                {{--<a class="collapse-item {{ Request::routeIs('dashboard.datamaster.jadwal.*') ? 'active' : ''  }}"
                     href="{{ route('dashboard.datamaster.jadwal.index') }}">Jadwal</a> --}}
                     <a class="collapse-item {{ Request::routeIs('dashboard.datamaster.siswa.*') ? 'active' : ''  }}"
                     href="{{ route('dashboard.datamaster.siswa.index') }}">
@@ -120,6 +118,11 @@
                     href="{{ route('dashboard.datamaster.nilai.index') }}">
                     <i class="fas fa-solid fa-user"></i>
                     <span>Nilai Siswa</span>
+                    </a>
+                    <a class="collapse-item {{ Request::routeIs('dashboard.datamaster.judul.pembayaran.*') ? 'active' : ''  }}"
+                    href="{{ route('dashboard.datamaster.judul.pembayaran.index') }}">
+                    <i class="fa-solid fa-money-check"></i>
+                    <span>Kategori Pembayaran</span>
                     </a>
                     <a class="collapse-item {{ Request::routeIs('dashboard.datamaster.pembayaran.*') ? 'active' : ''  }}"
                     href="{{ route('dashboard.datamaster.pembayaran.index') }}">

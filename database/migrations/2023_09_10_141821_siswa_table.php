@@ -20,6 +20,9 @@ return new class extends Migration
             $table->date('tgl_lahir');
             $table->string('nisn', 20);
             $table->string('agama');
+            //pendidikan sebelumnya
+            $table->string('nama_pendidikan')->nullable()->default('text');
+            $table->string('nama_jalan_pendidikan')->nullable()->default('text');
             // data sekolah
             $table->string('kelas_tahun');
             $table->date('tanggal_masuk');

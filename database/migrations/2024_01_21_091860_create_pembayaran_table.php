@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('siswa_id');
             $table->string('kelas_id');
             $table->string('category_kelas');
-            $table->string('name')->nullable();
             $table->string('email')->nullable();
             $table->float('gross_amount')->nullable();
             $table->string('startdate')->nullable();
@@ -28,6 +27,7 @@ return new class extends Migration
             $table->string('trx_id')->nullable();
             $table->string('bulkId')->nullable();
             $table->string('account_id')->nullable();
+            $table->foreignUuid('judul_id')->references('id')->on('judulpembayarans')->onDelete('cascade');
             $table->string('status')->default('pending');
             $table->timestamps();
         });

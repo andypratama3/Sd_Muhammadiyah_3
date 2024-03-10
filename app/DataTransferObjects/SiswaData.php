@@ -16,6 +16,8 @@ class SiswaData extends Data
         public readonly string $tgl_lahir,
         public readonly string $nisn,
         public readonly string $agama,
+        public readonly ?string $nama_pendidikan,
+        public readonly ?string $nama_jalan_pendidikan,
         public readonly string $kelas_tahun,
         public readonly string $tanggal_masuk,
         public readonly string $beasiswa,
@@ -57,6 +59,9 @@ class SiswaData extends Data
             $request->getTgllahir(),
             $request->getNisn(),
             $request->getAgama(),
+            //pendidikan Sebelumnya
+            $request->getNamaPendidikan(),
+            $request->getJalanPendidikan(),
             $request->getKelasTahun(),
             $request->getTanggalMasuk(),
             $request->getBeasiswa(),

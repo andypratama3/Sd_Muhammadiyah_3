@@ -19,15 +19,38 @@
                 <h4 class="card-title text-primary mb-4"> Pembayaran Siswa
                 <a href="{{ route('dashboard.datamaster.pembayaran.create') }}" class="btn btn-success btn-sm float-right">Tambah <i class="fas fa-plus"></i></a>
                 </h4>
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <select name="judul_pembayaran" id="judul_pembayaran" class="form-control">
+                                <option selected disabled>Pilih Judul</option>
+                                @foreach ($juduls as $judul)
+                                    <option value="{{ $judul->id }}">{{ $judul->name }}</option>
+                                @endforeach
+                            </select>
+                            <p style="display:none; color: red; margin-left : 10px;" id="alert-select"> leoeowk</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <button class="btn btn-success" id="exportData-excel"><i class="fas fa-file-excel"></i> Export Excel</button>
+                            <!-- Hidden form for exporting -->
+                            <form action="{{ route('dashboard.datamaster.pembayaran.exportExcel') }}" method="POST" id="exportForm" style="display: none;">
+                                @csrf
+                                <input type="hidden" name="judul_id" id="export_judul_id">
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
                 <div class="table-responsive">
                     <table class="table mt-4" id="invoice_table">
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Nama Pembayaran</th>
+                                <th>Judul Pembayaran</th>
                                 <th>Nama Siswa</th>
                                 <th>Kelas</th>
-                                {{-- <th>Category Kelas</th> --}}
                                 <th>Order ID</th>
                                 <th>Total</th>
                                 <th>Status</th>
@@ -47,13 +70,18 @@
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jqc-1.12.3/dt-1.10.16/b-1.4.2/b-html5-1.4.2/datatables.min.js"></script>
 <script>
 $(document).ready(function () {
+    function reloadTable(id){
+        var table = $(id).DataTable();
+        table.cleanData;
+        table.ajax.reload();
+    }
     $('#invoice_table').DataTable({
         ordering: true,
         pagination: true,
         deferRender: true,
         serverSide: true,
         responsive: true,
-        
+
         processing: true,
         pageLength: 100,
         ajax: {
@@ -136,6 +164,21 @@ $(document).ready(function () {
                 // If the user cancels the deletion, do nothing
             }
         });
+    });
+    $('#judul_pembayaran').on('change', function () {
+        reloadTable('#invoice_table');
+    });
+    $('#exportData-excel').click(function (e) {
+        e.preventDefault(); // Prevent default button behavior
+
+        // Get the selected judul_id
+        var judul_id = $('#judul_pembayaran').val();
+
+        // Set the judul_id value to the hidden input field in the form
+        $('#export_judul_id').val(judul_id);
+
+        // Submit the form
+        $('#exportForm').submit();
     });
 });
 </script>

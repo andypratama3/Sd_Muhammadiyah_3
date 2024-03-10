@@ -13,10 +13,6 @@ class PembayaranRequest extends FormRequest
     {
         return true;
     }
-    public function getName()
-    {
-        $this->name;
-    }
     public function getSiswa()
     {
         $this->siswa_id;
@@ -37,6 +33,10 @@ class PembayaranRequest extends FormRequest
     public function getOrderID()
     {
         $this->order_id;
+    }
+    public function getJudul()
+    {
+        $this->judul_id;
     }
 
     public function rules(): array

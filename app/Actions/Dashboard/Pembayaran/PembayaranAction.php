@@ -14,10 +14,10 @@ class PembayaranAction
             ['order_id' => $pembayaranData->order_id],
             [
                 'order_id' => rand(),
-                'name' => $pembayaranData->name,
                 'siswa_id' => $pembayaranData->siswa_id,
                 'kelas_id' => $pembayaranData->kelas_id,
                 'category_kelas' => $pembayaranData->category_kelas,
+                'judul_id' => $pembayaranData->judul_id,
                 'gross_amount' => $grossAmount,
             ]
         );

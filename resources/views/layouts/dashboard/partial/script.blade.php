@@ -29,10 +29,9 @@
                 }
             });
     });
-        setTimeout(function () {
-            $('.alert').remove();
-        }, 4000);
-
+    setTimeout(function () {
+        $('.alert').remove();
+    }, 4000);
 
         $(".delete").click(function (e) {
             slug = e.target.dataset.id;

@@ -82,6 +82,25 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="agama">Nama Pendidikan Sebelumnya</label>
+                        <div class="col-sm-9">
+                            <h6>: {{ $siswa->nama_pendidikan }}</h6>
+                            <hr>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="agama">Jalan Pendidikan</label>
+                        <div class="col-sm-9">
+                            <h6>: {{ $siswa->nama_jalan_pendidikan }}</h6>
+                            <hr>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="beasiswa">Beasiswa</label>
                         <div class="col-sm-9">
                             <h6>: {{ $siswa->beasiswa }}</h6>

@@ -16,7 +16,7 @@
     }
 
     tr td {
-        font-size: 13px;
+        font-size: 12px;
         font-weight: bold;
     }
 </style>
@@ -67,12 +67,20 @@
                 <tr>
                     <td colspan="2"> - TK/PAUD/SD</td>
                     <th>:</th>
-                    <td>Akjjsa</td>
+                    @if ($siswa->nama_pendidikan == null)
+                        <td>-</td>
+                    @else
+                        <td>{{ $siswa->nama_pendidikan }}</td>
+                    @endif
                 </tr>
                 <tr>
                     <td colspan="2"> - Alamat</td>
                     <th>:</th>
-                    <td>Akjjsa</td>
+                    @if ($siswa->nama_jalan_pendidikan == null)
+                        <td>-</td>
+                    @else
+                        <td>{{ $siswa->nama_jalan_pendidikan }}</td>
+                    @endif
                 </tr>
 
                 <tr>
@@ -246,7 +254,14 @@
             </table>
             <div class="row">
                 <!-- <div class="col-12" style="border: 2px solid blue;"> -->
-                <h6 class="text-end">Samarinda, 02 Januari 2004</h6>
+                <h6 class="text-end">Samarinda,
+                    @php
+                        setlocale(LC_TIME, 'id_ID');
+                        $timestamp = time();
+                        $currentDate = strftime('%d %B %y', $timestamp);
+                        echo $currentDate;
+                    @endphp
+                </h6>
                 <h6 class="text-end">Kepala Sekolah</h6>
                 <img src="{{ asset('storage/img/siswa/'. $siswa->foto) }}" alt="" style="width: 100px; margin-left: 290px;">
                 <h6 class="text-end" style="text-decoration: underline;">

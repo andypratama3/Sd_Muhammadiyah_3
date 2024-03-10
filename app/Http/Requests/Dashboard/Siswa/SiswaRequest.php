@@ -32,6 +32,15 @@ class SiswaRequest extends FormRequest
     public function getAgama(){
         $this->agama;
     }
+    //pendidikan sebelumnya
+    public function getNamaPendidikan()
+    {
+        $this->nama_pendidikan;
+    }
+    public function getJalanPendidikan()
+    {
+        $this->nama_jalan_pendidikan;
+    }
     public function getKelasTahun(){
         $this->kelas_tahun;
     }
