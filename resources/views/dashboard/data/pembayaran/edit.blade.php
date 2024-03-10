@@ -22,7 +22,12 @@
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="name">Judul Pembayaran</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control"  name="name" id="name" value="{{ $pembayaran->name }}"/>
+                            <select name="judul_id" class="form-control select2" data-placholder="Pilih Judul Pembayaran">
+                                <option value="{{ $pembayaran->judul_id }}" selected>{{ $pembayaran->judul->name }}</option>
+                                @foreach ($juduls as $judul)
+                                    <option value="{{ $judul->id }}">{{ $judul->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                 </div>

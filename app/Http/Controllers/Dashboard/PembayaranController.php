@@ -77,10 +77,11 @@ class PembayaranController extends Controller
     }
     public function edit($order_id)
     {
+        $juduls = JudulPembayaran::all();
         $pembayaran = Pembayaran::where('order_id', $order_id)->firstOrFail();
         $siswas = Siswa::select(['id','name','slug'])->get();
         $kelass = Kelas::orderBy('name','asc')->get();
-        return view('dashboard.data.pembayaran.edit', compact('siswas','kelass','pembayaran'));
+        return view('dashboard.data.pembayaran.edit', compact('juduls','siswas','kelass','pembayaran'));
     }
     public function update(PembayaranData $pembayaranData, PembayaranAction $pembayaranAction)
     {
