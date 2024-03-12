@@ -13,12 +13,34 @@
             <div class="card-body">
                 <h4 class="card-title text-primary mb-4">Siswa<a href="{{ route('dashboard.datamaster.siswa.create') }}" class="btn btn-success btn-sm float-right">Tambah <i class="fas fa-plus"></i></a></h4>
                 <div class="row">
-                    <div class="col-md-12 mx-3">
-                        <div class="form-group row">
+                    <div class="col-md-2 ">
+                        <div class="form-group">
                             <div class="gap-4">
-                                {{-- <a href="{{ route('siswa.export_excel') }}" class="btn btn-warning btn-sm"><i class="fas fa-file-pdf"></i> Export PDF</a> --}}
                                 <a href="{{ route('siswa.export_excel') }}" class="btn btn-success btn-sm"><i class="fas fa-file-excel"></i> Export Excel</a>
                             </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <select name="kelas" id="kelas" class="form-control">
+                                    <option selected disabled>Pilih Kelas</option>
+                                    @foreach ($kelass as $kelas)
+                                        <option value="{{ $kelas->id }}">{{ $kelas->name }}</option>
+                                    @endforeach
+                                </select>
+                                <select name="category_kelas" id="category_kelas" class="form-control ml-3">
+                                    <option selected disabled>Pilih Kategori Kelas</option>
+                                </select>
+                                <button class="btn btn-success btn-sm ml-3" id="export-data-kelas-excel"><i class="fas fa-file-excel"></i> Export Excel Perkelas</button>
+                                    <!-- Hidden form for exporting -->
+                                    <form action="{{ route('siswa.export_excel_kelas') }}" method="POST" id="exportForm" style="display: none;">
+                                        @csrf
+                                        <input type="hidden" name="kelas_id" id="export_kelas_id">
+                                        <input type="hidden" name="category" id="export_category">
+                                    </form>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -115,6 +137,51 @@ $(document).ready(function () {
                 // If the user cancels the deletion, do nothing
             }
         });
+    });
+    $('#kelas').on('change', function () {
+        var selectedKelasId = $('#kelas').val();
+        var categoryKelasDropdown = $('#category_kelas');
+        //clear area dropdown
+        categoryKelasDropdown.empty();
+        //add option for category_kelas
+        categoryKelasDropdown.append('<option selected disabled>Pilih Kategori Kelas</option>');
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url: '{{ route("dashboard.datasekolah.jadwal.kelas_category") }}',
+            method: 'POST',
+            data: {
+                id: selectedKelasId
+            },
+            success: function (response) {
+                let data_category = response.categoryKelas
+                $.each(response, function (index, category) {
+                    categoryKelasDropdown.append('<option data-id="' +
+                        category + '" value="' + category + '">' +
+                        category + '</option>');
+                });
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    });
+    $('#kelas').on('change', function () {
+        reloadTable('#siswa_table');
+    });
+    $('#export-data-kelas-excel').click(function (e) {
+        e.preventDefault();
+
+        let kelas = $('#kelas').val();
+        let category_kelas = $('#category_kelas').val();
+        $('#export_kelas_id').val(kelas);
+        $('#export_category').val(category_kelas);
+
+        // Submit the form
+        $('#exportForm').submit();
     });
 });
 </script>

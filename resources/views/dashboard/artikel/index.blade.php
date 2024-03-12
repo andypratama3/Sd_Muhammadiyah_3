@@ -37,6 +37,11 @@
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
 <script>
 $(document).ready(function () {
+    function reloadTable(id){
+        var table = $(id).DataTable();
+        table.cleanData;
+        table.ajax.reload();
+    }
     $('#artikel_table').DataTable({
         ordering: true,
         pagination: true,
@@ -100,6 +105,7 @@ $(document).ready(function () {
             }
         });
     });
+    
 });
 </script>
 @endpush

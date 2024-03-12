@@ -135,6 +135,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::resource('kategori-pembayaran',  DashboardJudulPembayaranController::class, ['names' => 'dashboard.datamaster.judul.pembayaran']);
         Route::get('siswas/export-excel', [DashboardSiswaController::class,'export_excel'])->name('siswa.export_excel');
         Route::get('siswas/export-pdf', [DashboardSiswaController::class,'export_pdf'])->name('siswa.export_pdf');
+        Route::post('siswas/export-excel-kelas', [DashboardSiswaController::class,'exportExcelKelas'])->name('siswa.export_excel_kelas');
         Route::get('siswa/cetak/{slug}', [DashboardSiswaController::class,'cetak_data'])->name('siswa.cetakData');
         Route::post('siswa/nisn', [DashboardSiswaController::class,'checknisn'])->name('siswa.check.nisn');
         Route::get('siswas/records', [DashboardSiswaController::class,'data_table'])->name('siswa.get.records');

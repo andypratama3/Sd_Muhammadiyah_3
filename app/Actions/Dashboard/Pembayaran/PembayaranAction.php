@@ -1,15 +1,25 @@
 <?php
+
 namespace App\Actions\Dashboard\Pembayaran;
 
 use App\Models\Pembayaran;
-
+use App\Http\Controllers\Api\Dashboard\SendOrderIDWhatsAppApi;
 
 class PembayaranAction
 {
+    protected $whatsApp;
+
+    public function __construct(SendOrderIDWhatsAppApi $whatsApp)
+    {
+        $this->whatsApp = $whatsApp; // Corrected assignment here
+    }
+
     public function execute($pembayaranData)
     {
         $grossAmount = $pembayaranData->gross_amount;
         $grossAmount = str_replace('.', '', $grossAmount);
+
+        // Update or create payment record
         $pembayaran = Pembayaran::updateOrCreate(
             ['order_id' => $pembayaranData->order_id],
             [
@@ -21,7 +31,6 @@ class PembayaranAction
                 'gross_amount' => $grossAmount,
             ]
         );
+        $this->whatsApp->sendMessage($pembayaran->order_id);
     }
 }
-
-

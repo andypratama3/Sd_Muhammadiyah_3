@@ -143,7 +143,7 @@
                             </div>
                         </div>
 
-                        <div class="tab-pane fade profile-edit pt-3" id="profile-edit" id="profile_edit">
+                        <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
                             <!-- Profile Edit Form -->
                             @if($karyawan && Auth::id() == $karyawan->user_id)
                             <button class="btn btn-primary float-right" id="button_edit_profile">

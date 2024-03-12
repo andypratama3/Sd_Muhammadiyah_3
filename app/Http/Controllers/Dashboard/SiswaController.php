@@ -8,6 +8,7 @@ use App\Models\Siswa;
 use Barryvdh\DomPDF\PDF;
 use App\Exports\SiswaExport;
 use Illuminate\Http\Request;
+use App\Exports\SiswaExportKelas;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Facades\Excel;
@@ -28,7 +29,8 @@ class SiswaController extends Controller
     }
     public function index()
     {
-        return view('dashboard.data.siswa.index');
+        $kelass = Kelas::select(['id','name'])->get();
+        return view('dashboard.data.siswa.index', compact('kelass'));
     }
     public function data_table(Request $request)
     {
@@ -176,4 +178,18 @@ class SiswaController extends Controller
     {
         return Excel::download(new SiswaExport, 'siswa-export-excel.xlsx');
     }
+    public function exportExcelKelas(Request $request)
+    {
+        $kelas_id = $request->kelas_id;
+        $category_kelas = $request->category;
+
+        if ($kelas_id && $category_kelas != null) {
+            return Excel::download(new SiswaExportKelas($kelas_id, $category_kelas), 'siswa-kelas-category-excel.xlsx');
+        } elseif ($kelas_id != null) {
+            return Excel::download(new SiswaExportKelas($kelas_id, null), 'siswa-kelas-excel.xlsx');
+        } else {
+            return response()->json(['error', 'Silahkan Pilih Kelas Atau Kategori Kelas']);
+        }
+    }
+
 }

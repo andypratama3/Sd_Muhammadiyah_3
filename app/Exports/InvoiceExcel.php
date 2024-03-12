@@ -20,7 +20,6 @@ class InvoiceExcel implements FromCollection, WithHeadings
     public function collection()
     {
         return Pembayaran::with('siswa', 'kelas')->where('judul_id', $this->judulId)->get()->map(function ($item) {
-            // Format the gross amount as rupiah
             $grossAmount = "Rp " . number_format($item->gross_amount, 0, ',', '.');
 
             return [
