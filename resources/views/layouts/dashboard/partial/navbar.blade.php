@@ -154,8 +154,10 @@
                     href="{{ route('dashboard.pengaturan.role.index') }}">Role</a>
                 <a class="collapse-item {{ Request::routeIs('dashboard.pengaturan.karyawan.*') ? 'active' : ''  }}"
                     href="{{ route('dashboard.pengaturan.karyawan.index') }}">karyawan</a>
+                @can('role: superadmin')
                 <a class="collapse-item {{ Request::routeIs('dashboard.pengaturan.user.*') ? 'active' : ''  }}"
                     href="{{ route('dashboard.pengaturan.user.index') }}">User</a>
+                @endcan
             </div>
         </div>
     </li>
