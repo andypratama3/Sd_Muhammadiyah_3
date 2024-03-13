@@ -35,6 +35,11 @@ class SiswaController extends Controller
     public function data_table(Request $request)
     {
         $siswa = Siswa::with('kelas')->select(['id','name','nisn','jk','foto','slug']);
+        if ($request->id) {
+            $siswa = $siswa->whereHas('siswa_kelas', function ($siswa) use ($request) {
+                $siswa->where('kelas_id', $request->id);
+            });
+        }
         return DataTables::of($siswa)
                 ->addColumn('kelas.name', function ($kelas) {
                     $kelas_name = $kelas->kelas->pluck('name');

@@ -19,6 +19,12 @@
         font-size: 12px;
         font-weight: bold;
     }
+    @media print{
+        @page{
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+    }
 </style>
 
 <body>
