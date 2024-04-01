@@ -35,17 +35,17 @@
                                 @endforeach
                             <td>
                                 <a href="{{ route('dashboard.pengaturan.karyawan.show', $karyawan->slug) }}"
-                                    class="btn btn-dark btn-sm"><i class="bi bi-eye">Detail</i></a>
+                                    class="btn btn-dark btn-sm"><i class="fas fa-eye"></i></a>
                                 <a href="{{ route('dashboard.pengaturan.karyawan.edit', $karyawan->slug) }}"
-                                    class="btn btn-primary btn-sm">Update</a>
-                                <a href="#" data-id="{{ $karyawan->slug }}" class="btn btn-danger delete btn-sm" title="Hapus">
+                                    class="btn btn-primary btn-sm"><i class="fas fa-pen"></i></a>
+                                <a href="#" data-id="{{ $karyawan->slug }}" class="btn btn-danger btn-sm delete" title="Hapus">
                                     <form action="{{ route('dashboard.pengaturan.karyawan.destroy', $karyawan->slug) }}"
                                         id="delete-{{ $karyawan->slug }}" method="POST" enctype="multipart/form-data">
                                         @csrf
                                         @method('delete')
                                     </form>
                                     <i class="fas fa-trash"></i>
-                                    Hapus
+
                             </td>
                         </tr>
                         @endforeach

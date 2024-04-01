@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class HSTS
 {
@@ -17,8 +18,13 @@ class HSTS
     {
         $response = $next($request);
 
-        $response->header('Strict-Transport-Security', 'max-age=31536000; includeSubdomains');
+        // Check if the response is not a BinaryFileResponse
+        if (! $response instanceof BinaryFileResponse) {
+            // Add the Strict-Transport-Security header
+            $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubdomains');
+        }
 
         return $response;
     }
+
 }

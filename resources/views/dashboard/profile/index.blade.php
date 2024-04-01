@@ -240,7 +240,7 @@
                                 <div class="row mb-3">
                                     <label for="email" class="col-md-4 col-lg-3 col-form-label">Email</label>
                                     <div class="col-md-8 col-lg-9">
-                                        <input name="email" type="text" class="form-control" id="email"
+                                        <input name="email" type="text" class="form-control"
                                             value="{{ Auth::user()->email }}" readonly>
                                     </div>
                                 </div>
@@ -260,7 +260,7 @@
                                     </div>
                                         <label for="email" class="col-md-4 col-lg-3 col-form-label">Email</label>
                                         <div class="col-md-8 col-lg-9">
-                                            <input name="email" type="text" class="form-control" id="email"
+                                            <input name="email" type="text" class="form-control"
                                                 value="{{ Auth::user()->email }}" readonly>
                                         </div>
                                 </div>

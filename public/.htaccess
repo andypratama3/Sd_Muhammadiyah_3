@@ -21,5 +21,5 @@
 </IfModule>
 
 <IfModule mod_headers.c>
-Header set Permissions-Policy "geolocation=self"
+    Header set Permissions-Policy "geolocation=self"
 </IfModule>
