@@ -19,6 +19,15 @@ class SecureHeadersMiddleware
     ];
     public function handle($request, Closure $next)
     {
+        // $response = $next($request);
+
+        // /**
+        // foreach ((array) config('headers.remove') as $header) {
+        //     $response->headers->remove(
+        //         key: $header,
+        //     );
+        // }
+        // return $response;
         $this->removeUnwantedHeaders($this->unwantedHeaderList);
         $response = $next($request);
         $response->headers->set('Referrer-Policy', 'no-referrer-when-downgrade');

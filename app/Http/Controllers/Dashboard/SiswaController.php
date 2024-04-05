@@ -25,6 +25,7 @@ class SiswaController extends Controller
     public function __construct(WilayahApi $wilayahApi)
     {
         $this->getprovinsi = $wilayahApi;
+        $this->getProvinsi = $wilayahApi;
         $this->getKelurahan = $wilayahApi;
     }
     public function index()
@@ -79,7 +80,12 @@ class SiswaController extends Controller
     public function edit(Siswa $siswa)
     {
         $kelass = Kelas::all();
+
         $result_provinsi = $this->getprovinsi->provinsi()->json();
+        if($result_provinsi){
+            $wilayah = $this->getprovinsi->getProvinsi($siswa->slug)->json();
+            dd($wilayah);
+        }
         return view('dashboard.data.siswa.edit',compact('siswa','kelass','result_provinsi'));
     }
     public function update(SiswaData $siswaData, SiswaAction $siswaAction)
@@ -118,8 +124,9 @@ class SiswaController extends Controller
         $provinsi_id = $siswa->provinsi_id;
         $kabupaten_id = $siswa->kabupaten_id;
         $kecamatan_id = $siswa->kecamatan_id;
-
         $response_provinsi = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/provinces.json");
+
+
 
         if ($response_provinsi->successful()) {
             /*
