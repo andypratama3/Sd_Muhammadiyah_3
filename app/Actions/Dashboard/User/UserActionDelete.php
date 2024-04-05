@@ -6,6 +6,7 @@ class UserActionDelete
 {
     public function execute($user)
     {
+       $user->roles()->dettach();
        $user->delete();
 
        return $user;
