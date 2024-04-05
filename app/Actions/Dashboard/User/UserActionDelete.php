@@ -1,5 +1,6 @@
 <?php
-namespace App\Action\Dashboard\User;
+
+namespace App\Actions\Dashboard\User;
 
 class UserActionDelete 
 {
