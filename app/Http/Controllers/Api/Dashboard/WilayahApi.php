@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Dashboard;
 
+use App\Models\Siswa;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
@@ -47,15 +48,25 @@ class WilayahApi extends Controller
     /*
         ! take Function for get Data Wilayah
     */
-    public function getProvinsi(Request $request)
+    public function getProvinsi(Request $request,Siswa $siswa)
     {
+
         /*
           ! take Request data From jquery
         */
-        $provinsi_id = $request->provinsi_id;
+        if($request == null)
+        {
+            $provinsi_id = $siswa->provinsi_id;
+            $kabupaten_id = $siswa->kabupaten_id;
+            $kecamatan_id = $siswa->kecamatan_id;
+
+        }else
+        {
+            $provinsi_id = $request->provinsi_id;
         $kabupaten_id = $request->kabupaten_id;
         $kecamatan_id = $request->kecamatan_id;
 
+        }
         $response_provinsi = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/provinces.json");
 
         if ($response_provinsi->successful()) {

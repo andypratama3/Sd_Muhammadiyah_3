@@ -102,11 +102,12 @@ class PembayaranController extends Controller
     public function exportExcel(Request $request)
     {
         $judulId = $request->judul_id;
+        $judul_pembayaran = JudulPembayaran::where('id', $judulId)->first();
 
         if ($judulId != null) {
-            return Excel::download(new InvoiceExcel($judulId), 'siswa-invoice-excel.xlsx');
+            return Excel::download(new InvoiceExcel($judulId), "siswa-invoice-$judul_pembayaran->name   -excel.xlsx");
         } else {
-            return redirect()->route('dashboard.datamaster.pembayaran.index')->with('error', 'Silahkan Pilih Judul');
+            return redirect()->route('dashboard.datamaster.pembayaran.index')->with('error', 'Silahkan Pilih Kategori Pembayaran =');
         }
     }
 
