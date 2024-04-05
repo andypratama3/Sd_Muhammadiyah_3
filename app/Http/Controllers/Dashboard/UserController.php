@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Models\User;
+use App\Actions\Dashboard\User\UserActionDelete;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -32,7 +33,7 @@ class UserController extends Controller
     {
 
     }
-    public function destroy(DeleteUserAction $deleteUserAction, User $user )
+    public function destroy(UserActionDelete $deleteUserAction, User $user )
     {
         $deleteUserAction->execute($user);
 
