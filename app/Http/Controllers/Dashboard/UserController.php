@@ -36,6 +36,7 @@ class UserController extends Controller
     public function destroy(UserActionDelete $deleteUserAction, User $user )
     {
         $deleteUserAction->execute($user);
+        return redirect()->route('dashboard.pengaturan.user.index')->with('success','Berhasil Menghapus User');
 
     }
 
