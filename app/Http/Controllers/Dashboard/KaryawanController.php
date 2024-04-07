@@ -64,6 +64,16 @@ class KaryawanController extends Controller
         $ActionKaryawan->execute($karyawanData);
         return redirect()->route('dashboard.pengaturan.karyawan.index')->with('success','Kayran Berhasil Di Update');
     }
+    public function getEmailUser(Request $request)
+    {
+        $email = $request->email;
+        $user = User::where('email', $email)->first();
+        if($user){
+            return response()->json(['status','success' => 'Email Bisa Di Gunakan']);
+        }else{
+            return response()->json(['status','error' => 'Email Telah Ada']);
+        }
+    }
     public function destroy(Karyawan $karyawan, karyawanDelete $karyawanDelete)
     {
         try {

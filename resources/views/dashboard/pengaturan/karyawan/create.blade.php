@@ -41,20 +41,14 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Email Karyawan <code>*</code></label>
-                                <input type="text" class="form-control" name="email" value="{{ old('email') }}" placeholder="Email Karyawan">
-                                    {{-- <select class="select2-single-placeholder form-control" name="email" id="select2Single">
-                                    <option selected disabled>Pilih Email Karyawan</option>
-                                    @foreach ($users as $user)
-                                    <option value="{{ $user->email }}">{{ $user->email }}</option>
-                                    @endforeach
-                                </select> --}}
+                                <input type="text" class="form-control" id="email" name="email" value="{{ old('email') }}" placeholder="Email Karyawan">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Nomor Hp <code>*</code></label>
                                 <input type="text" class="form-control" id="phone" name="phone"
-                                    placeholder="Masukkan Email Karyawan" value="{{ old('phone') }}" >
+                                    placeholder="Masukkan Hp Karyawan" value="{{ old('phone') }}" >
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -90,6 +84,25 @@
         $('.select2-single-placeholder').select2({
         placeholder: "Pilih Email Karyawan",
         allowClear: true
+      });
+      $('#email').on('change', function () { 
+          let email = $('#email').val();
+          $.ajax({
+            type: "POST",
+            url: "{{ route('dashboard.pengaturan.karyawan.get.email') }}",
+            data: {
+                email: email
+            },
+            dataType: "dataType",
+            success: function (response) {
+                if(response.success){
+                    // $('#email').addClass('is-');
+                }else{
+                    $('#email').addClass('is-');
+
+                }
+            }
+          });
       });
     });
 </script>

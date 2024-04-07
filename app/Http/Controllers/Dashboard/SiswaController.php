@@ -184,7 +184,7 @@ class SiswaController extends Controller
     }
     public function export_pdf()
     {
-
+        
     }
     public function export_excel()
     {

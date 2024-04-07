@@ -163,6 +163,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::resource('role', RoleController::class, ['names' => 'dashboard.pengaturan.role']);
         Route::resource('user', UserController::class, ['names' => 'dashboard.pengaturan.user']);
         Route::resource('karyawan', KaryawanController::class, ['names' => 'dashboard.pengaturan.karyawan']);
+        Route::post('get/email/karyawan',[KaryawanController::class, 'getEmailUser'])->name('dashboard.pengaturan.get.email');
     });
 
 

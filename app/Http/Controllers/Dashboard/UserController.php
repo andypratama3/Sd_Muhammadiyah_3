@@ -39,5 +39,6 @@ class UserController extends Controller
         return redirect()->route('dashboard.pengaturan.user.index')->with('success','Berhasil Menghapus User');
 
     }
+    
 
 }

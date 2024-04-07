@@ -6,7 +6,9 @@ class UserActionDelete
 {
     public function execute($user)
     {
-       $user->roles()->dettach();
+       dd($user);
+       $karyawan = Karyawan::where('user_id', $user->id);
+       $user->roles()->detach();
        $user->delete();
 
        return $user;
