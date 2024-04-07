@@ -1,11 +1,12 @@
 @extends('layouts.user')
+
 @section('title','Pembayaran')
 
 @section('content')
 
 <section id="posts" class="posts">
     <div class="container" data-aos="fade-up">
-        <div class="card w-100 d-lg-grid" style="margin-top: 80px;">
+        <div class="card w-100 d-lg-grid mt-5">
             <div class="card-header text-center mb-2">
                 <h2>Halaman Pembayaran</h2>
             </div>
@@ -26,7 +27,7 @@
 
 
         {{-- result for search code_payment --}}
-        <div class="card w-100 mt-2 mb-3" id="result_order" style="display: none !important;">
+        <div class="card w-100 mt-2 mb-3 d-none" id="result_order">
             <div class="card-header text-center mb-2">
                 <h5 id="status_result"></h5>
             </div>
