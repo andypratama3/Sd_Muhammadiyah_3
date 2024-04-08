@@ -22,7 +22,7 @@
             <span>News</span>
         </a>
         <div id="news" class="collapse {{ Request::routeIs('dashboard.news.*') ? 'show' : ''  }} }}"
-            aria-labelledby="headingBootstrap" data-parent="#accordionSidebar" style="">
+            aria-labelledby="headingBootstrap" data-parent="#accordionSidebar" >
             <div class="py-2 collapse-inner rounded">
                 <a class="collapse-item {{ Request::routeIs('dashboard.news.berita.*') ? 'active' : ''  }}"
                     href="{{ route('dashboard.news.berita.index') }}">
@@ -53,7 +53,7 @@
             <span>Data Sekolah</span>
         </a>
         <div id="data_sekolah" class="collapse {{ Request::routeIs('dashboard.datasekolah.*') ? 'show' : ''  }} }}"
-            aria-labelledby="headingBootstrap" data-parent="#accordionSidebar" style="">
+            aria-labelledby="headingBootstrap" data-parent="#accordionSidebar" >
             <div class="py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{{ route('dashboard.datasekolah.fasilitas.index') }}">
                     <i class="fas fa-solid fa-warehouse"></i>
@@ -144,7 +144,7 @@
             <span>Pengguna</span>
         </a>
         <div id="collapseBootstrap" class="collapse {{ Request::routeIs('dashboard.pengaturan.*') ? 'show' : ''  }} }}"
-            aria-labelledby="headingBootstrap" data-parent="#accordionSidebar" style="">
+            aria-labelledby="headingBootstrap" data-parent="#accordionSidebar" >
             <div class="py-2 collapse-inner rounded">
                 @role('superadmin')
                 <a class="collapse-item {{ Request::routeIs('dashboard.pengaturan.task.*') ? 'active' : ''  }}"
