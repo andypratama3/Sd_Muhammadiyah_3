@@ -22,6 +22,4 @@
 
 <IfModule mod_headers.c>
     Header set Permissions-Policy "geolocation=self"
-        Header always append X-Frame-Options SAMEORIGIN
-        Header always set Content-Security-Policy: "script-src 'self' 'unsafe-inline' 'unsafe-eval' data: https://www.googletagmanager.com"
 </IfModule>
