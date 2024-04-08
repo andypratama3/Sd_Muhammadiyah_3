@@ -3,6 +3,8 @@
 <script src="{{ asset('asset_dashboard/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
 <script src="{{ asset('asset_dashboard/js/ruang-admin.min.js') }}"></script>
 <script src="{{ asset('asset_dashboard/js/SwetAlert/index.js') }}"></script>
+<script src="https://kit.fontawesome.com/2feee0b69e.js" crossorigin="anonymous"></script>
+
 @stack('js')
 
 <script>
