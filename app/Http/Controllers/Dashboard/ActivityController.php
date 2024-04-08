@@ -8,6 +8,10 @@ use Spatie\Activitylog\Models\Activity;
 
 class ActivityController extends Controller
 {
+    public function __construct()
+    {
+        // $this->middleware('role:superadmin');
+    }
     public function index()
     {
         $limit = 15;

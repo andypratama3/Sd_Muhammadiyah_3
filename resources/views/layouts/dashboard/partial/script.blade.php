@@ -14,7 +14,7 @@
     table.ajax.reload();
     }
     $(document).ready(function () {
-        $(".swal-logout").click(function (e) {
+        $('.navbar').on('click','.swal-logout',function (e) {
         slug = e.target.dataset.id;
         swal({
                 title: 'Yakin ingin keluar?',
