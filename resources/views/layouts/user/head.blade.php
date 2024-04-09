@@ -4,10 +4,6 @@
 <title>SD MUH 3 || @yield('title')</title>
 <meta content="" name="description">
 <meta content="" name="keywords">
-<meta http-equiv="content-security-policy"
-  content="default-src 'none'; script-src 'self';
-  connect-src 'self'; img-src 'self';
-  style-src 'self' 'sha256-CwE3Bg0VYQOIdNAkbB/Btdkhul49qZuwgNCMPgNY5zw=';" />
 
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -34,7 +30,5 @@
 <link href="{{asset('assets/css/variables.css')}}" rel="stylesheet">
 <link href="{{asset('assets/css/main.css')}}" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
-<meta
-  http-equiv="Content-Security-Policy"
-  content="default-src 'self'; img-src https://*; child-src 'none';" />
+
 @stack('css_user')

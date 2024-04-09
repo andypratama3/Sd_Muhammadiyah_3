@@ -4,43 +4,45 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class SecureHeadersMiddleware
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
     private $unwantedHeaderList = [
         'X-Powered-By',
         'Server',
     ];
+
     public function handle($request, Closure $next)
     {
-        // $response = $next($request);
-
-        // /**
-        // foreach ((array) config('headers.remove') as $header) {
-        //     $response->headers->remove(
-        //         key: $header,
-        //     );
-        // }
-        // return $response;
+        // Remove unwanted headers
         $this->removeUnwantedHeaders($this->unwantedHeaderList);
+
+        // Proceed with the request
         $response = $next($request);
+
+        // Set additional secure headers
         $response->headers->set('Referrer-Policy', 'no-referrer-when-downgrade');
         $response->headers->set('X-Content-Type-Options', 'nosniff');
         $response->headers->set('X-XSS-Protection', '1; mode=block');
         $response->headers->set('X-Frame-Options', 'DENY');
-        $response->headers->set('Strict-Transport-Security', 'max-age:31536000; includeSubDomains');
-        $response->headers->set('Content-Security-Policy', "style-src 'self'");
+        $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+
+        // Set Content-Security-Policy
+        $response->headers->set('Content-Security-Policy', "default-src 'self'; style-src 'self';");
+        $response->headers->set('Content-Security-Policy', "style-src 'self' unpkg.com cdn.datatables.net https://fonts.googleapis.com;");
+        $response->headers->set('Content-Security-Policy', "style-src 'self' 'unsafe-inline' unpkg.com cdn.datatables.net cdn.jsdelivr.net cdnjs.cloudflare.com cdn.quilljs.com https://fonts.googleapis.com https://cdn.jsdelivr.net;");
+
+
+
+
+
         return $response;
     }
+
     private function removeUnwantedHeaders($headerList)
     {
-        foreach ($headerList as $header)
+        foreach ($headerList as $header) {
             header_remove($header);
+        }
     }
 }
