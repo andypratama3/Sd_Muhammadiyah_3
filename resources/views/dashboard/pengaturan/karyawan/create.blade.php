@@ -85,22 +85,30 @@
         placeholder: "Pilih Email Karyawan",
         allowClear: true
       });
-      $('#email').on('change', function () { 
+      $('#email').on('input', function () {
           let email = $('#email').val();
+          $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
           $.ajax({
             type: "POST",
-            url: "{{ route('dashboard.pengaturan.karyawan.get.email') }}",
+            url: "{{ route('dashboard.pengaturan.get.email') }}",
             data: {
                 email: email
             },
             dataType: "dataType",
+            cache: false,
             success: function (response) {
-                if(response.success){
-                    // $('#email').addClass('is-');
-                }else{
-                    $('#email').addClass('is-');
+                console.log(response);
 
-                }
+                // if(response.status == 'success'){
+                //    $('#email').addClass('is-invalid');
+
+                // }else{
+                //     // email.addClass('is-invalid');
+                // }
             }
           });
       });

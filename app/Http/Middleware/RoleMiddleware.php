@@ -16,8 +16,6 @@ class RoleMiddleware
     {
         if (! $request->user()->hasRole($role)) {
             abort(404);
-        }else {
-            return Request::session()->get('url.intended') ?? route('artikel.show');
         }
         if ($permission !== null && ! $request->user()->can($permission)) {
             abort(404);

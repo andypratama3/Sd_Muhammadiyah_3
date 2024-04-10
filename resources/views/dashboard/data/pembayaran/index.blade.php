@@ -3,6 +3,9 @@
 @push('css')
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
+    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.bootstrap5.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.1/css/responsive.bootstrap5.css"> --}}
     <link rel="stylesheet" type="text/css"
         href="https://cdn.datatables.net/v/dt/jqc-1.12.3/dt-1.10.16/b-1.4.2/b-html5-1.4.2/datatables.min.css" />
     <style>
@@ -48,12 +51,12 @@
 
                     </div>
                     <div class="table-responsive">
-                        <table class="table mt-4" id="invoice_table">
+                        <table class="table mt-4 w-100" id="invoice_table" >
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Judul Pembayaran</th>
-                                    <th>Nama Siswa</th>
+                                    <th>Kategori</th>
+                                    <th>Nama</th>
                                     <th>Kelas</th>
                                     <th>Order ID</th>
                                     <th>Total</th>
@@ -69,7 +72,7 @@
     </div>
     <input type="hidden" id="invoice_data" value="{{ route('dashboard.datamaster.get.records') }}">
     @push('js')
-        <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.0.js"></script>
+        {{-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.0.js"></script> --}}
         <script type="text/javascript" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
         <script type="text/javascript"
             src="https://cdn.datatables.net/v/dt/jqc-1.12.3/dt-1.10.16/b-1.4.2/b-html5-1.4.2/datatables.min.js"></script>
@@ -81,12 +84,12 @@
                     table.ajax.reload();
                 }
                 $('#invoice_table').DataTable({
+
                     ordering: true,
                     pagination: true,
                     deferRender: true,
                     serverSide: true,
                     responsive: true,
-
                     processing: true,
                     pageLength: 100,
                     ajax: {

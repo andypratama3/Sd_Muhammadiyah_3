@@ -69,9 +69,10 @@ class KaryawanController extends Controller
         $email = $request->email;
         $user = User::where('email', $email)->first();
         if($user){
-            return response()->json(['status','success' => 'Email Bisa Di Gunakan']);
+            return response()->json(['status','success' => 'Email Telah Ada']);
         }else{
-            return response()->json(['status','error' => 'Email Telah Ada']);
+            return response()->json(['status','error' => 'Email Bisa Di Gunakan']);
+
         }
     }
     public function destroy(Karyawan $karyawan, karyawanDelete $karyawanDelete)
