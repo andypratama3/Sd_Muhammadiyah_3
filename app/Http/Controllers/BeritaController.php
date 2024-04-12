@@ -8,7 +8,7 @@ class BeritaController extends Controller
 {
     public function index()
     {
-        $beritas = Berita::orderBy('created_at', 'asc')->get();
+        $beritas = Berita::orderBy('created_at', 'asc')->take(10)->get();
         return view('berita.index', compact('beritas'));
     }
     public function show($slug)

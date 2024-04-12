@@ -127,9 +127,8 @@
             </div>
           </div>
         </div>
-        <!-- Pie Chart -->
         <div class="col-xl-4 col-lg-5">
-          <div class="card mb-4">
+          <div class="card ">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
               <h6 class="m-0 font-weight-bold text-primary text-center">5 Top Pengunjung Artikel / Click</h6>
             </div>
@@ -176,7 +175,7 @@
           </div>
         </div>
         <!-- Invoice Example -->
-        <div class="col-xl-8 col-lg-7 mb-4">
+        <div class="col-xl-8 col-lg-7 ">
           <div class="card">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
               <h6 class="m-0 font-weight-bold text-primary">Invoice</h6>
@@ -266,9 +265,6 @@
       <!--Row-->
 @push('js')
 <script src="{{ $siswaChart->cdn() }}"></script>
-
 {{ $siswaChart->script() }}
-
-
 @endpush
 @endsection

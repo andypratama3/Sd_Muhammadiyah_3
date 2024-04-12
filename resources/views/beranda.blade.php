@@ -16,7 +16,7 @@
                                 style="background-image: url({{ url('storage/img/berita/'.$berita->foto)  }})">
                                 <div class="img-bg-inner">
                                     <h2>{{ $berita->judul }}</h2>
-                                    <p>{{ $berita->desc }}</p>
+                                    <p>{{ Str::substr($berita->desc, 0, 40) }}</p>
                                 </div>
                             </a>
                         </div>
@@ -32,7 +32,7 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
 </section>
 <!-- End Hero Slider Section -->

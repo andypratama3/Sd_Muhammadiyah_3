@@ -16,7 +16,7 @@ class BerandaController extends Controller
      */
     public function __invoke()
     {
-        $beritas = Berita::select(['judul', 'desc', 'foto', 'slug'])->latest()->get();
+        $beritas = Berita::select(['judul', 'desc', 'foto', 'slug'])->latest()->take(5)->get();
         $siswas = Siswa::count();
         $guru = Guru::count();
         $fasilitas = Fasilitas::count();
@@ -29,7 +29,7 @@ class BerandaController extends Controller
             'esktrakurikuler',
             'fasilitas',
             'kelas_name',
-            
+
         ));
     }
 }
