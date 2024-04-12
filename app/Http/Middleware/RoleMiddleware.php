@@ -20,7 +20,7 @@ class RoleMiddleware
         if ($permission !== null && ! $request->user()->can($permission)) {
             abort(404);
         }
-
+        
         return $next($request);
     }
 }

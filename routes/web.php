@@ -6,6 +6,7 @@ use App\Models\JudulPembayaran;
 use App\Models\TenagaPendidikan;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GuruController;
+use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\KontakController;
 use App\Http\Controllers\ArtikelController;
@@ -60,7 +61,7 @@ Route::group(['prefix' => '/'], function () {
     Route::get('/', BerandaController::class)->name('index');
 
     // Berita
-    Route::get('berita', [DetailBeritaController::class, 'index'])->name('berita.index');
+    Route::get('berita', [BeritaController::class, 'index'])->name('berita.index');
     Route::get('berita/{slug}', [DetailBeritaController::class, 'show'])->name('berita.show');
 
     //guru

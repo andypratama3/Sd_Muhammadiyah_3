@@ -77,11 +77,7 @@ class KaryawanController extends Controller
     }
     public function destroy(Karyawan $karyawan, karyawanDelete $karyawanDelete)
     {
-        try {
-            $karyawanDelete->execute($karyawan);
-        } catch (\Throwable $th) {
-            abort(404, $th);
-        }
+        $karyawanDelete->execute($karyawan);
         return redirect()->route('dashboard.pengaturan.karyawan.index')->with('success','Berhasil Menghapus Karyawan!');
 
     }

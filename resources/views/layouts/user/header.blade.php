@@ -34,6 +34,7 @@
                  <li><a href="{{ route('kontal.index') }}">Kontak</a></li>
 
                  <li><a href="{{ route('artikel.index') }}">Artikel</a></li>
+                 <li><a href="{{ route('berita.index') }}">Berita</a></li>
                  @auth
                     <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
                  @else
