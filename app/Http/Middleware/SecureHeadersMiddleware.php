@@ -27,14 +27,10 @@ class SecureHeadersMiddleware
         $response->headers->set('X-Frame-Options', 'DENY');
         $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
 
-        // Set Content-Security-Policy
-        $response->headers->set('Content-Security-Policy', "default-src 'self'; style-src 'self';");
-        $response->headers->set('Content-Security-Policy', "style-src 'self' unpkg.com cdn.datatables.net https://fonts.googleapis.com;");
-        $response->headers->set('Content-Security-Policy', "style-src 'self' 'unsafe-inline' unpkg.com cdn.datatables.net cdn.jsdelivr.net cdnjs.cloudflare.com cdn.quilljs.com https://fonts.googleapis.com https://cdn.jsdelivr.net;");
-
-
-
-
+              // Set Content-Security-Policy
+              $response->headers->set('Content-Security-Policy', "default-src 'self'; style-src 'self';");
+              $response->headers->set('Content-Security-Policy', "style-src 'self' unpkg.com cdn.datatables.net;");
+              $response->headers->set('Content-Security-Policy', "style-src 'self' 'unsafe-inline' unpkg.com cdn.datatables.net cdn.jsdelivr.net cdnjs.cloudflare.com cdn.quilljs.com;");
 
         return $response;
     }

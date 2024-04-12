@@ -21,6 +21,5 @@
 </IfModule>
 
 <IfModule mod_headers.c>
-    Header set Content-Security-Policy "default-src 'self';"
     Header set Permissions-Policy "geolocation=self"
 </IfModule>
