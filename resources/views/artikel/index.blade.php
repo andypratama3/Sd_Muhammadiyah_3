@@ -30,7 +30,7 @@
                         <div class="name mt-4">
                             <h3 class="author">Kategori : </h3>
                             @foreach ($artikel->categorys as $category)
-                            <span class="author">{{ $category->name }}</span>
+                            <span class="author badge bg-primary">{{ $category->name }}</span>
                             @endforeach
                         </div>
                     </div>

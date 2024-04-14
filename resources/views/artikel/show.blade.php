@@ -39,7 +39,7 @@
                             @foreach ($comment->users as $user)
                             <div class="flex-shrink-0">
                                 <div class="avatar avatar-sm rounded-circle">
-                                    <img class="avatar-img" src="{{ asset('storgae/app/public/img/user', $user->avatar) }}" alt="" class="img-fluid">
+                                    <img class="avatar-img" src="{{ asset('storage/img/profile/'. $user->avatar) }}" alt="" class="img-fluid">
                                 </div>
                             </div>
                             <div class="flex-grow-1 ms-2 ms-sm-3">

@@ -1,5 +1,5 @@
  <!-- ======= Header ======= -->
- <header id="header" class="header d-flex align-items-center fixed-top">
+ <header id="header" class="header d-flex align-items-center">
  {{-- <header id="header" class="header d-flex align-items-center"> --}}
      <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
 

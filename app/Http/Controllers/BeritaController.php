@@ -6,9 +6,13 @@ use Illuminate\Http\Request;
 use App\Models\Berita;
 class BeritaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $beritas = Berita::orderBy('created_at', 'asc')->take(10)->get();
+        $beritas = Berita::orderBy('created_at', 'desc')->paginate(9);
+
+        if($request->ajax()) {
+            return view('berita.load', compact('beritas'));
+        }
         return view('berita.index', compact('beritas'));
     }
     public function show($slug)

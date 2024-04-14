@@ -15,6 +15,8 @@ class CommentArtikelController extends Controller
     public function store(CommentData $commentData, CommentAction $action)
     {
         if(Auth::check()){
+            session(['url.intended' => url()->previous()]);
+
             $result = $action->execute($commentData);
             if($result){
                 return response()->json(['success' => 'Berhasil Menambahkana Komentar']);

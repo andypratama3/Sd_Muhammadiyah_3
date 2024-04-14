@@ -57,6 +57,9 @@ use App\Http\Controllers\Dashboard\TenagaPendidikanController as DashboardTenaga
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+// Route::get('/loading-data', function () {
+//     return view('layouts.user.loading-data');
+// });
 Route::group(['prefix' => '/'], function () {
     Route::get('/', BerandaController::class)->name('index');
 
