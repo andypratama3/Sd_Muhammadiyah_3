@@ -58,6 +58,7 @@
                     </div>
                     @endif
                     @endforeach
+                    @include('layouts.user.loading-data')
                 </div>
             </div>
             <!-- Trending Section -->
