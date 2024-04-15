@@ -102,7 +102,7 @@ Route::group(['prefix' => '/'], function () {
 
 
 //users after login
-Route::group(['prefix' => 'artikel', 'middleware' => ['auth']], function () {
+Route::group(['prefix' => 'artikel', 'middleware' => ['auth:basic']], function () {
     //CommentArtikel
     Route::resource('comment', CommentArtikelController::class, ['names' => 'comment']);
     Route::post('like', [LikeArtikelController::class, 'like'])->name('like.comment');

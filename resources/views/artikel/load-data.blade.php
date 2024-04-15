@@ -6,8 +6,8 @@
         <a href="{{ route('artikel.show', $artikel->slug) }}">
             {{-- <img src="{{ asset('storage/app/public/img/artikel/'. $artikel->image) }}" alt=""
             class="img-fluid"> --}}
-            <img src="{{ asset('storage/img/artikel/Berita_a_20240210170052.jpg') }}" alt=""
-                class="img-fluid">
+            <img src="{{ asset('storage/img/berita/Berita_test_20240412172357.jpg') }}" alt=""
+                                    class="img-fluid">
         </a>
         <div class="post-meta"><span class="date">Di Posting</span>
             <span class="mx-1">&bullet;</span>

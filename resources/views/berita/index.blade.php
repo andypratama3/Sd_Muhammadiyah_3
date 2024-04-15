@@ -72,6 +72,7 @@
                     $.ajax({
                         type: "GET",
                         url: url,
+                        cache: false,
                         data: {
                             page: page
                         },
