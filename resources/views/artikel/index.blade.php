@@ -7,7 +7,7 @@
     <div class="container" data-aos="fade-up">
         <div class="row g-4">
             <div class="col-lg-4">
-                <div class="post-entry-1 lg">
+                <div class="post-entry-1-lg">
                     @foreach ($artikels_trending as $artikel)
                     <a href="{{ route('artikel.show', $artikel->slug) }}">
                         {{-- <img src="{{ asset('storage/img/artikel/'. $artikel->image) }}" alt="" class="img-fluid">
@@ -37,8 +37,8 @@
                     @endforeach
                 </div>
             </div>
-            <div class="col-lg-6">
-                <div class="row g-5">
+            <div class="col-lg-6" id="col-lg-6">
+                <div class="row g-5" id="target">
                     @foreach ($artikel_not_trending as $artikel)
                     @if (!$artikels_trending->contains('id', $artikel->id))
                     <div class="col-lg-4 border-start custom-border">
@@ -120,28 +120,44 @@
     </div>
 </section> <!-- End Post Grid Section -->
 @push('js_user')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
-        var page = 1;
-        var url = "{{ route('artikel.index') }}";
-
-        $('#load-more').click(function () {
-            page++;
-            $.ajax({
-                url: url + '?page=' + page,
-                type: 'GET',
-                dataType: 'json',
-                success: function (response) {
-                    if (response.data.length > 0) {
-                        $.each(response.data, function (index, artikel) {
-                            // Append the new artikel data to your HTML
-                        });
-                    } else {
-                        $('#load-more').hide();
-                    }
+        let page = 1;
+        const url = "{{ route('artikel.index') }}";
+        const target = $('#target');
+        let itemsLoaded = 0;
+        let loading = $('.loading-data');
+        loading.hide();
+        function checkInternetConnection() {
+            return navigator.onLine;
+        }
+        $(window).scroll(function () {
+            let scrollPercentage = ($(window).scrollTop() / ($(document).height() - $(window)
+            .height())) * 100;
+            if (scrollPercentage >= 60 && itemsLoaded % 3 === 0) {
+                if (checkInternetConnection()) {
+                    loading.show();
+                    page++;
+                    $.ajax({
+                        type: "GET",
+                        url: url,
+                        data: {
+                            page: page
+                        },
+                        success: function (data) {
+                            target.append(data);
+                        },
+                        complete: function () {
+                            loading.hide();
+                        }
+                    });
                 }
-            });
+            }
+        });
+        $(document).on('DOMNodeInserted', function (e) {
+            if ($(e.target).hasClass('col-md-6')) {
+                itemsLoaded++;
+            }
         });
     });
 </script>

@@ -65,7 +65,7 @@
         $(window).scroll(function () {
             let scrollPercentage = ($(window).scrollTop() / ($(document).height() - $(window)
             .height())) * 100;
-            if (scrollPercentage >= 60 && itemsLoaded % 4 === 0) {
+            if (scrollPercentage >= 60 && itemsLoaded % 3 === 0) {
                 if (checkInternetConnection()) {
                     loading.show();
                     page++;
@@ -77,7 +77,6 @@
                         },
                         success: function (data) {
                             target.append(data);
-                            // loading.hide();
                         },
                         complete: function () {
                             loading.hide();

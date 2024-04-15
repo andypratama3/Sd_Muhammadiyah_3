@@ -8,15 +8,20 @@ use Illuminate\Http\Request;
 
 class ArtikelController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $no = 0;
-        $limit = 25;
+        $limit = 10;
         $maxClicks = Artikel::max('jumlah_klik');
         $artikels_trending = Artikel::where('jumlah_klik', $maxClicks)->select('id','name','artikel','image','created_at','slug')->get();
         $artikel_not_trending = Artikel::select('id','name','artikel','image','created_at','slug')->orderBy('created_at','desc')->paginate($limit);
+        // dd($artikel_not_trending->count());
         $latest_artikel = Artikel::orderBy('created_at', 'desc');
         $artikel_trending_list = Artikel::orderBy('jumlah_klik')->take(20)->get();
+
+        if($request->ajax()){
+            return view('artikel.load-data', compact('no','artikels_trending','artikel_not_trending','artikel_trending_list', 'maxClicks','latest_artikel'));
+        }
 
         return view('artikel.index', compact('no','artikels_trending','artikel_not_trending','artikel_trending_list', 'maxClicks','latest_artikel'));
     }
