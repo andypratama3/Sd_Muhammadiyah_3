@@ -1,7 +1,13 @@
 @extends('layouts.user')
 @section('title','Detail')
+@push('css_user')
+    <style>
+        img{
+            border-radius: 10px;
+        }
+    </style>
+@endpush
 @section('content')
-
 <section class="single-post-content" style="margin-top: 94px;">
     <div class="container">
         <div class="row">
@@ -15,7 +21,6 @@
                             </figcaption>
                         </figure>
                     <h1 class="mb-2">{{ $berita->judul }}</h1>
-                    <p>{{ $berita->desc }}.</p>
                 </div>
             </div>
             <div class="col-md-3">

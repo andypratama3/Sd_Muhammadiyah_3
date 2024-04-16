@@ -65,7 +65,7 @@ Route::group(['prefix' => '/'], function () {
 
     // Berita
     Route::get('berita', [BeritaController::class, 'index'])->name('berita.index');
-    Route::get('berita/{slug}', [DetailBeritaController::class, 'show'])->name('berita.show');
+    Route::get('berita/{slug}', [BeritaController::class, 'show'])->name('berita.show');
 
     //guru
     Route::get('guru', [GuruController::class, 'index'])->name('guru.index');
@@ -102,7 +102,7 @@ Route::group(['prefix' => '/'], function () {
 
 
 //users after login
-Route::group(['prefix' => 'artikel', 'middleware' => ['auth:basic']], function () {
+Route::group(['prefix' => 'artikel', 'middleware' => ['auth.basic']], function () {
     //CommentArtikel
     Route::resource('comment', CommentArtikelController::class, ['names' => 'comment']);
     Route::post('like', [LikeArtikelController::class, 'like'])->name('like.comment');

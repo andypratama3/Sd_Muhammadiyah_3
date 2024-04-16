@@ -1,6 +1,12 @@
 @extends('layouts.user')
 @section('title','Artikel')
-
+@push('css_user')
+    <style>
+        img{
+            border-radius: 20px;
+        }
+    </style>
+@endpush
 @section('content')
 
 <section id="posts" class="posts" style="margin-top: 95px;">
@@ -15,7 +21,7 @@
                         <img src="{{ asset('storage/img/berita/Berita_test_20240412172357.jpg') }}" alt=""
                         class="img-fluid">
                     </a>
-                    <div class="post-meta"><span class="date">Di Posting</span> <span class="mx-1">&bullet;</span>
+                    <div class="post-meta mt-2"><span class="date">Di Posting</span> <span class="mx-1">&bullet;</span>
                         <span>{{ $artikel->created_at->formatLocalized('%A %d %B %Y') }}</span></div>
                     <h2><a href="{{ route('artikel.show', $artikel->slug) }}">{{ $artikel->name }}</a></h2>
                     @php

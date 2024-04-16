@@ -14,6 +14,7 @@
         height: 250px;
         border-radius: 20px;
     }
+
 </style>
 @endpush
 @section('content')

@@ -16,7 +16,6 @@ class CommentArtikelController extends Controller
     {
         if(Auth::check()){
             session(['url.intended' => url()->previous()]);
-
             $result = $action->execute($commentData);
             if($result){
                 return response()->json(['success' => 'Berhasil Menambahkana Komentar']);

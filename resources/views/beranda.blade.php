@@ -12,8 +12,10 @@
                     <div class="swiper-wrapper">
                         @foreach ($beritas as $berita)
                         <div class="swiper-slide">
-                            <a href="{{ route('berita.show',$berita->slug) }}" class="img-bg d-flex align-items-end"
-                                style="background-image: url({{ url('storage/img/berita/'.$berita->foto)  }})">
+                            {{-- <a href="{{ route('berita.show',$berita->slug) }}" class="img-bg d-flex align-items-end"
+                                style="background-image: url({{ url('storage/img/berita/'.$berita->foto)  }})"> --}}
+                                <a href="{{ route('berita.show',$berita->slug) }}" class="img-bg d-flex align-items-end"
+                                    style="background-image: url({{ url('storage/img/berita/Berita_test_20240412172357.jpg')  }})">
                                 <div class="img-bg-inner">
                                     <h2>{{ $berita->judul }}</h2>
                                     <p>{{ Str::substr($berita->desc, 0, 40) }}</p>

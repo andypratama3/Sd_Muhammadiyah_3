@@ -8,6 +8,8 @@
         .unlike{
             color: #c2aeae;
         }
+        img{
+            border-radius: 10px;}
     </style>
 @endpush
 @section('content')
@@ -26,7 +28,7 @@
                     <h1 class="mb-5">{{ $artikel->name }}</h1>
                     <figure class="my-4">
                         {{-- <img src="{{ asset('storage/img/artikel/'. $artikel->image) }}" alt="" class="img-fluid"> --}}
-                        <img src="{{ asset('storage/img/artikel/Berita_a_20240210170052.jpg') }}" alt="" class="img-fluid">
+                        <img src="{{ asset('storage/img/berita/Berita_test_20240412172357.jpg') }}" alt="" class="img-fluid">
                     </figure>
                     <p><span class="firstcharacter">{{ $firstCharacter }}</span>{{ $contentWithoutFirstCharacter }}</p>
                 </div>
