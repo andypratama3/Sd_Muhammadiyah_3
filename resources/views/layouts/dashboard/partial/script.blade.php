@@ -36,22 +36,22 @@
         $('.alert').remove();
     }, 4000);
 
-        $(".delete").click(function (e) {
-            slug = e.target.dataset.id;
-            swal({
-                    title: 'Anda yakin?',
-                    text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
-                    icon: 'warning',
-                    buttons: true,
-                    dangerMode: true,
-                })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        $(`#delete-${slug}`).submit();
-                    } else {
-                        // Do Nothing
-                    }
-                });
+    $(".table").on('click','.delete',function (e) {
+        slug = e.target.dataset.id;
+        swal({
+                title: 'Anda yakin?',
+                text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
+                icon: 'warning',
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $(`#delete-${slug}`).submit();
+                } else {
+                    // Do Nothing
+                }
+            });
         });
     });
     getActivity();
@@ -63,7 +63,6 @@
 
             success: function (response) {
                 const activitys = response.activitys;
-
                 if(response.activitys_count > 9){
                     $('#activity_count').text(9 + '+');
                 }else{
@@ -78,6 +77,19 @@
                     if(activitys === 'Menambahkan'){
                         activity_icon.className = 'fas fa-plus text-white';
                     }
+                    if(activitys === 'Mengubah'){
+                        activity_icon.className = 'fas fa-edit text-white';
+                    }
+                    if(activitys === 'Menghapus'){
+                        activity_icon.className = 'fas fa-trash text-white';
+                    }
+                    if(activitys === 'Mengaktifkan'){
+                        activity_icon.className = 'fas fa-toggle-on text-white';
+                    }
+                    if(activitys === 'Menonaktifkan'){
+                        activity_icon.className = 'fas fa-toggle-off text-white';
+                    }
+
                 });
 
             }

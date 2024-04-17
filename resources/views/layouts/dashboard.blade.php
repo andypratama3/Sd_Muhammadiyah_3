@@ -14,7 +14,6 @@
                 <!-- Sidebar -->
                 @include('layouts.dashboard.partial.sidebar')
 
-
                 <!-- Content -->
                 <div class="container-fluid" id="container-wrapper">
                     @yield('content')
