@@ -26,7 +26,7 @@
                         <li>
 
                             <a href="single-post.html" class="d-flex align-items-center">
-                                <img src="{{asset('assets/img/post-sq-1.jpg')}}" alt="" class="img-fluid me-3">
+                                <img src="{{asset('assets/img/SD3_logo.png')}}" alt="" class="img-fluid me-3">
                                 <div>
                                     <div class="post-meta d-block"><span class="date">Culture</span> <span
                                             class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
@@ -37,7 +37,7 @@
 
                         <li>
                             <a href="single-post.html" class="d-flex align-items-center">
-                                <img src="{{asset('assets/img/post-sq-2.jpg')}}" alt="" class="img-fluid me-3">
+                                <img src="{{asset('assets/img/SD3_logo.png')}}" alt="" class="img-fluid me-3">
                                 <div>
                                     <div class="post-meta d-block"><span class="date">Culture</span> <span
                                             class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
@@ -49,7 +49,7 @@
 
                         <li>
                             <a href="single-post.html" class="d-flex align-items-center">
-                                <img src="{{asset('assets/img/post-sq-3.jpg')}}" alt="" class="img-fluid me-3">
+                                <img src="{{asset('assets/img/SD3_logo.png')}}" alt="" class="img-fluid me-3">
                                 <div>
                                     <div class="post-meta d-block"><span class="date">Culture</span> <span
                                             class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
@@ -60,7 +60,7 @@
 
                         <li>
                             <a href="single-post.html" class="d-flex align-items-center">
-                                <img src="{{asset('assets/img/post-sq-4.jpg')}}" alt="" class="img-fluid me-3">
+                                <img src="{{asset('assets/img/SD3_logo.png')}}" alt="" class="img-fluid me-3">
                                 <div>
                                     <div class="post-meta d-block"><span class="date">Culture</span> <span
                                             class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
