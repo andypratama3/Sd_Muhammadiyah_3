@@ -1,7 +1,6 @@
 @extends('layouts.user')
 @section('title','Beranda')
 
-
 @section('content')
 <!-- ======= Hero Slider Section ======= -->
 <section id="hero-slider" class="hero-slider" style="margin-top: 94px;">
@@ -15,7 +14,7 @@
                             {{-- <a href="{{ route('berita.show',$berita->slug) }}" class="img-bg d-flex align-items-end"
                                 style="background-image: url({{ url('storage/img/berita/'.$berita->foto)  }})"> --}}
                                 <a href="{{ route('berita.show',$berita->slug) }}" class="img-bg d-flex align-items-end"
-                                    style="background-image: url({{ url('storage/img/berita/Berita_test_20240412172357.jpg')  }})">
+                                    style="background-image: url({{ url('storage/img/berita/Berita_test_20240412172357.jpg')  }}); border-radius: 10px;">
                                 <div class="img-bg-inner">
                                     <h2>{{ $berita->judul }}</h2>
                                     <p>{{ Str::substr($berita->desc, 0, 40) }}</p>
