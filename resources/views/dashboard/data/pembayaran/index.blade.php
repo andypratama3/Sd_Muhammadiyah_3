@@ -155,10 +155,10 @@
                             if (data === 'pending') {
                                 return '<h5 style="color: black;"><span class="badge bg-warning"><i class="fa-solid fa-clock"></i> ' +
                                     data + '</span></h5>';
-                            } else if (data === 'berhasil') {
+                            } else if (data === 'Berhasil') {
                                 return '<h5 style="color: black;"><span class="badge bg-success"><i class="fa-solid fa-circle-check"></i> ' +
                                     data + '</span></h5>';
-                            } else if (data === 'failed') {
+                            } else if (data === 'Expired') {
                                 return '<h5 style="color: black;"><span class="badge bg-danger"><i class="fa-solid fa-xmark"></i> ' +
                                     data + '</span></h5>';
                             } else {

@@ -15,7 +15,7 @@ class IpaymuPaymentApi extends Controller
             ! Payment Callback From Ipaymu And Update data at database
         */
         $trx_id = $request->trx_id;
-        $sessionID    = $request->id;
+        $sessionID    = $request->sid;
         $status    = $request->status;
         $pembayaran = Pembayaran::where('sessionID', $sessionID)->first();
 
