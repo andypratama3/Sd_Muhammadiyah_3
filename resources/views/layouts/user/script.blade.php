@@ -12,12 +12,15 @@
   <script>
       $(document).ready(function () {
         $(window).on('load', function() {
+
             setTimeout(() => {
                 $('.loading-screen').fadeOut(1000);
                 $('#header').addClass('fixed-top');
             }, 800);
         });
+        function checkInternetConnection() {
+            return navigator.onLine;
+        }
       });
-
 
 </script>

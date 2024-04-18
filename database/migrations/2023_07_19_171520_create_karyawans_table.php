@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignUuid('user_id')->nullable()->references('id')->on('users')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
-        });
+        }); 
     }
 
     /**

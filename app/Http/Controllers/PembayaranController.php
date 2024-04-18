@@ -19,13 +19,14 @@ class PembayaranController extends Controller
         $siswa = $pembayaran->siswa->name;
 
         if ($pembayaran) {
-            // Return a JSON response with a 200 status code and the data
+
             return response()->json(
                 [
                     'data' => $pembayaran,
                     'siswa' => $siswa,
                     'kelas' => $kelas,
-                    'message' => 'Berhasil Mendapatkan Order ID'
+                    'message' => 'Berhasil Mendapatkan Order ID',
+                    'status' => 'success',
                 ], 200);
         } else {
 
@@ -35,7 +36,8 @@ class PembayaranController extends Controller
     public function pay(Request $request)
     {
         $order_id = $request->order_id;
-        $pembayaran = Pembayaran::where('order_id', $order_id)->first();
+        $pembayaran = Pembayaran::with('judul')->where('order_id', $order_id)->first();
+
         $gross_amount = str_replace('.', '', $pembayaran->gross_amount);
         // SAMPLE HIT API iPaymu v2 PHP
         $va           = '0000002217160075'; //get on iPaymu dashboard
@@ -47,7 +49,7 @@ class PembayaranController extends Controller
         $method       = 'POST'; //method
 
         //Request Body//
-        $body['product']    = array($pembayaran->name);
+        $body['product']    = array($pembayaran->judul->name);
         $body['price']      = array($gross_amount);
         $body['image']      = array(asset('assets/img/SD3_logo.png'));
         $body['qty']        = array('1');
@@ -88,6 +90,7 @@ class PembayaranController extends Controller
         $ret = curl_exec($ch);
 
         $response = json_decode($ret, true);
+        // dd($response);
         if (isset($response['Data']['Url']) && isset($response['Data']['SessionID'])) {
             $pembayaran->SessionID = $response['Data']['SessionID'];
             $pembayaran->Url = $response['Data']['Url'];

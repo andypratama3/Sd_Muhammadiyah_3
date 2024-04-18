@@ -6,7 +6,7 @@ class karyawanDelete
 {
     public function execute($karyawan)
     {
-        $karyawan->user()->detach();
+        $karyawan->user()->delete();
         $karyawan->delete();
         return $karyawan;
     }

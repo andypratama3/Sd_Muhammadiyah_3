@@ -30,7 +30,7 @@ class KelasController extends Controller
     public function store(KelasData $kelasData, KelasAction $kelasAction)
     {
         $kelasAction->execute($kelasData);
-        return redirect()->route('dashboard.datasekolah.kelas.index')->with('succes','Berhasil Menambahkan Kelas');
+        return redirect()->route('dashboard.datasekolah.kelas.index')->with('success','Berhasil Menambahkan Kelas');
     }
     public function edit($slug)
     {

@@ -36,19 +36,25 @@ class SiswaController extends Controller
     public function data_table(Request $request)
     {
         $siswa = Siswa::with('kelas')->select(['id','name','nisn','jk','foto','slug']);
-        if ($request->id) {
-            $siswa = $siswa->whereHas('siswa_kelas', function ($siswa) use ($request) {
-                $siswa->where('kelas_id', $request->id);
+
+        if ($request->kelas) {
+            $siswa = $siswa->whereHas('kelas', function ($query) use ($request) {
+                $query->where('kelas_id', $request->kelas);
+                if($request->category_kelas){
+                    $query->where('siswa_kelas.category_kelas', $request->category_kelas);
+                }
             });
         }
+
         return DataTables::of($siswa)
                 ->addColumn('kelas.name', function ($kelas) {
                     $kelas_name = $kelas->kelas->pluck('name');
                     return $kelas_name;
                 })
                 ->addColumn('kelas.category', function ($kelas) {
-                    $category_name = $kelas['kelas'][0]['pivot']['category_kelas'];
-                    return $category_name;
+                    return $kelas->kelas->pluck('pivot.category_kelas')->implode(', ');
+
+                    // return $category_name;
                 })
                 ->addColumn('options', function ($row){
                     return '
@@ -200,7 +206,7 @@ class SiswaController extends Controller
         } elseif ($kelas_id != null) {
             return Excel::download(new SiswaExportKelas($kelas_id, null), 'siswa-kelas-excel.xlsx');
         } else {
-            return response()->json(['error', 'Silahkan Pilih Kelas Atau Kategori Kelas']);
+            return redirect()->route('dashboard.datamaster.siswa.index')->with('error', 'Silahkan Pilih Kelas Atau Kategori Kelas');
         }
     }
 

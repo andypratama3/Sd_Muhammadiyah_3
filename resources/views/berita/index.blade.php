@@ -20,7 +20,7 @@
 @section('content')
 <section class="ftco-section bg-light ftco-no-pt" style="margin-top: 100px;">
     <div class="container-xl">
-        <div class="row justify-content-center mb-5">
+        <div class="row justify-content-center">
             <div class="col-md-7 heading-section text-center aos-init aos-animate" data-aos="fade-up"
                 data-aos-duration="1000">
                 <h2>Berita</h2>

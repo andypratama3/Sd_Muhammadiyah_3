@@ -12,22 +12,35 @@ class InvoiceExcel implements FromCollection, WithHeadings
 {
     protected $judulId;
 
-    public function __construct($judulId)
+    public function __construct($judulId,$kelas,$category_kelas)
     {
         $this->judulId = $judulId;
+        $this->kelas = $kelas;
+        $this->category_kelas = $category_kelas;
     }
 
     public function collection()
     {
-        return Pembayaran::with('siswa', 'kelas')->where('judul_id', $this->judulId)->get()->map(function ($item) {
-            $grossAmount = "Rp " . number_format($item->gross_amount, 0, ',', '.');
+        $query = Pembayaran::with(['siswa', 'kelas'])
+            ->where('judul_id', $this->judulId);
+
+        if ($this->kelas) {
+            $query->where('kelas_id', $this->kelas);
+        }
+
+        if ($this->category_kelas) {
+            $query->where('category_kelas', $this->category_kelas);
+        }
+
+        return $query->get()->map(function ($item) {
+            $grossAmount = number_format($item->gross_amount, 0, ',', '.');
 
             return [
                 $item->judul->name,
                 $item->siswa->name,
                 $item->kelas->name,
                 $item->category_kelas,
-                $grossAmount,
+                "Rp {$grossAmount}",
                 $item->status,
             ];
         });

@@ -135,9 +135,6 @@
         let itemsLoaded = 0;
         let loading = $('.loading-data');
         loading.hide();
-        function checkInternetConnection() {
-            return navigator.onLine;
-        }
         $(window).scroll(function () {
             let scrollPercentage = ($(window).scrollTop() / ($(document).height() - $(window)
             .height())) * 100;

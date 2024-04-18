@@ -16,7 +16,7 @@
                     <div class="col-md-2 ">
                         <div class="form-group">
                             <div class="gap-4">
-                                <a href="{{ route('siswa.export_excel') }}" class="btn btn-success btn-sm"><i class="fas fa-file-excel"></i> Export Excel</a>
+                                <a href="{{ route('siswa.export_excel') }}" class="btn btn-success "><i class="fas fa-file-excel"></i> Export Excel</a>
                             </div>
                         </div>
                     </div>
@@ -85,6 +85,10 @@ $(document).ready(function () {
         pageLength: 100,
         ajax: {
             'url': $('#siswa_data').val(),
+            'data': function (data) {
+                data.kelas = $('#kelas').val();
+                data.category_kelas = $('#category_kelas').val();
+            }
         },
         columns: [
             { data: 'DT_RowIndex',name: 'DT_RowIndex',orderable: false,searchable: false},
@@ -172,9 +176,11 @@ $(document).ready(function () {
     $('#kelas').on('change', function () {
         reloadTable('#siswa_table');
     });
+    $('#category_kelas').on('change', function () {
+        reloadTable('#siswa_table');
+    });
     $('#export-data-kelas-excel').click(function (e) {
         e.preventDefault();
-
         let kelas = $('#kelas').val();
         let category_kelas = $('#category_kelas').val();
         $('#export_kelas_id').val(kelas);

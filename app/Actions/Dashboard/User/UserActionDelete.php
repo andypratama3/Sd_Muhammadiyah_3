@@ -9,6 +9,8 @@ class UserActionDelete
     {
        $karyawn = Karyawan::where('user_id', $user->id)->first();
        $user->roles()->detach();
+       $user->permissions()->detach();
+       $karyawn->delete();
        $user->delete();
        return $user;
 

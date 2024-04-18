@@ -4,7 +4,7 @@
 
 @section('content')
 
-<section id="posts" class="posts">
+<section id="posts" class="posts mt-5">
     <div class="container" data-aos="fade-up">
         <div class="card w-100 d-lg-grid mt-5">
             <div class="card-header text-center mb-2">
@@ -24,10 +24,8 @@
 
             </div>
         </div>
-
-
         {{-- result for search code_payment --}}
-        <div class="card w-100 mt-2 mb-3 d-none" id="result_order">
+        <div class="card w-100 mt-2 mb-3" id="result_order" style="display: none">
             <div class="card-header text-center mb-2">
                 <h5 id="status_result"></h5>
             </div>
@@ -124,7 +122,7 @@
                     kode_pembayaran: kode_pembayaran,
                 },
                 success: function (response) {
-                    if (response.data && response.data.order_id) {
+                    if(response.status == 'success'){
                         content_result.css('display', '');
                         result_card.css('display', '');
                         name.text(response.data.name);
@@ -135,11 +133,12 @@
                         order_id.text(response.data.order_id);
                         gross_amount.text(response.data.gross_amount);
                         status.text(response.data.status);
-                    } else {
+                    }else  {
                         content_result.css('display', 'none');
                         result_card.css('display', '');
                         status_result.text(response.message);
                     }
+
 
                 },
             });

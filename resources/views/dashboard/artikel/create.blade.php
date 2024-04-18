@@ -1,5 +1,6 @@
 @extends('layouts.dashboard')
 @section('title', 'Tambah Artikel')
+
 @section('content')
 @push('css')
 <link href="{{ asset('asset_dashboard/vendor/select2/dist/css/select2.css') }}" rel="stylesheet" type="text/css">
@@ -38,7 +39,6 @@
                 <div id="editor"></div>
                 <textarea name="artikel" id="content-editor" style="display: none;"></textarea>
             </div>
-
             <a href="{{ route('dashboard.news.artikel.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
             <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
         </form>

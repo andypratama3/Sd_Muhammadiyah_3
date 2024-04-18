@@ -12,8 +12,9 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title text-primary mb-4">Artikel
-                <a href="{{ route('dashboard.news.artikel.create') }}" class="btn btn-success btn-sm float-right">Tambah <i class="fas fa-plus"></i></a>
+                <a href="{{ route('dashboard.news.artikel.create') }}" class="btn btn-success btn-sm float-right ">Tambah <i class="fas fa-plus"></i></a>
                 </h4>
+                
                 <div class="table-responsive">
                     <table class="table" id="artikel_table">
                         <thead>
@@ -105,7 +106,7 @@ $(document).ready(function () {
             }
         });
     });
-    
+
 });
 </script>
 @endpush

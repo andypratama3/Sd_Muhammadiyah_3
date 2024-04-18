@@ -22,7 +22,8 @@ class PembayaranController extends Controller
         $no = 0;
         $pembayarans = Pembayaran::all();
         $juduls = JudulPembayaran::all();
-        return view('dashboard.data.pembayaran.index', compact('no','pembayarans','juduls'));
+        $kelass = Kelas::orderBy('name','asc')->get();
+        return view('dashboard.data.pembayaran.index', compact('no','pembayarans','juduls','kelass'));
     }
     public function data_table(Request $request)
     {
@@ -30,7 +31,31 @@ class PembayaranController extends Controller
 
         if($request->judul_pembayaran){
             $query->where('judul_id', $request->judul_pembayaran);
+            if ($request->kelas) {
+                $query->whereHas('siswa', function ($querys) use ($request) {
+                    $querys->where('kelas_id', $request->kelas);
+
+                    if ($request->category_kelas) {
+                        $querys->whereHas('kelas', function ($querys) use ($request) {
+                            $querys->where('siswa_kelas.category_kelas', $request->category_kelas);
+                        });
+                    }
+                });
+            }
+        }else{
+            if ($request->kelas) {
+                $query->whereHas('siswa', function ($querys) use ($request) {
+                    $querys->where('kelas_id', $request->kelas);
+
+                    if ($request->category_kelas) {
+                        $querys->whereHas('kelas', function ($querys) use ($request) {
+                            $querys->where('siswa_kelas.category_kelas', $request->category_kelas);
+                        });
+                    }
+                });
+            }
         }
+
 
         return DataTables::of($query)
         ->addColumn('name', function ($judul) {
@@ -94,7 +119,6 @@ class PembayaranController extends Controller
         {
             $pembayaranActionDelete->execute($order_id);
             return response()->json(['status' => 'success', 'message' => 'Berhasil Menghapus Invoice']);
-            // toaster()->sucess('Berhasil Menghapus Artikel');
         }else{
             return response()->json(['status' => 'error', 'message' => 'Gagal Menghapus Artikel']);
         }
@@ -102,13 +126,21 @@ class PembayaranController extends Controller
     public function exportExcel(Request $request)
     {
         $judulId = $request->judul_id;
+        $kelas = $request->kelas;
+        $category_kelas = $request->category_kelas;
+        $kelas = Kelas::where('id', $kelas)->first();
         $judul_pembayaran = JudulPembayaran::where('id', $judulId)->first();
 
-        if ($judulId != null) {
-            return Excel::download(new InvoiceExcel($judulId), "siswa-invoice-$judul_pembayaran->name   -excel.xlsx");
+        if ($judulId != null && $kelas != null && $category_kelas != null) {
+            return Excel::download(new InvoiceExcel($judulId, $kelas, $category_kelas), "siswa-invoice-$judul_pembayaran->name-$kelas->name-$category_kelas-excel.xlsx");
+        } elseif($judulId != null && $kelas != null) {
+            return Excel::download(new InvoiceExcel($judulId, $kelas, $category_kelas), "siswa-invoice-$judul_pembayaran->name-$kelas->name-excel.xlsx");
+        } elseif($judulId != null) {
+            return Excel::download(new InvoiceExcel($judulId, $kelas, $category_kelas), "siswa-invoice-$judul_pembayaran->name-excel.xlsx");
         } else {
-            return redirect()->route('dashboard.datamaster.pembayaran.index')->with('error', 'Silahkan Pilih Kategori Pembayaran =');
+            return redirect()->route('dashboard.datamaster.pembayaran.index')->with('error', 'Silahkan Pilih Judul Atau Kelas Atau Kategori Kelas');
         }
     }
+
 
 }
