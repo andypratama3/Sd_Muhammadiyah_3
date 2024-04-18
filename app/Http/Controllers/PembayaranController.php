@@ -22,8 +22,8 @@ class PembayaranController extends Controller
         $data = [
             'order_id' => $pembayaran->order_id,
             'name' => $pembayaran->judul->name,
-            'siswa' => $pembayaran->siswa->name,
-            'kelas' => $pembayaran->kelas->name,
+            // 'siswa' => $pembayaran->siswa->name,
+            // 'kelas' => $pembayaran->kelas->name,
             'category_kelas' => $pembayaran->category_kelas,
             'gross_amount' => $pembayaran->gross_amount,
             'status' => $pembayaran->status
@@ -105,6 +105,7 @@ class PembayaranController extends Controller
             $pembayaran->SessionID = $response['Data']['SessionID'];
             $pembayaran->Url = $response['Data']['Url'];
             $redirectUrl = $response['Data']['Url'];
+            $pembayaran->update();
             return response()->json([
                 'redirect' => $redirectUrl,'Akan Mengalihkan'], 200);
         } else {
