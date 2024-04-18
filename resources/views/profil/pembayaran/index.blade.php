@@ -132,6 +132,9 @@
                         order_id.text(response.data.order_id);
                         gross_amount.text(response.data.gross_amount);
                         status.text(response.data.status);
+                        if(response.data.status == 'Berhasil'){
+                            $('#pay').css('display', 'none');
+                        }
 
                     }else  {
                         content_result.css('display', 'none');
