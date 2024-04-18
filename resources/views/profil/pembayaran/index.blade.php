@@ -108,7 +108,6 @@
 
         $('#posts').on('click', '#button_search', function () {
             let kode_pembayaran = $('#kode_pembayaran').val();
-
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -133,18 +132,17 @@
                         order_id.text(response.data.order_id);
                         gross_amount.text(response.data.gross_amount);
                         status.text(response.data.status);
+
                     }else  {
                         content_result.css('display', 'none');
                         result_card.css('display', '');
                         status_result.text(response.message);
                     }
-
-
                 },
             });
         });
         $('#posts').on('click', '#pay', function () {
-            const payment_id = $('#order_id').text();
+            let payment_id = $('#order_id').text();
 
             $.ajaxSetup({
                 headers: {
@@ -158,6 +156,7 @@
                     order_id : payment_id,
                 },
                 success: function (response) {
+
                     window.location.href = response.redirect;
                 }
 

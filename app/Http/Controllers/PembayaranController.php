@@ -14,31 +14,41 @@ class PembayaranController extends Controller
     public function getOrder(Request $request)
     {
         $kode_pembayaran = $request->kode_pembayaran;
-        $pembayaran = Pembayaran::where('order_id', $kode_pembayaran)->first();
+        $pembayaran = Pembayaran::with('judul')->where('order_id', $kode_pembayaran)->first();
         $kelas = $pembayaran->kelas->name;
         $siswa = $pembayaran->siswa->name;
 
-        if ($pembayaran) {
 
+        $data = [
+            'order_id' => $pembayaran->order_id,
+            'name' => $pembayaran->judul->name,
+            'siswa' => $pembayaran->siswa->name,
+            'kelas' => $pembayaran->kelas->name,
+            'category_kelas' => $pembayaran->category_kelas,
+            'gross_amount' => $pembayaran->gross_amount,
+            'status' => $pembayaran->status
+        ];
+        if ($pembayaran) {
             return response()->json(
                 [
-                    'data' => $pembayaran,
+                    'data' => $data,
                     'siswa' => $siswa,
                     'kelas' => $kelas,
                     'message' => 'Berhasil Mendapatkan Order ID',
                     'status' => 'success',
                 ], 200);
         } else {
-
             return response()->json(['message' => 'Tidak Ada Data Pembayaran']);
         }
     }
     public function pay(Request $request)
     {
         $order_id = $request->order_id;
-        $pembayaran = Pembayaran::with('judul')->where('order_id', $order_id)->first();
+
+        $pembayaran = Pembayaran::where('order_id', $order_id)->with('judul')->first();
 
         $gross_amount = str_replace('.', '', $pembayaran->gross_amount);
+
         // SAMPLE HIT API iPaymu v2 PHP
         $va           = '0000002217160075'; //get on iPaymu dashboard
         $apiKey       = 'SANDBOX9CAEF80A-BEE1-40DD-A0E4-A71F36393097'; //get on iPaymu dashboard
