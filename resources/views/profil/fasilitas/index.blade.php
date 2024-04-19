@@ -8,6 +8,7 @@
                 <h2>Fasilitas</h2>
                 <h4>SD Muhammadiyah 3 Samarinda</h4>
             </header>
+            @for($i = 0; $i < 100; $i++)
             @foreach ($fasilitass as $fasilitas)
             @php
                 $coverArray = explode(',', rtrim($fasilitas->foto, ','));
@@ -24,6 +25,7 @@
                 </div>
             </div>
             @endforeach
+            @endfor
         </div>
     </div>
 </section>

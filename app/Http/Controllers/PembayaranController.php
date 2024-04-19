@@ -109,7 +109,7 @@ class PembayaranController extends Controller
             return response()->json([
                 'redirect' => $redirectUrl,'Akan Mengalihkan'], 200);
         } else {
-            
+
             return response()->json([
                 'message' => 'Failed to get the redirect URL from the response',
             ], 500);

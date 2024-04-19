@@ -2,11 +2,33 @@
 @section('title','Tenaga Kependidikan')
 @push('css_user')
 <style>
+    /* .img-forscroll-left {
+        position: fixed;
+        width: 10%;
+        animation-duration: 1s;
+        animation-timing-function: linear;
+        animation-play-state: paused;
+        animation-iteration-count: 1;
+        animation-fill-mode: both;
+        animation-name: move;
+        top: 200px;
+        animation-delay: calc(var(--epoch) * -1s);
+    } */
+    /* .img-forscroll-right {
+        position: fixed;
+        width: 10%;
+        animation-duration: 1s;
+        animation-timing-function: linear;
+        animation-play-state: paused;
+        animation-iteration-count: 1;
+        animation-fill-mode: both;
+        animation-name: move;
+        animation-delay: calc(var(--epoch) * -1s);
+    } */
     .tenagakependidikan .member {
         text-align: center;
         margin-bottom: 20px;
         background: #343a40;
-        position: relative;
         overflow: hidden;
     }
 
@@ -74,25 +96,32 @@
         bottom: 0;
         transition: bottom ease-in-out 0.4s;
     }
+
 </style>
 @endpush
 @section('content')
 
-<section class="tenagakependidikan" style="margin-top: 95px;">
+<section class="tenagakependidikan" >
+    {{-- <img src="{{ asset('assets/img/SD3_logo.png') }}" alt=""  class="img-fluid img-forscroll-left"> --}}
+    {{-- <img src="{{ asset('assets/img/SD3_logo.png') }}" alt=""  class="img-forscroll-right"> --}}
     <div class="container aos-init aos-animate" data-aos="fade-up">
         <div class="section-title text-center">
             <h2>Tenaga Kependidikan SD Muhammadiyah 4</h2>
         </div>
         <hr>
-        <div class="row">
+        <div class="row ">
             @foreach ($tenagakependidikans as $tenagapendidikan)
-            <div class="col-lg-4 col-md-6">
-                <div class="member" data-aos="zoom-in" data-aos-delay="100">
-                    <a href="{{ asset('storage/img/tenagapendidikan/'. $tenagapendidikan->foto) }}" class="glightbox"
+            @for($i = 0; $i < 100; $i++)
+            <div class="col-lg-4 col-md-6 d-flex justify-content-center">
+                <div class="member w-75" data-aos="zoom-in" data-aos-delay="100" >
+                    {{-- <a href="{{ asset('storage/img/tenagapendidikan/'. $tenagapendidikan->foto) }}" class="glightbox"
                         data-glightbox="title: {{ $tenagapendidikan->name }}; description: Jabatan Sebagai {{ $tenagapendidikan->name }}; type: image; effect: fade; width: 900px; height: auto; zoomable: true; draggable: true;">
                         <img src="{{ asset('storage/img/tenagapendidikan/'. $tenagapendidikan->foto) }}"
-                            class="img-fluid" alt="">
-
+                            class="img-fluid" alt=""> --}}
+                            <a href="{{ asset('storage/img/guru/young-woman-white-shirt-pointing-up.jpg') }}" class="glightbox"
+                                data-glightbox="title: {{ $tenagapendidikan->name }}; description: Jabatan Sebagai {{ $tenagapendidikan->name }}; type: image; effect: fade; width: 900px; height: auto; zoomable: true; draggable: true;">
+                                <img src="{{ asset('storage/img/guru/young-woman-white-shirt-pointing-up.jpg') }}"
+                                    class="img-fluid" alt="">
                     <div class="member-info">
                         <div class="member-info-content">
                             <h3>{{ $tenagapendidikan->name }}</h3>
@@ -102,9 +131,8 @@
                 </a>
                 </div>
             </div>
+            @endfor
             @endforeach
         </div>
     </div>
-</section>
-
 @endsection

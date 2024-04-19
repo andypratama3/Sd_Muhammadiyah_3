@@ -10,18 +10,18 @@
   <!-- Template Main JS File -->
   <script src="{{asset('assets/js/main.js')}}"></script>
   <script>
-      $(document).ready(function () {
-        $(window).on('load', function() {
-            if(checkInternetConnection){
-                setTimeout(() => {
-                    $('.loading-screen').fadeOut(1000);
-                    $('#header').addClass('fixed-top');
-                }, 800);
-            }
-        });
-        function checkInternetConnection() {
-            return navigator.onLine;
-        }
-      });
-      
+    //   $(document).ready(function () {
+    //     $(window).on('load', function() {
+    //         if(checkInternetConnection){
+    //             setTimeout(() => {
+    //                 $('.loading-screen').fadeOut(1000);
+    //                 $('#header').addClass('fixed-top');
+    //             }, 800);
+    //         }
+    //     });
+    //     function checkInternetConnection() {
+    //         return navigator.onLine;
+    //     }
+    //   });
+
 </script>

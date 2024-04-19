@@ -86,9 +86,10 @@
         </div>
         <hr>
         <div class="row">
+            @for($i = 0; $i < 100; $i++)
             @foreach ($gurus as $guru)
             <div class="col-lg-4 col-md-6">
-                <div class="member" data-aos="zoom-in" data-aos-delay="100">
+                <div class="member" data-aos="zoom-out-up" data-aos-delay="100">
 
                     <a href="{{ asset('storage/img/guru/'. $guru->foto) }}" class="glightbox"
 
@@ -110,6 +111,8 @@
                 </div>
             </div>
             @endforeach
+            @endfor
+
         </div>
     </div>
 </section>

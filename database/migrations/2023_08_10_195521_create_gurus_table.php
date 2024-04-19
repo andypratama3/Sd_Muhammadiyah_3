@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('gurus', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
-            $table->string('description');
+            $table->longText('description');
             $table->string('lulusan');
             $table->foreignUuid('karyawan_id')->nullable()->references('id')->on('karyawans')->onDelete('cascade');
             $table->string('foto');

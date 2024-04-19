@@ -55,16 +55,14 @@ class GuruController extends Controller
     {
         $guru = Guru::with('karyawan')->where('slug',$slug)->firstOrFail();
         $karyawans = Karyawan::select(['id','name','slug'])->get();
-        // if ($guru->karyawan) {
-        //     $karyawan = $guru->karyawan;
-        //     // dd($karyawan->name);
-        // }
+
         $pelajarans = Pelajaran::all();
         return view('dashboard.guru.edit', compact('guru','pelajarans', 'karyawans'));
     }
     public function update(GuruData $GuruData, GuruAction $guruAction)
     {
         $guruAction->execute($GuruData);
+        dd($GuruData);
         return redirect()->route('dashboard.datasekolah.guru.index')->with('success','Berhasil Update Guru!');
     }
     public function destroy(DeleteGuruAction $DeleteGuruAction, $slug)
