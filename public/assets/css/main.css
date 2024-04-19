@@ -9,7 +9,10 @@ body {
   color: rgba(var(--color-primary-rgb), 1);
 
 }
+.loading {
+    overflow-y: hidden;
 
+}
 .loading-screen {
     width: 100%;
     height: 100%;

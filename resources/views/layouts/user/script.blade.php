@@ -11,11 +11,13 @@
   <script src="{{asset('assets/js/main.js')}}"></script>
   <script>
       $(document).ready(function () {
-
         $(window).on('load', function() {
+            $('body').addClass('loading');
+
             // if(checkInternetConnection){
                 setTimeout(() => {
                     $('.loading-screen').fadeOut(1000);
+                    $('body').removeClass('loading');
                     $('#header').addClass('fixed-top');
                 }, 800);
             // }
