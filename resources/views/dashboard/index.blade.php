@@ -197,7 +197,7 @@
                 @foreach ($invoice_list as $invoice)
                   <tr>
                     <td>{{ $invoice->order_id}}</td>
-                    <td>{{ $invoice->name }}</td>
+                    <td>{{ $invoice->judul->name }}</td>
                     <td>{{ $invoice->kelas->name }}</td>
                     <td>
                         @if($invoice->status === 'pending')
