@@ -39,7 +39,7 @@
 <!-- End Hero Slider Section -->
 
 <section id="about">
-    <div class="container aos-init aos-animate" data-aos="fade-up">
+    <div class="container aos-init aos-animate">
         <div class="row">
             <div class="col-lg-12 text-center mb-5">
                 <h4 class="page-title">Tentang</h4>
@@ -50,9 +50,9 @@
 
             <div class="d-md-flex post-entry-2 half">
                 <a href="#" class="me-4 thumbnail">
-                    <img src="{{ asset('storage/img/artikel/Berita_a_20240210170052.jpg') }}" alt="" class="img-fluid">
+                    <img src="{{ asset('storage/img/berita/Berita_test_20240412172357.jpg') }}" alt="" class="img-fluid" data-aos="fade-up-right">
                 </a>
-                <div class="ps-md-5 mt-4 mt-md-0">
+                <div class="ps-md-5 mt-4 mt-md-0" data-aos="fade-up-left">
                     <div class="post-meta mt-4">Tentang</div>
                     <h6 class="mb-4 display-6 text-center">SD Muhammadiyah 3 Samarinda</h6>
 
@@ -69,9 +69,9 @@
 
             <div class="d-md-flex post-entry-2 half mt-5">
                 <a href="#" class="me-4 thumbnail order-2">
-                    <img src="{{ asset('storage/img/artikel/Berita_a_20240210170052.jpg') }}" alt="" class="img-fluid">
+                    <img src="{{ asset('storage/img/berita/Berita_test_20240412172357.jpg') }}" alt="" class="img-fluid" data-aos="fade-up-left">
                 </a>
-                <div class="pe-md-5 mt-4 mt-md-0">
+                <div class="pe-md-5 mt-4 mt-md-0" data-aos="fade-up-right">
                     <div class="post-meta mt-4">Visi &amp; Misi</div>
                     <h2 class="mb-4 display-6">Visi &amp; Misi</h2>
 
@@ -159,6 +159,7 @@
 @push('js')
 <script src="{{ asset('assets/vendor/purecounter/purecounter_vanilla.js') }}"></script>
 <script>
+    // AOS.init();
     document.addEventListener("click", activate, false);
     (function () {
         "use strict";

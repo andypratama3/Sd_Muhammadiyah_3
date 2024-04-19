@@ -18,7 +18,7 @@ class SiswaChart
     public function build(): \ArielMejiaDev\LarapexCharts\BarChart
     {
         // Retrieve all classes with their associated students
-        $classes = Kelas::with('siswa')->get();
+        $classes = Kelas::with('siswa')->orderBy('name','asc')->get();
 
         // Initialize arrays to store class names and student counts
         $kelas_name = [];

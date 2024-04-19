@@ -28,8 +28,8 @@
         </div>
         <div class="row justify-content-center" id="content">
             @foreach ($beritas as $berita)
-            <div class="col-md-6 col-lg-4 d-flex mt-2" id="col-md-6">
-                <div class="blog-entry justify-content-end aos-init aos-animate" data-aos="fade-up"
+            <div class="col-md-6 col-lg-4 d-flex mt-2" id="col-md-6" >
+                <div class="blog-entry justify-content-end" data-aos="fade-up"
                     data-aos-duration="1000" data-aos-delay="100">
                     <a href="{{ route('berita.show', $berita->slug) }}">
                         <img src="{{ asset('storage/img/berita/'. $berita->foto ) }}" alt="" class="img-fluid">
@@ -60,15 +60,12 @@
         let itemsLoaded = 0;
         let loading = $('.loading-data');
         loading.hide();
-        function checkInternetConnection() {
-            return navigator.onLine;
-        }
         $(window).scroll(function () {
             let scrollPercentage = ($(window).scrollTop() / ($(document).height() - $(window)
             .height())) * 100;
-            if (scrollPercentage >= 60 && itemsLoaded % 3 === 0) {
+            if (scrollPercentage >= 20 && itemsLoaded % 3 === 0) {
                 if (checkInternetConnection()) {
-                    loading.show();
+                    // loading.show();
                     page++;
                     $.ajax({
                         type: "GET",
@@ -77,6 +74,7 @@
                         data: {
                             page: page
                         },
+
                         success: function (data) {
                             target.append(data);
                         },
@@ -92,7 +90,11 @@
                 itemsLoaded++;
             }
         });
+        function checkInternetConnection() {
+            return navigator.onLine;
+        }
     });
+
 </script>
 @endpush
 @endsection

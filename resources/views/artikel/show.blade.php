@@ -142,7 +142,7 @@
                     </div>
                 </div><!-- End Comments Form -->
             </div>
-            @include('layoust.user.sidebar')
+            @include('layouts.user.sidebar')
         </div>
     </div>
 </section>

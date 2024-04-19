@@ -1,8 +1,6 @@
 @foreach ($beritas as $berita)
-<div class="col-md-6 col-lg-4 d-flex mt-2 aos-init aos-animate" data-aos="fade-up"
-                        data-aos-duration="1000" data-aos-delay="100" id="col-md-6">
-    <div class="blog-entry justify-content-end aos-init aos-animate" data-aos="fade-up"
-        data-aos-duration="1000" data-aos-delay="100">
+<div class="col-md-6 col-lg-4 d-flex mt-2" data-aos="fade-up"  id="col-md-6">
+    <div class="blog-entry justify-content-end" >
         <a href="{{ route('berita.show', $berita->slug) }}">
             <img src="{{ asset('storage/img/berita/'. $berita->foto ) }}" alt="" class="img-fluid">
             <div class="text">

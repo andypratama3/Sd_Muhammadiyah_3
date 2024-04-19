@@ -3,6 +3,7 @@
 
 <head>
     @include('layouts.user.head')
+
 </head>
 
 <body class="body">

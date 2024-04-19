@@ -121,6 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /**
    * Animation on scroll function and init
    */
+
   function aos_init() {
     AOS.init({
       duration: 1000,

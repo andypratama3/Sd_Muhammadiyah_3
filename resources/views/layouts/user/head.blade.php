@@ -29,5 +29,4 @@
 <link href="{{asset('assets/css/variables.css')}}" rel="stylesheet">
 <link href="{{asset('assets/css/main.css')}}" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
-
 @stack('css_user')

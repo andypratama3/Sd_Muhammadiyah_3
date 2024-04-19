@@ -5,16 +5,17 @@
         img{
             border-radius: 20px;
         }
+
     </style>
 @endpush
 @section('content')
 
 <section id="posts" class="posts" style="margin-top: 95px;">
-    <div class="container" data-aos="fade-up">
+    <div class="container">
         <div class="row g-4">
             <div class="col-lg-4">
-                <div class="post-entry-1-lg">
-                    @foreach ($artikels_trending as $artikel)
+                @foreach ($artikels_trending as $artikel)
+                <div class="post-entry-1-lg" style="margin-right: 20px; margin-top: 20px;" data-aos="zoom-in-right">
                     <a href="{{ route('artikel.show', $artikel->slug) }}">
                         {{-- <img src="{{ asset('storage/img/artikel/'. $artikel->image) }}" alt="" class="img-fluid">
                         --}}
@@ -40,8 +41,8 @@
                             @endforeach
                         </div>
                     </div>
-                    @endforeach
                 </div>
+                @endforeach
             </div>
             <div class="col-lg-6">
                 <div class="row g-5 target" id="target">
@@ -128,7 +129,7 @@
 </section> <!-- End Post Grid Section -->
 @push('js_user')
 <script>
-    $(document).ready(function () {
+       $(document).ready(function () {
         let page = 1;
         const url = "{{ route('artikel.index') }}";
         const target = $('#target');
@@ -138,7 +139,7 @@
         $(window).scroll(function () {
             let scrollPercentage = ($(window).scrollTop() / ($(document).height() - $(window)
             .height())) * 100;
-            if (scrollPercentage >= 60 && itemsLoaded % 3 === 0) {
+            if (scrollPercentage >= 20 && itemsLoaded % 3 === 0) {
                 if (checkInternetConnection()) {
                     // loading.show();
                     page++;
@@ -165,6 +166,9 @@
                 itemsLoaded++;
             }
         });
+        function checkInternetConnection() {
+            return navigator.onLine;
+        }
     });
 </script>
 
