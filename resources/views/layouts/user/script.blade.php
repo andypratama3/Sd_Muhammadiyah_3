@@ -11,6 +11,7 @@
   <script src="{{asset('assets/js/main.js')}}"></script>
   <script>
       $(document).ready(function () {
+        
         $(window).on('load', function() {
             if(checkInternetConnection){
                 setTimeout(() => {

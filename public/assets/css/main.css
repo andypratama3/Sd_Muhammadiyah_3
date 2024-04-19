@@ -28,7 +28,6 @@ body {
 }
 
 @keyframes bounce {
-
     0%,
     100% {
         transform: translateY(0);
@@ -693,6 +692,7 @@ section {
   .custom-border {
     border: none !important;
   }
+
 }
 
 .author .photo {
@@ -875,12 +875,18 @@ section {
 }
 
 @media (max-width: 500px) {
-  .img-bg .img-bg-inner p {
-    /* display: none; */
+  .header .logo h1{
+    font-size: 14px;
   }
   .loading-screen{
     padding-top: 18%;
     padding-left: 18%;
+
+  }
+  .loading-screen .loading-image{
+    width: 75%;
+    margin-top: 20px;
+    padding-top: 20px;
   }
 
 }
@@ -894,10 +900,18 @@ section {
 }
 
 @media (max-width: 768px) {
-
   .custom-swiper-button-next,
   .custom-swiper-button-prev {
     display: none;
+  }
+  .loading-screen {
+    padding-top: 38%;
+    padding-left: 18%;
+  }
+  .loading-screen .loading-image{
+    width: 75%;
+    margin-top: 60px;
+    padding-top: 50px;
   }
 }
 
@@ -1314,6 +1328,9 @@ section {
 @media (max-width: 640px) {
   .contact .php-email-form {
     padding: 20px;
+  }
+  .loading-screen {
+    padding-top: 20%;
   }
 }
 

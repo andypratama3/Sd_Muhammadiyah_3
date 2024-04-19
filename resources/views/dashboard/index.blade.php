@@ -200,9 +200,9 @@
                     <td>{{ $invoice->judul->name }}</td>
                     <td>{{ $invoice->kelas->name }}</td>
                     <td>
-                        @if($invoice->status === 'pending')
-                        <span class="badge badge-warning"><i class="fas fa-solid fa-clock"></i> {{ $invoice->status }}</span>
-                        @elseif($invoice->status === 'berhasil')
+                        @if($invoice->status === 'Pending')
+                        <span class="badge badge-warning"><i class="fas fa-solid fa-pending"></i> {{ $invoice->status }}</span>
+                        @elseif($invoice->status === 'Berhasil')
                         <span class="badge badge-success"><i class="fas fa-solid fa-circle-check"></i> {{ $invoice->status }}</span>
                         @else
                         <span class="badge badge-danger"><i class="fas fa-xmark"></i> {{ $invoice->status }}</span>

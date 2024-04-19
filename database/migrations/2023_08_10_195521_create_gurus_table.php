@@ -17,7 +17,7 @@ return new class extends Migration
             $table->longText('description');
             $table->string('lulusan');
             $table->foreignUuid('karyawan_id')->nullable()->references('id')->on('karyawans')->onDelete('cascade');
-            $table->string('foto');
+            $table->longText('foto');
             $table->string('slug');
             $table->timestamps();
         });
