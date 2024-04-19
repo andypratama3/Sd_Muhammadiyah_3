@@ -22,4 +22,5 @@
 
 <IfModule mod_headers.c>
     Header set Permissions-Policy "geolocation=self"
+    Header set Referrer-Policy "no-referrer-when-downgrade"
 </IfModule>
