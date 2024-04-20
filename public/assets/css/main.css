@@ -542,6 +542,9 @@ section {
   .navbar .dropdown .dropdown:hover>ul {
     left: -100%;
   }
+  .loading-screen {
+    overflow: hidden !important;
+  }
 }
 
 .mobile-nav-toggle {
@@ -803,6 +806,9 @@ section {
     flex: 0 0 100%;
     margin-bottom: 20px;
   }
+  .loading-screen {
+    overflow: hidden !important;
+  }
 }
 
 .post-entry-2.half .thumbnail {
@@ -814,6 +820,9 @@ section {
     flex: 0 0 100%;
     margin-bottom: 20px;
   }
+  .loading-screen {
+    overflow: hidden !important;
+  }
 }
 
 .post-entry-2.small-img .thumbnail {
@@ -824,6 +833,9 @@ section {
   .post-entry-2.small-img .thumbnail {
     flex: 0 0 100%;
     margin-bottom: 20px;
+  }
+  .loading-screen {
+    overflow: hidden !important;
   }
 }
 
@@ -890,6 +902,9 @@ section {
     width: 75%;
     margin-top: 20px;
     padding-top: 20px;
+  }
+  .loading-screen {
+    overflow: hidden !important;
   }
 
 }
