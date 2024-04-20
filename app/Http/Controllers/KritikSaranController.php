@@ -12,9 +12,10 @@ class KritikSaranController extends Controller
         if($kritikSaranAction)
         {
             $kritikSaranAction->execute($kritikSaranData);
-            return response()->json('Kritik dan Saran Berhasil Di Kirim',200);
+            return response()->json(['message' => 'Kritik dan Saran Berhasil Di Kirim'], 200);
         }else{
-            return response()->json(['status' => 'error', 'message' => 'Gagal Menghapus Artikel']);
+            return response()->json(['status' => 'error', 'message' => 'Gagal Mengirim Kritik dan Saran'], 400);
+
         }
 
     }
