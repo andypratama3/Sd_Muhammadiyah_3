@@ -56,23 +56,25 @@
       headers: {'X-Requested-With': 'XMLHttpRequest'}
     })
     .then(response => {
-      if( response.ok ) {
-         console.log(response);
+      if( response.ok == 200 ) {
+        return response.text();
       } else {
         throw new Error(`${response.status} ${response.statusText} ${response.url}`);
       }
     })
     .then(data => {
-      thisForm.querySelector('.loading').classList.remove('d-block');
-      if (data.trim() == 'OK') {
-        thisForm.querySelector('.sent-message').classList.add('d-block');
-        thisForm.reset();
-      } else {
-        throw new Error(data ? data : 'Form submission failed and no error message returned from: ' + action);
-      }
+        thisForm.querySelector('.loading').classList.remove('d-block');
+        if(data.status === 'success') {
+          thisForm.querySelector('.sent-message').innerHTML = data.message; // Display success message
+          thisForm.querySelector('.sent-message').classList.add('d-block');
+          thisForm.reset();
+        } else {
+          throw new Error(data ? data.message : 'Form submission failed and no error message returned from: ' + action);
+        }
     })
     .catch((error) => {
       displayError(thisForm, error);
+    //   console.log(thisForm, error);
     });
   }
 
