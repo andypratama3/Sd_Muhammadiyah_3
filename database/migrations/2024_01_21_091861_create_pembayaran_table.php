@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('bulkId')->nullable();
             $table->string('account_id')->nullable();
             $table->foreignUuid('judul_id')->references('id')->on('judulpembayarans')->onDelete('cascade');
-            $table->string('status')->default('Pending');
+            $table->string('status')->default('pending');
             $table->timestamps();
         });
     }

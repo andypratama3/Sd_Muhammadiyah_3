@@ -13,6 +13,7 @@ use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\FasilitasController;
 use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\KritikSaranController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\LikeArtikelController;
 use App\Http\Controllers\DetailBeritaController;
@@ -27,6 +28,7 @@ use App\Http\Controllers\Dashboard\KelasController;
 use App\Http\Controllers\EkstrakurikulerController;
 use App\Http\Controllers\PrestasiSekolahController;
 use App\Http\Controllers\TenagaPendidikanController;
+
 //Dashboard Access
 use App\Http\Controllers\Dashboard\ActivityController;
 use App\Http\Controllers\Dashboard\KaryawanController;
@@ -88,6 +90,9 @@ Route::group(['prefix' => '/'], function () {
     Route::resource('artikel', ArtikelController::class, ['names' => 'artikel']);
     //new fiture kontak and prestasi
     Route::get('kontak', [KontakController::class, 'index'])->name('kontal.index');
+
+    //kritik saran
+    Route::post('kritik-saran/post', [KritikSaranController::class, 'store'])->name('kritik.saran.store');
     Route::get('prestasi-siswa', [PrestasiSiswaController::class, 'index'])->name('prestasi.siswa.index');
     Route::get('prestasi-siswa/{slug}', [PrestasiSiswaController::class, 'show'])->name('prestasi.siswa.show');
     //prestasi sekolah

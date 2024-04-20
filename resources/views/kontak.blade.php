@@ -4,7 +4,7 @@
 
 @section('content')
 <!-- ======= Hero Slider Section ======= -->
-<section id="hero-slider" class="hero-slider" style="margin-top: 94px;">
+{{-- <section id="hero-slider" class="hero-slider" style="margin-top: 94px;">
     <div class="container-md" data-aos="fade-in">
         <div class="row" style="gap: 1.5rem;">
             <div class="col-md-7 m-0">
@@ -30,10 +30,44 @@
             </div>
         </div>
     </div>
-</section>
+</section> --}}
 <!-- End Hero Slider Section -->
+<section class="contact" style="margin-top: 94px;">
+    <div class="container" data-aos="fade-up">
+        <div class="form mt-5" style="border-radius: 20px;">
+            <form action="{{ route('kritik.saran.store') }}" method="POST" role="form" class="php-email-form" style="border-radius: 20px;">
+                @csrf
+                <div class="col-md-12 text-center">
+                    <h2>Kritik dan Saran</h2>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <input type="email" class="form-control" name="email" id="email" placeholder="Your Email"
+                            required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required>
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
+                </div>
+                <div class="my-3">
+                    <div class="loading">Loading</div>
+                    <div class="error-message"></div>
+                    <div class="sent-message">Your message has been sent. Thank you!</div>
+                </div>
+                <div class="text-center"><button type="submit">Submit</button></div>
+            </form>
+        </div><!-- End Contact Form -->
+    </div>
+</section>
+@push('js_user')
+    <script>
 
-@push('js')
-
+    </script>
 @endpush
 @endsection
