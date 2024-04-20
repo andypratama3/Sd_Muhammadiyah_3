@@ -10,10 +10,9 @@
   <!-- Template Main JS File -->
   <script src="{{asset('assets/js/main.js')}}"></script>
   <script>
-      $(document).ready(function () {
+    document.addEventListener('DOMContentLoaded', function() {
         $(window).on('load', function() {
             $('body').addClass('loading');
-
             // if(checkInternetConnection){
                 setTimeout(() => {
                     $('.loading-screen').fadeOut(1000);
