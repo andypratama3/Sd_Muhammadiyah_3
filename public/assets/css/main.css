@@ -11,6 +11,7 @@ body {
 }
 .loading {
     overflow-y: hidden;
+    overflow: hidden;
 
 }
 .loading-screen {
