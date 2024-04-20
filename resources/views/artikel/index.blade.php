@@ -48,7 +48,7 @@
                 <div class="row g-5 target" id="target">
                     @foreach ($artikel_not_trending as $artikel)
                     @if (!$artikels_trending->contains('id', $artikel->id))
-                    <div class="col-lg-4 border-start custom-border">
+                    <div class="col-lg-4 border-start custom-border" data-aos="zoom-in-down" data-duration="200">
                         <div class="post-entry-1">
                             <a href="{{ route('artikel.show', $artikel->slug) }}">
                                 {{-- <img src="{{ asset('storage/app/public/img/artikel/'. $artikel->image) }}" alt=""
