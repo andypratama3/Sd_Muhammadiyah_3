@@ -34,6 +34,7 @@ use App\Http\Controllers\Dashboard\ActivityController;
 use App\Http\Controllers\Dashboard\KaryawanController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\KelasCategoryController;
+use App\Http\Controllers\Dashboard\KritikSaranController as DashboardKritiSaranController;
 use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
 use App\Http\Controllers\Dashboard\SiswaController as DashboardSiswaController;
 use App\Http\Controllers\Dashboard\BeritaController as DashboardBeritaController;
@@ -116,6 +117,9 @@ Route::group(['prefix' => 'artikel', 'middleware' => ['auth.basic']], function (
 
 Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], function () {
     Route::get('/', DashboardController::class)->name('dashboard');
+
+
+    Route::resource('kritik-saran', DashboardKritiSaranController::class, ['names' => 'dashboard.kritik.saran']);
 
     Route::group(['prefix' => 'news'], function () {
         Route::resource('berita', DashboardBeritaController::class, ['names' => 'dashboard.news.berita']);

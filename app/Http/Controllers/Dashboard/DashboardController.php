@@ -11,6 +11,7 @@ use App\Models\Pembayaran;
 use App\Charts\ArtikelView;
 use App\Models\TenagaPendidikan;
 use App\Http\Controllers\Controller;
+use App\Models\KritikSaran;
 
 class DashboardController extends Controller
 {
@@ -36,6 +37,9 @@ class DashboardController extends Controller
 
         $invoice_list = Pembayaran::orderBy('updated_at')->take(10)->get();
 
+        $kritis = KritikSaran::orderBy('created_at', 'desc')->take(5)->get();
+
+
         return view('dashboard.index', compact(
             'siswa',
             'guru',
@@ -46,7 +50,8 @@ class DashboardController extends Controller
             'artikels',
             'artikel_sum_total_klik',
             'percent_artikel',
-            'invoice_list'
+            'invoice_list',
+            'kritis',
         ));
     }
 

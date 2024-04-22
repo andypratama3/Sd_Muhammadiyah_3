@@ -161,4 +161,13 @@
             </div>
         </div>
     </li>
+    <hr class="sidebar-divider">
+    <div class="sidebar-heading">
+        Kritik
+    </div>
+    <li class="nav-item {{ Request::routeIs('dashboard.kiritik.saran.*') ? 'active' : '' }}">
+        <a class="nav-link  {{ Request::routeIs('dashboard.kiritik.saran.*') ? 'active' : '' }}" href="{{ route('dashboard.kritik.saran.index') }}">
+            <i class="fa-solid fa-envelope-open-text"></i>
+            <span>Kritik Saran</span></a>
+    </li>
 </ul>
