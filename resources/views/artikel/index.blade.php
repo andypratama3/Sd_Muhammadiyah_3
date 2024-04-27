@@ -15,7 +15,7 @@
         <div class="row g-4">
             <div class="col-lg-4">
                 @foreach ($artikels_trending as $artikel)
-                <div class="post-entry-1-lg" style="margin-right: 20px; margin-top: 20px;" data-aos="zoom-in-right">
+                <div class="post-entry-1-lg" style="margin-right: 20px; margin-top: 20px;">
                     <a href="{{ route('artikel.show', $artikel->slug) }}">
                         {{-- <img src="{{ asset('storage/img/artikel/'. $artikel->image) }}" alt="" class="img-fluid">
                         --}}
@@ -136,6 +136,7 @@
         let itemsLoaded = 0;
         let loading = $('.loading-data');
         loading.hide();
+        
         $(window).scroll(function () {
             let scrollPercentage = ($(window).scrollTop() / ($(document).height() - $(window)
             .height())) * 100;

@@ -9,5 +9,5 @@ class KritikSaranActionDelete
         $kritikSaran = KritikSaran::where('slug', $slug)->firstOrFail();
         $kritikSaran->delete();
         return $kritikSaran;
-    }
+    } 
 }

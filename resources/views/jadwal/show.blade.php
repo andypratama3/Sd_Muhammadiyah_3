@@ -125,7 +125,7 @@
             $('#preview-image').removeClass('display-none');
             let modal = document.getElementById("myModal");
 
-            let imageUrl = '/storage/app/public/file/jadwal/' + data;
+            let imageUrl = '{{ asset("storage/file/jadwal/") }}'+ '/' + data;
 
             modal.style.display = "block";
             $('#foto').attr('src', imageUrl);

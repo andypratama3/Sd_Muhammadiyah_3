@@ -50,6 +50,8 @@
             margin: 10px;
             border: 1px solid red;
         }
+
+
     </style>
 @endpush
 @section('content')
@@ -348,7 +350,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.js" nonce="{{ csp_nonce() }}"></script>
     <script>
         $(document).ready(function() {
-
             // cropp foto
             var $modal = $('#modal');
             var image = document.getElementById('image-crop');
@@ -380,7 +381,7 @@
                 cropper = new Cropper(image, {
                     aspectRatio: 1,
                     viewMode: 3,
-                    preview: '.preview'
+                    preview: '.preview',
                 });
             }).on('hidden.bs.modal', function() {
                 cropper.destroy();

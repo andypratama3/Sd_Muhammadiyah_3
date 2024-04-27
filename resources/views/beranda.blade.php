@@ -7,7 +7,7 @@
     <div class="container-md text-center" data-aos="fade-in">
         <div class="row">
             <div class="col-12">
-                <div class="swiper sliderFeaturedPosts">
+                <div class="swiper sliderFeaturedPosts" style="border-radius: 15px;">
                     <div class="swiper-wrapper">
                         @foreach ($beritas as $berita)
                         <div class="swiper-slide">
