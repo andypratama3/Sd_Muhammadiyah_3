@@ -19,6 +19,7 @@ class ArtikelController extends Controller
     }
     public function data_table()
     {
+        
         $query = Artikel::with('categorys')->select('id','name','image','jumlah_klik','artikel','slug')->orderBy('created_at','asc');
         return DataTables::of($query)
                 ->addColumn('kategori.name', function ($artikel) {

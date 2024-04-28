@@ -102,7 +102,7 @@
         </div>
     </div>
 </section>
-<div id="myModal" class="modal">
+<div id="myModal" class="modal" data-aos="zoom-in-down" data-duration="200">
 
     <!-- The Close Button -->
     <span class="closeheader">&times;</span>
@@ -128,6 +128,7 @@
             let imageUrl = '{{ asset("storage/file/jadwal/") }}'+ '/' + data;
 
             modal.style.display = "block";
+            $('#mymodal').fadeIn(2000);
             $('#foto').attr('src', imageUrl);
 
             // Get the <span> element that closes the modal

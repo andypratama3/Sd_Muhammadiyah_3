@@ -34,6 +34,8 @@ use App\Http\Controllers\Dashboard\ActivityController;
 use App\Http\Controllers\Dashboard\KaryawanController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\KelasCategoryController;
+use App\Http\Controllers\NaikKelasController;
+
 use App\Http\Controllers\Dashboard\KritikSaranController as DashboardKritiSaranController;
 use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
 use App\Http\Controllers\Dashboard\SiswaController as DashboardSiswaController;
@@ -150,6 +152,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::get('siswas/export-pdf', [DashboardSiswaController::class,'export_pdf'])->name('siswa.export_pdf');
         Route::post('siswas/export-excel-kelas', [DashboardSiswaController::class,'exportExcelKelas'])->name('siswa.export_excel_kelas');
         Route::get('siswa/cetak/{slug}', [DashboardSiswaController::class,'cetak_data'])->name('siswa.cetakData');
+        Route::get('siswas/naik/kelas', [NaikKelasController::class,'naik'])->name('siswa.naik.kelas');
+
         Route::post('siswa/nisn', [DashboardSiswaController::class,'checknisn'])->name('siswa.check.nisn');
         Route::get('siswas/records', [DashboardSiswaController::class,'data_table'])->name('siswa.get.records');
         Route::get('nilai', [DashboardNilaiSiswaController::class, 'index'])->name('dashboard.datamaster.nilai.index');

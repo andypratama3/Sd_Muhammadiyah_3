@@ -46,7 +46,7 @@
              <a href="#" class="mx-2"><span class="bi-facebook"></span></a>
              <a href="https://www.instagram.com/sekolahkreatifsamarinda/" class="mx-2"><span class="bi-instagram"></span></a>
 
-             <a href="#" class="mx-2 js-search-open"><span class="bi-search"></span></a>
+             {{-- <a href="#" class="mx-2 js-search-open"><span class="bi-search"></span></a> --}}
              <i class="bi bi-list mobile-nav-toggle"></i>
          </div>
      </div>

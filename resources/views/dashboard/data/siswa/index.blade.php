@@ -40,9 +40,13 @@
                                         <input type="hidden" name="category" id="export_category">
                                     </form>
                             </div>
-
                         </div>
                     </div>
+                    {{-- <div class="form-group">
+                        <div class="gap-5">
+                            <a href="{{ route('siswa.naik.kelas') }}" class="btn btn-primary ">Naik Kelas</a>
+                        </div>
+                    </div> --}}
                 </div>
 
                 <div class="table-responsive">
