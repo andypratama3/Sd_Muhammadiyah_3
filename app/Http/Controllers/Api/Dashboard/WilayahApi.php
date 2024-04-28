@@ -48,25 +48,23 @@ class WilayahApi extends Controller
     /*
         ! take Function for get Data Wilayah
     */
-    public function getProvinsi(Request $request,Siswa $siswa)
+    public function getProvinsi(Siswa $siswa)
     {
+
 
         /*
           ! take Request data From jquery
         */
-        if($request == null)
-        {
+        // if(!$request){
             $provinsi_id = $siswa->provinsi_id;
             $kabupaten_id = $siswa->kabupaten_id;
             $kecamatan_id = $siswa->kecamatan_id;
-
-        }else
-        {
-            $provinsi_id = $request->provinsi_id;
-        $kabupaten_id = $request->kabupaten_id;
-        $kecamatan_id = $request->kecamatan_id;
-
-        }
+            
+        // }else{
+        //     $provinsi_id = $request->provinsi_id;
+        //     $kabupaten_id = $request->kabupaten_id;
+        //     $kecamatan_id = $request->kecamatan_id;
+        // }
         $response_provinsi = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/provinces.json");
 
         if ($response_provinsi->successful()) {

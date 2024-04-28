@@ -90,7 +90,6 @@ class SiswaController extends Controller
         $result_provinsi = $this->getprovinsi->provinsi()->json();
         if($result_provinsi){
             $wilayah = $this->getprovinsi->getProvinsi($siswa->slug)->json();
-            dd($wilayah);
         }
         return view('dashboard.data.siswa.edit',compact('siswa','kelass','result_provinsi'));
     }

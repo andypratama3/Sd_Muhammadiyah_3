@@ -64,8 +64,10 @@
                         <img src="{{ asset('asset_dashboard/img/default.jpg') }}" alt="Profile" id=""
                             class="w-25 img-profile rounded-circle">
                     @else
+                    <a href="{{ asset('storage/img/profile/' . Auth::user()->avatar) }}">
                         <img src="{{ asset('storage/img/profile/' . Auth::user()->avatar) }}"
-                            class=" img-profile rounded-circle" alt="Profile" id="profile">
+                            class="img-profile rounded-circle" alt="Profile" id="profile">
+                    </a>
                     @endif
                     <h2>{{ Auth::user()->name }}</h2>
                     @if (empty(Auth::user()->roles->first()->name))
