@@ -165,12 +165,12 @@
                         <div class="form-group row">
                             <label class="col-sm-3 text-dark" for="name">Foto</label>
                             <div class="col-sm-9">
-                                <div class="input-group mt-2 ">
+                                <div class="input-group ">
                                     <input type="file" class="form-control" name="foto" id="foto"
-                                        value="{{ $siswa->name }}"/>
+                                        value="{{ $siswa->foto }}"/>
                                     </div>
                                     <div class="input-group-append">
-                                        <a target="__blank" href="{{ asset('storage/img/siswa/' . $siswa->foto) }}" class="btn btn-success"><i class="bi bi-file"></i> Lihat Foto</a>
+                                        <a target="__blank" href="{{ asset('storage/img/siswa/' . $siswa->foto) }}" class="btn btn-success mt-2"><i class="bi bi-file"></i> Lihat Foto</a>
                                     </div>
                             </div>
                         </div>

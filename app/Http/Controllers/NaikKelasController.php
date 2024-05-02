@@ -39,10 +39,15 @@ class NaikKelasController extends Controller
             // Find the next class for the student
             $nextClass = null;
             foreach ($kelass as $kelas) {
+
+
                 // Extract the class number from the class name
                 preg_match('/Kelas (\d+)/', $kelas->name, $matches);
                 // Check if the pattern matched
                 if (isset($matches[1])) {
+                    if($kelas->name == 'Lulus'){
+                        break;
+                    }
                     $nextClassNumber = intval($matches[1]);
                 } else {
                     $nextClass = $lulus;

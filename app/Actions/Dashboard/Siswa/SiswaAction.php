@@ -10,6 +10,8 @@ class SiswaAction {
 
     public function execute($siswaData)
     {
+        $siswa = Siswa::where('slug',$siswaData->slug)->first();
+
         /*
             ! change data compalate detail student
             ! masuk sekolah, nama orang tua , pekerjaan, alamat orang tua, wali
@@ -22,9 +24,9 @@ class SiswaAction {
             $picture_name = 'Siswa_'.Str::slug($siswaData->name).'_'.date('YmdHis').".$ext";
             $foto->move($upload_path, $picture_name);
         }else {
-            $picture_name = Str::slug($siswaData->name).'jpg';
+             $picture_name = $siswa->foto;
         }
-        // dd($siswaData->nik);
+
         $siswa = Siswa::updateOrCreate(
             ['slug' => $siswaData->slug],
             [
