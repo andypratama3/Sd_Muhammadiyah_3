@@ -16,15 +16,15 @@ class SiswaAction {
             ! change data compalate detail student
             ! masuk sekolah, nama orang tua , pekerjaan, alamat orang tua, wali
         */
-        if($siswaData->foto){
+        if(!$siswaData->foto){
+                $picture_name = $siswa->foto;
+        }else {
             $foto = $siswaData->foto;
             $ext = $foto->getClientOriginalExtension();
             //upload foto to folder
             $upload_path = public_path('storage/img/siswa/');
             $picture_name = 'Siswa_'.Str::slug($siswaData->name).'_'.date('YmdHis').".$ext";
             $foto->move($upload_path, $picture_name);
-        }else {
-             $picture_name = $siswa->foto;
         }
 
         $siswa = Siswa::updateOrCreate(
