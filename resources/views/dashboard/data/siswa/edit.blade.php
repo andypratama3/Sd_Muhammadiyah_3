@@ -56,19 +56,6 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label class="col-sm-3 text-dark" for="nik">NIK</label>
-                            <div class="col-sm-9 d-flex relative">
-                                <input type="text" class="form-control" name="nik" id="nik"
-                                    value="{{ $siswa->nik }}" />
-                                <i class="fas fa-solid bg-success border-1" data-toggle="tooltip" title=""
-                                    id="icon-check-nik"
-                                    style="font-size: 10px; position : absolute; margin-top: 6px; right: 15px; padding: 10px; border-radius: 50px; color: black; display:none; "></i>
-                            </div>
-
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group row">
                             <label class="col-sm-3 text-dark" for="tmpt_lahir">Tempat Lahir</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" name="tmpt_lahir" id="tmpt_lahir"
@@ -103,7 +90,7 @@
                             <label class="col-sm-3 text-dark" for="kelas_tahun">Nama Pendidikan</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" name="nama_pendidikan" id="nama_pendidikan"
-                                    value="{{ $siswa->nama_pendidikan }}" />
+                                    value="{{ $siswa->nama_pendidikan }}" placeholder="Nama Pendidikan Sebelumnya | Boleh Di Kosongkan" />
                             </div>
                         </div>
                     </div>
@@ -111,8 +98,27 @@
                         <div class="form-group row">
                             <label class="col-sm-3 text-dark" for="kelas_tahun">Alamat Pendidikan</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" name="nama_jalan_pendidikan"
-                                    id="nama_jalan_pendidikan" value="{{ $siswa->nama_jalan_pendidikan }}" />
+                                <input type="text" class="form-control" name="nama_jalan_pendidikan" id="nama_jalan_pendidikan"
+                                    value="{{ $siswa->nama_jalan_pendidikan }}"  placeholder="Alamat Pendidikan Sebelumnya | Boleh Di Kosongkan" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-3 text-dark" for="kelas_tahun">Kelas  / Tahun Ajaran</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="kelas_tahun" id="kelas_tahun"
+                                    value="{{ $siswa->kelas_tahun }}" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-3 text-dark" for="tanggal_masuk">Tanggal Masuk</label>
+                            <div class="col-sm-9">
+                                <input type="date" class="form-control" name="tanggal_masuk" id="tanggal_masuk"
+                                    value="{{ $siswa->tanggal_masuk }}" />
                             </div>
                         </div>
                     </div>
@@ -159,8 +165,13 @@
                         <div class="form-group row">
                             <label class="col-sm-3 text-dark" for="name">Foto</label>
                             <div class="col-sm-9">
-                                <input type="file" class="form-control" name="foto" id="foto"
-                                    value="{{ $siswa->name }}" />
+                                <div class="input-group mt-2 ">
+                                    <input type="file" class="form-control" name="foto" id="foto"
+                                        value="{{ $siswa->name }}"/>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <a target="__blank" href="{{ asset('storage/img/siswa/' . $siswa->foto) }}" class="btn btn-success"><i class="bi bi-file"></i> Lihat Foto</a>
+                                    </div>
                             </div>
                         </div>
                     </div>

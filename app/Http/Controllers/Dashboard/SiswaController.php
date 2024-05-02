@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 
 use App\Models\Kelas;
+use Response;
 use App\Models\Siswa;
 use Barryvdh\DomPDF\PDF;
 use App\Exports\SiswaExport;
@@ -83,15 +84,12 @@ class SiswaController extends Controller
     {
         return view('dashboard.data.siswa.show', compact('siswa'));
     }
-    public function edit(Siswa $siswa)
+    public function edit(Request $request,Siswa $siswa)
     {
         $kelass = Kelas::all();
-
-        $result_provinsi = $this->getprovinsi->provinsi()->json();
-        if($result_provinsi){
-            $wilayah = $this->getprovinsi->getProvinsi($siswa);
-        }
-        return view('dashboard.data.siswa.edit',compact('siswa','kelass','result_provinsi'));
+        $result_provinsi = $this->getprovinsi->provinsi($siswa)->json();
+    
+        return view('dashboard.data.siswa.edit', compact('siswa','kelass','result_provinsi'));
     }
     public function update(SiswaData $siswaData, SiswaAction $siswaAction)
     {
