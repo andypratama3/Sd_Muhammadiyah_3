@@ -31,10 +31,11 @@ class PembayaranController extends Controller
 
         if($request->judul_pembayaran){
             $query->where('judul_id', $request->judul_pembayaran);
+
             if ($request->kelas) {
                 $query->whereHas('siswa', function ($querys) use ($request) {
+                    
                     $querys->where('kelas_id', $request->kelas);
-
                     if ($request->category_kelas) {
                         $querys->whereHas('kelas', function ($querys) use ($request) {
                             $querys->where('siswa_kelas.category_kelas', $request->category_kelas);
@@ -86,8 +87,8 @@ class PembayaranController extends Controller
     {
         $juduls = JudulPembayaran::all();
         $siswas = Siswa::select(['id','name','slug'])->get();
-        $kelass = Kelas::orderBy('name','asc')->get();
-        return view('dashboard.data.pembayaran.create', compact('siswas','kelass','juduls'));
+        // $kelass = Kelas::orderBy('name','asc')->get();
+        return view('dashboard.data.pembayaran.create', compact('siswas','juduls'));
     }
     public function store(PembayaranData $pembayaranData, PembayaranAction $pembayaranAction)
     {

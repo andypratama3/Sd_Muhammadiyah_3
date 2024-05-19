@@ -33,10 +33,10 @@
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="tgl_lahir">Nama Siswa</label>
                         <div class="col-sm-9">
-                            <select class="form-control select2" name="siswa_id" id="">
+                            <select class="form-control select2" name="siswa_id" id="siswa_id">
                                 <option selected disabled>Pilih Siswa</option>
                                 @foreach ($siswas as $siswa)
-                                <option value="{{ $siswa->id }}">{{ $siswa->name }}</option>
+                                    <option value="{{ $siswa->id }}">{{ $siswa->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -49,9 +49,9 @@
                         <div class="col-sm-9">
                             <select name="kelas_id" id="kelas" class="select2 form-control" data-placholder="Pilih Kelas">
                                 <option selected disabled>Pilih Kelas</option>
-                                @foreach ($kelass as $kelas)
+                                {{-- @foreach ($siswa->kelas as $kelas)
                                     <option value="{{ $kelas->id }}">{{ $kelas->name }}</option>
-                                @endforeach
+                                @endforeach --}}
                             </select>
                         </div>
                     </div>
@@ -116,7 +116,15 @@
 
         }
 
-
+        $('#siswa_id').on('change', function () {
+            let selectedSiswaId = $('#siswa_id').val();
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            // 
+        });
         $('#kelas').on('change', function () {
             var selectedKelasId = $('#kelas').val();
             var categoryKelasDropdown = $('#category_kelas');

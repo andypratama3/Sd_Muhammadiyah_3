@@ -15,7 +15,6 @@ class CommentArtikelController extends Controller
     public function store(CommentData $commentData, CommentAction $action)
     {
         if(Auth::check()){
-            session(['url.intended' => url()->previous()]);
             $result = $action->execute($commentData);
             if($result){
                 return response()->json(['success' => 'Berhasil Menambahkana Komentar']);
@@ -23,7 +22,7 @@ class CommentArtikelController extends Controller
                 return response()->json(['failure' => 'Gagal Menambahkana Komentar']);
             }
         }else{
-            return redirect()->route('login')->with('status', 'Login Terlebih Dahulu');
+            return redirect()->route('login')->with('errro','Login Terlebih Dahulu');
         }
     }
     public function update(CommentData $commentData, CommentAction $action)

@@ -93,7 +93,7 @@ Route::group(['prefix' => '/'], function () {
     Route::resource('artikel', ArtikelController::class, ['names' => 'artikel']);
     //new fiture kontak and prestasi
     Route::get('kontak', [KontakController::class, 'index'])->name('kontal.index');
-    
+
     //kritik saran
     Route::post('kritik-saran/post', [KritikSaranController::class, 'store'])->name('kritik.saran.store');
     Route::get('prestasi-siswa', [PrestasiSiswaController::class, 'index'])->name('prestasi.siswa.index');
@@ -110,7 +110,7 @@ Route::group(['prefix' => '/'], function () {
 
 
 //users after login
-Route::group(['prefix' => 'artikel', 'middleware' => ['auth.basic']], function () {
+Route::group(['prefix' => 'artikel', 'middleware' => ['auth']], function () {
     //CommentArtikel
     Route::resource('comment', CommentArtikelController::class, ['names' => 'comment']);
     Route::post('like', [LikeArtikelController::class, 'like'])->name('like.comment');

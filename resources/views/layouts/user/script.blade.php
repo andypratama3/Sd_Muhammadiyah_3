@@ -13,17 +13,11 @@
     document.addEventListener('DOMContentLoaded', function() {
         $(window).on('load', function() {
             $('body').addClass('loading');
-            // if(checkInternetConnection){
                 setTimeout(() => {
                     $('.loading-screen').fadeOut(1000);
                     $('body').removeClass('loading');
                     $('#header').addClass('fixed-top');
                 }, 800);
-            // }
+            });
         });
-        // function checkInternetConnection() {
-        //     return navigator.onLine;
-        // }
-      });
-
-</script>
+  </script>

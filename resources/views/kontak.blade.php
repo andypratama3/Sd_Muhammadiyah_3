@@ -4,7 +4,7 @@
 
 @section('content')
 <!-- ======= Hero Slider Section ======= -->
-{{-- <section id="hero-slider" class="hero-slider" style="margin-top: 94px;">
+<section id="hero-slider" class="hero-slider" style="margin-top: 94px;">
     <div class="container-md" data-aos="fade-in">
         <div class="row" style="gap: 1.5rem;">
             <div class="col-md-7 m-0">
@@ -30,7 +30,7 @@
             </div>
         </div>
     </div>
-</section> --}}
+</section>
 <!-- End Hero Slider Section -->
 <section class="contact" style="margin-top: 94px;">
     <div class="container" data-aos="fade-up">
@@ -68,7 +68,7 @@
 @push('js_user')
     <script>
         $(document).ready(function() {
-           
+
         });
     </script>
 @endpush

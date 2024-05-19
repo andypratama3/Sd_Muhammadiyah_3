@@ -1,6 +1,12 @@
 @extends('layouts.user')
 @section('title','Beranda')
-
+@push('css')
+    <style>
+        .about img{
+            border-radius: 10px;
+        }
+    </style>
+@endpush
 @section('content')
 <!-- ======= Hero Slider Section ======= -->
 <section id="hero-slider" class="hero-slider" style="margin-top: 94px;">
@@ -50,7 +56,7 @@
 
             <div class="d-md-flex post-entry-2 half">
                 <a href="#" class="me-4 thumbnail">
-                    <img src="{{ asset('storage/img/berita/Berita_test_20240412172357.jpg') }}" alt="" class="img-fluid" data-aos="fade-up-right">
+                    <img src="{{ asset('storage/img/berita/Berita_test_20240412172357.jpg') }}" alt=""  class="img-fluid img-welcome" data-aos="fade-up-right">
                 </a>
                 <div class="ps-md-5 mt-4 mt-md-0" data-aos="fade-up-left">
                     <div class="post-meta mt-4">Tentang</div>
@@ -69,7 +75,7 @@
 
             <div class="d-md-flex post-entry-2 half mt-5">
                 <a href="#" class="me-4 thumbnail order-2">
-                    <img src="{{ asset('storage/img/berita/Berita_test_20240412172357.jpg') }}" alt="" class="img-fluid" data-aos="fade-up-left">
+                    <img src="{{ asset('storage/img/berita/Berita_test_20240412172357.jpg') }}" alt="" class="img-fluid img-welcome" data-aos="fade-up-left">
                 </a>
                 <div class="pe-md-5 mt-4 mt-md-0" data-aos="fade-up-right">
                     <div class="post-meta mt-4">Visi &amp; Misi</div>

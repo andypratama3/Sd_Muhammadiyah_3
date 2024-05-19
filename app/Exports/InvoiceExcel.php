@@ -22,7 +22,10 @@ class InvoiceExcel implements FromCollection, WithHeadings
     public function collection()
     {
         $query = Pembayaran::with(['siswa', 'kelas'])
-            ->where('judul_id', $this->judulId);
+            ->where('judul_id', $this->judulId)
+            ->whereHas('siswa', function ($query) {
+                $query->whereNotIn('name', ['lulus']);
+            });
 
         if ($this->kelas) {
             $query->where('kelas_id', $this->kelas);
@@ -31,6 +34,8 @@ class InvoiceExcel implements FromCollection, WithHeadings
         if ($this->category_kelas) {
             $query->where('category_kelas', $this->category_kelas);
         }
+
+        $query->orderBy('created_at', 'desc');
 
         return $query->get()->map(function ($item) {
             $grossAmount = number_format($item->gross_amount, 0, ',', '.');
