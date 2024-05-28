@@ -10,14 +10,14 @@
   <!-- Template Main JS File -->
   <script src="{{asset('assets/js/main.js')}}"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        $(window).on('load', function() {
-            $('body').addClass('loading');
-                setTimeout(() => {
-                    $('.loading-screen').fadeOut(1000);
-                    $('body').removeClass('loading');
-                    $('#header').addClass('fixed-top');
-                }, 800);
-            });
-        });
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     $(window).on('load', function() {
+    //         $('body').addClass('loading');
+    //             setTimeout(() => {
+    //                 $('.loading-screen').fadeOut(1000);
+    //                 $('body').removeClass('loading');
+    //                 $('#header').addClass('fixed-top');
+    //             }, 800);
+    //         });
+    //     });
   </script>
