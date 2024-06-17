@@ -17,7 +17,7 @@ class CommentArtikelController extends Controller
         if(Auth::check()){
             $result = $action->execute($commentData);
             if($result){
-                return response()->json(['redirect' => $rediret,'success' => 'Berhasil Menambahkana Komentar']);
+                return response()->json(['success' => 'Berhasil Menambahkana Komentar']);
             }else{
                 return response()->json(['failure' => 'Gagal Menambahkana Komentar']);
             }

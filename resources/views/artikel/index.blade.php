@@ -136,7 +136,7 @@
         let itemsLoaded = 0;
         let loading = $('.loading-data');
         loading.hide();
-        
+
         $(window).scroll(function () {
             let scrollPercentage = ($(window).scrollTop() / ($(document).height() - $(window)
             .height())) * 100;

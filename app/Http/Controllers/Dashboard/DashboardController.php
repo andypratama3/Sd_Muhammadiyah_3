@@ -9,9 +9,10 @@ use App\Models\Prestasi;
 use App\Charts\SiswaChart;
 use App\Models\Pembayaran;
 use App\Charts\ArtikelView;
+use App\Models\KritikSaran;
 use App\Models\TenagaPendidikan;
 use App\Http\Controllers\Controller;
-use App\Models\KritikSaran;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -43,6 +44,7 @@ class DashboardController extends Controller
 
         $kritis = KritikSaran::orderBy('created_at', 'desc')->take(5)->get();
 
+        $artikel_publish = Artikel::where('user_id', Auth::user()->id)->where('status','publish')->count();
 
         return view('dashboard.index', compact(
             'siswa',
@@ -56,6 +58,7 @@ class DashboardController extends Controller
             // 'percent_artikel',
             'invoice_list',
             'kritis',
+            'artikel_publish',
         ));
     }
 
