@@ -2,9 +2,9 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
 <title>SD MUH 3 || @yield('title')</title>
-<meta content="" name="description">
+<meta content="" name="description" content="sekolah kreatif muhammadiyah 3 samarinda">
 <meta content="" name="keywords">
-
+<meta>
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <!-- Favicons -->
@@ -29,4 +29,6 @@
 <link href="{{asset('assets/css/variables.css')}}" rel="stylesheet">
 <link href="{{asset('assets/css/main.css')}}" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+
+
 @stack('css_user')
