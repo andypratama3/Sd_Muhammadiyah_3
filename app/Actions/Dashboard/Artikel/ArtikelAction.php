@@ -4,6 +4,7 @@ namespace App\Actions\Dashboard\Artikel;
 
 use App\Models\Artikel;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 use App\DataTransferObjects\ArtikelData;
 
 class ArtikelAction
@@ -22,7 +23,7 @@ class ArtikelAction
         }else{
             $artikel = Artikel::where('slug', $artikelData->slug)->first();
             $picture_name = $artikel->image;
-            
+
         }
         $artikel = Artikel::updateOrCreate(
             ['slug' => $artikelData->slug],
@@ -30,6 +31,7 @@ class ArtikelAction
                 'name' => $artikelData->name,
                 'artikel' => $artikelData->artikel,
                 'image' => $picture_name,
+                'user_id' => Auth::id(),
             ]);
 
         if(empty($artikelData->slug))

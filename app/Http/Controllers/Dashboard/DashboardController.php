@@ -15,6 +15,10 @@ use App\Models\KritikSaran;
 
 class DashboardController extends Controller
 {
+    public function __construct()
+    {
+        // $this->middleware('role:admin,superadmin');
+    }
 
     public function __invoke(ArtikelView $ArtikelChart, SiswaChart $siswaChart)
     {
@@ -33,7 +37,7 @@ class DashboardController extends Controller
         $artikels = Artikel::orderBy('jumlah_klik','desc')->take(5)->get();
 
         // convert to percent
-        $percent_artikel = ($artikel_like_max->jumlah_klik  / $artikel_sum_total_klik) * 100;
+        // $percent_artikel = ($artikel_like_max->jumlah_klik  / $artikel_sum_total_klik) * 100;
 
         $invoice_list = Pembayaran::orderBy('updated_at')->take(10)->get();
 
@@ -49,7 +53,7 @@ class DashboardController extends Controller
             'siswaChart',
             'artikels',
             'artikel_sum_total_klik',
-            'percent_artikel',
+            // 'percent_artikel',
             'invoice_list',
             'kritis',
         ));

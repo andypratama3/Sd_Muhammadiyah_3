@@ -89,7 +89,7 @@
                                             @endauth
                                             <!-- Like Button for All Users -->
                                             <div class="form-group">
-                                                @if (Auth::check())
+                                                @auth
                                                     @if ($comment->likes)
                                                         <i class="bi bi-heart-fill like" id="like" data-id="<?=$comment->id ?>"></i>
                                                         <span id="like">{{ $comment->countLike() }} Like</span>
@@ -100,7 +100,7 @@
                                                 @else
                                                     <i class="bi bi-heart-fill unlike" id="like" data-id="<?=$comment->id ?>"></i>
                                                     <span id="like">{{ $comment->countLike() }} Like</span>
-                                                @endif
+                                                @endauth
                                             </div>
                                         @endforeach
                                     </div>

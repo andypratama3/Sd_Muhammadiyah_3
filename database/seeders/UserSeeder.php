@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
         // Role
         $listRoles = [
             'Superadmin',
-            // Add more roles here
+            'User',
         ];
 
         foreach ($listRoles as $key => $value) {

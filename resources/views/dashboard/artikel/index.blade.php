@@ -14,7 +14,7 @@
                 <h4 class="card-title text-primary mb-4">Artikel
                 <a href="{{ route('dashboard.news.artikel.create') }}" class="btn btn-success btn-sm float-right ">Tambah <i class="fas fa-plus"></i></a>
                 </h4>
-                
+
                 <div class="table-responsive">
                     <table class="table" id="artikel_table">
                         <thead>
@@ -23,6 +23,10 @@
                                 <th>Nama / Judul</th>
                                 <th>Kategori</th>
                                 <th>Jumlah View</th>
+                                <th>Status</th>
+                                @can('role:superadmin')
+                                    <th>Aksi Publish</th>
+                                @endcan
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -50,6 +54,7 @@ $(document).ready(function () {
         serverSide: true,
         responsive: true,
         processing: true,
+        stateSave: true,
         pageLength: 100,
         ajax: {
             'url': $('#artikel_data').val(),
@@ -59,6 +64,19 @@ $(document).ready(function () {
             { data: 'name', name: 'name'},
             { data: 'kategori.name', name: 'kategori.name'},
             { data: 'jumlah_klik', name: 'jumlah_klik', orderable: true},
+            {
+                data: 'status', name: 'status',
+                render: function (data) {
+                    if (data == 'publish') {
+                        return '<span class="badge badge-success"><i class="fas fa-check"></i> Publish</span>';
+                    } else {
+                        return '<span class="badge badge-warning"><i class="fas fa-clock"></i> Pending</span>';
+                    }
+                }
+            },
+            @if (Auth::user()->hasRole('superadmin'))
+            { data: 'button_action',name: 'button_action'},
+            @endif
             { data: 'options',name: 'options', orderable: false, searchable: false }
         ],
     });

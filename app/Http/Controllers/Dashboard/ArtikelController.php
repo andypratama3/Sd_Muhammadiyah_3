@@ -6,6 +6,7 @@ use App\Models\Artikel;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\DataTransferObjects\ArtikelData;
 use Yajra\DataTables\Facades\DataTables;
 use App\Actions\Dashboard\Artikel\ArtikelAction;
@@ -19,8 +20,12 @@ class ArtikelController extends Controller
     }
     public function data_table()
     {
-        
-        $query = Artikel::with('categorys')->select('id','name','image','jumlah_klik','artikel','slug')->orderBy('created_at','asc');
+
+        $query = Artikel::with('categorys')->select('id','name','image','jumlah_klik','artikel','slug','status','user_id')->orderBy('created_at','desc');
+        if(Auth::user()->hasRole('user'))
+        {
+            $query = $query->where('user_id',Auth::user()->id);
+        }
         return DataTables::of($query)
                 ->addColumn('kategori.name', function ($artikel) {
                     $categoryNames = $artikel->categorys->pluck('name')->implode(', ');
@@ -33,7 +38,14 @@ class ArtikelController extends Controller
                     <button data-id="' . $row['slug'] . '" class="btn btn-sm btn-danger" id="btn-delete"><i class="fa fa-trash"></i></button>
                 ';
                 })
-                ->rawColumns(['options'])
+                ->addColumn('button_action', function ($row) {
+                    $btn = $row->status == 'publish' ? 'warning' : 'success';
+                    $status = $row->status == 'pending' ? 'publish' : 'pending';
+                    $icon = $row->status == 'pending' ? 'check' : 'clock';
+                    return '<a href="' . route('dashboard.news.artikel.status', $row->slug) . '" class="btn btn-sm btn-' . $btn . '"><i class="fa fa-' . $icon . '"></i> ' . ucfirst($status) . '</a>';
+                })
+
+                ->rawColumns(['options','button_action'])
                 ->addIndexColumn()
                 ->make(true);
 
@@ -75,5 +87,19 @@ class ArtikelController extends Controller
         }else{
             return response()->json(['status' => 'error', 'message' => 'Gagal Mengirim Kritik Dan Saran']);
         }
+    }
+
+    public function status($slug)
+    {
+        $artikel = Artikel::where('slug', $slug)->first();
+        if($artikel->status == 'pending')
+        {
+            $artikel->status = 'publish';
+        }else{
+            $artikel->status = 'pending';
+        }
+        $artikel->update();
+
+        return redirect()->back()->with('success','Berhasil Mengubah Status Publish Artikel');
     }
 }

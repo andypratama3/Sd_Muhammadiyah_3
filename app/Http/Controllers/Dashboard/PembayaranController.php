@@ -30,11 +30,12 @@ class PembayaranController extends Controller
         $query = Pembayaran::with('kelas','siswa','judul')->select(['order_id','gross_amount','siswa_id','status','kelas_id','judul_id','category_kelas']);
 
         if($request->judul_pembayaran){
+            
             $query->where('judul_id', $request->judul_pembayaran);
 
             if ($request->kelas) {
                 $query->whereHas('siswa', function ($querys) use ($request) {
-                    
+
                     $querys->where('kelas_id', $request->kelas);
                     if ($request->category_kelas) {
                         $querys->whereHas('kelas', function ($querys) use ($request) {

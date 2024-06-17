@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('image');
             $table->longText('artikel');
             $table->string('slug');
+            $table->foreignUUid('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->string('status')->default('pending');
             $table->unsignedInteger('like')->default(0);
             $table->unsignedInteger('jumlah_klik')->default(0);
             $table->timestamps();

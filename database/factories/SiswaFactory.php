@@ -22,7 +22,7 @@ class SiswaFactory extends Factory
             'jk' => $this->faker->randomElement(['laki-laki', 'perempuan']),
             'tmpt_lahir' => $this->faker->city,
             'tgl_lahir' => $this->faker->date(),
-            'nik' => str_pad($this->faker->randomNumber(8), 9, '0', STR_PAD_LEFT),
+            // 'nik' => str_pad($this->faker->randomNumber(8), 9, '0', STR_PAD_LEFT),
             'agama' => $this->faker->randomElement(['Islam', 'Kristen', 'Hindu', 'Buddha']),
             'rt' => $this->faker->randomNumber(3),
             'rw' => $this->faker->randomNumber(3),

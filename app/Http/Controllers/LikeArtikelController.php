@@ -25,7 +25,7 @@ class LikeArtikelController extends Controller
             }
             return null;
         }else{
-            return redirect()->route('login');
+            return redirect()->route('login')->with('error', 'Anda harus login terlebih dahulu');
         }
 
     }

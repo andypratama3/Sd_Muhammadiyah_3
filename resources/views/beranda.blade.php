@@ -2,8 +2,8 @@
 @section('title','Beranda')
 @push('css')
     <style>
-        .about img{
-            border-radius: 10px;
+        .img-welcome{
+            border-radius: 10px !important;
         }
     </style>
 @endpush

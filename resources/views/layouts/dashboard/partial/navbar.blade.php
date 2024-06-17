@@ -12,6 +12,7 @@
             <span>Dashboard</span></a>
     </li>
     <hr class="sidebar-divider">
+    @can('role: admin,superadmin')
     <div class="sidebar-heading">
         Fitur
     </div>
@@ -170,4 +171,13 @@
             <i class="fa-solid fa-envelope-open-text"></i>
             <span>Kritik Saran</span></a>
     </li>
+    @endcan
+    @if(Auth::user()->hasRole('user'))
+    <li class="nav-item {{ Request::routeIs('dashboard.news.artikel.*') ? 'active' : '' }}">
+        <a class="nav-link  {{ Request::routeIs('dashboard.news.artikel.*') ? 'active' : '' }}" href="{{ route('dashboard.news.artikel.index') }}">
+            <i class="fa-solid fa-envelope-open-text"></i>
+            <span>Artikel</span></a>
+    </li>
+    <hr class="sidebar-divider d-none d-md-block">
+    @endif
 </ul>

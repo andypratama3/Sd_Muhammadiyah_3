@@ -19,6 +19,8 @@ class Artikel extends Model
         'artikel',
         'image',
         'jumlah_klik',
+        'user_id',
+        'status',
         'slug',
     ];
     // category for articles
@@ -27,6 +29,10 @@ class Artikel extends Model
         return $this->belongsToMany(Category::class, 'artikel_categorys');
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
     public function comments()
     {
         return $this->belongsToMany(Comment::class, 'comments_artikels');

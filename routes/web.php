@@ -120,7 +120,6 @@ Route::group(['prefix' => 'artikel', 'middleware' => ['auth']], function () {
 Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], function () {
     Route::get('/', DashboardController::class)->name('dashboard');
 
-
     Route::resource('kritik-saran', DashboardKritiSaranController::class, ['names' => 'dashboard.kritik.saran']);
 
     Route::group(['prefix' => 'news'], function () {
@@ -129,7 +128,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::resource('artikel', DashboardArtikelController::class, ['names' => 'dashboard.news.artikel']);
         Route::resource('category', CategoryArtikel::class, ['names' => 'dashboard.news.category']);
         Route::get('artikels/records', [DashboardArtikelController::class, 'data_table'])->name('dashboard.news.artikel.getArtikel');
-        // Route::post('artikels/destory', [DashboardArtikelController::class, 'destroy'])->name('dashboard.news.artikel.artikelsdestory');
+        Route::get('artikels/status/{slug}', [DashboardArtikelController::class, 'status'])->name('dashboard.news.artikel.status');
 
     });
 
