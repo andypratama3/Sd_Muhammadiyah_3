@@ -2,7 +2,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
 <title>SD MUH 3 || @yield('title')</title>
-<meta content="" name="description" content="sekolah kreatif muhammadiyah 3 samarinda">
+<meta name="description" content="sekolah kreatif muhammadiyah 3 Samarinda, Kalimantan Timur">
 <meta content="" name="keywords">
 <meta>
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -19,7 +19,14 @@
     rel="stylesheet" >
 
 <!-- Vendor CSS Files -->
-<link href="{{asset('assets/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+<link rel="preload" href="{{asset('assets/vendor/bootstrap/css/bootstrap.min.css')}}"  as="style" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="preload" href="{{asset('assets/css/main.css')}}"  as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+<noscript>
+    <link href="{{asset('assets/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/css/main.css')}}" rel="stylesheet">
+
+</noscript>
 <link href="{{asset('assets/vendor/bootstrap-icons/bootstrap-icons.css')}}" rel="stylesheet">
 <link href="{{asset('assets/vendor/swiper/swiper-bundle.min.css')}}" rel="stylesheet">
 <link href="{{asset('assets/vendor/glightbox/css/glightbox.min.css')}}" rel="stylesheet">
@@ -27,7 +34,6 @@
 
 <!-- Template Main CSS Files -->
 <link href="{{asset('assets/css/variables.css')}}" rel="stylesheet">
-<link href="{{asset('assets/css/main.css')}}" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
 
 
