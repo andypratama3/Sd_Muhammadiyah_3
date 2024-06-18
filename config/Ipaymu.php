@@ -1,6 +1,7 @@
 <?php
 
 return [
-    'va' => env('IPAY_VIRTUALACCOUNT'),
-    'api_key' => env('IPAY_APIKEY'),
+    'va' => env('VA_IPAYMU'),
+    'api_key' => env('API_KEY'),
+    'api_url' => env('API_URL')
 ];

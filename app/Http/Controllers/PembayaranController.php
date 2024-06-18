@@ -50,10 +50,10 @@ class PembayaranController extends Controller
         $gross_amount = str_replace('.', '', $pembayaran->gross_amount);
 
         // SAMPLE HIT API iPaymu v2 PHP
-        $va           = '0000002217160075'; //get on iPaymu dashboard
-        $apiKey       = 'SANDBOX9CAEF80A-BEE1-40DD-A0E4-A71F36393097'; //get on iPaymu dashboard
+        $va           =  config('Ipaymu.va'); 
+        $apiKey       =  config('Ipaymu.api_key');
 
-        $url          = 'https://sandbox.ipaymu.com/api/v2/payment'; // for development mode
+        $url          =  config('Ipaymu.api_url');
         // $url          = 'https://my.ipaymu.com/api/v2/payment'; // for production mode
 
         $method       = 'POST'; //method
