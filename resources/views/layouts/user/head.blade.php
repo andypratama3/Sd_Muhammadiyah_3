@@ -22,10 +22,10 @@
 <link rel="stylesheet" href="{{asset('assets/vendor/bootstrap/css/bootstrap.min.css')}}"  as="style" onload="this.onload=null;this.rel='stylesheet'">
 <link rel="stylesheet" href="{{asset('assets/css/main.css')}}"  as="style" onload="this.onload=null;this.rel='stylesheet'">
 
-<noscript>
-    <link href="{{asset('assets/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
-    <link href="{{asset('assets/css/main.css')}}" rel="stylesheet">
-</noscript>
+{{-- <noscript> --}}
+    {{-- <link href="{{asset('assets/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/css/main.css')}}" rel="stylesheet"> --}}
+{{-- </noscript> --}}
 <link href="{{asset('assets/vendor/bootstrap-icons/bootstrap-icons.css')}}" rel="stylesheet">
 <link href="{{asset('assets/vendor/swiper/swiper-bundle.min.css')}}" rel="stylesheet">
 <link href="{{asset('assets/vendor/glightbox/css/glightbox.min.css')}}" rel="stylesheet">
