@@ -15,7 +15,7 @@
                     <ul class="footer-links list-unstyled">
                         <li><a href="/"><i class="bi bi-chevron-right"></i> Home</a></li>
                         <li><a href="#about"><i class="bi bi-chevron-right"></i> Tentang</a></li>
-                        <li><a href="#"><i class="bi bi-chevron-right"></i> Visi & Misi</a></li>
+                        <li><a href="#a"><i class="bi bi-chevron-right"></i> Visi & Misi</a></li>
                         <li><a href="/kontak"><i class="bi bi-chevron-right"></i> Contact</a></li>
                     </ul>
                 </div>
@@ -89,11 +89,11 @@
 
                 <div class="col-md-6">
                     <div class="social-links mb-3 mb-lg-0 text-center text-md-end">
-                        <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+                        {{-- <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
                         <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
                         <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
                         <a href="#" class="google-plus"><i class="bi bi-skype"></i></a>
-                        <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+                        <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a> --}}
                     </div>
 
                 </div>
