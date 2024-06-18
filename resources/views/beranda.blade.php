@@ -55,9 +55,9 @@
         <div class="row mb-5">
 
             <div class="d-md-flex post-entry-2 half">
-                <a href="#" class="me-4 thumbnail">
+                <div class="me-4 thumbnail">
                     <img src="{{ asset('storage/img/berita/Berita_test_20240412172357.jpg') }}" alt=""  class="img-fluid img-welcome" data-aos="fade-up-right">
-                </a>
+                </div>
                 <div class="ps-md-5 mt-4 mt-md-0" data-aos="fade-up-left">
                     <div class="post-meta mt-4">Tentang</div>
                     <h6 class="mb-4 display-6 text-center">SD Muhammadiyah 3 Samarinda</h6>

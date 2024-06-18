@@ -2,7 +2,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
 <title>SD MUH 3 || @yield('title')</title>
-<meta name="description" content="sekolah kreatif muhammadiyah 3 Samarinda, Kalimantan Timur">
+<meta name="description" content="sekolah kreatif, sd muhammadiyah 3, Samarinda, Kalimantan Timur">
 <meta content="" name="keywords">
 <meta>
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -25,7 +25,6 @@
 <noscript>
     <link href="{{asset('assets/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
     <link href="{{asset('assets/css/main.css')}}" rel="stylesheet">
-
 </noscript>
 <link href="{{asset('assets/vendor/bootstrap-icons/bootstrap-icons.css')}}" rel="stylesheet">
 <link href="{{asset('assets/vendor/swiper/swiper-bundle.min.css')}}" rel="stylesheet">
