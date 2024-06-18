@@ -19,8 +19,8 @@
     rel="stylesheet" >
 
 <!-- Vendor CSS Files -->
-<link rel="preload" href="{{asset('assets/vendor/bootstrap/css/bootstrap.min.css')}}"  as="style" onload="this.onload=null;this.rel='stylesheet'">
-<link rel="preload" href="{{asset('assets/css/main.css')}}"  as="style" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="stylesheet" href="{{asset('assets/vendor/bootstrap/css/bootstrap.min.css')}}"  as="style" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="stylesheet" href="{{asset('assets/css/main.css')}}"  as="style" onload="this.onload=null;this.rel='stylesheet'">
 
 <noscript>
     <link href="{{asset('assets/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
