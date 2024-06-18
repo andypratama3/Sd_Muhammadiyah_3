@@ -7,6 +7,12 @@
 </head>
 
 <body class="body">
+
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T28Z28V9"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
     <div class="loading-screen">
         <img class="loading-image" src="{{asset('assets/img/SD3_logo.png')}}" alt="Loading">
     </div>
