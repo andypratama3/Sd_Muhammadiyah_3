@@ -4,20 +4,20 @@
   <script src="{{asset('assets/vendor/glightbox/js/glightbox.min.js')}}"></script>
   <script src="{{asset('assets/vendor/aos/aos.js')}}"></script>
   <script src="{{asset('assets/vendor/php-email-form/validate.js')}}"></script>
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
   @stack('js_user')
   <!-- Template Main JS File -->
   <script src="{{ asset('assets/js/main.js') }}"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        $(window).on('load', function() {
-            $('body').addClass('loading');
-                setTimeout(() => {
-                    $('.loading-screen').fadeOut(1000);
-                    $('body').removeClass('loading');
-                    $('#header').addClass('fixed-top');
-                }, 800);
-            });
-        });
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     $(window).on('load', function() {
+    //         $('body').addClass('loading');
+    //             setTimeout(() => {
+    //                 $('.loading-screen').fadeOut(1000);
+    //                 $('body').removeClass('loading');
+    //                 $('#header').addClass('fixed-top');
+    //             }, 800);
+    //         });
+    //     });
   </script>
