@@ -23,8 +23,7 @@
 <link rel="stylesheet" href="{{asset('assets/css/main.css')}}"  as="style" onload="this.onload=null;this.rel='stylesheet'"> --}}
 
 {{-- <noscript> --}}
-    <link href="{{asset('assets/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
-    <link href="{{asset('assets/css/main.css')}}" rel="stylesheet">
+
 {{-- </noscript> --}}
 <link href="{{asset('assets/vendor/bootstrap-icons/bootstrap-icons.css')}}" rel="stylesheet">
 <link href="{{asset('assets/vendor/swiper/swiper-bundle.min.css')}}" rel="stylesheet">
@@ -35,5 +34,6 @@
 <link href="{{asset('assets/css/variables.css')}}" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
 
-
+<link href="{{asset('assets/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+<link href="{{asset('assets/css/main.css')}}" rel="stylesheet">
 @stack('css_user')

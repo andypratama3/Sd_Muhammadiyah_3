@@ -20,7 +20,7 @@ body {
     position: fixed;
     overflow: hidden !important;
     padding-top: 8%;
-    background: #94E700;
+    background: #3DD68C;
     padding-left: 38%;
     margin: 0 auto;
     z-index: 99999;
@@ -155,7 +155,7 @@ section {
   height: 90px;
   transition: all 0.5s;
   z-index: 997;
-  background: #94E700;
+  background: #3DD68C;
 }
 
 .header.sticked {
@@ -366,7 +366,7 @@ section {
 
 .fasilitas .fasilitas-wrap .fasilitas-links a {
     color: #fff;
-    background: #94E700;
+    background: #3DD68C;
     margin: 10px 2px;
     width: 36px;
     height: 36px;
