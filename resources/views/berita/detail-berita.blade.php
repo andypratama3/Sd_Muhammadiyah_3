@@ -1,4 +1,4 @@
-@extends('layouts.user')
+@extends('layouts.user_new')
 @section('title','Detail')
 @push('css_user')
     <style>
@@ -22,8 +22,7 @@
                         </figure>
                     <h1 class="mb-2">{{ $berita->judul }}</h1>
                 </div>
-            </div>
-            @include('layouts.user.sidebar')
+            </div>            
         </div>
     </div>
 </section>

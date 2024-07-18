@@ -22,7 +22,7 @@ class BerandaController extends Controller
         $fasilitas = Fasilitas::count();
         $kelas_name = Kelas::orderBy('name');
         $esktrakurikuler = Esktrakurikuler::count();
-        return view('beranda', compact(
+        return view('landing', compact(
             'beritas',
             'siswas',
             'guru',

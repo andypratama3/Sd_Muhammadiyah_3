@@ -1,4 +1,4 @@
-@extends('layouts.user')
+@extends('layouts.user_new')
 @section('title','Berita')
 @push('css_user')
 <style>

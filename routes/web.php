@@ -66,6 +66,9 @@ use App\Http\Controllers\Dashboard\TenagaPendidikanController as DashboardTenaga
 //     return view('layouts.user.loading-data');
 // });
 Route::group(['prefix' => '/'], function () {
+    // Route::get('/', function () {
+    //     return view('landing');
+    // })->name('landing');
     Route::get('/', BerandaController::class)->name('index');
 
     // Berita
