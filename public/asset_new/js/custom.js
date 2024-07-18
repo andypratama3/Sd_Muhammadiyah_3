@@ -5,7 +5,7 @@
     $(window).on('load', function() {
         setTimeout(() => {
             // Fade out the loading screen over 1000 milliseconds
-            $('.js-preloader').fadeOut(1000);
+            $('#js-preloader').fadeOut(1000);
         }, 800);
 
         // Add 'loaded' class to the preloader element
