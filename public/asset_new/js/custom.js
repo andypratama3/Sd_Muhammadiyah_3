@@ -12,6 +12,14 @@
     //     $('#js-preloader').addClass('loaded');
     // });
 
+    function loader() {
+		$(window).on("load", function () {
+			// Animate loader off screen
+			$("#js-preloader").addClass("loaded");
+			$("#js-preloader").delay(1000).fadeOut();
+		});
+	}
+
 
 
 	// $(window).scroll(function() {
@@ -164,23 +172,23 @@
 	}
 
 
-	// Page loading animation
-	$(window).on('load', function() {
-		if($('.cover').length){
-			$('.cover').parallax({
-				imageSrc: $('.cover').data('image'),
-				zIndex: '1'
-			});
-		}
+	// // Page loading animation
+	// $(window).on('load', function() {
+	// 	if($('.cover').length){
+	// 		$('.cover').parallax({
+	// 			imageSrc: $('.cover').data('image'),
+	// 			zIndex: '1'
+	// 		});
+	// 	}
 
-		$("#js-preloader").animate({
-			'opacity': '0'
-		}, 600, function(){
-			setTimeout(function(){
-				$("#js-preloader").css("visibility", "hidden").fadeOut();
-			}, 300);
-		});
-	});
+	// 	$("#js-preloader").animate({
+	// 		'opacity': '0'
+	// 	}, 600, function(){
+	// 		setTimeout(function(){
+	// 			$("#js-preloader").css("visibility", "hidden").fadeOut();
+	// 		}, 300);
+	// 	});
+	// });
 
 	const dropdownOpener = $('.main-nav ul.nav .has-sub > a');
 
@@ -218,5 +226,5 @@
             });
         });
     }
-
+    loader();
 })(window.jQuery);

@@ -7,12 +7,12 @@
 @stack('js_user')
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        $(window).on('load', function() {
-            setTimeout(() => {
-                $('#js-preloader').fadeOut(1000);
-                $('#js-preloader').addClass('loaded');
-            }, 800);
-            });
-        });
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     $(window).on('load', function() {
+    //         setTimeout(() => {
+    //             $('#js-preloader').fadeOut(2000);
+    //             $('#js-preloader').addClass('loaded');
+    //         }, 2000);
+    //         });
+    //     });
 </script>
