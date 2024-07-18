@@ -5,3 +5,14 @@
 <script src="{{ asset('asset_new/js/counter.js') }}"></script>
 <script src="{{ asset('asset_new/js/custom.js') }}"></script>
 @stack('js_user')
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        $(window).on('load', function() {
+            setTimeout(() => {
+                $('#js-preloader').fadeOut(1000);
+                $('#js-preloader').addClass('loaded');
+            }, 800);
+            });
+        });
+</script>
