@@ -1,13 +1,18 @@
 (function ($) {
 
 	"use strict";
-
-	// Page loading animation
-	$(window).on('load', function() {
-        $('#js-preloader').addClass('loaded');
-		$("#js-preloader").fadeOut(1000);
+    // Page loading animation
+    $(window).on('load', function() {
         
+        setTimeout(() => {
+            // Fade out the loading screen over 1000 milliseconds
+            $('.loading-screen').fadeOut(1000);
+        }, 800);
+
+        // Add 'loaded' class to the preloader element
+        $('#js-preloader').addClass('loaded');
     });
+
 
 
 	// $(window).scroll(function() {
