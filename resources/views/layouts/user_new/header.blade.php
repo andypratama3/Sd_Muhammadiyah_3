@@ -4,8 +4,8 @@
             <div class="col-12">
                 <nav class="main-nav">
                     <!-- ***** Logo Start ***** -->
-                    <a href="index.html" class="logo">
-                        <h1>MUHAMMADIYAH3</h1>
+                    <a href="{{ route('index') }}" class="logo">
+                        <h1>SD MUHAMMADIYAH 3</h1>
                     </a>
                     <!-- ***** Logo End ***** -->
                     <!-- ***** Serach Start ***** -->
@@ -22,7 +22,7 @@
                       <li class="scroll-to-section"><a href="#services">Tentang</a></li>
                       <li class="scroll-to-section"><a href="#courses">Courses</a></li>
                       <li class="scroll-to-section"><a href="#team">Team</a></li>
-                      <li class="scroll-to-section"><a href="#events">Events</a></li>
+                      <li class="scroll-to-section"><a href="{{ route('berita.index') }}">Berita</a></li>
                       <li class="scroll-to-section"><a href="#contact">Register Now!</a></li>
                   </ul>
                     <a class='menu-trigger'>

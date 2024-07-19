@@ -27,9 +27,14 @@
   @include('layouts.user_new.header')
   <!-- ***** Header Area End ***** -->
   {{-- Start Content --}}
-  @yield('content')
+
+    @yield('content')
+
   {{-- End Content --}}
-  @include('layouts.user_new.footer')
+
+@include('layouts.user_new.footer')
+
+
 
   <!-- Scripts -->
   <!-- Bootstrap core JavaScript -->

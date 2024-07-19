@@ -365,18 +365,20 @@ Header Style
 }
 
 .header-area .main-nav .logo h1 {
-  font-size: 36px;
+  font-size: 25px;
   text-transform: uppercase;
   color: #fff;
   font-weight: 600;
-  margin-right: 20px;
-  padding-right: 20px;
+  margin-right: 10px;
+  padding-right: 10px;
+  margin-top: 25px;
+  width: max-content;
   border-right: 1px solid rgba(250, 250, 250, 0.3);
 }
 
 .background-header .main-nav .logo,
 .background-header .main-nav #search {
-  margin-top: 18px;
+  margin: 0;
 }
 
 .header-area .main-nav #search {
@@ -428,6 +430,7 @@ Header Style
   padding-left: 5px;
   padding-right: 5px;
   height: 40px;
+
   line-height: 40px;
 }
 
@@ -440,6 +443,7 @@ Header Style
   font-size: 14px;
   height: 40px;
   line-height: 40px;
+
   text-transform: capitalize;
   color: black;
   -webkit-transition: all 0.4s ease 0s;
@@ -610,6 +614,7 @@ Header Style
   .background-header .main-nav .nav,
   .header-area .main-nav .nav {
     background-color: #f1f0fe;
+
   }
 
   .background-header .main-nav .nav li a,
@@ -627,6 +632,7 @@ Header Style
     border-top: 1px solid #ddd;
     background-color: #f1f0fe;
     height: 50px;
+    border: 2px solid #000;
     border-radius: 0px 0px 25px 25px;
   }
 
@@ -1780,6 +1786,8 @@ footer {
   background-color: #5ce70b;
   vertical-align: middle;
   min-height: 150px;
+  display: block;
+  overflow: hidden !important;
   border-radius: 150px 150px 0px 0px;
 }
 
@@ -1831,6 +1839,7 @@ body {
 
   .header-area .main-nav .logo h1 {
     border-right: none;
+    font-size: 20px;
   }
 
   .main-banner .item {
@@ -2090,6 +2099,16 @@ body {
 }
 
 @media (max-width: 1200px) {
+    .header-area .main-nav ul.nav {
+    border: 1px solid #000;
+    height: 100%;
+    width: 80%;
+
+  }
+   .header-area .main-nav .nav li {
+    border: 2px solid #000;
+    display: flex;
+  }
   .header-area .main-nav #search input {
     width: 200px;
   }

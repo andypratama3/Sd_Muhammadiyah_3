@@ -1,19 +1,19 @@
 @foreach ($beritas as $berita)
-<div class="col-md-6 col-lg-4 d-flex mt-2" data-aos="fade-up"  id="col-md-6">
-    <div class="blog-entry justify-content-end" >
-        <a href="{{ route('berita.show', $berita->slug) }}">
-            <img src="{{ asset('storage/img/berita/'. $berita->foto ) }}" alt="" class="img-fluid">
-            <div class="text">
-                <p class="meta mt-2"><span><i class="fa fa-user me-1"></i>Admin</span> <span><i
-                            class="fa fa-calendar me-1"></i>{{ $berita->created_at->format('Y:m:d') }}</span> <span><a href="#"><i
-                                class="fa fa-comment me-1"></i> 3 Comments</a></span></p>
-                <h3 class="heading mb-3"><a href="{{ route('berita.show', $berita->slug) }}">{{ $berita->judul }}</a>
-                </h3>
-                <p>
-                    {{ Str::substr($berita->desc, 0, 50). ' ......' }}
-                </p>
+    <div class="col-lg-4 col-md-6 align-self-center mb-30 event_outer col-md-6 design">
+        <div class="events_item">
+            <div class="thumb">
+                <a href="{{ route('berita.show', $berita->slug) }}">
+                    <img src="{{ asset('storage/img/berita/' . $berita->foto) }}" alt="" loading="lazy">
+                    <span class="price">
+                        <h6><em><code>*</code></em>New</h6>
+                    </span>
             </div>
-        </a>
+            <div class="down-content">
+                <span class="author">{{ \Carbon\Carbon::parse($berita->created_at)->diffForHumans() }}</span>
+                <h4>{{ $berita->judul }}</h4>
+                <p>{{ Str::substr($berita->desc, 0, 50) . ' ......' }}</p>
+            </div>
+            </a>
+        </div>
     </div>
-</div>
 @endforeach

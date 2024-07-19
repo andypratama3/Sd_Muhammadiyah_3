@@ -11,11 +11,12 @@ class BeritaController extends Controller
     {
         $beritas = Berita::orderBy('created_at', 'desc')->paginate(9);
 
-        if($request->ajax()) {
-            return view('berita.load', compact('beritas'));
+        if ($request->ajax()) {
+            return view('berita.load', compact('beritas'))->render();
         }
         return view('berita.index', compact('beritas'));
     }
+
     public function show($slug)
     {
         $berita = Berita::where('slug', $slug)->firstOrFail();

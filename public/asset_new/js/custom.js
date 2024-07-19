@@ -82,7 +82,10 @@
 		1200:{
 			items:1
 		}
-      }
+      },
+      autoplay:true,
+      autoplayTimeout: 3500,
+      autoplayHoverPause:true,
 	});
 
 	$('.owl-testimonials').owlCarousel({
