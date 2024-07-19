@@ -10,5 +10,6 @@
 <link rel="stylesheet" href="{{ asset('asset_new/css/templatemo-scholar.css') }}">
 <link rel="stylesheet" href="{{ asset('asset_new/css/owl.css') }}">
 <link rel="stylesheet" href="{{ asset('asset_new/css/animate.css') }}">
+
 <link rel="stylesheet"href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
 @stack('css_user')

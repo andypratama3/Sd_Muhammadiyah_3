@@ -4,6 +4,8 @@
 <script src="{{ asset('asset_new/js/owl-carousel.js') }}"></script>
 <script src="{{ asset('asset_new/js/counter.js') }}"></script>
 <script src="{{ asset('asset_new/js/custom.js') }}"></script>
+<script src="{{ asset('asset_new/js/wow.animate.js') }}"></script>
+
 @stack('js_user')
 
 <script>
