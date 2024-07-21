@@ -365,7 +365,7 @@ Header Style
 }
 
 .header-area .main-nav .logo h1 {
-  font-size: 25px;
+  font-size: 24px;
   text-transform: uppercase;
   color: #fff;
   font-weight: 600;
@@ -443,7 +443,6 @@ Header Style
   font-size: 14px;
   height: 40px;
   line-height: 40px;
-
   text-transform: capitalize;
   color: black;
   -webkit-transition: all 0.4s ease 0s;
@@ -471,6 +470,70 @@ Header Style
   color: black;
   background-color: rgba(255, 255, 255, 0.719);
   opacity: 1;
+}
+/* dropdown Menu */
+.header-area .main-nav .nav a:hover,
+.header-area .main-nav .nav .active,
+.header-area .main-nav .nav .active:focus,
+.header-area .main-nav .nav li:hover>a {
+  color: #fff;
+}
+
+.header-area .main-nav .nav .dropdown ul {
+  display: block;
+  position: absolute;
+  left: 14px;
+  top: calc(100% + 30px);
+  margin: 0;
+  padding: 10px 0;
+  z-index: 99;
+  opacity: 0;
+  visibility: hidden;
+  background: #fff;
+  box-shadow: 0px 0px 30px rgba(127, 137, 161, 0.25);
+  transition: 0.3s;
+  border-radius: 4px;
+}
+
+.header-area .main-nav .nav .dropdown ul li {
+  min-width: 200px;
+  margin-top: 10px;
+  height: auto;
+}
+
+.header-area .main-nav .nav .dropdown ul a {
+  padding: 10px 20px;
+  font-size: 15px;
+  color: #101c36;
+}
+
+.header-area .main-nav .nav .dropdown ul a i {
+  font-size: 12px;
+}
+
+.header-area .main-nav .nav .dropdown ul a:hover,
+.header-area .main-nav .nav .dropdown ul .active:hover,
+.header-area .main-nav .nav .dropdown ul li:hover>a {
+  color: #2DD100;
+}
+
+.header-area .main-nav .nav .dropdown:hover>ul {
+  opacity: 1;
+  top: 100%;
+  visibility: visible;
+}
+
+.header-area .main-nav .nav .dropdown .dropdown ul {
+  top: 0;
+  left: calc(100% - 30px);
+  visibility: hidden;
+}
+
+.header-area .main-nav .nav .dropdown .dropdown:hover>ul {
+  opacity: 1;
+  top: 0;
+  left: 100%;
+  visibility: visible;
 }
 
 .background-header .main-nav .nav li:hover a {
@@ -1779,49 +1842,45 @@ Contact Style
 Footer Style
 ---------------------------------------------
 */
-
+/* Footer Styles */
 footer {
-  margin-top: 150px;
-  position: relative;
-  background-color: #5ce70b;
-  vertical-align: middle;
-  min-height: 150px;
-  display: block;
-  overflow: hidden !important;
-  border-radius: 150px 150px 0px 0px;
-}
+    position: relative;
+    background-color: #5ce70b;
+    min-height: 150px;
+    overflow: hidden;
+    border-radius: 150px 150px 0 0;
+    margin-top: 0;
+    bottom: auto;
+  }
 
-footer p {
-  text-align: center;
-  line-height: 150px;
-  color: #fff;
-  font-weight: 400;
-}
+  footer p {
+    text-align: center;
+    line-height: 150px;
+    color: #fff;
+    font-weight: 400;
+  }
 
-footer p a {
-  color: #fff;
-  transition: all .3s;
-  position: relative;
-  z-index: 3;
-}
+  footer p a {
+    color: #fff;
+    transition: opacity .3s;
+  }
 
-footer p a:hover {
-  opacity: 0.75;
-}
+  footer p a:hover {
+    opacity: 0.75;
+  }
 
-footer::before {
-  background: url(../images/contact-dec-01.png);
-  position: absolute;
-  left: 30px;
-  transform: rotate(180deg);
-  opacity: 1;
-  bottom: 0;
-  width: 318px;
-  height: 119px;
-  content: '';
-  z-index: 2;
-}
-
+  footer::before {
+    background: url(../images/contact-dec-01.png);
+    position: absolute;
+    left: 30px;
+    transform: rotate(180deg);
+    opacity: 1;
+    bottom: 0;
+    width: 318px;
+    height: 119px;
+    content: '';
+    z-index: 2;
+  }
 /*
 ---------------------------------------------
 Responsive Style
@@ -1839,7 +1898,7 @@ body {
 
   .header-area .main-nav .logo h1 {
     border-right: none;
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .main-banner .item {
@@ -1861,15 +1920,6 @@ body {
 }
 
 @media (max-width: 992px) {
-
-  .header-area .main-nav #search input,
-  .header-area .main-nav #search i {
-    display: none;
-  }
-
-  .header-area .main-nav .logo h1 {
-    font-size: 34px;
-  }
 
   .header-area .main-nav .logo {
     border-right: none;
@@ -2100,13 +2150,13 @@ body {
 
 @media (max-width: 1200px) {
     .header-area .main-nav ul.nav {
-    border: 1px solid #000;
+    /* border: 1px solid #000; */
     height: 100%;
     width: 80%;
 
   }
    .header-area .main-nav .nav li {
-    border: 2px solid #000;
+    /* border: 2px solid #000; */
     display: flex;
   }
   .header-area .main-nav #search input {

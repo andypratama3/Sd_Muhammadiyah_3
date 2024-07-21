@@ -18,13 +18,30 @@
                     <!-- ***** Serach Start ***** -->
                     <!-- ***** Menu Start ***** -->
                     <ul class="nav">
-                      <li class="scroll-to-section"><a href="{{ route('index') }}" class="active">Home</a></li>
-                      <li class="scroll-to-section"><a href="#services">Tentang</a></li>
-                      <li class="scroll-to-section"><a href="#courses">Courses</a></li>
-                      <li class="scroll-to-section"><a href="#team">Team</a></li>
-                      <li class="scroll-to-section"><a href="{{ route('berita.index') }}">Berita</a></li>
-                      <li class="scroll-to-section"><a href="#contact">Register Now!</a></li>
-                  </ul>
+                        <li class="scroll-to-section"><a href="{{ route('index') }}" class="active">Home</a></li>
+                        <li class="dropdown"><a href="#"><span>Profil </span> <i class="bi bi-chevron-down"></i></a>
+                            <ul>
+                              <li><a href="#">Akreditas</a></li>
+                              {{-- <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>
+                                <ul>
+                                  <li><a href="#">Deep Drop Down 1</a></li>
+                                  <li><a href="#">Deep Drop Down 2</a></li>
+                                  <li><a href="#">Deep Drop Down 3</a></li>
+                                  <li><a href="#">Deep Drop Down 4</a></li>
+                                  <li><a href="#">Deep Drop Down 5</a></li>
+                                </ul>
+                              </li> --}}
+                              <li><a href="#">Struktur Organisasi</a></li>
+                              <li><a href="#">Fasilitas</a></li>
+                              <li><a href="#">Visi & Misi</a></li>
+                              
+                            </ul>
+                          </li>
+                        <li class="scroll-to-section"><a href="#courses">Courses</a></li>
+                        <li class="scroll-to-section"><a href="#team">Team</a></li>
+                        <li class="scroll-to-section"><a href="{{ route('berita.index') }}">Berita</a></li>
+                        <li class="scroll-to-section"><a href="#contact">Register Now!</a></li>
+                    </ul>
                     <a class='menu-trigger'>
                         <span>Menu</span>
                     </a>
@@ -33,4 +50,4 @@
             </div>
         </div>
     </div>
-  </header>
+</header>
