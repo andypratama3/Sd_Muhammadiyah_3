@@ -7,40 +7,18 @@ use Illuminate\Http\Request;
 
 class PembayaranController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('profil.pembayaran.index');
-    }
-    public function getOrder(Request $request)
-    {
-        $kode_pembayaran = $request->kode_pembayaran;
-        $pembayaran = Pembayaran::with('judul')->where('order_id', $kode_pembayaran)->first();
-        $kelas = $pembayaran->kelas->name;
-        $siswa = $pembayaran->siswa->name;
-
-
-        $data = [
-            'order_id' => $pembayaran->order_id,
-            'name' => $pembayaran->judul->name,
-            // 'siswa' => $pembayaran->siswa->name,
-            // 'kelas' => $pembayaran->kelas->name,
-            'category_kelas' => $pembayaran->category_kelas,
-            'gross_amount' => $pembayaran->gross_amount,
-            'status' => $pembayaran->status
-        ];
-        if ($pembayaran) {
-            return response()->json(
-                [
-                    'data' => $data,
-                    'siswa' => $siswa,
-                    'kelas' => $kelas,
-                    'message' => 'Berhasil Mendapatkan Order ID',
-                    'status' => 'success',
-                ], 200);
-        } else {
-            return response()->json(['message' => 'Tidak Ada Data Pembayaran']);
+        $pembayaran = collect(); // Initialize as an empty collection
+        if($request->has('kode')) {
+            $kode_pembayaran = $request->kode;
+            $pembayaran = Pembayaran::with('judul')->where('order_id', $kode_pembayaran)->get();
         }
+
+
+        return view('profil.pembayaran.index', compact('pembayaran'));
     }
+
     public function pay(Request $request)
     {
         $order_id = $request->order_id;
@@ -50,7 +28,7 @@ class PembayaranController extends Controller
         $gross_amount = str_replace('.', '', $pembayaran->gross_amount);
 
         // SAMPLE HIT API iPaymu v2 PHP
-        $va           =  config('Ipaymu.va'); 
+        $va           =  config('Ipaymu.va');
         $apiKey       =  config('Ipaymu.api_key');
 
         $url          =  config('Ipaymu.api_url');

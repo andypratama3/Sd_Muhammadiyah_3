@@ -8,6 +8,8 @@
     </style>
 @endpush
 @section('content')
+
+
 <section class="single-post-content" style="margin-top: 94px;">
     <div class="container">
         <div class="row">
@@ -22,7 +24,7 @@
                         </figure>
                     <h1 class="mb-2">{{ $berita->judul }}</h1>
                 </div>
-            </div>            
+            </div>
         </div>
     </div>
 </section>

@@ -49,9 +49,9 @@
                         <div class="col-sm-9">
                             <select name="kelas_id" id="kelas" class="select2 form-control" data-placholder="Pilih Kelas">
                                 <option selected disabled>Pilih Kelas</option>
-                                {{-- @foreach ($siswa->kelas as $kelas)
+                                @foreach ($siswa->kelas as $kelas)
                                     <option value="{{ $kelas->id }}">{{ $kelas->name }}</option>
-                                @endforeach --}}
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -123,7 +123,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            // 
+            //
         });
         $('#kelas').on('change', function () {
             var selectedKelasId = $('#kelas').val();

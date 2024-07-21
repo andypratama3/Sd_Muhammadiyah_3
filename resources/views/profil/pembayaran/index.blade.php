@@ -1,152 +1,89 @@
-@extends('layouts.user')
+@extends('layouts.user_new')
 
 @section('title','Pembayaran')
-
+@push('css_user')
+    {{-- <style>
+        .events .button-pay{
+            width: 100px !important;
+            height: max-content;
+        }
+    </style> --}}
+@endpush
 @section('content')
 
-<section id="posts" class="posts mt-5">
-    <div class="container" data-aos="fade-up">
-        <div class="card w-100 d-lg-grid mt-5">
-            <div class="card-header text-center mb-2">
-                <h2>Halaman Pembayaran</h2>
-            </div>
-            <div class="card-body">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label for="">Kode Pembayaran</label>
-                        <input type="text" name="kode_pembayaran" id="kode_pembayaran" class="form-control"
-                            placeholder="Kode Pembayaran" aria-label="kode pembayaran">
-                    </div>
-                </div>
-                <div class="form-group mt-4 justify-center">
-                    <button class="btn btn-primary" id="button_search">Cari Pembayaran</button>
-                </div>
+<div class="section events" id="events">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="section-heading">
+                    <h6>Pembayaran</h6>
+                    <h2>Masukan Kode Pembayaran</h2>
+                    <div class="col-md-2">
 
+                    </div>
+                    <form action="{{ route('pembayaran.index') }}" method="GET">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="kode" placeholder="Masukan Kode Pembayaran" aria-label="Masukan Kode Pembayaran" aria-describedby="button-addon2">
+                            <button class="btn btn-success" type="submit" id="button-addon2">Cari Pembayaran</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
-        {{-- result for search code_payment --}}
-        <div class="card w-100 mt-2 mb-3" id="result_order" style="display: none">
-            <div class="card-header text-center mb-2">
-                <h5 id="status_result"></h5>
-            </div>
-            <div class="card-body">
-                <div class="col-sm-12">
-                    <div class="row" id="content-result">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="">Pembayaran</label>
-                                <h5 id="name"></h5>
-                                <hr>
+
+            @forelse ($pembayaran as $item)
+            <div class="col-lg-12 col-md-6 m-0">
+                <h3 class="title mb-2">Pembayaran Di Temukan</h3>
+                <div class="item">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="image">
+                                <img src="{{ asset('asset_new/images/SD3_logo.png') }}" alt="" style="width: 40%; margin-top: 25px; padding-top: 8px; ">
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="">Kode Pembayaran</label>
-                                <h5 id="order_id"></h5>
-                                <hr>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="">Nama Siswa</label>
-                                <h5 id="nama_siswa"></h5>
-                                <hr>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="">Kelas</label>
-                                <h5 id="kelas"></h5>
-                                <hr>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="">Category Kelas</label>
-                                <h5 id="category_kelas"></h5>
-                                <hr>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="">Total Pembayaran</label>
-                                <h5 id="gross_amount"></h5>
-                                <hr>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="">Status Pembayaran</label>
-                                <h5 id="status"></h5>
-                                <hr>
-                            </div>
-                        </div>
-                        <div class="form-group text-center">
-                            <button class="btn btn-primary" id="pay">Bayar</button>
+
+                        <div class="col-lg-12">
+                            <ul>
+                                <li>
+                                    <span class="category" style="font-size: 20px;">{{ $item->judul->name }}</span>
+                                    <h4>{{ $item->title }}</h4>
+                                </li>
+                                <li>
+                                    <span>Nama Siswa :</span>
+                                    <h6>{{ $item->siswa->name }}</h6>
+                                </li>
+                                <li>
+                                    <span>Kelas :</span>
+                                    <h6>{{ $item->category_kelas }}</h6>
+                                </li>
+                                <li>
+                                    <span>Total :</span>
+                                    <h6>Rp .{{ $item->gross_amount }}</h6>
+                                </li>
+
+                            </ul>
+                            @if($item->status == 'pending')
+                            <a href="#" class="button-pay" data-id="{{ $item->order_id }}"><i class="fa fa-angle-right"> Bayar</i></a>
+                            @else
+                            <a href="#" class="button-pay" data-id="{{ $item->order_id }}" disabled><i class="fa fa-angle-right"> Bayar</i></a>
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
+            @empty
+                <div class="col-lg-12 text-center  mb-5 ">
+                    <span class="badge bg-danger">Pembayaran Tidak Di Temukan</span><span class="badge bg-primary"></span>
+                </div>
+            @endforelse
+            
         </div>
     </div>
-</section> <!-- End Post Grid Section -->
+</div>
 @push('js_user')
-<script src="{{ asset('asset_dashboard/js/SwetAlert/index.js') }}"></script>
 <script>
     $(document).ready(function () {
-        //property
-        let name = $('#name');
-        let gross_amount = $('#gross_amount');
-        let result_card = $('#result_order');
-        let status_result = $('#status_result');
-        let content_result = $('#content-result');
-        let nama_siswa = $('#nama_siswa');
-        let kelas = $('#kelas');
-        let category_kelas = $('#category_kelas');
-        let order_id = $('#order_id');
-        let status = $('#status');
-
-        $('#posts').on('click', '#button_search', function () {
-            let kode_pembayaran = $('#kode_pembayaran').val();
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-            $.ajax({
-                type: "POST",
-                url: "{{ route('pembayaran.search') }}",
-                data: {
-                    kode_pembayaran: kode_pembayaran,
-                },
-                success: function (response) {
-                    if(response.status == 'success'){
-                        content_result.css('display', '');
-                        result_card.css('display', '');
-                        name.text(response.data.name);
-                        nama_siswa.text(response.siswa);
-                        kelas.text(response.kelas);
-                        category_kelas.text(response.data.category_kelas);
-                        status_result.text(response.message);
-                        order_id.text(response.data.order_id);
-                        gross_amount.text("Rp. " + response.data.gross_amount);
-                        status.text(response.data.status);
-                        if(response.data.status == 'Berhasil'){
-                            $('#pay').css('display', 'none');
-                        }
-
-                    }else  {
-                        content_result.css('display', 'none');
-                        result_card.css('display', '');
-                        status_result.text(response.message);
-                    }
-                },
-            });
-        });
-        $('#posts').on('click', '#pay', function () {
-            let payment_id = $('#order_id').text();
-
+        $('.events').on('click', '.button-pay', function () {
+            let payment_id = $(this).data('id');
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -159,7 +96,6 @@
                     order_id : payment_id,
                 },
                 success: function (response) {
-
                     window.location.href = response.redirect;
                 }
 

@@ -1811,6 +1811,9 @@ Contact Style
 #contact-form button:hover {
   opacity: 0.8;
 }
+.events .button-pay {
+
+}
 
 .contact-us-content .more-info {
   text-align: center;
@@ -1881,7 +1884,14 @@ footer {
     content: '';
     z-index: 2;
   }
+
+  .events .button-pay{
+    width: 100px !important;
+    height: max-content;
+}
 /*
+
+
 ---------------------------------------------
 Responsive Style
 ---------------------------------------------
@@ -1916,6 +1926,31 @@ body {
   .event_filter li {
     display: inline-block;
     margin: 0px 10px;
+  }
+  .events h3 {
+    font-size: 15px;
+    text-align: center;
+  }
+  .events .item {
+    margin-top: 0 !important;
+    align-content: center;
+    position: relative;
+    display: flex;
+
+  }
+  /* .events .item ul{
+    border: 1px solid #000;
+    position: relative;
+    display: contents;
+    width: 100% !important;
+  } */
+
+  .events .button-pay {
+    width: 60px !important;
+  }
+  .events .item a {
+    width: max-content;
+    font-size: 10px;
   }
 }
 

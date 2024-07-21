@@ -1,15 +1,40 @@
-@extends('layouts.user')
+@extends('layouts.user_new')
 @section('title','Artikel')
 @push('css_user')
     <style>
-        img{
-            border-radius: 20px;
+        .services .service-item {
+            border: 2px solid red;
+            padding-top: 10px !important;
+            margin: 0 !important;
         }
-
     </style>
 @endpush
 @section('content')
+<div class="services section" style="margin-top: 100px;">
+    <div class="container">
+        
+        <h4 class="section-title">
+            ARTIKEL TERBARU</h4>
+        <div class="row" >
+            <div class="col-lg-4 col-md-6">
+                <div class="service-item">
 
+                    {{-- <div class="icon">
+                        <img src="http://127.0.0.1:8000/asset_new/images/service-01.png" alt="Akreditas">
+                    </div> --}}
+                    <div class="main-content">
+                        <h4>Akreditas</h4>
+                        <p>Whenever you need free templates in HTML CSS, you just remember TemplateMo website.</p>
+                        <div class="main-button">
+                            <a href="#">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 <section id="posts" class="posts" style="margin-top: 95px;">
     <div class="container">
         <div class="row g-4">

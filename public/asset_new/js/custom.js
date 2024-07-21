@@ -14,6 +14,8 @@
         var width = $(window).width();
         if (width > 767 && $(window).width() < 767 || width < 767 && $(window).width() > 767) {
             location.reload();
+        }else{
+            document.querySelector("ul>li").classList.remove("display-none");
         }
     });
 

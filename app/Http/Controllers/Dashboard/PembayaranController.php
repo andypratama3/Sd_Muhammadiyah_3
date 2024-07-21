@@ -30,7 +30,7 @@ class PembayaranController extends Controller
         $query = Pembayaran::with('kelas','siswa','judul')->select(['order_id','gross_amount','siswa_id','status','kelas_id','judul_id','category_kelas']);
 
         if($request->judul_pembayaran){
-            
+
             $query->where('judul_id', $request->judul_pembayaran);
 
             if ($request->kelas) {
@@ -88,7 +88,7 @@ class PembayaranController extends Controller
     {
         $juduls = JudulPembayaran::all();
         $siswas = Siswa::select(['id','name','slug'])->get();
-        // $kelass = Kelas::orderBy('name','asc')->get();
+        $kelass = Kelas::orderBy('name','asc')->get();
         return view('dashboard.data.pembayaran.create', compact('siswas','juduls'));
     }
     public function store(PembayaranData $pembayaranData, PembayaranAction $pembayaranAction)

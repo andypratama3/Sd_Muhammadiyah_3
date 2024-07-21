@@ -82,7 +82,6 @@ Route::group(['prefix' => '/'], function () {
     Route::get('ekstrakurikuler/{name}', [EkstrakurikulerController::class, 'show'])->name('esktrakurikuler.show');
     // pembayaran
     Route::get('pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
-    Route::post('pembayaran/search', [PembayaranController::class, 'getOrder'])->name('pembayaran.search');
     Route::post('pembayaran/pay', [PembayaranController::class, 'pay'])->name('pembayaran.pay');
     //fasilitas
     Route::get('fasilitas', [FasilitasController::class, 'index'])->name('fasilitas.index');
