@@ -41,7 +41,7 @@
                         <li class="scroll-to-section"><a href="#team">Team</a></li>
                         <li class="scroll-to-section"><a href="{{ route('berita.index') }}">Berita</a></li>
                         <li class="scroll-to-section"><a href="{{ route('artikel.index') }}">Artikel</a></li>
-                        <li class="scroll-to-section"><a href="{{ route('artikel.index') }}">Kontak</a></li>
+                        <li class="scroll-to-section"><a href="{{ route('kontak.index') }}">Kontak</a></li>
 
                     </ul>
                     <a class='menu-trigger'>

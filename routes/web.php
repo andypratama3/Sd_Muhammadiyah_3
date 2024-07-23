@@ -94,7 +94,7 @@ Route::group(['prefix' => '/'], function () {
     //artikel
     Route::resource('artikel', ArtikelController::class, ['names' => 'artikel']);
     //new fiture kontak and prestasi
-    Route::get('kontak', [KontakController::class, 'index'])->name('kontal.index');
+    Route::get('kontak', [KontakController::class, 'index'])->name('kontak.index');
 
     //kritik saran
     Route::post('kritik-saran/post', [KritikSaranController::class, 'store'])->name('kritik.saran.store');

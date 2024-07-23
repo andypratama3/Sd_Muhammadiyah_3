@@ -1,21 +1,20 @@
-
-@foreach ($artikel_not_trending as $artikel)
-@if (!$artikels_trending->contains('id', $artikel->id))
-<div class="col-lg-4 border-start custom-border">
-    <div class="post-entry-1" data-aos="zoom-in-down" data-duration="200">
-        <a href="{{ route('artikel.show', $artikel->slug) }}">
-            {{-- <img src="{{ asset('storage/app/public/img/artikel/'. $artikel->image) }}" alt=""
-            class="img-fluid"> --}}
-            <img src="{{ asset('storage/img/berita/Berita_test_20240412172357.jpg') }}" alt=""
-                                    class="img-fluid">
-        </a>
-        <div class="post-meta"><span class="date">Di Posting</span>
-            <span class="mx-1">&bullet;</span>
-            <span class="mt-2">{{ $artikel->created_at->formatLocalized('%A %d %B %Y') }}</span>
+@foreach ($artikels_trending as $artikel)
+<div class="col-lg-4 col-md-6">
+    <div class="service-item">
+        <div class="main-content">
+            <img src="{{ asset('storage/img/artikel/'. $artikel->image) }}" alt="foto-artikel" class="img-fluid">
+            <h4>{{ $artikel->name }}</h4>
+            <p class="category"> Kategori :
+                @foreach ($artikel->categorys as $item)
+                {{ $item->name }}
+                @endforeach
+            </p>
+            <p>{!! $artikel->artikel !!}</p>
+            <div class="main-button">
+                <a href="{{ route('artikel.show', $artikel->slug) }}">Lihat Artikela</a>
+            </div>
         </div>
-        <h2><a href="{{ route('artikel.show', $artikel->slug) }}">{{ $artikel->name }}</a></h2>
     </div>
 </div>
-@endif
 @endforeach
-
+</div>
