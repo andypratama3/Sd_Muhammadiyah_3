@@ -1,4 +1,4 @@
-<div class="col-md-3">
+<div class="col-md-3 mt-4">
     <!-- ======= Sidebar ======= -->
     <div class="aside-block">
         <ul class="nav nav-pills custom-tab-nav mb-4" id="pills-tab" role="tablist">
@@ -21,7 +21,7 @@
                     <div class="post-meta">
                         <span class="date"></span>
                     <span class="mx-1">&bullet;</span> <span>{{ $latest->created_at->formatLocalized('%A %d %B %Y') }}</span></div>
-                    <h2 class="mb-2"><a href="{{ route('artikel.show', $latest->slug) }}">{{ $latest->name }}</a></h2>
+                    <h2 class="mb-2"><a class="text-dark" style="font-size: 20px !important;" href="{{ route('artikel.show', $latest->slug) }}">{{ $latest->name }}</a></h2>
                     @foreach ($latest->categorys as $category)
                     <span class="author mb-3 d-block">{{ $category->name }}</span>
                     @endforeach
@@ -36,7 +36,7 @@
                     <div class="post-meta">
                         <span class="date"></span>
                     <span class="mx-1">&bullet;</span> <span>{{ $trending->created_at->formatLocalized('%A %d %B %Y') }}</span></div>
-                    <h2 class="mb-2"><a href="{{ route('artikel.show', $trending->slug) }}">{{ $trending->name }}</a></h2>
+                    <h2 class="mb-2"><a class="text-dark" style="font-size: 20px !important;"  href="{{ route('artikel.show', $trending->slug) }}">{{ $trending->name }}</a></h2>
                     @foreach ($trending->categorys as $category)
                     <span class="author mb-3 d-block">{{ $category->name }}</span>
                     @endforeach

@@ -5,6 +5,7 @@
 <script src="{{ asset('asset_new/js/counter.js') }}"></script>
 <script src="{{ asset('asset_new/js/custom.js') }}"></script>
 <script src="{{ asset('asset_new/js/wow.animate.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bs5-lightbox@1.8.3/dist/index.bundle.min.js"></script>
 
 @stack('js_user')
 

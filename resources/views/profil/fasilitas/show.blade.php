@@ -1,4 +1,4 @@
-@extends('layouts.user')
+@extends('layouts.user_new')
 @section('title','Detail Fasilitas')
 @section('content')
 <section>
@@ -10,7 +10,7 @@
             </header>
             <div class="col-12 mt-3">
                 <div class="form-group">
-                    <a href="{{ route('fasilitas.index') }}" class="btn btn-primary"><i class="bi bi-arrow-left">Kembali</i></a>
+                    <a href="{{ route('fasilitas.index') }}" class="btn btn-primary" style="color: #ffffff; background-color: #5ce70b !important; border-color: #5ce70b !important"><i class="fa fa-arrow-left"></i> Kembali</a>
                 </div>
             </div>
 
@@ -19,7 +19,6 @@
             $firstCover = reset($fasilitas_foto);
             @endphp
             @foreach ($fasilitas_foto as $image => $i)
-            @for($j = 0; $j < 100; $j++)
             <div class="col-lg-4 mt-3" data-aos="flip-left">
                 <div class="d-flex align-content-center">
                     <a href="{{ asset('storage/img/fasilitas/'. trim($i)) }}" class="glightbox" title="fasilitas : {{ $fasilitas->nama_fasilitas }}">
@@ -28,7 +27,6 @@
                     </a>
                 </div>
             </div>
-            @endfor
             @endforeach
         </div>
     </div>

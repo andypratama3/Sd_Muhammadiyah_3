@@ -16,10 +16,22 @@
     </ul>
 
   <!-- ***** Preloader Start ***** -->
-  <div id="js-preloader" class="js-preloader">
+  {{-- <div id="js-preloader" class="js-preloader">
       <span></span>
       <span></span>
       <span class="logo-loading"><img src="{{ asset('asset_new/images/SD3_logo.png') }}" alt=""></span>
+  </div> --}}
+
+
+  <div class="js-preloader" id="js-preloader">
+    <ul class="background-page" id="backgorund-loading">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
   </div>
   <!-- ***** Preloader End ***** -->
 

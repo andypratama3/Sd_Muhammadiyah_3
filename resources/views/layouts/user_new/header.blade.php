@@ -37,8 +37,8 @@
 
                             </ul> --}}
                           </li>
+                        {{-- <li class="scroll-to-section"><a href="#team">Team</a></li> --}}
                         <li class="scroll-to-section"><a href="{{ route('pembayaran.index') }}">Pembayaran</a></li>
-                        <li class="scroll-to-section"><a href="#team">Team</a></li>
                         <li class="scroll-to-section"><a href="{{ route('berita.index') }}">Berita</a></li>
                         <li class="scroll-to-section"><a href="{{ route('artikel.index') }}">Artikel</a></li>
                         <li class="scroll-to-section"><a href="{{ route('kontak.index') }}">Kontak</a></li>

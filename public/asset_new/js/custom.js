@@ -5,6 +5,7 @@
     function loader() {
         $(window).on("load", function () {
             $("#js-preloader").addClass("loaded");
+            $("#backgorund-loading").css("display" ,"none");
             $("#js-preloader").delay(2000).fadeOut();
         });
     }

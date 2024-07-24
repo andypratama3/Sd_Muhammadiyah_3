@@ -1,7 +1,10 @@
 @extends('layouts.user_new')
 @section('title', 'Home')
-@section('content')
 
+@push('css_user')
+
+@endpush
+@section('content')
     <div class="main-banner" id="top">
         <div class="container">
             <div class="row">
@@ -37,13 +40,13 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="service-item">
                         <div class="icon">
-                            <img src="{{ asset('asset_new/images/service-01.png') }}" alt="Akreditas">
+                            <i class="fa-solid fa-a fa-6x text-white mt-4" style="padding-top: 17px !important;"></i>
                         </div>
                         <div class="main-content">
-                            <h4>Akreditas</h4>
-                            <p>Whenever you need free templates in HTML CSS, you just remember TemplateMo website.</p>
+                            <h4>AKREDITAS</h4>
+                            <p>Sekolah Kreatif Muhammadiyah 3 Samarinda memegang akreditasi tinggi yang menegaskan bahwa kami memenuhi standar pendidikan yang sangat baik. Akreditasi ini mencerminkan upaya kami dalam menyediakan lingkungan belajar yang optimal, dengan pengajaran berkualitas tinggi, fasilitas yang memadai, dan pengelolaan yang efisien. Kami berkomitmen untuk terus meningkatkan kualitas pendidikan agar siswa kami siap menghadapi tantangan di masa depan.</p>
                             <div class="main-button">
-                                <a href="#">Read More</a>
+                                {{-- <a href="#">Read More</a> --}}
                             </div>
                         </div>
                     </div>
@@ -54,10 +57,10 @@
                             <img src="{{ asset('asset_new/images/service-02.png') }}" alt="short courses">
                         </div>
                         <div class="main-content">
-                            <h4>Short Courses</h4>
-                            <p>You can browse free templates based on different tags such as digital marketing, etc.</p>
+                            <h4>PRESTASI</h4>
+                            <p>Siswa dan siswi Sekolah Kreatif Muhammadiyah 3 Samarinda telah meraih berbagai prestasi yang membanggakan baik di tingkat lokal maupun nasional. Kami bangga atas pencapaian mereka dalam kompetisi sains, seni, olahraga, serta digital marketing. Keberhasilan ini merupakan hasil dari pendekatan pembelajaran yang kreatif dan inovatif, yang dirancang untuk mengembangkan bakat dan keterampilan siswa secara menyeluruh.</p>
                             <div class="main-button">
-                                <a href="#">Read More</a>
+                                <a href="{{ route('prestasi.siswa.index') }}" aria-label="Lihat Prestasi">Lihat</a>
                             </div>
                         </div>
                     </div>
@@ -68,10 +71,17 @@
                             <img src="{{ asset('asset_new/images/service-03.png') }}" alt="web experts">
                         </div>
                         <div class="main-content">
-                            <h4>Web Experts</h4>
-                            <p>You can start learning HTML CSS by modifying free templates from our website too.</p>
-                            <div class="main-button">
-                                <a href="#">Read More</a>
+                            <h4>FASILITAS</h4>
+                            <p>Sekolah Kreatif Muhammadiyah 3 Samarinda menyediakan berbagai </p>
+                            <ol>
+                                <li>Ruang kelas yang modern dan dilengkapi dengan teknologi terkini.</li>
+                                <li>Laboratorium sains yang lengkap untuk eksperimen dan penelitian.</li>
+                                <li>Perpustakaan dengan koleksi buku yang luas dan terbaru.</li>
+                                <li>Lapangan olahraga yang luas untuk berbagai kegiatan fisik.</li>
+                                <li>Area bermain yang aman dan nyaman untuk siswa.</li>
+                            </ol>
+                            <div class="main-button mt-4">
+                                <a href="{{ route('fasilitas.index') }}" aria-label="Read More">Lihat</a>
                             </div>
                         </div>
                     </div>
@@ -79,6 +89,7 @@
             </div>
         </div>
     </div>
+
 
     <div class="section about-us">
         <div class="container">
@@ -89,7 +100,7 @@
                             <h2 class="accordion-header" id="headingOne">
                                 <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    Where shall we begin?
+                                    VISI & MISI
                                 </button>
                             </h2>
                             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
@@ -106,7 +117,7 @@
                             <h2 class="accordion-header" id="headingTwo">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                    How do we work together?
+                                    Latar Belakang Sekolah
                                 </button>
                             </h2>
                             <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
@@ -123,7 +134,7 @@
                             <h2 class="accordion-header" id="headingThree">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                    Why SCHOLAR is the best?
+                                    Tujuan
                                 </button>
                             </h2>
                             <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
@@ -154,8 +165,8 @@
                 </div>
                 <div class="col-lg-5 align-self-center">
                     <div class="section-heading">
-                        <h6>About Us</h6>
-                        <h2>What make us the best academy online?</h2>
+                        <h6>Tentang</h6>
+                        <h2>SD Muhammadiyah 3 Samarinda</h2>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
                             labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravid risus commodo.</p>
                         <div class="main-button">
@@ -294,26 +305,26 @@
                         <div class="row">
                             <div class="col-lg-3 col-md-6">
                                 <div class="counter">
-                                    <h2 class="timer count-title count-number" data-to="150" data-speed="1000"></h2>
-                                    <p class="count-text ">Happy Students</p>
+                                    <h2 class="timer count-title count-number" data-to="{{ $siswas }}" data-speed="1000"></h2>
+                                    <p class="count-text ">Total Siswa</p>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-6">
                                 <div class="counter">
-                                    <h2 class="timer count-title count-number" data-to="804" data-speed="1000"></h2>
-                                    <p class="count-text ">Course Hours</p>
+                                <h2 class="timer count-title count-number" data-to="{{ $guru }}" data-speed="1000"></h2>
+                                    <p class="count-text ">Total Guru </p>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-6">
                                 <div class="counter">
-                                    <h2 class="timer count-title count-number" data-to="50" data-speed="1000"></h2>
-                                    <p class="count-text ">Employed Students</p>
+                                    <h2 class="timer count-title count-number" data-to="{{ $fasilitas }}" data-speed="1000"></h2>
+                                    <p class="count-text ">Total Fasilitas</p>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-6">
                                 <div class="counter end">
-                                    <h2 class="timer count-title count-number" data-to="15" data-speed="1000"></h2>
-                                    <p class="count-text ">Years Experience</p>
+                                    <h2 class="timer count-title count-number" data-to="{{ $esktrakurikuler }}" data-speed="1000"></h2>
+                                    <p class="count-text ">Total Esktrakurikuler</p>
                                 </div>
                             </div>
                         </div>
@@ -323,69 +334,7 @@
         </div>
     </div>
 
-    <div class="team section" id="team">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-6">
-                    <div class="team-member">
-                        <div class="main-content">
-                            <img src="{{ asset('asset_new/images/member-01.jpg') }}" alt="">
-                            <span class="category">UX Teacher</span>
-                            <h4>Sophia Rose</h4>
-                            <ul class="social-icons">
-                                <li><a href="#"><i class="fab fa-facebook"></i></a></li>
-                                <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                                <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="team-member">
-                        <div class="main-content">
-                            <img src="{{ asset('asset_new/images/member-02.jpg') }}" alt="">
-                            <span class="category">Graphic Teacher</span>
-                            <h4>Cindy Walker</h4>
-                            <ul class="social-icons">
-                                <li><a href="#"><i class="fab fa-facebook"></i></a></li>
-                                <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                                <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="team-member">
-                        <div class="main-content">
-                            <img src="{{ asset('asset_new/images/member-03.jpg') }}" alt="">
-                            <span class="category">Full Stack Master</span>
-                            <h4>David Hutson</h4>
-                            <ul class="social-icons">
-                                <li><a href="#"><i class="fab fa-facebook"></i></a></li>
-                                <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                                <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="team-member">
-                        <div class="main-content">
-                            <img src="{{ asset('asset_new/images/member-04.jpg') }}" alt="">
-                            <span class="category">Digital Animator</span>
-                            <h4>Stella Blair</h4>
-                            <ul class="social-icons">
-                                <li><a href="#"><i class="fab fa-facebook"></i></a></li>
-                                <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                                <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+{{--
     <div class="section testimonials">
         <div class="container">
             <div class="row">
@@ -539,59 +488,8 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
-    <div class="contact-us section" id="contact">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6  align-self-center">
-                    <div class="section-heading">
-                        <h6>Contact Us</h6>
-                        <h2>Feel free to contact us anytime</h2>
-                        <p>Thank you for choosing our templates. We provide you best CSS templates at absolutely 100% free
-                            of charge. You may support us by sharing our website to your friends.</p>
-                        <div class="special-offer">
-                            <span class="offer">off<br><em>50%</em></span>
-                            <h6>Valide: <em>24 April 2036</em></h6>
-                            <h4>Special Offer <em>50%</em> OFF!</h4>
-                            <a href="#"><i class="fa fa-angle-right"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="contact-us-content">
-                        <form id="contact-form" action="" method="post">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <fieldset>
-                                        <input type="name" name="name" id="name" placeholder="Your Name..."
-                                            autocomplete="on" required>
-                                    </fieldset>
-                                </div>
-                                <div class="col-lg-12">
-                                    <fieldset>
-                                        <input type="text" name="email" id="email" pattern="[^ @]*@[^ @]*"
-                                            placeholder="Your E-mail..." required="">
-                                    </fieldset>
-                                </div>
-                                <div class="col-lg-12">
-                                    <fieldset>
-                                        <textarea name="message" id="message" placeholder="Your Message"></textarea>
-                                    </fieldset>
-                                </div>
-                                <div class="col-lg-12">
-                                    <fieldset>
-                                        <button type="submit" id="form-submit" class="orange-button">Send Message
-                                            Now</button>
-                                    </fieldset>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 {{-- </div> --}}
 @push('js_user')
 <script>
