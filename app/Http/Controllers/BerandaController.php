@@ -6,6 +6,7 @@ use App\Models\Guru;
 use App\Models\Kelas;
 use App\Models\Siswa;
 use App\Models\Berita;
+use App\Models\Prestasi;
 use App\Models\Fasilitas;
 use App\Models\Esktrakurikuler;
 
@@ -22,6 +23,9 @@ class BerandaController extends Controller
         $fasilitas = Fasilitas::count();
         $kelas_name = Kelas::orderBy('name');
         $esktrakurikuler = Esktrakurikuler::count();
+
+        //loop prestasi sekolah dan prestasi siswa
+        $prestasis = Prestasi::orderby('created_at', 'desc')->take(10)->get();
         return view('landing', compact(
             'beritas',
             'siswas',
@@ -29,7 +33,7 @@ class BerandaController extends Controller
             'esktrakurikuler',
             'fasilitas',
             'kelas_name',
-
+            'prestasis',
         ));
     }
 }

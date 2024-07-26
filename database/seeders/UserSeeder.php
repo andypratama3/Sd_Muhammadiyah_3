@@ -2,12 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Models\Karyawan;
-use App\Models\Permission;
-use App\Models\Role;
-use App\Models\Task;
-use App\Models\User;
 use Illuminate\Database\Seeder;
+use App\Models\Task;
+use App\Models\Role;
+use App\Models\Permission;
+use App\Models\User;
+use App\Models\Karyawan;
 use Str;
 
 class UserSeeder extends Seeder
@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
         // Role
         $listRoles = [
             'Superadmin',
-            'User',
+            // Add more roles here
         ];
 
         foreach ($listRoles as $key => $value) {
@@ -30,7 +30,7 @@ class UserSeeder extends Seeder
 
             $role[$key] = Role::whereSlug(Str::slug($roleName))->first();
 
-            if (! $role[$key]) {
+            if (!$role[$key]) {
                 $role[$key] = new Role();
                 $role[$key]->id = Str::uuid();
                 $role[$key]->name = $roleName;
@@ -41,20 +41,20 @@ class UserSeeder extends Seeder
         // Task
         $listTasks = [
             [
-                'name' => 'Guru',
-                'description' => 'Manajemen Guru',
+                'name' => 'Task',
+                'description' => 'Manajemen Task',
             ],
             [
-                'name' => 'Admin',
-                'description' => 'Manajemen Admin',
+                'name' => 'Role',
+                'description' => 'Manajemen Role',
             ],
             [
-                'name' => 'Kepala Sekolah',
-                'description' => 'Manajemen Kepala Sekolah',
+                'name' => 'Karyawan',
+                'description' => 'Manajemen Karyawan',
             ],
             [
-                'name' => 'Staff',
-                'description' => 'Manajemen Staff',
+                'name' => 'Slider',
+                'description' => 'Manajemen Slider',
             ],
         ];
 
@@ -64,7 +64,7 @@ class UserSeeder extends Seeder
 
             $task[$key] = Task::whereSlug(Str::slug($name))->first();
 
-            if (! $task[$key]) {
+            if (!$task[$key]) {
                 $task[$key] = new Task();
                 $task[$key]->id = Str::uuid();
                 $task[$key]->name = $name;
@@ -78,28 +78,28 @@ class UserSeeder extends Seeder
         // Permission
         foreach ($listTasks as $task) {
             $name = $task->name;
-            $listPermissions = [
+            $listPermissions = array(
                 [
                     'id' => Str::uuid(),
-                    'name' => 'View '.$name,
-                    'task_id' => $task->id,
+                    'name' => 'View ' . $name,
+                    'task_id' => $task->id
                 ],
                 [
                     'id' => Str::uuid(),
-                    'name' => 'Create '.$name,
-                    'task_id' => $task->id,
+                    'name' => 'Create ' . $name,
+                    'task_id' => $task->id
                 ],
                 [
                     'id' => Str::uuid(),
-                    'name' => 'Edit '.$name,
-                    'task_id' => $task->id,
+                    'name' => 'Edit ' . $name,
+                    'task_id' => $task->id
                 ],
                 [
                     'id' => Str::uuid(),
-                    'name' => 'Delete '.$name,
-                    'task_id' => $task->id,
+                    'name' => 'Delete ' . $name,
+                    'task_id' => $task->id
                 ],
-            ];
+            );
 
             foreach ($listPermissions as $listPermission) {
                 $createPermissions = Permission::Create($listPermission);
@@ -115,6 +115,8 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Superadmin',
                 'email' => 'superadmin@superadmin.com',
+                'nip' => '0000',
+                'sex' => 'laki-laki',
                 'password' => bcrypt('superadmin'),
                 'role_id' => $roleSuperAdmin->id,
             ],
@@ -124,14 +126,16 @@ class UserSeeder extends Seeder
         foreach ($listUsers as $key => $value) {
             $name = $value['name'];
             $email = $value['email'];
-            $avatar = 'profile.jpg';
+            $nip = $value['nip'];
+            $avatar = "profile.jpg";
+            $sex = $value['sex'];
             $password = $value['password'];
             $role_id = $value['role_id'];
 
             // User
             $user[$key] = User::whereEmail($email)->first();
 
-            if (! $user[$key]) {
+            if (!$user[$key]) {
                 // User
                 $user[$key] = new User();
                 $user[$key]->id = Str::uuid();
@@ -142,16 +146,6 @@ class UserSeeder extends Seeder
                 $user[$key]->slug = Str::slug('superadmin');
                 $user[$key]->save();
                 $user[$key]->roles()->attach($role_id);
-
-                // Karyawan
-                $karyawan[$key] = Karyawan::where('user_id', $user[$key]->id)->first();
-                $karyawan[$key] = new Karyawan();
-                $karyawan[$key]->id = Str::uuid();
-                $karyawan[$key]->name = $name;
-                $karyawan[$key]->phone = '123456789';
-                $karyawan[$key]->slug = Str::slug('superadmin-xxxx');
-                $karyawan[$key]->user_id = $user[$key]->id;
-                $karyawan[$key]->save();
             }
         }
     }

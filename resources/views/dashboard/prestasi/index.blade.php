@@ -96,7 +96,7 @@
                         <tr>
                             <td>{{ ++$no }}</td>
                             <td>{{ $prestasi->name }}</td>
-                            <td>{{ $prestasi->desc }}</td>
+                            <td>{!! $prestasi->description !!}</td>
                             <td>
                                 <a href="{{ route('dashboard.datasekolah.prestasi.show', $prestasi->slug) }}"
                                     class="btn btn-dark btn-sm"><i class="fas fa-eye"></i></a>

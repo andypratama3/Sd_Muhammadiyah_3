@@ -6,6 +6,7 @@ use App\Models\Task;
 use App\Models\Permission;
 use App\Http\Controllers\Controller;
 use App\DataTransferObjects\TaskData;
+use Illuminate\Http\Request;
 use App\Actions\Dashboard\Task\TaskAction;
 use App\Http\Requests\Dashboard\TaskRequest;
 use App\Actions\Dashboard\Task\DeleteTaskAction;
@@ -17,11 +18,18 @@ class TaskController extends Controller
         $this->middleware('role:superadmin');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $limit = 15;
-        $tasks = Task::select(['name', 'slug'])->orderBy('name')->paginate($limit);
-        $count = $tasks->count();
+        $query = Task::select(['name', 'slug'])->orderBy('name');
+
+        if ($request->has('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        $tasks = $query->paginate($limit);
+
+        $count = $tasks->total();
         $no = $limit * ($tasks->currentPage() - 1);
 
         return view('dashboard.pengaturan.task.index', compact(
@@ -30,6 +38,7 @@ class TaskController extends Controller
             'no'
         ));
     }
+
 
     public function create()
     {

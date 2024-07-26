@@ -94,7 +94,7 @@
     <div class="section about-us">
         <div class="container">
             <div class="row">
-                <div class="col-lg-6 offset-lg-1">
+                <div class="col-lg-7 offset-lg-1">
                     <div class="accordion" id="accordionExample">
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="headingOne">
@@ -106,10 +106,19 @@
                             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
                                 data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                    Dolor <strong>almesit amet</strong>, consectetur adipiscing elit, sed doesn't eiusmod
-                                    tempor incididunt ut labore consectetur <code>adipiscing</code> elit, sed do eiusmod
-                                    tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices
-                                    gravida.
+                                    <p><strong>VISI <code>*</code></strong></p>
+                                    <p>Sesuai dengan prinsip – prinsip pengembangan dan acuan operasional penyusunan Kurikulum Tingkat Satuan Pendidikan maka, Visi sekolah SD Muhammadiyah 3 Samarinda adalah sebagai berikut:</p>
+                                    <p><strong>“Terwujudnya Siswa Hafidz/Hafidzah Yang Beriman Bertaqwa Kepada Allah SWT Berakhlak Mulia, Cerdas, Aktif, Kreatif, Berbudaya Lingkungan Serta Unggul Dalam Prestasi Demi Terwujudnya Masyarakat Islam Yang Sebenar – benarnya ”</strong></p>
+
+                                    <p><strong>MISI <code>*</code></strong></p>
+                                    <p> Misi SD Muhammadiyah 3 Samarinda adalah :</p>
+                                    <ol>
+                                        <li>1. Membentuk Siswa Siswi hafidz dan hafidzah melalui progam tahfidz dan program penanaman iman dan taqwa sejak dini.</li>
+                                        <li>2. Membentuk Siswa Siswi yang cerdas melalui program edutainment dengan meningkatkan sarana prasarana pendidikan yang mendukung pengembangan kecerdasan Siswa sesuai potensi Siswa.</li>
+                                        <li>3. Membentuk Siswa yang kreatif melalui program pengembangan ekstrakurikuler Sekolah sesuai minat bakat Siswa.</li>
+                                        <li>4. Melakukan upaya melindungi dan megelola lingkungan hidup dengan program Adiwiyata di Sekolah.</li>
+                                        <li>5. Membentuk Siswa yang berprestasi dengan program pengembangan kemampuan anak dibidang masing-masing sejak dini.</li>
+                                        <li>6. Membentuk kebiasaan-kebiasaan warga Sekolah yang islami demi terwujudnya masyarakat islam yang sebenar-benarnya sesuai dengan tujuan Muhammadiyah.</li>
                                 </div>
                             </div>
                         </div>
@@ -117,16 +126,21 @@
                             <h2 class="accordion-header" id="headingTwo">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                    Latar Belakang Sekolah
+                                    Tujuan Sekolah
                                 </button>
                             </h2>
                             <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
                                 data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                    Dolor <strong>almesit amet</strong>, consectetur adipiscing elit, sed doesn't eiusmod
-                                    tempor incididunt ut labore consectetur <code>adipiscing</code> elit, sed do eiusmod
-                                    tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices
-                                    gravida.
+                                    Tujuan Sekolah <strong>SD Muhammadiyah 3 Samarinda Samarinda</strong>
+                                    <ol>
+                                        <li>1. Terwujudnya Siswa Siswi hafidz dan hafidzah melalui progam tahfidz dan program penanaman iman dan taqwa sejak dini.</li>
+                                        <li>2. Terwujudnya Siswa Siswi yang cerdas melalui program edutainment dengan meningkatkan sarana prasarana pendidikan yang mendukung pengembangan kecerdasan Siswa sesuai potensi Siswa.</li>
+                                        <li>3. Terwujudnya Siswa yang kreatif melalui program pengembangan ekstrakurikuler sekolah sesuai minat bakat Siswa.</li>
+                                        <li>4. Terwujudnya upaya melindungi dan megelola lingkungan hidup dengan program Adiwiyata di Sekolah.</li>
+                                        <li>5. Terwujudnya Siswa yang berprestasi dengan program pengembangan kemampuan anak dibidang masing-masing sejak dini.</li>
+                                        <li>6. Terwujudnya kebiasaan-kebiasaan warga Sekolah yang islami demi terwujudnya masyarakat islam yang sebenar-benarnya sesuai dengan tujuan Muhammadiyah.</li>
+                                    </ol>
                                 </div>
                             </div>
                         </div>
@@ -163,10 +177,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-5 align-self-center">
+                <div class="col-lg-4 align-self-center">
                     <div class="section-heading">
                         <h6>Tentang</h6>
-                        <h2>SD Muhammadiyah 3 Samarinda</h2>
+                        <h2 style="font-size: 22px;">SD Muhammadiyah 3 Samarinda</h2>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
                             labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravid risus commodo.</p>
                         <div class="main-button">
@@ -183,116 +197,40 @@
             <div class="row">
                 <div class="col-lg-12 text-center">
                     <div class="section-heading">
-                        <h6>Latest Courses</h6>
-                        <h2>Latest Courses</h2>
+                        <h6>Prestasi Terakhir</h6>
+                        <h2>Prestasi Terakhir</h2>
                     </div>
                 </div>
             </div>
             <ul class="event_filter">
                 <li>
-                    <a class="is_active" href="#!" data-filter="*">Show All</a>
+                    <a class="is_active" href="#!" data-filter="*">Semua</a>
                 </li>
                 <li>
-                    <a href="#!" data-filter=".design">Webdesign</a>
+                    <a href="#!" data-filter=".1">Siswa</a>
                 </li>
                 <li>
-                    <a href="#!" data-filter=".development">Development</a>
-                </li>
-                <li>
-                    <a href="#!" data-filter=".wordpress">Wordpress</a>
+                    <a href="#!" data-filter=".2">Sekolah</a>
+
                 </li>
             </ul>
             <div class="row event_box">
-                <div class="col-lg-4 col-md-6 align-self-center mb-30 event_outer col-md-6 design">
+                @foreach ($prestasis as $prestasi)
+                <div class="col-lg-4 col-md-6 align-self-center mb-30 event_outer col-md-6 {{ $prestasi->status }}">
                     <div class="events_item">
                         <div class="thumb">
-                            <a href="#"><img src="{{ asset('asset_new/images/course-01.jpg') }}" alt=""></a>
-                            <span class="category">Webdesign</span>
+                            <a href="#"><img src="{{ asset('storage/img/prestasi/' . $prestasi->foto) }}" alt=""></a>
                             <span class="price">
-                                <h6><em>$</em>160</h6>
+                                <h6 style="font-size: 15px;">{{ $prestasi->status == 1 ? 'Siswa' : 'Sekolah' }}</h6>
                             </span>
                         </div>
                         <div class="down-content">
-                            <span class="author">Stella Blair</span>
-                            <h4>Learn Web Design</h4>
+                            <span class="author">{{ $prestasi->status == 1 ? 'Siswa' : 'Sekolah' }}</span>
+                            <h4>{{ $prestasi->name }}</h4>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6 align-self-center mb-30 event_outer col-md-6  development">
-                    <div class="events_item">
-                        <div class="thumb">
-                            <a href="#"><img src="{{ asset('asset_new/images/course-02.jpg') }}" alt=""></a>
-                            <span class="category">Development</span>
-                            <span class="price">
-                                <h6><em>$</em>340</h6>
-                            </span>
-                        </div>
-                        <div class="down-content">
-                            <span class="author">Cindy Walker</span>
-                            <h4>Web Development Tips</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 align-self-center mb-30 event_outer col-md-6 design wordpress">
-                    <div class="events_item">
-                        <div class="thumb">
-                            <a href="#"><img src="{{ asset('asset_new/images/course-03.jpg') }}" alt=""></a>
-                            <span class="category">Wordpress</span>
-                            <span class="price">
-                                <h6><em>$</em>640</h6>
-                            </span>
-                        </div>
-                        <div class="down-content">
-                            <span class="author">David Hutson</span>
-                            <h4>Latest Web Trends</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 align-self-center mb-30 event_outer col-md-6 development">
-                    <div class="events_item">
-                        <div class="thumb">
-                            <a href="#"><img src="{{ asset('asset_new/images/course-04.jpg') }}" alt=""></a>
-                            <span class="category">Development</span>
-                            <span class="price">
-                                <h6><em>$</em>450</h6>
-                            </span>
-                        </div>
-                        <div class="down-content">
-                            <span class="author">Stella Blair</span>
-                            <h4>Online Learning Steps</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 align-self-center mb-30 event_outer col-md-6 wordpress development">
-                    <div class="events_item">
-                        <div class="thumb">
-                            <a href="#"><img src="{{ asset('asset_new/images/course-05.jpg') }}" alt=""></a>
-                            <span class="category">Wordpress</span>
-                            <span class="price">
-                                <h6><em>$</em>320</h6>
-                            </span>
-                        </div>
-                        <div class="down-content">
-                            <span class="author">Sophia Rose</span>
-                            <h4>Be a WordPress Master</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 align-self-center mb-30 event_outer col-md-6 wordpress design">
-                    <div class="events_item">
-                        <div class="thumb">
-                            <a href="#"><img src="{{ asset('asset_new/images/course-06.jpg') }}" alt=""></a>
-                            <span class="category">Webdesign</span>
-                            <span class="price">
-                                <h6><em>$</em>240</h6>
-                            </span>
-                        </div>
-                        <div class="down-content">
-                            <span class="author">David Hutson</span>
-                            <h4>Full Stack Developer</h4>
-                        </div>
-                    </div>
-                </div>
+               @endforeach
             </div>
         </div>
     </section>
