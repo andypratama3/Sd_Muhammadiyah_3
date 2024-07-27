@@ -26,7 +26,7 @@ class BerandaController extends Controller
 
         //loop prestasi sekolah dan prestasi siswa
         $prestasis = Prestasi::orderby('created_at', 'desc')->take(10)->get();
-        return view('landing', compact(
+        return view('beranda', compact(
             'beritas',
             'siswas',
             'guru',

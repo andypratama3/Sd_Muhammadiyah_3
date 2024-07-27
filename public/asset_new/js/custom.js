@@ -57,7 +57,7 @@
             1200: { items: 1 }
         },
         autoplay: true,
-        autoplayTimeout: 3500,
+        autoplayTimeout: 15000,
         autoplayHoverPause: true,
     });
 

@@ -9,6 +9,8 @@ class KritikSaranController extends Controller
 {
     public function store(KritikSaranData $kritikSaranData, KritikSaranAction $kritikSaranAction)
     {
+
+        
         if($kritikSaranAction)
         {
             $kritikSaranAction->execute($kritikSaranData);

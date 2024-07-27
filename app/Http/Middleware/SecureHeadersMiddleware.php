@@ -30,7 +30,7 @@ class SecureHeadersMiddleware
               // Set Content-Security-Policy
               $response->headers->set('Content-Security-Policy', "default-src 'self'; style-src 'self';");
               $response->headers->set('Content-Security-Policy', "style-src 'self' unpkg.com cdn.datatables.net;");
-              $response->headers->set('Content-Security-Policy', "style-src 'self' 'unsafe-inline' unpkg.com cdn.datatables.net cdn.jsdelivr.net cdnjs.cloudflare.com cdn.quilljs.com code.jquery.com fonts.googleapis.com;");
+              $response->headers->set('Content-Security-Policy', "style-src 'self' 'unsafe-inline' unpkg.com cdn.datatables.net cdn.jsdelivr.net cdnjs.cloudflare.com cdn.quilljs.com code.jquery.com fonts.googleapis.com https://use.fontawesome.com/releases/v5.15.4/css/all.css;");
 
         return $response;
     }

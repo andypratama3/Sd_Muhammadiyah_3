@@ -1,32 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    @include('layouts.user.head')
+@include('layouts.user.head')
 
-</head>
+<body>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T28Z28V9" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
 
-<body class="body">
+         <!-- Navbar & Hero End -->
+    <ul class="background-page">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
 
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T28Z28V9"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-
-    <div class="loading-screen">
-        <img class="loading-image" src="{{asset('assets/img/SD3_logo.png')}}" alt="Loading">
+    <!-- Spinner Start -->
+    <div id="spinner"
+        class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
     </div>
+    <!-- Spinner End -->
 
-    @include('layouts.user.header')
-    <main id="main">
-        @yield('content')
-    </main>
+    <!-- Topbar Start -->
+    @include('layouts.user.topbar')
+    <!-- Topbar End -->
 
-    <!-- ======= Footer ======= -->
-   @include('layouts.user.footer')
-    <a href="#" class="scroll-top d-flex align-items-center justify-content-center">
-        <i class="bi bi-arrow-up-short"></i>
-    </a>
+    <!-- Navbar & Hero Start -->
+    <div class="container-fluid nav-bar px-0 px-lg-4 py-lg-0">
+        <div class="container">
+            @include('layouts.user.navbar')
+        </div>
+    </div>
+    <!-- Navbar & Hero End -->
+
+    @yield('content')
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary btn-lg-square rounded-circle back-to-top"><i class="fa fa-arrow-up"></i></a>
+
+
     @include('layouts.user.script')
 </body>
+
 </html>

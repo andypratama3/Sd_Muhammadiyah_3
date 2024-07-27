@@ -1,48 +1,40 @@
-<meta charset="utf-8">
-<meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-<title>SD MUH 3 || @yield('title')</title>
-<meta name="description" content="sekolah kreatif, sd muhammadiyah 3, Samarinda, Kalimantan Timur">
-<meta content="" name="keywords">
-<meta>
-<meta name="csrf-token" content="{{ csrf_token() }}">
+<head>
+    <meta charset="utf-8">
+    <title>@yield('title')</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="SD Muhammadiyah 3 Samarinda" name="keywords">
+    <meta content="Sekolah Kreatif Muhammadiyah 3" name="description">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:slnt,wght@-10..0,100..900&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ asset('asset_new/images/SD3_logo.png') }}" type="image/x-icon">
+    <!-- Icon Font Stylesheet -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
-<!-- Favicons -->
-<link href="{{asset('assets/img/SD3_logo.png')}}" rel="icon">
-<link href="{{asset('assets/img/apple-touch-icon.png')}}" rel="apple-touch-icon">
+    <!-- Libraries Stylesheet -->
+    <link rel="stylesheet" href="{{ asset('asset/lib/animate/animate.min.css') }}"/>
+    <link href="{{ asset('asset/lib/lightbox/css/lightbox.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('asset/lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
 
-<!-- Google Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link
-    href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=Inter:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap"
-    rel="stylesheet" >
 
-<!-- Vendor CSS Files -->
-{{-- <link rel="stylesheet" href="{{asset('assets/vendor/bootstrap/css/bootstrap.min.css')}}"  as="style" onload="this.onload=null;this.rel='stylesheet'">
-<link rel="stylesheet" href="{{asset('assets/css/main.css')}}"  as="style" onload="this.onload=null;this.rel='stylesheet'"> --}}
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{{ asset('asset/css/bootstrap.min.css') }}" rel="stylesheet">
 
-{{-- <noscript> --}}
+    <!-- Template Stylesheet -->
+    <link href="{{ asset('asset/css/style.css') }}" rel="stylesheet">
+    @stack('css_user')
 
-{{-- </noscript> --}}
-<link href="{{asset('assets/vendor/bootstrap-icons/bootstrap-icons.css')}}" rel="stylesheet">
-<link href="{{asset('assets/vendor/swiper/swiper-bundle.min.css')}}" rel="stylesheet">
-<link href="{{asset('assets/vendor/glightbox/css/glightbox.min.css')}}" rel="stylesheet">
-<link href="{{asset('assets/vendor/aos/aos.css')}}" rel="stylesheet">
 
-<!-- Template Main CSS Files -->
-<link href="{{asset('assets/css/variables.css')}}" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-T28Z28V9');</script>
+    <!-- End Google Tag Manager -->
 
-<link href="{{asset('assets/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
-<link href="{{asset('assets/css/main.css')}}" rel="stylesheet">
-
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-T28Z28V9');</script>
-<!-- End Google Tag Manager -->
-
-{{-- @stack('css_user') --}}
+</head>

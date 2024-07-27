@@ -32,10 +32,10 @@ class KritikSaranData extends Data
     public static function messages()
     {
         return [
-            'name.required' => 'Kolom Nama tidak boleh kosong!',
-            'subject.required' => 'Kolom Subject tidak boleh kosong!',
-            'email.required' => 'Kolom Email tidak boleh kosong!',
-            'message.required' => 'Kolom Kritik Dan Saran tidak boleh kosong!',
+            'name.required|string' => 'Kolom Nama tidak boleh kosong!',
+            'subject.required|string' => 'Kolom Subject tidak boleh kosong!',
+            'email.required|string' => 'Kolom Email tidak boleh kosong!',
+            'message.required|string' => 'Kolom Kritik Dan Saran tidak boleh kosong!',
         ];
     }
 }

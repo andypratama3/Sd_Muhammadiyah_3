@@ -10,6 +10,7 @@ class LikeArtikelController extends Controller
 {
     public function like(Request $request)
     {
+        
         if(Auth::check()){
             $likeData = [
                 'comment_id' => $request->comment_id,

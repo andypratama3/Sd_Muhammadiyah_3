@@ -23,8 +23,13 @@
                     </div>
                     <form action="{{ route('pembayaran.index') }}" method="GET">
                         <div class="input-group">
-                            <input type="text" class="form-control" name="kode" placeholder="Masukan Kode Pembayaran" aria-label="Masukan Kode Pembayaran" aria-describedby="button-addon2">
+                            <input type="text" class="form-control @error('kode') is-invalid @enderror" id="search" name="kode" placeholder="Masukan Kode Pembayaran" aria-label="Masukan Kode Pembayaran" aria-describedby="button-addon2">
                             <button class="btn btn-success" type="submit" id="button-addon2">Cari Pembayaran</button>
+                            @error('kode')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
                     </form>
                 </div>
@@ -75,7 +80,7 @@
                     <span class="badge bg-danger">Pembayaran Tidak Di Temukan</span><span class="badge bg-primary"></span>
                 </div>
             @endforelse
-            
+
         </div>
     </div>
 </div>

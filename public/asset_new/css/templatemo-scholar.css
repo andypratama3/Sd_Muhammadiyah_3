@@ -544,7 +544,7 @@ Header Style
 
 .background-header .main-nav .nav li a.active {
   color: #fff;
-  background-color: rgba(255, 255, 255, 0.500);
+  background-color: rgba(255, 255, 255, 0.5);
   opacity: 1;
 }
 
@@ -652,7 +652,7 @@ Header Style
 }
 
 .header-area.header-sticky .nav li a.active {
-  color: #fff;
+  color: #000000;
 }
 
 .visible {
@@ -695,7 +695,7 @@ Header Style
     border-top: 1px solid #ddd;
     background-color: #f1f0fe;
     height: 50px;
-    border: 2px solid #000;
+    border: 2px solid #b60b0b;
     border-radius: 0px 0px 25px 25px;
   }
 
@@ -731,7 +731,7 @@ Header Style
 
   .header-area.header-sticky .nav li a:hover,
   .header-area.header-sticky .nav li a.active {
-    color: #5ce70b !important;
+    color: #123C11 !important;
     opacity: 1;
   }
 
@@ -1938,12 +1938,12 @@ body {
     display: flex;
 
   }
-  /* .events .item ul{
+  .events .item ul{
     border: 1px solid #000;
     position: relative;
     display: contents;
     width: 100% !important;
-  } */
+  }
 
   .events .button-pay {
     width: 60px !important;

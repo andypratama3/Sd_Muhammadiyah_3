@@ -32,7 +32,7 @@ class CommentData extends Data
     public static function messages()
     {
         return [
-            'comment.required' => 'Kolom Komentar Artikel tidak boleh kosong!',
+            'comment.required|string' => 'Kolom Komentar Artikel tidak boleh kosong!',
         ];
     }
 }

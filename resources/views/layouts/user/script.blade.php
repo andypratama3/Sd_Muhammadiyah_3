@@ -1,23 +1,14 @@
-  <!-- Vendor JS Files -->
-  <script src="{{asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-  <script src="{{asset('assets/vendor/swiper/swiper-bundle.min.js')}}"></script>
-  <script src="{{asset('assets/vendor/glightbox/js/glightbox.min.js')}}"></script>
-  <script src="{{asset('assets/vendor/aos/aos.js')}}"></script>
-  <script src="{{asset('assets/vendor/php-email-form/validate.js')}}"></script>
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<!-- JavaScript Libraries -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ asset('asset/lib/wow/wow.min.js') }}"></script>
+<script src="{{ asset('asset/lib/easing/easing.min.js') }}"></script>
+<script src="{{ asset('asset/lib/waypoints/waypoints.min.js') }}"></script>
+<script src="{{ asset('asset/lib/counterup/counterup.min.js') }}"></script>
+<script src="{{ asset('asset/lib/lightbox/js/lightbox.min.js') }}"></script>
+<script src="{{ asset('asset/lib/owlcarousel/owl.carousel.min.js') }}"></script>
 
-  {{-- @stack('js_user') --}}
-  <!-- Template Main JS File -->
-  <script src="{{ asset('assets/js/main.js') }}"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        $(window).on('load', function() {
-            $('body').addClass('loading');
-                setTimeout(() => {
-                    $('.loading-screen').fadeOut(1000);
-                    $('body').removeClass('loading');
-                    $('#header').addClass('fixed-top');
-                }, 800);
-            });
-        });
-  </script>
+
+<!-- Template Javascript -->
+<script src="{{ asset('asset/js/main.js') }}"></script>
+@stack('js_user')

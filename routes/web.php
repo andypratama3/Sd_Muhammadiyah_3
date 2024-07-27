@@ -67,7 +67,7 @@ use App\Http\Controllers\Dashboard\TenagaPendidikanController as DashboardTenaga
 // });
 Route::group(['prefix' => '/'], function () {
     // Route::get('/', function () {
-    //     return view('landing');
+    //     return view('new');
     // })->name('landing');
     Route::get('/', BerandaController::class)->name('index');
 

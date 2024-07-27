@@ -18,9 +18,9 @@
                     <!-- ***** Serach Start ***** -->
                     <!-- ***** Menu Start ***** -->
                     <ul class="nav">
-                        <li class="scroll-to-section"><a href="{{ route('index') }}" class="active">Home</a></li>
+                        <li class="scroll-to-section"><a href="{{ route('index') }}" class="{{ request()->routeIs('index') ? 'active' : '' }}">Home</a></li>
                         <li class="dropdown"><a href="#"><span>Profil </span> <i class="bi bi-chevron-down"></i></a>
-                            {{-- <ul>
+                            <ul>
                               <li><a href="#">Akreditas</a></li>
                               <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>
                                 <ul>
@@ -35,13 +35,12 @@
                               <li><a href="#">Fasilitas</a></li>
                               <li><a href="#">Visi & Misi</a></li>
 
-                            </ul> --}}
-                          </li>
-                        {{-- <li class="scroll-to-section"><a href="#team">Team</a></li> --}}
-                        <li class="scroll-to-section"><a href="{{ route('pembayaran.index') }}">Pembayaran</a></li>
-                        <li class="scroll-to-section"><a href="{{ route('berita.index') }}">Berita</a></li>
-                        <li class="scroll-to-section"><a href="{{ route('artikel.index') }}">Artikel</a></li>
-                        <li class="scroll-to-section"><a href="{{ route('kontak.index') }}">Kontak</a></li>
+                            </ul>
+                        </li>
+                        <li class="scroll-to-section"><a href="{{ route('pembayaran.index') }}" class="{{ Request::routeIs('pembayaran.index') ? 'active' : '' }}">Pembayaran</a></li>
+                        <li class="scroll-to-section"><a href="{{ route('berita.index') }}" class="{{ Request::routeIs('berita.index') ? 'active' : '' }}">Berita</a></li>
+                        <li class="scroll-to-section"><a href="{{ route('artikel.index') }}" class="{{ Request::routeIs('artikel.index') ? 'active' : '' }}">Artikel</a></li>
+                        <li class="scroll-to-section"><a href="{{ route('kontak.index') }}" class="{{ Request::routeIs('kontak.index') ? 'active' : '' }}">Kontak</a></li>
 
                     </ul>
                     <a class='menu-trigger'>
