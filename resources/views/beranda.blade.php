@@ -13,8 +13,8 @@
                     <div class="row g-4 align-items-center">
                         <div class="col-lg-7 animated fadeInLeft">
                             <div class="text-sm-center text-md-start">
-                                <h4 class="text-white text-uppercase fw-bold mb-4">SD MUHAMMADIYAH 3 SAMARINDA </h4>
-                                <h1 class="display-1 text-white mb-4">{{ $hero->name }}</h1>
+                                <h3 class="text-white text-uppercase fw-bold mb-2 mt-2">SD MUHAMMADIYAH 3 SAMARINDA </h3>
+                                <h4 class="display-1 text-white mb-4">{{ $hero->name }}</h4>
                                 <p class="mb-5 fs-5">{{ $hero->desc }}
                                 </p>
                                 <div class="d-flex justify-content-center justify-content-md-start flex-shrink-0 mb-4">
@@ -113,7 +113,7 @@
                     <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Membentuk Siswa yang kreatif melalui program pengembangan ekstrakurikuler Sekolah sesuai minat bakat Siswa.</p>
                     <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Melakukan upaya melindungi dan megelola lingkungan hidup dengan program Adiwiyata di Sekolah.</p>
                     <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Membentuk Siswa yang berprestasi dengan program pengembangan kemampuan anak dibidang masing-masing sejak dini.</p>
-                    <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Membentuk kebiasaan-kebiasaan warga Sekolah yang islami demi terwujudnya masyarakat islam yang sebenar-benarnya sesuai dengan tujuan Muhammadiyah.</p>                    
+                    <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Membentuk kebiasaan-kebiasaan warga Sekolah yang islami demi terwujudnya masyarakat islam yang sebenar-benarnya sesuai dengan tujuan Muhammadiyah.</p>
                 </div>
 
             </div>
@@ -161,14 +161,14 @@
                                 <h4 class="mb-0 text-dark">Fasilitas</h4>
                             </div>
                         </div>
-                        <div class="about-item-content bg-white rounded p-5 h-100">                                                     
+                        <div class="about-item-content bg-white rounded p-5 h-100">
                             <p class="text-dark">TUJUAN</p>
                             <p class="text-dark"><i class="fa fa-check text-primary me-3"></i>Terwujudnya Siswa Siswi hafidz dan hafidzah melalui progam tahfidz dan program penanaman iman dan taqwa sejak dini.</p>
                             <p class="text-dark"><i class="fa fa-check text-primary me-3"></i>Terwujudnya Siswa Siswi yang cerdas melalui program edutainment dengan meningkatkan sarana prasarana pendidikan yang mendukung pengembangan kecerdasan Siswa sesuai potensi Siswa.</p>
                             <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Terwujudnya Siswa yang kreatif melalui program pengembangan ekstrakurikuler sekolah sesuai minat bakat Siswa.</p>
                             <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Terwujudnya upaya melindungi dan megelola lingkungan hidup dengan program Adiwiyata di Sekolah.</p>
                             <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Terwujudnya Siswa yang berprestasi dengan program pengembangan kemampuan anak dibidang masing-masing sejak dini.</p>
-                            <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Terwujudnya kebiasaan-kebiasaan warga Sekolah yang islami demi terwujudnya masyarakat islam yang sebenar-benarnya sesuai dengan tujuan Muhammadiyah.</p>                           
+                            <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Terwujudnya kebiasaan-kebiasaan warga Sekolah yang islami demi terwujudnya masyarakat islam yang sebenar-benarnya sesuai dengan tujuan Muhammadiyah.</p>
                         </div>
 
                     </div>
