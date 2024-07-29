@@ -1,9 +1,9 @@
-@extends('layouts.user_new')
+@extends('layouts.user')
 @section('title','Detail')
 @push('css_user')
 <style>
     .course {
-        margin-top: 100px;
+        margin-top: 20px;
     }
 
     .course .title-news {

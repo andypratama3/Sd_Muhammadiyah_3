@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light">
-    <a href="#" class="navbar-brand p-0">
+    <a href="{{ route('index') }}" class="navbar-brand p-0">
         <h4 class="text-primary mb-0"> SD Muhammadiyah 3</h4>
         {{-- <!-- <img src="{{ asset('asset/img/logo.png') }}" alt="Logo"> --> --}}
     </a>
@@ -12,16 +12,17 @@
             <a href="#tentang" class="nav-item nav-link">Tentang</a>
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link" data-bs-toggle="dropdown">
-                    <span class="dropdown-toggle">Profile</span>
+                    <span class="dropdown-toggle">Profil</span>
                 </a>
                 <div class="dropdown-menu">
                     <a href="{{ route('fasilitas.index') }}" class="dropdown-item">Sarana & Prasarana</a>
-                    <a href="team.html" class="dropdown-item"></a>
-                    <a href="testimonial.html" class="dropdown-item">Testimonial</a>
-                    <a href="FAQ.html" class="dropdown-item">FAQs</a>
+                    <a href="{{ route('esktrakurikuler.index') }}" class="dropdown-item">Ekstrakurikuler</a>
+                    <a href="{{ route('guru.index') }}" class="dropdown-item">Guru</a>
+                    <a href="{{ route('prestasi.siswa.index') }}" class="dropdown-item">Prestasi Siswa</a>
                     <a href="404.html" class="dropdown-item">404 Page</a>
                 </div>
             </div>
+            <a href="{{ route('pembayaran.index') }}" class="nav-item nav-link {{ Request::routeIS('pembayaran.index') ? 'active' : '' }}">Pembayaran</a>
             <a href="{{ route('berita.index') }}" class="nav-item nav-link {{ Request::routeIS('berita.index') ? 'active' : '' }}">Berita</a>
             <a href="{{ route('artikel.index') }}" class="nav-item nav-link {{ Request::routeIS('artikel.index') ? 'active' : '' }}">Artikel</a>
             {{-- <div class="nav-item dropdown">
@@ -36,7 +37,7 @@
                     <a href="404.html" class="dropdown-item">404 Page</a>
                 </div>
             </div> --}}
-            <a href="contact.html" class="nav-item nav-link">Contact</a>
+            <a href="{{ route('kontak.index') }}" class="nav-item nav-link">Kontak</a>
             {{-- <div class="nav-btn px-3">
                 <button class="btn-search btn btn-primary btn-md-square rounded-circle flex-shrink-0" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search"></i></button>
                 <a href="#" class="btn btn-primary rounded-pill py-2 px-4 ms-3 flex-shrink-0"> Get a Quote</a>

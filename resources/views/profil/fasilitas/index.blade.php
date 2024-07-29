@@ -1,4 +1,4 @@
-@extends('layouts.user_new')
+@extends('layouts.user')
 @section('title','Fasilitas')
 @section('content')
 <div class="main-banner">
@@ -14,7 +14,7 @@
             $coverArray = explode(',', rtrim($fasilitas->foto, ','));
             $firstCover = reset($coverArray);
             @endphp
-            <div class="col-lg-4 text-center mb-5" data-aos="zoom-in" style="margin-top: 40px;" data-aos-delay="50">
+            <div class="col-lg-4 text-center mb-5 wow fadeInUp" data-wow-delay="0.2s" data-aos="zoom-in" style="margin-top: 40px;" data-aos-delay="50">
                 <img src="{{ asset('storage/img/fasilitas/'. $firstCover )}}" alt=""
                     class="img-fluid rounded w-100 mb-4">
                 <h4>{{ $fasilitas->nama_fasilitas }}</h4>

@@ -1,4 +1,4 @@
-@extends('layouts.user_new')
+@extends('layouts.user')
 @section('title','Artikel')
 @push('meta_user')
     <meta name="title" content="{{ $artikel->title }}">
@@ -202,10 +202,10 @@
 </style>
 @endpush
 @section('content')
-<section class="single-post-content" style="margin-top: 100px !important;">
+<section class="single-post-content " style="margin-top: 20px;">
     <div class="container">
         <div class="row row-not-refresh" data-aos="fade-up">
-            <div class="col-md-9 post-content">
+            <div class="col-md-12 post-content ">
                 <div class="single-post">
                     <div class="post-meta"><span class="date">
                             @foreach ($artikel->categorys as $category)
@@ -344,7 +344,6 @@
                 </div>
             </div><!-- End Comments Form -->
         </div>
-        @include('layouts.user.sidebar')
     </div>
     </div>
 </section>

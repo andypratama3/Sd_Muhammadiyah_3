@@ -6,6 +6,7 @@
     <meta content="SD Muhammadiyah 3 Samarinda" name="keywords">
     <meta content="Sekolah Kreatif Muhammadiyah 3" name="description">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    @stack('meta_user')
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

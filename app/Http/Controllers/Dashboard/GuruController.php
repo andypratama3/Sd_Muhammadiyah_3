@@ -62,7 +62,7 @@ class GuruController extends Controller
     public function update(GuruData $GuruData, GuruAction $guruAction)
     {
         $guruAction->execute($GuruData);
-        dd($GuruData);
+    
         return redirect()->route('dashboard.datasekolah.guru.index')->with('success','Berhasil Update Guru!');
     }
     public function destroy(DeleteGuruAction $DeleteGuruAction, $slug)

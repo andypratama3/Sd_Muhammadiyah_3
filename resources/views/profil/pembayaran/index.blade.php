@@ -1,4 +1,4 @@
-@extends('layouts.user_new')
+@extends('layouts.user')
 
 @section('title','Pembayaran')
 @push('css_user')
@@ -67,16 +67,16 @@
 
                             </ul>
                             @if($item->status == 'pending')
-                            <a href="#" class="button-pay" data-id="{{ $item->order_id }}"><i class="fa fa-angle-right"> Bayar</i></a>
+                                <a href="#" class="button-pay" data-id="{{ $item->order_id }}"><i class="fa fa-angle-right"> Bayar</i></a>
                             @else
-                            <a href="#" class="button-pay" data-id="{{ $item->order_id }}" disabled><i class="fa fa-angle-right"> Bayar</i></a>
+                                <a href="#" class="button-pay" data-id="{{ $item->order_id }}" disabled><i class="fa fa-angle-right"> Lunas</i></a>
                             @endif
                         </div>
                     </div>
                 </div>
             </div>
             @empty
-                <div class="col-lg-12 text-center  mb-5 ">
+                <div class="col-lg-12 text-center mb-5" style="margin-top: 100px;">
                     <span class="badge bg-danger">Pembayaran Tidak Di Temukan</span><span class="badge bg-primary"></span>
                 </div>
             @endforelse

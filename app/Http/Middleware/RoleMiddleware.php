@@ -16,15 +16,10 @@ class RoleMiddleware
     {
         if (! $request->user()->hasRole($role)) {
             abort(404);
-
-        }else {
         }
         if ($permission !== null && ! $request->user()->can($permission)) {
             abort(404);
         }
-
-
-
 
         return $next($request);
     }

@@ -1,4 +1,4 @@
-@extends('layouts.user_new')
+@extends('layouts.user')
 @section('title','Kontak')
 
 

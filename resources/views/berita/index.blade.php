@@ -1,41 +1,38 @@
-@extends('layouts.user_new')
+@extends('layouts.user')
 @section('title', 'Berita')
 
 @section('content')
-<section class="section courses mt-5" id="courses">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <div class="section-heading">
-                    <h2>Berita</h2>
-                </div>
-            </div>
-
-            <div class="row m-0" id="target">
-                @foreach ($beritas as $berita)
-                <div class="col-lg-4 col-md-6 align-self-center mb-30 event_outer col-md-6 design">
-                    <div class="events_item">
-                        <div class="thumb">
-                            <a href="{{ route('berita.show', $berita->slug) }}">
-                                <img src="{{ asset('storage/img/berita/' . $berita->foto) }}" alt="">
-                                <span class="price">
-                                    <h6><em><code>*</code></em>New</h6>
-                                </span>
+<div class="container-fluid blog py-5 mt-0">
+    <div class="container py-5">
+        <div class="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.2s" style="max-width: 800px;">
+            <h1 class="display-4 mb-4">Berita</h1>
+            </p>
+        </div>
+        <div class="row g-4 justify-content-center" id="target">
+            @foreach ($beritas as $berita)
+            <div class="col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.2s">
+                <div class="blog-item">
+                    <div class="blog-img">
+                        <img  src="{{ asset('storage/img/berita/' . $berita->foto) }}" class="img-fluid rounded-top w-100" alt="">
+                        <div class="blog-categiry py-2 px-4">
+                            <span>Berita</span>
                         </div>
-                        <div class="down-content">
-                            <span class="author">{{ \Carbon\Carbon::parse($berita->created_at)->diffForHumans() }}</span>
-                            <h4>{{ $berita->judul }}</h4>
-                            <p>{{ Str::substr($berita->desc, 0, 50) . ' ......' }}</p>
+                    </div>
+                    <div class="blog-content p-4">
+                        <div class="blog-comment d-flex justify-content-between mb-3">
+                            {{-- <div class="small"><span class="fa fa-user text-primary"></span> Martin.C</div> --}}
+                            <div class="small"><span class="fa fa-calendar text-primary"></span> {{ \Carbon\Carbon::parse($berita->created_at)->diffForHumans() }}</div>
                         </div>
-                        </a>
+                        <a href="{{ route('berita.show', $berita->slug) }}" class="h4 d-inline-block mb-3">{{ $berita->judul }}</a>
+                        {{-- <p class="mb-3">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eius libero soluta impedit eligendi? Quibusdam, laudantium.</p> --}}
+                        <a href="{{ route('berita.show', $berita->slug) }}" class="btn p-0">Lihat Berita  <i class="fa fa-arrow-right"></i></a>
                     </div>
                 </div>
-                @endforeach
             </div>
+            @endforeach
         </div>
-
     </div>
-</section>
+</div>
 @push('js_user')
 <script>
     $(document).ready(function () {
@@ -71,7 +68,7 @@
         });
 
         $(document).on('DOMNodeInserted', function (e) {
-            if ($(e.target).hasClass('col-lg-4')) {
+            if ($(e.target).hasClass('col-lg-6')) {
                 itemsLoaded++;
             }
         });

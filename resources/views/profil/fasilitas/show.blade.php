@@ -1,4 +1,4 @@
-@extends('layouts.user_new')
+@extends('layouts.user')
 @section('title','Detail Fasilitas')
 @section('content')
 <section>
@@ -19,7 +19,7 @@
             $firstCover = reset($fasilitas_foto);
             @endphp
             @foreach ($fasilitas_foto as $image => $i)
-            <div class="col-lg-4 mt-3" data-aos="flip-left">
+            <div class="col-lg-4 mt-3 wow fadeInUp" data-wow-delay="0.2s">
                 <div class="d-flex align-content-center">
                     <a href="{{ asset('storage/img/fasilitas/'. trim($i)) }}" class="glightbox" title="fasilitas : {{ $fasilitas->nama_fasilitas }}">
                     <img src="{{ asset('storage/img/fasilitas/'. trim($i)) }}" alt="" srcset=""

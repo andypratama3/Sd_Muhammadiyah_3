@@ -1,29 +1,33 @@
-@extends('layouts.user_new')
+@extends('layouts.user')
 @section('title','Guru')
 
 @section('content')
-<section class="guru" style="margin-top: 95px; margin-bottom: 0;">
+<section class="guru" style="margin-top: 20px; margin-bottom: 0;">
     <div class="container aos-init aos-animate" data-aos="fade-up">
         <div class="section-title text-center">
-            <h2>Guru SD Muhammadiyah 3</h2>
+            <h2>Guru SD Muhammadiyah 3 Samarinda</h2>
         </div>
     <hr>
     </div>
 </section>
-<div class="team section" id="team" style="margin-top: 0;">
-    <div class="container">
-        <div class="row">
+<div class="container-fluid team pb-5">
+    <div class="container pb-5">
+        <div class="row g-4">
             @foreach ($gurus as $guru)
-            <div class="col-lg-3 col-md-6">
-                <div class="team-member">
-                    <div class="main-content">
-                        <img src="{{ asset('storage/img/guru/'. $guru->foto) }}" alt="" class="img-fluid">
+            <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.2s">
+                <div class="team-item">
+                    <div class="team-img">
+                        <img src="{{ asset('storage/img/guru/'. $guru->foto) }}"  class="img-fluid rounded-top w-100" alt="">
+                    </div>
+                    <div class="team-title p-4">
+                        <h4 class="mb-0">{{ $guru->name }}</h4>
+                        <p class="mb-1">Lulusan : {{ $guru->lulusan }}</p>
+                        <p class="mb-1">Mengajar :</p>
                         @foreach ($guru->pelajarans as $pelajaran)
-                         <span class="category">{{ $pelajaran->name }}</span>
-                        @endforeach
-                        <h4 class="mt-4">{{ $guru->name }}</h4>
-                        <p>Lulusan {{ $guru->lulusan }}</p>
-                        <p>{{ $guru->description }}</p>
+                        <p class="mb-0">{{ $pelajaran->name }} <br></p>
+                       @endforeach
+                       {{-- <p>Lulusan {{ $guru->lulusan }}</p>
+                       <p>{{ $guru->description }}</p> --}}
                     </div>
                 </div>
             </div>

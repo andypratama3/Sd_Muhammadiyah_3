@@ -9,17 +9,22 @@ class PembayaranController extends Controller
 {
     public function index(Request $request)
     {
-        $request->validate([
-            'kode' => 'required|numeric',
-        ]);
-        $kode_pembayaran = $request->kode;
-        $pembayaran = collect();
-        if($kode_pembayaran) {
+
+
+        $pembayaran = collect(); // Initialize as an empty collection
+        if($request->has('kode')) {
+            $request->validate([
+                'kode' => 'required|numeric',
+            ]);
+            $kode_pembayaran = $request->kode;
             $pembayaran = Pembayaran::with('judul')->where('order_id', $kode_pembayaran)->get();
         }
 
+
         return view('profil.pembayaran.index', compact('pembayaran'));
     }
+
+
 
     public function pay(Request $request)
     {
