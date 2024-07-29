@@ -12,9 +12,10 @@ use App\Http\Controllers\KontakController;
 use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\FasilitasController;
+use App\Http\Controllers\NaikKelasController;
 use App\Http\Controllers\PembayaranController;
-use App\Http\Controllers\KritikSaranController;
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\KritikSaranController;
 use App\Http\Controllers\LikeArtikelController;
 use App\Http\Controllers\DetailBeritaController;
 use App\Http\Controllers\PrestasiSiswaController;
@@ -26,18 +27,17 @@ use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\CategoryArtikel;
 use App\Http\Controllers\Dashboard\KelasController;
 use App\Http\Controllers\EkstrakurikulerController;
-use App\Http\Controllers\PrestasiSekolahController;
-use App\Http\Controllers\TenagaPendidikanController;
 
 //Dashboard Access
+use App\Http\Controllers\PrestasiSekolahController;
+use App\Http\Controllers\TenagaPendidikanController;
 use App\Http\Controllers\Dashboard\ActivityController;
 use App\Http\Controllers\Dashboard\KaryawanController;
 use App\Http\Controllers\Dashboard\DashboardController;
-use App\Http\Controllers\Dashboard\KelasCategoryController;
-use App\Http\Controllers\NaikKelasController;
 
-use App\Http\Controllers\Dashboard\KritikSaranController as DashboardKritiSaranController;
+use App\Http\Controllers\Dashboard\KelasCategoryController;
 use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
+use App\Http\Controllers\Dashboard\HeroController as DashboardHeroController;
 use App\Http\Controllers\Dashboard\SiswaController as DashboardSiswaController;
 use App\Http\Controllers\Dashboard\BeritaController as DashboardBeritaController;
 use App\Http\Controllers\Dashboard\JadwalController as DashboardJadwalController;
@@ -47,9 +47,10 @@ use App\Http\Controllers\Dashboard\PrestasiController as DashboardPrestasiContro
 use App\Http\Controllers\Dashboard\FasilitasController as DashboardFasilitasController;
 use App\Http\Controllers\Dashboard\NilaiSiswaController as DashboardNilaiSiswaController;
 use App\Http\Controllers\Dashboard\PembayaranController as DashboardPembayaranController;
+use App\Http\Controllers\Dashboard\KritikSaranController as DashboardKritiSaranController;
 use App\Http\Controllers\Dashboard\MataPelajaranController as DashboardMataPelajaranController;
-use App\Http\Controllers\Dashboard\JudulPembayaranController as DashboardJudulPembayaranController;
 use App\Http\Controllers\Dashboard\EkstrakulikulerController as DashboardEsktrakurikulerController;
+use App\Http\Controllers\Dashboard\JudulPembayaranController as DashboardJudulPembayaranController;
 use App\Http\Controllers\Dashboard\TenagaPendidikanController as DashboardTenagaPendidikanController;
 
 /*
@@ -126,6 +127,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
 
     Route::group(['prefix' => 'news'], function () {
         Route::resource('berita', DashboardBeritaController::class, ['names' => 'dashboard.news.berita']);
+        Route::resource('hero', DashboardHeroController::class, ['names' => 'dashboard.news.hero']);
+
         Route::get('beritas/records', [DashboardBeritaController::class, 'data_table'])->name('dashboard.news.berita.getBerita');
         Route::resource('artikel', DashboardArtikelController::class, ['names' => 'dashboard.news.artikel']);
         Route::resource('category', CategoryArtikel::class, ['names' => 'dashboard.news.category']);

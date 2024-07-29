@@ -1,7 +1,7 @@
 <ul class="navbar-nav sidebar sidebar-light accordion" id="accordionSidebar">
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('dashboard') }}">
         <div class="sidebar-brand-icon">
-            <img src="{{ asset('assets/img/SD3_logo.png') }}" alt="">
+            <img src="{{ asset('asset_dashboard/img/SD3_logo.png') }}" alt="">
         </div>
         <div class="sidebar-brand-text mx-2 font-weight-bold text-uppercase" style="font-size: 12px;">SD Muhammadiyah 3 Samarinda</div>
     </a>
@@ -25,6 +25,11 @@
         <div id="news" class="collapse {{ Request::routeIs('dashboard.news.*') ? 'show' : ''  }} }}"
             aria-labelledby="headingBootstrap" data-parent="#accordionSidebar" >
             <div class="py-2 collapse-inner rounded">
+                <a class="collapse-item {{ Request::routeIs('dashboard.news.hero.*') ? 'active' : ''  }}"
+                    href="{{ route('dashboard.news.hero.index') }}">
+                    <i class="fas fa-solid fa-image"></i>
+                    <span>Hero Banner</span>
+                </a>
                 <a class="collapse-item {{ Request::routeIs('dashboard.news.berita.*') ? 'active' : ''  }}"
                     href="{{ route('dashboard.news.berita.index') }}">
                     <i class="fas fa-solid fa-newspaper"></i>

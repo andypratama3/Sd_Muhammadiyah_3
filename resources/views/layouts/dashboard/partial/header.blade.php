@@ -4,8 +4,8 @@
 <meta name="description" content="">
 <meta name="author" content="">
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<link href="{{ asset('assets/img/SD3_logo.png') }}" rel="icon">
-<link href="{{ asset('assets/img/SD3_logo.png') }}" rel="apple-touch-icon">
+<link href="{{ asset('asset_dashboard/img/SD3_logo.png') }}" rel="icon">
+<link href="{{ asset('asset_dashboard/img/SD3_logo.png') }}" rel="apple-touch-icon">
 <title>@yield('title') | SD Muhammadiyah 3</title>
 @stack('css')
 <link href="{{ asset('asset_dashboard/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">

@@ -6,33 +6,38 @@
 <!-- Carousel Start -->
 
 <div class="header-carousel owl-carousel">
-    {{-- @foreach($banners as $banner) --}}
-        <div class="header-carousel-item bg-primary">
+    @foreach($heroes as $hero)
+        <div class="header-carousel-item" style="background-image: url({{ asset('storage/img/hero/'. $hero->image) }})">
             <div class="carousel-caption">
                 <div class="container">
                     <div class="row g-4 align-items-center">
                         <div class="col-lg-7 animated fadeInLeft">
                             <div class="text-sm-center text-md-start">
-                                <h4 class="text-white text-uppercase fw-bold mb-4">Welcome To LifeSure</h4>
-                                <h1 class="display-1 text-white mb-4">Life Insurance Makes You Happy</h1>
-                                <p class="mb-5 fs-5">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy...
+                                <h4 class="text-white text-uppercase fw-bold mb-4">SD MUHAMMADIYAH 3 SAMARINDA </h4>
+                                <h1 class="display-1 text-white mb-4">{{ $hero->name }}</h1>
+                                <p class="mb-5 fs-5">{{ $hero->desc }}
                                 </p>
                                 <div class="d-flex justify-content-center justify-content-md-start flex-shrink-0 mb-4">
-                                    <a class="btn btn-light rounded-pill py-3 px-4 px-md-5 me-2" href="#"><i class="fas fa-play-circle me-2"></i> Watch Video</a>
-                                    <a class="btn btn-dark rounded-pill py-3 px-4 px-md-5 ms-2" href="#">Learn More</a>
+                                    @if($hero->youtube != null)
+                                    <a class="btn btn-light rounded-pill py-3 px-4 px-md-5 me-2" href="{{ $hero->youtube }}"><i class="fas fa-play-circle me-2"></i> Watch Video</a>
+                                    @endif
+                                    @if($hero->link != null)
+                                    <a class="btn btn-dark rounded-pill py-3 px-4 px-md-5 ms-2" href="{{ $hero->link }}">Kunjungi Halaman</a>
+                                    @endif
+
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-5 animated fadeInRight">
                             <div class="calrousel-img" style="object-fit: cover;">
-                                <img src="{{ asset('asset/img/carousel-2.png') }}" class="img-fluid w-100" alt="">
+                                <img src="{{ asset('asset/img/SD3_logo.png') }}" class="img-fluid w-50" alt="">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    {{-- @endforeach --}}
+    @endforeach
 </div>
 <!-- Carousel End -->
 
@@ -40,56 +45,49 @@
 <div class="container-fluid feature bg-light py-5">
     <div class="container py-5">
         <div class="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.2s" style="max-width: 800px;">
-            <h4 class="text-primary">Our Features</h4>
-            <h1 class="display-4 mb-4">Insurance Provide you a Better Future</h1>
-            <p class="mb-0">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tenetur adipisci facilis cupiditate recusandae aperiam temporibus corporis itaque quis facere, numquam, ad culpa deserunt sint dolorem autem obcaecati, ipsam mollitia hic.
-            </p>
+            <h4 class="text-primary">SD MUHAMMADIYAH 3 SAMARINDA</h4>
+            <h1 class="display-4 mb-4">Sekolah Kreatif Dengan Beberapa Keunggulan</h1>
+            {{-- <p class="mb-0 text-black fw-2">
+                SD Muhammadiyah 3 Samarinda, dikenal sebagai Sekolah Kreatif, memiliki beberapa keunggulan yang membuatnya menonjol. Dengan pendekatan pembelajaran yang inovatif, sekolah ini bertujuan untuk mengembangkan potensi siswa secara maksimal. Beberapa keunggulan yang ditawarkan antara lain
+            </p> --}}
         </div>
         <div class="row g-4">
             <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.2s">
                 <div class="feature-item p-4 pt-0">
                     <div class="feature-icon p-4 mb-4">
-                        <i class="far fa-handshake fa-3x"></i>
+                        <i class="fa-solid fa-a fa-3x"></i>
                     </div>
-                    <h4 class="mb-4">Trusted Company</h4>
-                    <p class="mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea hic laborum odit pariatur...
-                    </p>
-                    <a class="btn btn-primary rounded-pill py-2 px-4" href="#">Learn More</a>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.4s">
-                <div class="feature-item p-4 pt-0">
-                    <div class="feature-icon p-4 mb-4">
-                        <i class="fa fa-dollar-sign fa-3x"></i>
-                    </div>
-                    <h4 class="mb-4">Anytime Money Back</h4>
-                    <p class="mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea hic laborum odit pariatur...
-                    </p>
-                    <a class="btn btn-primary rounded-pill py-2 px-4" href="#">Learn More</a>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.6s">
-                <div class="feature-item p-4 pt-0">
-                    <div class="feature-icon p-4 mb-4">
-                        <i class="fa fa-bullseye fa-3x"></i>
-                    </div>
-                    <h4 class="mb-4">Flexible Plans</h4>
-                    <p class="mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea hic laborum odit pariatur...
-                    </p>
-                    <a class="btn btn-primary rounded-pill py-2 px-4" href="#">Learn More</a>
+                    <h4 class="mb-4">AKREDITAS</h4>
                 </div>
             </div>
             <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.8s">
                 <div class="feature-item p-4 pt-0">
                     <div class="feature-icon p-4 mb-4">
-                        <i class="fa fa-headphones fa-3x"></i>
+                        <i class="fa fa-building fa-3x"></i>
                     </div>
-                    <h4 class="mb-4">24/7 Fast Support</h4>
-                    <p class="mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea hic laborum odit pariatur...
-                    </p>
-                    <a class="btn btn-primary rounded-pill py-2 px-4" href="#">Learn More</a>
+                    <h4 class="mb-4">FASILITAS</h4>
+                    <a class="btn btn-primary rounded-pill py-2 px-4" href="{{ route('fasilitas.index') }}" aria-label="lihat-fasilitas">Lihat</a>
                 </div>
             </div>
+            <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.4s">
+                <div class="feature-item p-4 pt-0">
+                    <div class="feature-icon p-4 mb-4">
+                        <i class="fa fa-trophy fa-3x"></i>
+                    </div>
+                    <h4 class="mb-4">PRESTASI SISWA</h4>
+                    <a class="btn btn-primary rounded-pill py-2 px-4" href="{{ route('prestasi.siswa.index') }}" aria-label="Lihat-prestasi Siswa">Lihat</a>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.6s">
+                <div class="feature-item p-4 pt-0">
+                    <div class="feature-icon p-4 mb-4">
+                        <i class="fa fa-school fa-3x"></i>
+                    </div>
+                    <h4 class="mb-4" style="font-size: 23px;">PRESTASI SEKOLAH</h4>
+                    <a class="btn btn-primary rounded-pill py-2 px-4" href="{{  route('prestasi.sekolah.index') }}" aria-label="Lihat-prestasi Sekolah">Lihat</a>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -101,62 +99,78 @@
         <div class="row g-5">
             <div class="col-xl-6 wow fadeInLeft" data-wow-delay="0.2s">
                 <div class="about-item-content bg-white rounded p-5 h-100">
-                    <h4 class="text-primary">About Our Company</h4>
-                    <h1 class="display-4 mb-4">High Range of Exploring Protection</h1>
-                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sunt debitis sint tempora. Corporis consequatur illo blanditiis voluptates aperiam quos aliquam totam aliquid rem explicabo,
+                    <h4 class="text-primary">TENTANG SD MUHAMMADIYAH 3 SAMARINDA</h4>
+                    <h1 class="display-4 mb-4">Pembelajaran Inovatif dan Pengembangan Karakter</h1>
+                    <p>Sekolah Kreatif Muhammadiyah 3 Samarinda berkomitmen untuk menyediakan lingkungan belajar yang dinamis dan menarik. Misi kami adalah untuk menumbuhkan kreativitas dan cinta belajar pada setiap siswa. Dengan fokus pada pengembangan holistik, kami memastikan bahwa siswa kami unggul secara akademis dan tumbuh menjadi individu yang berkarakter.</p>
+                    <p class="text-bold text-dark">Visi & Misi <code>*</code></p>
+                    <p class="text-dark">VISI</p>
+                    <p>Sesuai dengan prinsip – prinsip pengembangan dan acuan operasional penyusunan Kurikulum Tingkat Satuan Pendidikan maka, Visi sekolah SD Muhammadiyah 3 Samarinda adalah sebagai berikut: <br>
+                        <strong class="text-dark">“Terwujudnya Siswa Hafidz/Hafidzah Yang Beriman Bertaqwa Kepada Allah SWT Berakhlak Mulia, Cerdas, Aktif, Kreatif, Berbudaya Lingkungan Serta Unggul Dalam Prestasi Demi Terwujudnya Masyarakat Islam Yang Sebenar – benarnya ”</strong>
                     </p>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae praesentium recusandae eligendi modi hic
-                    </p>
-                    <p class="text-dark"><i class="fa fa-check text-primary me-3"></i>We can save your money.</p>
-                    <p class="text-dark"><i class="fa fa-check text-primary me-3"></i>Production or trading of good</p>
-                    <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i>Our life insurance is flexible</p>
-                    <a class="btn btn-primary rounded-pill py-3 px-5" href="#">More Information</a>
+                    <p class="text-dark">MISI</p>
+                    <p class="text-dark"><i class="fa fa-check text-primary me-3"></i>Membentuk Siswa Siswi hafidz dan hafidzah melalui progam tahfidz dan program penanaman iman dan taqwa sejak dini.</p>
+                    <p class="text-dark"><i class="fa fa-check text-primary me-3"></i>Membentuk Siswa Siswi yang cerdas melalui program edutainment dengan meningkatkan sarana prasarana pendidikan yang mendukung pengembangan kecerdasan Siswa sesuai potensi Siswa.</p>
+                    <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Membentuk Siswa yang kreatif melalui program pengembangan ekstrakurikuler Sekolah sesuai minat bakat Siswa.</p>
+                    <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Melakukan upaya melindungi dan megelola lingkungan hidup dengan program Adiwiyata di Sekolah.</p>
+                    <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Membentuk Siswa yang berprestasi dengan program pengembangan kemampuan anak dibidang masing-masing sejak dini.</p>
+                    <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Membentuk kebiasaan-kebiasaan warga Sekolah yang islami demi terwujudnya masyarakat islam yang sebenar-benarnya sesuai dengan tujuan Muhammadiyah.</p>                    
                 </div>
+
             </div>
             <div class="col-xl-6 wow fadeInRight" data-wow-delay="0.2s">
                 <div class="bg-white rounded p-5 h-100">
                     <div class="row g-4 justify-content-center">
                         <div class="col-12">
                             <div class="rounded bg-light">
-                                <img src="{{ asset('asset/img/about-1.png') }}" class="img-fluid rounded w-100" alt="">
+                                <img src="{{ asset('asset/img/carousel-2.png') }}" class="img-fluid rounded w-100" alt="">
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="counter-item bg-light rounded p-3 h-100">
                                 <div class="counter-counting">
-                                    <span class="text-primary fs-2 fw-bold" data-toggle="counter-up">129</span>
+                                    <span class="text-primary fs-2 fw-bold" data-toggle="counter-up">{{ $siswas }}</span>
                                     <span class="h1 fw-bold text-primary">+</span>
                                 </div>
-                                <h4 class="mb-0 text-dark">Insurance Policies</h4>
+                                <h4 class="mb-0 text-dark">Siswa</h4>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="counter-item bg-light rounded p-3 h-100">
                                 <div class="counter-counting">
-                                    <span class="text-primary fs-2 fw-bold" data-toggle="counter-up">99</span>
+                                    <span class="text-primary fs-2 fw-bold" data-toggle="counter-up">{{ $prestasis_siswa }}</span>
                                     <span class="h1 fw-bold text-primary">+</span>
                                 </div>
-                                <h4 class="mb-0 text-dark">Awards WON</h4>
+                                <h4 class="mb-0 text-dark">Prestasi Siswa</h4>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="counter-item bg-light rounded p-3 h-100">
                                 <div class="counter-counting">
-                                    <span class="text-primary fs-2 fw-bold" data-toggle="counter-up">556</span>
+                                    <span class="text-primary fs-2 fw-bold" data-toggle="counter-up">{{ $prestasis_sekolah }}</span>
                                     <span class="h1 fw-bold text-primary">+</span>
                                 </div>
-                                <h4 class="mb-0 text-dark">Skilled Agents</h4>
+                                <h4 class="mb-0 text-dark">Prestasi Sekolah </h4>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="counter-item bg-light rounded p-3 h-100">
                                 <div class="counter-counting">
-                                    <span class="text-primary fs-2 fw-bold" data-toggle="counter-up">967</span>
+                                    <span class="text-primary fs-2 fw-bold" data-toggle="counter-up">{{ $fasilitas }}</span>
                                     <span class="h1 fw-bold text-primary">+</span>
                                 </div>
-                                <h4 class="mb-0 text-dark">Team Members</h4>
+                                <h4 class="mb-0 text-dark">Fasilitas</h4>
                             </div>
                         </div>
+                        <div class="about-item-content bg-white rounded p-5 h-100">                                                     
+                            <p class="text-dark">TUJUAN</p>
+                            <p class="text-dark"><i class="fa fa-check text-primary me-3"></i>Terwujudnya Siswa Siswi hafidz dan hafidzah melalui progam tahfidz dan program penanaman iman dan taqwa sejak dini.</p>
+                            <p class="text-dark"><i class="fa fa-check text-primary me-3"></i>Terwujudnya Siswa Siswi yang cerdas melalui program edutainment dengan meningkatkan sarana prasarana pendidikan yang mendukung pengembangan kecerdasan Siswa sesuai potensi Siswa.</p>
+                            <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Terwujudnya Siswa yang kreatif melalui program pengembangan ekstrakurikuler sekolah sesuai minat bakat Siswa.</p>
+                            <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Terwujudnya upaya melindungi dan megelola lingkungan hidup dengan program Adiwiyata di Sekolah.</p>
+                            <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Terwujudnya Siswa yang berprestasi dengan program pengembangan kemampuan anak dibidang masing-masing sejak dini.</p>
+                            <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Terwujudnya kebiasaan-kebiasaan warga Sekolah yang islami demi terwujudnya masyarakat islam yang sebenar-benarnya sesuai dengan tujuan Muhammadiyah.</p>                           
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -164,6 +178,64 @@
     </div>
 </div>
 <!-- About End -->
+
+<!-- FAQs Start -->
+<div class="container-fluid faq-section bg-light py-5">
+    <div class="container py-5">
+        <div class="row g-5 align-items-center">
+            <div class="col-xl-6 wow fadeInLeft" data-wow-delay="0.2s">
+                <div class="h-100">
+                    <div class="mb-5">
+                        <h4 class="text-primary"></h4>
+                        <h1 class="display-4 mb-0">Common Frequently Asked Questions</h1>
+                    </div>
+                    <div class="accordion" id="accordionExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button border-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    Q: What happens during Freshers' Week?
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show active" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                <div class="accordion-body rounded">
+                                    A: Leverage agile frameworks to provide a robust synopsis for high level overviews. Iterative approaches to corporate strategy foster collaborative thinking to further the overall value proposition. Organically grow the holistic world view of disruptive innovation via workplace diversity and empowerment.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    Q: What is the transfer application process?
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    A: Leverage agile frameworks to provide a robust synopsis for high level overviews. Iterative approaches to corporate strategy foster collaborative thinking to further the overall value proposition. Organically grow the holistic world view of disruptive innovation via workplace diversity and empowerment.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    Q: Why should I attend community college?
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    A: Leverage agile frameworks to provide a robust synopsis for high level overviews. Iterative approaches to corporate strategy foster collaborative thinking to further the overall value proposition. Organically grow the holistic world view of disruptive innovation via workplace diversity and empowerment.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6 wow fadeInRight" data-wow-delay="0.4s">
+                <img src="{{ asset('asset/img/carousel-2.png') }}" class="img-fluid w-100" alt="">
+            </div>
+        </div>
+    </div>
+</div>
+<!-- FAQs End -->
 
 <!-- Service Start -->
 <div class="container-fluid service py-5">
@@ -250,64 +322,6 @@
     </div>
 </div>
 <!-- Service End -->
-
-<!-- FAQs Start -->
-<div class="container-fluid faq-section bg-light py-5">
-    <div class="container py-5">
-        <div class="row g-5 align-items-center">
-            <div class="col-xl-6 wow fadeInLeft" data-wow-delay="0.2s">
-                <div class="h-100">
-                    <div class="mb-5">
-                        <h4 class="text-primary">Some Important FAQ's</h4>
-                        <h1 class="display-4 mb-0">Common Frequently Asked Questions</h1>
-                    </div>
-                    <div class="accordion" id="accordionExample">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingOne">
-                                <button class="accordion-button border-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    Q: What happens during Freshers' Week?
-                                </button>
-                            </h2>
-                            <div id="collapseOne" class="accordion-collapse collapse show active" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                <div class="accordion-body rounded">
-                                    A: Leverage agile frameworks to provide a robust synopsis for high level overviews. Iterative approaches to corporate strategy foster collaborative thinking to further the overall value proposition. Organically grow the holistic world view of disruptive innovation via workplace diversity and empowerment.
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingTwo">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                    Q: What is the transfer application process?
-                                </button>
-                            </h2>
-                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                                <div class="accordion-body">
-                                    A: Leverage agile frameworks to provide a robust synopsis for high level overviews. Iterative approaches to corporate strategy foster collaborative thinking to further the overall value proposition. Organically grow the holistic world view of disruptive innovation via workplace diversity and empowerment.
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingThree">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                    Q: Why should I attend community college?
-                                </button>
-                            </h2>
-                            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                                <div class="accordion-body">
-                                    A: Leverage agile frameworks to provide a robust synopsis for high level overviews. Iterative approaches to corporate strategy foster collaborative thinking to further the overall value proposition. Organically grow the holistic world view of disruptive innovation via workplace diversity and empowerment.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-6 wow fadeInRight" data-wow-delay="0.4s">
-                <img src="{{ asset('asset/img/carousel-2.png') }}" class="img-fluid w-100" alt="">
-            </div>
-        </div>
-    </div>
-</div>
-<!-- FAQs End -->
 
 <!-- Blog Start -->
 <div class="container-fluid blog py-5">
