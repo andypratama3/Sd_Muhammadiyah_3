@@ -1,8 +1,8 @@
-@extends('layouts.user_new')
+@extends('layouts.user')
 @section('title','Prestasi Sekolah')
 @section('content')
 
-<div class="hero-banner" style="margin-top: 95px;">
+<div class="hero-banner" style="margin-top: 20px;">
     <div class="container aos-init aos-animate" data-aos="fade-up">
         <div class="row">
             <header class="section-header text-center">

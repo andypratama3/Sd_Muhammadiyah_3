@@ -40,7 +40,7 @@
             </div>
         </div>
         <div class="row mt-4">
-            <div class="contact-us-content">
+            <div class="contact bg-light wow fadeInRight" data-wow-delay="0.4s">
                 <div class="col-md-12 text-center mb-4">
                     <h2>Kritik dan Saran</h2>
                 </div>
@@ -48,27 +48,27 @@
                     @csrf
                     <div class="row">
                         <div class="col-lg-12">
-                            <fieldset>
-                                <input type="name" name="name" id="name" placeholder="Your Name..."
-                                    autocomplete="on" required>
-                            </fieldset>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control border-0" id="name" name="name" placeholder="Your Name..." required>
+                                <label for="name">Your Name</label>
+                            </div>
+
                         </div>
                         <div class="col-lg-12">
-                            <fieldset>
-                                <input type="text" name="email" id="email" pattern="[^ @]*@[^ @]*"
-                                    placeholder="Your E-mail..." required="">
-                            </fieldset>
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control border-0" id="email" name="email" placeholder="Your Email" required>
+                                <label for="email">Your Email</label>
+                            </div>
                         </div>
                         <div class="col-lg-12">
-                            <fieldset>
-                                <textarea name="message" id="message" placeholder="Your Message"></textarea>
-                            </fieldset>
+                            <div class="form-floating mb-3">
+                                <textarea class="form-control border-0" id="message" name="message" placeholder="Your Message" style="height: 100px"></textarea>
+                                <label for="message">Your Message</label>
+                            </div>
                         </div>
-                        <div class="col-lg-12">
-                            <fieldset>
-                                <button type="submit" id="form-submit" class="orange-button">Send Message
+                        <div class="col-12">
+                                <button type="submit" id="form-submit" class="btn btn-primary w-100 py-3">Send Message
                                     Now</button>
-                            </fieldset>
                         </div>
                     </div>
                 </form>

@@ -1,8 +1,8 @@
-@extends('layouts.user_new')
-@section('title','Guru')
+@extends('layouts.user')
+@section('title','Tenaga Kependidikan')
 
 @section('content')
-<section class="guru" style="margin-top: 95px; margin-bottom: 0;">
+<section class="guru" style="margin-top: 20px; margin-bottom: 0;">
     <div class="container aos-init aos-animate" data-aos="fade-up">
         <div class="section-title text-center">
             <h2>Tenaga Pendidikan SD Muhammadiyah 3</h2>
