@@ -31,6 +31,6 @@ class PembayaranAction
                 'gross_amount' => $grossAmount,
             ]
         );
-        // $this->whatsApp->sendMessage($pembayaran->order_id);
+        $this->whatsApp->sendMessage($pembayaran->order_id);
     }
 }
