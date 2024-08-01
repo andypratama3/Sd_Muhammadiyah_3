@@ -23,9 +23,9 @@ class SendOrderIDWhatsAppApi extends Controller
         $accessToken = env('WA_Busines');
 
         $client = new Client();
-        $response = $client->post("https://graph.facebook.com/v18.0/242653778934344/messages", [
+        $response = $client->post("https://graph.facebook.com/v20.0/401364996388545/messages", [
             'headers' => [
-                'Authorization' => "Bearer {$accessToken}",
+                'Authorization' => "Bearer EAAQGovTCT1cBO6R9kKVs4JFxiCXDuPuhyqdFtmB6OuqcyhNCTw9EZA2JkQuapkWzZCIpU9vinyRusIZBbDLVZBnH4tIO3kLsUVYDDC1BYtIlfZBZCNTa7K52Ia8O15vCIYFZBNsLE080tL6gXPlwxnKUBWCT1NZCK9GBt718OJnHcpHxVZCNWZBpMQg85UrmvtOKxezQZDZD",
                 'Content-Type' => 'application/json',
             ],
             'json' => [
@@ -63,7 +63,6 @@ class SendOrderIDWhatsAppApi extends Controller
                 ]
             ],
         ]);
-
         $responseData = $response->getBody()->getContents();
 
         return $responseData;

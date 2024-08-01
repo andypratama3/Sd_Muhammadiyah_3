@@ -46,7 +46,7 @@ class PembayaranController extends Controller
         //Request Body//
         $body['product']    = array($pembayaran->judul->name);
         $body['price']      = array($gross_amount);
-        $body['image']      = array('https://sd.relawanmhf.com/assets/img/SD3_logo.png');
+        $body['image']      = 'https://sd.relawanmhf.com/asset/img/SD3_logo.png';
         $body['qty']        = array('1');
         $body['returnUrl']  = route('pembayaran.index');
         $body['cancelUrl']  = 'https://your-website.com/cancel-page';
