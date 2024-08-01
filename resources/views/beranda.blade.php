@@ -114,12 +114,26 @@
             <div class="text-center mx-auto mt-3 wow fadeInRight" data-wow-delay="0.2s">
                 <div class="bg-white rounded-0 p-3 h-100 mt-5">
                     <h1 class="display-4 mb-4 mt-0">Aktivitas Kami</h1>
+                    <p class="text-primary">Aktivitas SD Muhammadiyah 3 Samarinda</p>
                     <div class="row g-4">
-
+                        @for($aktivitas = 0; $aktivitas < 8; $aktivitas++)
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <img src="{{ asset('asset/img/bg-breadcrumb.jpg') }}" alt="" class="img-fluid">
+                                </div>
+                            </div>
+                        </div>
+                        @endfor
+                        <div class="col-md-12">
+                            <a href="" class="btn btn-primary">Lihat Semua</a>
+                        </div>
                     </div>
                     {{-- <h4 class="text-primary">SD Muhammadiyah 3 Samarinda</h4> --}}
-                </div>  
+                </div>
             </div>
+
+
         </div>
 
 
@@ -136,7 +150,12 @@
                     <h4 class="text-primary">TENTANG SD MUHAMMADIYAH 3 SAMARINDA</h4>
                     <h1 class="display-4 mb-4">Pembelajaran Inovatif dan Pengembangan Karakter</h1>
                     <p>Sekolah Kreatif Muhammadiyah 3 Samarinda berkomitmen untuk menyediakan lingkungan belajar yang dinamis dan menarik. Misi kami adalah untuk menumbuhkan kreativitas dan cinta belajar pada setiap siswa. Dengan fokus pada pengembangan holistik, kami memastikan bahwa siswa kami unggul secara akademis dan tumbuh menjadi individu yang berkarakter.</p>
+
+
+                <a href="{{ route('visimisi.index') }}" class="btn btn-primary">Lihat Visi & Misi</a>
+
                 </div>
+
             </div>
             <div class="col-xl-6 wow fadeInRight" data-wow-delay="0.2s">
                 <div class="bg-white rounded p-5 h-100">
@@ -195,7 +214,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="swiper init-swiper">
                         <div class="swiper-wrapper align-items-center">
                             <div class="swiper-slide"><img src="{{ asset('asset/img/client-1.png') }}" class="img-fluid" alt=""></div>
