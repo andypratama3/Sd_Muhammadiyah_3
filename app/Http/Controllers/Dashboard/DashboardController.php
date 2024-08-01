@@ -16,10 +16,7 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    public function __construct()
-    {
-        // $this->middleware('role:admin,superadmin');
-    }
+
 
     public function __invoke(ArtikelView $ArtikelChart, SiswaChart $siswaChart)
     {

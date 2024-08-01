@@ -11,6 +11,7 @@ use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\KontakController;
 use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\BerandaController;
+use App\Http\Controllers\VisiMisiController;
 use App\Http\Controllers\FasilitasController;
 use App\Http\Controllers\NaikKelasController;
 use App\Http\Controllers\PembayaranController;
@@ -26,15 +27,15 @@ use App\Http\Controllers\Dashboard\TaskController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\CategoryArtikel;
 use App\Http\Controllers\Dashboard\KelasController;
-use App\Http\Controllers\EkstrakurikulerController;
 
 //Dashboard Access
+use App\Http\Controllers\EkstrakurikulerController;
 use App\Http\Controllers\PrestasiSekolahController;
 use App\Http\Controllers\TenagaPendidikanController;
 use App\Http\Controllers\Dashboard\ActivityController;
 use App\Http\Controllers\Dashboard\KaryawanController;
-use App\Http\Controllers\Dashboard\DashboardController;
 
+use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\KelasCategoryController;
 use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
 use App\Http\Controllers\Dashboard\HeroController as DashboardHeroController;
@@ -78,6 +79,8 @@ Route::group(['prefix' => '/'], function () {
 
     //guru
     Route::get('guru', [GuruController::class, 'index'])->name('guru.index');
+    //visi misi
+    Route::get('visimisi', VisiMisiController::class)->name('visimisi.index');
     //ekstrakurikuler
     Route::get('ekstrakurikuler', [EkstrakurikulerController::class, 'index'])->name('esktrakurikuler.index');
     Route::get('ekstrakurikuler/{name}', [EkstrakurikulerController::class, 'show'])->name('esktrakurikuler.show');

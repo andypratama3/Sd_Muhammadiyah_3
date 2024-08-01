@@ -1,64 +1,47 @@
 @extends('layouts.user')
-@section('title','Beranda')
+@section('title','Visi Misi')
 @section('content')
 
-<section id="contact" class="contact mb-5">
-    <div class="container aos-init aos-animate" data-aos="fade-up">
-      <div class="row">
-        <div class="col-lg-12 text-center mb-5">
-          <h1 class="page-title">Visi & Misi</h1>
+
+<!-- About Start -->
+<div class="container-fluid bg-light about pb-5" id="tentang">
+    <div class="container pb-5">
+        <div class="row g-5">
+            <div class="col-md-12  wow fadeInLeft" data-wow-delay="0.2s">
+                <a href="{{ route('index') }}" class="btn btn-primary float-start" style="color: #ffffff; background-color: #5ce70b !important; border-color: #5ce70b !important;"><i class="fas fa-arrow-left"></i>Kembali</a>
+
+                <div class="about-item-content bg-white rounded p-5 h-100 mt-5">
+                    <h4 class="text-primary">Visi & Misi SD MUHAMMADIYAH 3 SAMARINDA</h4>
+                    <h4 class="display-4 mb-4">Visi & Misi</h4>
+
+                    <p class="text-dark">VISI <code>*</code></p>
+                    <p class="text-dark">Sesuai dengan prinsip – prinsip pengembangan dan acuan operasional penyusunan Kurikulum Tingkat Satuan Pendidikan maka, Visi sekolah SD Muhammadiyah 3 Samarinda adalah sebagai berikut: <br>
+                        <strong class="text-dark">“Terwujudnya Siswa Hafidz/Hafidzah Yang Beriman Bertaqwa Kepada Allah SWT Berakhlak Mulia, Cerdas, Aktif, Kreatif, Berbudaya Lingkungan Serta Unggul Dalam Prestasi Demi Terwujudnya Masyarakat Islam Yang Sebenar – benarnya ”</strong>
+                    </p>
+                    <p class="text-dark">MISI <code>*</code></p>
+                    <p class="text-dark"><i class="fa fa-check text-primary me-3"></i>Membentuk Siswa Siswi hafidz dan hafidzah melalui progam tahfidz dan program penanaman iman dan taqwa sejak dini.</p>
+                    <p class="text-dark"><i class="fa fa-check text-primary me-3"></i>Membentuk Siswa Siswi yang cerdas melalui program edutainment dengan meningkatkan sarana prasarana pendidikan yang mendukung pengembangan kecerdasan Siswa sesuai potensi Siswa.</p>
+                    <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Membentuk Siswa yang kreatif melalui program pengembangan ekstrakurikuler Sekolah sesuai minat bakat Siswa.</p>
+                    <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Melakukan upaya melindungi dan megelola lingkungan hidup dengan program Adiwiyata di Sekolah.</p>
+                    <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Membentuk Siswa yang berprestasi dengan program pengembangan kemampuan anak dibidang masing-masing sejak dini.</p>
+                    <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Membentuk kebiasaan-kebiasaan warga Sekolah yang islami demi terwujudnya masyarakat islam yang sebenar-benarnya sesuai dengan tujuan Muhammadiyah.</p>
+
+
+                    <div class="about-item-content bg-white rounded p-5 h-100">
+                        <p class="text-dark">TUJUAN <code>*</code></p>
+                        <p class="text-dark"><i class="fa fa-check text-primary me-3"></i>Terwujudnya Siswa Siswi hafidz dan hafidzah melalui progam tahfidz dan program penanaman iman dan taqwa sejak dini.</p>
+                        <p class="text-dark"><i class="fa fa-check text-primary me-3"></i>Terwujudnya Siswa Siswi yang cerdas melalui program edutainment dengan meningkatkan sarana prasarana pendidikan yang mendukung pengembangan kecerdasan Siswa sesuai potensi Siswa.</p>
+                        <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Terwujudnya Siswa yang kreatif melalui program pengembangan ekstrakurikuler sekolah sesuai minat bakat Siswa.</p>
+                        <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Terwujudnya upaya melindungi dan megelola lingkungan hidup dengan program Adiwiyata di Sekolah.</p>
+                        <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Terwujudnya Siswa yang berprestasi dengan program pengembangan kemampuan anak dibidang masing-masing sejak dini.</p>
+                        <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Terwujudnya kebiasaan-kebiasaan warga Sekolah yang islami demi terwujudnya masyarakat islam yang sebenar-benarnya sesuai dengan tujuan Muhammadiyah.</p>
+                    </div>
+                </div>
+
+            </div>
         </div>
-      </div>
-
-      <div class="row gy-4">
-        <div class="col-md-4">
-          <div class="info-item">
-            <i class="bi bi-geo-alt"></i>
-            <h3>Address</h3>
-            <address>A108 Adam Street, NY 535022, USA</address>
-          </div>
-        </div><!-- End Info Item -->
-        <div class="col-md-4">
-          <div class="info-item info-item-borders">
-            <i class="bi bi-phone"></i>
-            <h3>Phone Number</h3>
-            <p><a href="tel:+155895548855">+1 5589 55488 55</a></p>
-          </div>
-        </div><!-- End Info Item -->
-        <div class="col-md-4">
-          <div class="info-item">
-            <i class="bi bi-envelope"></i>
-            <h3>Email</h3>
-            <p><a href="mailto:info@example.com">info@example.com</a></p>
-          </div>
-        </div><!-- End Info Item -->
-      </div>
-      <div class="form mt-5">
-        <form action="forms/contact.php" method="post" role="form" class="php-email-form">
-          <div class="row">
-            <div class="form-group col-md-6">
-              <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required="">
-            </div>
-            <div class="form-group col-md-6">
-              <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required="">
-            </div>
-          </div>
-          <div class="form-group">
-            <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required="">
-          </div>
-          <div class="form-group">
-            <textarea class="form-control" name="message" rows="5" placeholder="Message" required=""></textarea>
-          </div>
-          <div class="my-3">
-            <div class="loading">Loading</div>
-            <div class="error-message"></div>
-            <div class="sent-message">Your message has been sent. Thank you!</div>
-          </div>
-          <div class="text-center"><button type="submit">Send Message</button></div>
-        </form>
-      </div><!-- End Contact Form -->
-
     </div>
-  </section>
-@endsection
+</div>
+<!-- About End -->
 
+@endsection

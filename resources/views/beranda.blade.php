@@ -1,6 +1,9 @@
 
 @extends('layouts.user')
 @section('title', 'Home')
+@push('css_user')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+@endpush
 @section('content')
 
 <!-- Carousel Start -->
@@ -44,9 +47,30 @@
 <!-- Feature Start -->
 <div class="container-fluid feature bg-light py-5">
     <div class="container py-5">
-        <div class="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.2s" style="max-width: 800px;">
+        <div class="text-center mx-auto pb-5 wow fadeInRight" data-wow-delay="0.2s" style="max-width: 800px;">
             <h4 class="text-primary">SD MUHAMMADIYAH 3 SAMARINDA</h4>
-            <h1 class="display-4 mb-4">Sekolah Kreatif Dengan Beberapa Keunggulan</h1>
+            <h1 class="display-4">Program Unggulan</h1>
+        </div>
+        <div class="row g-4 wow  fadeInUp" data-wow-delay="0.2s">
+            <div class="col-md-8 float-end">
+                <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Tahifdz Al - Qur'an 2 Juz (29 - 30)</h4>
+                <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Pembiasaan Akhlak Iskami Sejak Dini</h4>
+                <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Pembiasaan Sholat Wajib dan Sunnah</h4>
+                <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Pembiasaan Ngaji Morning Metode Tilawati</h4>
+                <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Pembiasaan Menulis Al - Qur'an Dengan Metode IMLA</h4>
+                <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Pembinaan Psikologi Untuk Mengetahui Minat & Bakat Anak</h4>
+                <div class="form-group">
+                    <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Pembelajaran Berbasis Edutainment <br></h4>
+                    <p class="text-dark" style="margin-left: 30px; margin-top: -10px; margin-bottom: 0;">( Belajar Menyenangkan Dengan Menyeimbankan Otak Kanan Dan Kiri )</p>
+                </div>
+                <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Lulus Dengan 3 Ijazah</h4>
+            </div>
+            <div class="col-md-4">
+                <img src="{{ asset('asset/img/sekolah-penggerak.jpeg') }}" class="img-fluid" alt="" style="object-fit: contain !important; mix-blend-mode: multiply; margin-top: 20px;">
+            </div>
+        </div>
+        <div class="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.2s" style="max-width: 800px;">
+            {{-- <h1 class="display-4 mb-4">Sekolah Kreatif Dengan Beberapa Keunggulan</h1> --}}
             {{-- <p class="mb-0 text-black fw-2">
                 SD Muhammadiyah 3 Samarinda, dikenal sebagai Sekolah Kreatif, memiliki beberapa keunggulan yang membuatnya menonjol. Dengan pendekatan pembelajaran yang inovatif, sekolah ini bertujuan untuk mengembangkan potensi siswa secara maksimal. Beberapa keunggulan yang ditawarkan antara lain
             </p> --}}
@@ -57,7 +81,7 @@
                     <div class="feature-icon p-4 mb-4">
                         <i class="fa-solid fa-a fa-3x"></i>
                     </div>
-                    <h4 class="mb-4">AKREDITAS</h4>
+                    <h4 class="mb-4" style="font-size: 22px;">AKREDITAS UNGGUL</h4>
                 </div>
             </div>
             <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.8s">
@@ -87,8 +111,18 @@
                     <a class="btn btn-primary rounded-pill py-2 px-4" href="{{  route('prestasi.sekolah.index') }}" aria-label="Lihat-prestasi Sekolah">Lihat</a>
                 </div>
             </div>
+            <div class="text-center mx-auto mt-3 wow fadeInRight" data-wow-delay="0.2s">
+                <div class="bg-white rounded-0 p-3 h-100 mt-5">
+                    <h1 class="display-4 mb-4 mt-0">Aktivitas Kami</h1>
+                    <div class="row g-4">
 
+                    </div>
+                    {{-- <h4 class="text-primary">SD Muhammadiyah 3 Samarinda</h4> --}}
+                </div>  
+            </div>
         </div>
+
+
     </div>
 </div>
 <!-- Feature End -->
@@ -102,20 +136,7 @@
                     <h4 class="text-primary">TENTANG SD MUHAMMADIYAH 3 SAMARINDA</h4>
                     <h1 class="display-4 mb-4">Pembelajaran Inovatif dan Pengembangan Karakter</h1>
                     <p>Sekolah Kreatif Muhammadiyah 3 Samarinda berkomitmen untuk menyediakan lingkungan belajar yang dinamis dan menarik. Misi kami adalah untuk menumbuhkan kreativitas dan cinta belajar pada setiap siswa. Dengan fokus pada pengembangan holistik, kami memastikan bahwa siswa kami unggul secara akademis dan tumbuh menjadi individu yang berkarakter.</p>
-                    <p class="text-bold text-dark">Visi & Misi <code>*</code></p>
-                    <p class="text-dark">VISI</p>
-                    <p>Sesuai dengan prinsip – prinsip pengembangan dan acuan operasional penyusunan Kurikulum Tingkat Satuan Pendidikan maka, Visi sekolah SD Muhammadiyah 3 Samarinda adalah sebagai berikut: <br>
-                        <strong class="text-dark">“Terwujudnya Siswa Hafidz/Hafidzah Yang Beriman Bertaqwa Kepada Allah SWT Berakhlak Mulia, Cerdas, Aktif, Kreatif, Berbudaya Lingkungan Serta Unggul Dalam Prestasi Demi Terwujudnya Masyarakat Islam Yang Sebenar – benarnya ”</strong>
-                    </p>
-                    <p class="text-dark">MISI</p>
-                    <p class="text-dark"><i class="fa fa-check text-primary me-3"></i>Membentuk Siswa Siswi hafidz dan hafidzah melalui progam tahfidz dan program penanaman iman dan taqwa sejak dini.</p>
-                    <p class="text-dark"><i class="fa fa-check text-primary me-3"></i>Membentuk Siswa Siswi yang cerdas melalui program edutainment dengan meningkatkan sarana prasarana pendidikan yang mendukung pengembangan kecerdasan Siswa sesuai potensi Siswa.</p>
-                    <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Membentuk Siswa yang kreatif melalui program pengembangan ekstrakurikuler Sekolah sesuai minat bakat Siswa.</p>
-                    <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Melakukan upaya melindungi dan megelola lingkungan hidup dengan program Adiwiyata di Sekolah.</p>
-                    <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Membentuk Siswa yang berprestasi dengan program pengembangan kemampuan anak dibidang masing-masing sejak dini.</p>
-                    <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Membentuk kebiasaan-kebiasaan warga Sekolah yang islami demi terwujudnya masyarakat islam yang sebenar-benarnya sesuai dengan tujuan Muhammadiyah.</p>
                 </div>
-
             </div>
             <div class="col-xl-6 wow fadeInRight" data-wow-delay="0.2s">
                 <div class="bg-white rounded p-5 h-100">
@@ -158,19 +179,34 @@
                                     <span class="text-primary fs-2 fw-bold" data-toggle="counter-up">{{ $fasilitas }}</span>
                                     <span class="h1 fw-bold text-primary">+</span>
                                 </div>
-                                <h4 class="mb-0 text-dark">Fasilitas</h4>
+                                <h4 class="mb-0 text-dark">Sarana & Prasarana</h4>
                             </div>
                         </div>
-                        <div class="about-item-content bg-white rounded p-5 h-100">
-                            <p class="text-dark">TUJUAN</p>
-                            <p class="text-dark"><i class="fa fa-check text-primary me-3"></i>Terwujudnya Siswa Siswi hafidz dan hafidzah melalui progam tahfidz dan program penanaman iman dan taqwa sejak dini.</p>
-                            <p class="text-dark"><i class="fa fa-check text-primary me-3"></i>Terwujudnya Siswa Siswi yang cerdas melalui program edutainment dengan meningkatkan sarana prasarana pendidikan yang mendukung pengembangan kecerdasan Siswa sesuai potensi Siswa.</p>
-                            <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Terwujudnya Siswa yang kreatif melalui program pengembangan ekstrakurikuler sekolah sesuai minat bakat Siswa.</p>
-                            <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Terwujudnya upaya melindungi dan megelola lingkungan hidup dengan program Adiwiyata di Sekolah.</p>
-                            <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Terwujudnya Siswa yang berprestasi dengan program pengembangan kemampuan anak dibidang masing-masing sejak dini.</p>
-                            <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Terwujudnya kebiasaan-kebiasaan warga Sekolah yang islami demi terwujudnya masyarakat islam yang sebenar-benarnya sesuai dengan tujuan Muhammadiyah.</p>
-                        </div>
 
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded pt-3 pb-5 wow fadeInUp" data-wow-delay="0.2s">
+                <div class="row g-4">
+                    <div class="d-flex justify-content-center">
+                        <div class="col-md-4">
+                            <div class="card bg-primary border-0" >
+                                <h6 class="text-black text-center mt-2">Cooperation And Support</h6>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="swiper init-swiper">
+                        <div class="swiper-wrapper align-items-center">
+                            <div class="swiper-slide"><img src="{{ asset('asset/img/client-1.png') }}" class="img-fluid" alt=""></div>
+                            <div class="swiper-slide"><img src="{{ asset('asset/img/client-1.png') }}" class="img-fluid" alt=""></div>
+                            <div class="swiper-slide"><img src="{{ asset('asset/img/client-1.png') }}" class="img-fluid" alt=""></div>
+                            <div class="swiper-slide"><img src="{{ asset('asset/img/client-1.png') }}" class="img-fluid" alt=""></div>
+                            <div class="swiper-slide"><img src="{{ asset('asset/img/client-1.png') }}" class="img-fluid" alt=""></div>
+                            <div class="swiper-slide"><img src="{{ asset('asset/img/client-1.png') }}" class="img-fluid" alt=""></div>
+                            <div class="swiper-slide"><img src="{{ asset('asset/img/client-1.png') }}" class="img-fluid" alt=""></div>
+                            <div class="swiper-slide"><img src="{{ asset('asset/img/client-1.png') }}" class="img-fluid" alt=""></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -749,5 +785,44 @@
 </div>
 <!-- Copyright End -->
 
-
+@push('js_user')
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        const swiper = new Swiper('.init-swiper', {
+          loop: true,
+          speed: 600,
+          autoplay: {
+            delay: 5000,
+          },
+          slidesPerView: 'auto',
+          pagination: {
+            el: '.swiper-pagination',
+            type: 'bullets',
+            clickable: true,
+          },
+          breakpoints: {
+            320: {
+              slidesPerView: 2,
+              spaceBetween: 40
+            },
+            480: {
+              slidesPerView: 3,
+              spaceBetween: 60
+            },
+            640: {
+              slidesPerView: 4,
+              spaceBetween: 80
+            },
+            992: {
+              slidesPerView: 5,
+              spaceBetween: 120
+            },
+            1200: {
+              slidesPerView: 6,
+              spaceBetween: 120
+            }
+          }
+        });
+      </script>
+@endpush
 @endsection

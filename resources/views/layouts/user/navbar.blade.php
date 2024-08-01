@@ -20,7 +20,7 @@
                     <a href="{{ route('guru.index') }}" class="dropdown-item">Guru</a>
                     <a href="{{ route('prestasi.siswa.index') }}" class="dropdown-item">Prestasi Siswa</a>
                     <a href="{{ route('tenagapendidikan.index') }}" class="dropdown-item">Tenaga Pendidikan</a>
-                    {{-- <a href="{{ route('visi-misi.index') }}" class="dropdown-item">Visi & Misi</a> --}}
+                    <a href="{{ route('visimisi.index') }}" class="dropdown-item">Visi & Misi</a>
                 </div>
             </div>
             <a href="{{ route('pembayaran.index') }}" class="nav-item nav-link {{ Request::routeIS('pembayaran.index') ? 'active' : '' }}">Pembayaran</a>
