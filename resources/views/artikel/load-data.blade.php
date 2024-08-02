@@ -2,7 +2,7 @@
 <div class="col-lg-4 col-md-6">
     <div class="service-item">
         <div class="main-content">
-            <img src="{{ asset('storage/img/artikel/'. $artikel->image) }}" alt="foto-artikel" class="img-fluid">
+            <img src="{{ asset('storage/img/artikel/'. $artikel->image) }}" alt="{{ $artikel->name }}" class="img-fluid">
             <h4>{{ $artikel->name }}</h4>
             <p class="category"> Kategori :
                 @foreach ($artikel->categorys as $item)

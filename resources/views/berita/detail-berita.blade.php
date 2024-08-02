@@ -22,7 +22,7 @@
             <div class="col-md-8" data-aos="fade-up">
                 <span class="date">Di Posting Pada</span> <span class="mx-1">&bullet;</span>
                     <span> {{ $berita->created_at }}</span>
-                <img src="{{ asset('storage/img/berita/'. $berita->foto) }}" alt="" class="img-fluid">
+                <img src="{{ asset('storage/img/berita/'. $berita->foto) }}" alt="{{ $berita->judul }}" class="img-fluid">
             </div>
             <div class="col-md-4 mt-3">
                 <h1 class="mb-2" class="title-news">{{ $berita->judul }}</h1>

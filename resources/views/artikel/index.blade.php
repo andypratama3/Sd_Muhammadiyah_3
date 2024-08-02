@@ -1,5 +1,10 @@
 @extends('layouts.user')
 @section('title','Artikel')
+@push('meta_user')
+<meta name="description" content="Baca artikel terbaru dan trending di Sekolah Kreatif Muhammadiyah 3 Samarinda. Temukan berita terkini, tips, dan informasi menarik lainnya.">
+<meta name="keywords" content="Sekolah Kreatif Muhammadiyah 3, Artikel, Berita, Pendidikan, Samarinda">
+<link rel="canonical" href="{{ url()->current() }}">
+@endpush
 @push('css_user')
 <style>
     .services .service-item {
@@ -28,7 +33,7 @@
             <div class="col-lg-4 col-md-6">
                 <div class="service-item">
                     <div class="main-content">
-                        <img src="{{ asset('storage/img/artikel/'. $artikel->image) }}" alt="foto-artikel" class="img-fluid">
+                        <img src="{{ asset('storage/img/artikel/'. $artikel->image) }}" alt="{{ $artikel->name }}" class="img-fluid">
                         <h4>{{ $artikel->name }}</h4>
                         <p class="category"> Kategori :
                             @foreach ($artikel->categorys as $item)

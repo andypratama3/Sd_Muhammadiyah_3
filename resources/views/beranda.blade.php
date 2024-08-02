@@ -1,6 +1,13 @@
 
 @extends('layouts.user')
 @section('title', 'Home')
+@push('meta_user')
+    <meta name="description" content="Sekolah Kreatif Muhammadiyah 3 Samarinda - Komitmen pada pembelajaran inovatif dan pengembangan karakter siswa.">
+    <meta name="keywords" content="Sekolah, Kreatif, Muhammadiyah, Samarinda, Pendidikan, SD, Pembelajaran Inovatif">
+    <meta property="og:title" content="Sekolah Kreatif Muhammadiyah 3 Samarinda">
+    <meta property="og:description" content="Pembelajaran inovatif dan pengembangan karakter siswa.">
+    <meta property="og:image" content="{{ asset('asset/img/SD3_logo.png') }}">
+@endpush
 @push('css_user')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
 @endpush

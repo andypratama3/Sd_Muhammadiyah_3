@@ -2,7 +2,7 @@
 <div class="col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.2s">
     <div class="blog-item">
         <div class="blog-img">
-            <img src="{{ asset('storage/img/berita/' . $berita->foto) }}" class="img-fluid rounded-top w-100" alt="">
+            <img src="{{ asset('storage/img/berita/' . $berita->foto) }}" class="img-fluid rounded-top w-100" alt="{{ $berita->judul }}">
             <div class="blog-categiry py-2 px-4">
                 <span>Berita</span>
             </div>

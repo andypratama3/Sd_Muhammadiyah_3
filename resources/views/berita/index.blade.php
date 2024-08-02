@@ -1,6 +1,16 @@
 @extends('layouts.user')
 @section('title', 'Berita')
-
+    <meta name="description" content="Berita terbaru dan terpopuler dari Sekolah Kreatif Muhammadiyah 3. Temukan informasi terbaru mengenai aktivitas, prestasi, dan acara di sekolah kami.">
+    <meta name="keywords" content="Berita, Sekolah Kreatif Muhammadiyah 3, Prestasi, Acara Sekolah">
+    <meta name="author" content="Nama Anda atau Nama Sekolah">
+    <meta property="og:title" content="Berita - Sekolah Kreatif Muhammadiyah 3">
+    <meta property="og:description" content="Temukan berita terbaru dan informasi terkini tentang kegiatan dan prestasi siswa di Sekolah Kreatif Muhammadiyah 3.">
+    <meta property="og:image" content="{{ asset('asset/img/SD3_logo.png') }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Berita - Sekolah Kreatif Muhammadiyah 3">
+    <meta name="twitter:description" content="Dapatkan berita terbaru dan informasi mengenai Sekolah Kreatif Muhammadiyah 3.">
+    <meta name="twitter:image" content="{{ asset('asset/img/SD3_logo.png') }}">
 @section('content')
 <div class="container-fluid blog py-5 mt-0">
     <div class="container py-5">
@@ -13,7 +23,7 @@
             <div class="col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.2s">
                 <div class="blog-item">
                     <div class="blog-img">
-                        <img  src="{{ asset('storage/img/berita/' . $berita->foto) }}" class="img-fluid rounded-top w-100" alt="">
+                        <img  src="{{ asset('storage/img/berita/' . $berita->foto) }}" class="img-fluid rounded-top w-100" alt="{{ $berita->judul }}">
                         <div class="blog-categiry py-2 px-4">
                             <span>Berita</span>
                         </div>

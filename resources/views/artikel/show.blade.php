@@ -5,7 +5,9 @@
     <meta name="keywords" content="{!! $artikel->deskripsi !!}">
     <meta name="author" content="{{ $artikel->user->name }}">
     <meta name="copyright" content="{{ $artikel->user->name }}">
-    <meta name="category" content="Artikel">
+    @foreach ($artikel->categorys as $category)
+        <meta name="category" content="{{ $category->name }}">
+    @endforeach
     <meta name="description" content="{!! $artikel->deskripsi !!}">
 @endpush
 @push('css_user')
