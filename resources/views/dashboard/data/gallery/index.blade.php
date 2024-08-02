@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('title','Dashboard')
+@section('title','Gallery')
 @push('css')
 <style>
     #myImg {
@@ -7,32 +7,33 @@
         cursor: pointer;
         transition: 0.3s;
     }
+
     #myImg:hover {
         opacity: 0.7;
     }
+
     .modal {
         display: none;
-        /* Hidden by default */
+        overflow-y: initial !important;
         position: fixed;
-        /* Stay in place */
         z-index: 1;
-        /* Sit on top */
-        padding-top: 100px;
-        /* Location of the box */
+        padding-top: 80px;
         left: 0;
         top: 0;
         width: 100%;
         height: 100%;
-        overflow: auto;
         background-color: rgb(0, 0, 0);
         background-color: rgba(0, 0, 0, 0.9);
     }
+
     .modal-content {
         margin: auto;
-        display: block;
+        display: flex;
         width: 80%;
+
         max-width: 500px;
     }
+
     @keyframes zoom {
         from {
             transform: scale(0)
@@ -42,6 +43,7 @@
             transform: scale(1)
         }
     }
+
     /* The Close Button */
     .closeheader {
         position: absolute;
@@ -52,12 +54,14 @@
         font-weight: bold;
         transition: 0.3s;
     }
+
     .closeheader:hover,
     .closeheader:focus {
         color: #bbb;
         text-decoration: none;
         cursor: pointer;
     }
+
     @media only screen and (max-width: 700px) {
         .modal-content {
             width: 100%;
@@ -66,45 +70,43 @@
 </style>
 @endpush
 @section('content')
-
 <div class="row">
     <div class="col-lg-12 mb-4">
+        <!-- Simple Tables -->
         <div class="card">
             @include('layouts.flashmessage')
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h4 class="m-0 font-weight-bold text-primary text-center">Data Guru</h5>
-                    <a href="{{ route('dashboard.datasekolah.guru.create') }}" class="btn btn-success btn-sm float-right">Tambah <i class="fas fa-plus"></i></a>
+                <h4 class="m-0 font-weight-bold text-primary text-center">Gallery</h4>
+                <a href="{{ route('dashboard.datasekolah.gallery.create') }}" class="btn btn-success float-right">Tambah <i
+                        class="fas fa-plus"></i></a>
             </div>
             <div class="table-responsive">
-                <table class="table align-items-center table-flush text-center">
+                <table class="table table-flush">
                     <thead class="thead-light">
                         <tr>
                             <th>No</th>
                             <th>Nama</th>
-                            <th>Deskripsi</th>
-                            <th>Lulusan</th>
                             <th>Foto</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($gurus as $guru)
+                        @foreach ($gallerys as $gallery)
                         <tr>
                             <td>{{ ++$no }}</td>
-                            <td>{{ $guru->name }}</td>
-                            <td>{{ $guru->description }}</td>
-                            <td>{{ $guru->lulusan }}</td>
+                            <td>{{ $gallery->name }}</td>
                             <td>
-                                <span class="btn btn-secondary fa fa-image" id="priview-image" data-foto="<?=$guru->foto ?>"></span>
+                                <span class="btn btn-secondary fa fa-image" id="priview-image" data-foto="<?=$gallery->foto ?>"></span>
                             </td>
                             <td>
-                                <a href="{{ route('dashboard.datasekolah.guru.show', $guru->slug) }}" class="btn btn-dark btn-sm"><i
-                                        class="fas fa-info-circle"></i></a>
-                                <a href="{{ route('dashboard.datasekolah.guru.edit', $guru->slug) }}" class="btn btn-primary btn-sm"><i
-                                        class="fa fa-pen"></i></a>
-                                <a href="#" data-id="{{ $guru->slug }}" class="btn btn-danger delete btn-sm" title="Hapus">
-                                    <form action="{{ route('dashboard.datasekolah.guru.destroy', $guru->slug) }}"
-                                        id="delete-{{ $guru->slug }}" method="POST" enctype="multipart/form-data">
+                                <a href="{{ route('dashboard.datasekolah.gallery.show', $gallery->slug) }}"
+                                    class="btn btn-dark btn-sm"><i class="fas fa-eye"></i></a>
+                                <a href="{{ route('dashboard.datasekolah.gallery.edit', $gallery->slug) }}"
+                                    class="btn btn-primary btn-sm"><i class="fas fa-pen"></i></a>
+                                <a href="#" data-id="{{ $gallery->slug }}" class="btn btn-danger btn-sm delete"
+                                    title="Hapus">
+                                    <form action="{{ route('dashboard.datasekolah.gallery.destroy', $gallery->slug) }}"
+                                        id="delete-{{ $gallery->slug }}" method="POST" enctype="multipart/form-data">
                                         @csrf
                                         @method('delete')
                                     </form>
@@ -120,10 +122,10 @@
                     <span class="badge badge-primary">Total : {{ $count }} Data</span>
                 </ul>
                 <ul class="pagination m-0 float-right">
-                    {{ $gurus->onEachSide(1)->links() }}
+                    {{ $gallerys->onEachSide(1)->links() }}
                 </ul>
             </div>
-            <div class="card-footer"></div>
+        </div>
         </div>
     </div>
 </div>
@@ -146,7 +148,7 @@
         var modal = document.getElementById("myModal");
         //take foto from folder
         var foto = $(this).data('foto');
-        var imageUrl = '/storage/img/guru/' + foto;
+        var imageUrl = '/storage/img/gallery/' + foto;
 
         modal.style.display = "block";
         $('#foto').attr('src', imageUrl);

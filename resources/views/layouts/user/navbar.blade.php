@@ -9,7 +9,11 @@
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <div class="navbar-nav mx-0 mx-lg-auto">
             <a href="{{ route('index') }}" class="nav-item nav-link {{ Request::routeIS('index') ? 'active' : '' }}">Beranda</a>
-            <a href="#tentang" class="nav-item nav-link">Tentang</a>
+            @if(!Request::routeIs('index'))
+                <a href="/#tentang" class="nav-item nav-link">Tentang</a>
+            @else
+                <a href="#tentang" class="nav-item nav-link">Tentang</a>
+            @endif
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link" data-bs-toggle="dropdown">
                     <span class="dropdown-toggle">Profil</span>
@@ -21,6 +25,8 @@
                     <a href="{{ route('prestasi.siswa.index') }}" class="dropdown-item">Prestasi Siswa</a>
                     <a href="{{ route('tenagapendidikan.index') }}" class="dropdown-item">Tenaga Pendidikan</a>
                     <a href="{{ route('visimisi.index') }}" class="dropdown-item">Visi & Misi</a>
+                    <a href="{{ route('gallery.index') }}" class="dropdown-item">Gallery Aktivitas</a>
+
                 </div>
             </div>
             <a href="{{ route('pembayaran.index') }}" class="nav-item nav-link {{ Request::routeIS('pembayaran.index') ? 'active' : '' }}">Pembayaran</a>

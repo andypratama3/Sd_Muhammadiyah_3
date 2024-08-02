@@ -93,7 +93,7 @@
                             <td>{{ $tenagapendidikan->name }}</td>
                             <td>{{ $tenagapendidikan->jabatan }}</td>
                             <td>
-                                <span class="btn fa fa-image" id="priview-image" data-foto="<?=$tenagapendidikan->foto ?>"><p>Lihat</p></span>
+                                <span class="btn btn-secondary fa fa-image" id="priview-image" data-foto="<?=$tenagapendidikan->foto ?>"></span>
                             </td>
                             <td>
                                 <a href="{{ route('dashboard.datasekolah.tenagapendidikan.show', $tenagapendidikan->slug) }}" class="btn btn-dark btn-sm"><i

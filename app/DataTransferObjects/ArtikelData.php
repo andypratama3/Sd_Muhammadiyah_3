@@ -33,9 +33,9 @@ class ArtikelData extends Data
     public static function messages()
     {
         return [
-            'name.required' => 'Kolom Nama Artikel tidak boleh kosong!',
+            'name.required|string' => 'Kolom Nama Artikel tidak boleh kosong!',
             'categorys.required' => 'Kolom Kategori tidak boleh kosong!',
-            'artikel.required' => 'Kolom Isi Artikel tidak boleh kosong!',
+            'artikel.required|string' => 'Kolom Isi Artikel tidak boleh kosong!',
             'image.required' => 'Kolom File Foto tidak boleh kosong!',
         ];
     }

@@ -13,6 +13,8 @@ class ArtikelSeeder extends Seeder
      */
     public function run(): void
     {
+
+        
         // Create 100 new Artikel instances
         $artikels = Artikel::factory(100)->create();
 

@@ -97,6 +97,11 @@
                     <i class="fas fa-solid fa-trophy"></i>
                     <span>Prestasi</span>
                 </a>
+                <a class="collapse-item {{ Request::routeIs('dashboard.datasekolah.gallery.*') ? 'active' : ''  }}"
+                    href="{{ route('dashboard.datasekolah.gallery.index') }}">
+                    <i class="fa-solid fa-photo-film"></i>
+                    <span>Gallery</span>
+                </a>
             </div>
         </div>
     </li>

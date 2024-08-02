@@ -11,6 +11,7 @@ use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\KontakController;
 use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\BerandaController;
+use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\VisiMisiController;
 use App\Http\Controllers\FasilitasController;
 use App\Http\Controllers\NaikKelasController;
@@ -26,16 +27,17 @@ use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\TaskController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\CategoryArtikel;
-use App\Http\Controllers\Dashboard\KelasController;
 
 //Dashboard Access
+use App\Http\Controllers\Dashboard\KelasController;
 use App\Http\Controllers\EkstrakurikulerController;
 use App\Http\Controllers\PrestasiSekolahController;
 use App\Http\Controllers\TenagaPendidikanController;
 use App\Http\Controllers\Dashboard\ActivityController;
-use App\Http\Controllers\Dashboard\KaryawanController;
 
+use App\Http\Controllers\Dashboard\KaryawanController;
 use App\Http\Controllers\Dashboard\DashboardController;
+
 use App\Http\Controllers\Dashboard\KelasCategoryController;
 use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
 use App\Http\Controllers\Dashboard\HeroController as DashboardHeroController;
@@ -51,6 +53,7 @@ use App\Http\Controllers\Dashboard\PembayaranController as DashboardPembayaranCo
 use App\Http\Controllers\Dashboard\KritikSaranController as DashboardKritiSaranController;
 use App\Http\Controllers\Dashboard\MataPelajaranController as DashboardMataPelajaranController;
 use App\Http\Controllers\Dashboard\EkstrakulikulerController as DashboardEsktrakurikulerController;
+use App\Http\Controllers\Dashboard\GalleryActivityController as DashboardGalleryActivityController;
 use App\Http\Controllers\Dashboard\JudulPembayaranController as DashboardJudulPembayaranController;
 use App\Http\Controllers\Dashboard\TenagaPendidikanController as DashboardTenagaPendidikanController;
 
@@ -92,6 +95,9 @@ Route::group(['prefix' => '/'], function () {
     Route::get('fasilitas/{nama_fasilitas}', [FasilitasController::class, 'show'])->name('fasilitas.show');
     //tenaga pendidikan
     Route::get('tenagapendidikan', [TenagaPendidikanController::class, 'index'])->name('tenagapendidikan.index');
+
+    Route::get('gallery', [GalleryController::class, 'index'])->name('gallery.index');
+
     //jadwal
     Route::resource('jadwal', JadwalController::class, ['names' => 'jadwal']);
     Route::post('jadwal/getjadwal/smester', [JadwalController::class, 'tahun_ajaran'])->name('jadwal.tahun.ajaran');
@@ -151,6 +157,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::resource('jadwal',  DashboardJadwalController::class, ['names' => 'dashboard.datasekolah.jadwal']);
         Route::post('kelas_category',[ DashboardJadwalController::class, 'getCategoryKelas'])->name('dashboard.datasekolah.jadwal.kelas_category');
         Route::post('getSmester',[ DashboardJadwalController::class, 'getSmester'])->name('dashboard.datasekolah.jadwal.getSmester');
+
+        Route::resource('gallery', DashboardGalleryActivityController::class, ['names' => 'dashboard.datasekolah.gallery']);
     });
     Route::group(['prefix' => 'datamaster'], function () {
         Route::resource('siswa',  DashboardSiswaController::class, ['names' => 'dashboard.datamaster.siswa']);

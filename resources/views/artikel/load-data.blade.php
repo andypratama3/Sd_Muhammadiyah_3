@@ -11,7 +11,7 @@
             </p>
             <p>{!! $artikel->artikel !!}</p>
             <div class="main-button">
-                <a href="{{ route('artikel.show', $artikel->slug) }}">Lihat Artikela</a>
+                <a href="{{ route('artikel.show', $artikel->slug) }}">Lihat Artikel</a>
             </div>
         </div>
     </div>
