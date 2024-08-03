@@ -5,18 +5,19 @@
 
     RewriteEngine On
 
+    # Redirect requests to the public directory
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    # # Deny access to specific folders
-    # RewriteRule ^assets/(.*)$ - [R=404,L]
-    # RewriteRule ^some-other-directory/(.*)$ - [R=404,L]
-
-    # Prevent access to sensitive files
+    # Deny access to specific sensitive files
     RewriteRule ^\.env$ - [F,L]
     RewriteRule ^composer\.json$ - [F,L]
     RewriteRule ^composer\.lock$ - [F,L]
+    # Uncomment the line below if you want to deny access to the storage folder
     # RewriteRule ^storage/(.*)$ - [F,L]
 
     # Redirect Trailing Slashes If Not A Folder...
