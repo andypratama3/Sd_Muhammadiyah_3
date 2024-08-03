@@ -17,7 +17,7 @@
     RewriteRule ^\.env$ - [F,L]
     RewriteRule ^composer\.json$ - [F,L]
     RewriteRule ^composer\.lock$ - [F,L]
-    RewriteRule ^storage/(.*)$ - [F,L]
+    # RewriteRule ^storage/(.*)$ - [F,L]
 
     # Redirect Trailing Slashes If Not A Folder...
     RewriteCond %{REQUEST_FILENAME} !-d
@@ -28,14 +28,4 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
-</IfModule>
-
-<IfModule mod_headers.c>
-    Header set Permissions-Policy "geolocation=self"
-    Header set Referrer-Policy "no-referrer-when-downgrade"
-    Header set X-Content-Type-Options "nosniff"
-    Header set X-XSS-Protection "1; mode=block"
-    Header set X-Frame-Options "DENY"
-    Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
-    Header set Content-Security-Policy "default-src 'self'; style-src 'self' 'unsafe-inline' unpkg.com cdn.datatables.net cdn.jsdelivr.net cdnjs.cloudflare.com cdn.quilljs.com code.jquery.com fonts.googleapis.com;"
 </IfModule>
