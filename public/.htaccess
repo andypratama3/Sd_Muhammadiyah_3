@@ -16,8 +16,8 @@
     RewriteCond %{HTTP:Accept-Ranges} ^https?:// [NC,OR]
     RewriteCond %{HTTP:Access-Control-Allow-Origin} ^https?:// [NC,OR]
     RewriteCond %{HTTP:Authorization} ^Bearer [NC,OR]
-    RewriteCond %{HTTP:Base-Url} . [NC,OR]  # Matches any value of Base-Url header
-    RewriteCond %{HTTP:CF-Connecting_IP} . [NC]  # Matches any value of CF-Connecting_IP header
+    RewriteCond %{HTTP:Base-Url} . [NC,OR]
+    RewriteCond %{HTTP:CF-Connecting_IP} . [NC]
     RewriteRule ^ - [R=404,L]
 
     # Deny access to other 'asset' and 'storage' paths
@@ -44,11 +44,11 @@
     # Redirect Trailing Slashes If Not A Folder
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
-    RewriteRule ^ %1 [L,R=404]
+    RewriteRule ^ %1 [L,R=301]
 
-    # Send Requests To Front Controller
-    RewriteCond %{REQUEST_FILENAME} !-d
+    # Redirect all 404 errors to Laravel
     RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^ index.php [L]
 </IfModule>
 
