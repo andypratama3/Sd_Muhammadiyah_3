@@ -70,7 +70,7 @@ use App\Http\Controllers\Dashboard\TenagaPendidikanController as DashboardTenaga
 // Route::get('/loading-data', function () {
 //     return view('layouts.user.loading-data');
 // });
-Route::group(['prefix' => '/'], function () {
+Route::group(['prefix' => '/', 'middleware' => ['web', 'throttle:web']], function () {
     // Route::get('/', function () {
     //     return view('new');
     // })->name('landing');
