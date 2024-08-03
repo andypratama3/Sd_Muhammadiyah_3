@@ -17,4 +17,10 @@ class TrustHosts extends Middleware
             $this->allSubdomainsOfApplicationUrl(),
         ];
     }
+
+    protected function shouldSpecifyTrustedHosts()
+    {
+        return ! $this->app->environment('local') &&
+            ! $this->app->runningUnitTests();
+    }
 }

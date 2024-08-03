@@ -70,7 +70,10 @@ use App\Http\Controllers\Dashboard\TenagaPendidikanController as DashboardTenaga
 // Route::get('/loading-data', function () {
 //     return view('layouts.user.loading-data');
 // });
-Route::group(['prefix' => '/', 'middleware' => ['web', 'throttle:web']], function () {
+Route::middleware('throttle:60,1')->group(function () {
+
+
+Route::group(['prefix' => '/', 'middleware' => ['secure']], function () {
     // Route::get('/', function () {
     //     return view('new');
     // })->name('landing');
@@ -198,6 +201,6 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::post('get/email/karyawan',[KaryawanController::class, 'getEmailUser'])->name('dashboard.pengaturan.get.email');
     });
 
-
+});
 
 });

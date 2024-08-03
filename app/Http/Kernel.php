@@ -47,7 +47,7 @@ class Kernel extends HttpKernel
             // \Spatie\Csp\AddCspHeaders::class,
             \App\Http\Middleware\BlockPayloads::class,
 
-
+            \App\Http\Middleware\SecureHeadersMiddleware::class,
         ],
 
         'api' => [
@@ -80,6 +80,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'role' => \App\Http\Middleware\RoleMiddleware::class,
         'permission' => \App\Http\Middleware\PermissionMiddleware::class,
-        // 'status' => \App\Http\Middleware\UserMiddleware::class,
+        'secure' => \App\Http\Middleware\SecureHeadersMiddleware::class,
     ];
 }
