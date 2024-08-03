@@ -10,21 +10,6 @@ class SecureHeadersMiddleware
     private $unwantedHeaderList = [
         'X-Powered-By',
         'Server',
-        'X-Frame-Options',
-        'X-Content-Type-Options',
-        'X-XSS-Protection',
-        'Referrer-Policy',
-        'Content-Security-Policy',
-        'Strict-Transport-Security',
-        'X-Content-Security-Policy',
-        'X-WebKit-CSP',
-        'X-Content-Security-Policy-Report-Only',
-        'X-WebKit-CSP-Report-Only',
-        'X-Content-Security-Policy-Report-Only-Report-To',
-        'X-WebKit-CSP-Report-Only-Report-To',
-        'X-Content-Security-Policy-Report-Only-Supports-Frames',
-        'X-WebKit-CSP-Report-Only-Supports-Frames',
-        'server',
     ];
 
     public function handle($request, Closure $next)
