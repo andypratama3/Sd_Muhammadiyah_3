@@ -5,28 +5,43 @@
 
     RewriteEngine On
 
-    # Redirect requests to the public directory
-    RewriteCond %{REQUEST_URI} !^/public/
-    RewriteRule ^(.*)$ public/$1 [L]
-
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    # Deny access to specific sensitive files
+    # Allow access to necessary assets
+    RewriteCond %{REQUEST_URI} ^/asset/(lib|css|js|img|webfonts)/ [OR]
+    RewriteCond %{REQUEST_URI} ^/storage/img/
+    RewriteRule ^ - [L]
+
+    # Deny access to other 'asset' and 'storage' paths
+    RewriteRule ^asset/(.*)$ - [R=404,L]
+    RewriteRule ^storage/(.*)$ - [R=404,L]
+
+    # Prevent access to sensitive files
     RewriteRule ^\.env$ - [F,L]
     RewriteRule ^composer\.json$ - [F,L]
     RewriteRule ^composer\.lock$ - [F,L]
-    # Uncomment the line below if you want to deny access to the storage folder
-    # RewriteRule ^storage/(.*)$ - [F,L]
 
-    # Redirect Trailing Slashes If Not A Folder...
+    # Restrict access to specific file types
+    RewriteRule \.(git|svn|htaccess|htpasswd|ini|log|sh|sql|bak|old|swp|swx)$ - [F,L]
+
+    # Deny access to common attack patterns
+    RewriteCond %{QUERY_STRING} \.\./ [NC,OR]
+    RewriteCond %{QUERY_STRING} \.php [NC,OR]
+    RewriteCond %{QUERY_STRING} \%00 [NC,OR]
+    RewriteCond %{QUERY_STRING} \%2e%2e [NC,OR]
+    RewriteCond %{QUERY_STRING} (union|select|insert|drop|delete|update|cast|create|truncate|alter|replace) [NC]
+    RewriteRule .* - [F,L]
+
+    # Redirect Trailing Slashes If Not A Folder
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
-    RewriteRule ^ %1 [L,R=404]
+    RewriteRule ^ %1 [L,R=301]
 
-    # Send Requests To Front Controller...
+    # Send Requests To Front Controller
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
+
 </IfModule>
