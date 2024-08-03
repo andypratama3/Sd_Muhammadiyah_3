@@ -10,6 +10,16 @@
     RewriteCond %{REQUEST_URI} ^/storage/img/
     RewriteRule ^ - [L]
 
+    # Block requests with certain headers and return 404
+    RewriteCond %{HTTP:Accept-Application} ^https?:// [NC,OR]
+    RewriteCond %{HTTP:Accept-Patch} ^https?:// [NC,OR]
+    RewriteCond %{HTTP:Accept-Ranges} ^https?:// [NC,OR]
+    RewriteCond %{HTTP:Access-Control-Allow-Origin} ^https?:// [NC,OR]
+    RewriteCond %{HTTP:Authorization} ^Bearer [NC,OR]
+    RewriteCond %{HTTP:Base-Url} . [NC,OR]  # Matches any value of Base-Url header
+    RewriteCond %{HTTP:CF-Connecting_IP} . [NC]  # Matches any value of CF-Connecting_IP header
+    RewriteRule ^ - [R=404,L]
+
     # Deny access to other 'asset' and 'storage' paths
     RewriteCond %{REQUEST_URI} ^/asset/ [OR]
     RewriteCond %{REQUEST_URI} ^/storage/
@@ -34,15 +44,7 @@
     # Redirect Trailing Slashes If Not A Folder
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
-    RewriteRule ^ %1 [L,R=301]
-
-    # Block requests with certain headers and return 404
-    RewriteCond %{HTTP:Accept-Application} ^https?:// [NC,OR]
-    RewriteCond %{HTTP:Accept-Patch} ^https?:// [NC,OR]
-    RewriteCond %{HTTP:Accept-Ranges} ^https?:// [NC,OR]
-    RewriteCond %{HTTP:Access-Control-Allow-Origin} ^https?:// [NC,OR]
-    RewriteCond %{HTTP:Authorization} ^Bearer [NC]
-    RewriteRule ^ - [R=404,L]
+    RewriteRule ^ %1 [L,R=404]
 
     # Send Requests To Front Controller
     RewriteCond %{REQUEST_FILENAME} !-d
