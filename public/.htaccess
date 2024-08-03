@@ -10,7 +10,7 @@
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
     # Deny access to specific folders
-    RewriteRule ^assets/(.*)$ - [R=404,L]
+    RewriteRule ^asset/(.*)$ - [R=404,L]
     RewriteRule ^some-other-directory/(.*)$ - [R=404,L]
 
     # Prevent access to sensitive files
