@@ -13,10 +13,13 @@
     RewriteCond %{REQUEST_URI} ^/asset/(lib|css|js|img|webfonts)/ [OR]
     RewriteCond %{REQUEST_URI} ^/storage/img/
     RewriteRule ^ - [L]
+    RewriteRule ^asset/(.*)$ - [F,L]
+    RewriteRule ^storage/(.*)$ - [F,L]
+    # RewriteRule ^ - [L]
 
-    # Deny access to other 'asset' and 'storage' paths
-    RewriteRule ^asset/(.*)$ - [R=404,L]
-    RewriteRule ^storage/(.*)$ - [R=404,L]
+    # # Deny access to other 'asset' and 'storage' paths
+    # RewriteRule ^asset/(.*)$ - [R=404,L]
+    # RewriteRule ^storage/(.*)$ - [R=404,L]
 
     # Prevent access to sensitive files
     RewriteRule ^\.env$ - [F,L]
