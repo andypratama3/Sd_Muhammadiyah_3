@@ -13,13 +13,11 @@
     RewriteCond %{REQUEST_URI} ^/asset/(lib|css|js|img|webfonts)/ [OR]
     RewriteCond %{REQUEST_URI} ^/storage/img/
     RewriteRule ^ - [L]
-    RewriteRule ^asset/(.*)$ - [F,L]
-    RewriteRule ^storage/(.*)$ - [F,L]
-    # RewriteRule ^ - [L]
 
-    # # Deny access to other 'asset' and 'storage' paths
-    # RewriteRule ^asset/(.*)$ - [R=404,L]
-    # RewriteRule ^storage/(.*)$ - [R=404,L]
+    # Deny access to other 'asset' and 'storage' paths
+    RewriteCond %{REQUEST_URI} ^/asset/ [OR]
+    RewriteCond %{REQUEST_URI} ^/storage/
+    RewriteRule .* - [R=404,L]
 
     # Prevent access to sensitive files
     RewriteRule ^\.env$ - [F,L]
@@ -46,6 +44,7 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
+
 
 </IfModule>
 
