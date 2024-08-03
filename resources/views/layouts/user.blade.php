@@ -8,14 +8,14 @@
             style="display:none;visibility:hidden"></iframe></noscript>
 
          <!-- Navbar & Hero End -->
-    {{-- <ul class="background-page">
+    <ul class="background-page">
         <li></li>
         <li></li>
         <li></li>
         <li></li>
         <li></li>
         <li></li>
-    </ul> --}}
+    </ul>
 
     <!-- Spinner Start -->
     <div id="spinner"

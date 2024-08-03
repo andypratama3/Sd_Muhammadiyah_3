@@ -223,7 +223,7 @@
                         <img src="{{ asset('storage/img/berita/Berita_test_20240412172357.jpg') }}" alt=""
                             class="img-fluid">
                     </figure>
-                    <p><span class="firstcharacter">{{ $firstCharacter }}</span>{{ $contentWithoutFirstCharacter }}</p>
+                    <p class="text-black"><span class="firstcharacter text-black">{{ $firstCharacter }}</span>{{ $contentWithoutFirstCharacter }}</p>
                 </div>
                 <!-- ======= Comments ======= -->
                 <div class="comments my-5" id="reset_form">

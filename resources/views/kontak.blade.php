@@ -8,20 +8,21 @@
         <div class="row">
             <div class="col-lg-6  align-self-center">
                 <div class="section-heading">
-                    <h6>Contact Us</h6>
+                    <h6>Kontak</h6>
 
                     <div class="special-offer">
+                        <a href="https://api.whatsapp.com/send?phone=6281234567898"><i class="fa fa-angle-right"></i>
                         <span class="offer" style="align-items: center !important"><i class="fa-brands fa-whatsapp fa-2x" style="margin-left: 10px; padding-top: 10px !important;"></i></span>
                         <h6><em>Admin:  1</em></h6>
                         <h4>098765679898</h4>
-                        <a href="#"><i class="fa fa-angle-right"></i></a>
+                    </a>
                     </div>
-
                     <div class="special-offer">
+                        <a href="https://api.whatsapp.com/send?phone=6281234567898"><i class="fa fa-angle-right"></i>
                         <span class="offer" style="align-items: center !important"><i class="fa-brands fa-whatsapp fa-2x" style="margin-left: 10px; padding-top: 10px !important;"></i></span>
-                        <h6>Valide: <em>24 April 2036</em></h6>
-                        <h4>Special Offer <em>50%</em> OFF!</h4>
-                        <a href="#"><i class="fa fa-angle-right"></i></a>
+                        <h6><em>Admin:  2</em></h6>
+                        <h4>098765679898</h4>
+                    </a>
                     </div>
                 </div>
             </div>
@@ -30,10 +31,7 @@
                     <div class="row text-center">
                         <div class="col-lg-12">
                             <h4 class="text-center">Sekolah Kreatif SD Muhammadiyah 3 Samarinda</h4>
-                            <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d249.35377604788306!2d117.13001198556047!3d-0.5097514697334635!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2df67fb245dc458f%3A0xa8ef3e4834a26bd!2sSekolah%20Kreatif%20SD%20Muhammadiyah%203%20Samarinda!5e0!3m2!1sid!2sid!4v1707661301375!5m2!1sid!2sid"
-                            width="450" height="450" allowfullscreen="" loading="lazy" style="border-radius: 20px;"
-                            referrerpolicy="no-referrer-when-downgrade"></iframe>
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d9477.659215305792!2d117.12429426373527!3d-0.5122169736669224!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2df67fb245dc458f%3A0xa8ef3e4834a26bd!2sSekolah%20Kreatif%20SD%20Muhammadiyah%203%20Samarinda!5e0!3m2!1sid!2sid!4v1722696990256!5m2!1sid!2sid" width="600" height="600" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                         </div>
                     </div>
                 </div>
