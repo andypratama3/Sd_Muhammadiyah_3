@@ -99,8 +99,6 @@
                                 <span class="btn btn-secondary fa fa-image" id="priview-image" data-foto="<?=$gallery->foto ?>"></span>
                             </td>
                             <td>
-                                <a href="{{ route('dashboard.datasekolah.gallery.show', $gallery->slug) }}"
-                                    class="btn btn-dark btn-sm"><i class="fas fa-eye"></i></a>
                                 <a href="{{ route('dashboard.datasekolah.gallery.edit', $gallery->slug) }}"
                                     class="btn btn-primary btn-sm"><i class="fas fa-pen"></i></a>
                                 <a href="#" data-id="{{ $gallery->slug }}" class="btn btn-danger btn-sm delete"

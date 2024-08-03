@@ -4,6 +4,9 @@
 <section>
     <div class="container aos-init aos-animate" style="margin-top: 20px;" data-aos="fade-up">
         <div class="row">
+            <div class="col-md-12">
+                <a href="{{ route('index') }}" class="btn btn-primary float-start" style="color: #ffffff; background-color: #5ce70b !important; border-color: #5ce70b !important"><i class="fas fa-arrow-left"></i>Kembali</a>
+            </div>
             <header class="section-header text-center">
                 <h2>Ekstrakurikuler</h2>
                 <h4>SD Muhammadiyah 3 Samarinda</h4>

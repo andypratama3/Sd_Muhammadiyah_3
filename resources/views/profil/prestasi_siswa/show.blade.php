@@ -5,8 +5,10 @@
 <section class="single-post-content" style="margin-top: 20px;">
     <div class="container aos-init aos-animate" data-aos="fade-up">
         <div class="row">
-            <header class="section-header text-center">
+            <div class="col-md-12">
                 <a href="{{ route('prestasi.siswa.index') }}" class="btn btn-primary float-start" style="color: #ffffff; background-color: #5ce70b !important; border-color: #5ce70b !important"><i class="fas fa-arrow-left"></i>Kembali</a>
+            </div>
+            <header class="section-header text-center">
                 <h2> Prestasi Siswa</h2>
                 <h4>SD Muhammadiyah 3 Samarinda</h4>
             </header>

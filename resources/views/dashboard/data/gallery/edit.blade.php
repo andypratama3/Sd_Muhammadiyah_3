@@ -17,16 +17,28 @@
                     aria-describedby="emailHelp" placeholder="Masukan Nama">
             </div>
             <div class="form-group">
-                <input type="file" name="foto" class="form-control mb-2 text-center" value="{{ $gallery->foto }}">
+                <input type="file" name="foto" class="form-control mb-2 text-center" value="{{ $gallery->foto }}" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])">
             </div>
             <div class="form-group text-center">
                 <p>Foto Yang Di Gunakan</p>
-                <img src="{{ asset('storage/img/gallery/'. $gallery->foto) }}" alt="" style="width: 100%;">
+                <img src="{{ asset('storage/img/gallery/'. $gallery->foto) }}" alt="" style="width: 100%;" id="output">
             </div>
             <a href="{{ route('dashboard.datasekolah.gallery.index') }}" class="btn btn-danger btn-sm">Kembali</a>
             <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
         </form>
     </div>
 </div>
-
+@push('js')
+    <script>
+    //     $(document).ready(function (e) {
+    //         $('#foto').change(function () {
+    //             let reader = new FileReader();
+    //             reader.onload = (e) => {
+    //                 $('#output').attr('src', e.target.result);
+    //             }
+    //             reader.readAsDataURL(this.files[0]);
+    //         });
+    // });
+    </script>
+@endpush
 @endsection
