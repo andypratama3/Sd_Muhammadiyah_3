@@ -32,8 +32,13 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
     {
-        if ($exception instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
-            // Customize handling for ModelNotFoundException
+        // Handle ModelNotFoundException
+        if ($exception instanceof ModelNotFoundException) {
+            return response()->view('errors.404', [], 404);
+        }
+
+        // Handle NotFoundHttpException (for undefined routes)
+        if ($exception instanceof NotFoundHttpException) {
             return response()->view('errors.404', [], 404);
         }
 
