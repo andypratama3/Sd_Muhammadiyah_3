@@ -19,15 +19,14 @@
                     <span class="dropdown-toggle">Profil</span>
                 </a>
                 <div class="dropdown-menu">
-                    <a href="{{ route('fasilitas.index') }}" class="dropdown-item">Sarana & Prasarana</a>
-                    <a href="{{ route('esktrakurikuler.index') }}" class="dropdown-item">Ekstrakurikuler</a>
                     <a href="{{ route('guru.index') }}" class="dropdown-item">Guru</a>
-                    <a href="{{ route('prestasi.siswa.index') }}" class="dropdown-item">Prestasi Siswa</a>
-                    <a href="{{ route('prestasi.sekolah.index') }}" class="dropdown-item">Prestasi Sekolah</a>
-
-                    <a href="{{ route('tenagapendidikan.index') }}" class="dropdown-item">Tenaga Pendidikan</a>
                     <a href="{{ route('visimisi.index') }}" class="dropdown-item">Visi & Misi</a>
                     <a href="{{ route('gallery.index') }}" class="dropdown-item">Gallery Aktivitas</a>
+                    <a href="{{ route('fasilitas.index') }}" class="dropdown-item">Sarana & Prasarana</a>
+                    <a href="{{ route('prestasi.siswa.index') }}" class="dropdown-item">Prestasi Siswa</a>
+                    <a href="{{ route('esktrakurikuler.index') }}" class="dropdown-item">Ekstrakurikuler</a>
+                    <a href="{{ route('prestasi.sekolah.index') }}" class="dropdown-item">Prestasi Sekolah</a>
+                    <a href="{{ route('tenagapendidikan.index') }}" class="dropdown-item">Tenaga Pendidikan</a>
 
                 </div>
             </div>
