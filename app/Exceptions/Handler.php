@@ -4,7 +4,10 @@ namespace App\Exceptions;
 
 use Throwable;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Auth\Access\AuthorizationException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class Handler extends ExceptionHandler
 {
@@ -29,8 +32,9 @@ class Handler extends ExceptionHandler
         });
     }
 
-    // app/Exceptions/Handler.php
-
+    /**
+     * Render an exception into an HTTP response.
+     */
     public function render($request, Throwable $exception)
     {
         // Handle ModelNotFoundException
@@ -43,7 +47,11 @@ class Handler extends ExceptionHandler
             return response()->view('errors.404', [], 404);
         }
 
+        // Handle AuthorizationException and AccessDeniedHttpException (access denied)
+        if ($exception instanceof AuthorizationException || $exception instanceof AccessDeniedHttpException) {
+            return response()->view('errors.404', [], 404);
+        }
+
         return parent::render($request, $exception);
     }
-
 }
