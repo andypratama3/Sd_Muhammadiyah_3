@@ -28,7 +28,7 @@ class Handler extends ExceptionHandler
     public function register(): void
     {
         $this->renderable(function (Throwable $e) {
-            // Additional custom exception handling can be added here if needed
+            abort(404);
         });
     }
 
@@ -37,7 +37,6 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        // Always return 404 for all exceptions
         abort(404);
     }
 }
