@@ -62,6 +62,10 @@
                     <div class="col-lg-5 animated fadeInRight">
                         <div class="calrousel-img" style="object-fit: cover; justify-content: center !important; align-items: center !important;">
                             <img src="{{ asset('asset/img/SD3_logo.png') }}" class="img-fluid w-50 " alt="">
+                            <div class="jargon" style="display: flex; gap: 4px; font-family: times new roman;">
+                                    <p class="text-primary">S</p>
+                                    <p class="text-warning">D</p>
+                            </div>
                         </div>
                     </div>
                 </div>
