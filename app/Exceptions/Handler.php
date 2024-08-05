@@ -28,12 +28,7 @@ class Handler extends ExceptionHandler
     public function register(): void
     {
         $this->renderable(function (Throwable $e) {
-            if ($e instanceof ModelNotFoundException ||
-                $e instanceof NotFoundHttpException ||
-                $e instanceof AuthorizationException ||
-                $e instanceof AccessDeniedHttpException) {
-                return response()->view('errors.404', [], 404);
-            }
+            // Additional custom exception handling can be added here if needed
         });
     }
 
@@ -42,21 +37,21 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        // // Handle ModelNotFoundException
-        // if ($exception instanceof ModelNotFoundException) {
-        //     return response()->view('errors.404', [], 404);
-        // }
+        // Handle ModelNotFoundException
+        if ($exception instanceof ModelNotFoundException) {
+            return response()->view('errors.404', [], 404);
+        }
 
-        // // Handle NotFoundHttpException (for undefined routes)
-        // if ($exception instanceof NotFoundHttpException) {
-        //     return response()->view('errors.404', [], 404);
-        // }
+        // Handle NotFoundHttpException (for undefined routes)
+        if ($exception instanceof NotFoundHttpException) {
+            return response()->view('errors.404', [], 404);
+        }
 
-        // // Handle AuthorizationException and AccessDeniedHttpException (access denied)
-        // if ($exception instanceof AuthorizationException || $exception instanceof AccessDeniedHttpException) {
-        //     return response()->view('errors.404', [], 404);
-        // }
+        // Handle AuthorizationException and AccessDeniedHttpException (access denied)
+        if ($exception instanceof AuthorizationException || $exception instanceof AccessDeniedHttpException) {
+            return response()->view('errors.404', [], 404);
+        }
+
         return parent::render($request, $exception);
-
     }
 }
