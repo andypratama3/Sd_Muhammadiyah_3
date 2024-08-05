@@ -48,7 +48,11 @@ class Handler extends ExceptionHandler
         }
 
         // Handle AuthorizationException and AccessDeniedHttpException (access denied)
-        if ($exception instanceof AuthorizationException || $exception instanceof AccessDeniedHttpException) {
+        if ($exception instanceof AuthorizationException) {
+            return response()->view('errors.404', [], 404);
+        }
+
+        if ($exception instanceof AccessDeniedHttpException) {
             return response()->view('errors.404', [], 404);
         }
 
