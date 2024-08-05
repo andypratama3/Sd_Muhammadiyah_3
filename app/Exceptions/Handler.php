@@ -28,7 +28,7 @@ class Handler extends ExceptionHandler
     public function register(): void
     {
         $this->renderable(function (Throwable $e) {
-            abort(404);
+            // Additional custom exception handling can be added here if needed
         });
     }
 
@@ -37,6 +37,25 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        abort(404);
+        // Handle ModelNotFoundException
+        if ($exception instanceof ModelNotFoundException) {
+            return new NotFoundHttpException();
+        }
+
+        // Handle NotFoundHttpException (for undefined routes)
+        if ($exception instanceof NotFoundHttpException) {
+            return new NotFoundHttpException();
+        }
+
+        // Handle AuthorizationException and AccessDeniedHttpException (access denied)
+        if ($exception instanceof AuthorizationException) {
+            return new NotFoundHttpException();
+        }
+
+        if ($exception instanceof AccessDeniedHttpException) {
+            return new NotFoundHttpException();
+        }
+
+
     }
 }
