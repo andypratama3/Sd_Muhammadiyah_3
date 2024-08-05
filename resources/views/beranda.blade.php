@@ -163,7 +163,7 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <img src="{{ asset('storage/img/gallery/'. $gallery->foto) }}" alt=""
-                                            class="img-fluid ">
+                                            class="img-fluid" style="border-radius: 8px;">
                                         <h4 class="card-title">{{ $gallery->name }}</h4>
                                     </div>
                                 </div>

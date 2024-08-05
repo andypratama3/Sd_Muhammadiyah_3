@@ -8,6 +8,8 @@
     # Allow access to necessary assets
     RewriteCond %{REQUEST_URI} ^/asset/(lib|css|js|img|webfonts)/ [OR]
     RewriteCond %{REQUEST_URI} ^/storage/img/
+    RewriteCond %{REQUEST_URI} ^/storage/file/
+
     RewriteRule ^ - [L]
 
     # Block requests with certain headers and return 404
