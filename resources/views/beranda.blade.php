@@ -26,6 +26,8 @@
     .about .swiper-slide img:hover {
         transform: scale(1.1);
     }
+
+
 </style>
 @endpush
 @section('content')
@@ -58,8 +60,8 @@
                         </div>
                     </div>
                     <div class="col-lg-5 animated fadeInRight">
-                        <div class="calrousel-img" style="object-fit: cover;">
-                            <img src="{{ asset('asset/img/SD3_logo.png') }}" class="img-fluid w-50" alt="">
+                        <div class="calrousel-img" style="object-fit: cover; justify-content: center !important; align-items: center !important;">
+                            <img src="{{ asset('asset/img/SD3_logo.png') }}" class="img-fluid w-50 " alt="">
                         </div>
                     </div>
                 </div>
@@ -319,9 +321,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-6 col-md-12  wow fadeInRight" data-wow-delay="0.4s">
-                <a href="{{ asset('asset/img/carousel-2.png')}}" data-lightbox="kepala-sekolah">
-                    <img src="{{ asset('asset/img/kepala-sekolah.jpeg') }}" class="img-fluid w-40 mb-2"
+            <div class="col-lg-6 col-md-12  wow fadeInRight p-4" data-wow-delay="0.4s">
+                <a href="{{ asset('asset/img/carousel-2.png')}}" data-lightbox="kepala-sekolah" >
+                    <img src="{{ asset('asset/img/kepala-sekolah.jpeg') }}" class="img-fluid w-40 mb-2" style="border-radius: 8px;"
                         alt="kepala-sekolah">
                 </a>
                 <h4 class="text-center" data-wow-delay="0.4s">Gr. Ansar HS. S.Pd.,M.M. </h4>
