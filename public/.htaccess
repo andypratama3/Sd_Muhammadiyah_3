@@ -18,7 +18,8 @@
     RewriteCond %{HTTP:Authorization} ^Bearer [NC,OR]
     RewriteCond %{HTTP:Base-Url} . [NC,OR]
     RewriteCond %{HTTP:CF-Connecting_IP} . [NC]
-    RewriteRule ^ - [R=404,L]
+    # RewriteRule ^ - [R=404,L]
+    RewriteRule ^ - index.php [L]
 
     # Deny access to other 'asset' and 'storage' paths
     RewriteCond %{REQUEST_URI} ^/asset/ [OR]
@@ -44,7 +45,8 @@
     # Redirect Trailing Slashes If Not A Folder
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
-    RewriteRule ^ %1 [L,R=301]
+    # RewriteRule ^ %1 [L,R=301]
+    RewriteRule ^ %1 index.php [L]
 
     # Redirect all 404 errors to Laravel
     RewriteCond %{REQUEST_FILENAME} !-f

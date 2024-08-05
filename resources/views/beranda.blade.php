@@ -321,11 +321,11 @@
             </div>
             <div class="col-xl-6 col-md-12  wow fadeInRight" data-wow-delay="0.4s">
                 <a href="{{ asset('asset/img/carousel-2.png')}}" data-lightbox="kepala-sekolah">
-                    <img src="{{ asset('asset/img/carousel-2.png') }}" class="img-fluid w-100 mb-2"
+                    <img src="{{ asset('asset/img/kepala-sekolah.jpeg') }}" class="img-fluid w-40 mb-2"
                         alt="kepala-sekolah">
                 </a>
-                <h4 class="text-center">Gr. Ansar HS. S.Pd.,M.M. </h4>
-                <p class="text-center text-primary">Kepala Sekolah SD Muhammadiyah 3 Samarinda</p>
+                <h4 class="text-center" data-wow-delay="0.4s">Gr. Ansar HS. S.Pd.,M.M. </h4>
+                <p class="text-center text-primary" data-wow-delay="0.4s">Kepala Sekolah SD Muhammadiyah 3 Samarinda</p>
 
             </div>
         </div>
@@ -363,9 +363,9 @@
             @endforeach
 
             <div class="col-12 text-center wow fadeInUp" data-wow-delay="0.2s">
-                <a class="btn btn-primary rounded-pill py-3 px-5" href="{{ route('prestasi.sekolah.index') }}">Lihat
+                <a class="btn btn-primary rounded-pill py-3 px-5 mb-2" href="{{ route('prestasi.sekolah.index') }}">Lihat
                     Prestasi Sekolah</a>
-                <a class="btn btn-primary rounded-pill py-3 px-5" href="{{ route('prestasi.siswa.index') }}">Lihat
+                <a class="btn btn-primary rounded-pill py-3 px-5 mb-2" href="{{ route('prestasi.siswa.index') }}">Lihat
                     Prestasi Siswa</a>
             </div>
         </div>
