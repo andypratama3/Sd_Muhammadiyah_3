@@ -37,25 +37,7 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        // Handle ModelNotFoundException
-        if ($exception instanceof ModelNotFoundException) {
-            return response()->view('errors.404', [], 404);
-        }
-
-        // Handle NotFoundHttpException (for undefined routes)
-        if ($exception instanceof NotFoundHttpException) {
-            return response()->view('errors.404', [], 404);
-        }
-
-        // Handle AuthorizationException and AccessDeniedHttpException (access denied)
-        if ($exception instanceof AuthorizationException) {
-            return response()->view('errors.404', [], 404);
-        }
-
-        if ($exception instanceof AccessDeniedHttpException) {
-            return response()->view('errors.404', [], 404);
-        }
-
-        return parent::render($request, $exception);
+        // Always return 404 for all exceptions
+        abort(404);
     }
 }

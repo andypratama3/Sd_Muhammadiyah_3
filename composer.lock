@@ -656,18 +656,6 @@
         },
         {
             "name": "amphp/socket",
-<<<<<<< Updated upstream
-            "version": "v2.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/amphp/socket.git",
-                "reference": "acc0a2f65ab498025ba5641f7cce499c4b1ed4b5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/amphp/socket/zipball/acc0a2f65ab498025ba5641f7cce499c4b1ed4b5",
-                "reference": "acc0a2f65ab498025ba5641f7cce499c4b1ed4b5",
-=======
             "version": "v2.2.4",
             "source": {
                 "type": "git",
@@ -678,7 +666,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/amphp/socket/zipball/4223324c627cc26d44800630411e64856d3344bc",
                 "reference": "4223324c627cc26d44800630411e64856d3344bc",
->>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {
@@ -741,11 +728,7 @@
             ],
             "support": {
                 "issues": "https://github.com/amphp/socket/issues",
-<<<<<<< Updated upstream
                 "source": "https://github.com/amphp/socket/tree/v2.3.0"
-=======
-                "source": "https://github.com/amphp/socket/tree/v2.2.4"
->>>>>>> Stashed changes
             },
             "funding": [
                 {
@@ -753,11 +736,7 @@
                     "type": "github"
                 }
             ],
-<<<<<<< Updated upstream
             "time": "2024-03-19T20:01:53+00:00"
-=======
-            "time": "2024-02-28T15:56:06+00:00"
->>>>>>> Stashed changes
         },
         {
             "name": "amphp/sync",
