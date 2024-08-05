@@ -8,6 +8,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Log;
 
 class Handler extends ExceptionHandler
 {
@@ -39,23 +40,20 @@ class Handler extends ExceptionHandler
     {
         // Handle ModelNotFoundException
         if ($exception instanceof ModelNotFoundException) {
-            return new NotFoundHttpException();
+            return response()->view('errors.404', [], 404);
         }
 
         // Handle NotFoundHttpException (for undefined routes)
         if ($exception instanceof NotFoundHttpException) {
-            return new NotFoundHttpException();
+            return response()->view('errors.404', [], 404);
         }
 
         // Handle AuthorizationException and AccessDeniedHttpException (access denied)
-        if ($exception instanceof AuthorizationException) {
-            return new NotFoundHttpException();
+        if ($exception instanceof AccessDeniedHttpException || $exception instanceof AuthorizationException) {
+            abort(404);
         }
 
-        if ($exception instanceof AccessDeniedHttpException) {
-            return new NotFoundHttpException();
-        }
-
-
+        return parent::render($request, $exception);
     }
 }
+
