@@ -214,9 +214,9 @@
     transition: .5s;
 }
 
-.nav-bar .navbar-light .navbar-brand img {
+/* .nav-bar .navbar-light .navbar-brand img {
     max-height: 50px;
-}
+} */
 
 .navbar .navbar-nav .nav-item .nav-link {
     padding: 0;

@@ -1,7 +1,8 @@
 <nav class="navbar navbar-expand-lg navbar-light">
-    <a href="{{ route('index') }}" class="navbar-brand p-0">
-        <h4 class="text-primary mb-0"> SD Muhammadiyah 3</h4>
-        {{-- <!-- <img src="{{ asset('asset/img/logo.png') }}" alt="Logo"> --> --}}
+
+    <a href="{{ route('index') }}" class="navbar-brand d-flex p-0 justify-content-center align-items-center">
+        <img src="{{ asset('asset/img/SD3_logo.png') }}" alt="Logo">
+        <h4 class="text-primary mb-0 pt-1" style="margin-left: 10px;"> SD Muhammadiyah 3</h4>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
         <span class="fa fa-bars"></span>
