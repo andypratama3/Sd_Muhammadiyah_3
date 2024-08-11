@@ -74,7 +74,7 @@ use App\Http\Controllers\Dashboard\TenagaPendidikanController as DashboardTenaga
 Route::get('/asset/{any}', function () {
     abort(404);
 })->where('any', '.*');
-Route::group(['prefix' => '/', 'middleware' => ['web', 'throttle:web']], function () {
+Route::group(['prefix' => '/',], function () {
     // Route::get('/', function () {
     //     return view('new');
     // })->name('landing');
