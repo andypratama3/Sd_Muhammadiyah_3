@@ -75,9 +75,7 @@ Route::get('/asset/{any}', function () {
     abort(404);
 })->where('any', '.*');
 Route::group(['prefix' => '/',], function () {
-    // Route::get('/', function () {
-    //     return view('new');
-    // })->name('landing');
+    
     Route::get('/', BerandaController::class)->name('index');
 
     // Berita
