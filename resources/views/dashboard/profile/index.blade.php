@@ -119,7 +119,7 @@
                                     <div class="col-lg-9 col-md-8">: {{ Auth::user()->roles->first()->name }}</div>
                                 @endif
                             </div>
-                            @can('role: karyawan' || 'role: admin')
+                            @role('karyawan|admin')
                                 <hr>
                                 <div class="row">
                                     <div class="col-lg-3 col-md-4 col-form-label">Jenis Kelamin</div>
@@ -130,7 +130,7 @@
                                     <div class="col-lg-3 col-md-4 col-form-label">HP</div>
                                     <div class="col-lg-9 col-md-8">: (+62) {{ $karyawan->phone }}</div>
                                 </div>
-                            @endcan
+                            @endrole
                             <hr>
                             <div class="row">
                                 <div class="col-lg-3 col-md-4 col-form-label">Email</div>

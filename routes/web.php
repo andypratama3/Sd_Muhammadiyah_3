@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\JudulPembayaran;
-
 //User Access
 use App\Models\TenagaPendidikan;
 use Illuminate\Support\Facades\Route;
@@ -74,8 +73,10 @@ use App\Http\Controllers\Dashboard\TenagaPendidikanController as DashboardTenaga
 Route::get('/asset/{any}', function () {
     abort(404);
 })->where('any', '.*');
+
+
 Route::group(['prefix' => '/',], function () {
-    
+
     Route::get('/', BerandaController::class)->name('index');
 
     // Berita

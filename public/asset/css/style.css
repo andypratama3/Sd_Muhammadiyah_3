@@ -271,6 +271,12 @@
         border: 1px solid var(--bs-primary);
         color: var(--bs-primary);
     }
+
+    /* .container-prorgam-unggulan h4
+    {
+        font-size: 0.9rem;
+        display: inline-block;
+    } */
 }
 
 .navbar .dropdown-toggle::after {
@@ -439,6 +445,8 @@
     color: var(--bs-white);
 }
 /*** Single Page Hero Header End ***/
+
+
 
 
 /*** Feature Start ***/

@@ -22,40 +22,19 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
      */
-    public function boot()
+    public function boot(): void
     {
-        $this->configureRateLimiting();
-
-        // Define your routes
-        $this->mapWebRoutes();
-    }
-
-    protected function configureRateLimiting()
-    {
-        RateLimiter::for('web', function (Request $request) {
-            return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
+        RateLimiter::for('api', function (Request $request) {
+            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
-        RateLimiter::for('assets', function (Request $request) {
-            return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
+        $this->routes(function () {
+            Route::middleware('api')
+                ->prefix('api')
+                ->group(base_path('routes/api.php'));
+
+            Route::middleware('web')
+                ->group(base_path('routes/web.php'));
         });
-    }
-
-    protected function mapWebRoutes()
-    {
-        Route::middleware(['web', 'throttle:web'])
-            ->group(base_path('routes/web.php'));
-
-        Route::middleware(['web', 'throttle:assets'])
-            ->prefix('storage')
-            ->group(function () {
-                Route::get('{file}', 'StorageController@show');
-            });
-
-        Route::middleware(['web', 'throttle:assets'])
-            ->prefix('asset')
-            ->group(function () {
-                Route::get('{file}', 'AssetController@show');
-            });
     }
 }

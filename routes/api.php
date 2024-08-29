@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\IpaymuPaymentApi;
 use App\Http\Controllers\Api\Dashboard\SiswaApi;
 use App\Http\Controllers\Api\Dashboard\WilayahApi;
 use App\Http\Controllers\Dashboard\Api\FacebookController;
+use App\Http\Controllers\Api\Dashboard\SendOrderIDWhatsAppApi;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,3 +36,6 @@ Route::post('get/kabupaten',[WilayahApi::class, 'getKabupaten'])->name('getkabup
 Route::post('ipaymu/callback',[IpaymuPaymentApi::class, 'callback'])->name('ipaymu.api.callback');
 
 Route::get('facebook/data',[FacebookController::class, 'getData'])->name('api.facebook.data');
+
+
+Route::post('send/message/whatsapp', [SendOrderIDWhatsAppApi::class, 'sendMessage']);

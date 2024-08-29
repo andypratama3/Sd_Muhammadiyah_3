@@ -12,7 +12,7 @@
             <span>Dashboard</span></a>
     </li>
     <hr class="sidebar-divider">
-    @can('role: admin,superadmin')
+    @can('role:Admin|superadmin')
     <div class="sidebar-heading">
         Fitur
     </div>

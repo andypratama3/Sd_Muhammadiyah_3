@@ -79,107 +79,110 @@
 <!-- Feature Start -->
 <div class="container-fluid feature bg-light py-5">
     <div class="container py-5">
-        <div class="text-center mx-auto pb-5 wow fadeInRight" data-wow-delay="0.2s" style="max-width: 800px;">
-            <h4 class="text-primary">SD MUHAMMADIYAH 3 SAMARINDA</h4>
-            <h1 class="display-4">Program Unggulan</h1>
+        <div class="container-prorgam-unggulan">
+            <div class="text-center mx-auto pb-5 wow fadeInRight" data-wow-delay="0.2s" style="max-width: 800px;">
+                <h3 class="text-primary">SD MUHAMMADIYAH 3 SAMARINDA</h3>
+                <h1 class="display-4">Program Unggulan</h1>
+            </div>
+            <div class="row g-4 wow  fadeInUp" data-wow-delay="0.2s">
+                <div class="col-md-8 float-end">
+                    <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Tahifdz Al - Qur'an 2 Juz (29 - 30)
+                    </h4>
+                    <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Pembiasaan Akhlak Iskami Sejak Dini
+                    </h4>
+                    <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Pembiasaan Sholat Wajib dan Sunnah
+                    </h4>
+                    <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Pembiasaan Ngaji Morning Metode
+                        Tilawati</h4>
+                    <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Pembiasaan Menulis Al - Qur'an Dengan
+                        Metode IMLA</h4>
+                    <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Pembinaan Psikologi Untuk Mengetahui
+                        Minat & Bakat Anak</h4>
+                    <div class="form-group">
+                        <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Pembelajaran Berbasis Edutainment
+                            <br></h4>
+                        <p class="text-dark" style="margin-left: 30px; margin-top: -10px; margin-bottom: 0;">( Belajar
+                            Menyenangkan Dengan Menyeimbankan Otak Kanan Dan Kiri )</p>
+                    </div>
+                    <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Lulus Dengan 3 Ijazah</h4>
+                </div>
+                <div class="col-md-4">
+                    <img src="{{ asset('asset/img/sekolah-penggerak.jpeg') }}" class="img-fluid" alt=""
+                        style="object-fit: contain !important; mix-blend-mode: multiply; margin-top: 20px;">
+                </div>
+            </div>
+            <div class="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.2s" style="max-width: 800px;">
+            </div>
         </div>
-        <div class="row g-4 wow  fadeInUp" data-wow-delay="0.2s">
-            <div class="col-md-8 float-end">
-                <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Tahifdz Al - Qur'an 2 Juz (29 - 30)
-                </h4>
-                <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Pembiasaan Akhlak Iskami Sejak Dini
-                </h4>
-                <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Pembiasaan Sholat Wajib dan Sunnah
-                </h4>
-                <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Pembiasaan Ngaji Morning Metode
-                    Tilawati</h4>
-                <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Pembiasaan Menulis Al - Qur'an Dengan
-                    Metode IMLA</h4>
-                <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Pembinaan Psikologi Untuk Mengetahui
-                    Minat & Bakat Anak</h4>
-                <div class="form-group">
-                    <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Pembelajaran Berbasis Edutainment
-                        <br></h4>
-                    <p class="text-dark" style="margin-left: 30px; margin-top: -10px; margin-bottom: 0;">( Belajar
-                        Menyenangkan Dengan Menyeimbankan Otak Kanan Dan Kiri )</p>
-                </div>
-                <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Lulus Dengan 3 Ijazah</h4>
-            </div>
-            <div class="col-md-4">
-                <img src="{{ asset('asset/img/sekolah-penggerak.jpeg') }}" class="img-fluid" alt=""
-                    style="object-fit: contain !important; mix-blend-mode: multiply; margin-top: 20px;">
-            </div>
-        </div>
-        <div class="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.2s" style="max-width: 800px;">
-        </div>
-        <div class="row g-4">
-            <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.2s">
-                <div class="feature-item p-4 pt-0">
-                    <div class="feature-icon p-4 mb-4">
-                        <i class="fa-solid fa-a fa-3x"></i>
+
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.2s">
+                    <div class="feature-item p-4 pt-0">
+                        <div class="feature-icon p-4 mb-4">
+                            <i class="fa-solid fa-a fa-3x"></i>
+                        </div>
+                        <h4 class="mb-4" style="font-size: 22px;">AKREDITAS UNGGUL</h4>
                     </div>
-                    <h4 class="mb-4" style="font-size: 22px;">AKREDITAS UNGGUL</h4>
                 </div>
-            </div>
-            <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.8s">
-                <div class="feature-item p-4 pt-0">
-                    <div class="feature-icon p-4 mb-4">
-                        <i class="fa fa-building fa-3x"></i>
+                <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.8s">
+                    <div class="feature-item p-4 pt-0">
+                        <div class="feature-icon p-4 mb-4">
+                            <i class="fa fa-building fa-3x"></i>
+                        </div>
+                        <h4 class="mb-4">FASILITAS</h4>
+                        <a class="btn btn-primary rounded-pill py-2 px-4" href="{{ route('fasilitas.index') }}"
+                            aria-label="lihat-fasilitas">Lihat</a>
                     </div>
-                    <h4 class="mb-4">FASILITAS</h4>
-                    <a class="btn btn-primary rounded-pill py-2 px-4" href="{{ route('fasilitas.index') }}"
-                        aria-label="lihat-fasilitas">Lihat</a>
                 </div>
-            </div>
-            <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.4s">
-                <div class="feature-item p-4 pt-0">
-                    <div class="feature-icon p-4 mb-4">
-                        <i class="fa fa-trophy fa-3x"></i>
+                <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.4s">
+                    <div class="feature-item p-4 pt-0">
+                        <div class="feature-icon p-4 mb-4">
+                            <i class="fa fa-trophy fa-3x"></i>
+                        </div>
+                        <h4 class="mb-4">PRESTASI SISWA</h4>
+                        <a class="btn btn-primary rounded-pill py-2 px-4" href="{{ route('prestasi.siswa.index') }}"
+                            aria-label="Lihat-prestasi Siswa">Lihat</a>
                     </div>
-                    <h4 class="mb-4">PRESTASI SISWA</h4>
-                    <a class="btn btn-primary rounded-pill py-2 px-4" href="{{ route('prestasi.siswa.index') }}"
-                        aria-label="Lihat-prestasi Siswa">Lihat</a>
                 </div>
-            </div>
-            <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.6s">
-                <div class="feature-item p-4 pt-0">
-                    <div class="feature-icon p-4 mb-4">
-                        <i class="fa fa-school fa-3x"></i>
+                <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.6s">
+                    <div class="feature-item p-4 pt-0">
+                        <div class="feature-icon p-4 mb-4">
+                            <i class="fa fa-school fa-3x"></i>
+                        </div>
+                        <h4 class="mb-4" style="font-size: 23px;">PRESTASI SEKOLAH</h4>
+                        <a class="btn btn-primary rounded-pill py-2 px-4" href="{{  route('prestasi.sekolah.index') }}"
+                            aria-label="Lihat-prestasi Sekolah">Lihat</a>
                     </div>
-                    <h4 class="mb-4" style="font-size: 23px;">PRESTASI SEKOLAH</h4>
-                    <a class="btn btn-primary rounded-pill py-2 px-4" href="{{  route('prestasi.sekolah.index') }}"
-                        aria-label="Lihat-prestasi Sekolah">Lihat</a>
                 </div>
-            </div>
-            <div class="text-center mx-auto mt-3 wow fadeInRight" data-wow-delay="0.2s">
-                <div class="bg-white rounded-0 p-3 h-100 mt-5">
-                    <h1 class="display-4 mb-4 mt-0">Aktivitas Kami</h1>
-                    <p class="text-primary">Aktivitas SD Muhammadiyah 3 Samarinda</p>
-                    <div class="row g-4">
-                        @foreach ($gallerys as $gallery)
-                        <div class="col-md-3">
-                            <a href="{{ asset('storage/img/gallery/'. $gallery->foto) }}"
-                                data-lightbox="{{ $gallery->foto }}" class="">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <img src="{{ asset('storage/img/gallery/'. $gallery->foto) }}" alt=""
-                                            class="img-fluid" style="border-radius: 8px;">
-                                        <h4 class="card-title">{{ $gallery->name }}</h4>
+                <div class="text-center mx-auto mt-3 wow fadeInRight" data-wow-delay="0.2s">
+                    <div class="bg-white rounded-0 p-3 h-100 mt-5">
+                        <h1 class="display-4 mb-4 mt-0">Aktivitas Kami</h1>
+                        <p class="text-primary">Aktivitas SD Muhammadiyah 3 Samarinda</p>
+                        <div class="row g-4">
+                            @foreach ($gallerys as $gallery)
+                            <div class="col-md-3">
+                                <a href="{{ asset('storage/img/gallery/'. $gallery->foto) }}"
+                                    data-lightbox="{{ $gallery->foto }}" class="">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <img src="{{ asset('storage/img/gallery/'. $gallery->foto) }}" alt=""
+                                                class="img-fluid" style="border-radius: 8px;">
+                                            <h4 class="card-title">{{ $gallery->name }}</h4>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
+                                </a>
+                            </div>
+                            @endforeach
+                            <div class="col-md-12">
+                                <a href="{{ route('gallery.index') }}" class="btn btn-primary">Lihat Semua</a>
+                            </div>
                         </div>
-                        @endforeach
-                        <div class="col-md-12">
-                            <a href="{{ route('gallery.index') }}" class="btn btn-primary">Lihat Semua</a>
-                        </div>
+                        {{-- <h4 class="text-primary">SD Muhammadiyah 3 Samarinda</h4> --}}
                     </div>
-                    {{-- <h4 class="text-primary">SD Muhammadiyah 3 Samarinda</h4> --}}
                 </div>
+
+
             </div>
-
-
-        </div>
     </div>
 </div>
 <!-- Feature End -->

@@ -89,7 +89,7 @@ class PembayaranController extends Controller
         $juduls = JudulPembayaran::all();
         $siswas = Siswa::select(['id','name','slug'])->get();
         $kelass = Kelas::orderBy('name','asc')->get();
-        return view('dashboard.data.pembayaran.create', compact('siswas','juduls'));
+        return view('dashboard.data.pembayaran.create', compact('siswas','juduls', 'kelass'));
     }
     public function store(PembayaranData $pembayaranData, PembayaranAction $pembayaranAction)
     {

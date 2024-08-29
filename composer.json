@@ -26,6 +26,7 @@
         "spatie/laravel-data": "^3.8",
         "spatie/laravel-permission": "^6.4",
         "tightenco/ziggy": "^1.0",
+        "twilio/sdk": "^8.2",
         "yajra/laravel-datatables": "10.0",
         "yoeunes/toastr": "^2.3"
     },

@@ -19,6 +19,7 @@
                 <a href="#" class="nav-link" data-bs-toggle="dropdown">
                     <span class="dropdown-toggle">Profil</span>
                 </a>
+                
                 <div class="dropdown-menu">
                     <a href="{{ route('guru.index') }}" class="dropdown-item">Guru</a>
                     <a href="{{ route('visimisi.index') }}" class="dropdown-item">Visi & Misi</a>

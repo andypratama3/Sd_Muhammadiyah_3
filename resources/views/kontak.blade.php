@@ -38,7 +38,7 @@
             </div>
         </div>
         <div class="row mt-4">
-            <div class="contact bg-light wow fadeInRight" data-wow-delay="0.4s">
+            <div class="contact bg-light wow fadeInRight mb-4" data-wow-delay="0.4s">
                 <div class="col-md-12 text-center mb-4">
                     <h2>Kritik dan Saran</h2>
                 </div>

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\Dashboard;
 
-use GuzzleHttp\Client;
+use Twilio\Rest\Client as TwilioClient;
 use App\Models\Pembayaran;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -11,60 +11,47 @@ class SendOrderIDWhatsAppApi extends Controller
 {
     public function sendMessage($orderId)
     {
+        // Retrieve the payment information
+        // $pembayaran = Pembayaran::with(['siswa', 'kelas'])->where('order_id', $orderId)->first();
         $pembayaran = Pembayaran::with(['siswa', 'kelas'])->where('order_id', $orderId)->first();
-        $no_hp = $pembayaran->siswa->no_hp;
-        $no_hp = '62' . substr($no_hp, 1);
-        $no_hp = intval($no_hp);
+        if (!$pembayaran) {
+            return response()->json(['status' => 'error', 'message' => 'Payment not found.'], 404);
+        }
+
+        // Prepare recipient details
+        // $no_hp = '+62' . ltrim($pembayaran->siswa->no_hp, '0'); // Format phone number for WhatsApp
+        $no_hp = '+6285349734475';
         $siswa_name = $pembayaran->siswa->name;
         $siswa_kelas = $pembayaran->kelas->name;
         $gross_amount = intval($pembayaran->gross_amount);
 
-        // Access token for the WhatsApp Business API
-        $accessToken = env('WA_Busines');
+        // Retrieve Twilio credentials from environment variables
+        $sid = env('TWILIO_SID');
+        $token = env('TWILIO_AUTH_TOKEN');
+        $whatsappFrom = env('TWILIO_WHATSAPP_FROM');
 
-        $client = new Client();
-        $response = $client->post("https://graph.facebook.com/v20.0/401364996388545/messages", [
-            'headers' => [
-                'Authorization' => "Bearer EAAQGovTCT1cBO6R9kKVs4JFxiCXDuPuhyqdFtmB6OuqcyhNCTw9EZA2JkQuapkWzZCIpU9vinyRusIZBbDLVZBnH4tIO3kLsUVYDDC1BYtIlfZBZCNTa7K52Ia8O15vCIYFZBNsLE080tL6gXPlwxnKUBWCT1NZCK9GBt718OJnHcpHxVZCNWZBpMQg85UrmvtOKxezQZDZD",
-                'Content-Type' => 'application/json',
-            ],
-            'json' => [
-                'messaging_product' => 'whatsapp',
-                'to' => "$no_hp",
-                'type' => 'template',
-                'template' => [
-                    'name' => 'payment_sd',
-                    'language' => [
-                        'code' => 'en_US'
-                    ],
-                    'components' => [
-                        [
-                            'type' => 'body',
-                            'parameters' => [
-                                [
-                                    'type' => 'text',
-                                    'text' => $siswa_name // Replaces {{1}}
-                                ],
-                                [
-                                    'type' => 'text',
-                                    'text' => $siswa_kelas // Replaces {{2}}
-                                ],
-                                [
-                                    'type' => 'text',
-                                    'text' => $orderId // Replaces {{3}}
-                                ],
-                                [
-                                    'type' => 'text',
-                                    'text' => "Rp " . number_format($gross_amount, 0, ',', '.') // Replaces {{4}}
-                                ]
-                            ]
-                        ]
-                    ]
+        if (!$sid || !$token || !$whatsappFrom) {
+            return response()->json(['status' => 'error', 'message' => 'Twilio configuration is missing.'], 500);
+        }
+
+        try {
+            // Initialize the Twilio client
+            $client = new TwilioClient($sid, $token);
+
+            $message = $client->messages->create(
+                'whatsapp:+6282217160075',
+                [
+                    // 'from' => $whatsappFrom,
+                    "from" => "whatsapp:+14155238886",
+                    'body' => "Halo Bapak/Ibu Dari $siswa_name, \n\n $siswa_kelas Memiliki Pembayaran with Order ID: $orderId has been received. The amount is Rp " . number_format($gross_amount, 0, ',', '.') . ". Thank you!"
                 ]
-            ],
-        ]);
-        $responseData = $response->getBody()->getContents();
+            );
 
-        return $responseData;
+            return response()->json(['status' => 'success', 'message_sid' => $message->sid], 200);
+
+        } catch (\Exception $e) {
+            // Handle exceptions
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
 }
