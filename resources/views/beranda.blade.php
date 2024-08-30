@@ -41,12 +41,12 @@
             <div class="container">
                 <div class="row g-4 align-items-center">
                     <div class="col-lg-7 animated fadeInLeft">
-                        <div class="text-sm-center text-md-start">
+                        <div class="text-sm-center">
                             <h3 class="text-white text-uppercase fw-bold mb-2 mt-2">SD MUHAMMADIYAH 3 SAMARINDA </h3>
                             <h4 class="display-2 text-white mb-4">{{ $hero->name }}</h4>
                             <p class="mb-5 fs-5">{{ $hero->desc }}
                             </p>
-                            <div class="d-flex justify-content-center justify-content-md-start flex-shrink-0 mb-4">
+                            <div class="d-flex justify-content-center flex-shrink-0 mb-4">
                                 @if($hero->youtube != null)
                                 <a class="btn btn-light rounded-pill py-3 px-4 px-md-5 me-2"
                                     href="{{ $hero->youtube }}"><i class="fas fa-play-circle me-2"></i> Watch Video</a>
@@ -60,8 +60,8 @@
                         </div>
                     </div>
                     <div class="col-lg-5 animated fadeInRight">
-                        <div class="calrousel-img" style="object-fit: cover; justify-content: center !important; align-items: center !important;">
-                            <img src="{{ asset('asset/img/SD3_logo.png') }}" class="img-fluid " alt="" style="width: 80%;" loading="lazy">
+                        <div class="carousel-img" style="object-fit: cover; justify-content: center !important; align-items: center !important;">
+                            <img src="{{ asset('asset/img/SD3_logo.png') }}" class="img-fluid img-logo" alt="" style="width: 80%;" loading="lazy">
                             <div class="jargon" style="display: flex; gap: 4px; font-family: times new roman;">
                                     <p class="text-primary">S</p>
                                     <p class="text-warning">D</p>
@@ -86,25 +86,52 @@
             </div>
             <div class="row g-4 wow  fadeInUp" data-wow-delay="0.2s">
                 <div class="col-md-8 float-end">
-                    <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Tahifdz Al - Qur'an 2 Juz (29 - 30)
+                    <h4 class="text-dark d-flex align-items-center justify-content-start">
+                        <i class="fa fa-check text-primary me-3"></i>
+                        <p class="my-0 py-0">
+                            Tahifdz Al - Qur'an 2 Juz (29 - 30)
+                        </p>
                     </h4>
-                    <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Pembiasaan Akhlak Iskami Sejak Dini
+                    <h4 class="text-dark d-flex align-items-center justify-content-start">
+                        <i class="fa fa-check text-primary me-3"></i>
+                        <p class="my-0 py-0">
+                            Pembiasaan Akhlak Iskami Sejak Dini
+                        </p>
                     </h4>
-                    <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Pembiasaan Sholat Wajib dan Sunnah
+                    <h4 class="text-dark d-flex align-items-center justify-content-start">
+                        <i class="fa fa-check text-primary me-3"></i>
+                        <p class="my-0 py-0">
+                            Pembiasaan Sholat Wajib dan Sunnah
+                        </p>
                     </h4>
-                    <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Pembiasaan Ngaji Morning Metode
-                        Tilawati</h4>
-                    <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Pembiasaan Menulis Al - Qur'an Dengan
-                        Metode IMLA</h4>
-                    <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Pembinaan Psikologi Untuk Mengetahui
-                        Minat & Bakat Anak</h4>
-                    <div class="form-group">
-                        <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Pembelajaran Berbasis Edutainment
-                            <br></h4>
-                        <p class="text-dark" style="margin-left: 30px; margin-top: -10px; margin-bottom: 0;">( Belajar
-                            Menyenangkan Dengan Menyeimbankan Otak Kanan Dan Kiri )</p>
-                    </div>
-                    <h4 class="text-dark"><i class="fa fa-check text-primary me-3"></i>Lulus Dengan 3 Ijazah</h4>
+                    <h4 class="text-dark d-flex align-items-center justify-content-start">
+                        <i class="fa fa-check text-primary me-3"></i>
+                        <p class="my-0 py-0">
+                            Pembiasaan Ngaji Morning Metode Tilawati
+                        </p>
+                    </h4>
+                    <h4 class="text-dark d-flex align-items-center justify-content-start">
+                        <i class="fa fa-check text-primary me-3"></i>
+                        <p class="my-0 py-0">Pembiasaan Menulis Al - Qur'an Dengan Metode IMLA</p>    
+                    </h4>
+                    <h4 class="text-dark d-flex align-items-center justify-content-start">
+                        <i class="fa fa-check text-primary me-3"></i>
+                        <p class="my-0 py-0">Pembinaan Psikologi Untuk Mengetahui Minat & Bakat Anak</p>    
+                    </h4>
+                    <h4 class="text-dark d-flex align-items-center justify-content-start">
+                        <i class="fa fa-check text-primary me-3"></i>
+                        <p class="my-0 py-0">Pembelajaran Berbasis Edutainment</p>
+                    </h4>
+                    <h4 class="text-dark d-flex my-0">
+                        <i class="fa fa-check text-primary me-3" style="opacity: 0;"></i>
+                        <p class="text-dark" style="font-size: 16px;">
+                            ( Belajar Menyenangkan Dengan Menyeimbankan Otak Kanan Dan Kiri )
+                        </p>
+                    </h4>
+                    <h4 class="text-dark d-flex align-items-center justify-content-start">
+                        <i class="fa fa-check text-primary me-3"></i>
+                        <p class="my-0 py-0">Lulus Dengan 3 Ijazah</p>    
+                    </h4>
                 </div>
                 <div class="col-md-4">
                     <img src="{{ asset('asset/img/sekolah-penggerak.jpeg') }}" class="img-fluid" alt=""
