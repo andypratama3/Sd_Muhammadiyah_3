@@ -16,6 +16,7 @@ class SiswaData extends Data
         public readonly string $tgl_lahir,
         public readonly string $nisn,
         public readonly string $agama,
+        public readonly string $spp,
         public readonly ?string $nama_pendidikan,
         public readonly ?string $nama_jalan_pendidikan,
         public readonly string $kelas_tahun,
@@ -59,6 +60,7 @@ class SiswaData extends Data
             $request->getTgllahir(),
             $request->getNisn(),
             $request->getAgama(),
+            $request->getSpp(),
             //pendidikan Sebelumnya
             $request->getNamaPendidikan(),
             $request->getJalanPendidikan(),
@@ -100,6 +102,7 @@ class SiswaData extends Data
             'tmpt_lahir.required' => 'Kolom Tempat Lahir tidak boleh kosong!',
             'tgl_lahir.required' => 'Kolom tanggal Lahir tidak boleh kosong!',
             'nisn.required' => 'Kolom Nisn tidak boleh kosong!',
+            'spp.required' => 'Kolom SPP Pembiayaan tidak boleh kosong!',
             'agama.required' => 'Kolom Agama tidak boleh kosong!',
             'kelas_tahun.required' => 'Kolom Kelas / Tahun tidak boleh kosong!',
             'tanggal_masu.required' => 'Kolom Tahun Masuk tidak boleh kosong!',

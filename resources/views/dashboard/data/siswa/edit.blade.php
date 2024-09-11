@@ -21,6 +21,7 @@
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="slug" value="{{ $siswa->slug }}">
+
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group row">
@@ -158,6 +159,14 @@
                                             {{ $kelas->pivot->category_kelas }}</option>
                                     @endforeach
                                 </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-3 text-dark" for="spp">SPP</label>
+                            <div class="col-sm-9">
+                            <input type="text" name="spp" id="spp" class="form-control" value="{{ old('spp', $siswa->spp) }}">
                             </div>
                         </div>
                     </div>
@@ -542,6 +551,33 @@
                         },
                     });
                 });
+                //function formatRupiah
+                $('#spp').on('input', function () {
+                let spp = $(this).val();
+                    spp = spp.replace(/[^0-9.]/g, '');
+                    spp = formatRupiah(spp);
+                    $(this).val(spp);
+                });
+
+                $('#spp').val(formatRupiah($('#spp').val()));
+
+                // Fungsi untuk memformat angka sebagai mata uang Rupiah
+                function formatRupiah(angka) {
+                    var number_string = angka.toString().replace(/[^,\d]/g, ''),
+                        split = number_string.split(','),
+                        sisa = split[0].length % 3,
+                        rupiah = split[0].substr(0, sisa),
+                        ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+                    if (ribuan) {
+                        separator = sisa ? '.' : '';
+                        rupiah += separator + ribuan.join('.');
+                    }
+
+                    rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+                    return rupiah;
+
+                }
             });
         </script>
     @endpush

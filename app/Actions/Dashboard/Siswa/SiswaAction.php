@@ -16,15 +16,22 @@ class SiswaAction {
             ! change data compalate detail student
             ! masuk sekolah, nama orang tua , pekerjaan, alamat orang tua, wali
         */
-        if(!$siswaData->foto){
-                $picture_name = $siswa->foto;
-        }else {
+        if($siswaData->foto){
             $foto = $siswaData->foto;
             $ext = $foto->getClientOriginalExtension();
             //upload foto to folder
             $upload_path = public_path('storage/img/siswa/');
             $picture_name = 'Siswa_'.Str::slug($siswaData->name).'_'.date('YmdHis').".$ext";
             $foto->move($upload_path, $picture_name);
+        }else{
+            $picture_name = $siswa->foto;
+        }
+
+        //make virtual account random wehn empty data
+        if(!$siswa){
+            $va = rand();
+        }else{
+            $va = $siswa->va;
         }
 
         $siswa = Siswa::updateOrCreate(
@@ -36,6 +43,8 @@ class SiswaAction {
                 'tgl_lahir' => $siswaData->tgl_lahir,
                 'nisn' => $siswaData->nisn,
                 'agama' => $siswaData->agama,
+                'spp' => (int) str_replace('.', '', $siswaData->spp),
+                'va' => $va,
                 'nama_pendidikan' => $siswaData->nama_pendidikan,
                 'nama_jalan_pendidikan' => $siswaData->nama_jalan_pendidikan,
                 'kelas_tahun' => $siswaData->kelas_tahun,

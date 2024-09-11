@@ -28,7 +28,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <select name="judul_pembayaran" id="judul_pembayaran" class="form-control">
-                                    <option selected disabled>Pilih Kategori Pembayaran</option>
+                                    <option selected value="">Pilih Kategori Pembayaran</option>
                                     @foreach ($juduls as $judul)
                                         <option value="{{ $judul->id }}">{{ $judul->name }}</option>
                                     @endforeach
@@ -38,7 +38,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <select name="kelas" id="kelas" class="form-control">
-                                    <option selected disabled>Pilih Kelas</option>
+                                    <option selected value="">Pilih Kelas</option>
                                     @foreach ($kelass as $kelas)
                                         <option value="{{ $kelas->id }}">{{ $kelas->name }}</option>
                                     @endforeach
@@ -53,10 +53,10 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <button class="btn btn-success" id="exportData-excel"><i class="fas fa-file-excel"></i>
-                                    Export Excel</button>
+                                    Export</button>
                                 <!-- Hidden form for exporting -->
                                 <form action="{{ route('dashboard.datamaster.pembayaran.exportExcel') }}" method="POST"
                                     id="exportForm" style="display: none;">
@@ -67,7 +67,6 @@
                                 </form>
                             </div>
                         </div>
-
                     </div>
                     <div class="table-responsive">
                         <table class="table mt-4 w-100" id="invoice_table" >

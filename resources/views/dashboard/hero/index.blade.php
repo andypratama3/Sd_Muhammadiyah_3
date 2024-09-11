@@ -1,18 +1,18 @@
 @extends('layouts.dashboard')
-@section('title','Hero Banner')
+@section('title','Gambar Depan')
 @push('css')
 
 @section('content')
-<div class="row">
-    <div class="col-lg-12 mb-4">
-        <!-- Simple Tables -->
-        <div class="card">
-            @include('layouts.flashmessage')
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h4 class="m-0 font-weight-bold text-primary text-center">Hero Banner</h4>
-                <a href="{{ route('dashboard.news.hero.create') }}" class="btn btn-success btn-sm float-right">Tambah <i
-                        class="fas fa-plus"></i></a>
-            </div>
+<div class="col-lg-12 mb-4">
+    <!-- Simple Tables -->
+    <div class="card">
+        @include('layouts.flashmessage')
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h4 class="m-0 font-weight-bold text-center">Gambar Depan</h4>
+            <a href="{{ route('dashboard.news.hero.create') }}" class="btn btn-primary btn-sm float-right">Tambah <i
+                    class="fas fa-plus"></i></a>
+        </div>
+        <div class="card-body">
             <div class="table-responsive">
                 <table class="table align-items-center table-flush text-center">
                     <thead class="thead-light">
@@ -31,7 +31,7 @@
                         <tr>
                             <td>{{ ++$no }}</td>
                             <td>{{ $hero->name }}</td>
-                            <td><a href="{{ asset('storage/img/hero/'.$hero->image) }}" target="_blank">Lihat Foto</a></td>
+                            <td><a href="{{ asset('storage/img/hero/'.$hero->image) }}" target="_blank" class="btn btn-success btn-sm">Lihat Foto</a></td>
                             <td>{{ $hero->desc }}</td>
                             <td>{{ $hero->youtube }}</td>
                             <td>{{ $hero->link }}</td>
@@ -52,16 +52,16 @@
                     </tbody>
                 </table>
             </div>
-            <div class="card-footer clearfix">
-                <ul class="m-0 float-left">
-                    <span class="badge badge-primary">Total : {{ $count }} Data</span>
-                </ul>
-                <ul class="pagination m-0 float-right">
-                    {{ $heroes->onEachSide(1)->links() }}
-                </ul>
-            </div>
         </div>
+        <div class="card-footer clearfix">
+            <ul class="m-0 float-left">
+                <span class="badge badge-primary">Total : {{ $count }} Data</span>
+            </ul>
+            <ul class="pagination m-0 float-right">
+                {{ $heroes->onEachSide(1)->links() }}
+            </ul>
         </div>
+    </div>
     </div>
 </div>
 

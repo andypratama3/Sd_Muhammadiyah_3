@@ -7,6 +7,5 @@ class SiswaActionDelete
     public function execute($siswa)
     {
         $siswa->delete();
-        $siswa->kelas()->delete();
     }
 }

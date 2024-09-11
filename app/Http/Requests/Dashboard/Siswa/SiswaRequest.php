@@ -18,7 +18,6 @@ class SiswaRequest extends FormRequest
     }
     public function getJk(){
         $this->jk;
-
     }
     public function getTmptlahir(){
         $this->tmpt_lahir;
@@ -134,6 +133,11 @@ class SiswaRequest extends FormRequest
     public function getSlug()
     {
         $this->slug;
+    }
+
+    public function getSpp()
+    {
+        $this->spp;
     }
 
 

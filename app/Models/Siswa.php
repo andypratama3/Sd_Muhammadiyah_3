@@ -24,6 +24,8 @@ class Siswa extends Model
         'tgl_lahir',
         'nisn',
         'agama',
+        'spp',
+        'va',
         //pendidikan sebelumnya
         'nama_pendidikan',
         'nama_jalan_pendidikan',

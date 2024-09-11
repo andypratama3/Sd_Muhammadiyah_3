@@ -8,16 +8,16 @@
             @csrf
             @method('PUT')
             <input type="hidden" name="slug" value="{{ $berita->slug }}">
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="judul">Judul</label>
                 <input type="text" class="form-control" name="judul" id="judul" value="{{ $berita->judul }}" placeholder="Masukan Judul">
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="">Deskripsi</label>
                 <input type="text" class="form-control" id="" value="{{ $berita->desc }}" name="desc"
                     placeholder="Deskripsi">
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="">Foto</label>
                 <div class="custom-file">
                     <input type="file" class="form-control" id="foto" name="foto" accept="image/*"
@@ -29,8 +29,8 @@
                         style="width: 200px; height: 50%;">
                 </div>
             </div>
-            <a href="{{ route('dashboard.news.berita.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
-            <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
+            <a href="{{ route('dashboard.news.berita.index') }}" class="btn btn-danger btn-sm">Kembali</a>
+            <button type="submit" class="btn btn-primary float-lg-end btn-sm">Submit</button>
         </form>
     </div>
 </div>

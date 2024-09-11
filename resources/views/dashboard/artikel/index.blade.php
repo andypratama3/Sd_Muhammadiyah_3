@@ -4,34 +4,30 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
 @endpush
 @section('content')
-
-
-<div class="row">
-    <div class="col-lg-12 grid-margin stretch-card">
-        @include('layouts.flashmessage')
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title text-primary mb-4">Artikel
-                <a href="{{ route('dashboard.news.artikel.create') }}" class="btn btn-success btn-sm float-right ">Tambah <i class="fas fa-plus"></i></a>
-                </h4>
-
-                <div class="table-responsive">
-                    <table class="table" id="artikel_table">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Nama / Judul</th>
-                                <th>Kategori</th>
-                                <th>Jumlah View</th>
-                                <th>Status</th>
-                                @can('role:superadmin')
-                                    <th>Aksi Publish</th>
-                                @endcan
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
+<div class="col-lg-12 grid-margin stretch-card">
+    @include('layouts.flashmessage')
+    <div class="card">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h4 class="card-title mb-4">Artikel</h4>
+            <a href="{{ route('dashboard.news.artikel.create') }}" class="btn btn-primary btn-sm float-right ">Tambah <i class="fas fa-plus"></i></a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table" id="artikel_table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama / Judul</th>
+                            <th>Kategori</th>
+                            <th>View</th>
+                            <th>Status</th>
+                            @role('superadmin')
+                                <th>Aksi Publish</th>
+                            @endrole
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                </table>
             </div>
         </div>
     </div>
@@ -68,9 +64,9 @@ $(document).ready(function () {
                 data: 'status', name: 'status',
                 render: function (data) {
                     if (data == 'publish') {
-                        return '<span class="badge badge-success"><i class="fas fa-check"></i> Publish</span>';
+                        return '<button class="btn btn-sm btn-success"><i class="bx bx-check"></i> Publish</button>';
                     } else {
-                        return '<span class="badge badge-warning"><i class="fas fa-clock"></i> Pending</span>';
+                        return '<button class="btn btn-sm btn-warning"><i class="bx bx-time-five"></i> Pending</button>';
                     }
                 }
             },

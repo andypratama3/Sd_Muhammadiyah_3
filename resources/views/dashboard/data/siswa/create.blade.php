@@ -157,11 +157,18 @@
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="name">Foto</label>
                         <div class="col-sm-9">
-                            <input type="file" class="form-control" name="foto" id="foto" value="{{ old('foto') }}" />
+                            <input type="file" class="form-control" name="foto" id="foto" value="{{ old('foto') }}" required/>
                         </div>
                     </div>
                 </div>
-
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="spp">SPP</label>
+                        <div class="col-sm-9">
+                        <input type="text" name="spp" id="spp" class="form-control" value="{{ old('spp') }}">
+                        </div>
+                    </div>
+                </div>
                 {{-- Data Detail orang tua --}}
                 <div class="col-md-12">
                     <hr>
@@ -570,6 +577,32 @@
                 },
             });
         });
+
+        //function formatRupiah
+        $('#spp').on('input', function () {
+        let spp = $(this).val();
+            spp = spp.replace(/[^0-9.]/g, '');
+            spp = formatRupiah(spp);
+            $(this).val(spp);
+        });
+
+        // Fungsi untuk memformat angka sebagai mata uang Rupiah
+        function formatRupiah(angka) {
+            var number_string = angka.toString().replace(/[^,\d]/g, ''),
+                split = number_string.split(','),
+                sisa = split[0].length % 3,
+                rupiah = split[0].substr(0, sisa),
+                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+            if (ribuan) {
+                separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+            return rupiah;
+
+        }
     });
 </script>
 @endpush

@@ -1,24 +1,23 @@
 @extends('layouts.dashboard')
 @section('title', 'Detail Berita')
 @section('content')
-    <div class="card mb-4">
-        <div class="card-body">
-        <form action="{{ route('dashboard.news.berita.store') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            <div class="form-group">
+<div class="card mb-4">
+    <div class="card-body">
+        <a href="{{ route('dashboard.news.berita.index') }}" class="btn btn-danger">Kembali</a>
+        <div class="form-group mt-4">
             <label for="judul">Judul</label>
-            <input type="text" class="form-control" id="judul" aria-describedby="emailHelp" value="{{ $berita->judul }}" readonly>
-            </div>
-            <div class="form-group">
+            <input type="text" class="form-control" id="judul" aria-describedby="emailHelp" value="{{ $berita->judul }}"
+                readonly>
+        </div>
+        <div class="form-group mt-2">
             <label for="">Deskripsi</label>
             <input type="text" class="form-control" id="" value="{{ $berita->desc }}" readonly>
-            </div>
-            <div class="form-group">
+        </div>
+        <div class="form-group mb-2 mt-2">
             <h6 class="text-center">Foto</h6>
             <img src="{{ asset('storage/img/berita/'.$berita->foto) }}" alt="" srcset="" style="width: 100%; height:">
-            </div>
-            <a href="{{ route('dashboard.news.berita.index') }}" class="btn btn-danger float-end">Kembali</a>
-        </form>
         </div>
+        </form>
     </div>
+</div>
 @endsection

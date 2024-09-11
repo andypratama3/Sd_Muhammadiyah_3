@@ -67,26 +67,27 @@
 </style>
 @endpush
 @section('content')
-<div class="row">
-    <div class="col-lg-12 grid-margin stretch-card">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title text-primary mb-4">Berita
-                <a href="{{ route('dashboard.news.berita.create') }}" class="btn btn-success btn-sm float-right">Tambah <i class="fas fa-plus"></i></a>
-                </h4>
-                <div class="table-responsive">
-                    <table class="table" id="berita_table">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Judul</th>
-                                <th>Deskripsi</th>
-                                <th>Foto</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h4 class="m-0 font-weight-bold text-center">Berita</h4>
+            <a href="{{ route('dashboard.news.berita.create') }}" class="btn btn-primary btn-sm float-right">Tambah <i
+                    class="fas fa-plus"></i></a>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table" id="berita_table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Judul</th>
+                            <th>Deskripsi</th>
+                            <th>Foto</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                </table>
             </div>
         </div>
     </div>
@@ -123,8 +124,16 @@ $(document).ready(function () {
         columns: [
             { data: 'DT_RowIndex',name: 'DT_RowIndex',orderable: false,searchable: false},
             { data: 'judul', name: 'judul'},
-            { data: 'desc', name: 'desc'},
-            { data: 'foto', name: 'foto', orderable: true},
+            { data: 'desc', name: 'desc', orderable: false,
+                render: function (data) {
+                    return '<p>' + data.substring(0, 20) + '...</p>';
+                }
+            },
+            { data: 'foto', name: 'foto', orderable: false,
+                render: function (data) {
+                    return '<a href="storage/img/berita/'+data+'" target="_blank" class="btn btn-success btn-sm">Lihat Foto</a>';
+                }
+            },
             { data: 'options',name: 'options', orderable: false, searchable: false }
         ],
     });

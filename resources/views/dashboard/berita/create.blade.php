@@ -9,15 +9,15 @@
     <div class="card-body">
         <form action="{{ route('dashboard.news.berita.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="judul">Judul</label>
                 <input type="text" class="form-control" name="judul" id="judul" value="{{ old('judul') }}" placeholder="Masukan Judul">
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="">Deskripsi</label>
                 <input type="text" class="form-control" id="" name="desc" value="{{ old('desc') }}" placeholder="Deskripsi">
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="">Foto</label>
                 <div class="custom-file">
                     <input type="file" class="form-control" id="foto" name="foto" accept="image/jpeg,image/png,application/pdf,image" value="{{ old('foto') }}" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])">
@@ -27,8 +27,8 @@
                     <img src="" id="output" alt="" style="width: 200px; height: 50%;">
                 </div>
             </div>
-            <a  href="{{ route('dashboard.news.berita.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
-            <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
+            <a  href="{{ route('dashboard.news.berita.index') }}" class="btn btn-danger btn-sm">Kembali</a>
+            <button type="submit" class="btn btn-primary float-lg-end btn-sm">Submit</button>
         </form>
     </div>
 </div>

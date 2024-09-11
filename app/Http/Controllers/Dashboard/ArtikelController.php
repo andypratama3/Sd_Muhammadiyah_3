@@ -33,9 +33,9 @@ class ArtikelController extends Controller
                 })
                 ->addColumn('options', function ($row){
                     return '
-                    <a href="' . route('dashboard.news.artikel.show', $row->slug) . '" class="btn btn-sm btn-warning"><i class="fa fa-eye"></i></a>
-                    <a href="' . route('dashboard.news.artikel.edit', $row->slug) . '" class="btn btn-sm btn-primary"><i class="fa fa-pen"></i></a>
-                    <button data-id="' . $row['slug'] . '" class="btn btn-sm btn-danger" id="btn-delete"><i class="fa fa-trash"></i></button>
+                    <a href="' . route('dashboard.news.artikel.show', $row->slug) . '" class="btn btn-sm me-2 btn-warning"><i class="fa fa-eye"></i></a>
+                    <a href="' . route('dashboard.news.artikel.edit', $row->slug) . '" class="btn btn-sm me-2 btn-primary"><i class="fa fa-pen"></i></a>
+                    <button data-id="' . $row['slug'] . '" class="btn btn-sm btn-danger me-1" id="btn-delete"><i class="fa fa-trash"></i></button>
                 ';
                 })
                 ->addColumn('button_action', function ($row) {

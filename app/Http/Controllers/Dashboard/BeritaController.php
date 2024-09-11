@@ -22,10 +22,11 @@ class BeritaController extends Controller
     {
         $query = Berita::select('id','judul','desc','foto','slug')->orderBy('created_at','asc');
         return DataTables::of($query)
+
                 ->addColumn('options', function ($row){
                     return '
-                    <a href="' . route('dashboard.news.berita.show', $row->slug) . '" class="btn btn-sm btn-warning"><i class="fa fa-eye"></i></a>
-                    <a href="' . route('dashboard.news.berita.edit', $row->slug) . '" class="btn btn-sm btn-primary"><i class="fa fa-pen"></i></a>
+                    <a href="' . route('dashboard.news.berita.show', $row->slug) . '" class="btn btn-sm me-1 btn-warning"><i class="fa fa-eye"></i></a>
+                    <a href="' . route('dashboard.news.berita.edit', $row->slug) . '" class="btn btn-sm me-1 btn-primary"><i class="fa fa-pen"></i></a>
                     <button data-id="' . $row['slug'] . '" class="btn btn-sm btn-danger" id="btn-delete"><i class="fa fa-trash"></i></button>
                 ';
                 })
