@@ -15,79 +15,79 @@
     </style>
 @endpush
 @section('content')
-    <div class="row">
-        <div class="col-lg-12 grid-margin stretch-card">
-            @include('layouts.flashmessage')
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title text-primary mb-4"> Pembayaran Siswa
-                        <a href="{{ route('dashboard.datamaster.pembayaran.create') }}"
-                            class="btn btn-success btn-sm float-right">Tambah <i class="fas fa-plus"></i></a>
-                    </h4>
-                    <div class="form-group row">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <select name="judul_pembayaran" id="judul_pembayaran" class="form-control">
-                                    <option selected value="">Pilih Kategori Pembayaran</option>
-                                    @foreach ($juduls as $judul)
-                                        <option value="{{ $judul->id }}">{{ $judul->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <select name="kelas" id="kelas" class="form-control">
-                                    <option selected value="">Pilih Kelas</option>
-                                    @foreach ($kelass as $kelas)
-                                        <option value="{{ $kelas->id }}">{{ $kelas->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <select name="category_kelas" id="category_kelas" class="form-control">
-                                    <option selected disabled>Pilih Kategori Kelas</option>
-                                </select>
-                            </div>
-                        </div>
+<div class="col-lg-12 grid-margin stretch-card">
+    @include('layouts.flashmessage')
+    <div class="card">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h4 class="card-title"> Pembayaran Siswa</h4>
+            <a href="{{ route('dashboard.datamaster.pembayaran.create') }}"
+            class="btn btn-success btn-sm float-right">Tambah <i class="fas fa-plus"></i></a>
+        </div>
+        <div class="card-body">
 
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <button class="btn btn-success" id="exportData-excel"><i class="fas fa-file-excel"></i>
-                                    Export</button>
-                                <!-- Hidden form for exporting -->
-                                <form action="{{ route('dashboard.datamaster.pembayaran.exportExcel') }}" method="POST"
-                                    id="exportForm" style="display: none;">
-                                    @csrf
-                                    <input type="hidden" name="judul_id" id="export_judul_id">
-                                    <input type="hidden" name="kelas" id="export_kelas">
-                                    <input type="hidden" name="category_kelas" id="export_category_kelas">
-                                </form>
-                            </div>
-                        </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <select name="judul_pembayaran" id="judul_pembayaran" class="form-control">
+                            <option selected value="">Pilih Kategori Pembayaran</option>
+                            @foreach ($juduls as $judul)
+                                <option value="{{ $judul->id }}">{{ $judul->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
-                    <div class="table-responsive">
-                        <table class="table mt-4 w-100" id="invoice_table" >
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Kategori</th>
-                                    <th>Nama</th>
-                                    <th>Kelas</th>
-                                    <th>Order ID</th>
-                                    <th>Total</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                        </table>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <select name="kelas" id="kelas" class="form-control">
+                            <option selected value="">Pilih Kelas</option>
+                            @foreach ($kelass as $kelas)
+                                <option value="{{ $kelas->id }}">{{ $kelas->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <select name="category_kelas" id="category_kelas" class="form-control">
+                            <option selected disabled>Pilih Kategori Kelas</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <button class="btn btn-success" id="exportData-excel"><i class="fas fa-file-excel"></i>
+                            Export</button>
+                        <!-- Hidden form for exporting -->
+                        <form action="{{ route('dashboard.datamaster.pembayaran.exportExcel') }}" method="POST"
+                            id="exportForm" style="display: none;">
+                            @csrf
+                            <input type="hidden" name="judul_id" id="export_judul_id">
+                            <input type="hidden" name="kelas" id="export_kelas">
+                            <input type="hidden" name="category_kelas" id="export_category_kelas">
+                        </form>
                     </div>
                 </div>
             </div>
+            <div class="table-responsive mt-4">
+                <table class="table mt-4 w-100" id="invoice_table" >
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Kategori</th>
+                            <th>Nama</th>
+                            <th>Kelas</th>
+                            <th>Order ID</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
         </div>
     </div>
+</div>
 <input type="hidden" id="invoice_data" value="{{ route('dashboard.datamaster.get.records') }}">
 @push('js')
     {{-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.0.js"></script> --}}

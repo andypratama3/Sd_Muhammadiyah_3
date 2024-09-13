@@ -10,12 +10,12 @@
     <div class="card-body">
         <form action="{{ route('dashboard.datamaster.judul.pembayaran.store') }}" method="POST">
             @csrf
-            <div class="form-group">
+            <div class="form-group mt-2 mb-2">
                 <label for="name">Nama Kategori Pembayaran</label>
                 <input type="text" class="form-control" name="name" id="name" aria-describedby="emailHelp" placeholder="Masukan name">
             </div>
-            <a href="{{ route('dashboard.datamaster.judul.pembayaran.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
-            <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
+            <a href="{{ route('dashboard.datamaster.judul.pembayaran.index') }}" class="btn btn-danger btn-sm float-lg-start">Kembali</a>
+            <button type="submit" class="btn btn-primary btn-sm float-lg-end">Submit</button>
         </form>
     </div>
 </div>

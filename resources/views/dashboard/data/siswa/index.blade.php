@@ -103,14 +103,17 @@ $(document).ready(function () {
         var slug = $(this).data('id');
         var url = '{{ route("dashboard.datamaster.siswa.destroy", ":slug") }}'; // Use the correct route name "destroy"
         url = url.replace(':slug', slug);
-        swal({
+        Swal.fire({
             title: 'Anda yakin?',
             text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
             icon: 'warning',
-            buttons: true,
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Hapus Data',
+            cancelButtonText: 'Tidak, Batalkan!',
+            reverseButtons: true,
             dangerMode: true,
         }).then((willDelete) => {
-            if (willDelete) {
+            if (willDelete.isConfirmed) {
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -123,7 +126,7 @@ $(document).ready(function () {
                     type: 'DELETE', // Use the DELETE method
                     success: function (data) {
                         if (data.status === 'success') {
-                            swal('Berhasil', data.message, 'success').then(() => {
+                            Swal.fire('Berhasil', data.message, 'success').then(() => {
                                 // Reload the page
                                 // window.location.href = "{{ route('dashboard.datamaster.siswa.index') }}";
                                 // Reload the page with a success message

@@ -13,9 +13,8 @@
     </div>
     <hr>
     <div class="card-body">
-
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6 mt-2">
                 <div class="form-group row">
                     <label class="col-sm-3 text-dark" for="name">Judul Pembayaran</label>
                     <div class="col-sm-9">
@@ -24,7 +23,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 mt-2">
                 <div class="form-group row">
                     <label class="col-sm-3 text-dark" for="tgl_lahir">Nama Siswa</label>
                     <div class="col-sm-9">
@@ -35,7 +34,7 @@
                 </div>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-6 mt-2">
                 <div class="form-group row">
                     <label class="col-sm-3 text-dark" for="kelas">Kelas</label>
                     <div class="col-sm-9">
@@ -46,7 +45,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 mt-2">
                 <div class="form-group row">
                     <label class="col-sm-3 text-dark" for="category_kelas">Kategori Kelas</label>
                     <div class="col-sm-9">
@@ -56,7 +55,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 mt-2">
                 <div class="form-group row">
                     <label class="col-sm-3 text-dark" for="gross_amount">Total Pembayaran</label>
                     <div class="col-sm-9">
@@ -65,7 +64,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 mt-2">
                 <div class="form-group row">
                     <label class="col-sm-3 text-dark" for="gross_amount">Status</label>
                     <div class="col-sm-9">
@@ -85,9 +84,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-12 mt-2 ">
                 <div class="form-group">
-                    <a href="{{ route('dashboard.datamaster.pembayaran.index') }}" class="btn btn-danger">Kembali</a>
+                    <a href="{{ route('dashboard.datamaster.pembayaran.index') }}" class="btn btn-danger btn-sm">Kembali</a>
                 </div>
             </div>
         </div>

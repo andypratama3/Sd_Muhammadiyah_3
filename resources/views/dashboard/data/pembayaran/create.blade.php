@@ -16,7 +16,7 @@
         <form action="{{ route('dashboard.datamaster.pembayaran.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="name">Judul Pembayaran</label>
                         <div class="col-sm-9">
@@ -29,7 +29,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="tgl_lahir">Nama Siswa</label>
                         <div class="col-sm-9">
@@ -43,7 +43,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="kelas">Kelas</label>
                         <div class="col-sm-9">
@@ -56,7 +56,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="category_kelas">Kategori Kelas</label>
                         <div class="col-sm-9">
@@ -66,7 +66,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="gross_amount">Total Pembayaran</label>
                         <div class="col-sm-9">
@@ -74,10 +74,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12">
-                    <div class="form-group row justify-content-end">
-                        <a href="{{ route('dashboard.datamaster.siswa.index') }}" class="btn btn-danger float-lg-start mr-2">Kembali</a>
-                        <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
+                <div class="col-md-12 mt-2">
+                        <a href="{{ route('dashboard.datamaster.siswa.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
+                        <button type="submit" class="btn btn-primary btn-sm float-lg-end">Submit</button>
                     </div>
                 </div>
             </div>
