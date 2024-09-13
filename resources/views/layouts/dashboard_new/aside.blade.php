@@ -116,27 +116,8 @@
              </ul>
          </li>
 
-         <!-- Extended components -->
-         {{-- <li class="menu-item">
-             <a href="javascript:void(0)" class="menu-link menu-toggle">
-                 <i class="menu-icon tf-icons bx bx-copy"></i>
-                 <div data-i18n="Extended UI">Extended UI</div>
-             </a>
-             <ul class="menu-sub">
-                 <li class="menu-item">
-                     <a href="extended-ui-perfect-scrollbar.html" class="menu-link">
-                         <div data-i18n="Perfect Scrollbar">Perfect scrollbar</div>
-                     </a>
-                 </li>
-                 <li class="menu-item">
-                     <a href="extended-ui-text-divider.html" class="menu-link">
-                         <div data-i18n="Text Divider">Text Divider</div>
-                     </a>
-                 </li>
-             </ul>
-         </li>
 
-         <li class="menu-item">
+         {{-- <li class="menu-item">
              <a href="icons-boxicons.html" class="menu-link">
                  <i class="menu-icon tf-icons bx bx-crown"></i>
                  <div data-i18n="Boxicons">Boxicons</div>
@@ -182,46 +163,42 @@
                  </li>
              </ul>
          </li>
-         <li class="menu-item">
-             <a href="javascript:void(0);" class="menu-link menu-toggle">
-                 <i class="menu-icon tf-icons bx bx-detail"></i>
-                 <div data-i18n="Form Layouts">Form Layouts</div>
-             </a>
-             <ul class="menu-sub">
-                 <li class="menu-item">
-                     <a href="form-layouts-vertical.html" class="menu-link">
-                         <div data-i18n="Vertical Form">Vertical Form</div>
-                     </a>
-                 </li>
-                 <li class="menu-item">
-                     <a href="form-layouts-horizontal.html" class="menu-link">
-                         <div data-i18n="Horizontal Form">Horizontal Form</div>
-                     </a>
-                 </li>
-             </ul>
-         </li>
-         <!-- Tables -->
-         <li class="menu-item">
-             <a href="tables-basic.html" class="menu-link">
-                 <i class="menu-icon tf-icons bx bx-table"></i>
-                 <div data-i18n="Tables">Tables</div>
-             </a>
-         </li>
-         <!-- Misc -->
-         <li class="menu-header small text-uppercase"><span class="menu-header-text">Misc</span></li>
-         <li class="menu-item">
-             <a href="https://github.com/themeselection/sneat-html-admin-template-free/issues" target="_blank"
-                 class="menu-link">
-                 <i class="menu-icon tf-icons bx bx-support"></i>
-                 <div data-i18n="Support">Support</div>
-             </a>
-         </li>
-         <li class="menu-item">
-             <a href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
-                 target="_blank" class="menu-link">
-                 <i class="menu-icon tf-icons bx bx-file"></i>
-                 <div data-i18n="Documentation">Documentation</div>
-             </a>
-         </li>
+         <li class="menu-header small text-uppercase"><span class="menu-header-text">Pengaturan Akses</span></li>
+         <!-- Pengaturan -->
+         <li class="menu-item {{ Request::routeIs('dashboard.pengaturan.*') ? 'open' : '' }}">
+            <a href="javascript:void(0)" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-cog"></i>
+                <div data-i18n="Pengaturan">Pengaturan Akses</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item {{ Request::routeIs('dashboard.pengaturan.task.*') ? 'active' : ''  }}">
+                    <a href="{{ route('dashboard.pengaturan.task.index') }}" class="menu-link">
+                        <i class="menu-icon tf-icons bx bx-task"></i>
+                        <div class="mx-3" data-i18n="Task">Task</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ Request::routeIs('dashboard.pengaturan.role.*') ? 'active' : ''  }}">
+                    <a href="{{ route('dashboard.pengaturan.role.index') }}" class="menu-link">
+                        <i class="menu-icon tf-icons bx bx-user"></i>
+                        <div class="mx-3" data-i18n="Role">Role</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ Request::routeIs('dashboard.pengaturan.karyawan.*') ? 'active' : ''  }}">
+                    <a href="{{ route('dashboard.pengaturan.karyawan.index') }}" class="menu-link">
+                        <i class="menu-icon tf-icons bx bx-group"></i>
+                        <div class="mx-3" data-i18n="Karyawan">Karyawan</div>
+                    </a>
+                </li>
+                @can('role: superadmin')
+                <li class="menu-item {{ Request::routeIs('dashboard.pengaturan.user.*') ? 'active' : ''  }}">
+                    <a href="{{ route('dashboard.pengaturan.user.index') }}" class="menu-link">
+                        <i class="menu-icon tf-icons fa fa-users"></i>
+                        <div class="mx-3" data-i18n="User">User</div>
+                    </a>
+                </li>
+                @endcan
+            </ul>
+        </li>
+
      </ul>
  </aside>

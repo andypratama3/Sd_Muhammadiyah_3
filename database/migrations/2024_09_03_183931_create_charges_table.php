@@ -15,6 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name');
             $table->string('order_id');
+            $table->uuid('siswa_id');
             $table->integer('gross_amount');
             $table->string('payment_type')->default('bank_transfer');
             $table->string('bank')->nullable();
@@ -23,7 +24,6 @@ return new class extends Migration
             $table->date('transaction_time')->nullable();
             $table->string('fraud_status')->default('accept');
             $table->string('transaction_status');
-            
             $table->softDeletes();
             $table->timestamps();
         });

@@ -23,7 +23,7 @@ class SiswaSeeder extends Seeder
             'slug' => Str::slug('Kelas 1'),
         ]);
 
-        Siswa::factory()->count(50000)->create()->each(function ($siswa) {
+        Siswa::factory()->count(2)->create()->each(function ($siswa) {
             // Attach each Siswa to a random Kelas
             $kelas = Kelas::inRandomOrder()->first();
             $siswa->kelas()->attach($kelas, ['category_kelas' => 'A']);

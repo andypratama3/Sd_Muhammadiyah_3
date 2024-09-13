@@ -22,8 +22,13 @@ id="layout-navbar">
             <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);"
                 data-bs-toggle="dropdown">
                 <div class="avatar avatar-online">
-                    <img src="{{ asset('asset_dashboard_new/img/avatars/1.png') }}" alt
-                        class="w-px-40 h-auto rounded-circle" />
+                    @if(Auth::user()->avatar === 'default.jpg')
+                        <img src="{{ asset('asset_dashboard_new/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
+                    @else
+                    <img src="{{ asset('storage/img/profile/'. Auth::user()->avatar) }}" class="w-px-40 h-auto rounded-circle" alt="Profile"
+                        id="profile">
+                    @endif
+
                 </div>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
@@ -47,13 +52,13 @@ id="layout-navbar">
                     <div class="dropdown-divider"></div>
                 </li>
                 <li>
-                    <a class="dropdown-item" href="#">
+                    <a class="dropdown-item" href="{{ route('dashboard.pengaturan.profile.index') }}">
                         <i class="bx bx-user me-2"></i>
                         <span class="align-middle">My Profile</span>
                     </a>
                 </li>
                 <li>
-                    <a class="dropdown-item" href="#">
+                    <a class="dropdown-item" href="{{ route('dashboard.pengaturan.profile.index') }}">
                         <i class="bx bx-cog me-2"></i>
                         <span class="align-middle">Settings</span>
                     </a>
@@ -72,9 +77,13 @@ id="layout-navbar">
                     <div class="dropdown-divider"></div>
                 </li>
                 <li>
-                    <a class="dropdown-item" href="auth-login-basic.html">
-                        <i class="bx bx-power-off me-2"></i>
-                        <span class="align-middle">Log Out</span>
+                    <a href="#" class="dropdown-item swal-logout" title="Logout">
+                        <form action="{{ route('logout') }}" id="logout-form" method="POST"
+                            enctype="multipart/form-data">
+                            @csrf
+                        </form>
+                        <i class="fas fa-sign-out-alt mr-2"></i> <span
+                            class="d-none d-sm-inline-block">Logout</span>
                     </a>
                 </li>
             </ul>

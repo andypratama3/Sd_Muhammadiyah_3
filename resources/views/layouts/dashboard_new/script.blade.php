@@ -31,8 +31,8 @@
     }
 
     $(document).ready(function () {
-        $('.navbar').on('click', '.swal-logout', function (e) {
-            slug = e.target.dataset.id;
+        $('.navbar-nav-right').on('click', '.swal-logout', function (e) {
+            // slug = e.target.dataset.id;
             Swal.fire({
                 title: 'Yakin ingin keluar?',
                 text: 'Anda akan dialihkan ke beranda.',
@@ -40,12 +40,12 @@
                 showCancelButton: true,
                 confirmButtonText: 'Yes, log out!',
                 cancelButtonText: 'No, cancel!',
-                dangerMode: true,
                 reverseButtons: true,
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $(`#logout-form-${slug}`).submit();
+                    $('#logout-form').submit();
                 }
+
             });
         });
 

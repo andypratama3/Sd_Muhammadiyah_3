@@ -12,7 +12,7 @@ class MidtransApi extends Controller
     {
         // make change and after make store to database
         // charge from table siswa refrence by id and pembayaran_id
-        // give fee to user 5000 for admin 
+        // give fee to user 5000 for admin
         $request->validate([
             'pembayaran_id' => 'required',
         ]);

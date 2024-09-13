@@ -43,6 +43,18 @@
             max-width: 100%;
         }
 
+        .cropper-container {
+            width: 100%;
+            height: 10%;
+        }
+        .cropper-container cropper-bg {
+            width: 100% !important;
+            height: 50% !important;
+        }
+        .cropper-container cropper-bg img {
+            width: 50% !important;
+            height: 10% !important;
+        }
         .preview {
             overflow: hidden;
             width: 160px;
@@ -312,7 +324,7 @@
             </div>
         </div>
         {{-- crop modal for photo --}}
-        <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
+        <div class="modal fade show" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -322,16 +334,14 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body mx-3">
                         <div class="img-container">
                             <div class="row">
-                                <div class="col-md-8">
-                                    <img class="img" id="image-crop"
-                                        src="{{ asset('storage/img/profile/' . Auth::user()->avatar) }}">
-                                </div>
-                                <div class="col-md-4">
+                                <img class="img" id="image-crop"
+                                    src="{{ asset('storage/img/profile/' . Auth::user()->avatar) }}">
+                                {{-- <div class="col-md-4"> --}}
                                     <div class="preview"></div>
-                                </div>
+                                {{-- </div> --}}
                             </div>
                         </div>
                     </div>

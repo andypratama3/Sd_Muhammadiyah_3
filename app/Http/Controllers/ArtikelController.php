@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Artikel;
 use App\Models\Comment;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class ArtikelController extends Controller
@@ -11,6 +12,7 @@ class ArtikelController extends Controller
     public function index(Request $request)
     {
         $limit = 10;
+        $categorys = Category::select(['id','name','slug'])->orderBy('name','desc')->get();
         $maxClicks = Artikel::max('jumlah_klik');
         $artikels_trending = Artikel::select('id','name','artikel','image','created_at','slug')
             ->where('status', 'publish')
@@ -23,8 +25,16 @@ class ArtikelController extends Controller
             ));
         }
 
+        if($request->category)
+        {
+            $artikels_trending = $artikels_trending
+                ->where('category_id', $request->category)
+                ->orderBy('created_at', 'desc')
+                ->paginate($limit);
+        }
+
         return view('artikel.index', compact(
-            'artikels_trending', 'maxClicks'
+            'artikels_trending', 'maxClicks', 'categorys'
         ));
     }
     public function show(Artikel $artikel)

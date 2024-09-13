@@ -26,8 +26,29 @@
 @section('content')
 <div class="services section" style="margin-top: 100px;">
     <div class="container">
-        <h4 class="section-title">
-            ARTIKEL TERBARU</h4>
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-4">
+                    <h4 class="section-title">ARTIKEL TERBARU</h4>
+                </div>
+                <div class="col-md-4">
+                    <select name="" class="form-control" id="category">
+                        <option value="">Semua Kategori</option>
+                        @foreach ($categorys as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-4">
+                   <div class="input-group">
+                       <input type="text" class="form-control" placeholder="Cari Artikel">
+                       <button class="btn btn-primary" type="button"><i class="fa fa-search"></i></button>
+                   </div>
+                </div>
+            </div>
+            <hr>
+        </div>
+
         <div class="row" id="target">
             @foreach ($artikels_trending as $artikel)
             <div class="col-lg-4 col-md-6">
@@ -35,14 +56,14 @@
                     <div class="main-content">
                         <img src="{{ asset('storage/img/artikel/'. $artikel->image) }}" alt="{{ $artikel->name }}" class="img-fluid">
                         <h4>{{ $artikel->name }}</h4>
-                        <p class="category"> Kategori :
+                        <p class="category text-dark"> Kategori :
                             @foreach ($artikel->categorys as $item)
                                     {{ $item->name }}
                             @endforeach
                         </p>
-                        <p>{!!  $artikel->artikel !!}</p>
+                        <p class="text-dark"> {!! Str::substr( $artikel->artikel, 0, 200) !!}</p>
                         <div class="main-button">
-                            <a href="{{ route('artikel.show', $artikel->slug) }}">Lihat Artikel</a>
+                            <a href="{{ route('artikel.show', $artikel->slug) }}" class="btn btn-primary">Lihat Artikel <i class="fa fa-angle-right"></i></a>
                         </div>
                     </div>
                 </div>
@@ -95,6 +116,21 @@
         function checkInternetConnection() {
             return navigator.onLine;
         }
+        $('#category').on('change', function () {
+            let category = $(this).val();
+            let url = "{{ route('artikel.index') }}";
+
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: {
+                    category: category
+                },
+                success: function (data) {
+                    target.html(data);
+                }
+            });
+        })
     });
 </script>
 

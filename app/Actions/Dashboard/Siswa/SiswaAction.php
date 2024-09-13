@@ -29,9 +29,9 @@ class SiswaAction {
 
         //make virtual account random wehn empty data
         if(!$siswa){
-            $va = rand();
+            $va_number = rand(1000000000, 9999999999);
         }else{
-            $va = $siswa->va;
+            $va_number = $siswa->va_number;
         }
 
         $siswa = Siswa::updateOrCreate(
@@ -44,7 +44,7 @@ class SiswaAction {
                 'nisn' => $siswaData->nisn,
                 'agama' => $siswaData->agama,
                 'spp' => (int) str_replace('.', '', $siswaData->spp),
-                'va' => $va,
+                'va_number' => $va_number,
                 'nama_pendidikan' => $siswaData->nama_pendidikan,
                 'nama_jalan_pendidikan' => $siswaData->nama_jalan_pendidikan,
                 'kelas_tahun' => $siswaData->kelas_tahun,

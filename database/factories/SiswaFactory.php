@@ -23,6 +23,7 @@ class SiswaFactory extends Factory
             'tmpt_lahir' => $this->faker->city,
             'tgl_lahir' => $this->faker->date(),
             'spp' => $this->faker->randomNumber(4),
+            'va_number' => rand(1000000000, 9999999999),
             'kelas_tahun' => $this->faker->year(),
             'tanggal_masuk' => $this->faker->date(),
             // 'nik' => str_pad($this->faker->randomNumber(8), 9, '0', STR_PAD_LEFT),
