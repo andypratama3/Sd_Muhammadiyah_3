@@ -16,8 +16,6 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-
-
     public function __invoke(ArtikelView $ArtikelChart, SiswaChart $siswaChart)
     {
         $siswa = Siswa::count();

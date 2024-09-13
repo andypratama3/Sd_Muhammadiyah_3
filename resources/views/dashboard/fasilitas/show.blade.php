@@ -8,7 +8,7 @@
             <input type="text" class="form-control" id="judul" aria-describedby="emailHelp"
                 value="{{ $fasilitas->nama_fasilitas }}" readonly>
         </div>
-        <div class="form-group">
+        <div class="form-group mb-2">
             <label for="">Deskripsi</label>
             <input type="text" class="form-control" id="" value="{{ $fasilitas->desc }}" readonly>
         </div>
@@ -25,7 +25,7 @@
                 @endforeach
             </div>
         </div>
-        <a href="{{ route('dashboard.datasekolah.fasilitas.index') }}" class="btn btn-danger float-end">Kembali</a>
+        <a href="{{ route('dashboard.datasekolah.fasilitas.index') }}" class="btn btn-danger btn-sm">Kembali</a>
     </div>
 </div>
 @endsection

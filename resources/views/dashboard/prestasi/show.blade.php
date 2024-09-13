@@ -16,21 +16,21 @@
             @csrf
             @method('PUT')
             <input type="hidden" name="slug" value="{{ $prestasi->slug }}">
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="name">Nama</label>
                 <input type="text" class="form-control" name="name" id="name" aria-describedby="name"
                     placeholder="Masukan Prestasi" value="{{ $prestasi->name }}">
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="">Foto</label>
                 <img src="{{ asset('storage/file/prestasi/'. $prestasi->foto) }}" alt="" srcset="" style="width: 100%; margin-top: 2rem;" >
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="">Deskripsi</label>
                  <div id="editor">{!! $prestasi->description !!}</div>
                 <textarea name="description" id="content-editor" style="display: none;"></textarea>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="">Status</label>
                 <select name="status" id="" class="form-control">
                     <option selected value="{{ $prestasi->status }}">{{ ($prestasi->status == 1 ) ? 'Prestasi Siswa' : 'Prestasi Sekolah'  }}</option>
@@ -38,9 +38,9 @@
                     <option value="2">Prestasi Sekolah</option>
                 </select>
             </div>
-            <div class="form-group">
-                <a href="{{ route('dashboard.datasekolah.prestasi.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
-                <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
+            <div class="form-group mt-2 mb-2">
+                <a href="{{ route('dashboard.datasekolah.prestasi.index') }}" class="btn btn-danger btn-sm float-lg-start">Kembali</a>
+                <button type="submit" class="btn btn-primary btn-sm float-lg-end">Submit</button>
             </div>
         </form>
     </div>

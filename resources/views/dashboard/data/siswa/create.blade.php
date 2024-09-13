@@ -19,7 +19,7 @@
         <form id="form_siswa" action="{{ route('dashboard.datamaster.siswa.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="name">Nama</label>
                         <div class="col-sm-9">
@@ -27,7 +27,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="nik">Nisn</label>
                         <div class="col-sm-9 d-flex relative">
@@ -37,7 +37,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="jk">Jenis Kelamin</label>
                         <div class="col-sm-9">
@@ -49,7 +49,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="tmpt_lahir">Tempat Lahir</label>
                         <div class="col-sm-9">
@@ -58,7 +58,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="tgl_lahir">Tanggal Lahir</label>
                         <div class="col-sm-9">
@@ -67,7 +67,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="agama">Agama</label>
                         <div class="col-sm-9">
@@ -81,7 +81,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="kelas_tahun">Nama Pendidikan</label>
                         <div class="col-sm-9">
@@ -90,7 +90,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="kelas_tahun">Alamat Pendidikan</label>
                         <div class="col-sm-9">
@@ -100,7 +100,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="kelas_tahun">Kelas  / Tahun Ajaran</label>
                         <div class="col-sm-9">
@@ -109,7 +109,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="tanggal_masuk">Tanggal Masuk</label>
                         <div class="col-sm-9">
@@ -119,7 +119,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="beasiswa">Beasiswa</label>
                         <div class="col-sm-9">
@@ -128,7 +128,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="kelas">Kelas</label>
                         <div class="col-sm-9">
@@ -141,7 +141,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="category_kelas">Kategori Kelas</label>
                         <div class="col-sm-9">
@@ -153,7 +153,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="name">Foto</label>
                         <div class="col-sm-9">
@@ -161,7 +161,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="spp">SPP</label>
                         <div class="col-sm-9">
@@ -174,16 +174,17 @@
                     <hr>
                     <div class="card-header">
                         <h6 class="m-0 font-weight-bold text-primary text-center" id="title_data_orang_tua">Data Orang Tua</h6>
-                        <select id="data_wali" name="data_wali" class="btn btn-primary mb-2" style="float: inline-end; border:2px;">
+                        <div class="col-md-2">
+                        <select id="data_wali" name="data_wali" class="btn btn-primary mb-2 form-control" style="border:2px;">
                             <option selected>Pilih Data</option>
                             <option value="orang_tua" {{ old('data_wali') == 'orang_tua' ? 'selected' : '' }}>Orang Tua</option>
                             <option value="wali" {{ old('data_wali') == 'wali' ? 'selected' : '' }}>Wali</option>
                         </select>
-
+                    </div>
                     </div>
                 </div>
-                <div class="row mx-3" id="orang_tua" style="display: none;">
-                    <div class="col-md-6">
+                <div class="row" id="orang_tua" style="display: none;">
+                    <div class="col-md-6 mt-2">
                         <div class="form-group row">
                             <label class="col-sm-3 text-dark" for="nama_ayah">Nama Ayah</label>
                             <div class="col-sm-9">
@@ -191,7 +192,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 mt-2">
                         <div class="form-group row">
                             <label class="col-sm-3 text-dark" for="nama_ibu">Nama Ibu</label>
                             <div class="col-sm-9">
@@ -199,7 +200,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 mt-2">
                         <div class="form-group row">
                             <label class="col-sm-3 text-dark" for="pendidikan_ayah">Pendidikan Ayah</label>
                             <div class="col-sm-9">
@@ -208,7 +209,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 mt-2">
                         <div class="form-group row">
                             <label class="col-sm-3 text-dark" for="pendidikan_ibu">Pendidikan Ibu</label>
                             <div class="col-sm-9">
@@ -217,7 +218,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 mt-2">
                         <div class="form-group row">
                             <label class="col-sm-3 text-dark" for="pendidikan_ayah">Pekerjaan Ayah</label>
                             <div class="col-sm-9">
@@ -225,7 +226,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 mt-2">
                         <div class="form-group row">
                             <label class="col-sm-3 text-dark" for="pekerjaan_ibu">Pekerjaan Ibu</label>
                             <div class="col-sm-9">
@@ -234,8 +235,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="row mx-3" id="wali" style="display: none;">
-                    <div class="col-md-6">
+                <div class="row " id="wali" style="display: none;">
+                    <div class="col-md-6 mt-2">
                         <div class="form-group row">
                             <label class="col-sm-3 text-dark" for="nama_wali">Nama Wali</label>
                             <div class="col-sm-9">
@@ -243,7 +244,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 mt-2">
                         <div class="form-group row">
                             <label class="col-sm-3 text-dark" for="pekerjaan_wali">Pekerjaan Wali</label>
                             <div class="col-sm-9">
@@ -251,7 +252,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 mt-2">
                         <div class="form-group row">
                             <label class="col-sm-3 text-dark" for="alamat_wali">Alamat Wali</label>
                             <div class="col-sm-9">
@@ -268,7 +269,7 @@
                         <h6 class="m-0 font-weight-bold text-primary">Alamat Tinggal</h6>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="rt">RT</label>
                         <div class="col-sm-9">
@@ -276,7 +277,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="rw">RW</label>
                         <div class="col-sm-9">
@@ -284,7 +285,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="provinsi">Provinsi</label>
                         <div class="col-sm-9">
@@ -300,7 +301,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="kabupaten">Kabupaten / Kota</label>
                         <div class="col-sm-9">
@@ -311,7 +312,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="kecamatan">Kecamatan</label>
                         <div class="col-sm-9">
@@ -323,7 +324,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="kelurahan">Kelurahan</label>
                         <div class="col-sm-9">
@@ -336,7 +337,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="name">Jenis Tinggal</label>
                         <div class="col-sm-9">
@@ -349,7 +350,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="nama_jalan">Nama Jalan</label>
                         <div class="col-sm-9">
@@ -358,7 +359,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mt-2">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="no_hp">No HP</label>
                         <div class="col-sm-9">
@@ -366,12 +367,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12">
-                    <div class="form-group row justify-content-end">
-                        <a href="{{ route('dashboard.datamaster.siswa.index') }}"
-                            class="btn btn-danger float-lg-start mr-2">Kembali</a>
-                        <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
-                    </div>
+                <div class="col-md-12 mt-2">
+                    <a href="{{ route('dashboard.datamaster.siswa.index') }}" class="btn btn-danger btn-sm">Kembali</a>
+                    <button type="submit" class="btn btn-primary float-lg-end btn-sm">Submit</button>
                 </div>
             </div>
         </form>

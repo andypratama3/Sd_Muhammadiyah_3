@@ -9,15 +9,15 @@
     <div class="card-body">
         <form action="{{ route('dashboard.datasekolah.ekstrakurikuler.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="judul">Nama</label>
                 <input type="text" class="form-control" name="name" id="name" placeholder="Masukan name" value="{{ old('name') }}">
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="">Deskripsi</label>
                 <input type="text" class="form-control" id="" name="desc" value="{{ old('desc') }}" placeholder="Deskripsi">
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2 mb-2">
                 <label for="">Foto</label>
                 <div class="custom-file">
                     <input type="file" class="form-control" id="foto" multiple name="foto[]">
@@ -27,8 +27,8 @@
                     <img src="" id="output" alt="" style="width: 200px; height: 50%;">
                 </div>
             </div>
-            <a  href="{{ route('dashboard.datasekolah.ekstrakurikuler.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
-            <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
+            <a  href="{{ route('dashboard.datasekolah.ekstrakurikuler.index') }}" class="btn btn-danger btn-sm float-lg-start">Kembali</a>
+            <button type="submit" class="btn btn-primary btn-sm float-lg-end">Submit</button>
         </form>
     </div>
 </div>

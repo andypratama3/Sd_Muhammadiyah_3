@@ -14,23 +14,23 @@
     <div class="card-body">
         <form action="{{ route('dashboard.datasekolah.prestasi.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="name">Nama</label>
                 <input type="text" class="form-control" name="name" id="name" aria-describedby="name"
                     placeholder="Masukan Prestasi">
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="">Foto</label>
                 <div class="custom-file">
                     <input type="file" class="form-control" id="foto" name="foto">
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="">Deskripsi</label>
                  <div id="editor"></div>
                 <textarea name="description" id="content-editor" style="display: none;"></textarea>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="">Status</label>
                 <select name="status" id="" class="form-control">
                     <option selected disabled>Pilih Kategori Prestasi</option>
@@ -38,9 +38,9 @@
                     <option value="2">Prestasi Sekolah</option>
                 </select>
             </div>
-            <div class="form-group">
-                <a href="{{ route('dashboard.datasekolah.prestasi.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
-                <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
+            <div class="form-group mt-2 mb-2">
+                <a href="{{ route('dashboard.datasekolah.prestasi.index') }}" class="btn btn-danger btn-sm float-lg-start">Kembali</a>
+                <button type="submit" class="btn btn-primary btn-sm float-lg-end">Submit</button>
             </div>
         </form>
     </div>

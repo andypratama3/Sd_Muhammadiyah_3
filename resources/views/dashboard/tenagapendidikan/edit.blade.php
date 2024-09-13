@@ -15,16 +15,16 @@
             @csrf
             @method('PUT')
             <input type="hidden" name="slug" value="{{ $tenagapendidikan->slug }}">
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="judul">Nama</label>
                 <input type="text" class="form-control" name="name" id="name"  value="{{ $tenagapendidikan->name }}"
                     placeholder="Masukan nama">
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="">Jabatan</label>
                 <input type="text" class="form-control" id="jabatan" name="jabatan" value="{{ $tenagapendidikan->jabatan }}">
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2 mb-2">
                 <label for="">Foto</label>
                 <div class="custom-file">
                     <input type="file" class="form-control" id="foto" name="foto" accept="image/*" onchange="loadPreview(this)">
@@ -35,7 +35,7 @@
                 </div>
             </div>
             <a href="{{ route('dashboard.datasekolah.tenagapendidikan.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
-            <button type="submit" class="btn btn-primary float-lg-right">Simpan</button>
+            <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
         </form>
         </div>
     </div>

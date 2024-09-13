@@ -3,7 +3,7 @@
 @section('content')
     <div class="card mb-4">
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold text-primary">Tambah Fasilitas</h6>
+        <h6 class="m-0 font-weight-bold">Tambah Fasilitas</h6>
         </div>
         <div class="card-body">
         <form action="{{ route('dashboard.datasekolah.fasilitas.store') }}" method="POST" enctype="multipart/form-data">
@@ -22,9 +22,9 @@
                     <input type="file" class="form-control" id="foto" name="foto[]" multiple>
                 </div>
             </div>
-            <div class="form-group">
-                <a href="{{ route('dashboard.datasekolah.fasilitas.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
-            <button type="submit"  class="btn btn-primary float-lg-right">Submit</button>
+            <div class="form-group mt-3">
+                <a href="{{ route('dashboard.datasekolah.fasilitas.index') }}" class="btn btn-sm btn-danger float-lg-start">Kembali</a>
+            <button type="submit"  class="btn btn-sm btn-primary float-lg-end">Submit</button>
         </div>
         </form>
         </div>

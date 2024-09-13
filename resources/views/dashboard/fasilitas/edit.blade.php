@@ -14,7 +14,7 @@
             <label for="nama_fasilitas">Nama Fasilitas</label>
                 <input type="text" class="form-control" name="nama_fasilitas" id="nama_fasilitas" value="{{ $fasilitas->nama_fasilitas }}" aria-describedby="emailHelp" placeholder="Masukan nama_fasilitas">
             </div>
-            <div class="form-group">
+            <div class="form-group mb-2">
             <label for="">Deskripsi</label>
                 <input type="text" class="form-control" id="" value="{{ $fasilitas->desc }}" name="desc" placeholder="Deskripsi">
             </div>
@@ -31,7 +31,7 @@
                 </div>
             </div>
             <a href="{{ route('dashboard.datasekolah.fasilitas.index') }}" class="btn btn-danger btn-sm">Kembali</a>
-            <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
+            <button type="submit" class="btn btn-sm btn-primary float-lg-end">Submit</button>
         </form>
         </div>
     </div>

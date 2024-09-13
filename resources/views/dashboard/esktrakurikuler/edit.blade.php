@@ -8,16 +8,16 @@
             @csrf
             @method('PUT')
             <input type="hidden" name="slug" value="{{ $ekstrakurikuler->slug }}">
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="name">Nama Fasilitas</label>
                 <input type="text" class="form-control" name="name" id="name" value="{{ $ekstrakurikuler->name }}" placeholder="Masukan name">
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="">Deskripsi</label>
                 <input type="text" class="form-control" id="" value="{{ $ekstrakurikuler->desc }}" name="desc"
                     placeholder="Deskripsi">
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2 mb-2">
                 <label for="">Foto</label>
                 <div class="custom-file">
                     <input type="file" class="form-control" id="foto" name="foto" accept="image/*"

@@ -10,15 +10,15 @@
     <div class="card-body">
         <form action="{{ route('dashboard.datasekolah.tenagapendidikan.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="judul">Nama</label>
                 <input type="text" class="form-control" name="name" id="name"  placeholder="Masukan nama">
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="">Jabatan</label>
                 <input type="text" class="form-control" name="jabatan" placeholder="jabatan">
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="">Foto</label>
                 <div class="custom-file">
                     <input type="file" class="form-control" id="foto" name="foto" accept="image/*" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])">
@@ -28,8 +28,8 @@
                     <img src="" id="output" alt="" style="width: 200px; height: 50%;">
                 </div>
             </div>
-            <a href="{{ route('dashboard.datasekolah.tenagapendidikan.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
-            <button type="submit" class="btn btn-primary float-lg-right">Simpan</button>
+            <a href="{{ route('dashboard.datasekolah.tenagapendidikan.index') }}" class="btn btn-danger btn-sm float-lg-start">Kembali</a>
+            <button type="submit" class="btn btn-primary btn-sm float-lg-end">Simpan</button>
         </form>
     </div>
 </div>

@@ -1,6 +1,6 @@
  <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
      <div class="app-brand demo d-flex justify-content-center mb-3">
-         <a href="{{ route('dashboard') }}" class="app-brand-link">
+         <a href="{{ route('index') }}" class="app-brand-link">
              <span class="app-brand-logo demo w-100 d-flex justify-content-center align-items-center m-0 p-0">
                  <img src="{{ asset('asset_dashboard/img/SD3_logo.png') }}" alt="" style="width: 25%;">
              </span>
@@ -117,7 +117,7 @@
          </li>
 
          <!-- Extended components -->
-         <li class="menu-item">
+         {{-- <li class="menu-item">
              <a href="javascript:void(0)" class="menu-link menu-toggle">
                  <i class="menu-icon tf-icons bx bx-copy"></i>
                  <div data-i18n="Extended UI">Extended UI</div>
@@ -141,26 +141,43 @@
                  <i class="menu-icon tf-icons bx bx-crown"></i>
                  <div data-i18n="Boxicons">Boxicons</div>
              </a>
-         </li>
+         </li> --}}
 
          <!-- Forms & Tables -->
-         <li class="menu-header small text-uppercase"><span class="menu-header-text">Forms &amp;
-                 Tables</span></li>
+         <li class="menu-header small text-uppercase"><span class="menu-header-text">Siswa &amp;
+                 Pembayaran</span></li>
          <!-- Forms -->
-         <li class="menu-item">
+         <li class="menu-item {{ Request::routeIs('dashboard.datamaster.*') ? 'open' : '' }}">
              <a href="javascript:void(0);" class="menu-link menu-toggle">
                  <i class="menu-icon tf-icons bx bx-detail"></i>
-                 <div data-i18n="Form Elements">Form Elements</div>
+                 <div data-i18n="Form Elements"> Siswa & Pembayaran</div>
              </a>
              <ul class="menu-sub">
-                 <li class="menu-item">
-                     <a href="forms-basic-inputs.html" class="menu-link">
-                         <div data-i18n="Basic Inputs">Basic Inputs</div>
+                 <li class="menu-item {{ Request::routeIs('dashboard.datamaster.siswa.*') ? 'active' : ''  }}">
+                     <a class="menu-link" href="{{ route('dashboard.datamaster.siswa.index') }}">
+                         <i class="menu-icon tf-icons fas fa-solid fa-users"> </i>
+                         <div class="mx-3" data-i18n="siswa"> Siswa</div>
                      </a>
                  </li>
-                 <li class="menu-item">
-                     <a href="forms-input-groups.html" class="menu-link">
-                         <div data-i18n="Input groups">Input groups</div>
+                 <li class="menu-item {{ Request::routeIs('dashboard.datamaster.nilai.*') ? 'active' : ''  }}">
+                     <a class="menu-link"
+                         href="{{ route('dashboard.datamaster.nilai.index') }}">
+                         <i class="menu-icon tf-icons fas fa-solid fa-user"></i>
+                         <div class="mx-3" data-i18n="Nilai Siswa">Nilai Siswa</div>
+                     </a>
+                 </li>
+                 <li class="menu-item {{ Request::routeIs('dashboard.datamaster.judul.pembayaran.*') ? 'active' : ''  }}">
+                     <a class="menu-link"
+                         href="{{ route('dashboard.datamaster.judul.pembayaran.index') }}">
+                         <i class="menu-icon tf-icons fas fa-solid fa-money-check"></i>
+                         <div class="mx-3" data-i18n="Judul Pembayaran"> Kategori Pembayaran</div>
+                     </a>
+                 </li>
+                 <li class="menu-item {{ Request::routeIs('dashboard.datamaster.pembayaran.*') ? 'active' : ''  }}">
+                     <a class="menu-link"
+                         href="{{ route('dashboard.datamaster.pembayaran.index') }}">
+                         <i class="menu-icon tf-icons fas fa-solid fa-file-invoice"></i>
+                         <div class="mx-3" data-i18n="Invoice">Invoice</div>
                      </a>
                  </li>
              </ul>

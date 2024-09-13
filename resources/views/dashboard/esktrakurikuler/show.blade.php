@@ -3,16 +3,16 @@
 @section('content')
 <div class="card mb-4">
     <div class="card-body">
-        <div class="form-group">
+        <div class="form-group mt-2">
             <label for="name">Nama</label>
             <input type="text" class="form-control" id="name" aria-describedby="emailHelp"
                 value="{{ $ekstrakurikuler->name }}" readonly>
         </div>
-        <div class="form-group">
+        <div class="form-group mt-2">
             <label for="">Deskripsi</label>
             <input type="text" class="form-control" id="" value="{{ $ekstrakurikuler->desc }}" readonly>
         </div>
-        <div class="form-group">
+        <div class="form-group mt-2 mb-2">
             <h6 class="text-center">Foto</h6>
             <div class="form-group">
                 @php
@@ -27,7 +27,7 @@
                     </div>
                 </div>
             </div>
-            <a href="{{ route('dashboard.datasekolah.ekstrakurikuler.index') }}" class="btn btn-danger float-end">Kembali</a>
+            <a href="{{ route('dashboard.datasekolah.ekstrakurikuler.index') }}" class="btn btn-danger btn-sm float-end">Kembali</a>
         </div>
     </div>
 </div>

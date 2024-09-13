@@ -6,64 +6,60 @@
 
 @endpush
 @section('content')
-<div class="row">
-    <div class="col-lg-12 grid-margin stretch-card">
-        @include('layouts.flashmessage')
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title text-primary mb-4">Siswa<a href="{{ route('dashboard.datamaster.siswa.create') }}" class="btn btn-success btn-sm float-right">Tambah <i class="fas fa-plus"></i></a></h4>
-                <div class="row">
-                    <div class="col-md-2 ">
-                        <div class="form-group">
-                            <div class="gap-4">
-                                <a href="{{ route('siswa.export_excel') }}" class="btn btn-success "><i class="fas fa-file-excel"></i> Export Excel</a>
-                            </div>
+<div class="col-lg-12 grid-margin stretch-card">
+    @include('layouts.flashmessage')
+    <div class="card">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h4 class="card-title">Siswa</h4>
+            <a href="{{ route('dashboard.datamaster.siswa.create') }}" class="btn btn-success btn-sm float-end">Tambah <i class="fas fa-plus"></i></a>
+        </div>
+        <div class="card-body">
+            <div class="row mb-2">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <div class="gap-4">
+                            <a href="{{ route('siswa.export_excel') }}" class="btn btn-success btn-sm "><i class="fas fa-file-excel"></i> Export Excel</a>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <div class="input-group">
-                                <select name="kelas" id="kelas" class="form-control">
-                                    <option selected disabled>Pilih Kelas</option>
-                                    @foreach ($kelass as $kelas)
-                                        <option value="{{ $kelas->id }}">{{ $kelas->name }}</option>
-                                    @endforeach
-                                </select>
-                                <select name="category_kelas" id="category_kelas" class="form-control ml-3">
-                                    <option selected disabled>Pilih Kategori Kelas</option>
-                                </select>
-                                <button class="btn btn-success btn-sm ml-3" id="export-data-kelas-excel"><i class="fas fa-file-excel"></i> Export Excel Perkelas</button>
-                                    <!-- Hidden form for exporting -->
-                                    <form action="{{ route('siswa.export_excel_kelas') }}" method="POST" id="exportForm" style="display: none;">
-                                        @csrf
-                                        <input type="hidden" name="kelas_id" id="export_kelas_id">
-                                        <input type="hidden" name="category" id="export_category">
-                                    </form>
-                            </div>
-                        </div>
-                    </div>
-                    {{-- <div class="form-group">
-                        <div class="gap-5">
-                            <a href="{{ route('siswa.naik.kelas') }}" class="btn btn-primary ">Naik Kelas</a>
-                        </div>
-                    </div> --}}
                 </div>
+                <div class="col-md-6 ">
+                    <div class="form-group">
+                        <div class="input-group gap-3">
+                            <select name="kelas" id="kelas" class="form-control">
+                                <option selected disabled>Pilih Kelas</option>
+                                @foreach ($kelass as $kelas)
+                                    <option value="{{ $kelas->id }}">{{ $kelas->name }}</option>
+                                @endforeach
+                            </select>
+                            <select name="category_kelas" id="category_kelas" class="form-control me-2">
+                                <option selected disabled>Pilih Kategori Kelas</option>
+                            </select>
+                            <button class="btn btn-success btn-sm" id="export-data-kelas-excel"><i class="fas fa-file-excel"></i> Export Excel Perkelas</button>
+                                <!-- Hidden form for exporting -->
+                                <form action="{{ route('siswa.export_excel_kelas') }}" method="POST" id="exportForm" style="display: none;">
+                                    @csrf
+                                    <input type="hidden" name="kelas_id" id="export_kelas_id">
+                                    <input type="hidden" name="category" id="export_category">
+                                </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                <div class="table-responsive">
-                    <table class="table mt-4" id="siswa_table">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Nama</th>
-                                <th>Nisn</th>
-                                <th>Kelas</th>
-                                <th>Ketagori Kelas</th>
-                                {{-- <th>Tanggal Masuk</th>  --}}
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
+            <div class="table-responsive mt-2">
+                <table class="table mt-4" id="siswa_table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama</th>
+                            <th>Nisn</th>
+                            <th>Kelas</th>
+                            <th>Ketagori Kelas</th>
+                            {{-- <th>Tanggal Masuk</th>  --}}
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                </table>
             </div>
         </div>
     </div>

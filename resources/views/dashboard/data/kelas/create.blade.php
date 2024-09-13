@@ -9,12 +9,12 @@
     <div class="card-body">
         <form action="{{ route('dashboard.datasekolah.kelas.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="Kelas">Nama Kelas</label>
                 <input type="text" class="form-control" name="name" id="Kelas" aria-describedby="emailHelp"
                     placeholder="Masukan Nama Kelas">
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2 mb-2">
                 <div class="row">
                     <div class="col-md-12">
                         <table class="table table-bordered text-center" id="dynamicAddRemove">
@@ -27,8 +27,8 @@
                     </div>
                 </div>
             </div>
-            <a  href="{{ route('dashboard.datasekolah.kelas.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
-            <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
+            <a  href="{{ route('dashboard.datasekolah.kelas.index') }}" class="btn btn-danger float-lg-start btn-sm">Kembali</a>
+            <button type="submit" class="btn btn-primary float-lg-end btn-sm">Submit</button>
         </form>
     </div>
 </div>
