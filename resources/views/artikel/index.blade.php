@@ -28,21 +28,21 @@
     <div class="container">
         <div class="col-md-12">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-4 mt-2">
                     <h4 class="section-title">ARTIKEL TERBARU</h4>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4 mt-2">
                     <select name="" class="form-control" id="category">
                         <option value="">Semua Kategori</option>
                         @foreach ($categorys as $category)
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4 mt-2">
                    <div class="input-group">
-                       <input type="text" class="form-control" placeholder="Cari Artikel">
-                       <button class="btn btn-primary" type="button"><i class="fa fa-search"></i></button>
+                        <input type="text" class="form-control" id="search" name="search" placeholder="Cari Artikel">
+                        <button class="btn btn-primary" type="button"><i class="fa fa-search"></i></button>
                    </div>
                 </div>
             </div>
@@ -51,7 +51,7 @@
 
         <div class="row" id="target">
             @foreach ($artikels_trending as $artikel)
-            <div class="col-lg-4 col-md-6">
+            <div class="col-lg-4 col-md-6" id="artikel-data">
                 <div class="service-item">
                     <div class="main-content">
                         <img src="{{ asset('storage/img/artikel/'. $artikel->image) }}" alt="{{ $artikel->name }}" class="img-fluid">
@@ -69,6 +69,11 @@
                 </div>
             </div>
             @endforeach
+        </div>
+        <div class="col-md-12 d-none" id="not-found">
+            <div class="container">
+                <h2 id="message">Artikel Tidak Di Temukan</h2>
+            </div>
         </div>
     </div>
 </div>
@@ -96,7 +101,6 @@
                         data: {
                             page: page
                         },
-
                         success: function (data) {
                             target.append(data);
                         },
@@ -116,6 +120,38 @@
         function checkInternetConnection() {
             return navigator.onLine;
         }
+
+        let searchTimeout;
+
+        $('#search').on('keyup', function () {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(function () {
+                let search = $('#search').val();
+                let url = "{{ route('artikel.index') }}";
+
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    data: {
+                        search: search
+                    },
+                    success: function (data) {
+                        if (data.status == 'error') {
+                            target.addClass('d-none');
+                            $('#not-found').removeClass('d-none');
+                            $('#message').text(data.message);
+                        } else {
+                            target.html(data);
+                        }
+                    },
+                    error: function () {
+                        target.html('<div class="alert alert-danger">Error loading articles. Please try again later.</div>');
+                    }
+                });
+            }, 300); // Wait 300ms after the user stops typing
+        });
+
+
         $('#category').on('change', function () {
             let category = $(this).val();
             let url = "{{ route('artikel.index') }}";

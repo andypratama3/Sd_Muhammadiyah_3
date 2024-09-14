@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Siswa;
+use GuzzleHttp\Client;
 use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -46,7 +47,8 @@ class ChargePayment extends Command
                     $vaNumber = $existingCharge->va_number;
                 } else {
                     // Generate a new VA if it doesn't exist
-                    $vaNumber = $this->generateNewVaNumber($siswa); // Assuming this function generates a new VA number
+                    $vaNumber = $this->generateNewVaNumber($siswa);
+                    $siswa->update(['va_number' => $vaNumber]);
                 }
 
                 // Insert the charge record
@@ -57,13 +59,15 @@ class ChargePayment extends Command
                     'siswa_id' => $siswa->id,
                     'gross_amount' => $siswa->spp,
                     'payment_type' => 'bank_transfer',
-                    'bank' => 'bni',
+                    'bank' => 'bca',
                     'va_number' => $vaNumber,
                     'transaction_id' => rand(),
                     'transaction_time' => now(),
                     'fraud_status' => 'accept',
                     'transaction_status' => 'pending',
                 ]);
+
+
 
                 // Send to API payment Midtrans
                 $this->sendPaymentToMidtrans($siswa, $vaNumber);
@@ -89,27 +93,53 @@ class ChargePayment extends Command
         $params = [
             'payment_type' => 'bank_transfer',
             'transaction_details' => [
-                'order_id' => $siswa->id,
+                'order_id' => Str::uuid(),
                 'gross_amount' => $siswa->spp,
             ],
             'customer_details' => [
                 'first_name' => $siswa->name,
                 'email' => $siswa->email,
-                'phone' => $siswa->phone,
+                'phone' => $siswa->no_hp,
             ],
+            'virtual_account_number' => $vaNumber,
             'bank_transfer' => [
-                'bank' => 'bni',
+                'bank' => 'bca',
                 'va_number' => $vaNumber,
             ],
         ];
 
+        // Guzzle client
+        $client = new Client();
+        $server_key = env('MIDTRANS_SERVER_KEY');
         try {
-            $response = CoreApi::charge($params); // Charge API request
-            $this->info('Payment charged successfully for student ' . $siswa->name . ': ' . $response->transaction_status);
+            $this->info('Charging payment for student ' . $siswa->name . ' with VA number ' . '80391'.$vaNumber);
+
+            // send virtual account with message to whatsapp for payment
+            
+            // Send the request using Guzzle
+            $response = $client->post('https://api.sandbox.midtrans.com/v2/charge', [
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Authorization' => 'Basic ' . base64_encode($server_key . ':'),
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => $params, // Send data as JSON
+            ]);
+
+            // Decode the response
+            $responseData = json_decode($response->getBody(), true);
+
+            // Log the response
+            if (isset($responseData['transaction_status'])) {
+                $this->info('Payment charged successfully for student ' . $siswa->name . ': ' . $responseData['transaction_status']);
+            } else {
+                $this->warn('No transaction_status found in the response for student ' . $siswa->name);
+            }
         } catch (\Exception $e) {
             $this->error('Failed to charge payment for student ' . $siswa->name . ': ' . $e->getMessage());
         }
     }
+
 
     /**
      * Generate a new VA number for the student.
@@ -119,6 +149,6 @@ class ChargePayment extends Command
      */
     private function generateNewVaNumber(Siswa $siswa)
     {
-        return rand(1000000000, 9999999999); // 10 digits
+        return '80391'. rand(1000000000, 9999999999);
     }
 }

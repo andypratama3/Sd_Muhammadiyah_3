@@ -11,32 +11,51 @@ class ArtikelController extends Controller
 {
     public function index(Request $request)
     {
+
+        $request->validate([
+            'search' => 'nullable|string',
+        ]);
+
         $limit = 10;
         $categorys = Category::select(['id','name','slug'])->orderBy('name','desc')->get();
         $maxClicks = Artikel::max('jumlah_klik');
-        $artikels_trending = Artikel::select('id','name','artikel','image','created_at','slug')
-            ->where('status', 'publish')
-            ->orderBy('jumlah_klik', 'DESC')
-            ->paginate($limit);
 
-        if ($request->ajax()) {
-            return view('artikel.load-data', compact(
-                'artikels_trending', 'maxClicks'
-            ));
+        // Start building the query for artikels
+        $artikels_trending = Artikel::select('id', 'name', 'artikel', 'image', 'created_at', 'slug')
+            ->where('status', 'publish')
+            ->orderBy('jumlah_klik', 'DESC');
+
+        // Apply search filter if exists
+        if($request->search){
+            $artikels_trending->where('name', 'like', '%'.$request->search.'%');
+
+            if($artikels_trending->count() == 0){
+                return response()->json(['status' => 'error','message' => 'Artikel Tidak Ditemukan']);
+            }
         }
+
 
         if($request->category)
         {
-            $artikels_trending = $artikels_trending
-                ->where('category_id', $request->category)
-                ->orderBy('created_at', 'desc')
-                ->paginate($limit);
+            $artikels_trending->whereHas('categorys', function ($query) use ($request) {
+                $query->where('category_id', $request->category);
+            });
         }
 
-        return view('artikel.index', compact(
-            'artikels_trending', 'maxClicks', 'categorys'
-        ));
+        if ($request->ajax()) {
+            return view('artikel.load-data', compact('artikels_trending', 'maxClicks'));
+        }
+
+        // Paginate the results after applying all filters
+        $artikels_trending = $artikels_trending->paginate($limit);
+
+
+
+
+        // Return the main view with the data
+        return view('artikel.index', compact('artikels_trending', 'maxClicks', 'categorys'));
     }
+
     public function show(Artikel $artikel)
     {
         $artikel->incrementClickCount();
