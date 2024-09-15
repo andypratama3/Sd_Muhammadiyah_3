@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light">
 
     <a href="{{ route('index') }}" class="navbar-brand d-flex p-0 justify-content-center align-items-center">
-        <img src="{{ asset('asset/img/SD3_logo.png') }}" alt="Logo">
+        <img src="{{ asset('asset_new/images/SD3_logo1.png') }}" alt="Logo">
         <h4 class="text-primary mb-0 pt-1" style="margin-left: 10px;"> SD Muhammadiyah 3</h4>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -19,7 +19,7 @@
                 <a href="#" class="nav-link" data-bs-toggle="dropdown">
                     <span class="dropdown-toggle">Profil</span>
                 </a>
-                
+
                 <div class="dropdown-menu">
                     <a href="{{ route('guru.index') }}" class="dropdown-item">Guru</a>
                     <a href="{{ route('visimisi.index') }}" class="dropdown-item">Visi & Misi</a>

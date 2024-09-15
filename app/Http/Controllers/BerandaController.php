@@ -22,7 +22,9 @@ class BerandaController extends Controller
 
         $heroes = Hero::select(['name', 'desc', 'image', 'youtube', 'link', 'slug'])->latest()->take(3)->get();
         $beritas = Berita::select(['judul', 'desc', 'foto', 'slug'])->latest()->take(5)->get();
-        $siswas = Siswa::count();
+        $siswas = Siswa::whereHas('kelas', function ($q) {
+            $q->where('name', '!=', 'Lulus');
+        })->count();
         $guru = Guru::count();
         $fasilitas = Fasilitas::count();
         $prestasis_siswa = Prestasi::where('status', '1')->count();

@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:slnt,wght@-10..0,100..900&display=swap" rel="stylesheet">
-    <link rel="shortcut icon" href="{{ asset('asset_new/images/SD3_logo.png') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('asset_new/images/SD3_logo1.png') }}" type="image/x-icon">
     <!-- Icon Font Stylesheet -->
     {{-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/> --}}
     <link rel="stylesheet" href="{{ asset('asset/css/fontawesome.css')}}">

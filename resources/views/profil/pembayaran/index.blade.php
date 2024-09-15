@@ -11,7 +11,7 @@
             <div class="col-lg-12 text-center">
                 <div class="section-heading">
                     <h6>Pembayaran</h6>
-                    <h2>Masukan Kode Pembayaran</h2>
+                    <h2>Masukan Kode Pembayaran Atau Cari Nama Lengkap Anak</h2>
                     <div class="col-md-2"></div>
                     <form id="searchPaymentForm" method="GET">
                         <div class="input-group">

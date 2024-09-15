@@ -61,7 +61,7 @@
                     </div>
                     <div class="col-lg-5 animated fadeInRight">
                         <div class="carousel-img" style="object-fit: cover; justify-content: center !important; align-items: center !important;">
-                            <img src="{{ asset('asset/img/SD3_logo.png') }}" class="img-fluid img-logo" alt="" style="width: 80%;" loading="lazy">
+                            <img src="{{ asset('asset_new/images/SD3_logo1.png') }}" class="img-fluid img-logo" alt="" style="width: 80%;" loading="lazy">
                             <div class="jargon" style="display: flex; gap: 4px; font-family: times new roman;">
                                     <p class="text-primary">S</p>
                                     <p class="text-warning">D</p>
@@ -112,11 +112,11 @@
                     </h4>
                     <h4 class="text-dark d-flex align-items-center justify-content-start">
                         <i class="fa fa-check text-primary me-3"></i>
-                        <p class="my-0 py-0">Pembiasaan Menulis Al - Qur'an Dengan Metode IMLA</p>    
+                        <p class="my-0 py-0">Pembiasaan Menulis Al - Qur'an Dengan Metode IMLA</p>
                     </h4>
                     <h4 class="text-dark d-flex align-items-center justify-content-start">
                         <i class="fa fa-check text-primary me-3"></i>
-                        <p class="my-0 py-0">Pembinaan Psikologi Untuk Mengetahui Minat & Bakat Anak</p>    
+                        <p class="my-0 py-0">Pembinaan Psikologi Untuk Mengetahui Minat & Bakat Anak</p>
                     </h4>
                     <h4 class="text-dark d-flex align-items-center justify-content-start">
                         <i class="fa fa-check text-primary me-3"></i>
@@ -130,7 +130,7 @@
                     </h4>
                     <h4 class="text-dark d-flex align-items-center justify-content-start">
                         <i class="fa fa-check text-primary me-3"></i>
-                        <p class="my-0 py-0">Lulus Dengan 3 Ijazah</p>    
+                        <p class="my-0 py-0">Lulus Dengan 3 Ijazah</p>
                     </h4>
                 </div>
                 <div class="col-md-4">

@@ -60,8 +60,12 @@ class PembayaranController extends Controller
                                 'name' => $payment->name,
                             ]
                         ],
+                        // "expiry" => [
+                        //     "start_time" => now(),
+                        //     "unit" => "minutes",
+                        //     "duration" => 180
+                        // ],
                     ];
-
                     // Try generating the snap token
                     try {
                         $snapToken = Snap::getSnapToken($params);
