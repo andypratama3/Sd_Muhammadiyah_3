@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 
 class SendOrderIDWhatsAppApi extends Controller
 {
-    public function sendMessage($orderId)
+    public function sendMessage($siswa_id)
     {
         // Retrieve the payment information
         // $pembayaran = Pembayaran::with(['siswa', 'kelas'])->where('order_id', $orderId)->first();

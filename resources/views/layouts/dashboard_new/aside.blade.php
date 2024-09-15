@@ -154,13 +154,15 @@
                          <div class="mx-3" data-i18n="Judul Pembayaran"> Kategori Pembayaran</div>
                      </a>
                  </li>
-                 <li class="menu-item {{ Request::routeIs('dashboard.datamaster.pembayaran.*') ? 'active' : ''  }}">
+                 <li class="menu-item {{ Request::routeIs('dashboard.datamaster.charge.*') ? 'active' : ''  }}">
                      <a class="menu-link"
-                         href="{{ route('dashboard.datamaster.pembayaran.index') }}">
+                         href="{{ route('dashboard.datamaster.charge.index') }}">
                          <i class="menu-icon tf-icons fas fa-solid fa-file-invoice"></i>
-                         <div class="mx-3" data-i18n="Invoice">Invoice</div>
+                         <div class="mx-3" data-i18n="Invoice">Charge</div>
                      </a>
                  </li>
+
+
              </ul>
          </li>
          <li class="menu-header small text-uppercase"><span class="menu-header-text">Pengaturan Akses</span></li>

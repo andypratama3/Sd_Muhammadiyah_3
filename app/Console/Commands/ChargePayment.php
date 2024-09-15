@@ -54,14 +54,14 @@ class ChargePayment extends Command
                 // Insert the charge record
                 DB::table('charges')->insert([
                     'id' => Str::uuid(),
-                    'name' => $siswa->name,
+                    'name' => 'SPP',
                     'order_id' => rand(),
                     'siswa_id' => $siswa->id,
                     'gross_amount' => $siswa->spp,
                     'payment_type' => 'bank_transfer',
                     'bank' => 'bca',
                     'va_number' => $vaNumber,
-                    'transaction_id' => rand(),
+                    'transaction_id' => Str::uuid(),
                     'transaction_time' => now(),
                     'fraud_status' => 'accept',
                     'transaction_status' => 'pending',
@@ -101,10 +101,14 @@ class ChargePayment extends Command
                 'email' => $siswa->email,
                 'phone' => $siswa->no_hp,
             ],
-            'virtual_account_number' => $vaNumber,
             'bank_transfer' => [
                 'bank' => 'bca',
                 'va_number' => $vaNumber,
+            ],
+            'expiry' => [
+                'start_time' => now()->format('Y-m-d H:i:s T'), // Current time
+                'duration' => 30, // 30 days
+                'unit' => 'days', // Set unit as days
             ],
         ];
 
@@ -112,10 +116,18 @@ class ChargePayment extends Command
         $client = new Client();
         $server_key = env('MIDTRANS_SERVER_KEY');
         try {
+
             $this->info('Charging payment for student ' . $siswa->name . ' with VA number ' . '80391'.$vaNumber);
 
+            $this->info('expired ' . $params['expiry']['duration'] . ' ' . $params['expiry']['unit'] . 'day');
+            // update va number in siswa table
+            DB::table('charges')->where('siswa_id', $siswa->id)->update(['va_number' => '80391'.$vaNumber]);
+            $this->info('Charging virtual account for student ' . $siswa->name . ' with VA number ' . '80391'.$vaNumber);
+
+
             // send virtual account with message to whatsapp for payment
-            
+            // $this->SendOrderIDWhatsAppApi($siswa->id);
+
             // Send the request using Guzzle
             $response = $client->post('https://api.sandbox.midtrans.com/v2/charge', [
                 'headers' => [
@@ -123,7 +135,7 @@ class ChargePayment extends Command
                     'Authorization' => 'Basic ' . base64_encode($server_key . ':'),
                     'Content-Type' => 'application/json',
                 ],
-                'json' => $params, // Send data as JSON
+                'json' => $params,
             ]);
 
             // Decode the response
@@ -139,7 +151,6 @@ class ChargePayment extends Command
             $this->error('Failed to charge payment for student ' . $siswa->name . ': ' . $e->getMessage());
         }
     }
-
 
     /**
      * Generate a new VA number for the student.

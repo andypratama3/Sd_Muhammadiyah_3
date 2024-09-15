@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('app:charge-payment')->monthly();
-
+        $schedule->command('app:up-class')->yearly();
     }
 
     /**

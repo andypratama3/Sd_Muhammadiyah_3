@@ -24,6 +24,7 @@ return new class extends Migration
             $table->date('transaction_time')->nullable();
             $table->string('fraud_status')->default('accept');
             $table->string('transaction_status');
+            $table->string('snap_token')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

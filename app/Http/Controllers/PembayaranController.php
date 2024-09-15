@@ -2,104 +2,100 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pembayaran;
+use Midtrans\Snap;
+use Midtrans\Config;
+use App\Models\Siswa;
+use App\Models\Charge;
 use Illuminate\Http\Request;
 
 class PembayaranController extends Controller
 {
     public function index(Request $request)
     {
-
-
-        $pembayaran = collect(); // Initialize as an empty collection
-        if($request->has('kode')) {
-            $request->validate([
-                'kode' => 'required|numeric',
-            ]);
-            $kode_pembayaran = $request->kode;
-            $pembayaran = Pembayaran::with('judul')->where('order_id', $kode_pembayaran)->get();
-        }
-
-
-        return view('profil.pembayaran.index', compact('pembayaran'));
+        return view('profil.pembayaran.index');
     }
 
-
-
-    public function pay(Request $request)
+    public function searchOrder(Request $request)
     {
-        $order_id = $request->order_id;
+        if ($request->has('kode')) {
+            $kode = $request->input('kode');
 
-        $pembayaran = Pembayaran::where('order_id', $order_id)->with('judul')->first();
+            // Search for the payment by order_id in Charge or name in Siswa
+            $payment = Charge::where('order_id', $kode)
+                        ->orWhereHas('siswa', function ($query) use ($kode) {
+                            $query->where('name', 'LIKE', "%{$kode}%");
+                        })->first();
 
-        $gross_amount = str_replace('.', '', $pembayaran->gross_amount);
+            if ($payment) {
+                // Fetch the related siswa data
+                $siswa = Siswa::find($payment->siswa_id);
 
-        // SAMPLE HIT API iPaymu v2 PHP
-        $va           =  config('Ipaymu.va');
-        $apiKey       =  config('Ipaymu.api_key');
+                // Configure Midtrans
+                Config::$serverKey = env('MIDTRANS_SERVER_KEY');
+                Config::$isProduction = false; // Set to true in production
+                Config::$isSanitized = true;
+                Config::$is3ds = true;
 
-        $url          =  config('Ipaymu.api_url');
-        // $url          = 'https://my.ipaymu.com/api/v2/payment'; // for production mode
+                // Check if snap_token exists
+                if ($payment->snap_token) {
+                    // Use the existing snap_token
+                    $snapToken = $payment->snap_token;
+                } else {
+                    // Prepare parameters for Snap if snap_token does not exist
+                    $params = [
+                        'transaction_details' => [
+                            'order_id' => $payment->order_id,
+                            'gross_amount' => $payment->gross_amount,
+                        ],
+                        'customer_details' => [
+                            'first_name' => $siswa->name,
+                            'email' => $siswa->email,
+                            'phone' => $siswa->no_hp,
+                        ],
+                        'item_details' => [
+                            [
+                                'id' => $payment->order_id,
+                                'price' => $payment->gross_amount,
+                                'quantity' => 1,
+                                'name' => $payment->name,
+                            ]
+                        ],
+                    ];
 
-        $method       = 'POST'; //method
+                    // Try generating the snap token
+                    try {
+                        $snapToken = Snap::getSnapToken($params);
 
-        //Request Body//
-        $body['product']    = array($pembayaran->judul->name);
-        $body['price']      = array($gross_amount);
-        $body['image']      = 'https://sd.relawanmhf.com/asset/img/SD3_logo.png';
-        $body['qty']        = array('1');
-        $body['returnUrl']  = route('pembayaran.index');
-        $body['cancelUrl']  = 'https://your-website.com/cancel-page';
-        $body['notifyUrl']  =  route('ipaymu.api.callback');
-        // $body['referenceId'] = '1234'; //your reference id
-        //End Request Body//
+                        // Save the new snap_token to the database
+                        $payment->snap_token = $snapToken;
+                        $payment->save();
+                    } catch (\Exception $e) {
+                        return response()->json([
+                            'status' => 'error',
+                            'message' => 'Failed to create Snap token: ' . $e->getMessage(),
+                        ]);
+                    }
+                }
 
-        //Generate Signature
-        // *Don't change this
-        $jsonBody     = json_encode($body, JSON_UNESCAPED_SLASHES);
-        $requestBody  = strtolower(hash('sha256', $jsonBody));
-        $stringToSign = strtoupper($method) . ':' . $va . ':' . $requestBody . ':' . $apiKey;
-        $signature    = hash_hmac('sha256', $stringToSign, $apiKey);
-        $timestamp    = Date('YmdHis');
-        //End Generate Signature
-        $ch = curl_init($url);
-
-        $headers = array(
-            'Accept: application/json',
-            'Content-Type: application/json',
-            'va: ' . $va,
-            'signature: ' . $signature,
-            'timestamp: ' . $timestamp
-        );
-
-        curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-        curl_setopt($ch, CURLOPT_POST, count($body));
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonBody);
-
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        $err = curl_error($ch);
-        $ret = curl_exec($ch);
-
-        $response = json_decode($ret, true);
-        // dd($response);
-        if (isset($response['Data']['Url']) && isset($response['Data']['SessionID'])) {
-            $pembayaran->SessionID = $response['Data']['SessionID'];
-            $pembayaran->Url = $response['Data']['Url'];
-            $redirectUrl = $response['Data']['Url'];
-            $pembayaran->update();
-            return response()->json([
-                'redirect' => $redirectUrl,'Akan Mengalihkan'], 200);
-        } else {
-
-            return response()->json([
-                'message' => 'Failed to get the redirect URL from the response',
-            ], 500);
+                // Return success response with snap_token
+                return response()->json([
+                    'status' => 'success',
+                    'data' => [
+                        'siswa' => $siswa,
+                        'order_id' => $payment->order_id,
+                        'gross_amount' => $payment->gross_amount,
+                        'name' => $payment->name,
+                        'transaction_status' => $payment->transaction_status,
+                    ],
+                    'snap_token' => $snapToken,
+                ]);
+            } else {
+                // Payment not found
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Pembayaran tidak ditemukan',
+                ]);
+            }
         }
-        curl_close($ch);
     }
-
 }

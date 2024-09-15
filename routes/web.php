@@ -32,14 +32,16 @@ use App\Http\Controllers\Dashboard\KelasController;
 use App\Http\Controllers\EkstrakurikulerController;
 use App\Http\Controllers\PrestasiSekolahController;
 use App\Http\Controllers\TenagaPendidikanController;
+
 use App\Http\Controllers\Dashboard\ActivityController;
-
 use App\Http\Controllers\Dashboard\KaryawanController;
-use App\Http\Controllers\Dashboard\DashboardController;
 
+use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\KelasCategoryController;
 use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
 use App\Http\Controllers\Dashboard\HeroController as DashboardHeroController;
+use App\Http\Controllers\Dashboard\ChargeController as DashboardChargeController;
+
 use App\Http\Controllers\Dashboard\SiswaController as DashboardSiswaController;
 use App\Http\Controllers\Dashboard\BeritaController as DashboardBeritaController;
 use App\Http\Controllers\Dashboard\JadwalController as DashboardJadwalController;
@@ -92,7 +94,7 @@ Route::group(['prefix' => '/',], function () {
     Route::get('ekstrakurikuler/{name}', [EkstrakurikulerController::class, 'show'])->name('esktrakurikuler.show');
     // pembayaran
     Route::get('pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
-    Route::post('pembayaran/pay', [PembayaranController::class, 'pay'])->name('pembayaran.pay');
+    Route::get('pembayaran/pay', [PembayaranController::class, 'searchOrder'])->name('pembayaran.searchOrder');
     //fasilitas
     Route::get('fasilitas', [FasilitasController::class, 'index'])->name('fasilitas.index');
     Route::get('fasilitas/{nama_fasilitas}', [FasilitasController::class, 'show'])->name('fasilitas.show');
@@ -182,6 +184,10 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::resource('invoice',  DashboardPembayaranController::class, ['names' => 'dashboard.datamaster.pembayaran']);
         Route::get('invoices/records', [DashboardPembayaranController::class, 'data_table'])->name('dashboard.datamaster.get.records');
         Route::post('invoices/export', [DashboardPembayaranController::class, 'exportExcel'])->name('dashboard.datamaster.pembayaran.exportExcel');
+
+        // charge payment
+        Route::resource('charge',  DashboardChargeController::class, ['names' => 'dashboard.datamaster.charge'])->except('edit','update');
+        Route::get('charges/records', [DashboardChargeController::class, 'data_table'])->name('dashboard.datamaster.charge.get.records');
         //activity user
         Route::resource('activity',  ActivityController::class, ['names' => 'dashboard.datamaster.activity']);
         Route::get('get/activitys', [ActivityController::class, 'activitys'])->name('dashboard.datamaster.get.activitys');
