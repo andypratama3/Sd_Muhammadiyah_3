@@ -75,8 +75,8 @@
                     </table>
                 </div>
             </div>
-            <div class="col-sm-12 mt-10">
-                <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
+            <div class="col-sm-12 mt-5">
+                <button type="submit" class="btn btn-primary float-lg-end btn-sm">Submit</button>
               </div>
           </form>
         </div>

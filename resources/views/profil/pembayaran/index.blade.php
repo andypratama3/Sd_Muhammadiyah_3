@@ -1,6 +1,9 @@
 @extends('layouts.user')
 
 @section('title','Pembayaran')
+@push('meta_user')
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+@endpush
 @push('css_user')
 @endpush
 @section('content')

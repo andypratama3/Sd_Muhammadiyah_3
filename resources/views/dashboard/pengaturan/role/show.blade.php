@@ -27,7 +27,7 @@
                                 <div class="text-danger">{{ $errors->first('permissions') }}</div>
                             </div>
                             @endif
-                            <table class="table table-bordered table-striped mb-5" border='10' style=" text-align:center;">
+                            <table class="table table-bordered table-striped mb-5">
                                 <thead>
                                     <tr>
                                         <th scope="col" class="text-center" style="vertical-align:middle">Tugas</th>
@@ -60,8 +60,8 @@
                             </table>
                         </div>
                     </div>
-                    <a href="{{ route('dashboard.pengaturan.role.index') }}" class="btn btn-danger">Kembali</a>
-                    <button type="submit" class="btn btn-primary float-lg-right">Ubah Role</button>
+                    <a href="{{ route('dashboard.pengaturan.role.index') }}" class="btn btn-danger btn-sm ">Kembali</a>
+                    <button type="submit" class="btn btn-primary btn-sm float-lg-end">Ubah Role</button>
                 </form>
             </div>
         </div>

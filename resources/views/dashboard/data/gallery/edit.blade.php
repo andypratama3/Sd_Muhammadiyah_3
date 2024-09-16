@@ -11,34 +11,22 @@
             @csrf
             @method('PUT')
             <input type="hidden" name="slug" value="{{ $gallery->slug }}">
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="name">Nama gallery</label>
                 <input type="text" class="form-control" name="name" id="name" value="{{ $gallery->name }}"
                     aria-describedby="emailHelp" placeholder="Masukan Nama">
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <input type="file" name="foto" class="form-control mb-2 text-center" value="{{ $gallery->foto }}" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])">
             </div>
-            <div class="form-group text-center">
+            <div class="form-group mt-2 text-center mb-4">
                 <p>Foto Yang Di Gunakan</p>
                 <img src="{{ asset('storage/img/gallery/'. $gallery->foto) }}" alt="" style="width: 100%;" id="output">
             </div>
             <a href="{{ route('dashboard.datasekolah.gallery.index') }}" class="btn btn-danger btn-sm">Kembali</a>
-            <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
+            <button type="submit" class="btn btn-primary float-lg-end btn-sm">Submit</button>
         </form>
     </div>
 </div>
-@push('js')
-    <script>
-    //     $(document).ready(function (e) {
-    //         $('#foto').change(function () {
-    //             let reader = new FileReader();
-    //             reader.onload = (e) => {
-    //                 $('#output').attr('src', e.target.result);
-    //             }
-    //             reader.readAsDataURL(this.files[0]);
-    //         });
-    // });
-    </script>
-@endpush
+
 @endsection

@@ -37,13 +37,19 @@ id="layout-navbar">
                         <div class="d-flex">
                             <div class="flex-shrink-0 me-3">
                                 <div class="avatar avatar-online">
-                                    <img src="{{ asset('asset_dashboard_new/img/avatars/1.png') }}" alt
-                                        class="w-px-40 h-auto rounded-circle" />
+                                    @if(Auth::user()->avatar === 'default.jpg')
+                                        <img src="{{ asset('asset_dashboard_new/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
+                                    @elseif(Auth::user()->avatar == null)
+                                        <img src="{{ asset('asset_dashboard_new/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
+                                    @else
+                                    <img src="{{ asset('storage/img/profile/'. Auth::user()->avatar) }}" class="w-px-40 h-auto rounded-circle" alt="Profile"
+                                        id="profile">
+                                    @endif
                                 </div>
                             </div>
                             <div class="flex-grow-1">
-                                <span class="fw-semibold d-block">John Doe</span>
-                                <small class="text-muted">Admin</small>
+                                <span class="fw-semibold d-block">{{ Auth::user()->name }}</span>
+                                <small class="text-muted">{{ Auth::user()->roles->first()->name }}</small>
                             </div>
                         </div>
                     </a>

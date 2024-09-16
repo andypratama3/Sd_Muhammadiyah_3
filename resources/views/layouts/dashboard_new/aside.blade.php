@@ -21,7 +21,14 @@
                  <div data-i18n="Dashboard">Dashboard</div>
              </a>
          </li>
-
+         @if(Auth::user()->hasRole('user'))
+         <li class="menu-item {{ Request::routeIs('dashboard.news.artikel.*') ? 'active' : '' }}">
+            <a class="menu-link" href="{{ route('dashboard.news.artikel.index') }}">
+                <i class="menu-icon tf-icons bx bx-book"></i>
+                <div data-i18n="Artikel">Artikel</div>
+            </a>
+        </li>
+        @endif
          <li class="menu-header small text-uppercase">
              <span class="menu-header-text">News</span>
          </li>
@@ -165,6 +172,18 @@
 
              </ul>
          </li>
+
+         <li class="menu-header small text-uppercase"><span class="menu-header-text">Artikel</span></li>
+
+
+
+         <li class="menu-item {{ Request::routeIs('dashboard.kritik.saran.*') ? 'active' : '' }}">
+            <a class="menu-link" href="{{ route('dashboard.kritik.saran.index') }}">
+                <i class="menu-icon tf-icons bx bxs-comment"></i>
+                <div data-i18n="Hero Banner">Kritik Saran</div>
+            </a>
+        </li>
+
          <li class="menu-header small text-uppercase"><span class="menu-header-text">Pengaturan Akses</span></li>
          <!-- Pengaturan -->
          <li class="menu-item {{ Request::routeIs('dashboard.pengaturan.*') ? 'open' : '' }}">

@@ -7,23 +7,23 @@
         <div class="col-md-12">
             <div class="card card-orange">
                 @include('layouts.flashmessage')
-                <div class="card-header border-0">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <div class="d-flex justify-content-between">
-                         <!-- SEARCH FORM -->
-                        <form class="form-inline ml-1" action="{{ route('dashboard.pengaturan.task.index') }}" method="GET">
-                            <div class="input-group input-group-sm">
-                                <input class="form-control form-control-navbar" type="text" id="search" name="search" placeholder="Nama Task" aria-label="Nama Task">
-                                <div class="input-group-append">
-                                    <button class="btn btn-navbar btn-default" type="submit">
-                                        <i class="fas fa-search"></i>
-                                    </button>
+                            <form class="form-inline ml-1" action="{{ route('dashboard.pengaturan.task.index') }}" method="GET">
+                                <div class="input-group input-group-sm">
+                                    <input class="form-control form-control-navbar" type="text" id="search" name="search" placeholder="Nama Task" aria-label="Nama Task">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-navbar btn-default" type="submit">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                         </form>
-                        @can('create-task')
-                        <a href="{{ route('dashboard.pengaturan.task.create') }}" class="ml-auto btn btn-primary btn-sm btn-flat text-bold text-light"><i class="fa fa-plus"></i> Tambah</a>
-                        @endcan
+                             </form>
+                         <!-- SEARCH FORM -->
                     </div>
+                    @can('create-task')
+                    <a href="{{ route('dashboard.pengaturan.task.create') }}" class="btn btn-primary btn-sm float-end"><i class="fa fa-plus"></i> Tambah</a>
+                @endcan
                 </div>
                 <div class="card-body">
                     <div class="card-body table-responsive p-0">

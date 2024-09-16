@@ -17,11 +17,11 @@
             @csrf
             @method('PUT')
             <input type="hidden" name="slug" value="{{ $artikel->slug }}">
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="name">Nama</label>
                 <input type="text" class="form-control" name="name" value="{{ $artikel->name }}" id="name" aria-describedby="name" placeholder="Masukan Nama" >
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label>Kategori Artikel</label>
                 <select class="form-control select2" multiple="multiple" name="categorys"
                     data-placeholder="Pilih Kategori artikel">
@@ -33,20 +33,20 @@
                     @endforeach
                 </select>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="">Foto</label>
                 <input type="file" class="form-control" name="image" value="{{ $artikel->image }}" placeholder="{{ $artikel->image }}">
             </div>
-            <div class="form-group text-center">
+            <div class="form-group mt-2 text-center">
                 <img src="{{ asset('storage/img/artikel/'. $artikel->image) }}" alt="" srcset="" width="200px">
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2 mb-2">
                 <div id="editor">{!! $artikel->artikel !!}</div>
                 <textarea name="artikel" id="content-editor" style="display: none;">{{ $artikel->artikel }}</textarea>
             </div>
 
-            <a href="{{ route('dashboard.news.artikel.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
-            <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
+            <a href="{{ route('dashboard.news.artikel.index') }}" class="btn btn-danger btn-sm">Kembali</a>
+            <button type="submit" class="btn btn-primary float-lg-end btn-sm">Submit</button>
         </form>
     </div>
 </div>

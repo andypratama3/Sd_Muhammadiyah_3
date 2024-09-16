@@ -31,7 +31,7 @@
                                 <div class="text-danger">{{ $errors->first('permissions') }}</div>
                             </div>
                             @endif
-                            <table class="table table-bordered table-striped mb-5" border='10' style=" text-align:center;">
+                            <table class="table table-bordered table-striped mb-5">
                                 <thead>
                                     <tr>
                                         <th scope="col" class="text-center" style="vertical-align:middle">Tugas</th>
@@ -64,7 +64,7 @@
                             </table>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
+                    <button type="submit" class="btn btn-primary float-lg-end btn-sm">Submit</button>
                 </form>
             </div>
         </div>

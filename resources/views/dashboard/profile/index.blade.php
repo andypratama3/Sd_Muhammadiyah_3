@@ -73,7 +73,7 @@
             <div class="card">
                 <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
                     @if (Auth::user()->avatar === 'default.jpg')
-                        <img src="{{ asset('asset_dashboard/img/default.jpg') }}" alt="Profile" id=""
+                        <img src="{{ asset('asset_dashboard_new/img/avatars/1.png') }}" alt="Profile" id=""
                             class="w-25 img-profile rounded-circle">
                     @else
                     <a href="{{ asset('storage/img/profile/' . Auth::user()->avatar) }}">
@@ -166,7 +166,7 @@
                                     Image</label>
                                 <div class="col-md-8 col-lg-9">
                                     @if (Auth::user()->avatar === 'default.jpg')
-                                        <img src="{{ asset('asset_dashboard/img/default.jpg') }}" alt="Profile"
+                                        <img src="{{ asset('asset_dashboard_new/img/avatars/1.png') }}" alt="Profile"
                                             id="" class=" w-25">
                                     @else
                                         <img src="{{ asset('storage/img/profile/' . Auth::user()->avatar) }}"
