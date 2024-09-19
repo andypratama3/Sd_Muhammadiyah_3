@@ -326,14 +326,14 @@
                                 @csrf
                                 <input type="hidden" name="artikel" value="{{ $artikel->id }}" id="artikel">
                                 <input type="hidden" name="user" value="{{ Auth::id() }}" id="user">
-                                {{-- @auth --}}
+
                                 <div class="col-12 mb-3" id="comment-form">
                                     <label for="comment-message">Tambahkan Komentar</label>
                                     <textarea class="form-control" name="comment" id="comment-message"
                                         placeholder="Masukan Teks" cols="30" rows="1"></textarea>
                                 </div>
                                 <div class="col-12">
-                                    <input type="submit" class="btn" style="background-color: #5ce70b !important" value="Posting">
+                                    <input type="submit" class="btn" style="background-color: #5ce70b !important; color: white !important;" value="Posting">
                                 </div>
                                 {{-- @else
                                 <div class="col-12">
@@ -371,7 +371,11 @@
                     $('.comment-meta').load(location.href + " .comment-meta");
                 },
                 error: function (response) {
-                    window.location.href = "{{ route('login') }}";
+                    Swal.fire(
+                        'Error',
+                        'Kamu harus login terlebih dahulu',
+                        'error'
+                    )
                 },
             });
         });

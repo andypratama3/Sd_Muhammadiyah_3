@@ -65,6 +65,9 @@ class ChargePayment extends Command
                     'transaction_time' => now(),
                     'fraud_status' => 'accept',
                     'transaction_status' => 'pending',
+                    'snap_token' => null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
 
 

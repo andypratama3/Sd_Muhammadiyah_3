@@ -125,6 +125,7 @@
 
         $('#search').on('keyup', function () {
             clearTimeout(searchTimeout);
+            let search = $('#search').val();
             searchTimeout = setTimeout(function () {
                 let search = $('#search').val();
                 let url = "{{ route('artikel.index') }}";
@@ -148,7 +149,7 @@
                         target.html('<div class="alert alert-danger">Error loading articles. Please try again later.</div>');
                     }
                 });
-            }, 300); // Wait 300ms after the user stops typing
+            }, 300);
         });
 
 

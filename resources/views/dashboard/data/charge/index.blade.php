@@ -36,7 +36,7 @@
                 </div>
                 <div class="col-md-5">
                     <div class="form-group">
-                        <input type="text" name="date" id="date" class="form-control">
+                        <input type="text" name="date" id="date_range" class="form-control" placeholder="Pilih Tanggal">
                     </div>
                 </div>
 
@@ -45,12 +45,11 @@
                         <button class="btn btn-success" id="exportData-excel"><i class="fas fa-file-excel"></i>
                             Export</button>
                         <!-- Hidden form for exporting -->
-                        <form action="{{ route('dashboard.datamaster.pembayaran.exportExcel') }}" method="POST"
+                        <form action="{{ route('dashboard.datamaster.charge.exportExcel') }}" method="POST"
                             id="exportForm" style="display: none;">
                             @csrf
-                            <input type="hidden" name="judul_id" id="export_judul_id">
                             <input type="hidden" name="kelas" id="export_kelas">
-                            <input type="hidden" name="category_kelas" id="export_category_kelas">
+                            <input type="hidden" name="date" id="export_date">
                         </form>
                     </div>
                 </div>
@@ -83,14 +82,23 @@
     <script>
 
         $(document).ready(function() {
-            // $('input[name="date"]').daterangepicker({
-            //     timePicker: true,
-            //     startDate: moment("02-01-2023", "DD-MM-YYYY"),
-            //     endDate: moment("02-01-2023", "DD-MM-YYYY").add(32, 'hour'),
-            //     locale: {
-            //         format: 'DD-MM-YYYY',
-            //     }
-            // });
+            $('input[name="date"]').daterangepicker({
+                timePicker: true,
+                autoUpdateInput: false,  // This prevents automatic updating of the input value
+                locale: {
+                    format: 'DD-MM-YYYY',
+                }
+            });
+
+            // Listen for the apply event to manually set the input value when a date range is selected
+            $('input[name="date"]').on('apply.daterangepicker', function(ev, picker) {
+                $(this).val(picker.startDate.format('DD-MM-YYYY') + ' : ' + picker.endDate.format('DD-MM-YYYY'));
+            });
+
+            // Clear the input value on cancel if needed
+            $('input[name="date"]').on('cancel.daterangepicker', function(ev, picker) {
+                $(this).val('');
+            });
             function reloadTable(id) {
                 var table = $(id).DataTable();
                 table.cleanData;
@@ -108,7 +116,7 @@
                     'url': "{{ route('dashboard.datamaster.charge.get.records') }}",
                     'data': function(d) {
                         d.kelas = $('#kelas').val();
-                        d.date = $('#date').val();
+                        d.date = $('#date_range').val();
                     }
                 },
                 columns: [{
@@ -221,21 +229,22 @@
             $('#kelas').on('change', function () {
                 reloadTable('#charge_table');
             });
+
+
+            $('#date_range').on('apply.daterangepicker', function () {
+                let range = $('#date_range').val();
+                $('#date_range').val(range);
+                reloadTable('#charge_table');
+
+            });
             $('#category_kelas').on('change', function () {
                 reloadTable('#charge_table');
             });
             $('#exportData-excel').click(function(e) {
                 e.preventDefault();
-                let judul_id = $('#judul_pembayaran').val();
-                let kelas = $('#kelas').val();
-                let category_kelas = $('#category_kelas').val();
-
-                $('#export_judul_id').val(judul_id);
-                $('#export_kelas').val(kelas);
-                $('#export_category_kelas').val(category_kelas);
+                $('#export_kelas').val($('#kelas').val());
+                $('#export_date').val($('#date_range').val());
                 $('#exportForm').submit();
-
-
             });
         });
     </script>

@@ -44,6 +44,6 @@ class CommentArtikelController extends Controller
             return response()->json(['failure' => 'Gagal Menghapus Komentar']);
         }
     }
-   
+
 
 }

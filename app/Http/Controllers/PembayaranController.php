@@ -17,6 +17,10 @@ class PembayaranController extends Controller
 
     public function searchOrder(Request $request)
     {
+        $request->validate([
+            'kode' => 'required',
+        ]);
+
         if ($request->has('kode')) {
             $kode = $request->input('kode');
 

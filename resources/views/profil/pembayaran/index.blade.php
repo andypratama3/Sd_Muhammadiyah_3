@@ -13,8 +13,8 @@
         <div class="row">
             <div class="col-lg-12 text-center">
                 <div class="section-heading">
-                    <h6>Pembayaran</h6>
-                    <h2>Masukan Kode Pembayaran Atau Cari Nama Lengkap Anak</h2>
+                    <h4>Pembayaran</h4>
+                    <h6>Cari Nama Anak, Nomor Virtual Account</h6>
                     <div class="col-md-2"></div>
                     <form id="searchPaymentForm" method="GET">
                         <div class="input-group">
@@ -75,6 +75,32 @@
             <div id="paymentNotFound" class="col-lg-12 text-center mb-5" style="margin-top: 100px; display:none;">
                 <span class="badge bg-danger">Pembayaran Tidak Ditemukan</span>
             </div>
+
+
+            <div class="col-md-12 mt-5">
+                <Button class="btn btn-primary float-start" type="button" id="modal_how_pay_button" class="btn btn-primary" data-toggle="modal" data-target="#modal_how_pay">Cara Pembayaran</Button>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade bd-example-modal-lg" id="modal_how_pay" tabindex="-1" role="dialog" aria-labelledby="modal_how_payTitle" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modal_how_payTitle">Cara Melakukan Pembayaran</h5>
+                            <button type="button" style="background: none; color: red; font-weight: bold;" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true"><i class="fa-solid fa-xmark"></i></span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            
+                        </div>
+                        <div class="modal-footer d-flex align-items-center">
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Tutup</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -85,6 +111,16 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        // modal
+        $('#modal_how_pay_button').click(function () {
+            $('#modal_how_pay').modal('show');
+        });
+
+        // Close the modal when needed (optional)
+        $('#closeModalButton').click(function () {
+            $('#modal_how_pay').modal('hide');
+        });
+
         $('#searchPaymentButton').click(function () {
             var kode = $('#kodePembayaran').val();
             if (kode === "") {

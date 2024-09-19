@@ -8,7 +8,7 @@
                     <div class="row g-4">
                         <div class="col-md-6 col-lg-6 col-xl-5">
                             <div class="footer-item">
-                                <a href="index.html" class="p-0">
+                                <a href="/" class="p-0">
                                     <h3 class="text-white"><i class="fab fa-slack me-3"></i> SD Muhammadiyah 3 Samarinda</h3>
                                     <!-- <img src="{{ asset('asset/img/logo.png') }}" alt="Logo"> -->
                                 </a>
@@ -92,10 +92,7 @@
                 <span class="text-body"><a href="/" class="border-bottom text-white"><i class="fas fa-copyright text-light me-2"></i>SD MUHAMMADIYAH 3 SAMARINDA</a>, All right reserved.</span>
             </div>
             <div class="col-md-6 text-center text-md-start text-body">
-                <!--/*** This template is free as long as you keep the below author’s credit link/attribution link/backlink. ***/-->
-                <!--/*** If you'd like to use the template without the below author’s credit link/attribution link/backlink, ***/-->
-                <!--/*** you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". ***/-->
-                Designed By <a class="border-bottom text-white" href="https://www.linkedin.com/in/andypratama3/">Andy Pratama</a>
+                Develop By <a class="border-bottom text-white" href="https://www.linkedin.com/in/andypratama3/">Andy Pratama</a>
             </div>
         </div>
     </div>

@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use Carbon\Carbon;
 use App\Models\Kelas;
 use App\Models\Siswa;
 use App\Models\Charge;
 use Illuminate\Http\Request;
+use App\Exports\ChargeExport;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
 class ChargeController extends Controller
@@ -26,9 +30,12 @@ class ChargeController extends Controller
             });
         }
 
-        if($request->date)
-        {
-            $charges = $charges->whereDate('created_at', $request->date);
+        if ($request->date) {
+            $dates = explode(' : ', $request->date);
+            $startDate = Carbon::createFromFormat('d-m-Y', trim($dates[0]))->format('Y-m-d');
+            $endDate = Carbon::createFromFormat('d-m-Y', trim($dates[1]))->format('Y-m-d');
+
+            $charges = $charges->whereBetween(DB::raw('date(created_at)'), [$startDate, $endDate]);
         }
 
         return DataTables::of($charges)
@@ -79,6 +86,19 @@ class ChargeController extends Controller
         }
     }
 
+    public function exportExcel(Request $request)
+    {
+        $request->validate([
+            'date' => 'required',
+        ]);
 
+        $dates = explode(' : ', $request->date);
+        $startDate = Carbon::createFromFormat('d-m-Y', trim($dates[0]))->format('Y-m-d');
+        $endDate = Carbon::createFromFormat('d-m-Y', trim($dates[1]))->format('Y-m-d');
+
+        $kelas = $request->kelas;
+
+        return Excel::download(new ChargeExport($startDate, $endDate, $kelas), "charge-$startDate-$endDate-excel.xlsx");
+    }
 
 }

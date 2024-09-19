@@ -127,7 +127,7 @@ Route::group(['prefix' => '/',], function () {
 
 
 //users after login
-Route::group(['prefix' => 'artikel', 'middleware' => ['auth.basic']], function () {
+Route::group(['prefix' => 'artikel', 'middleware'], function () {
     //CommentArtikel
     Route::resource('comment', CommentArtikelController::class, ['names' => 'comment']);
     Route::post('like', [LikeArtikelController::class, 'like'])->name('like.comment');
@@ -188,6 +188,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         // charge payment
         Route::resource('charge',  DashboardChargeController::class, ['names' => 'dashboard.datamaster.charge'])->except('edit','update');
         Route::get('charges/records', [DashboardChargeController::class, 'data_table'])->name('dashboard.datamaster.charge.get.records');
+        Route::post('charges/export', [DashboardChargeController::class, 'exportExcel'])->name('dashboard.datamaster.charge.exportExcel');
+
         //activity user
         Route::resource('activity',  ActivityController::class, ['names' => 'dashboard.datamaster.activity']);
         Route::get('get/activitys', [ActivityController::class, 'activitys'])->name('dashboard.datamaster.get.activitys');

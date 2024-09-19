@@ -1,14 +1,13 @@
 @extends('layouts.user')
 @section('title','Visi Misi')
 @section('content')
-
-
-<!-- About Start -->
+<div class="row ">
+    <!-- About Start -->
 <div class="container-fluid bg-light about pb-5" id="tentang">
-    <div class="container pb-5">
+    <div class="container pb-5 mt-3">
         <div class="row g-5">
             <div class="col-md-12  wow fadeInLeft" data-wow-delay="0.2s">
-                <a href="{{ route('index') }}" class="btn btn-primary float-start" style="color: #ffffff; background-color: #5ce70b !important; border-color: #5ce70b !important;"><i class="fas fa-arrow-left"></i>Kembali</a>
+                <a href="{{ route('index') }}" class="btn btn-primary float-start" style="color: #ffffff; background-color: #5ce70b !important; border-color: #5ce70b !important;"><i class="fas fa-arrow-left"></i> Kembali</a>
 
                 <div class="about-item-content bg-white rounded p-5 h-100 mt-5">
                     <h4 class="text-primary">Visi & Misi SD MUHAMMADIYAH 3 SAMARINDA</h4>
@@ -27,7 +26,7 @@
                     <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i> Membentuk kebiasaan-kebiasaan warga Sekolah yang islami demi terwujudnya masyarakat islam yang sebenar-benarnya sesuai dengan tujuan Muhammadiyah.</p>
 
 
-                    <div class="about-item-content bg-white rounded p-5 h-100">
+                    <div class="about-item-content bg-white rounded p-5 ">
                         <p class="text-dark">TUJUAN <code>*</code></p>
                         <p class="text-dark"><i class="fa fa-check text-primary me-3"></i>Terwujudnya Siswa Siswi hafidz dan hafidzah melalui progam tahfidz dan program penanaman iman dan taqwa sejak dini.</p>
                         <p class="text-dark"><i class="fa fa-check text-primary me-3"></i>Terwujudnya Siswa Siswi yang cerdas melalui program edutainment dengan meningkatkan sarana prasarana pendidikan yang mendukung pengembangan kecerdasan Siswa sesuai potensi Siswa.</p>
@@ -43,5 +42,7 @@
     </div>
 </div>
 <!-- About End -->
+
+</div>
 
 @endsection

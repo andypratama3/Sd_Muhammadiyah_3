@@ -50,8 +50,6 @@ class ArtikelController extends Controller
         $artikels_trending = $artikels_trending->paginate($limit);
 
 
-
-
         // Return the main view with the data
         return view('artikel.index', compact('artikels_trending', 'maxClicks', 'categorys'));
     }

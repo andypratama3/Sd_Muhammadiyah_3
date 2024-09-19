@@ -122,7 +122,7 @@ class PembayaranController extends Controller
             $pembayaranActionDelete->execute($order_id);
             return response()->json(['status' => 'success', 'message' => 'Berhasil Menghapus Invoice']);
         }else{
-            return response()->json(['status' => 'error', 'message' => 'Gagal Menghapus Artikel']);
+            return response()->json(['status' => 'error', 'message' => 'Gagal Menghapus Invoice']);
         }
     }
     public function exportExcel(Request $request)

@@ -62,8 +62,8 @@
             </div>
         </a>
         <div class="d-flex flex-column ms-3">
-            <span>Call to Our Experts</span>
-            <a href="tel:+ 0123 456 7890"><span class="text-dark">Free: + 0123 456 7890</span></a>
+            <span>Contact As</span>
+            <a href="https://wa.me/6281234567890"><span class="text-dark">0123 456 7890</span></a>
         </div>
     </div>
 </nav>
