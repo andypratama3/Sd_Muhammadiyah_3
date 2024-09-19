@@ -49,11 +49,11 @@
                             <div class="d-flex justify-content-center flex-shrink-0 mb-4">
                                 @if($hero->youtube != null)
                                 <a class="btn btn-light rounded-pill py-3 px-4 px-md-5 me-2"
-                                    href="{{ $hero->youtube }}"><i class="fas fa-play-circle me-2"></i> Watch Video</a>
+                                    href="{{ $hero->youtube }}" target="__blank"><i class="fas fa-play-circle me-2"></i> Watch Video</a>
                                 @endif
                                 @if($hero->link != null)
                                 <a class="btn btn-dark rounded-pill py-3 px-4 px-md-5 ms-2"
-                                    href="{{ $hero->link }}">Kunjungi Halaman</a>
+                                    href="{{ $hero->link }}" target="__blank">Kunjungi Halaman</a>
                                 @endif
 
                             </div>
@@ -61,10 +61,33 @@
                     </div>
                     <div class="col-lg-5 animated fadeInRight">
                         <div class="carousel-img" style="object-fit: cover; justify-content: center !important; align-items: center !important;">
-                            <img src="{{ asset('asset_new/images/SD3_logo1.png') }}" class="img-fluid img-logo" alt="" style="width: 80%;" loading="lazy">
-                            <div class="jargon" style="display: flex; gap: 4px; font-family: times new roman;">
+                            <img src="{{ asset('asset_new/images/SD3_logo1.png') }}" class="img-fluid img-logo" alt="" style="width: 60%;" loading="lazy">
+                            <div class="jargon" style="display: flex; gap: 4px; font-family: times new roman; justify-content: center; margin-top: 15px;">
+                                {{-- Jargon SD MUHAMMADIYAH 3 SAMARINDA --}}
                                     <p class="text-primary">S</p>
+                                    <p class="text-warning" style="margin-right: 5px;">D</p>
+                                    <p class="text-danger">M</p>
+                                    <p class="text-success">U</p>
+                                    <p class="text-primary">H</p>
+                                    <p class="text-warning">A</p>
+                                    <p class="text-danger">M</p>
+                                    <p class="text-success">M</p>
+                                    <p class="text-primary">A</p>
                                     <p class="text-warning">D</p>
+                                    <p class="text-danger">I</p>
+                                    <p class="text-success">Y</p>
+                                    <p class="text-primary">A</p>
+                                    <p class="text-warning" style="margin-right: 5px;">H</p>
+                                    <p class="text-success" style="margin-right: 5px;">3</p>
+                                    <p class="text-primary">S</p>
+                                    <p class="text-warning">A</p>
+                                    <p class="text-danger">M</p>
+                                    <p class="text-success">A</p>
+                                    <p class="text-primary">R</p>
+                                    <p class="text-warning">I</p>
+                                    <p class="text-danger">N</p>
+                                    <p class="text-success">D</p>
+                                    <p class="text-primary">A</p>
                             </div>
                         </div>
                     </div>

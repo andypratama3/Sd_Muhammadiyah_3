@@ -9,14 +9,17 @@ use App\Models\Prestasi;
 use App\Charts\SiswaChart;
 use App\Models\Pembayaran;
 use App\Charts\ArtikelView;
+use App\Charts\ChargeChart;
 use App\Models\KritikSaran;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use App\Models\TenagaPendidikan;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    public function __invoke(ArtikelView $ArtikelChart, SiswaChart $siswaChart)
+    public function __invoke(ArtikelView $ArtikelChart, SiswaChart $siswaChart, ChargeChart $chagreChart, Request $request)
     {
         $siswa = Siswa::count();
         $guru = Guru::count();
@@ -25,7 +28,10 @@ class DashboardController extends Controller
         //chart
         $ArtikelChart = $ArtikelChart->build();
         $siswaChart = $siswaChart->build();
-
+        // Set year for ChargeChart, default to current year if not provided
+        $year = $request->input('year', Carbon::now()->year);
+        $chagreChart->setYear($year);
+        $chagreChart = $chagreChart->build();
         //count artikel data
         $artikel_sum_total_klik = Artikel::sum('jumlah_klik');
         $artikel_like_max = Artikel::orderBy('jumlah_klik','desc')->first();
@@ -41,6 +47,13 @@ class DashboardController extends Controller
 
         $artikel_publish = Artikel::where('user_id', Auth::user()->id)->where('status','publish')->count();
 
+        if ($request->ajax()) {
+            return response()->json([
+                'chagreChart' => $chagreChart->toJson(),
+            ]);
+        }
+
+
         return view('dashboard.index', compact(
             'siswa',
             'guru',
@@ -48,6 +61,7 @@ class DashboardController extends Controller
             'tenagakependidikan',
             'ArtikelChart',
             'siswaChart',
+            'chagreChart',
             'artikels',
             'artikel_sum_total_klik',
             // 'percent_artikel',

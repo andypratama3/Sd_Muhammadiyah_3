@@ -86,6 +86,28 @@
         </div>
     </div>
     <!-- Area Chart -->
+    <div class="col-xl-12 col-lg-7">
+        <div class="card mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <div class="col-md-12">
+                    <h5>Sortir Tahun</h5>
+                    <form id="yearForm" method="GET" action="{{ route('dashboard') }}">
+                        <select name="year" id="year_select" class="form-control">
+                            <option disabled selected>Pilih Tahun</option>
+                            @for ($i = 2020; $i <= date('Y'); $i++)
+                            <option value="{{ $i }}" {{ $i == request()->query('year') ?? date('Y') ? 'selected' : '' }}>{{ $i }}</option>
+                            @endfor
+                        </select>
+                    </form>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="chargeChartContainer">
+                    {!! $chagreChart->container() !!}
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="col-xl-8 col-lg-7">
         <div class="card mb-4">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -206,5 +228,15 @@
 @push('js')
 <script src="{{ $siswaChart->cdn() }}"></script>
 {{ $siswaChart->script() }}
+{{ $chagreChart->script() }}
+<script>
+    $(document).ready(function () {
+        $('#year_select').on('change', function () {
+            let year = $(this).val();
+            $('#yearForm').submit();
+        })
+    });
+</script>
 @endpush
+
 @endsection

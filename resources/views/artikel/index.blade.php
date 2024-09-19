@@ -32,8 +32,8 @@
                     <h4 class="section-title">ARTIKEL TERBARU</h4>
                 </div>
                 <div class="col-md-4 mt-2">
-                    <select name="" class="form-control" id="category">
-                        <option value="">Semua Kategori</option>
+                    <select name="categorys" class="form-control" id="category">
+                        <option value="" selected>Semua Kategori</option>
                         @foreach ($categorys as $category)
                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                         @endforeach
@@ -41,7 +41,7 @@
                 </div>
                 <div class="col-md-4 mt-2">
                    <div class="input-group">
-                        <input type="text" class="form-control" id="search" name="search" placeholder="Cari Artikel">
+                        <input type="text" class="form-control" id="search" value="{{ old('search') }}" name="search" placeholder="Cari Artikel">
                         <button class="btn btn-primary" type="button"><i class="fa fa-search"></i></button>
                    </div>
                 </div>
@@ -70,8 +70,8 @@
             </div>
             @endforeach
         </div>
-        <div class="col-md-12 d-none" id="not-found">
-            <div class="container">
+        <div class="col-md-12 d-none mt-5" id="not-found">
+            <div class="container text-center">
                 <h2 id="message">Artikel Tidak Di Temukan</h2>
             </div>
         </div>
