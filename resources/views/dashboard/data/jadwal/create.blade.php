@@ -13,7 +13,7 @@
     <div class="card-body">
         <form action="{{ route('dashboard.datasekolah.jadwal.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="kelas">Kelas</label>
                 <select name="kelas" id="kelas" class="form-control select2" data-placeholder="Pilih Kelas">
                     <option selected disabled>Pilih Kelas</option>
@@ -22,14 +22,14 @@
                     @endforeach
                 </select>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="category_kelas">Kategori Kelas</label>
                 <select name="category_kelas" id="category_kelas" class="form-control select2" data-placeholder="Pilih Kategori Kelas">
                     <option selected disabled>Pilih Kategori Kelas</option>
                     <option value="" class="option_category"></option>
                 </select>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="tahun_ajaran">Tahun Ajaran</label>
                 <select name="tahun_ajaran" id="tahun_ajaran" class="form-control select2">
                     <option selected disabled>Pilih Tahun Ajaran</option>
@@ -39,13 +39,13 @@
                   <?php endforeach; ?>a>
                 </select>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2 mb-4">
                 <label for="jadwal">Jadwal</label>
                 <input type="file" class="form-control" name="jadwal" id="jadwal">
             </div>
 
-            <a  href="{{ route('dashboard.datasekolah.jadwal.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
-            <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
+            <a  href="{{ route('dashboard.datasekolah.jadwal.index') }}" class="btn btn-sm btn-danger float-lg-start">Kembali</a>
+            <button type="submit" class="btn btn-sm btn-primary float-lg-end">Submit</button>
         </form>
     </div>
 </div>

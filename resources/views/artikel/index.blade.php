@@ -24,7 +24,7 @@
 </style>
 @endpush
 @section('content')
-<div class="services section" style="margin-top: 100px;">
+<div class="services section" style="margin-top: 20px;">
     <div class="container">
         <div class="col-md-12">
             <div class="row">
@@ -42,7 +42,7 @@
                 <div class="col-md-4 mt-2">
                    <div class="input-group">
                         <input type="text" class="form-control" id="search" value="{{ old('search') }}" name="search" placeholder="Cari Artikel">
-                        <button class="btn btn-primary" type="button"><i class="fa fa-search"></i></button>
+                        <button class="btn btn-primary" id="button_search"  type="button"><i class="fa fa-search"></i></button>
                    </div>
                 </div>
             </div>
@@ -82,7 +82,7 @@
     $(document).ready(function () {
         let page = 1;
         const url = "{{ route('artikel.index') }}";
-        const target = $('#target');
+        let target = $('#target');
         let itemsLoaded = 0;
         let loading = $('#js-preloader');
         loading.hide();
@@ -120,37 +120,45 @@
         function checkInternetConnection() {
             return navigator.onLine;
         }
+        function getArticle()
+        {
+            let search = $('#search').val();
+            let url = "{{ route('artikel.index') }}";
 
-        let searchTimeout;
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: {
+                    search: search
+                },
+                success: function (data) {
+                    if (search === '') {
+                        // If search is empty, just load the original articles
+                        target.removeClass('d-none').html(data);
+                        $('#not-found').addClass('d-none');
+                    } else if (data.status == 'error') {
+                        target.addClass('d-none');
+                        $('#not-found').removeClass('d-none');
+                        $('#message').text(data.message);
+                    } else {
+                        $('#not-found').addClass('d-none');
+                        target.removeClass('d-none').html(data);
+                    }
+                },
+                error: function () {
+                    target.html('<div class="alert alert-danger">Error loading articles. Please try again later.</div>');
+                }
+            });
+        }
 
         $('#search').on('keyup', function () {
-            clearTimeout(searchTimeout);
-            let search = $('#search').val();
-            searchTimeout = setTimeout(function () {
-                let search = $('#search').val();
-                let url = "{{ route('artikel.index') }}";
-
-                $.ajax({
-                    type: "GET",
-                    url: url,
-                    data: {
-                        search: search
-                    },
-                    success: function (data) {
-                        if (data.status == 'error') {
-                            target.addClass('d-none');
-                            $('#not-found').removeClass('d-none');
-                            $('#message').text(data.message);
-                        } else {
-                            target.html(data);
-                        }
-                    },
-                    error: function () {
-                        target.html('<div class="alert alert-danger">Error loading articles. Please try again later.</div>');
-                    }
-                });
-            }, 300);
+            getArticle();
         });
+
+        $('#button_search').on('click', function () {
+            getArticle();
+        })
+
 
 
         $('#category').on('change', function () {

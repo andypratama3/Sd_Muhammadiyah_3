@@ -1,12 +1,11 @@
 @extends('layouts.user')
 @section('title','Kontak')
 
-
 @section('content')
 <div class="contact-us section" id="contact">
     <div class="container">
         <div class="row">
-            <div class="col-lg-6  align-self-center">
+            <div class="col-md-6 pt-4 wow fadeInUp" style="margin-top: 100px !important;">
                 <div class="section-heading">
                     <h6>Kontak</h6>
 
@@ -26,7 +25,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6">
+            <div class="col-md-6 pt-4 wow fadeInRight">
                 <div class="contact-us-content">
                     <div class="row text-center">
                         <div class="col-lg-12">
@@ -37,39 +36,48 @@
                 </div>
             </div>
         </div>
-        <div class="row mt-4">
-            <div class="contact bg-light wow fadeInRight mb-4" data-wow-delay="0.4s">
-                <div class="col-md-12 text-center mb-4">
-                    <h2>Kritik dan Saran</h2>
-                </div>
-                <form id="contact-form" action="{{ route('kritik.saran.store') }}" method="POST">
-                    @csrf
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control border-0" id="name" name="name" placeholder="Your Name..." required>
-                                <label for="name">Your Name</label>
+        <div class="row" style="margin-top: 100px;">
+            <div class="contact wow fadeInRight mb-4" data-wow-delay="0.4s">
+                <div class="card" style="background-color: #f5f5f5">
+                    <div class="card-body">
+                        <div class="col-md-12 text-center mb-4">
+                            <h2>Kritik dan Saran</h2>
+                        </div>
+                        <form id="contact-form" action="{{ route('kritik.saran.store') }}" method="POST">
+                            @csrf
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control border-0" id="name" name="name" placeholder="Nama Anda..." required>
+                                        <label for="name">Nama Anda</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control border-0" id="subject" name="subject" placeholder="Subjek" required>
+                                        <label for="subject">Subjek</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-floating mb-3">
+                                        <input type="email" class="form-control border-0" id="email" name="email" placeholder="Email Anda" required>
+                                        <label for="email">Email Anda</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-floating mb-3">
+                                        <textarea class="form-control border-0" id="message" name="message" placeholder="Kritik dan Saran Anda" style="height: 100px"></textarea>
+                                        <label for="message">Kritik dan Saran Anda</label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" id="form-submit" class="btn btn-primary w-100 py-3">Kirim Kritik Dan Saran</button>
+                                </div>
                             </div>
-
-                        </div>
-                        <div class="col-lg-12">
-                            <div class="form-floating mb-3">
-                                <input type="email" class="form-control border-0" id="email" name="email" placeholder="Your Email" required>
-                                <label for="email">Your Email</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <div class="form-floating mb-3">
-                                <textarea class="form-control border-0" id="message" name="message" placeholder="Your Message" style="height: 100px"></textarea>
-                                <label for="message">Your Message</label>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                                <button type="submit" id="form-submit" class="btn btn-primary w-100 py-3">Send Message
-                                    Now</button>
-                        </div>
+                        </form>
                     </div>
-                </form>
+
+                </div>
             </div>
         </div>
     </div>

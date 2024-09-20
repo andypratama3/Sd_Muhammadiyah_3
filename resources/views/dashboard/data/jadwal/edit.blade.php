@@ -15,7 +15,7 @@
             @csrf
             @method('PUT')
             <input type="hidden" name="slug" value="{{ $jadwal->slug }}">
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="kelas">Kelas</label>
                 <select name="kelas" id="kelas" class="form-control select2" data-placeholder="Pilih Kelas">
                     <option value="{{ $jadwal->kelas }}">{{ $jadwal->kelas_jadwal->name }}</option>
@@ -24,14 +24,14 @@
                     @endforeach
                 </select>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="category_kelas">Kategori Kelas</label>
                 <select name="category_kelas" id="category_kelas" class="form-control select2" data-placeholder="Pilih Kategori Kelas">
                     <option selected value="{{ $jadwal->category_kelas }}">{{ $jadwal->category_kelas }}</option>
                     <option value="" class="option_category"></option>
                 </select>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="tahun_ajaran">Tahun Ajaran</label>
                 <select name="tahun_ajaran" id="tahun_ajaran" class="form-control select2">
                     <option selected value="{{ $jadwal->tahun_ajaran }}">{{ $jadwal->tahun_ajaran }}</option>
@@ -41,13 +41,13 @@
                   <?php endforeach; ?>a>
                 </select>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2 mb-4">
                 <label for="jadwal">Jadwal</label>
                 <input type="file" class="form-control" name="jadwal" id="jadwal" value="{{ $jadwal->jadwal }}">
             </div>
 
-            <a  href="{{ route('dashboard.datasekolah.jadwal.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
-            <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
+            <a  href="{{ route('dashboard.datasekolah.jadwal.index') }}" class="btn btn-sm btn-danger float-lg-start">Kembali</a>
+            <button type="submit" class="btn btn-sm btn-primary float-lg-end">Submit</button>
         </form>
     </div>
 </div>

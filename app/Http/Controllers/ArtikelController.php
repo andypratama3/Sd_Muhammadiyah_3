@@ -11,13 +11,12 @@ class ArtikelController extends Controller
 {
     public function index(Request $request)
     {
-
         $request->validate([
             'search' => 'nullable|string',
         ]);
 
         $limit = 10;
-        $categorys = Category::select(['id','name','slug'])->orderBy('name','desc')->get();
+        $categorys = Category::select(['id', 'name', 'slug'])->orderBy('name', 'desc')->get();
         $maxClicks = Artikel::max('jumlah_klik');
 
         // Start building the query for artikels
@@ -25,34 +24,34 @@ class ArtikelController extends Controller
             ->where('status', 'publish')
             ->orderBy('jumlah_klik', 'DESC');
 
-        // Apply search filter if exists
-        if($request->search){
+        // If the search is provided and not empty
+        if ($request->search !== null && $request->search !== '') {
             $artikels_trending->where('name', 'like', '%'.$request->search.'%');
 
-            if($artikels_trending->count() == 0){
-                return response()->json(['status' => 'error','message' => 'Artikel Tidak Ditemukan']);
+            if ($artikels_trending->count() == 0) {
+                return response()->json(['status' => 'error', 'message' => 'Artikel Tidak Ditemukan']);
             }
         }
 
-
-        if($request->category)
-        {
+        // Apply category filter if exists
+        if ($request->category) {
             $artikels_trending->whereHas('categorys', function ($query) use ($request) {
                 $query->where('category_id', $request->category);
             });
         }
 
+        // Paginate the results after applying all filters
+        $artikels_trending = $artikels_trending->paginate($limit);
+
+        // Check if it's an AJAX request
         if ($request->ajax()) {
             return view('artikel.load-data', compact('artikels_trending', 'maxClicks'));
         }
 
-        // Paginate the results after applying all filters
-        $artikels_trending = $artikels_trending->paginate($limit);
-
-
         // Return the main view with the data
         return view('artikel.index', compact('artikels_trending', 'maxClicks', 'categorys'));
     }
+
 
     public function show(Artikel $artikel)
     {

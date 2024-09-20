@@ -1,11 +1,11 @@
 @extends('layouts.user')
-@section('title','Fasilitas')
+@section('title','Sarana & Prasarana')
 @section('content')
 <div class="main-banner">
     <div class="container aos-init aos-animate" data-aos="fade-up">
         <div class="row">
             <header class="section-header text-center">
-                <h2>Fasilitas</h2>
+                <h2>Sarana & Prasarana</h2>
                 <h4>SD Muhammadiyah 3 Samarinda</h4>
             </header>
 
@@ -28,7 +28,7 @@
             </div>
             @empty
             <div class="col-lg-12 text-center mb-5" data-aos="zoom-in" style="margin-top: 40px;" data-aos-delay="50">
-                <h4>Tidak ada fasilitas</h4>
+                <h4>Tidak ada Sarana & Prasarana</h4>
                 @endforelse
             </div>
         </div>

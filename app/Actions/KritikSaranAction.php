@@ -7,6 +7,7 @@ class KritikSaranAction
 {
     public function execute($kritikSaranData)
     {
+
         $kritik_saran = new KritikSaran();
         $kritik_saran->name = $kritikSaranData->name;
         $kritik_saran->email = $kritikSaranData->email;

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class KritikSaran extends Model
 {
-    use HasFactory,UsesUuid,NameHasSlug;
+    use HasFactory,UsesUuid, NameHasSlug;
     protected $table = 'kritik_sarans';
     protected $fillable = ['name', 'email', 'subject', 'message','slug'];
 }

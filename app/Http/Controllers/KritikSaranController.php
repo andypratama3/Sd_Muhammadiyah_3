@@ -9,14 +9,12 @@ class KritikSaranController extends Controller
 {
     public function store(KritikSaranData $kritikSaranData, KritikSaranAction $kritikSaranAction)
     {
-
-        
         if($kritikSaranAction)
         {
             $kritikSaranAction->execute($kritikSaranData);
-            return response()->json(['message' => 'Kritik dan Saran Berhasil Di Kirim'], 200);
+            return redirect()->route('kontak.index')->with('success', 'Kritik dan Saran Berhasil Di Kirim');
         }else{
-            return response()->json(['status' => 'error', 'message' => 'Gagal Mengirim Kritik dan Saran'], 400);
+            return redirect()->route('kontak.index')->with('error', 'Kritik dan Saran Gagal Di Kirim');
 
         }
 

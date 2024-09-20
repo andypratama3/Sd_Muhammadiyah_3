@@ -29,6 +29,8 @@ class PembayaranController extends Controller
 
             // Search for the payment by order_id in Charge or name in Siswa
             $payment = Charge::where('order_id', $kode)
+                ->orWhere('order_id', 'LIKE', "%{$kode}%")
+                ->orWhere('va_number', 'LIKE', "%{$kode}%")
                 ->whereMonth('transaction_time', Carbon::now()->month)
                 ->whereYear('transaction_time', Carbon::now()->year)
                 ->orWhereHas('siswa', function ($query) use ($kode) {
@@ -37,7 +39,7 @@ class PembayaranController extends Controller
                         ->whereYear('transaction_time', Carbon::now()->year);
                 })
                 ->first();
-                
+
             if ($payment) {
                 // Fetch the related siswa data
                 $siswa = Siswa::find($payment->siswa_id);
@@ -72,11 +74,6 @@ class PembayaranController extends Controller
                                 'name' => $payment->name,
                             ]
                         ],
-                        // "expiry" => [
-                        //     "start_time" => now(),
-                        //     "unit" => "minutes",
-                        //     "duration" => 180
-                        // ],
                     ];
                     // Try generating the snap token
                     try {
