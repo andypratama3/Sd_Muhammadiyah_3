@@ -7,6 +7,7 @@ use Midtrans\Config;
 use App\Models\Siswa;
 use App\Models\Charge;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class PembayaranController extends Controller
 {
@@ -21,15 +22,22 @@ class PembayaranController extends Controller
             'kode' => 'required',
         ]);
 
+        $currentMonth = Carbon::now()->startOfMonth();
+
         if ($request->has('kode')) {
             $kode = $request->input('kode');
 
             // Search for the payment by order_id in Charge or name in Siswa
             $payment = Charge::where('order_id', $kode)
-                        ->orWhereHas('siswa', function ($query) use ($kode) {
-                            $query->where('name', 'LIKE', "%{$kode}%");
-                        })->first();
-
+                ->whereMonth('transaction_time', Carbon::now()->month)
+                ->whereYear('transaction_time', Carbon::now()->year)
+                ->orWhereHas('siswa', function ($query) use ($kode) {
+                    $query->where('name', 'LIKE', "%{$kode}%")
+                        ->whereMonth('transaction_time', Carbon::now()->month)
+                        ->whereYear('transaction_time', Carbon::now()->year);
+                })
+                ->first();
+                
             if ($payment) {
                 // Fetch the related siswa data
                 $siswa = Siswa::find($payment->siswa_id);

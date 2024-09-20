@@ -18,8 +18,9 @@ class MidtransPaymentController extends Controller
             ], 404);
         }
         $status_transaction = $request->transaction_status;
-        if($status_transaction == 'settlement'){
-            $charge = $charge->transaction_status = $request->transaction_status;
+        
+        if($status_transaction == 'settlement' || $status_transaction == 'capture'){
+            $charge = $charge->transaction_status = 'settlement';
         }elseif($status_transaction == 'pending'){
             $charge = $charge->transaction_status = $request->transaction_status;
         }elseif($status_transaction == 'deny'){

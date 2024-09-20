@@ -15,6 +15,8 @@ class ArtikelView
 
     public function build(): \ArielMejiaDev\LarapexCharts\BarChart
     {
+        // count
+        // $artikels
         return $this->chart->barChart()
             ->addData('San Francisco', [6, 9, 3, 4, 10, 8])
             ->addData('Boston', [7, 3, 8, 2, 6, 4])

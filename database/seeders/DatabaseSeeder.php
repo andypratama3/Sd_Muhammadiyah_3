@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
             ArtikelSeeder::class,
             BeritaSeed::class,
             SiswaSeeder::class,
-            ChargeSeeder::class,
+            // ChargeSeeder::class,
         ]);
     }
 }

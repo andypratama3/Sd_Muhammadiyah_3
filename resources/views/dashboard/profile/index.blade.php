@@ -427,7 +427,7 @@
                             },
                             success: function(data) {
                                 $modal.modal('hide');
-                                swal({
+                                Swal.fire({
                                         title: 'Success!',
                                         text: data['success'],
                                         icon: 'success',

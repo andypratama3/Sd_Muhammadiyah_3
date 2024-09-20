@@ -27,22 +27,22 @@ class ChargeChart
     {
         // Fetch charge data grouped by month and status for the selected year
         $charges = Charge::selectRaw('MONTH(created_at) as month,
-                                    SUM(CASE WHEN transaction_status = "success" THEN 1 ELSE 0 END) as success_count,
+                                    SUM(CASE WHEN transaction_status = "settlement" THEN 1 ELSE 0 END) as settlement_count,
                                     SUM(CASE WHEN transaction_status = "pending" THEN 1 ELSE 0 END) as pending_count,
                                     SUM(CASE WHEN transaction_status = "deny" THEN 1 ELSE 0 END) as deny_count')
             ->whereYear('created_at', $this->year)
             ->groupBy('month')
             ->orderBy('month')
             ->get();
-
         // Initialize the count for each month (1 to 12)
-        $monthlySuccessCounts = array_fill(1, 12, 0);
+        $monthlysettlementCounts = array_fill(1, 12, 0);
         $monthlyPendingCounts = array_fill(1, 12, 0);
         $monthlyDenyCounts = array_fill(1, 12, 0);
 
+
         // Populate the counts arrays with actual data
         foreach ($charges as $item) {
-            $monthlySuccessCounts[$item->month] = $item->success_count;
+            $monthlysettlementCounts[$item->month] = $item->settlement_count;
             $monthlyPendingCounts[$item->month] = $item->pending_count;
             $monthlyDenyCounts[$item->month] = $item->deny_count;
         }
@@ -54,9 +54,9 @@ class ChargeChart
         ];
 
         return $this->chart->barChart()
-            ->setTitle('Pembayaran Chart')
+            ->setTitle('Pembayaran SPP Siswa Chart')
             ->setSubtitle('Jumlah Transaksi per Bulan')
-            ->addData('Success', array_values($monthlySuccessCounts))
+            ->addData('settlement', array_values($monthlysettlementCounts))
             ->addData('Pending', array_values($monthlyPendingCounts))
             ->addData('Deny', array_values($monthlyDenyCounts))
             ->setColors(['#5ce70b', '#f9ca24', '#e74c3c'])

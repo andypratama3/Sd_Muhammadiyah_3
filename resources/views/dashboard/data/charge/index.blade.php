@@ -104,7 +104,8 @@
                 table.cleanData;
                 table.ajax.reload();
             }
-            $('#charge_table').DataTable({
+            // Initialize DataTable
+            let table = $('#charge_table').DataTable({
                 ordering: true,
                 pagination: true,
                 deferRender: true,
@@ -113,40 +114,23 @@
                 processing: true,
                 pageLength: 100,
                 ajax: {
-                    'url': "{{ route('dashboard.datamaster.charge.get.records') }}",
-                    'data': function(d) {
+                    url: "{{ route('dashboard.datamaster.charge.get.records') }}",
+                    data: function(d) {
                         d.kelas = $('#kelas').val();
                         d.date = $('#date_range').val();
                     }
                 },
-                columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                        orderable: false,
-                        searchable: false,
-                        ordering: false
-                    },
+                columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, ordering: false },
+                    { data: 'name', name: 'name' },
+                    { data: 'siswa.name', name: 'siswa.name' },
+                    { data: 'kelas.name', name: 'kelas.name' },
+                    { data: 'order_id', name: 'order_id' },
                     {
-                        data: 'name',
-                        name: 'name'
-                    },
-                    {
-                        data: 'siswa.name',
-                        name: 'siswa.name'
-                    },
-                    {
-                        data: 'kelas.name',
-                        name: 'kelas.name'
-                    },
-                    {
-                        data: 'order_id',
-                        name: 'order_id'
-                    },
-                    {
-                        data: 'gross_amount', // Refers to the data field in your dataset
-                        name: 'gross_amount', // Name of the column
-                        render: function(data, type, full, meta) { // Custom rendering function
-                            return 'Rp. ' + data; // Formats the data with 'Rp.' prefix
+                        data: 'gross_amount',
+                        name: 'gross_amount',
+                        render: function(data, type, full, meta) {
+                            return 'Rp. ' + data;
                         }
                     },
                     {
@@ -154,27 +138,27 @@
                         name: 'transaction_status',
                         render: function(data, type, full, meta) {
                             if (data === 'pending') {
-                                return '<h6 style="color: black;"><span class="badge bg-warning"><i class="fa-solid fa-clock"></i> ' +
-                                    data + '</span></h6>';
-                            } else if (data === 'Berhasil') {
-                                return '<h6 style="color: black;"><span class="badge bg-success"><i class="fa-solid fa-circle-check"></i> ' +
-                                    data + '</span></h6>';
+                                return '<h6 style="color: black;"><span class="badge bg-warning"><i class="fa-solid fa-clock"></i> ' + data + '</span></h6>';
+                            } else if (data === 'settlement') {
+                                return '<h6 style="color: black;"><span class="badge bg-success"><i class="fa-solid fa-circle-check"></i> ' + data + '</span></h6>';
                             } else if (data === 'Expired') {
-                                return '<h6 style="color: black;"><span class="badge bg-danger"><i class="fa-solid fa-xmark"></i> ' +
-                                    data + '</span></h6>';
+                                return '<h6 style="color: black;"><span class="badge bg-danger"><i class="fa-solid fa-xmark"></i> ' + data + '</span></h6>';
                             } else {
                                 return data;
                             }
                         }
                     },
-                    {
-                        data: 'options',
-                        name: 'options',
-                        orderable: false,
-                        searchable: false
-                    }
+                    { data: 'options', name: 'options', orderable: false, searchable: false }
                 ],
             });
+
+            // Scroll to top when changing DataTable pages
+            table.on('page.dt', function() {
+                // Scroll to top using a smooth scroll
+                // e.preventDefault();
+                $('html, body').animate({ scrollTop: 0 }, 'slow');
+            });
+
             $('#charge_table').on('click', '#btn-delete', function() {
                 var id = $(this).data('id');
                 var url = "{{ route('dashboard.datamaster.charge.destroy', ':id') }}";
@@ -229,7 +213,6 @@
             $('#kelas').on('change', function () {
                 reloadTable('#charge_table');
             });
-
 
             $('#date_range').on('apply.daterangepicker', function () {
                 let range = $('#date_range').val();

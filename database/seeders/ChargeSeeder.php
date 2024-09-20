@@ -48,7 +48,7 @@ class ChargeSeeder extends Seeder
                     'transaction_id' => 'TRX-'.Str::random(5),
                     'transaction_time' => now(),
                     'fraud_status' => 'accept',
-                    'transaction_status' => ['pending', 'success'][array_rand(['pending', 'success'])],
+                    'transaction_status' => ['pending', 'settlement'][array_rand(['pending', 'settlement'])],
                     'snap_token' => Str::random(10),
                     'created_at' => Carbon::create($year, $monthNumber, rand(1, 28)), // Random day within the month
                 ]);

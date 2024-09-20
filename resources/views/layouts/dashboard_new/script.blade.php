@@ -30,6 +30,7 @@
         table.ajax.reload();
     }
 
+
     $(document).ready(function () {
         $('.navbar-nav-right').on('click', '.swal-logout', function (e) {
             // slug = e.target.dataset.id;

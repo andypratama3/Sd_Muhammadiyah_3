@@ -19,14 +19,14 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    public function __invoke(ArtikelView $ArtikelChart, SiswaChart $siswaChart, ChargeChart $chagreChart, Request $request)
+    public function __invoke(SiswaChart $siswaChart, ChargeChart $chagreChart, Request $request)
     {
         $siswa = Siswa::count();
         $guru = Guru::count();
         $prestasi = Prestasi::count();
         $tenagakependidikan = TenagaPendidikan::count();
         //chart
-        $ArtikelChart = $ArtikelChart->build();
+        // $ArtikelChart = $ArtikelChart->build();
         $siswaChart = $siswaChart->build();
         // Set year for ChargeChart, default to current year if not provided
         $year = $request->input('year', Carbon::now()->year);
@@ -59,7 +59,7 @@ class DashboardController extends Controller
             'guru',
             'prestasi',
             'tenagakependidikan',
-            'ArtikelChart',
+            // 'ArtikelChart',
             'siswaChart',
             'chagreChart',
             'artikels',
