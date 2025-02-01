@@ -28,7 +28,7 @@ class BeritaController extends Controller
                     <a href="' . route('dashboard.news.berita.show', $row->slug) . '" class="btn btn-sm me-1 btn-warning"><i class="fa fa-eye"></i></a>
                     <a href="' . route('dashboard.news.berita.edit', $row->slug) . '" class="btn btn-sm me-1 btn-primary"><i class="fa fa-pen"></i></a>
                     <button data-id="' . $row['slug'] . '" class="btn btn-sm btn-danger" id="btn-delete"><i class="fa fa-trash"></i></button>
-                ';
+                ';  
                 })
                 ->rawColumns(['options'])
                 ->addIndexColumn()
@@ -64,7 +64,7 @@ class BeritaController extends Controller
     public function update(ActionBerita $ActionBerita, BeritaData $beritaData)
     {
         $ActionBerita->execute($beritaData);
-        return redirect()->route('dashboard.news.berita.index')->with('success', 'Berita Berhasil Di Updtae');
+        return redirect()->route('dashboard.news.berita.index')->with('success', 'Berita Berhasil Di Update');
     }
 
     public function destroy(DeleteBeritaAction $deleteBeritaAction, $slug)

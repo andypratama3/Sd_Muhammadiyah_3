@@ -38,7 +38,7 @@
                 <input type="file" class="form-control" name="image" value="{{ $artikel->image }}" placeholder="{{ $artikel->image }}">
             </div>
             <div class="form-group mt-2 text-center">
-                <img src="{{ asset('storage/img/artikel/'. $artikel->image) }}" alt="" srcset="" width="200px">
+                <img src="{{ asset('storage/img/artikel/'. $artikel->image) }}" alt="" class="img-fluid" style="border-radius: 10px;">
             </div>
             <div class="form-group mt-2 mb-2">
                 <div id="editor">{!! $artikel->artikel !!}</div>

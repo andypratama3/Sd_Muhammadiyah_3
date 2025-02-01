@@ -25,6 +25,7 @@ class ArtikelAction
             $picture_name = $artikel->image;
 
         }
+
         $artikel = Artikel::updateOrCreate(
             ['slug' => $artikelData->slug],
             [

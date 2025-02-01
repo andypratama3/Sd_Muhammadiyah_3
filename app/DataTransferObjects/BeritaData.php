@@ -11,7 +11,7 @@ class BeritaData extends Data
     public function __construct(
         public readonly string $judul,
         public readonly string $desc,
-        public readonly UploadedFile $foto,
+        public readonly ?UploadedFile $foto,
         public readonly ?string $slug,
 
     ) {
@@ -31,7 +31,7 @@ class BeritaData extends Data
     public static function messages()
     {
         return [
-            'judul.required' => 'Kolom Nama tidak boleh kosong!',
+            'judul.required' => 'Kolom Judul tidak boleh kosong!',
             'desc.required' => 'Kolom Deskripsi tidak boleh kosong!',
             'foto.required' => 'Kolom Foto tidak boleh kosong!',
         ];

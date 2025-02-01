@@ -8,34 +8,39 @@
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 @endpush
 <div class="card mb-4">
-    @include('layouts.flashmessage')
+
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
         <h6 class="m-0 font-weight-bold text-primary">Detail Artikel {{ $artikel->name }}</h6>
     </div>
     <div class="card-body">
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="name">Nama</label>
                 <input type="text" class="form-control" name="name" value="{{ $artikel->name }}" id="name" aria-describedby="name" placeholder="Masukan Nama" readonly>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label>Kategori Artikel</label>
-                <select class="form-control select2" multiple="multiple" name="categorys"
+                <select class="form-control" multiple="multiple" name="categorys"
                     data-placeholder="Pilih Kategori artikel" disabled>
                     @foreach ($artikel->categorys as $category)
-                    <option selected value="{{ $category->id }}">{{ $category->name }}</option>
+                    <option  value="{{ $category->id }}">{{ $category->name }}</option>
                     @endforeach
                 </select>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="">Foto</label>
-                <input type="file" class="form-control" name="image" value="{{ $artikel->image }}">
+                <input type="file" class="form-control" name="image" value="{{ asset('storage/img/artikel/'. $artikel->image) }}">
+
+                <div class="row mt-2">
+                    <img src="{{ asset('storage/img/artikel/'. $artikel->image) }}" alt="" class="img-fluid" style="border-radius: 10px;">
+                </div>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
+                <label for="">Artikel</label>
                 <div id="editor">{!! $artikel->artikel !!}</div>
                 <textarea name="artikel" id="content-editor" style="display: none;"></textarea>
             </div>
 
-            <a href="{{ route('dashboard.news.artikel.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
+            <a href="{{ route('dashboard.news.artikel.index') }}" class="btn btn-danger float-lg-start btn-sm">Kembali</a>
         </form>
     </div>
 </div>

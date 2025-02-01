@@ -13,9 +13,12 @@ class MataPelajaranController extends Controller
 {
     public function index()
     {
-        $no = 0;
-        $matapelajarans = Pelajaran::all();
-        return view('dashboard.matapelajaran.index', compact('matapelajarans', 'no'));
+        $limit = 10;
+
+        $matapelajarans = Pelajaran::orderBy('created_at', 'desc')->paginate($limit);
+        $no = $limit * ($matapelajarans->currentPage() - 1);
+        $count = $matapelajarans->count();
+        return view('dashboard.matapelajaran.index', compact('matapelajarans', 'no', 'count'));
     }
     public function create()
     {
@@ -26,8 +29,24 @@ class MataPelajaranController extends Controller
         $PelajaranAction->execute($pelajaranData);
         return redirect()->route('dashboard.datasekolah.matapelajaran.index')->with('success','Berhasil Menambah MataPelajaran');
     }
+
+    public function edit($slug)
+    {
+        $matapelajaran = Pelajaran::where('slug', $slug)->firstOrFail();
+        return view('dashboard.matapelajaran.edit', compact('matapelajaran'));
+    }
+
+    public function update(PelajaranAction $PelajaranAction, PelajaranData $pelajaranData)
+    {
+        $PelajaranAction->execute($pelajaranData);
+
+
+        return redirect()->route('dashboard.datasekolah.matapelajaran.index')->with('success', 'Berhasil Mengubah Mata Pelajaran');
+    }
+
     public function destroy(PelajaranActionDelete $pelajaranActionDelete,$slug)
     {
+
         $pelajaranActionDelete->execute($slug);
         return redirect()->route('dashboard.datasekolah.matapelajaran.index')->with('success', 'Barhasil Menghapus Mata Pelajaran');
     }

@@ -51,6 +51,7 @@
                 <label for="">Foto</label>
                 <div class="custom-file">
                     <input type="file" class="form-control" id="foto" name="foto" accept="image/*" onchange="loadPreview(this)">
+                    <input type="hidden" name="foto" value="{{ $guru->foto }}">
                 </div>
                 <div class="mt-3 text-center">
                     <h6 class="">Poto yang di pilih</h6>

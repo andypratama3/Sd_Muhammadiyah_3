@@ -12,13 +12,9 @@
     }
     .modal {
         display: none;
-        /* Hidden by default */
         position: fixed;
-        /* Stay in place */
         z-index: 1;
-        /* Sit on top */
         padding-top: 100px;
-        /* Location of the box */
         left: 0;
         top: 0;
         width: 100%;
@@ -26,6 +22,7 @@
         overflow: auto;
         background-color: rgb(0, 0, 0);
         background-color: rgba(0, 0, 0, 0.9);
+        z-index: 9999;
     }
     .modal-content {
         margin: auto;
@@ -70,13 +67,25 @@
 <div class="row">
     <div class="col-lg-12 mb-4">
         <div class="card">
-            @include('layouts.flashmessage')
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h4 class="m-0 font-weight-bold text-primary text-center">Data Guru</h5>
                     <a href="{{ route('dashboard.datasekolah.guru.create') }}" class="btn btn-success btn-sm float-right">Tambah <i class="fas fa-plus"></i></a>
             </div>
+            <div class="row mx-2 mb-2">
+                <div class="col-md-12">
+                    {{-- <div class="form-group">
+                        <label for="sortir">Sortir</label>
+                        <select name="mata_pelajaran" id="mata_pelajaran" class="form-control">
+                            <option value="">Semua</option>
+                            @foreach ($mataPelajarans as $pelajaran)
+                                <option value="{{ $pelajaran->id }}">{{ $pelajaran->name }}</option>
+                            @endforeach
+                        </select>
+                    </div> --}}
+                </div>
+            </div>
             <div class="table-responsive">
-                <table class="table align-items-center table-flush text-center">
+                <table class="table align-items-center table-flush text-center" id="table-guru">
                     <thead class="thead-light">
                         <tr>
                             <th>No</th>
@@ -157,6 +166,23 @@
         span.onclick = function () {
             modal.style.display = "none";
         }
+    });
+
+    $(document).ready(function () {
+        $('#mata_pelajaran').on('change', function () {
+            var mata_pelajaran = $(this).val();
+            $.ajax({
+                url: "{{ route('dashboard.datasekolah.guru.index') }}",
+                type: "GET",
+                data: {
+                    mata_pelajaran: mata_pelajaran
+                },
+                success: function (data) {
+                    $('.table').load(location.href + " .table");
+
+                }
+            });
+        });
     });
 </script>
 @endpush

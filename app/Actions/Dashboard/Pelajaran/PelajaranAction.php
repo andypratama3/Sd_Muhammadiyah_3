@@ -14,6 +14,9 @@ class PelajaranAction {
                 'name' => $pelajaranData->name,
             ]
         );
+
+
+        return $matapelajaran;
     }
 
 }

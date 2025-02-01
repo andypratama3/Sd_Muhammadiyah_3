@@ -131,7 +131,7 @@ $(document).ready(function () {
             },
             { data: 'foto', name: 'foto', orderable: false,
                 render: function (data) {
-                    return '<a href="storage/img/berita/'+data+'" target="_blank" class="btn btn-success btn-sm">Lihat Foto</a>';
+                    return '<a href="storage/img/berita/'+ data +'" target="_blank" class="btn btn-success btn-sm">Lihat Foto</a>';
                 }
             },
             { data: 'options',name: 'options', orderable: false, searchable: false }
@@ -141,14 +141,17 @@ $(document).ready(function () {
         var slug = $(this).data('id');
         var url = '{{ route("dashboard.news.berita.destroy", ":slug") }}';
         url = url.replace(':slug', slug);
-        swal({
+        Swal.fire({
             title: 'Anda yakin?',
             text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
             icon: 'warning',
-            buttons: true,
-            dangerMode: true,
+            showCancelButton: true,
+            confirmButtonText: "Ya, Hapus Data",
+            denyButtonText: 'Tidak, Batalkan!',
+            reverseButtons: true,
+            confirmButtonColor: '#d33',
         }).then((willDelete) => {
-            if (willDelete) {
+            if (willDelete.isConfirmed) {
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -161,10 +164,8 @@ $(document).ready(function () {
                     type: 'DELETE', // Use the DELETE method
                     success: function (data) {
                         if (data.status === 'success') {
-                                // redirect fucntion
-                                // window.location.href = "{{ route('dashboard.news.berita.index') }}";
-                                 // reload datatable
-                                 reloadTable('#artikel_table');
+                            reloadTable('#berita_table');
+                            Swal.fire('Berhasil', data.message, 'success');
                         } else {
                             window.location.href = "{{ route('dashboard.news.berita.index') }}";
                         }
@@ -176,23 +177,6 @@ $(document).ready(function () {
         });
     });
 });
-// $(document).on('click', '#priview-image', function () {
-//     // Get the modal
-//     var modal = document.getElementById("myModal");
-//     //take foto from folder
-//     var foto = $(this).data('foto');
-//     var imageUrl = '/storage/app/public/img/berita/' + foto;
-
-//     modal.style.display = "block";
-//     $('#foto').attr('src', imageUrl);
-
-//     // // Get the <span> element that closes the modal
-//     var span = document.getElementsByClassName("closeheader")[0];
-//     // // When the user clicks on <span> (x), close the modal
-//     span.onclick = function () {
-//         modal.style.display = "none";
-//     }
-// });
 </script>
 @endpush
 @endsection

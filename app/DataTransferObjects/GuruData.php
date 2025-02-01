@@ -13,7 +13,7 @@ class GuruData extends Data
         public readonly string $lulusan,
         public readonly string $karyawan_id,
         public readonly array $pelajarans,
-        public readonly UploadedFile $foto,
+        public readonly ?UploadedFile $foto,
         public readonly ?string $slug,
 
     ) {

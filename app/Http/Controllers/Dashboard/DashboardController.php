@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Models\Guru;
 use App\Models\Siswa;
 use App\Models\Artikel;
+use App\Models\Visitor;
 use App\Models\Prestasi;
 use App\Charts\SiswaChart;
 use App\Models\Pembayaran;
@@ -52,6 +53,20 @@ class DashboardController extends Controller
                 'chagreChart' => $chagreChart->toJson(),
             ]);
         }
+
+        $visitor_by_day = Visitor::whereDate('created_at', Carbon::now()->format('Y-m-d'))->count();
+        $visitor_by_month = Visitor::whereDate('created_at', '>=', Carbon::now()->startOfMonth()->format('Y-m-d'))->count();
+        $visitor_by_year = Visitor::whereDate('created_at', '>=', Carbon::now()->startOfYear()->format('Y-m-d'))->count();
+
+
+         // define visitor data
+        //  View::composer('layouts.landing.footer', function ($view) {
+            // $visitor_by_day = Visitor::whereDate('created_at', Carbon::now()->format('Y-m-d'))->count();
+            // $visitor_by_month = Visitor::whereDate('created_at', '>=', Carbon::now()->startOfMonth()->format('Y-m-d'))->count();
+            // $visitor_by_year = Visitor::whereDate('created_at', '>=', Carbon::now()->startOfYear()->format('Y-m-d'))->count();
+
+        //     $view->with(compact('visitor_by_day', 'visitor_by_month', 'visitor_by_year'));
+        // });
 
 
         return view('dashboard.index', compact(

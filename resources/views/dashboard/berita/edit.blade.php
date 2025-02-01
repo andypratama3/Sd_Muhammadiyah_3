@@ -17,16 +17,14 @@
                 <input type="text" class="form-control" id="" value="{{ $berita->desc }}" name="desc"
                     placeholder="Deskripsi">
             </div>
-            <div class="form-group mt-2">
+            <div class="form-group mt-2 mb-2">
                 <label for="">Foto</label>
                 <div class="custom-file">
-                    <input type="file" class="form-control" id="foto" name="foto" accept="image/*"
-                        onchange="loadPreview(this)">
+                    <input type="file" class="form-control" id="foto" name="foto" accept="image/*" value="{{ $berita->foto }}" onchange="loadPreview(this)">
                 </div>
                 <div class="mt-3 text-center">
                     <h6 class="">Poto yang di pilih</h6>
-                    <img src="{{ asset('storage/img/berita/'.$berita->foto) }}" id="output" alt=""
-                        style="width: 200px; height: 50%;">
+                    <img src="{{ asset('storage/img/berita/'.$berita->foto) }}" id="output" class="img-fluid" alt="" style="border-radius: 10px;">
                 </div>
             </div>
             <a href="{{ route('dashboard.news.berita.index') }}" class="btn btn-danger btn-sm">Kembali</a>

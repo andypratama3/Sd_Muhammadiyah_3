@@ -11,6 +11,7 @@ use App\Http\Controllers\KontakController;
 use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\VisitorController;
 use App\Http\Controllers\VisiMisiController;
 use App\Http\Controllers\FasilitasController;
 use App\Http\Controllers\NaikKelasController;
@@ -25,25 +26,25 @@ use App\Http\Controllers\CommentArtikelController;
 use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\TaskController;
 use App\Http\Controllers\Dashboard\UserController;
-use App\Http\Controllers\Dashboard\CategoryArtikel;
 
 //Dashboard Access
+use App\Http\Controllers\Dashboard\CategoryArtikel;
 use App\Http\Controllers\Dashboard\KelasController;
 use App\Http\Controllers\EkstrakurikulerController;
 use App\Http\Controllers\PrestasiSekolahController;
+
 use App\Http\Controllers\TenagaPendidikanController;
-
 use App\Http\Controllers\Dashboard\ActivityController;
-use App\Http\Controllers\Dashboard\KaryawanController;
 
+use App\Http\Controllers\Dashboard\KaryawanController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\KelasCategoryController;
 use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
 use App\Http\Controllers\Dashboard\HeroController as DashboardHeroController;
-use App\Http\Controllers\Dashboard\ChargeController as DashboardChargeController;
 
 use App\Http\Controllers\Dashboard\SiswaController as DashboardSiswaController;
 use App\Http\Controllers\Dashboard\BeritaController as DashboardBeritaController;
+use App\Http\Controllers\Dashboard\ChargeController as DashboardChargeController;
 use App\Http\Controllers\Dashboard\JadwalController as DashboardJadwalController;
 use App\Http\Controllers\Dashboard\ArtikelController as DashboardArtikelController;
 use App\Http\Controllers\Dashboard\ProfileController as DashboardProfileController;
@@ -136,6 +137,9 @@ Route::group(['prefix' => 'artikel', 'middleware'], function () {
 
 Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], function () {
     Route::get('/', DashboardController::class)->name('dashboard');
+
+    Route::get('/visitors/data', [VisitorController::class, 'getVisitorData'])->name('visitors.data');
+
 
     Route::resource('kritik-saran', DashboardKritiSaranController::class, ['names' => 'dashboard.kritik.saran']);
 

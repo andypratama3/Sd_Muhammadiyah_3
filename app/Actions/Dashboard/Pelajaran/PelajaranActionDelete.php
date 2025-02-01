@@ -7,7 +7,9 @@ class PelajaranActionDelete
 {
     public function execute($slug)
     {
-        $pelajaran = Pelajaran::where('slug')->firstOrFail();
+        $pelajaran = Pelajaran::where('slug', $slug)->firstOrFail();
         $pelajaran->delete();
+
+        return $pelajaran;
     }
 }

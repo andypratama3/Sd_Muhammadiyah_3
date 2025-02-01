@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Models\Guru;
 use App\Models\Karyawan;
 use App\Models\Pelajaran;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\DataTransferObjects\GuruData;
 use App\Actions\Dashboard\Guru\GuruAction;
@@ -12,17 +13,27 @@ use App\Actions\Dashboard\Guru\DeleteGuruAction;
 
 class GuruController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->middleware('role: guru');
-    // }
-    public function index()
+
+    public function index(Request $request)
     {
         $limit = 15;
-        $gurus = Guru::select(['name','description','lulusan','foto','slug'])->paginate($limit);
+        $gurus = Guru::select(['name','description','lulusan','foto','slug'])->with('pelajarans');
+
+        $mataPelajarans = Pelajaran::all();
+
+        if($request->mata_pelajaran) {
+
+            $gurus = $gurus->whereHas('pelajarans', function ($query) use ($request) {
+                $query->where('pelajaran_id', $request->mata_pelajaran);
+            });
+
+        }
+
+        $gurus = $gurus->paginate($limit);
         $count = $gurus->count();
         $no = $limit * ($gurus->currentPage() - 1);
-        return view('dashboard.guru.index', compact('gurus','count','no'));
+
+        return view('dashboard.guru.index', compact('gurus','count','no', 'mataPelajarans'));
     }
     public function create()
     {
@@ -62,7 +73,7 @@ class GuruController extends Controller
     public function update(GuruData $GuruData, GuruAction $guruAction)
     {
         $guruAction->execute($GuruData);
-    
+
         return redirect()->route('dashboard.datasekolah.guru.index')->with('success','Berhasil Update Guru!');
     }
     public function destroy(DeleteGuruAction $DeleteGuruAction, $slug)

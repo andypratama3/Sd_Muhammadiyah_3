@@ -80,14 +80,17 @@ $(document).ready(function () {
         var slug = $(this).data('id');
         var url = '{{ route("dashboard.news.artikel.destroy", ":slug") }}'; // Use the correct route name "destroy"
         url = url.replace(':slug', slug);
-        swal({
+        Swal.fire({
             title: 'Anda yakin?',
             text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
             icon: 'warning',
-            buttons: true,
-            dangerMode: true,
+            showCancelButton: true,
+            confirmButtonText: "Ya, Hapus Data",
+            denyButtonText: 'Tidak, Batalkan!',
+            reverseButtons: true,
+            confirmButtonColor: '#d33',
         }).then((willDelete) => {
-            if (willDelete) {
+            if (willDelete.isConfirmed) {
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -100,14 +103,8 @@ $(document).ready(function () {
                     type: 'DELETE', // Use the DELETE method
                     success: function (data) {
                         if (data.status === 'success') {
-                            swal('Berhasil', data.message, 'success').then(() => {
-                                // Reload the page
-                                // window.location.href = "{{ route('dashboard.news.artikel.index') }}";
-                                // Reload the page with a success message
-                                // reload datatable
-                                reloadTable('#artikel_table');
-
-                            });
+                            reloadTable('#artikel_table');
+                            Swal.fire('Berhasil', data.message, 'success');
                         } else {
                             // Reload the page with an error message
                             swal('Error', data.message, 'error');
@@ -116,7 +113,7 @@ $(document).ready(function () {
                     },
                 });
             } else {
-                // If the user cancels the deletion, do nothing
+                
             }
         });
     });

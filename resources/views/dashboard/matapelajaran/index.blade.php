@@ -23,6 +23,11 @@
                         <td>{{ ++$no }}</td>
                         <td>{{ $matapelajaran->name }}</td>
                         <td>
+                            <a href="{{ route('dashboard.datasekolah.matapelajaran.edit', $matapelajaran->slug) }}"
+                                class="btn btn-primary btn-sm">
+                                <i class="fas fa-pen"></i>
+                            </a>
+
                             <a href="#" data-id="{{ $matapelajaran->slug }}" class="btn btn-danger btn-sm delete" title="Hapus">
                                 <form action="{{ route('dashboard.datasekolah.matapelajaran.destroy', $matapelajaran->slug) }}"
                                     id="delete-{{ $matapelajaran->slug }}" method="POST" enctype="multipart/form-data">
@@ -36,14 +41,14 @@
                 </tbody>
             </table>
         </div>
-        {{-- <div class="card-footer clearfix">
+        <div class="card-footer clearfix">
             <ul class="m-0 float-left">
-                <span class="badge badge-primary">Total : {{ $count }} Data</span>
+                {{-- <span class="badge badge-primary">Total : {{ $count }} Data</span> --}}
             </ul>
             <ul class="pagination m-0 float-right">
                 {{ $matapelajarans->onEachSide(1)->links() }}
             </ul>
-        </div> --}}
+        </div>
         <div class="card-footer"></div>
     </div>
 </div>

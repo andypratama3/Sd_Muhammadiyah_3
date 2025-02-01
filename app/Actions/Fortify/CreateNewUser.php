@@ -34,7 +34,12 @@ class CreateNewUser implements CreatesNewUsers
             'password' => Hash::make($input['password']),
         ]);
 
-        $role = Role::where('slug', 'user')->first();
+        $role = Role::where('slug', 'User')->firstOrFail();
+
+        if(!$role) {
+            return redirect()->route('register')->with('error', 'Role not found');
+        }
+
         $user->roles()->attach($role);
 
         return $user;

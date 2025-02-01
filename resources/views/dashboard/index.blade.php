@@ -86,6 +86,23 @@
         </div>
     </div>
     <!-- Area Chart -->
+    <div class="col-12 d-flex mb-2">
+        <div class="card flex-fill w-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Pengunjung</h5>
+                <select id="dataRange" class="form-select w-auto">
+                    <option value="day">Harian</option>
+                    <option value="month" selected>Bulanan</option>
+                    <option value="year">Tahunan</option>
+                </select>
+            </div>
+            <div class="card-body d-flex w-100">
+                <div class="align-self-center chart chart-lg">
+                    <canvas id="chartjs-dashboard-bar"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="col-xl-12 col-lg-7">
         <div class="card mb-4">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -226,6 +243,8 @@
 @endif
 <!--Row-->
 @push('js')
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
 <script src="{{ $siswaChart->cdn() }}"></script>
 {{ $siswaChart->script() }}
 {{ $chagreChart->script() }}
@@ -237,6 +256,96 @@
         })
     });
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const ctx = document.getElementById("chartjs-dashboard-bar").getContext("2d");
+        const chart = new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: [], // Empty initially, will be filled dynamically
+                datasets: [{
+                    label: "Data",
+                    // backgroundColor: window.theme.primary,
+                    // borderColor: window.theme.primary,
+                    // hoverBackgroundColor: window.theme.primary,
+                    // hoverBorderColor: window.theme.primary,
+                    data: [], // Empty initially
+                    barPercentage: 0.75,
+                    categoryPercentage: 0.5,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                // Format tooltip value to integer
+                                return context.dataset.label + ": " + Math.round(context.raw);
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        ticks: {
+                            beginAtZero: true,
+                            callback: function (value) {
+                                // Format Y-axis labels to integers
+                                return Math.round(value);
+                            }
+                        }
+                    },
+                    x: {
+                        grid: { display: false },
+                    }
+                }
+            }
+        });
+
+
+        const baseUrl = "{{ route('visitors.data') }}";
+        function updateChart(range) {
+            fetch(`${baseUrl}?range=${range}`)
+                .then(response => response.json())
+                .then(data => {
+                    const labels = [];
+                    const values = [];
+
+                    if (range === "day") {
+                        labels.push("Hari Ini");
+                        values.push(data);
+                    } else if (range === "month") {
+                        data.forEach(item => {
+                            labels.push(`Tanggal ${item.day}`);
+                            values.push(item.total);
+                        });
+                    } else if (range === "year") {
+                        data.forEach(item => {
+                            labels.push(["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][item.month - 1]);
+                            values.push(item.total);
+                        });
+                    }
+
+                    chart.data.labels = labels;
+                    chart.data.datasets[0].data = values;
+                    chart.update();
+                })
+                .catch(err => console.error("Error fetching data:", err));
+        }
+
+
+        // Initial load
+        updateChart("month");
+
+        // Listen for dropdown change
+        document.getElementById("dataRange").addEventListener("change", function () {
+            updateChart(this.value);
+            console.log(this.value);
+        });
+    });
+</script>
 @endpush
+
 
 @endsection

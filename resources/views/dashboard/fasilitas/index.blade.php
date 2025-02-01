@@ -72,7 +72,7 @@
 @section('content')
 <div class="col-lg-12 mb-4">
     <div class="card">
-        @include('layouts.flashmessage')
+        
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
             <h4 class="m-0 font-weight-bold text-center">Fasilitas</h4>
             <a href="{{ route('dashboard.datasekolah.fasilitas.create') }}" class="btn btn-success float-right btn-sm">Tambah <i

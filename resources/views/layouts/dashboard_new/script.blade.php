@@ -61,14 +61,15 @@
                 text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#3085d6',
+                confirmButtonColor: '#d33',
                 confirmButtonText: 'Hapus !',
                 cancelButtonText: 'Batal !',
-                dangerMode: true,
                 reverseButtons: true,
             }).then((result) => {
                 if (result.isConfirmed) {
                     $(`#delete-${slug}`).submit();
+                } else {
+                    // do nothing
                 }
             });
         });

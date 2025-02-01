@@ -85,7 +85,7 @@ class ArtikelController extends Controller
             return response()->json(['status' => 'success', 'message' => 'Berhasil Menghapus Artikel']);
             // toaster()->sucess('Berhasil Menghapus Artikel');
         }else{
-            return response()->json(['status' => 'error', 'message' => 'Gagal Mengirim Kritik Dan Saran']);
+            return response()->json(['status' => 'error', 'message' => 'Gagal Menghapus Artikel']);
         }
     }
 
