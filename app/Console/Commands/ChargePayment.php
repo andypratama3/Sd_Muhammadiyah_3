@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Console\Commands;
 
 use App\Models\Siswa;
@@ -7,52 +6,32 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use Midtrans\CoreApi; // Import Midtrans CoreApi
+use Midtrans\CoreApi;
 
 class ChargePayment extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'app:charge-payment';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Charge payments for all students';
 
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
         $siswas = Siswa::all();
 
         foreach ($siswas as $siswa) {
-            // Start Transaction
             DB::beginTransaction();
 
             try {
-
-                $existingCharge = DB::table('siswas')
-                    ->where('va_number', $siswa->va_number)
-                    ->first();
-
-                if ($existingCharge) {
-                    // Reuse the existing VA
-                    $vaNumber = $existingCharge->va_number;
-                } else {
-                    // Generate a new VA if it doesn't exist
-                    $vaNumber = $this->generateNewVaNumber($siswa);
+                // Periksa apakah siswa sudah punya VA Number
+                if (!$siswa->va_number) {
+                    $vaNumber = $this->generateNewVaNumber();
                     $siswa->update(['va_number' => $vaNumber]);
+                } else {
+                    $vaNumber = $siswa->va_number;
                 }
 
-                $order_id = rand();
-                // Insert the charge record
+                $order_id = Str::uuid();
+
+                // Insert data ke tabel charges
                 DB::table('charges')->insert([
                     'id' => Str::uuid(),
                     'name' => 'SPP',
@@ -71,26 +50,17 @@ class ChargePayment extends Command
                     'updated_at' => now(),
                 ]);
 
-
-                // Send to API payment Midtrans
+                // Kirim pembayaran ke Midtrans
                 $this->sendPaymentToMidtrans($siswa, $vaNumber, $order_id);
 
-                // Commit Transaction
                 DB::commit();
             } catch (\Exception $e) {
-
                 DB::rollBack();
-                $this->error('Failed to charge payment for student ' . $siswa->name . ': ' . $e->getMessage());
+                $this->error("Gagal memproses pembayaran untuk {$siswa->name}: " . $e->getMessage());
             }
         }
     }
 
-    /**
-     * Send payment to Midtrans API.
-     *
-     * @param Siswa $siswa
-     * @param string $vaNumber
-     */
     private function sendPaymentToMidtrans(Siswa $siswa, $vaNumber, $order_id)
     {
         $params = [
@@ -109,21 +79,16 @@ class ChargePayment extends Command
                 'va_number' => $vaNumber,
             ],
             'expiry' => [
-                'start_time' => now()->format('Y-m-d H:i:s T'),
-                'duration' => 30, // 30 days
-                'unit' => 'days', // Set unit as days
+                'start_time' => now()->toIso8601String(),
+                'duration' => 29,
+                'unit' => 'days',
             ],
         ];
 
-        // Guzzle client
         $client = new Client();
         $server_key = env('MIDTRANS_SERVER_KEY');
-        
-        try {
-            // send virtual account with message to whatsapp for payment
-            // $this->SendOrderIDWhatsAppApi($siswa->id);
 
-            // Send the request using Guzzle
+        try {
             $response = $client->post('https://api.sandbox.midtrans.com/v2/charge', [
                 'headers' => [
                     'Accept' => 'application/json',
@@ -133,43 +98,37 @@ class ChargePayment extends Command
                 'json' => $params,
             ]);
 
-            // Decode the response
             $responseData = json_decode($response->getBody(), true);
 
-            if($responseData['status_code'] == 201){
-                $this->info('Charging payment for student ' . $siswa->name . ' with VA number ' .$responseData['va_numbers'][0]['va_number']);
-
-                $this->info('expired ' . $params['expiry']['duration'] . ' ' . $params['expiry']['unit'] . 'day');
-                // update va number in siswa table
-                DB::table('charges')->where('order_id', $responseData['order_id'])->update(['va_number' => $responseData['va_numbers'][0]['va_number']]);
-
-                $this->info('Charging payment for student ' . $siswa->name . ' with order id ' . $responseData['order_id']);
-                $this->info('Charging virtual account for student ' . $siswa->name . 'with VA number ' . $responseData['va_numbers'][0]['va_number']);
+            if ($responseData['status_code'] == 201) {
+                $this->info("VA untuk {$siswa->name}: " . $responseData['va_numbers'][0]['va_number']);
+                $this->info("Transaksi akan kedaluwarsa dalam {$params['expiry']['duration']} {$params['expiry']['unit']}");
 
 
-                // Log the response
-                if (isset($responseData['transaction_status'])) {
-                    $this->info('Payment charged successfully for student ' . $siswa->name . ': ' . $responseData['transaction_status']);
-                } else {
-                    $this->warn('No transaction_status found in the response for student ' . $siswa->name);
-                }
+                DB::table('charges')
+                    ->where('order_id', $responseData['order_id'])
+                    ->update([
+                        'va_number' => $responseData['va_numbers'][0]['va_number'],
+                        'snap_token' => $responseData['token'] ?? null,
+                        'transaction_status' => $responseData['transaction_status'],
+                    ]);
+
+                $this->info("Pembayaran untuk {$siswa->name} berhasil dikirim ke Midtrans.");
             } else {
-                $this->error('Failed to charge payment for student ' . $siswa->name . ': ' . $responseData['message']);
+                $this->error("Gagal memproses pembayaran untuk {$siswa->name}: " . $responseData['status_message']);
             }
-
         } catch (\Exception $e) {
-            $this->error('Failed to charge payment for student ' . $siswa->name . ': ' . $e->getMessage());
+            $this->error("Gagal mengirim pembayaran ke Midtrans untuk {$siswa->name}: " . $e->getMessage());
         }
     }
 
-    /**
-     * Generate a new VA number for the student.
-     *
-     * @param Siswa $siswa
-     * @return string
-     */
-    private function generateNewVaNumber(Siswa $siswa)
+    private function generateNewVaNumber()
     {
-        return rand(1000000000, 9999999999);
+        do {
+            $vaNumber = rand(1000000000, 9999999999);
+            $exists = DB::table('siswas')->where('va_number', $vaNumber)->exists();
+        } while ($exists);
+
+        return $vaNumber;
     }
 }

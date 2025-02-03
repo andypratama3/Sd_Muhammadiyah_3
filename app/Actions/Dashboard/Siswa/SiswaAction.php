@@ -27,12 +27,17 @@ class SiswaAction {
             $picture_name = $siswa->foto;
         }
 
-        //make virtual account random wehn empty data
-        if(!$siswa){
-            $va_number = rand(1000000000, 9999999999);
-        }else{
+     // Prefix VA untuk bank tertentu (misalnya BCA: 91012)
+        $company_prefix = '91012';
+
+        // Jika siswa belum punya VA, buat yang baru
+        if (!$siswa) {
+            $unique_number = str_pad(rand(1, 99999999), 8, '0', STR_PAD_LEFT); // Pastikan panjangnya sesuai
+            $va_number = $company_prefix . $unique_number;
+        } else {
             $va_number = $siswa->va_number;
         }
+
 
         $siswa = Siswa::updateOrCreate(
             ['slug' => $siswaData->slug],

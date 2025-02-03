@@ -171,6 +171,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
 
         Route::resource('gallery', DashboardGalleryActivityController::class, ['names' => 'dashboard.datasekolah.gallery']);
     });
+    
     Route::group(['prefix' => 'datamaster'], function () {
         Route::resource('siswa',  DashboardSiswaController::class, ['names' => 'dashboard.datamaster.siswa']);
         Route::resource('kategori-pembayaran',  DashboardJudulPembayaranController::class, ['names' => 'dashboard.datamaster.judul.pembayaran']);

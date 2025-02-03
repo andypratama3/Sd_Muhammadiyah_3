@@ -72,7 +72,7 @@ class SiswaController extends Controller
     {
         $result_provinsi = $this->getprovinsi->provinsi()->json();
         // $result_provinsi = Http::get(route('provinsi.api'))->json();
-        $kelass = Kelas::orderBy('name')->get();
+        $kelass = Kelas::orderBy('name','asc')->get();
         return view('dashboard.data.siswa.create', compact('kelass','result_provinsi'));
     }
     public function store(SiswaData $siswaData, SiswaAction $siswaAction)
@@ -86,7 +86,7 @@ class SiswaController extends Controller
     }
     public function edit(Request $request,Siswa $siswa)
     {
-        $kelass = Kelas::all();
+        $kelass = Kelas::orderBy('name','asc')->get();
         $result_provinsi = $this->getprovinsi->provinsi($siswa)->json();
 
         return view('dashboard.data.siswa.edit', compact('siswa','kelass','result_provinsi'));

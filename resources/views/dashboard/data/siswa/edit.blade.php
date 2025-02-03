@@ -179,13 +179,105 @@
                                         value="{{ $siswa->foto }}"/>
                                     </div>
                                     <div class="input-group-append">
-                                        <a target="__blank" href="{{ asset('storage/img/siswa/' . $siswa->foto) }}" class="btn btn-success mt-2"><i class="bi bi-file"></i> Lihat Foto</a>
+                                        <a target="__blank" href="{{ asset('storage/img/siswa/' . $siswa->foto) }}" class="btn btn-success mt-2 btn-sm"><i class="bi bi-file"></i> Lihat Foto</a>
                                     </div>
                             </div>
                         </div>
                     </div>
 
                     {{-- Data Detail lSiswa --}}
+                    <div class="col-md-12">
+                        <hr>
+                        <div class="card-header">
+                            <h6 class="m-0 font-weight-bold text-primary text-center" id="title_data_orang_tua">Data Orang Tua</h6>
+                            <div class="col-md-2">
+                            <select id="data_wali" name="data_wali" class="btn btn-primary mb-2 form-control" style="border:2px;">
+                                <option selected>Pilih Data</option>
+                                <option value="orang_tua" {{ old('data_wali') == 'orang_tua' ? 'selected' : '' }}>Orang Tua</option>
+                                <option value="wali" {{ old('data_wali') == 'wali' ? 'selected' : '' }}>Wali</option>
+                            </select>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="row" id="orang_tua" style="display: none;">
+                        <div class="col-md-6 mt-2">
+                            <div class="form-group row">
+                                <label class="col-sm-3 text-dark" for="nama_ayah">Nama Ayah</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="nama_ayah" id="nama_ayah" value="{{ old('nama_ayah') }}" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <div class="form-group row">
+                                <label class="col-sm-3 text-dark" for="nama_ibu">Nama Ibu</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="nama_ibu" id="nama_ibu" value="{{ old('nama_ibu') }}" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <div class="form-group row">
+                                <label class="col-sm-3 text-dark" for="pendidikan_ayah">Pendidikan Ayah</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="pendidikan_ayah" id="pendidikan_ayah" value="{{ old('pendidikan_ayah') }}" />
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <div class="form-group row">
+                                <label class="col-sm-3 text-dark" for="pendidikan_ibu">Pendidikan Ibu</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="pendidikan_ibu" id="pendidikan_ibu" value="{{ old('pendidikan_ibu') }}" />
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <div class="form-group row">
+                                <label class="col-sm-3 text-dark" for="pendidikan_ayah">Pekerjaan Ayah</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="pekerjaan_ayah" id="pekerjaan_ayah" value="{{ old('pekerjaan_ayah') }}" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <div class="form-group row">
+                                <label class="col-sm-3 text-dark" for="pekerjaan_ibu">Pekerjaan Ibu</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="pekerjaan_ibu" id="pekerjaan_ibu" value="{{ old('pekerjaan_ibu') }}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row " id="wali" style="display: none;">
+                        <div class="col-md-6 mt-2">
+                            <div class="form-group row">
+                                <label class="col-sm-3 text-dark" for="nama_wali">Nama Wali</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="nama_wali" id="nama_wali" value="{{ old('nama_wali') }}" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <div class="form-group row">
+                                <label class="col-sm-3 text-dark" for="pekerjaan_wali">Pekerjaan Wali</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="pekerjaan_wali" id="pekerjaan_wali" value="{{ old('pekerjaan_wali') }}" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <div class="form-group row">
+                                <label class="col-sm-3 text-dark" for="alamat_wali">Alamat Wali</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="alamat_wali" id="alamat_wali" value="{{ old('alamat_wali') }}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="col-md-12">
                         <hr>
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-center">
@@ -291,12 +383,10 @@
                         </div>
                     </div>
 
-                    <div class="col-md-12">
-                        <div class="form-group row justify-content-end">
-                            <a href="{{ route('dashboard.datamaster.siswa.index') }}"
-                                class="btn btn-danger float-lg-start mr-2">Kembali</a>
-                            <button type="submit" class="btn btn-primary float-lg-right">Submit</button>
-                        </div>
+                    <div class="col-md-12 mt-2">
+                        <a href="{{ route('dashboard.datamaster.siswa.index') }}"
+                            class="btn btn-sm btn-danger float-lg-start mr-2">Kembali</a>
+                        <button type="submit" class="btn btn-sm btn-primary float-end">Submit</button>
                     </div>
                 </div>
             </form>
@@ -365,6 +455,34 @@
         </script>
         <script>
             $(function() {
+                function formdata_data_wali() {
+                    const title = $('#title_data_orang_tua');
+                    let wali = $('#wali');
+                    let orang_tua = $('#orang_tua');
+                    let data = $('#data_wali').val();
+                    if(data === 'wali'){
+                    title.text('Data Wali');
+                    wali.css('display', '');
+                    orang_tua.css('display', 'none');
+                    }else if(data == 'orang_tua'){
+                        title.text('Data Orang Tua');
+                        wali.css('display', 'none');
+                        orang_tua.css('display', '');
+                    }else{
+                    title.text('Pilih Data Orang Tua');
+                        wali.css('display', 'none');
+                        orang_tua.css('display', 'none');
+
+                    }
+                }
+
+                $('.select2').select2({
+                    theme: 'bootstrap4'
+                });
+                $('#data_wali').on('change', function () {
+                    formdata_data_wali();
+                });
+                formdata_data_wali();
                 //property
                 let nik_property = document.getElementById('icon-check-nik');
                 let nisn_property = document.getElementById('icon-check-nisn');
