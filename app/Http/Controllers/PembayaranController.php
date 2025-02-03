@@ -19,17 +19,16 @@ class PembayaranController extends Controller
     public function searchOrder(Request $request)
     {
         $request->validate([
-            'kode' => 'required',
+            'kode' => 'required|string',
         ]);
 
         $currentMonth = Carbon::now()->startOfMonth();
 
         if ($request->has('kode')) {
             $kode = $request->input('kode');
-
             // Search for the payment by order_id in Charge or name in Siswa
             $payment = Charge::where('order_id', $kode)
-                ->orWhere('order_id', 'LIKE', "%{$kode}%")
+                // ->orWhere('order_id', 'LIKE', "%{$kode}%")
                 ->orWhere('va_number', 'LIKE', "%{$kode}%")
                 ->whereMonth('transaction_time', Carbon::now()->month)
                 ->whereYear('transaction_time', Carbon::now()->year)
@@ -40,9 +39,9 @@ class PembayaranController extends Controller
                 })
                 ->first();
 
-            if ($payment) {
-                // Fetch the related siswa data
-                $siswa = Siswa::find($payment->siswa_id);
+
+                if ($payment !== null) {
+                    $siswa = Siswa::find($payment->siswa_id);
 
                 // Configure Midtrans
                 Config::$serverKey = env('MIDTRANS_SERVER_KEY');
@@ -110,5 +109,17 @@ class PembayaranController extends Controller
                 ]);
             }
         }
+    }
+
+    public function snap_url($order_id)
+    {
+        $token = env('MIDTRANS_SERVER_KEY');
+        $charge = Charge::where('order_id', $order_id)->firstOrFail();
+
+        if(!$charge){
+            abort(404);
+        }
+
+        return view('midtrans.snap', compact('token','charge'));
     }
 }

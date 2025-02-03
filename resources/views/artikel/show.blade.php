@@ -347,7 +347,7 @@
             </div><!-- End Comments Form -->
         </div>
     </div>
-    </div>
+</div>
 </section>
 @push('js_user')
 <script src="{{ asset('asset_dashboard/js/SwetAlert/index.js') }}"></script>

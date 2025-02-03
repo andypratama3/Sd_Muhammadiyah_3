@@ -96,6 +96,7 @@ Route::group(['prefix' => '/',], function () {
     // pembayaran
     Route::get('pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
     Route::get('pembayaran/pay', [PembayaranController::class, 'searchOrder'])->name('pembayaran.searchOrder');
+    Route::get('pembayaran/snap/{order_id}', [PembayaranController::class, 'snap_url'])->name('snap_url');
     //fasilitas
     Route::get('fasilitas', [FasilitasController::class, 'index'])->name('fasilitas.index');
     Route::get('fasilitas/{nama_fasilitas}', [FasilitasController::class, 'show'])->name('fasilitas.show');
@@ -145,6 +146,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
 
     Route::group(['prefix' => 'news'], function () {
         Route::resource('berita', DashboardBeritaController::class, ['names' => 'dashboard.news.berita']);
+        Route::post('berita/upload/image/', [DashboardBeritaController::class, 'uploadImage'])->name('dashboard.news.berita.uploadImage');
         Route::resource('hero', DashboardHeroController::class, ['names' => 'dashboard.news.hero']);
 
         Route::get('beritas/records', [DashboardBeritaController::class, 'data_table'])->name('dashboard.news.berita.getBerita');

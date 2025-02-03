@@ -13,12 +13,14 @@ class GuruData extends Data
         public readonly string $lulusan,
         public readonly string $karyawan_id,
         public readonly array $pelajarans,
-        public readonly ?UploadedFile $foto,
+        public readonly UploadedFile $foto,
         public readonly ?string $slug,
 
     ) {
         //
     }
+
+
 
     public static function fromRequest(StoreGuruRequest $request): self
     {
@@ -31,13 +33,15 @@ class GuruData extends Data
         ]);
     }
 
+
+
     public static function messages()
     {
         return [
-            'description.required' => 'Kolom Nama Artikel tidak boleh kosong!',
             'pelajarans.required' => 'Kolom Pelajaran tidak boleh kosong!',
-            'lulusan.required' => 'Kolom Isi Artikel tidak boleh kosong!',
+            'lulusan.required' => 'Kolom Lulusan tidak boleh kosong!',
             'foto.required' => 'Kolom File Foto tidak boleh kosong!',
+            'foto.image' => 'Kolom File Foto harus berupa gambar!',
         ];
     }
 }

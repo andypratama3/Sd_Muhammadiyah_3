@@ -37,9 +37,9 @@ class ChargePayment extends Command
             DB::beginTransaction();
 
             try {
-                // Check if VA exists for the student in the charges table
+
                 $existingCharge = DB::table('siswas')
-                    ->where('va_number', $siswa->va_number) // Check by VA number
+                    ->where('va_number', $siswa->va_number)
                     ->first();
 
                 if ($existingCharge) {
@@ -51,11 +51,12 @@ class ChargePayment extends Command
                     $siswa->update(['va_number' => $vaNumber]);
                 }
 
+                $order_id = rand();
                 // Insert the charge record
                 DB::table('charges')->insert([
                     'id' => Str::uuid(),
                     'name' => 'SPP',
-                    'order_id' => rand(),
+                    'order_id' => $order_id,
                     'siswa_id' => $siswa->id,
                     'gross_amount' => $siswa->spp,
                     'payment_type' => 'bank_transfer',
@@ -71,14 +72,13 @@ class ChargePayment extends Command
                 ]);
 
 
-
                 // Send to API payment Midtrans
-                $this->sendPaymentToMidtrans($siswa, $vaNumber);
+                $this->sendPaymentToMidtrans($siswa, $vaNumber, $order_id);
 
                 // Commit Transaction
                 DB::commit();
             } catch (\Exception $e) {
-                // Rollback Transaction if something goes wrong
+
                 DB::rollBack();
                 $this->error('Failed to charge payment for student ' . $siswa->name . ': ' . $e->getMessage());
             }
@@ -91,12 +91,12 @@ class ChargePayment extends Command
      * @param Siswa $siswa
      * @param string $vaNumber
      */
-    private function sendPaymentToMidtrans(Siswa $siswa, $vaNumber)
+    private function sendPaymentToMidtrans(Siswa $siswa, $vaNumber, $order_id)
     {
         $params = [
             'payment_type' => 'bank_transfer',
             'transaction_details' => [
-                'order_id' => Str::uuid(),
+                'order_id' => $order_id,
                 'gross_amount' => $siswa->spp,
             ],
             'customer_details' => [
@@ -109,7 +109,7 @@ class ChargePayment extends Command
                 'va_number' => $vaNumber,
             ],
             'expiry' => [
-                'start_time' => now()->format('Y-m-d H:i:s T'), // Current time
+                'start_time' => now()->format('Y-m-d H:i:s T'),
                 'duration' => 30, // 30 days
                 'unit' => 'days', // Set unit as days
             ],
@@ -118,16 +118,8 @@ class ChargePayment extends Command
         // Guzzle client
         $client = new Client();
         $server_key = env('MIDTRANS_SERVER_KEY');
+        
         try {
-
-            $this->info('Charging payment for student ' . $siswa->name . ' with VA number ' . '80391'.$vaNumber);
-
-            $this->info('expired ' . $params['expiry']['duration'] . ' ' . $params['expiry']['unit'] . 'day');
-            // update va number in siswa table
-            DB::table('charges')->where('siswa_id', $siswa->id)->update(['va_number' => '80391'.$vaNumber]);
-            $this->info('Charging virtual account for student ' . $siswa->name . ' with VA number ' . '80391'.$vaNumber);
-
-
             // send virtual account with message to whatsapp for payment
             // $this->SendOrderIDWhatsAppApi($siswa->id);
 
@@ -144,12 +136,27 @@ class ChargePayment extends Command
             // Decode the response
             $responseData = json_decode($response->getBody(), true);
 
-            // Log the response
-            if (isset($responseData['transaction_status'])) {
-                $this->info('Payment charged successfully for student ' . $siswa->name . ': ' . $responseData['transaction_status']);
+            if($responseData['status_code'] == 201){
+                $this->info('Charging payment for student ' . $siswa->name . ' with VA number ' .$responseData['va_numbers'][0]['va_number']);
+
+                $this->info('expired ' . $params['expiry']['duration'] . ' ' . $params['expiry']['unit'] . 'day');
+                // update va number in siswa table
+                DB::table('charges')->where('order_id', $responseData['order_id'])->update(['va_number' => $responseData['va_numbers'][0]['va_number']]);
+
+                $this->info('Charging payment for student ' . $siswa->name . ' with order id ' . $responseData['order_id']);
+                $this->info('Charging virtual account for student ' . $siswa->name . 'with VA number ' . $responseData['va_numbers'][0]['va_number']);
+
+
+                // Log the response
+                if (isset($responseData['transaction_status'])) {
+                    $this->info('Payment charged successfully for student ' . $siswa->name . ': ' . $responseData['transaction_status']);
+                } else {
+                    $this->warn('No transaction_status found in the response for student ' . $siswa->name);
+                }
             } else {
-                $this->warn('No transaction_status found in the response for student ' . $siswa->name);
+                $this->error('Failed to charge payment for student ' . $siswa->name . ': ' . $responseData['message']);
             }
+
         } catch (\Exception $e) {
             $this->error('Failed to charge payment for student ' . $siswa->name . ': ' . $e->getMessage());
         }
@@ -163,6 +170,6 @@ class ChargePayment extends Command
      */
     private function generateNewVaNumber(Siswa $siswa)
     {
-        return '80391'. rand(1000000000, 9999999999);
+        return rand(1000000000, 9999999999);
     }
 }

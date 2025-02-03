@@ -82,7 +82,6 @@
                         <tr>
                             <th>No</th>
                             <th>Judul</th>
-                            <th>Deskripsi</th>
                             <th>Foto</th>
                             <th>Action</th>
                         </tr>
@@ -124,16 +123,7 @@ $(document).ready(function () {
         columns: [
             { data: 'DT_RowIndex',name: 'DT_RowIndex',orderable: false,searchable: false},
             { data: 'judul', name: 'judul'},
-            { data: 'desc', name: 'desc', orderable: false,
-                render: function (data) {
-                    return '<p>' + data.substring(0, 20) + '...</p>';
-                }
-            },
-            { data: 'foto', name: 'foto', orderable: false,
-                render: function (data) {
-                    return '<a href="storage/img/berita/'+ data +'" target="_blank" class="btn btn-success btn-sm">Lihat Foto</a>';
-                }
-            },
+            { data: 'foto', name: 'foto', orderable: false, searchable: false },
             { data: 'options',name: 'options', orderable: false, searchable: false }
         ],
     });

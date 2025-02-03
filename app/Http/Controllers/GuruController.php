@@ -9,8 +9,9 @@ class GuruController extends Controller
 {
     public function index()
     {
-        $gurus = Guru::orderBy('name', 'asc')->paginate(10);
-        
+        $limit = 15;
+        $gurus = Guru::orderBy('name', 'asc')->get();
+
         return view('profil.guru.guru', compact('gurus'));
     }
 }

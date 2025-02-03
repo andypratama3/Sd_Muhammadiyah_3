@@ -11,14 +11,16 @@ class MidtransPaymentController extends Controller
     {
         $charge = Charge::where('order_id',$request->order_id)->first();
 
+
         if($charge->isEmpty())
         {
             return response()->json([
                 'message' => 'Order not found'
             ], 404);
         }
+
         $status_transaction = $request->transaction_status;
-        
+
         if($status_transaction == 'settlement' || $status_transaction == 'capture'){
             $charge = $charge->transaction_status = 'settlement';
         }elseif($status_transaction == 'pending'){
@@ -32,6 +34,7 @@ class MidtransPaymentController extends Controller
         $change_transaction_status = $charge->save();
 
         if($change_transaction_status){
+            
             return response()->json([
                 'status' => 'success',
                 'message' => 'Transaction status updated',
@@ -44,5 +47,15 @@ class MidtransPaymentController extends Controller
     {
         $data = $request->all();
         return response()->json(['data' => 'data']);
+    }
+
+    public function callback_unfinish(Request $request)
+    {
+
+    }
+
+    public function callback_error(Request $request)
+    {
+
     }
 }

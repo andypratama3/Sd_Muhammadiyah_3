@@ -30,6 +30,7 @@ class BerandaController extends Controller
         $siswas = Siswa::whereHas('kelas', function ($q) {
             $q->where('name', '!=', 'Lulus');
         })->count();
+        
         $guru = Guru::count();
         $fasilitas = Fasilitas::count();
         $prestasis_siswa = Prestasi::where('status', '1')->count();

@@ -16,7 +16,7 @@
                     <h4>Pembayaran</h4>
                     <h6>Cari Nama Anak, Nomor Virtual Account</h6>
                     <div class="col-md-2"></div>
-                    <form id="searchPaymentForm" method="GET">
+                    <form id="searchPaymentForm" method="GET" >
                         <div class="input-group">
                             <input type="text" class="form-control @error('kode') is-invalid @enderror" id="kodePembayaran"
                                 name="kode" placeholder="Masukan Kode Pembayaran" aria-label="Masukan Kode Pembayaran"
@@ -92,7 +92,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            
+
                         </div>
                         <div class="modal-footer d-flex align-items-center">
                             <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Tutup</button>
@@ -120,6 +120,46 @@
         $('#closeModalButton').click(function () {
             $('#modal_how_pay').modal('hide');
         });
+
+        // search payment use keyboard when press eneter
+        $('#kodePembayaran').keypress(function (e) {
+            if(e.which == 13) {
+
+                // $.ajax({
+                //     url: "{{ route('pembayaran.searchOrder') }}",
+                //     method: "GET",
+                //     data: { kode: kode },
+                //     success: function (response) {
+                //         if (response.status === "success") {
+                //             $('#paymentNotFound').hide();
+                //             $('#paymentResult').show();
+
+                //             $('#siswaFoto').attr('src', '{{ asset('storage/img/siswa/') }}' + '/' + response.data.siswa.foto);
+                //             $('#siswaName').text(response.data.siswa.name);
+                //             $('#orderId').text(response.data.order_id);
+                //             $('#grossAmount').text(response.data.gross_amount);
+                //             $('#paymentCategory').text(response.data.name);
+                //             if (response.data.transaction_status === 'pending') {
+                //                 $('#transactionStatus').removeClass('bg-success').addClass('bg-warning').text('Belum Lunas');
+                //                 $('#payButton').show();
+                //                 $('#payButton').attr('data-snaptoken', response.snap_token);
+                //             } else {
+                //                 $('#transactionStatus').removeClass('bg-warning').addClass('bg-success').text('Lunas');
+                //                 $('#payButton').hide();
+                //             }
+                //         } else {
+                //             $('#paymentResult').hide();
+                //             $('#paymentNotFound').show();
+                //         }
+                //     },
+                //     error: function () {
+                //         alert('Gagal mencari pembayaran. Silakan coba lagi.');
+                //     }
+                // });
+            }
+
+        });
+
 
         $('#searchPaymentButton').click(function () {
             var kode = $('#kodePembayaran').val();

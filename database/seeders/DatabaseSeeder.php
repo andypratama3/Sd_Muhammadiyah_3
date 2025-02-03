@@ -20,10 +20,10 @@ class DatabaseSeeder extends Seeder
         // ]);
         $this->call([
             UserSeeder::class,
-            CategorySeeder::class,
-            ArtikelSeeder::class,
-            BeritaSeed::class,
-            SiswaSeeder::class,
+            // CategorySeeder::class,
+            // ArtikelSeeder::class,
+            // BeritaSeed::class,
+            // SiswaSeeder::class,
             // ChargeSeeder::class,
         ]);
     }

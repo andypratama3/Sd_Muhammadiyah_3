@@ -205,7 +205,7 @@
                     </div>
                 </div>
                 <div class="text-center mx-auto mt-3 wow fadeInRight" data-wow-delay="0.2s">
-                    <div class="bg-white rounded-0 p-3 h-100 mt-5">
+                    <div class="bg-white rounded-0 p-3 h-100 mt-5" style="border-radius: 10px !important;">
                         <h1 class="display-4 mb-4 mt-0">Aktivitas Kami</h1>
                         <p class="text-primary">Aktivitas SD Muhammadiyah 3 Samarinda</p>
                         <div class="row g-4">
@@ -227,11 +227,8 @@
                                 <a href="{{ route('gallery.index') }}" class="btn btn-primary">Lihat Semua</a>
                             </div>
                         </div>
-                        {{-- <h4 class="text-primary">SD Muhammadiyah 3 Samarinda</h4> --}}
                     </div>
                 </div>
-
-
             </div>
     </div>
 </div>

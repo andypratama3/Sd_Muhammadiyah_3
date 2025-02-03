@@ -1,5 +1,19 @@
 @extends('layouts.user')
 @section('title','Detail')
+@push('meta_user')
+    <meta name="description" content="{{ Str::limit(strip_tags($berita->desc), 160) }}">
+    <meta name="keywords" content="Berita, {{ $berita->judul }}, Informasi Terbaru">
+
+    <meta property="og:title" content="{{ $berita->judul }}">
+    <meta property="og:description" content="{{ Str::limit(strip_tags($berita->desc), 160) }}">
+    <meta property="og:image" content="{{ asset('storage/img/berita/'. $berita->foto) }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:type" content="article">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $berita->judul }}">
+    <meta name="twitter:description" content="{{ Str::limit(strip_tags($berita->desc), 160) }}">
+    <meta name="twitter:image" content="{{ asset('storage/img/berita/'. $berita->foto) }}">
+@endpush
 @push('css_user')
 <style>
     .course {

@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('gurus', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
-            $table->longText('description');
+            $table->longText('description')->nullable();
             $table->string('lulusan');
             $table->foreignUuid('karyawan_id')->nullable()->references('id')->on('karyawans')->onDelete('cascade');
-            $table->longText('foto');
+            $table->longText('foto')->nullable();
             $table->string('slug');
             $table->timestamps();
         });
