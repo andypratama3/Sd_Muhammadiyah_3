@@ -26,7 +26,14 @@
     .about .swiper-slide img:hover {
         transform: scale(1.1);
     }
-
+    .img-header-kepala-sekolah {
+        border-radius: 10px;
+        object-fit: cover;
+        height: 100%;
+        object-position: center;
+        object-fit: cover;
+        mix-blend-mode: multiply;
+    }
 
 </style>
 @endpush
@@ -362,7 +369,8 @@
 <!-- About End -->
 
 <!-- FAQs Start -->
-<div class="container-fluid faq-section bg-light py-2">
+<div class="container-fluid faq-section bg-light py-2"data-wow-delay="0.4s"
+>
     <div class="container py-5">
         <div class="row g-5 align-items-center justify-content-center">
             <div class="col-xl-6 wow fadeInLeft" data-wow-delay="0.2s">
@@ -375,13 +383,13 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 col-md-12  wow fadeInRight p-4" data-wow-delay="0.4s">
-                <a href="{{ asset('asset/img/carousel-2.png')}}" data-lightbox="kepala-sekolah" >
-                    <img src="{{ asset('asset/img/kepala-sekolah.jpeg') }}" class="img-fluid w-40 mb-2" style="border-radius: 8px;"
+            <div class="col-lg-6 col-md-12  wow fadeInRight p-4">
+                <a href="{{ asset('asset/img/kepala-sekolah.jpeg')}}" data-lightbox="kepala-sekolah" >
+                    <img src="{{ asset('asset/img/kepala-sekolah.jpeg') }}" class="img-fluid mb-2 img-header-kepala-sekolah"
                         alt="kepala-sekolah">
                 </a>
-                <h4 class="text-center" data-wow-delay="0.4s">Gr. Ansar HS. S.Pd.,M.M. </h4>
-                <p class="text-center text-primary" data-wow-delay="0.4s">Kepala Sekolah SD Muhammadiyah 3 Samarinda</p>
+                <h4 class="text-center">Gr. Ansar HS. S.Pd.,M.M. </h4>
+                <p class="text-center text-primary">Kepala Sekolah SD Muhammadiyah 3 Samarinda</p>
 
             </div>
         </div>

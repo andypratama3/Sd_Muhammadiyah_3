@@ -44,7 +44,7 @@
     left: 45vw;
     width: 10px;
     height: 10px;
-    border: solid 1px #52cf09;
+    border: solid 1px #46bf00;
     color: transparent;
     transform-origin: top left;
     transform: scale(0) rotate(0deg) translate(-50%, -50%);
@@ -61,28 +61,28 @@
     animation-delay: 2s;
     left: 96vw;
     top: 24vh;
-    border-color: #65fe0c;
+    border-color: #46bf00;
 }
 
 .background-page li:nth-child(2) {
     animation-delay: 4s;
     left: 8vw;
     top: 48vh;
-    border-color: #65fe0c;
+    border-color: #46bf00;
 }
 
 .background-page li:nth-child(3) {
     animation-delay: 6s;
     left: 59vw;
     top: 66vh;
-    border-color: #65fe0c;
+    border-color: #46bf00;
 }
 
 .background-page li:nth-child(4) {
     animation-delay: 8s;
     left: 23vw;
     top: 83vh;
-    border-color: #65fe0c;
+    border-color: #46bf00;
 }
 
 .background-page li:nth-child(5) {

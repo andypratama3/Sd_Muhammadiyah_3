@@ -6,10 +6,9 @@
 <div class="container-fluid bg-light about pb-5" id="tentang">
     <div class="container pb-5 mt-3">
         <div class="row g-5">
-            <div class="col-md-12  wow fadeInLeft" data-wow-delay="0.2s">
-                <a href="{{ route('index') }}" class="btn btn-primary float-start" style="color: #ffffff; background-color: #5ce70b !important; border-color: #5ce70b !important;"><i class="fas fa-arrow-left"></i> Kembali</a>
-
-                <div class="about-item-content bg-white rounded p-5 h-100 mt-5">
+            <div class="col-md-12">
+                <a href="{{ route('index') }}" class="btn btn-primary float-start wow fadeInLeft" data-wow-delay="0.2s" style="color: #ffffff; background-color: #5ce70b !important; border-color: #5ce70b !important;"><i class="fas fa-arrow-left"></i> Kembali</a>
+                <div class="about-item-content bg-white rounded p-5 h-100 mt-5 wow fadeInUp" data-wow-delay="0.2s">
                     <h4 class="text-primary">Visi & Misi SD MUHAMMADIYAH 3 SAMARINDA</h4>
                     <h4 class="display-4 mb-4">Visi & Misi</h4>
 
