@@ -5,7 +5,8 @@
 <script src="{{ asset('asset_dashboard_new/vendor/js/menu.js') }}"></script>
 
 <!-- Vendors JS -->
-<script src="{{ asset('asset_dashboard_new/vendor/libs/apex-charts/apexcharts.js') }}"></script>
+{{-- <script src="{{ asset('asset_dashboard_new/vendor/libs/apex-charts/apexcharts.js') }}"></script> --}}
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
 <!-- Main JS -->
 <script src="{{ asset('asset_dashboard_new/js/main.js') }}"></script>
@@ -17,8 +18,9 @@
 <script src="{{ asset('asset_dashboard_new/js/dashboards-analytics.js') }}"></script>
 <script src="https://kit.fontawesome.com/2feee0b69e.js" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-
 <!-- GitHub buttons -->
+<script src="{{ asset('asset_dashboard/vendor/select2/dist/js/select2.js') }}"></script>
+
 <script async defer src="https://buttons.github.io/buttons.js"></script>
 
 @stack('js')
@@ -30,6 +32,8 @@
         table.ajax.reload();
     }
 
+
+    $('.select2').select2();
 
     $(document).ready(function () {
         $('.navbar-nav-right').on('click', '.swal-logout', function (e) {

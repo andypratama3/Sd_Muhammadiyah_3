@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('app:charge-payment')->monthly();
         $schedule->command('app:archive-charges')->yearly();
+        $schedule->command('app:sync-wilayah')->yearly();
         $schedule->command('app:up-class')->yearly();
     }
 

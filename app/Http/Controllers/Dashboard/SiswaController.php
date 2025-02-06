@@ -31,7 +31,7 @@ class SiswaController extends Controller
     }
     public function index()
     {
-        $kelass = Kelas::select(['id','name'])->get();
+        $kelass = Kelas::select(['id','name'])->orderBy('name', 'asc')->get();
         return view('dashboard.data.siswa.index', compact('kelass'));
     }
     public function data_table(Request $request)

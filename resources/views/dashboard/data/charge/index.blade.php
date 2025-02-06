@@ -19,8 +19,8 @@
     <div class="card">
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
             <h4 class="card-title">Pembayaran Siswa</h4>
-            <a href="{{ route('dashboard.datamaster.charge.create') }}"
-            class="btn btn-success btn-sm float-right">Tambah <i class="fas fa-plus"></i></a>
+            {{-- <a href="{{ route('dashboard.datamaster.charge.create') }}"
+            class="btn btn-success btn-sm float-right">Tambah <i class="fas fa-plus"></i></a> --}}
         </div>
         <div class="card-body">
             <div class="form-group row gap-3">

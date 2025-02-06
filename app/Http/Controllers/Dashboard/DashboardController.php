@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    public function __invoke(SiswaChart $siswaChart, ChargeChart $chagreChart, Request $request)
+    public function __invoke(SiswaChart $siswaChart, ChargeChart $chargeChart, Request $request)
     {
         $siswa = Siswa::count();
         $guru = Guru::count();
@@ -31,8 +31,13 @@ class DashboardController extends Controller
         $siswaChart = $siswaChart->build();
         // Set year for ChargeChart, default to current year if not provided
         $year = $request->input('year', Carbon::now()->year);
-        $chagreChart->setYear($year);
-        $chagreChart = $chagreChart->build();
+        $month = $request->input('month', date('m')); // Default to the current month
+
+
+
+        $chargeChart->setYear($year);
+        $chargeChart->setMonth($month);
+        $chargeChart = $chargeChart->build();
         //count artikel data
         $artikel_sum_total_klik = Artikel::sum('jumlah_klik');
         $artikel_like_max = Artikel::orderBy('jumlah_klik','desc')->first();
@@ -50,7 +55,7 @@ class DashboardController extends Controller
 
         if ($request->ajax()) {
             return response()->json([
-                'chagreChart' => $chagreChart->toJson(),
+                'chargeChart' => $chargeChart->toJson(),
             ]);
         }
 
@@ -67,7 +72,7 @@ class DashboardController extends Controller
 
         //     $view->with(compact('visitor_by_day', 'visitor_by_month', 'visitor_by_year'));
         // });
-
+        // dd($chagreChart)
 
         return view('dashboard.index', compact(
             'siswa',
@@ -76,7 +81,7 @@ class DashboardController extends Controller
             'tenagakependidikan',
             // 'ArtikelChart',
             'siswaChart',
-            'chagreChart',
+            'chargeChart',
             'artikels',
             'artikel_sum_total_klik',
             // 'percent_artikel',

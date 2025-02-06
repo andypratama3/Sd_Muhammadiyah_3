@@ -26,15 +26,15 @@
                     <div class="form-group">
                         <div class="input-group gap-3">
                             <select name="kelas" id="kelas" class="form-control">
-                                <option selected disabled>Pilih Kelas</option>
+                                <option selected value="">Pilih Kelas</option>
                                 @foreach ($kelass as $kelas)
                                     <option value="{{ $kelas->id }}">{{ $kelas->name }}</option>
                                 @endforeach
                             </select>
                             <select name="category_kelas" id="category_kelas" class="form-control me-2">
-                                <option selected disabled>Pilih Kategori Kelas</option>
+                                <option selected value="">Pilih Kategori Kelas</option>
                             </select>
-                            <button class="btn btn-success btn-sm" id="export-data-kelas-excel"><i class="fas fa-file-excel"></i> Export Excel Perkelas</button>
+                            <button class="btn btn-success btn-sm" id="export-data-kelas-excel" style="border-radius: 10px;"><i class="fas fa-file-excel"></i> Export Excel Perkelas</button>
                                 <!-- Hidden form for exporting -->
                                 <form action="{{ route('siswa.export_excel_kelas') }}" method="POST" id="exportForm" style="display: none;">
                                     @csrf

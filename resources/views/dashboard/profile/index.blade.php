@@ -8,19 +8,30 @@
         .image {
             opacity: 1;
             display: block;
-            transition: .5s ease;
+            transition: 0.5s ease;
             backface-visibility: hidden;
+            max-width: 100%;
+            height: auto;
         }
 
         .label {
-            transition: .5s ease;
+            transition: 0.5s ease;
             opacity: 0;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            -ms-transform: translate(-50%, -50%);
             text-align: center;
+            font-size: 18px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        .profile-edit {
+            position: relative;
+            display: inline-block;
         }
 
         .profile-edit:hover .image {
@@ -32,36 +43,58 @@
         }
 
         .text {
-            /* background-color: #04AA6D; */
             color: #515151;
             font-size: 30px;
-            /* padding: 10px 50px; */
+            text-align: center;
         }
 
         .img {
             display: block;
             max-width: 100%;
+            height: auto;
         }
 
         .cropper-container {
             width: 100%;
-            height: 10%;
-        }
-        .cropper-container cropper-bg {
-            width: 100% !important;
-            height: 50% !important;
-        }
-        .cropper-container cropper-bg img {
-            width: 50% !important;
-            height: 10% !important;
-        }
-        .preview {
+            height: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             overflow: hidden;
+        }
+
+        .cropper-container img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .preview {
             width: 160px;
             height: 160px;
-            margin: 10px;
+            margin: 10px auto;
             border: 1px solid red;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
+
+        /* Responsif untuk layar kecil */
+        @media (max-width: 768px) {
+            .text {
+                font-size: 24px;
+            }
+
+            .label {
+                font-size: 16px;
+            }
+
+            .preview {
+                width: 120px;
+                height: 120px;
+            }
+        }
+
 
 
     </style>
@@ -326,7 +359,7 @@
         {{-- crop modal for photo --}}
         <div class="modal fade show" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
             aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-dialog modal-fullscreen" role="document">
                 <div class="modal-content">
                     <div class="modal-header" id="modalLabel">
                         <h4 class="modal-title">Crop Foto</h4>
@@ -356,14 +389,13 @@
 </section>
 @push('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"
-        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous">
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.js" nonce="{{ csp_nonce() }}"></script>
-    <script>
+    <script type="text/javascript">
         $(document).ready(function() {
             // cropp foto
-            var $modal = $('#modal');
+            var modal = $('#modal');
             var image = document.getElementById('image-crop');
             var cropper;
 
@@ -371,7 +403,10 @@
                 var files = e.target.files;
                 var done = function(url) {
                     image.src = url;
-                    $modal.modal('show');
+                    modal.modal('show');
+
+                    // disabled click close modal from another
+                    $(".modal .close, .modal .btn-close, .modal-footer .btn").prop("disabled", true);
                 };
                 var reader;
                 var file;
@@ -389,7 +424,7 @@
                     }
                 }
             });
-            $modal.on('shown.bs.modal', function() {
+            modal.on('shown.bs.modal', function() {
                 cropper = new Cropper(image, {
                     aspectRatio: 1,
                     viewMode: 3,
@@ -426,7 +461,7 @@
                                 'image': base64data
                             },
                             success: function(data) {
-                                $modal.modal('hide');
+                                modal.modal('hide');
                                 Swal.fire({
                                         title: 'Success!',
                                         text: data['success'],

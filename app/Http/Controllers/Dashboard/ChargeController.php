@@ -68,6 +68,12 @@ class ChargeController extends Controller
         return view('dashboard.data.charge.show', compact('charge'));
     }
 
+    public function edit($id)
+    {
+        $charge = Charge::with('siswa')->where('id', $id)->firstOrFail();
+
+        return view('dashboard.data.charge.edit', compact('charge'));
+    }
 
     public function destroy($id)
     {
