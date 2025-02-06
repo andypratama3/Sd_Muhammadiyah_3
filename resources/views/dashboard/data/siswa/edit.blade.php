@@ -309,7 +309,7 @@
                                 <select name="provinsi_id" id="provinsi" class="select2 form-control">
                                     <option id="provinsi_select" value="{{ $siswa->provinsi_id }}" selected></option>
                                     @foreach ($result_provinsi as $provinsi)
-                                        <option value="{{ $provinsi['id'] }}">{{ $provinsi['name'] }}</option>
+                                        <option value="{{ $provinsi['province_id'] }}">{{ $provinsi['name'] }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -611,9 +611,9 @@
                         success: function(response) {
                             const kabupaten = response.data;
                             let selectElement = $('#kabupaten');
-                            selectElement.append('<option value="">Pilih Kabupaten</option>');
+                            // selectElement.append('<option value="">Pilih Kabupaten</option>');
                             $.each(kabupaten, function(i, item) {
-                                selectElement.append('<option value="' + item.id + '">' +
+                                selectElement.append('<option value="' + item.regency_id + '">' +
                                     item.name + '</option>');
                             });
                         },
@@ -636,9 +636,9 @@
                         success: function(response) {
                             const kota = response.data;
                             let selectElement = $('#kecamatan');
-                            selectElement.append('<option value="">Pilih Kecamatan</option>');
+                            // selectElement.append('<option value="">Pilih Kecamatan</option>');
                             $.each(kota, function(i, item) {
-                                selectElement.append('<option value="' + item.id + '">' +
+                                selectElement.append('<option value="' + item.district_id + '">' +
                                     item.name + '</option>');
                             });
                         },
@@ -661,9 +661,9 @@
                         success: function(response) {
                             const kota = response.data;
                             let selectElement = $('#kelurahan');
-                            selectElement.append('<option value="">Pilih Kelurahan</option>');
+                            // selectElement.append('<option value="">Pilih Kelurahan</option>');
                             $.each(kota, function(i, item) {
-                                selectElement.append('<option value="' + item.id + '">' +
+                                selectElement.append('<option value="' + item.village_id + '">' +
                                     item.name + '</option>');
                             });
                         },

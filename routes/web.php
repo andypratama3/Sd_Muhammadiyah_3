@@ -171,7 +171,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
 
         Route::resource('gallery', DashboardGalleryActivityController::class, ['names' => 'dashboard.datasekolah.gallery']);
     });
-    
+
     Route::group(['prefix' => 'datamaster'], function () {
         Route::resource('siswa',  DashboardSiswaController::class, ['names' => 'dashboard.datamaster.siswa']);
         Route::resource('kategori-pembayaran',  DashboardJudulPembayaranController::class, ['names' => 'dashboard.datamaster.judul.pembayaran']);
@@ -215,6 +215,15 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::resource('karyawan', KaryawanController::class, ['names' => 'dashboard.pengaturan.karyawan']);
         Route::post('get/email/karyawan',[KaryawanController::class, 'getEmailUser'])->name('dashboard.pengaturan.get.email');
     });
+
+
+    // Refrence Data
+    Route::get('provinsi',[WilayahApi::class, 'provinsi'])->name('provinsi.api');
+    Route::post('kabupaten',[WilayahApi::class, 'kabupaten'])->name('kabupaten.api');
+    Route::post('kecamatan',[WilayahApi::class, 'kecamatan'])->name('kecamatan.api');
+    Route::post('kelurahan',[WilayahApi::class, 'kelurahan'])->name('kelurahan.api');
+    Route::post('get/provinsi',[WilayahApi::class, 'getProvinsi'])->name('getprovinsi.api');
+    Route::post('get/kabupaten',[WilayahApi::class, 'getKabupaten'])->name('getkabupaten.api');
 
 
 

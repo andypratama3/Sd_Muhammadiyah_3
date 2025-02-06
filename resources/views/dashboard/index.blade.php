@@ -262,7 +262,7 @@
         const chart = new Chart(ctx, {
             type: "bar",
             data: {
-                labels: [], // Empty initially, will be filled dynamically
+                // labels: ["Data"], // Empty initially, will be filled dynamically
                 datasets: [{
                     label: "Data",
                     // backgroundColor: window.theme.primary,
@@ -305,43 +305,40 @@
 
 
         const baseUrl = "{{ route('visitors.data') }}";
-        function updateChart(range) {
-            fetch(`${baseUrl}?range=${range}`)
-                .then(response => response.json())
-                .then(data => {
-                    const labels = [];
-                    const values = [];
+            function updateChart(range) {
+                fetch(`${baseUrl}?range=${range}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const labels = [];
+                        const values = [];
 
-                    if (range === "day") {
-                        labels.push("Hari Ini");
-                        values.push(data);
-                    } else if (range === "month") {
-                        data.forEach(item => {
-                            labels.push(`Tanggal ${item.day}`);
-                            values.push(item.total);
-                        });
-                    } else if (range === "year") {
-                        data.forEach(item => {
-                            labels.push(["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][item.month - 1]);
-                            values.push(item.total);
-                        });
-                    }
+                        if (range === "day") {
+                            labels.push("Hari Ini");
+                            values.push(data);
+                        } else if (range === "month") {
+                            data.forEach(item => {
+                                labels.push(`Tanggal ${item.day}`);
+                                values.push(item.total);
+                            });
+                        } else if (range === "year") {
+                            data.forEach(item => {
+                                labels.push(["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][item.month - 1]);
+                                values.push(item.total);
+                            });
+                        }
 
-                    chart.data.labels = labels;
-                    chart.data.datasets[0].data = values;
-                    chart.update();
-                })
-                .catch(err => console.error("Error fetching data:", err));
-        }
-
-
-        // Initial load
-        updateChart("month");
+                        chart.data.labels = labels;
+                        chart.data.datasets[0].data = values;
+                        chart.update();
+                    })
+                    .catch(err => console.error("Error fetching data:", err));
+            }
+            // Initial load
+            updateChart("month");
 
         // Listen for dropdown change
         document.getElementById("dataRange").addEventListener("change", function () {
             updateChart(this.value);
-            console.log(this.value);
         });
     });
 </script>

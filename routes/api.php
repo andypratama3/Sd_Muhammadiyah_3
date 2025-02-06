@@ -23,13 +23,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-//get data from api wilayah github
-Route::get('provinsi',[WilayahApi::class, 'provinsi'])->name('provinsi.api');
-Route::post('kabupaten',[WilayahApi::class, 'kabupaten'])->name('kabupaten.api');
-Route::post('kecamatan',[WilayahApi::class, 'kecamatan'])->name('kecamatan.api');
-Route::post('kelurahan',[WilayahApi::class, 'kelurahan'])->name('kelurahan.api');
-Route::post('get/provinsi',[WilayahApi::class, 'getProvinsi'])->name('getprovinsi.api');
-Route::post('get/kabupaten',[WilayahApi::class, 'getKabupaten'])->name('getkabupaten.api');
+// //get data from api wilayah github
+// Route::get('provinsi',[WilayahApi::class, 'provinsi'])->name('provinsi.api');
+// Route::post('kabupaten',[WilayahApi::class, 'kabupaten'])->name('kabupaten.api');
+// Route::post('kecamatan',[WilayahApi::class, 'kecamatan'])->name('kecamatan.api');
+// Route::post('kelurahan',[WilayahApi::class, 'kelurahan'])->name('kelurahan.api');
+// Route::post('get/provinsi',[WilayahApi::class, 'getProvinsi'])->name('getprovinsi.api');
+// Route::post('get/kabupaten',[WilayahApi::class, 'getKabupaten'])->name('getkabupaten.api');
 //siswa Data Json
 // Route::get('siswas',[SiswaApi::class, 'siswa'])->name('siswa.api');
 // Api Payment

@@ -189,7 +189,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="kelurahan">Kelurahan</label>
                         <div class="col-sm-9">
-                            <input type="hidden" id="kalurahan_id" value="{{ $siswa->kalurahan_id }}">
+                            <input type="hidden" id="kelurahan_id" value="{{ $siswa->kelurahan_id }}">
                             <h6 id="kelurahan">: {{ $siswa->kelurahan_id }}</h6>
                             <hr>
                         </div>

@@ -293,7 +293,7 @@
                                 value="{{ old('provinsi_id') }}">
                                 <option selected disabled>Pilih Provinsi</option>
                                 @foreach ($result_provinsi as $provinsi)
-                                <option value="{{ $provinsi['id'] }}" {{ old('provinsi_id') == $provinsi['id'] ? 'selected' : '' }}>
+                                <option value="{{ $provinsi['province_id'] }}" {{ old('province_id') == $provinsi['province_id'] ? 'selected' : '' }}>
                                     {{ $provinsi['name'] }}
                                 </option>
                                 @endforeach
@@ -517,7 +517,7 @@
                     selectElement.empty();
                     selectElement.append('<option value="">Pilih Kabupaten</option>');
                     $.each(kabupaten, function (i, item) {
-                        selectElement.append('<option value="' + item.id + '">' +
+                        selectElement.append('<option value="' + item.regency_id + '">' +
                             item.name + '</option>');
                     });
                 },
@@ -543,7 +543,7 @@
                     selectElement.empty();
                     selectElement.append('<option value="">Pilih Kecamatan</option>');
                     $.each(kota, function (i, item) {
-                        selectElement.append('<option value="' + item.id + '">' +
+                        selectElement.append('<option value="' + item.district_id + '">' +
                             item.name + '</option>');
                     });
 
@@ -570,7 +570,7 @@
                     selectElement.empty();
                     selectElement.append('<option value="">Pilih Kelurahan</option>');
                     $.each(kota, function (i, item) {
-                        selectElement.append('<option value="' + item.id + '">' + item.name + '</option>');
+                        selectElement.append('<option value="' + item.village_id + '">' + item.name + '</option>');
                     });
                 },
             });
