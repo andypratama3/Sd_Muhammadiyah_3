@@ -23,7 +23,11 @@ class ChargeController extends Controller
 
     public function data_table(Request $request)
     {
-        $charges = Charge::with('siswa')->orderBy('created_at', 'desc');
+        $charges = Charge::with('siswa')
+                ->whereYear('created_at', Carbon::now()->year)
+                ->whereMonth('created_at', Carbon::now()->month)
+                ->orderBy('created_at', 'desc');
+
         if($request->kelas){
             $charges = $charges->whereHas('siswa.kelas', function ($query) use ($request) {
                 $query->where('id', $request->kelas);
@@ -35,7 +39,7 @@ class ChargeController extends Controller
             $startDate = Carbon::createFromFormat('d-m-Y', trim($dates[0]))->format('Y-m-d');
             $endDate = Carbon::createFromFormat('d-m-Y', trim($dates[1]))->format('Y-m-d');
 
-            $charges = $charges->whereBetween(DB::raw('date(created_at)'), [$startDate, $endDate]);
+            $charges = Charge::whereBetween(DB::raw('date(created_at)'), [$startDate, $endDate]);
         }
 
         return DataTables::of($charges)

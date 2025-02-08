@@ -110,8 +110,9 @@
             </div>
             <div class="row p-4">
                 <div class="col-md-12">
-                    <label for="">Sortir Tanggal</label>
-                    <input type="text" id="range-pie" class="form-control" name="range-pie" placeholder="Pilih Tanggal">
+                    <label for="">Sortir Waktu</label>
+                    <input type="month" id="range-pie" class="form-control" value="{{ request()->query('chargeCountMount_date') }}" name="range-pie" placeholder="Pilih Bulan dan Tahun">
+
                 </div>
             </div>
             <div class="card-body d-flex justify-content-center align-items-center w-100">
@@ -243,17 +244,19 @@
             let month = $(this).val();
             $('#yearForm').submit();
         });
-        $('input[name="range-pie"]').daterangepicker({
-            timePicker: true,
-            autoUpdateInput: false,  // This prevents automatic updating of the input value
-            locale: {
-                format: 'DD-MM-YYYY',
-            }
-        });
-
         $('#range-pie').on('change', function () {
             let range = $(this).val();
-
+            $.ajax({
+                type: "GET",
+                url: "{{ route('dashboard') }}",
+                data: {
+                    chargeCountMount_date: range
+                },
+                cache: false,
+                success: function (response) {
+                    window.location.href = "{{ route('dashboard') }}?chargeCountMount_date=" + range;
+                }
+            });
         })
 
     });

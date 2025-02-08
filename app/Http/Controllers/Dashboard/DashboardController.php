@@ -35,10 +35,17 @@ class DashboardController extends Controller
         // $ArtikelChart = $ArtikelChart->build();
         $siswaChart = $siswaChart->build();
 
-        $chargeCountMount = $chargeCountMount->build();
 
         $year = $request->input('year', Carbon::now()->year);
         $month = $request->input('month', Carbon::now()->month);
+
+        $chargeCountMount_date = $request->input('chargeCountMount_date', Carbon::now()->format('Y-m'));
+
+        // Set tanggal ke objek chart
+        $chargeCountMount->setChargeCountMount_date($chargeCountMount_date);
+
+        // Bangun chart
+        $chargeCountMount = $chargeCountMount->build();
 
         $chargeChart->setYear($year);
         $chargeChart->setMonth($month);
@@ -61,6 +68,7 @@ class DashboardController extends Controller
 
         if ($request->ajax()) {
             return response()->json([
+                'chargeCountMount' => $chargeCountMount->toJson(),
                 'chargeChart' => $chargeChart->toJson(),
             ]);
         }

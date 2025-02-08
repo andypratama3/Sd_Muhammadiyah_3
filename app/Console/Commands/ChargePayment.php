@@ -80,7 +80,7 @@ class ChargePayment extends Command
             ],
             'expiry' => [
                 'start_time' => now()->toIso8601String(),
-                'duration' => 29,
+                'duration' => 20,
                 'unit' => 'days',
             ],
         ];
