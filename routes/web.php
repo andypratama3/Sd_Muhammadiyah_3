@@ -193,7 +193,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::post('invoices/export', [DashboardPembayaranController::class, 'exportExcel'])->name('dashboard.datamaster.pembayaran.exportExcel');
 
         // charge payment
-        Route::resource('charge',  DashboardChargeController::class, ['names' => 'dashboard.datamaster.charge'])->except('edit','update');
+        Route::resource('charge',  DashboardChargeController::class, ['names' => 'dashboard.datamaster.charge']);
         Route::get('charges/records', [DashboardChargeController::class, 'data_table'])->name('dashboard.datamaster.charge.get.records');
         Route::post('charges/export', [DashboardChargeController::class, 'exportExcel'])->name('dashboard.datamaster.charge.exportExcel');
 

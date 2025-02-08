@@ -19,8 +19,6 @@
     <div class="card">
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
             <h4 class="card-title">Pembayaran Siswa</h4>
-            {{-- <a href="{{ route('dashboard.datamaster.charge.create') }}"
-            class="btn btn-success btn-sm float-right">Tambah <i class="fas fa-plus"></i></a> --}}
         </div>
         <div class="card-body">
             <div class="form-group row gap-3">
@@ -42,9 +40,10 @@
 
                 <div class="col-md-2">
                     <div class="form-group">
-                        <button class="btn btn-success" id="exportData-excel"><i class="fas fa-file-excel"></i>
-                            Export</button>
-                        <!-- Hidden form for exporting -->
+                        <button class="btn btn-success" id="exportData-excel">
+                            <i class="fas fa-file-excel"></i>
+                            Export
+                        </button>
                         <form action="{{ route('dashboard.datamaster.charge.exportExcel') }}" method="POST"
                             id="exportForm" style="display: none;">
                             @csrf
@@ -62,7 +61,7 @@
                             <th>Nama</th>
                             <th>Nama Siswa</th>
                             <th>Kelas</th>
-                            <th>Order ID</th>
+                            <th>Va Number</th>
                             <th>Total</th>
                             <th>Status</th>
                             <th>Action</th>
@@ -75,7 +74,6 @@
 </div>
 @push('js')
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js" defer></script>
-
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jqc-1.12.3/dt-1.10.16/b-1.4.2/b-html5-1.4.2/datatables.min.js"></script>
@@ -125,7 +123,7 @@
                     { data: 'name', name: 'name' },
                     { data: 'siswa.name', name: 'siswa.name' },
                     { data: 'kelas.name', name: 'kelas.name' },
-                    { data: 'order_id', name: 'order_id' },
+                    { data: 'va_number', name: 'va_number' },
                     {
                         data: 'gross_amount',
                         name: 'gross_amount',
@@ -141,8 +139,10 @@
                                 return '<h6 style="color: black;"><span class="badge bg-warning"><i class="fa-solid fa-clock"></i> ' + data + '</span></h6>';
                             } else if (data === 'settlement') {
                                 return '<h6 style="color: black;"><span class="badge bg-success"><i class="fa-solid fa-circle-check"></i> ' + data + '</span></h6>';
-                            } else if (data === 'Expired') {
+                            } else if (data === 'Expired' || data === 'failed') {
                                 return '<h6 style="color: black;"><span class="badge bg-danger"><i class="fa-solid fa-xmark"></i> ' + data + '</span></h6>';
+                            } else if(data === 'pay_offline'){
+                                return '<h6 style="color: black;"><span class="badge bg-success"><i class="fa-solid fa-circle-check"></i> ' + data + '</span></h6>';
                             } else {
                                 return data;
                             }

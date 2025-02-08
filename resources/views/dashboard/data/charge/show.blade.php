@@ -9,7 +9,7 @@
 <div class="card mb-4">
     @include('layouts.flashmessage')
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold text-primary">Detail Pembayaran Dengan Order {{ $charge->order_id }}</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Detail Pembayaran Dengan Virtual Account {{ $charge->va_number }}</h6>
     </div>
     <hr>
     <div class="card-body">
@@ -109,8 +109,16 @@
                 <div class="form-group row">
                     <label class="col-sm-3 text-dark" for="transaction_status">Status Transaksi</label>
                     <div class="col-sm-9">
-                        <input type="text" name="transaction_status" value="{{ $charge->transaction_status }}"
-                            class="form-control" id="transaction_status" readonly>
+                        {{-- <h2> --}}
+                            @if($charge->transaction_status === 'pending')
+                            <span class="badge bg-warning">Pending</span>
+                            @elseif($charge->transaction_status === 'settlement' || $charge->transaction_status == 'pay_offline')
+                            <span class="badge bg-success">Success</span>
+                            @else
+                            <span class="badge bg-danger">Failed</span>
+                            @endif
+
+                        {{-- </h2> --}}
                     </div>
                 </div>
             </div>

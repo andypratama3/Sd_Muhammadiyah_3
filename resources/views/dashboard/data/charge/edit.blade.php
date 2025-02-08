@@ -9,61 +9,38 @@
 <div class="card mb-4">
     @include('layouts.flashmessage')
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold text-primary">Edit Pembayaran {{ $pembayaran->order_id }}</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Edit Pembayaran Dengan Virtual Account {{ $charge->va_number }}</h6>
     </div>
     <hr>
     <div class="card-body">
-        <form action="{{ route('dashboard.datamaster.pembayaran.update', $pembayaran->order_id) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('dashboard.datamaster.charge.update', $charge->id) }}" method="post">
             @csrf
             @method('PUT')
-            <input type="hidden" value="{{ $pembayaran->order_id }}" name="order_id">
             <div class="row">
                 <div class="col-md-6 mt-2">
                     <div class="form-group row">
-                        <label class="col-sm-3 text-dark" for="name">Judul Pembayaran</label>
+                        <label class="col-sm-3 text-dark" for="name">Nama</label>
                         <div class="col-sm-9">
-                            <select name="judul_id" class="form-control select2" data-placholder="Pilih Judul Pembayaran">
-                                <option value="{{ $pembayaran->judul_id }}" selected>{{ $pembayaran->judul->name }}</option>
-                                @foreach ($juduls as $judul)
-                                    <option value="{{ $judul->id }}">{{ $judul->name }}</option>
-                                @endforeach
-                            </select>
+                            <input type="text" class="form-control" name="name" id="name" value="{{ $charge->name }}"
+                                readonly />
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6 mt-2">
                     <div class="form-group row">
-                        <label class="col-sm-3 text-dark" for="tgl_lahir">Nama Siswa</label>
+                        <label class="col-sm-3 text-dark" for="order_id">Order ID</label>
                         <div class="col-sm-9">
-                            <select class="form-control select2" name="siswa_id" id="">
-                                <option selected value="{{ $pembayaran->siswa_id }}">{{ $pembayaran->siswa->name }}</option>
-                                @foreach ($siswas as $siswa)
-                                <option value="{{ $siswa->id }}">{{ $siswa->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6 mt-2">
-                    <div class="form-group row">
-                        <label class="col-sm-3 text-dark" for="kelas">Kelas</label>
-                        <div class="col-sm-9">
-                            <select name="kelas_id" id="kelas" class="select2 form-control" data-placholder="Pilih Kelas">
-                                <option selected value="{{ $pembayaran->kelas_id }}">{{ $pembayaran->kelas->name }}</option>
-                                @foreach ($kelass as $kelas)
-                                    <option value="{{ $kelas->id }}" @if (old('kelas_id') == '{{ $kelas->id }}') {{ 'selected' }}  @endif>{{ $kelas->name }}</option>
-                                @endforeach
-                            </select>
+                            <input type="text" class="form-control" name="order_id" id="order_id"
+                                value="{{ $charge->order_id }}" readonly />
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6 mt-2">
                     <div class="form-group row">
-                        <label class="col-sm-3 text-dark" for="category_kelas">Kategori Kelas</label>
+                        <label class="col-sm-3 text-dark" for="siswa_id">Nama Siswa</label>
                         <div class="col-sm-9">
-                            <select name="category_kelas" id="category_kelas" class="select2 form-control" data-placholder="Pilih Kategori Kelas">
-                                <option selected value="{{ $pembayaran->category_kelas }}">{{ $pembayaran->category_kelas }}</option>
+                            <select class="form-control select2" name="siswa_id" id="" disabled>
+                                <option selected disabled>{{ $charge->siswa->name }}</option>
                             </select>
                         </div>
                     </div>
@@ -72,80 +49,119 @@
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="gross_amount">Total Pembayaran</label>
                         <div class="col-sm-9">
-                            <input type="text" name="gross_amount" value="{{ $pembayaran->gross_amount }}" class="form-control" id="gross_amount">
+                            <input type="text" name="gross_amount" value="{{ $charge->gross_amount }}"
+                                class="form-control" id="gross_amount" readonly>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12 mt-2">
-                    <a href="{{ route('dashboard.datamaster.siswa.index') }}" class="btn btn-danger float-lg-start btn-sm">Kembali</a>
-                    <button type="submit" class="btn btn-primary float-lg-end btn-sm">Submit</button>
+                <div class="col-md-6 mt-2">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="payment_type">Tipe Pembayaran</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="payment_type" value="{{ $charge->payment_type }}"
+                                class="form-control" id="payment_type" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mt-2">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="bank">Bank</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="bank" value="{{ $charge->bank }}" class="form-control" id="bank"
+                                readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mt-2">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="va_number">Nomor VA</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="va_number" value="{{ $charge->va_number }}" class="form-control"
+                                id="va_number" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mt-2">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="transaction_id">ID Transaksi</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="transaction_id" value="{{ $charge->transaction_id }}"
+                                class="form-control" id="transaction_id" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mt-2">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="transaction_time">Tanggal Transaksi</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="transaction_time" value="{{ $charge->transaction_time }}"
+                                class="form-control" id="transaction_time" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mt-2">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="fraud_status">Status Fraud</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="fraud_status" value="{{ $charge->fraud_status }}"
+                                class="form-control" id="fraud_status" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mt-2">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="transaction_status">Status Transaksi</label>
+                        <div class="col-sm-9">
+                            <select class="form-control" name="transaction_status" id="transaction_status">
+                                <option value="pending" {{ $charge->transaction_status === 'pending' ? 'selected' : '' }}>Pending</option>
+                                <option value="settlement" {{ $charge->transaction_status === 'settlement' ? 'selected' : '' }}>Success</option>
+                                <option value="pay_offline" {{ $charge->transaction_status === 'pay_offline' ? 'selected' : '' }}>Pay Offline</option>
+                                <option value="failed" {{ $charge->transaction_status === 'failed' ? 'selected' : '' }}>Failed</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mt-2 ">
+                    <div class="form-group">
+                        <a href="{{ route('dashboard.datamaster.charge.index') }}" class="btn btn-danger btn-sm">Kembali</a>
+                        <button type="submit" class="btn btn-primary btn-sm float-end">Submit</button>
+                    </div>
                 </div>
             </div>
         </form>
     </div>
 </div>
 @push('js')
-<script src="{{ asset('asset_dashboard/vendor/select2/dist/js/select2.js') }}"></script>
-<script>
-    $(document).ready(function () {
-        $('.select2').select2({
-            theme: 'bootstrap4'
-        });
-        $('#gross_amount').on('input', function () {
-        let gross_amount = $(this).val();
-            gross_amount = gross_amount.replace(/[^0-9.]/g, '');
-            gross_amount = formatRupiah(gross_amount);
-            $(this).val(gross_amount);
-        });
 
-        // Fungsi untuk memformat angka sebagai mata uang Rupiah
-        function formatRupiah(angka) {
-            var number_string = angka.toString().replace(/[^,\d]/g, ''),
-                split = number_string.split(','),
-                sisa = split[0].length % 3,
-                rupiah = split[0].substr(0, sisa),
-                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#gross_amount').on('input', function () {
+                let gross_amount = $(this).val();
+                gross_amount = gross_amount.replace(/[^0-9.]/g, '');
+                gross_amount = formatRupiah(gross_amount);
+                $(this).val(gross_amount);
+            });
 
-            if (ribuan) {
-                separator = sisa ? '.' : '';
-                rupiah += separator + ribuan.join('.');
+            $('#gross_amount').val(formatRupiah($('#gross_amount').val()));
+
+            // Fungsi untuk memformat angka sebagai mata uang Rupiah
+            function formatRupiah(angka) {
+                var number_string = angka.toString().replace(/[^,\d]/g, ''),
+                    split = number_string.split(','),
+                    sisa = split[0].length % 3,
+                    rupiah = split[0].substr(0, sisa),
+                    ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+                if (ribuan) {
+                    separator = sisa ? '.' : '';
+                    rupiah += separator + ribuan.join('.');
+                }
+
+                rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+                return rupiah;
             }
-
-            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-            return rupiah;
-
-        }
-
-        $('#kelas').on('change', function () {
-            var selectedKelasId = $('#kelas').val();
-            var categoryKelasDropdown = $('#category_kelas');
-            //clear area dropdown
-            categoryKelasDropdown.empty();
-            //add option for category_kelas
-            categoryKelasDropdown.append('<option selected disabled>Pilih Kategori Kelas</option>');
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.ajax({
-                url: '{{ route("dashboard.datasekolah.jadwal.kelas_category") }}',
-                method: 'POST',
-                data: {
-                    id: selectedKelasId
-                },
-                success: function (response) {
-                    let data_category = response.categoryKelas
-                    $.each(response, function (index, category) {
-                        categoryKelasDropdown.append('<option data-id="' + category  +'" value="' + category + '">' + category + '</option>');
-                    });
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            });
         });
-    });
-</script>
+    </script>
+
 @endpush
 @endsection

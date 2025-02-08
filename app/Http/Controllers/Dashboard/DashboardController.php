@@ -14,14 +14,19 @@ use App\Charts\ChargeChart;
 use App\Models\KritikSaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Charts\ChargeCountMount;
 use App\Models\TenagaPendidikan;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    public function __invoke(SiswaChart $siswaChart, ChargeChart $chargeChart, Request $request)
-    {
+    public function __invoke(
+        SiswaChart $siswaChart,
+        ChargeChart $chargeChart,
+        ChargeCountMount $chargeCountMount,
+        Request $request
+    ) {
         $siswa = Siswa::count();
         $guru = Guru::count();
         $prestasi = Prestasi::count();
@@ -29,15 +34,16 @@ class DashboardController extends Controller
         //chart
         // $ArtikelChart = $ArtikelChart->build();
         $siswaChart = $siswaChart->build();
-        // Set year for ChargeChart, default to current year if not provided
+
+        $chargeCountMount = $chargeCountMount->build();
+
         $year = $request->input('year', Carbon::now()->year);
-        $month = $request->input('month', date('m')); // Default to the current month
-
-
+        $month = $request->input('month', Carbon::now()->month);
 
         $chargeChart->setYear($year);
         $chargeChart->setMonth($month);
         $chargeChart = $chargeChart->build();
+
         //count artikel data
         $artikel_sum_total_klik = Artikel::sum('jumlah_klik');
         $artikel_like_max = Artikel::orderBy('jumlah_klik','desc')->first();
@@ -88,6 +94,7 @@ class DashboardController extends Controller
             'invoice_list',
             'kritis',
             'artikel_publish',
+            'chargeCountMount'
         ));
     }
 

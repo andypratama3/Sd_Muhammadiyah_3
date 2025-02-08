@@ -33,44 +33,61 @@ class ChargeChart
     public function build(): \ArielMejiaDev\LarapexCharts\BarChart
     {
         // Fetch charge data grouped by month and status for the selected year
-        $charges = Charge::selectRaw('MONTH(created_at) as month,
-                                    SUM(CASE WHEN transaction_status = "settlement" THEN 1 ELSE 0 END) as settlement_count,
-                                    SUM(CASE WHEN transaction_status = "pending" THEN 1 ELSE 0 END) as pending_count,
-                                    SUM(CASE WHEN transaction_status = "deny" THEN 1 ELSE 0 END) as deny_count')
-            ->whereYear('created_at', $this->year)
-            ->whereMonth('created_at', $this->month) // Filter hanya bulan berjalan
-            ->groupBy('month')
-            ->orderBy('month')
-            ->get();
+        $chargesQuery = Charge::selectRaw('
+                MONTH(created_at) as month,
+                SUM(CASE WHEN transaction_status = "settlement" THEN 1 ELSE 0 END) as settlement_count,
+                SUM(CASE WHEN transaction_status = "pay_offline" THEN 1 ELSE 0 END) as pay_offline_count,
+                SUM(CASE WHEN transaction_status = "pending" THEN 1 ELSE 0 END) as pending_count,
+                SUM(CASE WHEN transaction_status = "deny" THEN 1 ELSE 0 END) as deny_count,
+                SUM(CASE WHEN transaction_status = "failed" THEN 1 ELSE 0 END) as failed_count
 
-        // Inisialisasi array untuk menyimpan data transaksi per bulan
+            ')
+            ->whereYear('created_at', $this->year)
+            ->groupBy('month')
+            ->orderBy('month');
+
+        // Apply month filter only if $this->month is set
+        if ($this->month !== null) {
+            $chargesQuery->whereMonth('created_at', $this->month);
+        }
+
+        $charges = $chargesQuery->get();
+
+        // Initialize arrays to store monthly transaction counts
         $monthlySettlementCounts = array_fill(0, 12, 0);
         $monthlyPendingCounts = array_fill(0, 12, 0);
         $monthlyDenyCounts = array_fill(0, 12, 0);
 
-        // Populate the counts arrays dengan data dari database
+        // Populate the counts arrays with data from the database
         foreach ($charges as $item) {
-            $index = $item->month - 1; // Sesuaikan index dengan array
-            $monthlySettlementCounts[$index] = $item->settlement_count;
+            $index = $item->month - 1; // Adjust index for array
+            $monthlySettlementCounts[$index] = $item->settlement_count + $item->pay_offline_count;
             $monthlyPendingCounts[$index] = $item->pending_count;
-            $monthlyDenyCounts[$index] = $item->deny_count;
+            $monthlyDenyCounts[$index] = $item->deny_count + $item->failed_count;
         }
 
-        // Define nama bulan untuk X-axis
-        $months = [
-            'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun',
-            'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'
-        ];
+        // Define month names for X-axis
+        $months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+
+        // Determine chart title
+        $title = $this->month !== null
+            ? 'Pembayaran SPP Siswa Bulan ' . $months[$this->month - 1]
+            : 'Pembayaran SPP Siswa Tahun ' . $this->year;
+
+        $subtitle = $this->month !== null
+            ? 'Jumlah Transaksi pada bulan ' . $months[$this->month - 1]
+            : 'Jumlah Transaksi sepanjang tahun ' . $this->year;
 
         return $this->chart->barChart()
-            ->setTitle('Pembayaran SPP Siswa Bulan ' . $months[$this->month - 1])
-            ->setSubtitle('Jumlah Transaksi pada bulan ' . $months[$this->month - 1])
+            ->setTitle($title)
+            ->setSubtitle($subtitle)
             ->addData('Settlement', array_values($monthlySettlementCounts))
             ->addData('Pending', array_values($monthlyPendingCounts))
             ->addData('Deny', array_values($monthlyDenyCounts))
             ->setColors(['#5ce70b', '#f9ca24', '#e74c3c'])
             ->setXAxis($months);
     }
+
 }
 
 

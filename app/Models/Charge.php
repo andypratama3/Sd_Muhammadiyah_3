@@ -13,6 +13,11 @@ class Charge extends Model
 
     protected $table = 'charges';
 
+    protected $fillable = [
+        'transaction_status',
+    ];
+
+
 
     protected $dates = ['deleted_at'];
 

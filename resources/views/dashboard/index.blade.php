@@ -1,5 +1,22 @@
 @extends('layouts.dashboard')
 @section('title', 'Dashboard')
+@push('css')
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <style>
+        .chart-container {
+            width: 500px; /* Atur ukuran chart sesuai kebutuhan */
+            height: 500px;
+        }
+
+        @media (max-width: 768px) {
+            .chart-container {
+                width: 100%;
+                height: auto;
+            }
+        }
+    </style>
+
+@endpush
 @section('content')
 @if(Auth::user()->hasRole ('user'))
 @include('dashboard.user.index')
@@ -86,23 +103,25 @@
         </div>
     </div>
     <!-- Area Chart -->
-    <div class="col-12 d-flex mb-2">
+    <div class="col-md-12 d-flex justify-content-center align-items-center mb-2">
         <div class="card flex-fill w-100">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0">Pengunjung</h5>
-                <select id="dataRange" class="form-select w-auto">
-                    <option value="day">Harian</option>
-                    <option value="month" selected>Bulanan</option>
-                    <option value="year">Tahunan</option>
-                </select>
+                <h5 class="card-title mb-0">Total Pembayaran</h5>
             </div>
-            <div class="card-body d-flex w-100">
-                <div class="align-self-center chart chart-lg">
-                    <canvas id="chartjs-dashboard-bar"></canvas>
+            <div class="row p-4">
+                <div class="col-md-12">
+                    <label for="">Sortir Tanggal</label>
+                    <input type="text" id="range-pie" class="form-control" name="range-pie" placeholder="Pilih Tanggal">
+                </div>
+            </div>
+            <div class="card-body d-flex justify-content-center align-items-center w-100">
+                <div class="chart-container">
+                    {!! $chargeCountMount->container() !!}
                 </div>
             </div>
         </div>
     </div>
+
     <div class="col-xl-12 col-lg-7">
         <div class="card mb-4">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -111,9 +130,9 @@
                         <h5>Sortir Tahun</h5>
                         <div class="col-md-6">
                             <select name="year" id="year_select" class="form-control">
-                                <option value="" selected>Pilih Tahun</option>
-                                @for ($i = 2020; $i <= date('Y'); $i++)
-                                    <option value="{{ $i }}" {{ $i == request()->query('year') ?? date('Y') ? 'selected' : '' }}>{{ $i }}</option>
+                                <option value="" {{ !request()->query('year') ? 'selected' : '' }}>Pilih Tahun</option>
+                                @for ($i = 2020; $i <= \Carbon\Carbon::now()->year; $i++)
+                                    <option value="{{ $i }}" {{ $i == request()->query('year') ? 'selected' : '' }}>{{ $i }}</option>
                                 @endfor
                             </select>
                         </div>
@@ -138,7 +157,7 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-8 col-lg-7">
+    <div class="col-md-12 ">
         <div class="card mb-4">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <div class="dropdown no-arrow">
@@ -159,6 +178,23 @@
             <div class="card-body">
                 {{-- {!! $ArtikelChart->container() !!} --}}
                 {!! $siswaChart->container() !!}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 d-flex mb-2">
+        <div class="card flex-fill w-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Pengunjung</h5>
+                <select id="dataRange" class="form-select w-auto">
+                    <option value="day">Harian</option>
+                    <option value="month" selected>Bulanan</option>
+                    <option value="year">Tahunan</option>
+                </select>
+            </div>
+            <div class="card-body d-flex w-100">
+                <div class="align-self-center chart chart-lg">
+                    <canvas id="chartjs-dashboard-bar"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -183,86 +219,19 @@
         </div>
     </div>
 
-    <!-- Invoice Example -->
-    <div class="col-xl-8 col-lg-7 ">
-        <div class="card">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Invoice</h6>
-                <a class="m-0 float-right btn btn-danger btn-sm"
-                    href="{{ route('dashboard.datamaster.pembayaran.index') }}">View More <i
-                        class="fas fa-chevron-right"></i></a>
-            </div>
-            <div class="table-responsive text-center">
-                <table class="table align-items-center table-flush">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Nama Pembayaran</th>
-                            <th>Kelas</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($invoice_list as $invoice)
-                        <tr>
-                            <td>{{ $invoice->order_id}}</td>
-                            <td>{{ $invoice->judul->name }}</td>
-                            <td>{{ $invoice->kelas->name }}</td>
-                            <td>
-                                @if($invoice->status === 'Pending')
-                                <span class="badge badge-warning"><i class="fas fa-solid fa-pending"></i>
-                                    {{ $invoice->status }}</span>
-                                @elseif($invoice->status === 'Berhasil')
-                                <span class="badge badge-success"><i class="fas fa-solid fa-circle-check"></i>
-                                    {{ $invoice->status }}</span>
-                                @else
-                                <span class="badge badge-danger"><i class="fas fa-xmark"></i> {{ $invoice->status }}</span>
-                                @endif
-                            </td>
-                            <td><a href="{{ route('dashboard.datamaster.pembayaran.show', $invoice->order_id) }}"
-                                    class="btn btn-sm btn-primary">Detail</a></td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-            <div class="card-footer"></div>
-        </div>
-    </div>
-    <!-- Message From Customer-->
-    <div class="col-xl-4 col-lg-5 ">
-        <div class="card">
-            <div class="card-header py-4 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="text-dark">Kritik Saran</h6>
-            </div>
-            <div>
-                @foreach ($kritis as $kritik)
-                <div class="customer-message align-items-center">
-                    <a class="font-weight-bold" href="{{ route('dashboard.kritik.saran.show', $kritik->slug) }}">
-                        <div class="text-truncate message-title">{{ $kritik->name }}</div>
-                        <div class="small text-gray-500 message-time font-weight-bold">{{ $kritik->subject }}</div>
-                    </a>
-                </div>
-                @endforeach
-                <div class="card-footer text-center">
-                    <a class="m-0 small text-primary card-link" href="#">View More <i class="fas fa-chevron-right"></i></a>
-                </div>
-            </div>
-        </div>
-    </div>
-        </div>
 </div>
 @endif
 <!--Row-->
 @push('js')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js" defer></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script src="{{ $siswaChart->cdn() }}"></script>
+<script src="{{ $chargeCountMount->cdn() }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script src="{{ $chargeChart->cdn() }}"></script>
 {!! $chargeChart->script() !!}
-
+{!! $chargeCountMount->script() !!}
 <script>
     $(document).ready(function () {
         $('#year_select').on('change', function () {
@@ -274,6 +243,19 @@
             let month = $(this).val();
             $('#yearForm').submit();
         });
+        $('input[name="range-pie"]').daterangepicker({
+            timePicker: true,
+            autoUpdateInput: false,  // This prevents automatic updating of the input value
+            locale: {
+                format: 'DD-MM-YYYY',
+            }
+        });
+
+        $('#range-pie').on('change', function () {
+            let range = $(this).val();
+
+        })
+
     });
 </script>
 <script>
@@ -353,7 +335,7 @@
                     })
                     .catch(err => console.error("Error fetching data:", err));
             }
-            // Initial load
+
             updateChart("month");
 
         // Listen for dropdown change

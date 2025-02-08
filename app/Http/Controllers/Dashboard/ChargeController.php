@@ -17,7 +17,7 @@ class ChargeController extends Controller
 {
     public function index()
     {
-        $kelass = Kelas::select('id','name')->get();
+        $kelass = Kelas::select('id','name')->orderBy('name','asc')->get();
         return view('dashboard.data.charge.index', compact('kelass'));
     }
 
@@ -42,8 +42,12 @@ class ChargeController extends Controller
             ->addColumn('options', function ($row) {
                 return '
                     <a href="' . route('dashboard.datamaster.charge.show', $row->id) . '" class="btn btn-sm me-2 btn-warning"><i class="fa fa-eye"></i></a>
+                    <a href="' . route('dashboard.datamaster.charge.edit', $row->id) . '" class="btn btn-sm me-2 btn-info"><i class="fa fa-edit"></i></a>
                     <button data-id="' . $row['id'] . '" class="btn btn-sm btn-danger me-1" id="btn-delete"><i class="fa fa-trash"></i></button>
                 ';
+            })
+            ->addColumn('va_number', function ($row) {
+                return $row->va_number;
             })
             ->addColumn('siswa.name', function ($row) {
                 return $row->siswa->name;
@@ -73,6 +77,25 @@ class ChargeController extends Controller
         $charge = Charge::with('siswa')->where('id', $id)->firstOrFail();
 
         return view('dashboard.data.charge.edit', compact('charge'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'transaction_status' => 'required',
+        ]);
+
+        $charge = Charge::find($id);
+
+        if (!$charge) {
+            return redirect()->route('dashboard.datamaster.charge.index')->with('error', 'Data Tidak Ditemukan');
+        }
+
+        $charge->update([
+            'transaction_status' => $request->transaction_status,
+        ]);
+
+        return redirect()->route('dashboard.datamaster.charge.index')->with('success', 'Data Berhasil Diubah');
     }
 
     public function destroy($id)
