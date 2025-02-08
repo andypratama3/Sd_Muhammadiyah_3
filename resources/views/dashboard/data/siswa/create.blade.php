@@ -405,12 +405,11 @@
             }
         }
 
-        $('.select2').select2({
-            theme: 'bootstrap4'
-        });
+
         $('#data_wali').on('change', function () {
             formdata_data_wali();
         });
+        
         formdata_data_wali();
 
         $('#kelas').on('change', function () {

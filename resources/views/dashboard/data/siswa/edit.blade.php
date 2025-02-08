@@ -486,9 +486,7 @@
                 //property
                 let nik_property = document.getElementById('icon-check-nik');
                 let nisn_property = document.getElementById('icon-check-nisn');
-                $('.select2').select2({
-                    theme: 'bootstrap4'
-                });
+                
                 $('#kelas').on('change', function() {
                     var selectedKelasId = $('#kelas').val();
                     var categoryKelasDropdown = $('#category_kelas');

@@ -4,12 +4,20 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <style>
         .chart-container {
-            width: 500px; /* Atur ukuran chart sesuai kebutuhan */
-            height: 500px;
+            width: 500px;
+            height: 400px;
+        }
+        #chartjs-dashboard-bar {
+            width: 100%;
+            height: 400px;
         }
 
         @media (max-width: 768px) {
             .chart-container {
+                width: 100%;
+                height: auto;
+            }
+            #chartjs-dashboard-bar {
                 width: 100%;
                 height: auto;
             }
@@ -108,11 +116,10 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="card-title mb-0">Total Pembayaran</h5>
             </div>
-            <div class="row p-4">
+            <div class="row mx-2">
                 <div class="col-md-12">
                     <label for="">Sortir Waktu</label>
                     <input type="month" id="range-pie" class="form-control" value="{{ request()->query('chargeCountMount_date') }}" name="range-pie" placeholder="Pilih Bulan dan Tahun">
-
                 </div>
             </div>
             <div class="card-body d-flex justify-content-center align-items-center w-100">

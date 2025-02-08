@@ -40,8 +40,8 @@ class ChargeCountMount
 
         if($chargeData->settlement_amount == null && $chargeData->pay_offline_amount == null && $chargeData->pending_amount == null && $chargeData->deny_amount == null && $chargeData->failed_amount == null) {
             return $this->chart->pieChart()
-                ->setWidth(500)
-                ->setHeight(500)
+                // ->setWidth(500)
+                // ->setHeight(500)
                 ->setTitle("Total Pembayaran - Bulan {$this->setChargeCountMount_date}")
                 ->addData([
                     100,
@@ -51,8 +51,8 @@ class ChargeCountMount
         }
 
         return $this->chart->pieChart()
-            ->setWidth(500)
-            ->setHeight(500)
+            // ->setWidth(500)
+            // ->setHeight(500)
             ->setTitle("Total Pembayaran - Bulan {$this->setChargeCountMount_date}")
             ->addData([
                 (float) ($chargeData->settlement_amount ?? 0),

@@ -72,9 +72,7 @@
 
 <script>
 $(document).ready(function () {
-    $('.select2').select2({
-        theme: 'bootstrap4',
-    });
+
     $('#siswa_table').DataTable({
         ordering: true,
         pagination: true,
@@ -151,7 +149,7 @@ $(document).ready(function () {
         //clear area dropdown
         categoryKelasDropdown.empty();
         //add option for category_kelas
-        categoryKelasDropdown.append('<option selected disabled>Pilih Kategori Kelas</option>');
+        categoryKelasDropdown.append('<option selected value="">Pilih Kategori Kelas</option>');
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

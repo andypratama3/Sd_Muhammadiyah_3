@@ -52,9 +52,10 @@
         .select2-container .select2-selection--single {
             height: 37px !important;
         }
-        .select2-selection__arrow {
+        /* .select2-selection__arrow {
             height: 35px !important;
-        }
+        } */
+
         .select2-container--default .select2-selection--single {
             border: 0.1px solid #d0d0d0 !important;
         }
