@@ -11,6 +11,7 @@ use App\Models\Gallery;
 use App\Models\Visitor;
 use App\Models\Prestasi;
 use App\Models\Fasilitas;
+use App\Models\Achivement;
 use App\Models\Cooperation;
 use App\Models\Esktrakurikuler;
 
@@ -41,6 +42,7 @@ class BerandaController extends Controller
 
         // cooperation
         $cooperations = Cooperation::orderBy('order', 'asc')->get();
+        $achivements = Achivement::orderBy('order', 'asc')->get();
 
         $esktrakurikuler = Esktrakurikuler::count();
 
@@ -59,7 +61,8 @@ class BerandaController extends Controller
             'heroes',
             'gallerys',
             'prestasi_terakhir',
-            'cooperations'
+            'cooperations',
+            'achivements',
         ));
     }
 }

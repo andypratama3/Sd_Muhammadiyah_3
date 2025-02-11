@@ -342,12 +342,13 @@
                     </div>
                     <div class="swiper init-swiper2">
                         <div class="swiper-wrapper justify-content-center align-items-center">
-                            <div class="swiper-slide"><img src="{{ asset('asset/img/client-1.png') }}" class="img-fluid"
-                                    alt=""></div>
-                            <div class="swiper-slide"><img src="{{ asset('asset/img/client-1.png') }}" class="img-fluid"
-                                    alt=""></div>
-                            <div class="swiper-slide"><img src="{{ asset('asset/img/client-1.png') }}" class="img-fluid"
-                                    alt=""></div>
+                            @forelse ($achivements as $achivement)
+                            <div class="swiper-slide">
+                                <img src="{{ asset('storage/img/achivement/'. $achivement->foto) }}" class="img-fluid" alt="" style="border-radius: 10px;">
+                            </div>
+                            @empty
+
+                            @endforelse
                         </div>
                     </div>
                 </div>
