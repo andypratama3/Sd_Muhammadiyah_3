@@ -38,10 +38,12 @@ use App\Http\Controllers\Dashboard\ActivityController;
 
 use App\Http\Controllers\Dashboard\KaryawanController;
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\AchivementController;
+use App\Http\Controllers\Dashboard\CooperationController;
 use App\Http\Controllers\Dashboard\KelasCategoryController;
+
 use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
 use App\Http\Controllers\Dashboard\HeroController as DashboardHeroController;
-
 use App\Http\Controllers\Dashboard\SiswaController as DashboardSiswaController;
 use App\Http\Controllers\Dashboard\BeritaController as DashboardBeritaController;
 use App\Http\Controllers\Dashboard\ChargeController as DashboardChargeController;
@@ -170,6 +172,12 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::post('getSmester',[ DashboardJadwalController::class, 'getSmester'])->name('dashboard.datasekolah.jadwal.getSmester');
 
         Route::resource('gallery', DashboardGalleryActivityController::class, ['names' => 'dashboard.datasekolah.gallery']);
+
+        Route::resource('cooperation', CooperationController::class, ['names' => 'dashboard.datasekolah.cooperation']);
+        Route::get('cooperations/data', [CooperationController::class,'data_table'])->name('dashboard.datasekolah.cooperation.data');
+        //
+        Route::resource('achivement', AchivementController::class, ['names' => 'dashboard.datasekolah.achivement']);
+        Route::get('achivements/data', [AchivementController::class,'data_table'])->name('dashboard.datasekolah.achivement.data');
     });
 
     Route::group(['prefix' => 'datamaster'], function () {

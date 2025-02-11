@@ -60,6 +60,10 @@ class ChargeCountMount
                 (float) ($chargeData->pending_amount ?? 0),
                 (float) (($chargeData->deny_amount ?? 0) + ($chargeData->failed_amount ?? 0)),
             ])
-            ->setLabels(['Settlement', 'Pay Offline', 'Pending', 'Deny & Failed']);
+            ->setLabels(['Settlement : Rp. ' . $chargeData->settlement_amount,
+                        'Pay Offline : Rp. ' . $chargeData->pay_offline_amount,
+                        'Pending     : Rp. ' . $chargeData->pending_amount,
+                        'Deny & Failed : Rp. ' . ($chargeData->deny_amount ?? 0) + ($chargeData->failed_amount ?? 0),
+            ]);
     }
 }

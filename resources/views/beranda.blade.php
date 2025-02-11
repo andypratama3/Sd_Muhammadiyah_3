@@ -321,22 +321,11 @@
 
                     <div class="swiper init-swiper">
                         <div class="swiper-wrapper align-items-center">
-                            <div class="swiper-slide"><img src="{{ asset('asset/img/client-1.png') }}" class="img-fluid"
-                                    alt=""></div>
-                            <div class="swiper-slide"><img src="{{ asset('asset/img/client-1.png') }}" class="img-fluid"
-                                    alt=""></div>
-                            <div class="swiper-slide"><img src="{{ asset('asset/img/client-1.png') }}" class="img-fluid"
-                                    alt=""></div>
-                            <div class="swiper-slide"><img src="{{ asset('asset/img/client-1.png') }}" class="img-fluid"
-                                    alt=""></div>
-                            <div class="swiper-slide"><img src="{{ asset('asset/img/client-1.png') }}" class="img-fluid"
-                                    alt=""></div>
-                            <div class="swiper-slide"><img src="{{ asset('asset/img/client-1.png') }}" class="img-fluid"
-                                    alt=""></div>
-                            <div class="swiper-slide"><img src="{{ asset('asset/img/client-1.png') }}" class="img-fluid"
-                                    alt=""></div>
-                            <div class="swiper-slide"><img src="{{ asset('asset/img/client-1.png') }}" class="img-fluid"
-                                    alt=""></div>
+                            @foreach ($cooperations as $cooperation)
+                                <div class="swiper-slide">
+                                    <img src="{{ asset('storage/img/cooperation/'. $cooperation->foto ) }}" class="img-fluid" style="border-radius: 10px;"  alt="">
+                                </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -351,7 +340,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="swiper init-swiper ">
+                    <div class="swiper init-swiper2">
                         <div class="swiper-wrapper justify-content-center align-items-center">
                             <div class="swiper-slide"><img src="{{ asset('asset/img/client-1.png') }}" class="img-fluid"
                                     alt=""></div>
@@ -570,7 +559,7 @@
             }
         }
     });
-    const swiper2 = new Swiper('.init-swiper', {
+    const swiper2 = new Swiper('.init-swiper2', {
         loop: true,
         speed: 600,
         autoplay: {

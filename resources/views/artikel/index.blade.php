@@ -1,9 +1,20 @@
 @extends('layouts.user')
 @section('title','Artikel')
 @push('meta_user')
-<meta name="description" content="Baca artikel terbaru dan trending di Sekolah Kreatif Muhammadiyah 3 Samarinda. Temukan berita terkini, tips, dan informasi menarik lainnya.">
-<meta name="keywords" content="Sekolah Kreatif Muhammadiyah 3, Artikel, Berita, Pendidikan, Samarinda">
-<link rel="canonical" href="{{ url()->current() }}">
+    <meta name="description" content="Baca artikel terbaru dan trending di Sekolah Kreatif Muhammadiyah 3 Samarinda. Temukan berita terkini, tips, dan informasi menarik lainnya.">
+    <meta name="keywords" content="Sekolah Kreatif Muhammadiyah 3, Artikel, Artikel, Pendidikan, Samarinda">
+    <link rel="canonical" href="{{ url()->current() }}">
+    <meta name="description" content="Artikel terbaru dan terpopuler dari Sekolah Kreatif Muhammadiyah 3. Temukan informasi terbaru mengenai aktivitas, prestasi, dan acara di sekolah kami.">
+    <meta name="keywords" content="Artikel, Sekolah Kreatif Muhammadiyah 3, Prestasi, Acara Sekolah">
+    <meta name="author" content="Nama Anda atau Nama Sekolah">
+    <meta property="og:title" content="Artikel - Sekolah Kreatif Muhammadiyah 3">
+    <meta property="og:description" content="Temukan Artikel terbaru dan informasi terkini tentang kegiatan dan prestasi siswa di Sekolah Kreatif Muhammadiyah 3.">
+    <meta property="og:image" content="{{ asset('asset/img/SD3_logo.png') }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Artikel - Sekolah Kreatif Muhammadiyah 3">
+    <meta name="twitter:description" content="Dapatkan Artikel terbaru dan informasi mengenai Sekolah Kreatif Muhammadiyah 3.">
+    <meta name="twitter:image" content="{{ asset('asset/img/SD3_logo.png') }}">
 @endpush
 @push('css_user')
 <style>

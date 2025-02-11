@@ -1,14 +1,21 @@
 @extends('layouts.user')
 @section('title','Artikel')
 @push('meta_user')
-    <meta name="title" content="{{ $artikel->title }}">
+    <meta name="description" content="{!! Str::limit($artikel->deskripsi, 160) !!}">
     <meta name="keywords" content="{!! $artikel->deskripsi !!}">
     <meta name="author" content="{{ $artikel->user->name }}">
     <meta name="copyright" content="{{ $artikel->user->name }}">
     @foreach ($artikel->categorys as $category)
         <meta name="category" content="{{ $category->name }}">
     @endforeach
-    <meta name="description" content="{!! $artikel->deskripsi !!}">
+    <meta property="og:title" content="{{ $artikel->title }}">
+    <meta property="og:description" content="{!! Str::limit($artikel->deskripsi, 160) !!}">
+    <meta property="og:image" content="{{ asset('storage/img/artikels/'. $artikel->foto) }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $artikel->title }}">
+    <meta name="twitter:description" content="{!! Str::limit($artikel->deskripsi, 160) !!}">
+    <meta name="twitter:image" content="{{ asset('storage/img/artikels/'. $artikel->foto) }}">
 @endpush
 @push('css_user')
 <style>

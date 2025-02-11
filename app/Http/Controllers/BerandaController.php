@@ -11,6 +11,7 @@ use App\Models\Gallery;
 use App\Models\Visitor;
 use App\Models\Prestasi;
 use App\Models\Fasilitas;
+use App\Models\Cooperation;
 use App\Models\Esktrakurikuler;
 
 class BerandaController extends Controller
@@ -30,13 +31,17 @@ class BerandaController extends Controller
         $siswas = Siswa::whereHas('kelas', function ($q) {
             $q->where('name', '!=', 'Lulus');
         })->count();
-        
+
         $guru = Guru::count();
         $fasilitas = Fasilitas::count();
         $prestasis_siswa = Prestasi::where('status', '1')->count();
         $prestasis_sekolah = Prestasi::where('status', '2')->count();
 
         $kelas_name = Kelas::orderBy('name');
+
+        // cooperation
+        $cooperations = Cooperation::orderBy('order', 'asc')->get();
+
         $esktrakurikuler = Esktrakurikuler::count();
 
         $prestasi_terakhir = Prestasi::Where('status', '1')->orderBy('created_at', 'desc')->take(4)->get();
@@ -53,7 +58,8 @@ class BerandaController extends Controller
             'prestasis_sekolah',
             'heroes',
             'gallerys',
-            'prestasi_terakhir'
+            'prestasi_terakhir',
+            'cooperations'
         ));
     }
 }

@@ -120,6 +120,18 @@
                          <div data-i18n="Gallery">Gallery</div>
                      </a>
                  </li>
+                 <li class="menu-item {{ Request::routeIs('dashboard.datasekolah.cooperation.*') ? 'active' : '' }}">
+                     <a href="{{ route('dashboard.datasekolah.cooperation.index') }}" class="menu-link">
+                         <i class="menu-icon tf-icons bx bxs-user-voice"></i>
+                         <div data-i18n="Kerja Sama">Kerja Sama</div>
+                     </a>
+                 </li>
+                 <li class="menu-item {{ Request::routeIs('dashboard.datasekolah.achivement.*') ? 'active' : '' }}">
+                     <a href="{{ route('dashboard.datasekolah.achivement.index') }}" class="menu-link">
+                         <i class="menu-icon tf-icons bx bxs-medal"></i>
+                         <div data-i18n="Penghargaan">Pengargaan</div>
+                     </a>
+                 </li>
              </ul>
          </li>
 
