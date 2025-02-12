@@ -51,19 +51,19 @@ class ChargeCountMount
         }
 
         return $this->chart->pieChart()
-            // ->setWidth(500)
-            // ->setHeight(500)
-            ->setTitle("Total Pembayaran - Bulan {$this->setChargeCountMount_date}")
+            ->setTitle("Total Pembayaran - Bulan " . Carbon::parse($this->setChargeCountMount_date)->format('F Y'))
             ->addData([
-                (float) ($chargeData->settlement_amount ?? 0),
+                (float) ($chargeData->settlement_amount ?? 0 . '00'),
                 (float) ($chargeData->pay_offline_amount ?? 0),
                 (float) ($chargeData->pending_amount ?? 0),
                 (float) (($chargeData->deny_amount ?? 0) + ($chargeData->failed_amount ?? 0)),
             ])
-            ->setLabels(['Settlement : Rp. ' . $chargeData->settlement_amount,
-                        'Pay Offline : Rp. ' . $chargeData->pay_offline_amount,
-                        'Pending     : Rp. ' . $chargeData->pending_amount,
-                        'Deny & Failed : Rp. ' . ($chargeData->deny_amount ?? 0) + ($chargeData->failed_amount ?? 0),
+            ->setLabels([
+                'Settlement',
+                'Pay Offline',
+                'Pending',
+                'Deny & Failed',
             ]);
+
     }
 }

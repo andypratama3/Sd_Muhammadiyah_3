@@ -264,12 +264,13 @@
                     window.location.href = "{{ route('dashboard') }}?chargeCountMount_date=" + range;
                 }
             });
-        })
+        });
 
     });
 </script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+
         const ctx = document.getElementById("chartjs-dashboard-bar").getContext("2d");
         const chart = new Chart(ctx, {
             type: "bar",

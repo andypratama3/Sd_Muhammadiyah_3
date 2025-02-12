@@ -2,16 +2,25 @@
 namespace App\Console\Commands;
 
 use App\Models\Siswa;
+use Midtrans\CoreApi;
 use GuzzleHttp\Client;
 use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use Midtrans\CoreApi;
+use App\Http\Controllers\Api\Dashboard\SendOrderIDWhatsAppApi;
 
 class ChargePayment extends Command
 {
     protected $signature = 'app:charge-payment';
     protected $description = 'Charge payments for all students';
+
+    protected $whatsApp;
+
+    public function __construct(SendOrderIDWhatsAppApi $whatsApp)
+    {
+        parent::__construct();
+        $this->whatsApp = $whatsApp;
+    }
 
     public function handle()
     {
@@ -114,6 +123,10 @@ class ChargePayment extends Command
                     ]);
 
                 $this->info("Pembayaran untuk {$siswa->name} berhasil dikirim ke Midtrans.");
+
+                // mengirim pesan ke WhatsApp
+                // $this->whatsApp->sendMessage($responseData['order_id']);
+
             } else {
                 $this->error("Gagal memproses pembayaran untuk {$siswa->name}: " . $responseData['status_message']);
             }
