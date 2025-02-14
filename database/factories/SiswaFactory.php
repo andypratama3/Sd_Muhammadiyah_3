@@ -26,6 +26,7 @@ class SiswaFactory extends Factory
             'va_number' => rand(1000000000, 9999999999),
             'kelas_tahun' => $this->faker->year(),
             'tanggal_masuk' => $this->faker->date(),
+            'select_data' => $this->faker->randomElement(['orang_tua', 'wali']),
             // 'nik' => str_pad($this->faker->randomNumber(8), 9, '0', STR_PAD_LEFT),
             'agama' => $this->faker->randomElement(['Islam', 'Kristen', 'Hindu', 'Buddha']),
             'rt' => $this->faker->randomNumber(3),

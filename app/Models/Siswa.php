@@ -34,6 +34,7 @@ class Siswa extends Model
         'tanggal_masuk',
         'beasiswa',
         'foto',
+        'select_data',
         // data orang tua
         'nama_ayah',
         'nama_ibu',

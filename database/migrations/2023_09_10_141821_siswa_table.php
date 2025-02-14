@@ -30,6 +30,7 @@ return new class extends Migration
             $table->date('tanggal_masuk');
             $table->string('beasiswa');
             $table->string('foto', 100)->nullable()->default('text');
+            $table->enum('select_data', ['orang_tua', 'wali'])->default('orang_tua');
             // data orang tua
             $table->string('nama_ayah')->nullable();
             $table->string('nama_ibu')->nullable();

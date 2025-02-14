@@ -107,7 +107,7 @@ class UserSeeder extends Seeder
         }
 
         // User
-        $roleSuperAdmin = Role::where('slug', 'superadmin')->first();
+        $roleSuperAdmin = Role::where('name', 'Superadmin')->first();
         // Call more role_id here
 
         // List User

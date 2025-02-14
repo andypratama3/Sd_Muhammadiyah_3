@@ -33,7 +33,7 @@
                         <div class="col-sm-9 d-flex relative">
                             <input type="text" class="form-control" name="nisn" id="nisn" value="{{ old('nisn') }}" />
                             <i class="fas fa-solid fa-check bg-success border-1" id="icon-check-nisn"
-                                style="font-size: 10px; position : absolute; margin-top: 6px; right: 15px; padding: 10px; border-radius: 50px; color: black; display: none;"></i>
+                                style="font-size: 10px; position : absolute; margin-top: 6px; right: 35px; padding: 10px; border-radius: 50px; color: black; display: none;"></i>
                         </div>
                     </div>
                 </div>
@@ -174,11 +174,11 @@
                     <hr>
                     <div class="card-header">
                         <h6 class="m-0 font-weight-bold text-primary text-center" id="title_data_orang_tua">Data Orang Tua</h6>
-                        <div class="col-md-2">
-                        <select id="data_wali" name="data_wali" class="btn btn-primary mb-2 form-control" style="border:2px;">
+                        <div class="col-md-2 col-sm-4">
+                        <select id="select_data" name="select_data" class="btn btn-secondary mb-2 form-control mt-2" >
                             <option selected>Pilih Data</option>
-                            <option value="orang_tua" {{ old('data_wali') == 'orang_tua' ? 'selected' : '' }}>Orang Tua</option>
-                            <option value="wali" {{ old('data_wali') == 'wali' ? 'selected' : '' }}>Wali</option>
+                            <option value="orang_tua" {{ old('select_data') == 'orang_tua' ? 'selected' : '' }}>Orang Tua</option>
+                            <option value="wali" {{ old('select_data') == 'wali' ? 'selected' : '' }}>Wali</option>
                         </select>
                     </div>
                     </div>
@@ -384,11 +384,11 @@
         let nik_property = document.getElementById('icon-check-nik');
         let nisn_property = document.getElementById('icon-check-nisn');
 
-        function formdata_data_wali() {
+        function formdata_select_data() {
             const title = $('#title_data_orang_tua');
             let wali = $('#wali');
             let orang_tua = $('#orang_tua');
-            let data = $('#data_wali').val();
+            let data = $('#select_data').val();
             if(data === 'wali'){
               title.text('Data Wali');
               wali.css('display', '');
@@ -406,11 +406,11 @@
         }
 
 
-        $('#data_wali').on('change', function () {
-            formdata_data_wali();
+        $('#select_data').on('change', function () {
+            formdata_select_data();
         });
-        
-        formdata_data_wali();
+
+        formdata_select_data();
 
         $('#kelas').on('change', function () {
             var selectedKelasId = $('#kelas').val();

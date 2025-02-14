@@ -23,6 +23,7 @@ class SiswaData extends Data
         public readonly string $tanggal_masuk,
         public readonly string $beasiswa,
         public readonly ?UploadedFile $foto,
+        public readonly string $select_data,
         public readonly ?string $nama_ayah,
         public readonly ?string $nama_ibu,
         public readonly ?string $pendidikan_ayah,
@@ -68,6 +69,7 @@ class SiswaData extends Data
             $request->getTanggalMasuk(),
             $request->getBeasiswa(),
             $request->getFoto(),
+            $request->getSelectData(),
             //request data orang tua
             $request->getNamaAyah(),
             $request->getNamaIbu(),
@@ -127,7 +129,7 @@ class SiswaData extends Data
             'nama_jalan.required' => 'Kolom Nama Jalan tidak boleh kosong!',
             'jenis_tinggal.required' => 'Kolom Jenis Tinggal tidak boleh kosong!',
             'no_hp.required' => 'Kolom Hp tidak boleh kosong!',
-
+            'select_data.required' => 'Pilih Data Orang Tua atau Wali!',
             //relation message
             'kelas.required' => 'Kolom Kelas tidak boleh kosong!',
             'category_kelas.required' => 'Kolom Category Kelas tidak boleh kosong!',

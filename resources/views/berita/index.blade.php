@@ -16,6 +16,7 @@
     <div class="container py-5">
         <div class="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.2s" style="max-width: 800px;">
             <h1 class="display-4 mb-4">Berita</h1>
+            <p class="mb-4">Berita Terbaru</p>
         </div>
         <div class="row g-4 justify-content-center" id="target">
             @foreach ($beritas as $berita)

@@ -131,6 +131,7 @@
                     </div>
                 </div>
                 {{-- Data Detai lSiswa --}}
+                
                 <div class="col-md-12">
                     <hr>
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-center">

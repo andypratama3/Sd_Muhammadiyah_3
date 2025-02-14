@@ -190,21 +190,21 @@
                         <hr>
                         <div class="card-header">
                             <h6 class="m-0 font-weight-bold text-primary text-center" id="title_data_orang_tua">Data Orang Tua</h6>
-                            <div class="col-md-2">
-                            <select id="data_wali" name="data_wali" class="btn btn-primary mb-2 form-control" style="border:2px;">
-                                <option selected>Pilih Data</option>
-                                <option value="orang_tua" {{ old('data_wali') == 'orang_tua' ? 'selected' : '' }}>Orang Tua</option>
-                                <option value="wali" {{ old('data_wali') == 'wali' ? 'selected' : '' }}>Wali</option>
+                            <div class="col-md-2 col-sm-4">
+                            <select id="select_data" name="select_data" class="btn btn-secondary mb-2 form-control">
+                                <option value="orang_tua" {{ old('select_data', $siswa->select_data) == 'orang_tua' ? 'selected' : '' }}>Orang Tua</option>
+                                <option value="wali" {{ old('select_data', $siswa->select_data) == 'wali' ? 'selected' : '' }}>Wali</option>
                             </select>
                         </div>
                         </div>
                     </div>
-                    <div class="row" id="orang_tua" style="display: none;">
+                  
+                    <div class="row" id="orang_tua" style="display: none">
                         <div class="col-md-6 mt-2">
                             <div class="form-group row">
                                 <label class="col-sm-3 text-dark" for="nama_ayah">Nama Ayah</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" name="nama_ayah" id="nama_ayah" value="{{ old('nama_ayah') }}" />
+                                    <input type="text" class="form-control" name="nama_ayah" id="nama_ayah" value="{{ old('nama_ayah', $siswa->nama_ayah) }}" />
                                 </div>
                             </div>
                         </div>
@@ -212,7 +212,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 text-dark" for="nama_ibu">Nama Ibu</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" name="nama_ibu" id="nama_ibu" value="{{ old('nama_ibu') }}" />
+                                    <input type="text" class="form-control" name="nama_ibu" id="nama_ibu" value="{{ old('nama_ibu', $siswa->nama_ibu) }}" />
                                 </div>
                             </div>
                         </div>
@@ -220,7 +220,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 text-dark" for="pendidikan_ayah">Pendidikan Ayah</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" name="pendidikan_ayah" id="pendidikan_ayah" value="{{ old('pendidikan_ayah') }}" />
+                                    <input type="text" class="form-control" name="pendidikan_ayah" id="pendidikan_ayah" value="{{ old('pendidikan_ayah', $siswa->pendidikan_ayah) }}" />
 
                                 </div>
                             </div>
@@ -229,7 +229,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 text-dark" for="pendidikan_ibu">Pendidikan Ibu</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" name="pendidikan_ibu" id="pendidikan_ibu" value="{{ old('pendidikan_ibu') }}" />
+                                    <input type="text" class="form-control" name="pendidikan_ibu" id="pendidikan_ibu" value="{{ old('pendidikan_ibu', $siswa->pendidikan_ibu) }}" />
 
                                 </div>
                             </div>
@@ -238,7 +238,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 text-dark" for="pendidikan_ayah">Pekerjaan Ayah</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" name="pekerjaan_ayah" id="pekerjaan_ayah" value="{{ old('pekerjaan_ayah') }}" />
+                                    <input type="text" class="form-control" name="pekerjaan_ayah" id="pekerjaan_ayah" value="{{ old('pekerjaan_ayah', $siswa->pekerjaan_ayah) }}" />
                                 </div>
                             </div>
                         </div>
@@ -246,17 +246,18 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 text-dark" for="pekerjaan_ibu">Pekerjaan Ibu</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" name="pekerjaan_ibu" id="pekerjaan_ibu" value="{{ old('pekerjaan_ibu') }}" />
+                                    <input type="text" class="form-control" name="pekerjaan_ibu" id="pekerjaan_ibu" value="{{ old('pekerjaan_ibu', $siswa->pekerjaan_ibu) }}" />
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row " id="wali" style="display: none;">
+                    
+                    <div class="row " id="wali" style="display: none">
                         <div class="col-md-6 mt-2">
                             <div class="form-group row">
                                 <label class="col-sm-3 text-dark" for="nama_wali">Nama Wali</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" name="nama_wali" id="nama_wali" value="{{ old('nama_wali') }}" />
+                                    <input type="text" class="form-control" name="nama_wali" id="nama_wali" value="{{ old('nama_wali', $siswa->nama_wali) }}" />
                                 </div>
                             </div>
                         </div>
@@ -264,7 +265,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 text-dark" for="pekerjaan_wali">Pekerjaan Wali</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" name="pekerjaan_wali" id="pekerjaan_wali" value="{{ old('pekerjaan_wali') }}" />
+                                    <input type="text" class="form-control" name="pekerjaan_wali" id="pekerjaan_wali" value="{{ old('pekerjaan_wali', $siswa->pekerjaan_wali) }}" />
                                 </div>
                             </div>
                         </div>
@@ -272,12 +273,12 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 text-dark" for="alamat_wali">Alamat Wali</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" name="alamat_wali" id="alamat_wali" value="{{ old('alamat_wali') }}" />
+                                    <input type="text" class="form-control" name="alamat_wali" id="alamat_wali" value="{{ old('alamat_wali', $siswa->alamat_wali) }}" />
                                 </div>
                             </div>
                         </div>
                     </div>
-
+                    
                     <div class="col-md-12">
                         <hr>
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-center">
@@ -455,38 +456,37 @@
         </script>
         <script>
             $(function() {
-                function formdata_data_wali() {
+                function formdata_select_data() {
                     const title = $('#title_data_orang_tua');
                     let wali = $('#wali');
                     let orang_tua = $('#orang_tua');
-                    let data = $('#data_wali').val();
-                    if(data === 'wali'){
-                    title.text('Data Wali');
-                    wali.css('display', '');
-                    orang_tua.css('display', 'none');
-                    }else if(data == 'orang_tua'){
+                    let data = $('#select_data').val();
+                    if (data === 'wali') {
+                        title.text('Data Wali');
+                        wali.css('display', 'block');
+                        orang_tua.css('display', 'none');
+                    } else if (data == 'orang_tua') {
                         title.text('Data Orang Tua');
                         wali.css('display', 'none');
-                        orang_tua.css('display', '');
-                    }else{
-                    title.text('Pilih Data Orang Tua');
+                        orang_tua.css('display', 'block');
+                    } else {
+                        title.text('Pilih Data Orang Tua');
                         wali.css('display', 'none');
                         orang_tua.css('display', 'none');
-
                     }
                 }
 
                 $('.select2').select2({
                     theme: 'bootstrap4'
                 });
-                $('#data_wali').on('change', function () {
-                    formdata_data_wali();
+                $('#select_data').on('change', function () {
+                    formdata_select_data();
                 });
-                formdata_data_wali();
+                formdata_select_data();
                 //property
                 let nik_property = document.getElementById('icon-check-nik');
                 let nisn_property = document.getElementById('icon-check-nisn');
-                
+
                 $('#kelas').on('change', function() {
                     var selectedKelasId = $('#kelas').val();
                     var categoryKelasDropdown = $('#category_kelas');

@@ -56,6 +56,7 @@ class SiswaAction {
                 'tanggal_masuk' => $siswaData->tanggal_masuk,
                 'beasiswa' => $siswaData->beasiswa,
                 'foto' => $picture_name,
+                'select_data' => $siswaData->select_data,
                 'nama_ayah' => $siswaData->nama_ayah,
                 'nama_ibu' => $siswaData->nama_ibu,
                 'pendidikan_ayah' => $siswaData->pendidikan_ayah,
