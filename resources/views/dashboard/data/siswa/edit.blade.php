@@ -181,8 +181,8 @@
                                     <div class="input-group-append">
                                         <a target="__blank" href="{{ asset('storage/img/siswa/' . $siswa->foto) }}" class="btn btn-success mt-2 btn-sm"><i class="bi bi-file"></i> Lihat Foto</a>
                                     </div>
+                                </div>
                             </div>
-                        </div>
                     </div>
 
                     {{-- Data Detail lSiswa --}}
@@ -191,14 +191,14 @@
                         <div class="card-header">
                             <h6 class="m-0 font-weight-bold text-primary text-center" id="title_data_orang_tua">Data Orang Tua</h6>
                             <div class="col-md-2 col-sm-4">
-                            <select id="select_data" name="select_data" class="btn btn-secondary mb-2 form-control">
-                                <option value="orang_tua" {{ old('select_data', $siswa->select_data) == 'orang_tua' ? 'selected' : '' }}>Orang Tua</option>
-                                <option value="wali" {{ old('select_data', $siswa->select_data) == 'wali' ? 'selected' : '' }}>Wali</option>
-                            </select>
-                        </div>
+                                <select id="select_data" name="select_data" class="btn btn-secondary mb-2 form-control">
+                                    <option value="orang_tua" {{ old('select_data', $siswa->select_data ) == 'orang_tua' ? 'selected' : '' }}>Orang Tua</option>
+                                    <option value="wali" {{ old('select_data', $siswa->select_data ) == 'wali' ? 'selected' : '' }}>Wali</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
-                  
+
                     <div class="row" id="orang_tua" style="display: none">
                         <div class="col-md-6 mt-2">
                             <div class="form-group row">
@@ -221,7 +221,6 @@
                                 <label class="col-sm-3 text-dark" for="pendidikan_ayah">Pendidikan Ayah</label>
                                 <div class="col-sm-9">
                                     <input type="text" class="form-control" name="pendidikan_ayah" id="pendidikan_ayah" value="{{ old('pendidikan_ayah', $siswa->pendidikan_ayah) }}" />
-
                                 </div>
                             </div>
                         </div>
@@ -251,8 +250,8 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="row " id="wali" style="display: none">
+
+                    <div class="row" id="wali" style="display: none">
                         <div class="col-md-6 mt-2">
                             <div class="form-group row">
                                 <label class="col-sm-3 text-dark" for="nama_wali">Nama Wali</label>
@@ -278,7 +277,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-md-12">
                         <hr>
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-center">
@@ -463,12 +462,12 @@
                     let data = $('#select_data').val();
                     if (data === 'wali') {
                         title.text('Data Wali');
-                        wali.css('display', 'block');
+                        wali.css('display', '');
                         orang_tua.css('display', 'none');
                     } else if (data == 'orang_tua') {
                         title.text('Data Orang Tua');
                         wali.css('display', 'none');
-                        orang_tua.css('display', 'block');
+                        orang_tua.css('display', '');
                     } else {
                         title.text('Pilih Data Orang Tua');
                         wali.css('display', 'none');
@@ -477,7 +476,7 @@
                 }
 
                 $('.select2').select2({
-                    theme: 'bootstrap4'
+                    theme: 'bootstrap4',
                 });
                 $('#select_data').on('change', function () {
                     formdata_select_data();
