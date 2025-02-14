@@ -12,11 +12,12 @@ class KritikSaranController extends Controller
         if($kritikSaranAction)
         {
             $kritikSaranAction->execute($kritikSaranData);
-            return redirect()->route('kontak.index')->with('success', 'Kritik dan Saran Berhasil Di Kirim');
+            return redirect()->route('kontak.success');
         }else{
             return redirect()->route('kontak.index')->with('error', 'Kritik dan Saran Gagal Di Kirim');
 
         }
-
     }
+
+
 }

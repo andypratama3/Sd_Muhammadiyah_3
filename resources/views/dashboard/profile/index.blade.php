@@ -5,6 +5,7 @@
         integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous" nonce="{{ csp_nonce() }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.css"  nonce="{{ csp_nonce() }}"/>
     <style type="text/stylesheet">
+
         .image {
             opacity: 1;
             display: block;
@@ -106,8 +107,8 @@
             <div class="card">
                 <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
                     @if (Auth::user()->avatar === 'default.jpg')
-                        <img src="{{ asset('asset_dashboard_new/img/avatars/1.png') }}" alt="Profile" id=""
-                            class="w-25 img-profile rounded-circle">
+                        <img src="{{ asset('asset_dashboard_new/img/avatars/1.png') }}"
+                                alt="Profile" id="" class="w-25 img-profile rounded-circle">
                     @else
                     <a href="{{ asset('storage/img/profile/' . Auth::user()->avatar) }}">
                         <img src="{{ asset('storage/img/profile/' . Auth::user()->avatar) }}"
@@ -307,7 +308,7 @@
                                     <label for="email" class="col-md-4 col-lg-3 col-form-label">Email</label>
                                     <div class="col-md-8 col-lg-9">
                                         <input name="email" type="text" class="form-control"
-                                            value="{{ Auth::user()->email }}" readonly>
+                                            value="{{ Auth::user()->email }}" readonly />
                                     </div>
                                 </div>
                                 <div class="text-center">

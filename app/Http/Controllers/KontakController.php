@@ -10,4 +10,9 @@ class KontakController extends Controller
     {
         return view('kontak');
     }
+
+    public function success()
+    {
+        return view('keritiksaran-success');
+    }
 }
