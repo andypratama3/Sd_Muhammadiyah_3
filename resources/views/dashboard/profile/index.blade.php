@@ -166,16 +166,16 @@
                                 @endif
                             </div>
                             @role('karyawan|admin')
-                                <hr>
-                                <div class="row">
-                                    <div class="col-lg-3 col-md-4 col-form-label">Jenis Kelamin</div>
-                                    <div class="col-lg-9 col-md-8">: {{ $karyawan->sex }}</div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-lg-3 col-md-4 col-form-label">HP</div>
-                                    <div class="col-lg-9 col-md-8">: (+62) {{ $karyawan->phone }}</div>
-                                </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 col-form-label">Jenis Kelamin</div>
+                                <div class="col-lg-9 col-md-8">: {{ $karyawan->sex }}</div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 col-form-label">HP</div>
+                                <div class="col-lg-9 col-md-8">: (+62) {{ $karyawan->phone }}</div>
+                            </div>
                             @endrole
                             <hr>
                             <div class="row">

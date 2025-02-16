@@ -5,6 +5,7 @@ use App\Models\Siswa;
 use Midtrans\CoreApi;
 use GuzzleHttp\Client;
 use Illuminate\Support\Str;
+use Illuminate\Support\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Api\Dashboard\SendOrderIDWhatsAppApi;
@@ -26,6 +27,9 @@ class ChargePayment extends Command
     {
         $siswas = Siswa::all();
 
+         // make can name automatic by month
+        $monthName = Carbon::now()->locale('id_ID')->format('F');
+
         foreach ($siswas as $siswa) {
             DB::beginTransaction();
 
@@ -40,10 +44,13 @@ class ChargePayment extends Command
 
                 $order_id = Str::uuid();
 
+
+
+
                 // Insert data ke tabel charges
                 DB::table('charges')->insert([
                     'id' => Str::uuid(),
-                    'name' => 'SPP',
+                    'name' => "SPP  {$monthName} {$siswa->name}",
                     'order_id' => $order_id,
                     'siswa_id' => $siswa->id,
                     'gross_amount' => $siswa->spp,
@@ -120,6 +127,7 @@ class ChargePayment extends Command
                         'va_number' => $responseData['va_numbers'][0]['va_number'],
                         'snap_token' => $responseData['token'] ?? null,
                         'transaction_status' => $responseData['transaction_status'],
+                        'transaction_id' => $responseData['transaction_id'],
                     ]);
 
                 $this->info("Pembayaran untuk {$siswa->name} berhasil dikirim ke Midtrans.");

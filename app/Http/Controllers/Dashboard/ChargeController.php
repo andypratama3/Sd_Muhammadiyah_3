@@ -12,9 +12,18 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
+use App\Http\Controllers\Api\V1\MidtransPaymentController;
 
 class ChargeController extends Controller
 {
+
+    protected $midtrans;
+
+    public function __construct(MidtransPaymentController $midtrans)
+    {
+        $this->midtrans = $midtrans;
+    }
+
     public function index()
     {
         $kelass = Kelas::select('id','name')->orderBy('name','asc')->get();
@@ -95,8 +104,26 @@ class ChargeController extends Controller
             return redirect()->route('dashboard.datamaster.charge.index')->with('error', 'Data Tidak Ditemukan');
         }
 
+        $transaction_status = $request->transaction_status;
+
+        if ($transaction_status === 'pay_offline') {
+            try {
+                $status = 'settlement';
+                if ($this->midtrans->update_transaction_status($charge, $status)) {
+                    $transaction_status = $status;
+                } else {
+                    return redirect()->route('dashboard.datamaster.charge.index')
+                        ->with('error', 'Gagal Mengupdate Status Transaksi di Midtrans.');
+                }
+            } catch (\Exception $e) {
+                return redirect()->route('dashboard.datamaster.charge.index')
+                    ->with('error', 'Terjadi Kesalahan: ' . $e->getMessage());
+            }
+        }
+
+
         $charge->update([
-            'transaction_status' => $request->transaction_status,
+            'transaction_status' => $transaction_status,
         ]);
 
         return redirect()->route('dashboard.datamaster.charge.index')->with('success', 'Data Berhasil Diubah');

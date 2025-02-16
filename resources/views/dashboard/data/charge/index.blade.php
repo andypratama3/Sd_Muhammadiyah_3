@@ -142,7 +142,7 @@
                             } else if (data === 'Expired' || data === 'failed') {
                                 return '<h6 style="color: black;"><span class="badge bg-danger"><i class="fa-solid fa-xmark"></i> ' + data + '</span></h6>';
                             } else if(data === 'pay_offline'){
-                                return '<h6 style="color: black;"><span class="badge bg-success"><i class="fa-solid fa-circle-check"></i> ' + data + '</span></h6>';
+                                return '<h6 style="color: black;"><span class="badge bg-success"><i class="fa-solid fa-circle-check"></i> Pay Offline</span></h6>';
                             } else {
                                 return data;
                             }
