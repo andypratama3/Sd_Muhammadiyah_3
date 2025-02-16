@@ -3,79 +3,160 @@
 namespace App\Exports;
 
 use App\Models\Charge;
+use App\Models\Kelas;
 use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithTitle;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 
-class ChargeExport implements FromQuery, WithHeadings, WithMapping
+class ChargeExport implements FromQuery, WithHeadings, WithMapping, WithTitle, WithEvents
 {
-    protected $startDate;
-    protected $endDate;
+    protected $tanggalMulai;
+    protected $tanggalSelesai;
     protected $kelas;
+    protected $totalBayar = 0;
+    protected $nomor = 1; // Tambahkan variabel untuk auto increment
 
-    public function __construct($startDate, $endDate, $kelas = null)
+    public function __construct($tanggalMulai, $tanggalSelesai, $kelas = null)
     {
-        $this->startDate = $startDate;
-        $this->endDate = $endDate;
+        $this->tanggalMulai = $tanggalMulai;
+        $this->tanggalSelesai = $tanggalSelesai;
         $this->kelas = $kelas;
     }
 
     public function query()
     {
-        // Query charges with related siswa and filter by date range
-        $charges = Charge::with('siswa') // Eager load the siswa relationship
-            ->whereBetween('created_at', [$this->startDate, $this->endDate]);
+        $tagihan = Charge::with('siswa.kelas')
+            ->whereBetween('created_at', [$this->tanggalMulai, $this->tanggalSelesai]);
 
-        // Filter by class (kelas) if provided
         if ($this->kelas) {
-            $charges->whereHas('siswa.kelas', function ($query) {
+            $tagihan->whereHas('siswa.kelas', function ($query) {
                 $query->where('id', $this->kelas);
             });
         }
 
-        return $charges->select(
-            'order_id',
-            'siswa_id',
-            'gross_amount as total_bayar',
-            'payment_type as jenis_bayar',
-            'bank',
-            'va_number',
-            'transaction_id as id_transaksi',
-            'created_at',
-            'transaction_status as status'
-        );
+        return $tagihan;
     }
 
-    // Mapping the data to match your required format
-    public function map($charge): array
+    public function map($tagihan): array
     {
-        return [
-            $charge->order_id,
-            $charge->siswa->name ?? 'N/A', // Accessing siswa name via relationship
-            "Rp " . number_format($charge->total_bayar, 2, ',', '.'),
-            $charge->jenis_bayar,
-            $charge->bank ?? 'N/A',
-            $charge->va_number ?? 'N/A',
-            $charge->id_transaksi,
-            Carbon::parse($charge->created_at)->format('d-m-Y H:i'),
-            $charge->status,
+        $data = [
+            $this->nomor++, // Tambahkan nomor auto increment
+            $tagihan->order_id,
+            optional($tagihan->siswa)->name ?? 'Tidak Ada',
+            "Rp " . number_format($tagihan->gross_amount, 2, ',', '.'),
+            $tagihan->payment_type,
+            $tagihan->bank ?? 'Tidak Ada',
+            $tagihan->va_number ?? 'Tidak Ada',
+            $tagihan->transaction_id,
+            Carbon::parse($tagihan->created_at)->format('d-m-Y H:i'),
+            $this->translateStatus($tagihan->transaction_status),
         ];
+
+        $this->totalBayar += $tagihan->gross_amount;
+
+        return $data;
     }
 
-    // Define the Excel headings
     public function headings(): array
     {
         return [
-            "Order ID",
-            "Siswa",
-            "Total Bayar",
-            "Jenis Bayar",
+            "No", // Tambahkan kolom nomor
+            "ID Tagihan",
+            "Nama Siswa",
+            "Jumlah Bayar",
+            "Jenis Pembayaran",
             "Bank",
-            "Nomor VA",
+            "Nomor Virtual Account",
             "ID Transaksi",
             "Tanggal Transaksi",
             "Status Transaksi",
         ];
+    }
+
+    public function title(): string
+    {
+        $kelas = Kelas::find($this->kelas);
+        return $kelas ? $kelas->name : "Semua Kelas";
+    }
+
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function (AfterSheet $event) {
+                $lembar = $event->sheet->getDelegate();
+                $jumlahBaris = count($this->query()->get()) + 2;
+                $kolomTerakhir = 'J'; // Kolom terakhir setelah menambahkan "No"
+                $rentangSel = "A1:{$kolomTerakhir}{$jumlahBaris}";
+
+                // Tambahkan garis tepi pada seluruh sel
+                $lembar->getStyle($rentangSel)->applyFromArray([
+                    'borders' => [
+                        'allBorders' => [
+                            'borderStyle' => Border::BORDER_THIN,
+                            'color' => ['argb' => '000000'],
+                        ],
+                    ],
+                ]);
+
+                // Sesuaikan ukuran kolom otomatis
+                foreach (range('A', $kolomTerakhir) as $kolom) {
+                    $lembar->getColumnDimension($kolom)->setAutoSize(true);
+                }
+
+                // Format warna berdasarkan status transaksi
+                for ($baris = 2; $baris <= $jumlahBaris; $baris++) {
+                    $selStatus = "J{$baris}";
+                    $nilaiStatus = $lembar->getCell($selStatus)->getValue();
+
+                    $warnaStatus = [
+                        'Menunggu' => 'FFFF00',
+                        'Pembayaran Online' => '87CEEB',
+                        'Gagal' => 'FF0000',
+                        'Bayar Offline' => '5ce70b',
+                    ];
+
+                    if (isset($warnaStatus[$nilaiStatus])) {
+                        $lembar->getStyle($selStatus)->applyFromArray([
+                            'fill' => [
+                                'fillType' => Fill::FILL_SOLID,
+                                'startColor' => ['argb' => $warnaStatus[$nilaiStatus]],
+                            ],
+                            'font' => ['bold' => true, 'color' => ['argb' => '000000']],
+                        ]);
+                    }
+                }
+
+                // Tambahkan total di bawah tabel
+                $selSubtotal = "D{$jumlahBaris}";
+                $selTotal = "E{$jumlahBaris}";
+
+                $lembar->setCellValue($selSubtotal, "Total:");
+                $lembar->setCellValue($selTotal, "Rp " . number_format($this->totalBayar, 2, ',', '.'));
+
+                // Jadikan total tebal
+                $lembar->getStyle("{$selSubtotal}:{$selTotal}")->applyFromArray([
+                    'font' => ['bold' => true],
+                ]);
+            },
+        ];
+    }
+
+    private function translateStatus($status)
+    {
+        $statusTerjemahan = [
+            'pending' => 'Menunggu',
+            'settlement' => 'Pembayaran Online',
+            'Expired' => 'Gagal',
+            'failed' => 'Gagal',
+            'pay_offline' => 'Bayar Offline',
+        ];
+
+        return $statusTerjemahan[$status] ?? $status;
     }
 }

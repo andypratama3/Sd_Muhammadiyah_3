@@ -79,6 +79,8 @@ class ChargePayment extends Command
 
     private function sendPaymentToMidtrans(Siswa $siswa, $vaNumber, $order_id)
     {
+        $monthName = Carbon::now()->locale('id_ID')->format('F');
+
         $params = [
             'payment_type' => 'bank_transfer',
             'transaction_details' => [
@@ -98,6 +100,15 @@ class ChargePayment extends Command
                 'start_time' => now()->toIso8601String(),
                 'duration' => 20,
                 'unit' => 'days',
+            ],
+            'item_details' => [
+                'id' => 1,
+                'price' => $siswa->spp,
+                'quantity' => 1,
+                'name' => "SPP  {$monthName} {$siswa->name}",
+                'category' => "SPP",
+                "merchant_name" => "Sekolah Kreatif SD Muhammadiyah 3 Samarinda",
+
             ],
         ];
 

@@ -155,10 +155,13 @@ class ChargeController extends Controller
         $dates = explode(' : ', $request->date);
         $startDate = Carbon::createFromFormat('d-m-Y', trim($dates[0]))->format('Y-m-d');
         $endDate = Carbon::createFromFormat('d-m-Y', trim($dates[1]))->format('Y-m-d');
-
         $kelas = $request->kelas;
 
-        return Excel::download(new ChargeExport($startDate, $endDate, $kelas), "charge-$startDate-$endDate-excel.xlsx");
+        // Format Name
+        $carbonStartDate = Carbon::parse($startDate)->locale('id')->translatedFormat('d F Y');
+        $carbonEndDate = Carbon::parse($endDate)->locale('id')->translatedFormat('d F Y');
+
+        return Excel::download(new ChargeExport($startDate, $endDate, $kelas), "Rekap Pembayaran SPP Dari - $carbonStartDate - Sampai - $carbonEndDate.xlsx");
     }
 
 }
