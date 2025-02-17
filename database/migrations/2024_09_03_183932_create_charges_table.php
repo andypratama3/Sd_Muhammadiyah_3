@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('transaction_id');
             $table->date('transaction_time')->nullable();
             $table->string('fraud_status')->default('accept');
+            $table->foreignUuid('category_payment_id')->references('id')->on('judulpembayarans');
             $table->string('transaction_status');
             $table->string('snap_token')->nullable();
             $table->softDeletes();

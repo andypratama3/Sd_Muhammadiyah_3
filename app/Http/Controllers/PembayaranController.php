@@ -13,8 +13,45 @@ class PembayaranController extends Controller
 {
     public function index(Request $request)
     {
-        return view('profil.pembayaran.index');
+        $list_pembayaran = collect();
+        $siswa = collect();
+
+        if ($request->filled('nisn')) {
+            $request->validate([
+                'nisn' => 'required|string',
+            ]);
+
+            $siswa = Siswa::where('nisn', $request->nisn)
+                // ->orWhere('name', 'like', '%' . $request->nisn . '%')
+                ->first();
+
+
+            if (!$siswa) {
+                $list_pembayaran = collect();
+                $siswa = null;
+            } else {
+                $list_pembayaran = Charge::where('siswa_id', $siswa->id)
+                ->orderBy('created_at', 'desc')
+                ->get()
+                ->groupBy(function ($item) {
+                    return Carbon::parse($item->created_at)->format('Y'); // Group by Year
+                })
+                ->map(function ($yearGroup) {
+                    return $yearGroup->groupBy('category_payment_id'); // Group by Category
+                });
+            }
+        }
+
+        // dd($siswa, $list_pembayaran);
+
+        return view('profil.pembayaran.index', compact('list_pembayaran', 'siswa'));
     }
+
+
+    // public function searchOrder()
+    // {
+
+    // }
 
     public function searchOrder(Request $request)
     {

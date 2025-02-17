@@ -15,6 +15,8 @@ class Charge extends Model
 
     protected $fillable = [
         'transaction_status',
+        'type_payment',
+        'category_payment_id',
     ];
 
 
@@ -24,5 +26,10 @@ class Charge extends Model
     public function siswa()
     {
         return $this->belongsTo(Siswa::class, 'siswa_id');
+    }
+
+    public function kategori_pembayaran()
+    {
+        return $this->belongsTo(JudulPembayaran::class, 'category_payment_id', 'id');
     }
 }

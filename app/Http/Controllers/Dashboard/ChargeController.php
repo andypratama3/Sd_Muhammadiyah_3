@@ -105,12 +105,14 @@ class ChargeController extends Controller
         }
 
         $transaction_status = $request->transaction_status;
+        $type_payment = null;
 
         if ($transaction_status === 'pay_offline') {
             try {
                 $status = 'settlement';
                 if ($this->midtrans->update_transaction_status($charge, $status)) {
                     $transaction_status = $status;
+                    $type_payment = 'Offline';
                 } else {
                     return redirect()->route('dashboard.datamaster.charge.index')
                         ->with('error', 'Gagal Mengupdate Status Transaksi di Midtrans.');
@@ -124,6 +126,7 @@ class ChargeController extends Controller
 
         $charge->update([
             'transaction_status' => $transaction_status,
+
         ]);
 
         return redirect()->route('dashboard.datamaster.charge.index')->with('success', 'Data Berhasil Diubah');
@@ -161,7 +164,7 @@ class ChargeController extends Controller
         $carbonStartDate = Carbon::parse($startDate)->locale('id')->translatedFormat('d F Y');
         $carbonEndDate = Carbon::parse($endDate)->locale('id')->translatedFormat('d F Y');
 
-        return Excel::download(new ChargeExport($startDate, $endDate, $kelas), "Rekap Pembayaran SPP Dari - $carbonStartDate - Sampai - $carbonEndDate.xlsx");
+        return Excel::download(new ChargeExport($startDate, $endDate, $kelas), "Rekap Pembayaran SPP Dari $carbonStartDate Sampai $carbonEndDate.xlsx");
     }
 
 }

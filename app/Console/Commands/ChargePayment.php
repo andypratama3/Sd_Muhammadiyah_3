@@ -6,6 +6,7 @@ use Midtrans\CoreApi;
 use GuzzleHttp\Client;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
+use App\Models\JudulPembayaran;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Api\Dashboard\SendOrderIDWhatsAppApi;
@@ -44,13 +45,12 @@ class ChargePayment extends Command
 
                 $order_id = Str::uuid();
 
-
-
+                $category_Spp = JudulPembayaran::where('name', 'PPDB')->first();
 
                 // Insert data ke tabel charges
                 DB::table('charges')->insert([
                     'id' => Str::uuid(),
-                    'name' => "SPP  {$monthName} {$siswa->name}",
+                    'name' => "$category_Spp->name  {$monthName} {$siswa->name}",
                     'order_id' => $order_id,
                     'siswa_id' => $siswa->id,
                     'gross_amount' => $siswa->spp,
@@ -61,13 +61,14 @@ class ChargePayment extends Command
                     'transaction_time' => now(),
                     'fraud_status' => 'accept',
                     'transaction_status' => 'pending',
+                    'category_payment_id' => $category_Spp->id,
                     'snap_token' => null,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
 
                 // Kirim pembayaran ke Midtrans
-                $this->sendPaymentToMidtrans($siswa, $vaNumber, $order_id);
+                $this->sendPaymentToMidtrans($siswa, $vaNumber, $order_id, $category_Spp);
 
                 DB::commit();
             } catch (\Exception $e) {
@@ -77,7 +78,7 @@ class ChargePayment extends Command
         }
     }
 
-    private function sendPaymentToMidtrans(Siswa $siswa, $vaNumber, $order_id)
+    private function sendPaymentToMidtrans(Siswa $siswa, $vaNumber, $order_id, $category_Spp)
     {
         $monthName = Carbon::now()->locale('id_ID')->format('F');
 
@@ -106,7 +107,7 @@ class ChargePayment extends Command
                 'price' => $siswa->spp,
                 'quantity' => 1,
                 'name' => "SPP  {$monthName} {$siswa->name}",
-                'category' => "SPP",
+                'category' => $category_Spp->name,
                 "merchant_name" => "Sekolah Kreatif SD Muhammadiyah 3 Samarinda",
 
             ],

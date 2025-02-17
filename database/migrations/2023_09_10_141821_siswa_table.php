@@ -28,7 +28,7 @@ return new class extends Migration
             // data sekolah
             $table->string('kelas_tahun');
             $table->date('tanggal_masuk');
-            $table->string('beasiswa');
+            $table->string('beasiswa')->nullable();
             $table->string('foto', 100)->nullable()->default('text');
             $table->enum('select_data', ['orang_tua', 'wali'])->default('orang_tua');
             // data orang tua
@@ -44,14 +44,14 @@ return new class extends Migration
             $table->string('pekerjaan_wali')->nullable();
             $table->string('alamat_wali')->nullable();
             //alamat
-            $table->string('rt');
-            $table->string('rw');
+            $table->string('rt')->nullable();
+            $table->string('rw')->nullable();
             $table->string('provinsi_id');
             $table->string('kabupaten_id');
             $table->string('kecamatan_id');
             $table->string('kelurahan_id');
-            $table->longText('nama_jalan');
-            $table->string('jenis_tinggal');
+            $table->longText('nama_jalan')->nullable();
+            $table->string('jenis_tinggal')->nullable();
             $table->string('no_hp');
             $table->string('slug');
             $table->softDeletes();
