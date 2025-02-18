@@ -15,6 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name');
             $table->string('order_id');
+            $table->string('order_id_1')->nullable();
             $table->uuid('siswa_id');
             $table->integer('gross_amount');
             $table->string('payment_type')->default('bank_transfer');

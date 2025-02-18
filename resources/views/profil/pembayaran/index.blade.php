@@ -147,6 +147,7 @@
                                                                         @foreach($charges as $charge)
                                                                             <li>
                                                                                 <div class="row align-items-center">
+                                                                                    <input type="hidden" name="charge_id" value="{{ $charge->id }}">
                                                                                     <div class="col-md-4">
                                                                                         <label class="fw-bold">Tanggal Pembayaran:</label>
                                                                                         {{ \Carbon\Carbon::parse($charge->created_at)->translatedFormat('d F Y') }}
@@ -167,7 +168,7 @@
                                                                                         @if($charge->transaction_status == 'settlement')
                                                                                             <button class="btn btn-primary btn-sm" style="font-size: 10px;">Detail Pembayaran</button>
                                                                                         @else
-                                                                                            <button class="btn btn-success btn-sm" id="payButton">Bayar</button>
+                                                                                            <button class="btn btn-success btn-sm" data-id="{{ $charge->id }}" id="payButton">Bayar</button>
                                                                                         @endif
                                                                                     </div>
                                                                                 </div>
@@ -206,55 +207,6 @@
             </div>
 
 
-
-            <div id="paymentResult" class="col-lg-12 col-md-6" style="margin-top: 20px; display:none;">
-                <h3 class="title mb-2">Pembayaran Ditemukan</h3>
-                <div class="item">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                           <img id="siswaFoto" src="" alt="" class="img-fluid">
-                                        </div>
-                                        <div class="col-md-9">
-                                            <div class="form-group mt-2">
-                                                <h5>Nama : <span id="siswaName"></span></h5>
-                                            </div>
-                                            <div class="form-group">
-                                                <h5>Kode : <span id="orderId"></span></h5>
-                                            </div>
-                                            <div class="form-group">
-                                                <h5>Status : <span id="transactionStatus" class="badge"></span></h5>
-                                            </div>
-                                            <div class="form-group">
-                                                <h5>Total : Rp. <span id="grossAmount"></span></h5>
-                                            </div>
-                                            <div class="form-group">
-                                                <h5>Kategori Pembayaran : <span id="paymentCategory"></span></h5>
-                                            </div>
-                                            <div class="form-group float-end mt-2">
-                                                <button class="btn btn-primary" id="payButton" style="display: none;">
-                                                    <i class="fa fa-angle-right"> Bayar</i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="paymentNotFound" class="col-lg-12 text-center mb-5" style="margin-top: 100px; display:none;">
-                <span class="badge bg-danger">Pembayaran Tidak Ditemukan</span>
-            </div>
-
-
-            <div class="col-md-12 mt-5 wow fadeInLeft" data-wow-delay="0.2s">
-                <Button class="btn btn-primary float-start" type="button" id="modal_how_pay_button" class="btn btn-primary" data-toggle="modal" data-target="#modal_how_pay">Cara Pembayaran</Button>
-            </div>
 
             <!-- Modal -->
             <div class="modal fade bd-example-modal-lg" id="modal_how_pay" tabindex="-1" role="dialog" aria-labelledby="modal_how_payTitle" aria-hidden="true">
@@ -325,116 +277,112 @@
             $('#modal_how_pay').modal('hide');
         });
 
-        // search payment use keyboard when press eneter
-        $('#kodePembayaran').keypress(function (e) {
-            if(e.which == 13) {
+        // button pay
+        $('.accordion-body').on('click', '#payButton', function () {
+            let charge_id = $(this).data('id');
 
-                // $.ajax({
-                //     url: "{{ route('pembayaran.searchOrder') }}",
-                //     method: "GET",
-                //     data: { kode: kode },
-                //     success: function (response) {
-                //         if (response.status === "success") {
-                //             $('#paymentNotFound').hide();
-                //             $('#paymentResult').show();
-
-                //             $('#siswaFoto').attr('src', '{{ asset('storage/img/siswa/') }}' + '/' + response.data.siswa.foto);
-                //             $('#siswaName').text(response.data.siswa.name);
-                //             $('#orderId').text(response.data.order_id);
-                //             $('#grossAmount').text(response.data.gross_amount);
-                //             $('#paymentCategory').text(response.data.name);
-                //             if (response.data.transaction_status === 'pending') {
-                //                 $('#transactionStatus').removeClass('bg-success').addClass('bg-warning').text('Belum Lunas');
-                //                 $('#payButton').show();
-                //                 $('#payButton').attr('data-snaptoken', response.snap_token);
-                //             } else {
-                //                 $('#transactionStatus').removeClass('bg-warning').addClass('bg-success').text('Lunas');
-                //                 $('#payButton').hide();
-                //             }
-                //         } else {
-                //             $('#paymentResult').hide();
-                //             $('#paymentNotFound').show();
-                //         }
-                //     },
-                //     error: function () {
-                //         alert('Gagal mencari pembayaran. Silakan coba lagi.');
-                //     }
-                // });
-            }
-
-        });
-
-
-        $('#searchPaymentButton').click(function () {
-            var kode = $('#kodePembayaran').val();
-            if (kode === "") {
+            if (!charge_id) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Kode pembayaran tidak boleh kosong!'
-                })
+                    text: 'ID transaksi tidak ditemukan!',
+                });
                 return;
             }
 
-            $.ajax({
-                url: "{{ route('pembayaran.searchOrder') }}",
-                method: "GET",
-                data: { kode: kode },
-                success: function (response) {
-                    if (response.status === "success") {
-                        $('#paymentNotFound').hide();
-                        $('#paymentResult').show();
+            // Cegah klik berulang
+            $(this).prop('disabled', true);
 
-                        $('#siswaFoto').attr('src', '{{ asset('storage/img/siswa/') }}' + '/' + response.data.siswa.foto);
-                        $('#siswaName').text(response.data.siswa.name);
-                        $('#orderId').text(response.data.order_id);
-                        $('#grossAmount').text(response.data.gross_amount);
-                        $('#paymentCategory').text(response.data.name);
-                        if (response.data.transaction_status === 'pending') {
-                            $('#transactionStatus').removeClass('bg-success').addClass('bg-warning').text('Belum Lunas');
-                            $('#payButton').show();
-                            $('#payButton').attr('data-snaptoken', response.snap_token);
-                        } else {
-                            $('#transactionStatus').removeClass('bg-warning').addClass('bg-success').text('Lunas');
-                            $('#payButton').hide();
-                        }
+            console.log("Mengambil snap_token untuk charge_id:", charge_id);
+
+            $.ajax({
+                type: "GET",
+                url: "{{ route('pembayaran.searchOrder') }}",
+                data: { charge_id: charge_id },
+                cache: false,
+                success: function (response) {
+                    console.log("Response dari server:", response);
+
+                    if (response.status === 'success' && response.snap_token) {
+                        let snapToken = response.snap_token;
+
+                        console.log("Snap Token:", snapToken);
+
+                        snap.pay(snapToken, {
+                            onSuccess: function (result) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil',
+                                    text: 'Pembayaran Berhasil',
+                                });
+                                $('#payButton').prop('disabled', false);
+                            },
+                            onPending: function (result) {
+                                Swal.fire({
+                                    icon: 'info',
+                                    title: 'Pembayaran Sedang Dalam Proses',
+                                    text: 'Silakan lakukan pembayaran pada menu pembayaran.',
+                                });
+                                $('#payButton').prop('disabled', false);
+                            },
+                            onError: function (result) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Pembayaran Gagal. Silakan coba lagi.',
+                                });
+                                $('#payButton').prop('disabled', false);
+                            }
+                        });
                     } else {
-                        $('#paymentResult').hide();
-                        $('#paymentNotFound').show();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: response.message || 'Terjadi kesalahan dalam mendapatkan snap_token',
+                        });
+                        $('#payButton').prop('disabled', false);
                     }
                 },
-                error: function () {
-                    alert('Gagal mencari pembayaran. Silakan coba lagi.');
-                }
-            });
-        });
-
-        $('#payButton').click(function () {
-            var snapToken = $(this).attr('data-snaptoken');
-            snap.pay(snapToken, {
-                onSuccess: function (result) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil',
-                        text: 'Pembayaran Berhasil',
-                    });
-                },
-                onPending: function (result) {
-                    Swal.fire({
-                        icon: 'info',
-                        title: 'Pembayaran Sedang Dalam Proses',
-                        text: 'Silakan lakukan pembayaran pada menu pembayaran.',
-                    });
-                },
-                onError: function (result) {
+                error: function (xhr) {
+                    console.error("Kesalahan Ajax:", xhr);
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
-                        text: 'Pembayaran Gagal. Silakan coba lagi.',
+                        text: 'Gagal mengambil data transaksi',
                     });
+                    $('#payButton').prop('disabled', false);
                 }
             });
         });
+
+
+
+        // $('#payButton').click(function () {
+        //     var snapToken = $(this).attr('data-snaptoken');
+        //     snap.pay(snapToken, {
+        //         onSuccess: function (result) {
+        //             Swal.fire({
+        //                 icon: 'success',
+        //                 title: 'Berhasil',
+        //                 text: 'Pembayaran Berhasil',
+        //             });
+        //         },
+        //         onPending: function (result) {
+        //             Swal.fire({
+        //                 icon: 'info',
+        //                 title: 'Pembayaran Sedang Dalam Proses',
+        //                 text: 'Silakan lakukan pembayaran pada menu pembayaran.',
+        //             });
+        //         },
+        //         onError: function (result) {
+        //             Swal.fire({
+        //                 icon: 'error',
+        //                 title: 'Oops...',
+        //                 text: 'Pembayaran Gagal. Silakan coba lagi.',
+        //             });
+        //         }
+        //     });
+        // });
     });
 </script>
 @endpush

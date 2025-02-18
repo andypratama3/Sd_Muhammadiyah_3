@@ -16,6 +16,7 @@ class Charge extends Model
     protected $fillable = [
         'transaction_status',
         'type_payment',
+        'order_id_1',
         'category_payment_id',
     ];
 

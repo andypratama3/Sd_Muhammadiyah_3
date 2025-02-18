@@ -10,7 +10,13 @@ class MidtransPaymentController extends Controller
 {
     public function callback(Request $request)
     {
-        $charge = Charge::where('order_id',$request->order_id)->first();
+        // check transaction
+
+        $charge = Charge::where('order_id',$request->order_id)
+                    ->orWhere('order_id_1', $request->order_id)
+                    ->first();
+
+      
 
         if($charge->isEmpty())
         {

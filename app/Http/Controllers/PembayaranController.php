@@ -6,6 +6,8 @@ use Midtrans\Snap;
 use Midtrans\Config;
 use App\Models\Siswa;
 use App\Models\Charge;
+use GuzzleHttp\Client;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -56,97 +58,113 @@ class PembayaranController extends Controller
     public function searchOrder(Request $request)
     {
         $request->validate([
-            'kode' => 'required|string',
+            'charge_id' => 'required',
         ]);
 
-        $currentMonth = Carbon::now()->startOfMonth();
+        $charge = Charge::find($request->charge_id);
+        if (!$charge) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Charge tidak ditemukan',
+            ]);
+        }
 
-        if ($request->has('kode')) {
-            $kode = $request->input('kode');
-            // Search for the payment by order_id in Charge or name in Siswa
-            $payment = Charge::where('order_id', $kode)
-                // ->orWhere('order_id', 'LIKE', "%{$kode}%")
-                ->orWhere('va_number', 'LIKE', "%{$kode}%")
-                ->whereMonth('transaction_time', Carbon::now()->month)
-                ->whereYear('transaction_time', Carbon::now()->year)
-                ->orWhereHas('siswa', function ($query) use ($kode) {
-                    $query->where('name', 'LIKE', "%{$kode}%")
-                        ->whereMonth('transaction_time', Carbon::now()->month)
-                        ->whereYear('transaction_time', Carbon::now()->year);
-                })
-                ->first();
+        $siswa = Siswa::find($charge->siswa_id);
+        if (!$siswa) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data siswa tidak ditemukan',
+            ]);
+        }
 
+        // Konfigurasi Midtrans
+        Config::$serverKey = env('MIDTRANS_SERVER_KEY');
+        Config::$isProduction = false;
+        Config::$isSanitized = true;
+        Config::$is3ds = true;
 
-                if ($payment !== null) {
-                    $siswa = Siswa::find($payment->siswa_id);
+        $client = new Client();
+        $server_key = env('MIDTRANS_SERVER_KEY');
 
-                // Configure Midtrans
-                Config::$serverKey = env('MIDTRANS_SERVER_KEY');
-                Config::$isProduction = false; // Set to true in production
-                Config::$isSanitized = true;
-                Config::$is3ds = true;
-
-                // Check if snap_token exists
-                if ($payment->snap_token) {
-                    // Use the existing snap_token
-                    $snapToken = $payment->snap_token;
-                } else {
-                    // Prepare parameters for Snap if snap_token does not exist
-                    $params = [
-                        'transaction_details' => [
-                            'order_id' => $payment->order_id,
-                            'gross_amount' => $payment->gross_amount,
-                        ],
-                        'customer_details' => [
-                            'first_name' => $siswa->name,
-                            'email' => $siswa->email,
-                            'phone' => $siswa->no_hp,
-                        ],
-                        'item_details' => [
-                            [
-                                'id' => $payment->order_id,
-                                'price' => $payment->gross_amount,
-                                'quantity' => 1,
-                                'name' => $payment->name,
-                            ]
-                        ],
-                    ];
-                    // Try generating the snap token
-                    try {
-                        $snapToken = Snap::getSnapToken($params);
-
-                        // Save the new snap_token to the database
-                        $payment->snap_token = $snapToken;
-                        $payment->save();
-                    } catch (\Exception $e) {
-                        return response()->json([
-                            'status' => 'error',
-                            'message' => 'Failed to create Snap token: ' . $e->getMessage(),
-                        ]);
-                    }
-                }
-
-                // Return success response with snap_token
+        try {
+            // Jika Snap Token sudah ada, langsung kembalikan
+            if (!empty($charge->snap_token)) {
                 return response()->json([
                     'status' => 'success',
-                    'data' => [
-                        'siswa' => $siswa,
-                        'order_id' => $payment->order_id,
-                        'gross_amount' => $payment->gross_amount,
-                        'name' => $payment->name,
-                        'transaction_status' => $payment->transaction_status,
-                    ],
-                    'snap_token' => $snapToken,
-                ]);
-            } else {
-                // Payment not found
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Pembayaran tidak ditemukan',
+                    'snap_token' => $charge->snap_token,
                 ]);
             }
+
+            // Ambil data transaksi dari Midtrans
+            $response = $client->get("https://api.sandbox.midtrans.com/v2/{$charge->order_id}/status", [
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Authorization' => 'Basic ' . base64_encode($server_key . ':'),
+                    'Content-Type' => 'application/json',
+                ],
+            ]);
+
+            $responseData = json_decode($response->getBody(), true);
+
+            // Pastikan respons memiliki order_id dan gross_amount
+            if (!isset($responseData['order_id'], $responseData['gross_amount'])) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Data transaksi tidak lengkap dari Midtrans',
+                    'data' => $responseData,
+                ]);
+            }
+
+            // new order_id & transaction_id
+
+            $params = [
+                'transaction_details' => [
+                    'order_id' => $charge->id,
+                    'gross_amount' => $charge->gross_amount,
+                ],
+                'item_details' => [
+                    [
+                        'id' => $charge->id,
+                        'price' => $charge->gross_amount,
+                        'quantity' => 1,
+                        'name' => $charge->name,
+                    ]
+                ],
+
+            ];
+
+         
+            // Generate Snap Token baru
+            try {
+                $snapToken = Snap::getSnapToken($params);
+                $charge->snap_token = $snapToken;
+                $charge->order_id_1 = $charge->id;
+                $charge->save();
+                
+
+                return response()->json([
+                    'status' => 'success',
+                    'snap_token' => $snapToken,
+                    'data' => $params,
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Gagal membuat Snap Token: ' . $e->getMessage(),
+                ]);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal mengambil data transaksi',
+                'error' => $e->getMessage(),
+            ]);
         }
     }
+
+
+
+
 
     public function snap_url($order_id)
     {
@@ -159,4 +177,4 @@ class PembayaranController extends Controller
 
         return view('midtrans.snap', compact('token','charge'));
     }
-}
+}     

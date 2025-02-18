@@ -50,7 +50,7 @@ class ChargePayment extends Command
                 // Insert data ke tabel charges
                 DB::table('charges')->insert([
                     'id' => Str::uuid(),
-                    'name' => "$category_Spp->name  {$monthName} {$siswa->name}",
+                    'name' => "$category_Spp->name  {$monthName} {$siswa->name} test 1",
                     'order_id' => $order_id,
                     'siswa_id' => $siswa->id,
                     'gross_amount' => $siswa->spp,
@@ -81,6 +81,8 @@ class ChargePayment extends Command
     private function sendPaymentToMidtrans(Siswa $siswa, $vaNumber, $order_id, $category_Spp)
     {
         $monthName = Carbon::now()->locale('id_ID')->format('F');
+
+        
 
         $params = [
             'payment_type' => 'bank_transfer',
