@@ -148,8 +148,12 @@
                                                                             <li>
                                                                                 <div class="row align-items-center">
                                                                                     <input type="hidden" name="charge_id" value="{{ $charge->id }}">
+                                                                                    <hr>
+
                                                                                     <div class="col-md-4">
-                                                                                        <label class="fw-bold">Tanggal Pembayaran:</label>
+                                                                                        <label class="fw-bold">{{ $charge->kategori_pembayaran->name }} </label>
+                                                                                        <br>
+                                                                                        <label class="fw-bold">Tanggal :</label>
                                                                                         {{ \Carbon\Carbon::parse($charge->created_at)->translatedFormat('d F Y') }}
                                                                                     </div>
                                                                                     <div class="col-md-3">
@@ -166,7 +170,7 @@
                                                                                     </div>
                                                                                     <div class="col-md-2 text-center">
                                                                                         @if($charge->transaction_status == 'settlement')
-                                                                                            <button class="btn btn-primary btn-sm" style="font-size: 10px;">Detail Pembayaran</button>
+                                                                                            <button class="btn btn-primary btn-sm" style="font-size: 10px;" id="detailButton" data-id="{{ $charge->id }}">Detail Pembayaran</button>
                                                                                         @else
                                                                                             <button class="btn btn-success btn-sm" data-id="{{ $charge->id }}" id="payButton">Bayar</button>
                                                                                         @endif
@@ -209,17 +213,50 @@
 
 
             <!-- Modal -->
-            <div class="modal fade bd-example-modal-lg" id="modal_how_pay" tabindex="-1" role="dialog" aria-labelledby="modal_how_payTitle" aria-hidden="true">
+            <div class="modal fade bd-example-modal-lg" id="modal_detail" tabindex="-1" role="dialog" aria-labelledby="modal_detailTitle" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="modal_how_payTitle">Cara Melakukan Pembayaran</h5>
+                            <h5 class="modal-title">Detail Transaksi Pembayaran</h5>
                             <button type="button" style="background: none; color: red; font-weight: bold;" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true"><i class="fa-solid fa-xmark"></i></span>
                             </button>
                         </div>
                         <div class="modal-body">
-
+                            <table class="table">
+                                <tr>
+                                    <th>Nama</th>
+                                    <td id="detail_name"></td>
+                                </tr>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <td id="detail_order_id"></td>
+                                </tr>
+                                <tr>
+                                    <th>Total Bayar</th>
+                                    <td id="detail_gross_amount"></td>
+                                </tr>
+                                <tr>
+                                    <th>Metode Pembayaran</th>
+                                    <td id="detail_payment_type"></td>
+                                </tr>
+                                <tr>
+                                    <th>Bank / Provider</th>
+                                    <td id="detail_bank"></td>
+                                </tr>
+                                <tr>
+                                    <th>VA Number / Kode Bayar</th>
+                                    <td id="detail_va_number"></td>
+                                </tr>
+                                <tr>
+                                    <th>Status Transaksi</th>
+                                    <td id="detail_transaction_status"></td>
+                                </tr>
+                                <tr>
+                                    <th>Waktu Transaksi</th>
+                                    <td id="detail_transaction_time"></td>
+                                </tr>
+                            </table>
                         </div>
                         <div class="modal-footer d-flex align-items-center">
                             <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Tutup</button>
@@ -227,6 +264,7 @@
                     </div>
                 </div>
             </div>
+
 
         </div>
     </div>
@@ -355,35 +393,111 @@
             });
         });
 
+        $('.accordion-body').on('click', '#detailButton', function () {
+            let charge_id = $(this).data('id');
 
+            if (!charge_id) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'ID transaksi tidak ditemukan!',
+                });
+                return;
+            }
 
-        // $('#payButton').click(function () {
-        //     var snapToken = $(this).attr('data-snaptoken');
-        //     snap.pay(snapToken, {
-        //         onSuccess: function (result) {
-        //             Swal.fire({
-        //                 icon: 'success',
-        //                 title: 'Berhasil',
-        //                 text: 'Pembayaran Berhasil',
-        //             });
-        //         },
-        //         onPending: function (result) {
-        //             Swal.fire({
-        //                 icon: 'info',
-        //                 title: 'Pembayaran Sedang Dalam Proses',
-        //                 text: 'Silakan lakukan pembayaran pada menu pembayaran.',
-        //             });
-        //         },
-        //         onError: function (result) {
-        //             Swal.fire({
-        //                 icon: 'error',
-        //                 title: 'Oops...',
-        //                 text: 'Pembayaran Gagal. Silakan coba lagi.',
-        //             });
-        //         }
-        //     });
-        // });
+            $.ajax({
+                type: "GET",
+                url: "{{ route('pembayaran.searchOrderDetail') }}",
+                data: {
+                    charge_id: charge_id
+                },
+                cache: false,
+                success: function(response) {
+                    if (response.status === "success") {
+                        showTransactionDetail(response.data);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Data tidak ditemukan!',
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Terjadi kesalahan, coba lagi.',
+                    });
+                }
+            });
+        });
+
+        function showTransactionDetail(data) {
+            // Set nilai umum
+            $("#detail_name").text(data.name ?? "-");
+            $("#detail_order_id").text(data.order_id ?? "-");
+            $("#detail_gross_amount").text(formatCurrency(data.gross_amount ?? 0));
+            $("#detail_payment_type").text(data.payment_type ?? "-");
+            $("#detail_transaction_status").text(data.transaction_status ?? "-");
+            $("#detail_transaction_time").text(data.transaction_time ?? "-");
+
+            // Tampilkan status transaksi dalam bentuk badge
+            let statusBadge = "";
+            if (data.transaction_status === 'settlement') {
+                statusBadge = `<span class="badge bg-success">Lunas</span>`;
+            } else if (data.transaction_status === 'pending') {
+                statusBadge = `<span class="badge bg-warning">Belum Lunas</span>`;
+            } else {
+                statusBadge = data.transaction_status;
+            }
+            $("#detail_transaction_status").html(statusBadge);
+
+            // Reset semua elemen agar tidak ada data yang tertinggal dari transaksi sebelumnya
+            $("#detail_bank, #detail_va_number").text("-");
+
+            // Menentukan informasi tambahan berdasarkan payment_type
+            switch (data.payment_type) {
+                case "bank_transfer":
+                    $("#detail_bank").text(data.bank ?? "-");
+                    $("#detail_va_number").text(data.va_number ?? "-");
+                    break;
+                case "credit_card":
+                    $("#detail_bank").text(data.bank ?? "-");
+                    $("#detail_va_number").text(data.card_number ? "**** **** **** " + data.card_number.slice(-4) : "-");
+                    break;
+                case "qris":
+                    $("#detail_bank").text("QRIS");
+                    $("#detail_va_number").text("Tersedia (Silakan scan)");
+                    break;
+                case "cstore":
+                    $("#detail_bank").text(data.store ?? "-");
+                    $("#detail_va_number").text(data.payment_code ?? "-");
+                    break;
+                case "e_wallet":
+                    $("#detail_bank").text(data.e_wallet ?? "-");
+                    $("#detail_va_number").text("Tersedia (Lihat aplikasi e-wallet)");
+                    break;
+                default:
+                    $("#detail_payment_type").text("Tipe pembayaran tidak dikenal");
+                    break;
+            }
+
+            // Tampilkan modal
+            $("#modal_detail").modal("show");
+        }
+
+        // Fungsi untuk format angka ke mata uang (Rupiah)
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat("id-ID", {
+                style: "currency",
+                currency: "IDR",
+                minimumFractionDigits: 0
+            }).format(amount);
+        }
     });
+
+
 </script>
 @endpush
 @endsection

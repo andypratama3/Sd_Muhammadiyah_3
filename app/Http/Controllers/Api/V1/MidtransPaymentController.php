@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\Charge;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -10,43 +11,87 @@ class MidtransPaymentController extends Controller
 {
     public function callback(Request $request)
     {
-        // check transaction
+        $midtransResponse = $request->all();
 
-        $charge = Charge::where('order_id',$request->order_id)
-                    ->orWhere('order_id_1', $request->order_id)
+        // Pastikan order_id tersedia
+        if (!isset($midtransResponse['order_id'])) {
+            return response()->json(['message' => 'Invalid request, order_id not found'], 400);
+        }
+
+        // Ambil data dari response Midtrans
+        $data = [
+            'transaction_status' => $midtransResponse['transaction_status'] ?? null,
+            'transaction_id' => $midtransResponse['transaction_id'] ?? null,
+            'transaction_time' => $midtransResponse['transaction_time'] ?? null,
+            'fraud_status' => $midtransResponse['fraud_status'] ?? 'accept',
+        ];
+
+        // Pastikan payment_type ada dalam response
+        if (isset($midtransResponse['payment_type'])) {
+            switch ($midtransResponse['payment_type']) {
+                case 'bank_transfer':
+                    $data['bank'] = $midtransResponse['va_numbers'][0]['bank'] ?? null;
+                    $data['va_number'] = $midtransResponse['va_numbers'][0]['va_number'] ?? null;
+                    break;
+
+                case 'credit_card':
+                    $data['bank'] = $midtransResponse['bank'] ?? null;
+                    break;
+
+                case 'qris':
+                    $data['bank'] = $midtransResponse['acquirer'] ?? null;
+                    break;
+
+                case 'gopay':
+                case 'shopeepay':
+                    $data['bank'] = $midtransResponse['issuer'] ?? null;
+                    break;
+
+                case 'echannel': // Mandiri Bill Payment
+                    $data['bank'] = 'mandiri';
+                    $data['va_number'] = $midtransResponse['bill_key'] ?? null;
+                    break;
+
+                case 'cstore': // Indomaret / Alfamart
+                    $data['bank'] = $midtransResponse['store'] ?? null;
+                    $data['va_number'] = $midtransResponse['payment_code'] ?? null;
+                    break;
+
+                default:
+                    return response()->json(['message' => 'Unsupported payment type'], 400);
+            }
+        }
+
+        // Update data di tabel charges berdasarkan order_id
+        $charge = Charge::where('order_id', $midtransResponse['order_id'])
+                    ->orWhere('order_id_1', $midtransResponse['order_id'])
                     ->first();
 
-      
-
-        if($charge->isEmpty())
-        {
-            return response()->json([
-                'message' => 'Order not found'
-            ], 404);
+        if (!$charge) {
+            return response()->json(['message' => 'Charge data not found'], 404);
         }
 
-        $status_transaction = $request->transaction_status;
-
-        if($status_transaction == 'settlement' || $status_transaction == 'capture'){
-            $charge = $charge->transaction_status = 'settlement';
-        }elseif($status_transaction == 'pending'){
-            $charge = $charge->transaction_status = $request->transaction_status;
-        }elseif($status_transaction == 'deny'){
-            $charge = $charge->transaction_status = $request->transaction_status;
-        }else{
-            $charge = $charge->transaction_status = $request->transaction_status;
-        }
-
-        $change_transaction_status = $charge->save();
-
-        if($change_transaction_status){
-
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Transaction status updated',
-                'data' => $charge,
+        if($charge->transaction_status == 'settlement' || $charge->transaction_status == 'capture'){
+            // cancel order_id
+            $server_key = env('MIDTRANS_SERVER_KEY');
+            $client = new Client();
+            $response = $client->get("https://api.sandbox.midtrans.com/v2/{$charge->order_id}/cancel", [
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Authorization' => 'Basic ' . base64_encode($server_key . ':'),
+                    'Content-Type' => 'application/json',
+                ],
             ]);
+
+            if($midtransResponse['transaction_status'] == 'settlement' || $midtransResponse['transaction_status'] == 'capture'){
+                $data['transaction_status'] = 'settlement';
+            }
         }
+
+
+        $charge->update($data);
+
+        return response()->json(['message' => 'Payment data updated successfully'], 200);
     }
 
     public function update_transaction_status($charge, $status)

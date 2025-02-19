@@ -98,6 +98,7 @@ Route::group(['prefix' => '/',], function () {
     // pembayaran
     Route::get('pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
     Route::get('pembayaran/pay', [PembayaranController::class, 'searchOrder'])->name('pembayaran.searchOrder');
+    Route::get('pembayaran/detail', [PembayaranController::class, 'searchOrderDetail'])->name('pembayaran.searchOrderDetail');
     Route::get('pembayaran/snap/{order_id}', [PembayaranController::class, 'snap_url'])->name('snap_url');
     //fasilitas
     Route::get('fasilitas', [FasilitasController::class, 'index'])->name('fasilitas.index');

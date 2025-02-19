@@ -133,14 +133,14 @@ class PembayaranController extends Controller
 
             ];
 
-         
+
             // Generate Snap Token baru
             try {
                 $snapToken = Snap::getSnapToken($params);
                 $charge->snap_token = $snapToken;
                 $charge->order_id_1 = $charge->id;
                 $charge->save();
-                
+
 
                 return response()->json([
                     'status' => 'success',
@@ -162,19 +162,32 @@ class PembayaranController extends Controller
         }
     }
 
-
-
-
-
-    public function snap_url($order_id)
+    public function searchOrderDetail(Request $request)
     {
-        $token = env('MIDTRANS_SERVER_KEY');
-        $charge = Charge::where('order_id', $order_id)->firstOrFail();
+        $request->validate([
+            'charge_id' => 'required',
+        ]);
 
-        if(!$charge){
-            abort(404);
+        $charge = Charge::find($request->charge_id);
+        if (!$charge) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Charge tidak ditemukan',
+            ]);
         }
 
-        return view('midtrans.snap', compact('token','charge'));
+        $siswa = Siswa::find($charge->siswa_id);
+        if (!$siswa) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data siswa tidak ditemukan',
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $charge,
+        ]);
     }
-}     
+}
+

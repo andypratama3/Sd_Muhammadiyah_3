@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\IpaymuPaymentApi;
 use App\Http\Controllers\Api\Dashboard\SiswaApi;
 use App\Http\Controllers\Api\Dashboard\WilayahApi;
+use App\Http\Controllers\Api\V1\MidtransPaymentController;
 use App\Http\Controllers\Dashboard\Api\FacebookController;
 use App\Http\Controllers\Api\Dashboard\SendOrderIDWhatsAppApi;
 
