@@ -17,6 +17,8 @@ class SiswaData extends Data
         public readonly string $nisn,
         public readonly string $agama,
         public readonly string $spp,
+        public readonly string $dpp,
+        public readonly string $seragam,
         public readonly ?string $nama_pendidikan,
         public readonly ?string $nama_jalan_pendidikan,
         public readonly string $kelas_tahun,
@@ -62,6 +64,8 @@ class SiswaData extends Data
             $request->getNisn(),
             $request->getAgama(),
             $request->getSpp(),
+            $request->getDpp(),
+            $request->getSeragam(),
             //pendidikan Sebelumnya
             $request->getNamaPendidikan(),
             $request->getJalanPendidikan(),

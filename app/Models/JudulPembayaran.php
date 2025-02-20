@@ -12,10 +12,11 @@ class JudulPembayaran extends Model
     use HasFactory;
     use UsesUuid;
     use NameHasSlug;
-    
+
     protected $table = 'judulpembayarans';
     protected $fillable = [
         'name',
+        'code',
         'slug',
     ];
 }

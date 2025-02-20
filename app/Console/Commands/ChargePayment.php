@@ -35,18 +35,21 @@ class ChargePayment extends Command
             DB::beginTransaction();
 
             try {
-                // Periksa apakah siswa sudah punya VA Number
-                if (!$siswa->va_number) {
-                    $vaNumber = $this->generateNewVaNumber();
-                    $siswa->update(['va_number' => $vaNumber]);
-                } else {
-                    $vaNumber = $siswa->va_number;
-                }
+                // // Periksa apakah siswa sudah punya VA Number
+                // if (!$siswa->va_number) {
+                //     $vaNumber = $this->generateNewVaNumber();
+                //     $siswa->update(['va_number' => $vaNumber]);
+                // } else {
+                //     $vaNumber = $siswa->va_number;
+                // }
+
 
                 $order_id = Str::uuid();
+                // make number mounth
+                $monthNumber = Carbon::now()->format('m');
 
-                $category_Spp = JudulPembayaran::where('name', 'PPDB')->first();
-
+                $category_Spp = JudulPembayaran::where('name', 'SPP')->first();
+                $vaNumber = $siswa->nisn . $category_Spp->code . $monthNumber;
                 // Insert data ke tabel charges
                 DB::table('charges')->insert([
                     'id' => Str::uuid(),
@@ -82,7 +85,7 @@ class ChargePayment extends Command
     {
         $monthName = Carbon::now()->locale('id_ID')->format('F');
 
-        
+
 
         $params = [
             'payment_type' => 'bank_transfer',
@@ -101,7 +104,7 @@ class ChargePayment extends Command
             ],
             'expiry' => [
                 'start_time' => now()->toIso8601String(),
-                'duration' => 20,
+                'duration' => 29,
                 'unit' => 'days',
             ],
             'item_details' => [
@@ -157,13 +160,13 @@ class ChargePayment extends Command
         }
     }
 
-    private function generateNewVaNumber()
-    {
-        do {
-            $vaNumber = rand(1000000000, 9999999999);
-            $exists = DB::table('siswas')->where('va_number', $vaNumber)->exists();
-        } while ($exists);
+    // private function generateNewVaNumber()
+    // {
+    //     do {
+    //         $vaNumber = rand(1000000000, 9999999999);
+    //         $exists = DB::table('siswas')->where('va_number', $vaNumber)->exists();
+    //     } while ($exists);
 
-        return $vaNumber;
-    }
+    //     return $vaNumber;
+    // }
 }

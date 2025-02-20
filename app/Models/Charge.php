@@ -14,10 +14,21 @@ class Charge extends Model
     protected $table = 'charges';
 
     protected $fillable = [
-        'transaction_status',
+        'name' ,
         'type_payment',
+        'order_id' ,
         'order_id_1',
-        'category_payment_id',
+        'siswa_id' ,
+        'gross_amount' ,
+        'payment_type' ,
+        'bank' ,
+        'va_number' ,
+        'transaction_id' ,
+        'transaction_time' ,
+        'fraud_status' ,
+        'transaction_status' ,
+        'category_payment_id' ,
+        'snap_token' ,
     ];
 
 

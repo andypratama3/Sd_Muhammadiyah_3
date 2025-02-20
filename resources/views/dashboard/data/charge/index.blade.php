@@ -19,9 +19,21 @@
     <div class="card">
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
             <h4 class="card-title">Pembayaran Siswa</h4>
+            <a href="{{ route('dashboard.datamaster.charge.create') }}" class="btn btn-primary float-end btn-sm">Buat Pembayaran <i class="fa fa-plus align-middle"></i></a>
+
         </div>
         <div class="card-body">
             <div class="form-group row gap-3">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <select name="category_payment" id="category_payment" class="form-control">
+                            <option selected value="">Pilih Kategori Pembayaran</option>
+                            @foreach ($category_payments as $category_payment)
+                                <option value="{{ $category_payment->id }}">{{ $category_payment->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
                 <div class="col-md-2">
                     <div class="form-group">
                         <select name="kelas" id="kelas" class="form-control">
@@ -32,7 +44,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-4">
                     <div class="form-group">
                         <input type="text" name="date" id="date_range" class="form-control" placeholder="Pilih Tanggal">
                     </div>
@@ -114,10 +126,16 @@
                 ajax: {
                     url: "{{ route('dashboard.datamaster.charge.get.records') }}",
                     data: function(d) {
+                        d.category_payment = $('#category_payment').val();
                         d.kelas = $('#kelas').val();
                         d.date = $('#date_range').val();
                     }
                 },
+                autoWidth: false,
+                responsive: true,
+                columnDefs: [
+                    { width: 'auto', targets: '_all' }
+                ],
                 columns: [
                     { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, ordering: false },
                     { data: 'name', name: 'name' },
@@ -221,6 +239,9 @@
 
             });
             $('#category_kelas').on('change', function () {
+                reloadTable('#charge_table');
+            });
+            $('#category_payment').on('change', function () {
                 reloadTable('#charge_table');
             });
             $('#exportData-excel').click(function(e) {

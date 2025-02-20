@@ -32,7 +32,7 @@ class SiswaAction {
 
         // Jika siswa belum punya VA, buat yang baru
         if (!$siswa) {
-            $unique_number = str_pad(rand(1, 99999999), 8, '0', STR_PAD_LEFT); // Pastikan panjangnya sesuai
+            $unique_number = str_pad(rand(1, 99999999), 8, '0', STR_PAD_LEFT);
             $va_number = $company_prefix . $unique_number;
         } else {
             $va_number = $siswa->va_number;
@@ -49,6 +49,8 @@ class SiswaAction {
                 'nisn' => $siswaData->nisn,
                 'agama' => $siswaData->agama,
                 'spp' => (int) str_replace('.', '', $siswaData->spp),
+                'dpp' => (int) str_replace('.', '', $siswaData->dpp),
+                'seragam' => (int) str_replace('.', '', $siswaData->seragam),
                 'va_number' => $va_number,
                 'nama_pendidikan' => $siswaData->nama_pendidikan,
                 'nama_jalan_pendidikan' => $siswaData->nama_jalan_pendidikan,

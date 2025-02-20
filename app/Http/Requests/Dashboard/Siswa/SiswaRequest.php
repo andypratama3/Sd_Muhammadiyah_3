@@ -140,6 +140,16 @@ class SiswaRequest extends FormRequest
         $this->spp;
     }
 
+    public function getDpp()
+    {
+        $this->dpp;
+    }
+
+    public function getSeragam()
+    {
+        $this->seragam;
+    }
+
 
     /**
      * Get the validation rules that apply to the request.

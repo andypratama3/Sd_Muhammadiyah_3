@@ -22,7 +22,7 @@
     }
     .card-header {
         /* border: 2px solid red; */
-        background-color: var(--bs-primary);
+        background-color: #198754;
         /* make have ronded in end */
         border-top-left-radius: 40px !important; /* Adjust the value as needed */
         border-top-right-radius: 150px !important; /* Adjust the value as needed */
@@ -40,7 +40,7 @@
 
 <div class="section events mb-5" id="events">
     <div class="container">
-        <div class="row">
+        <div class="row" id="row">
             <div class="col-lg-12 text-center">
                 <div class="section-heading">
                     <h4 >Pembayaran</h4>
@@ -82,10 +82,10 @@
                             @if(request()->filled('nisn'))
                             @if($siswa != null)
                             <div class="card-header">
-                                <h4>Biodata Siswa</h4>
+                                <h4 class="mt-2 text-white">Biodata Siswa</h4>
                             </div>
 
-                            <div class="box" style="padding: 10px; border-radius: 4px; background-color: #c8ffa8">
+                            <div class="box" style="padding: 10px; border-radius: 4px;">
                                 <div class="row">
                                     <div class="col-md-4 text-center mb-2">
                                         <img src="{{ asset('storage/img/siswa/' . $siswa->foto) }}" alt="" class="img-fluid" style="border-radius: 10px;">
@@ -102,7 +102,7 @@
                             <hr>
 
                             <div class="card-header">
-                                <h4>List Pembayaran Siswa</h4>
+                                <h4 class="mt-2 text-white">List Pembayaran Siswa</h4>
                             </div>
 
                             @forelse ($list_pembayaran as $year => $categories)
@@ -305,7 +305,14 @@
     });
 
     $(document).ready(function () {
-        // modal
+        
+        // set time out
+    //     setInterval(() => {
+    //     $('.row, .accordion').each(function () {
+    //         $(this).load(location.href + " " + $(this).attr('class'));
+    //     });
+    // }, 5000);
+
         $('#modal_how_pay_button').click(function () {
             $('#modal_how_pay').modal('show');
         });
@@ -339,7 +346,7 @@
                 data: { charge_id: charge_id },
                 cache: false,
                 success: function (response) {
-                    console.log("Response dari server:", response);
+                    // console.log("Response dari server:", response);
 
                     if (response.status === 'success' && response.snap_token) {
                         let snapToken = response.snap_token;
@@ -353,7 +360,7 @@
                                     title: 'Berhasil',
                                     text: 'Pembayaran Berhasil',
                                 });
-                                $('#payButton').prop('disabled', false);
+                                // $('#payButton').prop('disabled', false);
                             },
                             onPending: function (result) {
                                 Swal.fire({
@@ -369,7 +376,7 @@
                                     title: 'Oops...',
                                     text: 'Pembayaran Gagal. Silakan coba lagi.',
                                 });
-                                $('#payButton').prop('disabled', false);
+                                // $('#payButton').prop('disabled', false);
                             }
                         });
                     } else {
@@ -378,7 +385,7 @@
                             title: 'Oops...',
                             text: response.message || 'Terjadi kesalahan dalam mendapatkan snap_token',
                         });
-                        $('#payButton').prop('disabled', false);
+                        // $('#payButton').prop('disabled', false);
                     }
                 },
                 error: function (xhr) {
@@ -388,7 +395,7 @@
                         title: 'Oops...',
                         text: 'Gagal mengambil data transaksi',
                     });
-                    $('#payButton').prop('disabled', false);
+                    // $('#payButton').prop('disabled', false);
                 }
             });
         });

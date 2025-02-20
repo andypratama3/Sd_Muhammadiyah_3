@@ -172,6 +172,22 @@
                     </div>
                     <div class="col-md-6 mt-2">
                         <div class="form-group row">
+                            <label class="col-sm-3 text-dark" for="dpp">DPP</label>
+                            <div class="col-sm-9">
+                            <input type="text" name="dpp" id="dpp" class="form-control" value="{{ old('dpp', $siswa->dpp) }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mt-2">
+                        <div class="form-group row">
+                            <label class="col-sm-3 text-dark" for="seragam">Seragam</label>
+                            <div class="col-sm-9">
+                            <input type="text" name="seragam" id="seragam" class="form-control" value="{{ old('seragam', $siswa->seragam) }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mt-2">
+                        <div class="form-group row">
                             <label class="col-sm-3 text-dark" for="name">Foto</label>
                             <div class="col-sm-9">
                                 <div class="input-group ">
@@ -667,14 +683,14 @@
                     });
                 });
                 //function formatRupiah
-                $('#spp').on('input', function () {
-                let spp = $(this).val();
-                    spp = spp.replace(/[^0-9.]/g, '');
-                    spp = formatRupiah(spp);
-                    $(this).val(spp);
+                $('#spp, #dpp, #seragam').on('input', function () {
+                    let spp = $(this).val();
+                        spp = spp.replace(/[^0-9.]/g, '');
+                        spp = formatRupiah(spp);
+                        $(this).val(spp);
                 });
 
-                $('#spp').val(formatRupiah($('#spp').val()));
+                $('#spp, #dpp, #seragam').val(formatRupiah($('#spp').val()));
 
                 // Fungsi untuk memformat angka sebagai mata uang Rupiah
                 function formatRupiah(angka) {

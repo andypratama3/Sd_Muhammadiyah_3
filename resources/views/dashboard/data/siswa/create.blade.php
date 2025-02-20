@@ -31,9 +31,10 @@
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="nik">Nisn</label>
                         <div class="col-sm-9 d-flex relative">
-                            <input type="text" class="form-control" name="nisn" id="nisn" value="{{ old('nisn') }}" />
+                            <input type="text" class="form-control nisn-message-error" name="nisn" id="nisn" value="{{ old('nisn') }}" />
                             <i class="fas fa-solid fa-check bg-success border-1" id="icon-check-nisn"
-                                style="font-size: 10px; position : absolute; margin-top: 6px; right: 35px; padding: 10px; border-radius: 50px; color: black; display: none;"></i>
+                                style="font-size: 10px; position : absolute; margin-top: 6px; right: 35px; padding: 10px; border-radius: 50px; color: black; display: none;">
+                            </i>
                         </div>
                     </div>
                 </div>
@@ -166,6 +167,22 @@
                         <label class="col-sm-3 text-dark" for="spp">SPP</label>
                         <div class="col-sm-9">
                         <input type="text" name="spp" id="spp" class="form-control" value="{{ old('spp') }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mt-2">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="dpp">DPP</label>
+                        <div class="col-sm-9">
+                        <input type="text" name="dpp" id="dpp" class="form-control" value="{{ old('dpp') }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mt-2">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="seragam">Seragam</label>
+                        <div class="col-sm-9">
+                        <input type="text" name="seragam" id="seragam" class="form-control" value="{{ old('seragam') }}">
                         </div>
                     </div>
                 </div>
@@ -443,22 +460,22 @@
                 }
             });
         });
-        $('#nisn').on('input', function () {
-            let inputValue = $('#nisn').val();
-            if (inputValue.length < 16) {
-                nisn_property.className = 'fas fa-solid fa-xmark bg-danger border-1';
-                nisn_property.style.display = 'block';
-                $('#icon-check-nisn').attr('title', 'Nisn Harus 16 Karakter');
-            } else {
-                nisn_property.className = 'fas fa-solid fa-check bg-success border-1';
-                nisn_property.style.display = 'block';
-                $('#icon-check-nisn').attr('title', '');
-            }
-            if (inputValue.length > 16) {
-                inputValue = inputValue.substring(0, 16);
-                $(this).val(inputValue);
-            }
-        });
+        // $('#nisn').on('input', function () {
+        //     let inputValue = $('#nisn').val();
+        //     // if (inputValue.length < 16) {
+        //     //     nisn_property.className = 'fas fa-solid fa-xmark bg-danger border-1';
+        //     //     nisn_property.style.display = 'block';
+        //     //     $('#icon-check-nisn').attr('title', 'Nisn Harus 16 Karakter');
+        //     // } else {
+        //     //     nisn_property.className = 'fas fa-solid fa-check bg-success border-1';
+        //     //     nisn_property.style.display = 'block';
+        //     //     $('#icon-check-nisn').attr('title', '');
+        //     // }
+        //     // if (inputValue.length > 16) {
+        //     //     inputValue = inputValue.substring(0, 16);
+        //     //     $(this).val(inputValue);
+        //     // }
+        // });
         $('#nisn').on('change', function () {
             let nisn = $('#nisn').val();
             $.ajaxSetup({
@@ -474,15 +491,12 @@
                 },
                 cache: false,
                 success: function (response) {
-                    if (nisn.length < 16) {
-                        nisn_property.className = 'fas fa-solid fa-xmark bg-danger border-1';
-                        nisn_property.style.display = 'block';
-                        $('#icon-check-nisn').attr('title', 'Nisn Harus 16 Karakter');
-                    }else {
-                        if (response[0] === 'error') {
+                    if (response[0] === 'error') {
                             nisn_property.className = 'fas fa-solid fa-xmark bg-danger border-1';
                             nisn_property.style.display = 'block';
-                            $('#icon-check-nisn').attr('title', 'Nisn Telah Ada');
+
+                            $('#nisn-message-error').addClass('is-invalid');
+                            $('#icon-check-nisn').attr('title', 'Nisn Telah Di Gunakan');
                             $('#nisn').addClass('border-danger');
                         } else {
                             nisn_property.className = 'fas fa-solid fa-check bg-success border-1';
@@ -491,8 +505,6 @@
                             $('#nisn').removeClass('border-danger');
                             $('#nisn').addClass('border-success');
                         }
-                    }
-
                 }
             });
         });
@@ -576,11 +588,11 @@
         });
 
         //function formatRupiah
-        $('#spp').on('input', function () {
-        let spp = $(this).val();
-            spp = spp.replace(/[^0-9.]/g, '');
-            spp = formatRupiah(spp);
-            $(this).val(spp);
+        $('#spp, #dpp, #seragam').on('input', function () {
+            let val = $(this).val();
+            val = val.replace(/[^0-9.]/g, '');
+            val = formatRupiah(val);
+            $(this).val(val);
         });
 
         // Fungsi untuk memformat angka sebagai mata uang Rupiah

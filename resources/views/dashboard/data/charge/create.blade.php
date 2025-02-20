@@ -7,39 +7,53 @@
     type="text/css">
 @endpush
 <div class="card mb-4">
-    @include('layouts.flashmessage')
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold text-primary">Tambah Pembayaran</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Buat Charge Pembayaran</h6>
     </div>
     <hr>
     <div class="card-body">
-        <form action="{{ route('dashboard.datamaster.pembayaran.store') }}" method="POST" enctype="multipart/form-data">
+    @include('layouts.flashmessage')
+
+        <form action="{{ route('dashboard.datamaster.charge.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="row">
-                <div class="col-md-6 mt-2">
+                <div class="col-md-12 mt-2">
                     <div class="form-group row">
-                        <label class="col-sm-3 text-dark" for="tgl_lahir">Nama Siswa</label>
+                        <label class="col-sm-3 text-dark" for="category_payment_id">Kategori Pembayaran</label>
                         <div class="col-sm-9">
-                            <select class="form-control select2" name="siswa_id" id="siswa_id">
-                                <option selected disabled>Pilih Siswa</option>
-                                @foreach ($siswas as $siswa)
-                                    <option value="{{ $siswa->id }}">{{ $siswa->name }}</option>
+                            <select name="category_payment_id" id="category_payment_id" class="form-control select2">
+                                <option value="" selected>Pilih Kategori Pembayaran</option>
+                                @foreach ($kategori_pembayaran as $kategori)
+                                    <option value="{{ $kategori->id }}">{{ $kategori->name }}</option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
                 </div>
-
-                <div class="col-md-6 mt-2">
+                <div class="col-md-12 mt-2">
                     <div class="form-group row">
-                        <label class="col-sm-3 text-dark" for="gross_amount">Total</label>
+                        <label class="col-sm-3 text-dark" for="tgl_lahir">Kelas</label>
                         <div class="col-sm-9">
-                            <input type="text" id="gross_amount" class="form-control" name="gross_amount">
+                            <select class="form-control select2" name="kelas_id" id="kelas_id">
+                                <option value="" selected disabled>Pilih Kelas</option>
+                                @foreach ($kelas as $kelas)
+                                    <option value="{{ $kelas->id }}">{{ $kelas->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-12 mt-2">
-                        <a href="{{ route('dashboard.datamaster.siswa.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="gross_amount">Nominal</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="gross_amount" id="gross_amount" value="{{ old('gross_amount') }}" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12 mt-4">
+                        <a href="{{ route('dashboard.datamaster.charge.index') }}" class="btn btn-danger float-lg-start btn-sm">Kembali</a>
                         <button type="submit" class="btn btn-primary btn-sm float-lg-end">Submit</button>
                     </div>
                 </div>

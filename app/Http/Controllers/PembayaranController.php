@@ -87,14 +87,6 @@ class PembayaranController extends Controller
         $server_key = env('MIDTRANS_SERVER_KEY');
 
         try {
-            // Jika Snap Token sudah ada, langsung kembalikan
-            if (!empty($charge->snap_token)) {
-                return response()->json([
-                    'status' => 'success',
-                    'snap_token' => $charge->snap_token,
-                ]);
-            }
-
             // Ambil data transaksi dari Midtrans
             $response = $client->get("https://api.sandbox.midtrans.com/v2/{$charge->order_id}/status", [
                 'headers' => [
@@ -106,7 +98,6 @@ class PembayaranController extends Controller
 
             $responseData = json_decode($response->getBody(), true);
 
-            // Pastikan respons memiliki order_id dan gross_amount
             if (!isset($responseData['order_id'], $responseData['gross_amount'])) {
                 return response()->json([
                     'status' => 'error',
@@ -114,43 +105,46 @@ class PembayaranController extends Controller
                     'data' => $responseData,
                 ]);
             }
+            $order_id = Str::uuid();
 
-            // new order_id & transaction_id
-
+            // Persiapan parameter Snap Token
             $params = [
                 'transaction_details' => [
-                    'order_id' => $charge->id,
+                    'order_id' => $order_id,
                     'gross_amount' => $charge->gross_amount,
                 ],
                 'item_details' => [
                     [
-                        'id' => $charge->id,
+                        'id' => $order_id,
                         'price' => $charge->gross_amount,
                         'quantity' => 1,
                         'name' => $charge->name,
                     ]
                 ],
+                'expiry' => [
+                    "unit" => "days",
+                    // "unit" => "minutes",
+                    "duration" => 20,
+                ],
 
             ];
 
-
-            // Generate Snap Token baru
-            try {
+            if ($responseData['transaction_status'] === 'expire' || $responseData['transaction_status'] === 'pending' || $responseData['transaction_status'] === 'cancel' || empty($charge->snap_token)) {
+                // Jika expired atau snap_token kosong, buat token baru
                 $snapToken = Snap::getSnapToken($params);
                 $charge->snap_token = $snapToken;
-                $charge->order_id_1 = $charge->id;
-                $charge->save();
-
+                $charge->order_id_1 = $order_id;
+                $charge->update();
 
                 return response()->json([
                     'status' => 'success',
                     'snap_token' => $snapToken,
                     'data' => $params,
                 ]);
-            } catch (\Exception $e) {
+            } else {
                 return response()->json([
-                    'status' => 'error',
-                    'message' => 'Gagal membuat Snap Token: ' . $e->getMessage(),
+                    'status' => 'success',
+                    'snap_token' => $charge->snap_token,
                 ]);
             }
         } catch (\Exception $e) {
@@ -161,6 +155,7 @@ class PembayaranController extends Controller
             ]);
         }
     }
+
 
     public function searchOrderDetail(Request $request)
     {

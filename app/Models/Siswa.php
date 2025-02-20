@@ -25,6 +25,8 @@ class Siswa extends Model
         'nisn',
         'agama',
         'spp',
+        'seragam',
+        'dpp',
         'va_number',
         //pendidikan sebelumnya
         'nama_pendidikan',

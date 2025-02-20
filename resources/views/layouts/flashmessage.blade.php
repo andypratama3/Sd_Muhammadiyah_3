@@ -1,4 +1,6 @@
-<div class="col-md-12 p-4">
+
+<div class="{{ $errors->any() ? 'col-md-12 p-4'  : '' }}">
+
     @if (count($errors) > 0)
     <div class="alert alert-danger alert-dismissible animation">
         <h5><i class="icon fas fa-ban"></i> Alert!</h5>

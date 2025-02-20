@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('nisn', 20);
             $table->string('agama');
             $table->integer('spp');
+            $table->integer('dpp');
+            $table->integer('seragam');
             $table->string('va_number');
             //pendidikan sebelumnya
             $table->string('nama_pendidikan')->nullable()->default('text');

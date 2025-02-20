@@ -20,5 +20,10 @@ class KelasSeeder extends Seeder
                 'slug' => 'kelas-' . $i,
             ]);
         }
+        Kelas::create([
+            'name' => 'Lulus',
+            'category_kelas' => json_encode([""]),
+            'slug' => 'lulus',
+        ]);
     }
 }

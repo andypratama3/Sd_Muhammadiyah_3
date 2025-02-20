@@ -14,7 +14,17 @@
             <input type="hidden" name="slug" value="{{ $judulPembayaran->slug }}">
             <div class="form-group mt-2 mb-2">
                 <label for="name">Nama Kategori Pembayaran</label>
-                <input type="text" class="form-control" name="name" value="{{ $judulPembayaran->name }}" placeholder="Masukan name">
+                <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="name" value="{{ old('name', $judulPembayaran->name) }}" placeholder="Masukan name">
+                @error('name')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+            <div class="form-group mt-2 mb-2">
+                <label for="code">Kode Pembayaran</label>
+                <input type="text" class="form-control @error('code') is-invalid @enderror" name="code" id="code" value="{{ old('code', $judulPembayaran->code) }}" placeholder="Masukan Kode Pembayaran">
+                @error('code')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
             <a href="{{ route('dashboard.datamaster.judul.pembayaran.index') }}" class="btn btn-danger btn-sm float-lg-start">Kembali</a>
             <button type="submit" class="btn btn-primary btn-sm float-lg-end">Submit</button>
