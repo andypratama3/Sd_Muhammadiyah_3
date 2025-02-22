@@ -29,7 +29,7 @@ class MidtransPaymentController extends Controller
         // Pastikan payment_type ada dalam response
         if (isset($midtransResponse['payment_type'])) {
             switch ($midtransResponse['payment_type']) {
-                case 'bank_transfer':
+                case 'bank_trSendOrderIDWhatsAppApiansfer':
                     $data['bank'] = $midtransResponse['va_numbers'][0]['bank'] ?? null;
                     $data['va_number'] = $midtransResponse['va_numbers'][0]['va_number'] ?? null;
                     break;
@@ -62,14 +62,10 @@ class MidtransPaymentController extends Controller
             }
         }
 
-        // Update data di tabel charges berdasarkan order_id
         $charge = Charge::where('order_id', $midtransResponse['order_id'])
-                    ->orWhere('order_id_1', $midtransResponse['order_id'])
-                    ->first();
+        ->orWhere('order_id_1', $midtransResponse['order_id'])
+        ->first();
 
-        if (!$charge) {
-            return response()->json(['message' => 'Charge data not found'], 404);
-        }
 
         if($charge->transaction_status == 'settlement' || $charge->transaction_status == 'capture'){
             // cancel order_id
@@ -88,6 +84,19 @@ class MidtransPaymentController extends Controller
             }
         }
 
+        if($charge->transaction_status == 'expire' || $charge->transaction_status == 'cancel'){
+            // update transaction_status
+            $data['transaction_status'] = 'expire';
+        }
+        // make rcord in activity log
+        if($midtransResponse['status_code'] == '202' || $midtransResponse['status_code'] == '300' || $midtransResponse['status_code'] == '401' || $midtransResponse['status_code'] == '405'){
+            \DB::insert('activity_log')->insert([
+                'status_code' => $midtransResponse['status_code'],
+                'status_message' => $midtransResponse['error'],
+            ]);
+        }
+
+        // activity()->log('Payment status updated to ' . $data['transaction_status']);
 
         $charge->update($data);
 
@@ -112,6 +121,14 @@ class MidtransPaymentController extends Controller
 
             // Jika status transaksi tidak bisa diubah
             if (isset($responseData['status_code']) && $responseData['status_code'] == "412") {
+                //save meesage error
+                DB::table('error_log')->insert([
+                    'error' => $responseData['status_message'],
+                    'status_code' => $responseData['status_code'],
+                ]);
+
+                return true;
+
                 throw new \Exception($responseData['status_message']);
             }
 

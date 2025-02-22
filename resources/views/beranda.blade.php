@@ -243,6 +243,93 @@
     </div>
 </div>
 <!-- Feature End -->
+<div class="container-fluid container-fluid bg-light about pb-5">
+    <div class="container pb-5 bg-white p-3" style="border-radius: 10px;">
+        <div class="section-title">
+            <small>Fitur</small>
+            <h3>Fitur Website SD Muhammadiyah 3 Samarinda
+            </h3>
+        </div>
+
+        <ul class="nav nav-tabs nav-justified" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#communication">Pembayaran</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#berita-tab">Berita</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#artikel-tab">Artikel</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#prestasi-tab">Prestasi</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="communication">
+                <div class="d-flex flex-column flex-lg-row mt-2">
+                    <img src="{{ asset('asset/img/website_midtrans_resized.png') }}" alt="graphic" style="border-radius: 10px !important;" class="img-fluid align-self-start mr-lg-5 mb-5 mb-lg-0 p-2">
+                    <div>
+                        <h2>Fitur Pembayaran</h2>
+                    
+                        <p>Pembayaran Online Menggunakan Pihak Ketiga Dari Midtrans Yang Dapat Memudahkan Pembayaran Dengan Tampilan Sederhana Dengan Support Banyak Pembayaran Seperti
+                        </p>
+                        <p> <p class="text-primary">OVO</p>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="berita-tab">
+                <div class="d-flex flex-column flex-lg-row">
+                    <img src="images/graphic.png" alt="graphic" class="img-fluid rounded align-self-start mr-lg-5 mb-5 mb-lg-0">
+                    <div>
+                        <h2>Realtime Messaging service</h2>
+                        <p class="lead">Uniquely underwhelm premium outsourcing with proactive leadership skills. </p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer rutrum, urna eu pellentesque pretium, nisi nisi fermentum enim, et sagittis dolor nulla vel sapien. Vestibulum sit amet mattis ante. Ut placerat dui eu nulla
+                            congue tincidunt ac a nibh. Mauris accumsan pulvinar lorem placerat volutpat. Praesent quis facilisis elit. Sed condimentum neque quis ex porttitor,
+                        </p>
+                        <p> malesuada faucibus augue aliquet. Sed elit est, eleifend sed dapibus a, semper a eros. Vestibulum blandit vulputate pharetra. Phasellus lobortis leo a nisl euismod, eu faucibus justo sollicitudin. Mauris consectetur, tortor
+                            sed tempor malesuada, sem nunc porta augue, in dictum arcu tortor id turpis. Proin aliquet vulputate aliquam.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="artikel-tab">
+                <div class="d-flex flex-column flex-lg-row">
+                    <div>
+                        <h2>Scheduling when you want</h2>
+                        <p class="lead">Uniquely underwhelm premium outsourcing with proactive leadership skills. </p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer rutrum, urna eu pellentesque pretium, nisi nisi fermentum enim, et sagittis dolor nulla vel sapien. Vestibulum sit amet mattis ante. Ut placerat dui eu nulla
+                            congue tincidunt ac a nibh. Mauris accumsan pulvinar lorem placerat volutpat. Praesent quis facilisis elit. Sed condimentum neque quis ex porttitor,
+                        </p>
+                        <p> malesuada faucibus augue aliquet. Sed elit est, eleifend sed dapibus a, semper a eros. Vestibulum blandit vulputate pharetra. Phasellus lobortis leo a nisl euismod, eu faucibus justo sollicitudin. Mauris consectetur, tortor
+                            sed tempor malesuada, sem nunc porta augue, in dictum arcu tortor id turpis. Proin aliquet vulputate aliquam.
+                        </p>
+                    </div>
+                    <img src="images/graphic.png" alt="graphic" class="img-fluid rounded align-self-start mr-lg-5 mb-5 mb-lg-0">
+                </div>
+            </div>
+           
+            <div class="tab-pane fade" id="prestasi-tab">
+                <div class="d-flex flex-column flex-lg-row">
+                    <div>
+                        <h2>Live chat when you needed</h2>
+                        <p class="lead">Uniquely underwhelm premium outsourcing with proactive leadership skills. </p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer rutrum, urna eu pellentesque pretium, nisi nisi fermentum enim, et sagittis dolor nulla vel sapien. Vestibulum sit amet mattis ante. Ut placerat dui eu nulla
+                            congue tincidunt ac a nibh. Mauris accumsan pulvinar lorem placerat volutpat. Praesent quis facilisis elit. Sed condimentum neque quis ex porttitor,
+                        </p>
+                        <p> malesuada faucibus augue aliquet. Sed elit est, eleifend sed dapibus a, semper a eros. Vestibulum blandit vulputate pharetra. Phasellus lobortis leo a nisl euismod, eu faucibus justo sollicitudin. Mauris consectetur, tortor
+                            sed tempor malesuada, sem nunc porta augue, in dictum arcu tortor id turpis. Proin aliquet vulputate aliquam.
+                        </p>
+                    </div>
+                    <img src="images/graphic.png" alt="graphic" class="img-fluid rounded align-self-start mr-lg-5 mb-5 mb-lg-0">
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
 
 <!-- About Start -->
 <div class="container-fluid bg-light about pb-5" id="tentang">

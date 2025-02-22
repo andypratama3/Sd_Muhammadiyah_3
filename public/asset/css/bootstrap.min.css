@@ -4340,7 +4340,8 @@ fieldset:disabled .btn {
 
 .nav-link:hover,
 .nav-link:focus {
-    color: #014ca1
+    /* background-color: var(--bs-primary); */
+    color: #ffff;
 }
 
 .nav-link.disabled {
@@ -4364,7 +4365,9 @@ fieldset:disabled .btn {
 .nav-tabs .nav-link:hover,
 .nav-tabs .nav-link:focus {
     border-color: #e9ecef #e9ecef #dee2e6;
-    isolation: isolate
+    /* isolation: isolate */
+    color: var(--bs-primary);
+
 }
 
 .nav-tabs .nav-link.disabled {
@@ -4373,10 +4376,15 @@ fieldset:disabled .btn {
     border-color: rgba(0, 0, 0, 0)
 }
 
+.nav-tabs .nav-link:hover{
+    background-color: var(--bs-primary);
+    color: #ffff;
+}
+
 .nav-tabs .nav-link.active,
 .nav-tabs .nav-item.show .nav-link {
-    color: #495057;
-    background-color: #fff;
+    color: #fff;
+    background-color: var(--bs-primary);
     border-color: #dee2e6 #dee2e6 #fff
 }
 

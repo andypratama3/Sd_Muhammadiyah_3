@@ -196,14 +196,14 @@ class ChargeController extends Controller
         }
 
         $transaction_status = $request->transaction_status;
-        $type_payment = null;
+        $payment_type = null;
 
         if ($transaction_status === 'pay_offline') {
             try {
                 $status = 'settlement';
                 if ($this->midtrans->update_transaction_status($charge, $status)) {
                     $transaction_status = $status;
-                    $type_payment = 'Offline';
+                    $payment_type = 'Offline';
                 } else {
                     return redirect()->route('dashboard.datamaster.charge.index')
                         ->with('error', 'Gagal Mengupdate Status Transaksi di Midtrans.');
@@ -217,7 +217,7 @@ class ChargeController extends Controller
 
         $charge->update([
             'transaction_status' => $transaction_status,
-            'type_payment' => $type_payment
+            // 'payment_type' => $payment_type,
         ]);
 
         return redirect()->route('dashboard.datamaster.charge.index')->with('success', 'Data Berhasil Diubah');
@@ -312,7 +312,7 @@ class ChargeController extends Controller
             $charge->va_number = $responseData['va_numbers'][0]['va_number'];
             $charge->save();
 
-            
+
             return $responseData;
         } catch (\Exception $e) {
             return ['error' => $e->getMessage()];

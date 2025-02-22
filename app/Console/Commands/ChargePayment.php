@@ -102,10 +102,10 @@ class ChargePayment extends Command
                 'bank' => 'bca',
                 'va_number' => $vaNumber,
             ],
-            'expiry' => [
-                'start_time' => now()->toIso8601String(),
-                'duration' => 29,
-                'unit' => 'days',
+            'custom_expiry' => [
+                // 'order_time' => now()->toIso8601String(),
+                'expiry_duration' => 365,
+                'unit' => 'day',
             ],
             'item_details' => [
                 'id' => 1,
@@ -135,7 +135,7 @@ class ChargePayment extends Command
 
             if ($responseData['status_code'] == 201) {
                 $this->info("VA untuk {$siswa->name}: " . $responseData['va_numbers'][0]['va_number']);
-                $this->info("Transaksi akan kedaluwarsa dalam {$params['expiry']['duration']} {$params['expiry']['unit']}");
+                // $this->info("Transaksi akan kedaluwarsa dalam {$params['expiry']['duration']} {$params['expiry']['unit']}");
 
 
                 DB::table('charges')
