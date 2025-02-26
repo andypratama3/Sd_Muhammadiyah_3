@@ -23,6 +23,7 @@ class JudulPembayaranSeeder extends Seeder
         foreach ($datas as $d) {
             JudulPembayaran::create([
                 'name' => $d,
+                'kode' => random_int(1000, 9999),
                 'slug' => Str::slug($d),
             ]);
         }
