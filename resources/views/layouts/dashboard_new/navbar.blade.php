@@ -12,9 +12,35 @@
             <div class="nav-item d-flex align-items-center">
                 <h4 class="pt-3">SD MUHAMMADIYAH 3 SAMARINDA</h4>
             </div>
-        </div>
-        <!-- /Search -->
 
+        </div>
+        
+        <!-- /Search -->
+        {{-- <li class="nav-item dropdown no-arrow mx-1">
+            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-bell fa-fw"></i>
+                <span class="badge badge-danger badge-counter" id="activity_count"></span>
+            </a>
+            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                aria-labelledby="alertsDropdown">
+                <h6 class="dropdown-header">
+                    Activity
+                </h6>
+                <a class="dropdown-item d-flex align-items-center" href="#" id="activity_link">
+                    <div class="mr-3">
+                        <div class="icon-circle bg-primary">
+                            <i class="fas fa-file-alt text-white" id="activity_icon"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="small text-gray-500" id="activity_date"></div>
+                        <span class="font-weight-bold" id="activity_data">A new monthly report is ready to download!</span>
+                    </div>
+                </a>
+                <a class="dropdown-item text-center small text-black-500" href="{{ route('dashboard.datamaster.activity.index') }}">Show All Activity</a>
+            </div>
+        </li> --}}
         <ul class="navbar-nav flex-row align-items-center ms-auto">
 
             <!-- User -->

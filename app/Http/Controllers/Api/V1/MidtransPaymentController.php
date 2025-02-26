@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Charge;
 use GuzzleHttp\Client;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -12,6 +13,17 @@ class MidtransPaymentController extends Controller
     public function callback(Request $request)
     {
         $midtransResponse = $request->all();
+
+        // make rcord in activity log
+        if($midtransResponse['status_code'] == '202' || $midtransResponse['status_code'] == '300' || $midtransResponse['status_code'] == '401' || $midtransResponse['status_code'] == '405'){
+            \DB::table('error_log')->insert([
+                // 'id' => Str::uuid(),
+                'status_code' => $midtransResponse['status_code'],
+                'error' => $midtransResponse['status_message'],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
 
         // Pastikan order_id tersedia
         if (!isset($midtransResponse['order_id'])) {
@@ -29,7 +41,7 @@ class MidtransPaymentController extends Controller
         // Pastikan payment_type ada dalam response
         if (isset($midtransResponse['payment_type'])) {
             switch ($midtransResponse['payment_type']) {
-                case 'bank_trSendOrderIDWhatsAppApiansfer':
+                case 'bank_transfer':
                     $data['bank'] = $midtransResponse['va_numbers'][0]['bank'] ?? null;
                     $data['va_number'] = $midtransResponse['va_numbers'][0]['va_number'] ?? null;
                     break;
@@ -47,7 +59,7 @@ class MidtransPaymentController extends Controller
                     $data['bank'] = $midtransResponse['issuer'] ?? null;
                     break;
 
-                case 'echannel': // Mandiri Bill Payment
+                case '': 
                     $data['bank'] = 'mandiri';
                     $data['va_number'] = $midtransResponse['bill_key'] ?? null;
                     break;
@@ -56,7 +68,10 @@ class MidtransPaymentController extends Controller
                     $data['bank'] = $midtransResponse['store'] ?? null;
                     $data['va_number'] = $midtransResponse['payment_code'] ?? null;
                     break;
-
+                case 'bank_transfer' :
+                    $data['bank'] = $midtransResponse['va_numbers'][0]['bank'] ?? null;
+                    $data['va_number'] = $midtransResponse['va_numbers'][0]['va_number'] ?? null;
+                    break;  
                 default:
                     return response()->json(['message' => 'Unsupported payment type'], 400);
             }
@@ -66,6 +81,9 @@ class MidtransPaymentController extends Controller
         ->orWhere('order_id_1', $midtransResponse['order_id'])
         ->first();
 
+        if(!$charge){
+            return response()->json(['message' => 'Charge not found'], 404);
+        }
 
         if($charge->transaction_status == 'settlement' || $charge->transaction_status == 'capture'){
             // cancel order_id
@@ -88,15 +106,17 @@ class MidtransPaymentController extends Controller
             // update transaction_status
             $data['transaction_status'] = 'expire';
         }
-        // make rcord in activity log
-        if($midtransResponse['status_code'] == '202' || $midtransResponse['status_code'] == '300' || $midtransResponse['status_code'] == '401' || $midtransResponse['status_code'] == '405'){
-            \DB::insert('activity_log')->insert([
-                'status_code' => $midtransResponse['status_code'],
-                'status_message' => $midtransResponse['error'],
-            ]);
-        }
+      
+        $siswaName = $charge->siswa ? $charge->siswa->name : 'Unknown Student';
 
-        // activity()->log('Payment status updated to ' . $data['transaction_status']);
+
+        activity()
+        ->useLog('default') // Menggunakan log default
+        ->tap(function ($activity) {
+            $activity->causer_id = Str::uuid();
+            $activity->causer_type = 'Midtrans'; 
+        })
+        ->log('Pembayaran ' . $data['transaction_status'] . ' Pada Order ID: ' . $charge->order_id . ' - Murid: ' . $charge->siswa->name);
 
         $charge->update($data);
 

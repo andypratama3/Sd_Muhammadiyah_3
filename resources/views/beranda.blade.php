@@ -244,9 +244,9 @@
 </div>
 <!-- Feature End -->
 <div class="container-fluid container-fluid bg-light about pb-5">
-    <div class="container pb-5 bg-white p-3" style="border-radius: 10px;">
+    <div class="container pb-5 bg-white p-3 wow fadeInUp" data-wow-delay="0.2s" style="border-radius: 10px;">
         <div class="section-title">
-            <small>Fitur</small>
+            <small>FITUR</small>
             <h3>Fitur Website SD Muhammadiyah 3 Samarinda
             </h3>
         </div>
