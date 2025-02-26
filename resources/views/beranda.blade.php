@@ -243,7 +243,7 @@
     </div>
 </div>
 <!-- Feature End -->
-<div class="container-fluid container-fluid bg-light about pb-5">
+{{-- <div class="container-fluid container-fluid bg-light about pb-5">
     <div class="container pb-5 bg-white p-3 wow fadeInUp" data-wow-delay="0.2s" style="border-radius: 10px;">
         <div class="section-title">
             <small>FITUR</small>
@@ -271,7 +271,7 @@
                     <img src="{{ asset('asset/img/website_midtrans_resized.png') }}" alt="graphic" style="border-radius: 10px !important;" class="img-fluid align-self-start mr-lg-5 mb-5 mb-lg-0 p-2">
                     <div>
                         <h2>Fitur Pembayaran</h2>
-                    
+
                         <p>Pembayaran Online Menggunakan Pihak Ketiga Dari Midtrans Yang Dapat Memudahkan Pembayaran Dengan Tampilan Sederhana Dengan Support Banyak Pembayaran Seperti
                         </p>
                         <p> <p class="text-primary">OVO</p>
@@ -309,7 +309,7 @@
                     <img src="images/graphic.png" alt="graphic" class="img-fluid rounded align-self-start mr-lg-5 mb-5 mb-lg-0">
                 </div>
             </div>
-           
+
             <div class="tab-pane fade" id="prestasi-tab">
                 <div class="d-flex flex-column flex-lg-row">
                     <div>
@@ -329,7 +329,7 @@
 
 
     </div>
-</div>
+</div> --}}
 
 <!-- About Start -->
 <div class="container-fluid bg-light about pb-5" id="tentang">

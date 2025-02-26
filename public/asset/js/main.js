@@ -100,31 +100,31 @@
     });
 
     // document.addEventListener("DOMContentLoaded", function () {
-        var tabLinks = document.querySelectorAll(".nav-link");
+        // var tabLinks = document.querySelectorAll(".nav-link");
 
-        tabLinks.forEach(function (tab) {
-            tab.addEventListener("click", function (event) {
-                event.preventDefault();
+        // tabLinks.forEach(function (tab) {
+        //     tab.addEventListener("click", function (event) {
+        //         event.preventDefault();
 
-                // Hapus kelas 'active' dari semua tab
-                tabLinks.forEach(function (el) {
-                    el.classList.remove("active");
-                });
+        //         // Hapus kelas 'active' dari semua tab
+        //         tabLinks.forEach(function (el) {
+        //             el.classList.remove("active");
+        //         });
 
-                // Tambahkan kelas 'active' ke tab yang diklik
-                tab.classList.add("active");
+        //         // Tambahkan kelas 'active' ke tab yang diklik
+        //         tab.classList.add("active");
 
-                // Sembunyikan semua tab-pane
-                var tabContents = document.querySelectorAll(".tab-pane");
-                tabContents.forEach(function (content) {
-                    content.classList.remove("show", "active");
-                });
+        //         // Sembunyikan semua tab-pane
+        //         var tabContents = document.querySelectorAll(".tab-pane");
+        //         tabContents.forEach(function (content) {
+        //             content.classList.remove("show", "active");
+        //         });
 
-                // Tampilkan tab yang sesuai
-                var target = tab.getAttribute("href");
-                document.querySelector(target).classList.add("show", "active");
-            });
-        });
+        //         // Tampilkan tab yang sesuai
+        //         var target = tab.getAttribute("href");
+        //         document.querySelector(target).classList.add("show", "active");
+        //     });
+        // });
     // });
 
 
