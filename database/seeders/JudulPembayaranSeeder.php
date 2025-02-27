@@ -12,19 +12,32 @@ class JudulPembayaranSeeder extends Seeder
     /**
      * Run the database seeds.
      */
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
     public function run(): void
     {
+
+        // kode pembayaran
+        // SPP = 00
+        // DPP = 01
+        // Seragam = 02
         $datas = [
+
             'SPP',
             'DPP',
+            // Biaya seragam
             'Seragam',
+
         ];
 
-        foreach ($datas as $d) {
+        foreach ($datas as $data) {
             JudulPembayaran::create([
-                'name' => $d,
+                'name' => $data,
                 'kode' => random_int(1000, 9999),
-                'slug' => Str::slug($d),
+                'slug' => Str::slug($data),
             ]);
         }
     }
