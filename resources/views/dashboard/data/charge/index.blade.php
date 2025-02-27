@@ -142,13 +142,7 @@
                     { data: 'siswa.name', name: 'siswa.name' },
                     { data: 'kelas.name', name: 'kelas.name' },
                     { data: 'va_number', name: 'va_number' },
-                    {
-                        data: 'gross_amount',
-                        name: 'gross_amount',
-                        render: function(data, type, full, meta) {
-                            return 'Rp. ' + data;
-                        }
-                    },
+                    { data: 'gross_amount', name: 'gross_amount' },
                     {
                         data: 'transaction_status',
                         name: 'transaction_status',

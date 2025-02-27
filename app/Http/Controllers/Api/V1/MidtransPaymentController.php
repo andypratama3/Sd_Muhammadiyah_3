@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use DB;
 use App\Models\Charge;
 use GuzzleHttp\Client;
 use Illuminate\Support\Str;
@@ -16,7 +17,7 @@ class MidtransPaymentController extends Controller
 
         // make rcord in activity log
         if($midtransResponse['status_code'] == '202' || $midtransResponse['status_code'] == '300' || $midtransResponse['status_code'] == '401' || $midtransResponse['status_code'] == '405'){
-            \DB::table('error_log')->insert([
+            DB::table('error_log')->insert([
                 // 'id' => Str::uuid(),
                 'status_code' => $midtransResponse['status_code'],
                 'error' => $midtransResponse['status_message'],
@@ -59,7 +60,7 @@ class MidtransPaymentController extends Controller
                     $data['bank'] = $midtransResponse['issuer'] ?? null;
                     break;
 
-                case '': 
+                case '':
                     $data['bank'] = 'mandiri';
                     $data['va_number'] = $midtransResponse['bill_key'] ?? null;
                     break;
@@ -71,7 +72,7 @@ class MidtransPaymentController extends Controller
                 case 'bank_transfer' :
                     $data['bank'] = $midtransResponse['va_numbers'][0]['bank'] ?? null;
                     $data['va_number'] = $midtransResponse['va_numbers'][0]['va_number'] ?? null;
-                    break;  
+                    break;
                 default:
                     return response()->json(['message' => 'Unsupported payment type'], 400);
             }
@@ -106,7 +107,7 @@ class MidtransPaymentController extends Controller
             // update transaction_status
             $data['transaction_status'] = 'expire';
         }
-      
+
         $siswaName = $charge->siswa ? $charge->siswa->name : 'Unknown Student';
 
 
@@ -114,7 +115,7 @@ class MidtransPaymentController extends Controller
         ->useLog('default') // Menggunakan log default
         ->tap(function ($activity) {
             $activity->causer_id = Str::uuid();
-            $activity->causer_type = 'Midtrans'; 
+            $activity->causer_type = 'Midtrans';
         })
         ->log('Pembayaran ' . $data['transaction_status'] . ' Pada Order ID: ' . $charge->order_id . ' - Murid: ' . $charge->siswa->name);
 

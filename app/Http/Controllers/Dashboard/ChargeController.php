@@ -67,6 +67,10 @@ class ChargeController extends Controller
                     <button data-id="' . $row['id'] . '" class="btn btn-sm btn-danger me-1" id="btn-delete"><i class="fa fa-trash"></i></button>
                 ';
             })
+            ->addColumn('gross_amount', function ($row) {
+                // with .
+                return "Rp " . number_format($row->gross_amount, 0, ',', '.');
+            })
             ->addColumn('va_number', function ($row) {
                 return $row->va_number;
             })

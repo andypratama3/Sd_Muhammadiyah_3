@@ -121,10 +121,23 @@
                     <label for="">Sortir Waktu</label>
                     <input type="month" id="range-pie" class="form-control" value="{{ request()->query('chargeCountMount_date') }}" name="range-pie" placeholder="Pilih Bulan dan Tahun">
                 </div>
+                <div class="col-md-12">
+                    <label for="">Kategori Pembayaran</label>
+                    <select name="category_payment" id="category_payment" class="form-control">
+                        <option value="">Pilih Kategori Pembayaran</option>
+                        @foreach ($category_payments as $category_payment)
+                            <option value="{{ $category_payment->id }}"
+                                {{ request()->query('category_payment') == $category_payment->id ? 'selected' : '' }}>
+                                {{ $category_payment->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
             <div class="card-body d-flex justify-content-center align-items-center w-100">
                 <div class="chart-container">
-                    {!! $chargeCountMount->container() !!}
+                    <canvas id="chartjs-dashboard-pie-mount"></canvas>
+
                 </div>
             </div>
         </div>
@@ -235,11 +248,106 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js" defer></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script src="{{ $siswaChart->cdn() }}"></script>
-<script src="{{ $chargeCountMount->cdn() }}"></script>
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script src="{{ $chargeChart->cdn() }}"></script>
 {!! $chargeChart->script() !!}
-{!! $chargeCountMount->script() !!}
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        const chartChargeCanvas = document.getElementById("chartjs-dashboard-pie-mount").getContext("2d");
+
+        let chartPie = new Chart(chartChargeCanvas, {
+            type: "pie",
+            data: {
+                labels: ["Tidak Ada Data"],
+                datasets: [{
+                    // label: "Total Pembayaran",
+                    backgroundColor: ["#008FFB", "#00E396", "#FEB019", "#FF455F"],
+                    borderColor: "#fff",
+                    hoverBackgroundColor: ["#0057ff", "#00a9f4", "#2ccdc9", "#ff6384"],
+                    hoverBorderColor: "#fff",
+                    data: [100],
+                    hoverOffset: 4
+
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: "right",
+                        labels: {
+                            padding: 10, // Spasi antara label
+                            boxWidth: 15, // Ukuran kotak warna
+                            font: {
+                                size: 14 // Ukuran teks
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                return "Rp : " + new Intl.NumberFormat().format(context.raw);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Fungsi untuk memperbarui chart dengan data baru
+        function updateChart(response) {
+            let seriesData = [
+                response.settlement_amount || 0,
+                response.pay_offline_amount || 0,
+                response.pending_amount || 0,
+                response.deny_failed_amount || 0
+            ];
+            let labelsData = [
+                `Settlement: Rp ${new Intl.NumberFormat('id-ID').format(response.settlement_amount || 0)}`,
+                `Pay Offline: Rp ${new Intl.NumberFormat('id-ID').format(response.pay_offline_amount || 0)}`,
+                `Pending: Rp ${new Intl.NumberFormat('id-ID').format(response.pending_amount || 0)}`,
+                `Denied/Failed: Rp ${new Intl.NumberFormat('id-ID').format(response.deny_failed_amount || 0)}`
+            ];
+
+            chartPie.data.labels = labelsData;
+            chartPie.data.datasets[0].data = seriesData;
+            chartPie.update();
+        }
+
+        // Fungsi untuk mengambil data dari backend
+        function fetchChartData() {
+            let range = $('#range-pie').val();
+            let category_payment = $('#category_payment').val();
+
+            $.ajax({
+                type: "GET",
+                url: "{{ route('chart.charge.count') }}",
+                data: {
+                    chargeCountMount_date: range,
+                    category: category_payment
+                },
+                cache: false,
+                success: function (response) {
+                    updateChart(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching chart data: ", error);
+                }
+            });
+        }
+
+        // Panggil data pertama kali
+        fetchChartData();
+
+        // Update data saat filter berubah
+        $('#range-pie, #category_payment').on('change', fetchChartData);
+    });
+</script>
+
+
+
 <script>
     $(document).ready(function () {
         $('#year_select').on('change', function () {
@@ -251,21 +359,6 @@
             let month = $(this).val();
             $('#yearForm').submit();
         });
-        $('#range-pie').on('change', function () {
-            let range = $(this).val();
-            $.ajax({
-                type: "GET",
-                url: "{{ route('dashboard') }}",
-                data: {
-                    chargeCountMount_date: range
-                },
-                cache: false,
-                success: function (response) {
-                    window.location.href = "{{ route('dashboard') }}?chargeCountMount_date=" + range;
-                }
-            });
-        });
-
     });
 </script>
 <script>
@@ -304,7 +397,7 @@
                         ticks: {
                             beginAtZero: true,
                             callback: function (value) {
-                                // Format Y-axis labels to integers
+
                                 return Math.round(value);
                             }
                         }

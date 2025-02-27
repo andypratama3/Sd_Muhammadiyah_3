@@ -9,61 +9,71 @@ use Carbon\Carbon;
 class ChargeCountMount
 {
     protected $chart;
-    protected $setChargeCountMount_date;
+    protected $chargeCountMountDate;
+    protected $category;
 
     public function __construct(LarapexChart $chart)
     {
         $this->chart = $chart;
-        $this->setChargeCountMount_date = Carbon::now()->format('Y-m'); // Default ke bulan ini
+        $this->chargeCountMountDate = Carbon::now()->format('Y-m');
     }
 
-    public function setChargeCountMount_date($setChargeCountMount_date)
+    public function setChargeCountMountDate($date)
     {
-        $this->setChargeCountMount_date = $setChargeCountMount_date;
+        $this->chargeCountMountDate = $date;
+        return $this;
+    }
+
+    public function setCategory($category)
+    {
+        $this->category = $category;
         return $this;
     }
 
     public function build(): \ArielMejiaDev\LarapexCharts\PieChart
     {
-        // Konversi format Y-m menjadi rentang tanggal awal & akhir bulan
+        $query = Charge::selectRaw("
+            SUM(CASE WHEN transaction_status = 'settlement' THEN gross_amount ELSE 0 END) as settlement_amount,
+            SUM(CASE WHEN transaction_status = 'pay_offline' THEN gross_amount ELSE 0 END) as pay_offline_amount,
+            SUM(CASE WHEN transaction_status = 'pending' THEN gross_amount ELSE 0 END) as pending_amount,
+            SUM(CASE WHEN transaction_status = 'deny' THEN gross_amount ELSE 0 END) as deny_amount,
+            SUM(CASE WHEN transaction_status = 'failed' THEN gross_amount ELSE 0 END) as failed_amount
+        ");
 
-        // Mengambil total gross_amount berdasarkan status transaksi
-        $chargeData = Charge::selectRaw('
-                SUM(CASE WHEN transaction_status = "settlement" THEN gross_amount ELSE 0 END) as settlement_amount,
-                SUM(CASE WHEN transaction_status = "pay_offline" THEN gross_amount ELSE 0 END) as pay_offline_amount,
-                SUM(CASE WHEN transaction_status = "pending" THEN gross_amount ELSE 0 END) as pending_amount,
-                SUM(CASE WHEN transaction_status = "deny" THEN gross_amount ELSE 0 END) as deny_amount,
-                SUM(CASE WHEN transaction_status = "failed" THEN gross_amount ELSE 0 END) as failed_amount
-            ')
-            ->whereRaw("DATE_FORMAT(created_at, '%Y-%m') = ?", $this->setChargeCountMount_date)
-            ->first();
+        if (!empty($this->chargeCountMountDate)) {
+            $query->whereRaw("DATE_FORMAT(created_at, '%Y-%m') = ?", [$this->chargeCountMountDate]);
+        }
 
-        if($chargeData->settlement_amount == null && $chargeData->pay_offline_amount == null && $chargeData->pending_amount == null && $chargeData->deny_amount == null && $chargeData->failed_amount == null) {
+        if (!empty($this->category)) {
+            $query->where('category_payment_id', $this->category);
+        }
+
+        $chargeData = $query->first();
+
+        if (!$chargeData || ($chargeData->settlement_amount == 0 &&
+            $chargeData->pay_offline_amount == 0 &&
+            $chargeData->pending_amount == 0 &&
+            $chargeData->deny_amount == 0 &&
+            $chargeData->failed_amount == 0)) {
             return $this->chart->pieChart()
-                // ->setWidth(500)
-                // ->setHeight(500)
-                ->setTitle("Total Pembayaran - Bulan {$this->setChargeCountMount_date}")
-                ->addData([
-                    100,
-                ])
-
+                ->setTitle("Total Pembayaran - Bulan {$this->chargeCountMountDate}")
+                ->addData([100])
                 ->setLabels(['No Data']);
         }
 
         return $this->chart->pieChart()
-            ->setTitle("Total Pembayaran - Bulan " . Carbon::parse($this->setChargeCountMount_date)->format('F Y'))
+            ->setTitle("Total Pembayaran - Bulan " . Carbon::parse($this->chargeCountMountDate)->format('F Y'))
             ->addData([
-                (float) ($chargeData->settlement_amount ?? 0 . '00'),
-                (float) ($chargeData->pay_offline_amount ?? 0),
-                (float) ($chargeData->pending_amount ?? 0),
-                (float) (($chargeData->deny_amount ?? 0) + ($chargeData->failed_amount ?? 0)),
+                (float) $chargeData->settlement_amount,
+                (float) $chargeData->pay_offline_amount,
+                (float) $chargeData->pending_amount,
+                (float) ($chargeData->deny_amount + $chargeData->failed_amount),
             ])
             ->setLabels([
-                'Settlement: Rp ' . number_format($chargeData->settlement_amount ?? 0, 0, ',', '.'),
-                'Pay Offline: Rp ' . number_format($chargeData->pay_offline_amount ?? 0, 0, ',', '.'),
-                'Pending: Rp ' . number_format($chargeData->pending_amount ?? 0, 0, ',', '.'),
-                'Deny & Failed: Rp ' . number_format(($chargeData->deny_amount ?? 0) + ($chargeData->failed_amount ?? 0), 0, ',', '.'),
+                'Settlement: Rp ' . number_format($chargeData->settlement_amount, 0, ',', '.'),
+                'Pay Offline: Rp ' . number_format($chargeData->pay_offline_amount, 0, ',', '.'),
+                'Pending: Rp ' . number_format($chargeData->pending_amount, 0, ',', '.'),
+                'Deny & Failed: Rp ' . number_format($chargeData->deny_amount + $chargeData->failed_amount, 0, ',', '.'),
             ]);
-
     }
 }

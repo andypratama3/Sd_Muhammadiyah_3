@@ -9,11 +9,11 @@
                         <div class="col-md-6 col-lg-6 col-xl-5">
                             <div class="footer-item">
                                 <a href="/" class="p-0">
-                                    <h3 class="text-white"><i class="fab fa-slack me-3"></i> SD Muhammadiyah 3 Samarinda</h3>
-                                    <!-- <img src="{{ asset('asset/img/logo.png') }}" alt="Logo"> -->
+                                    <h3 class="text-white"> SD Muhammadiyah 3 Samarinda</h3>
+                                    <img src="{{ asset('asset_new/images/SD3_logo1.png') }}" alt="Logo" class="img-fluid" style="width: 20%;">
                                 </a>
                                 {{-- <p class="text-white mb-4">Dolor amet sit justo amet elitr clita ipsum elitr est.Lorem ipsum dolor sit amet, consectetur adipiscing...</p> --}}
-                                <div class="footer-btn d-flex">
+                                <div class="footer-btn d-flex mt-4">
                                     <a class="btn btn-md-square rounded-circle me-3" href="#"><i class="fab fa-facebook-f"></i></a>
                                     <a class="btn btn-md-square rounded-circle me-3" href="#"><i class="fab fa-twitter"></i></a>
                                     <a class="btn btn-md-square rounded-circle me-3" href="#"><i class="fab fa-instagram"></i></a>
@@ -21,7 +21,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 col-lg-6 col-xl-4">
+                        <div class="col-md-6 col-lg-6 col-xl-4 ">
                             <div class="footer-item">
                                 <h4 class="mb-4 text-white">Instagram</h4>
                                 <div class="row g-3">

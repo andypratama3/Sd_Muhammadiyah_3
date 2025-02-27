@@ -29,19 +29,20 @@ use App\Http\Controllers\Dashboard\UserController;
 
 //Dashboard Access
 use App\Http\Controllers\Dashboard\CategoryArtikel;
+use App\Http\Controllers\Dashboard\ChartController;
 use App\Http\Controllers\Dashboard\KelasController;
 use App\Http\Controllers\EkstrakurikulerController;
+
 use App\Http\Controllers\PrestasiSekolahController;
-
 use App\Http\Controllers\TenagaPendidikanController;
-use App\Http\Controllers\Dashboard\ActivityController;
 
+use App\Http\Controllers\Dashboard\ActivityController;
 use App\Http\Controllers\Dashboard\KaryawanController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\AchivementController;
 use App\Http\Controllers\Dashboard\CooperationController;
-use App\Http\Controllers\Dashboard\KelasCategoryController;
 
+use App\Http\Controllers\Dashboard\KelasCategoryController;
 use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
 use App\Http\Controllers\Dashboard\HeroController as DashboardHeroController;
 use App\Http\Controllers\Dashboard\SiswaController as DashboardSiswaController;
@@ -224,6 +225,13 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::resource('user', UserController::class, ['names' => 'dashboard.pengaturan.user']);
         Route::resource('karyawan', KaryawanController::class, ['names' => 'dashboard.pengaturan.karyawan']);
         Route::post('get/email/karyawan',[KaryawanController::class, 'getEmailUser'])->name('dashboard.pengaturan.get.email');
+    });
+
+
+    // Chart Data
+    Route::group(['prefix' => 'chart'], function () {
+        Route::get('charge-count', [ChartController::class, 'chargeCount'])->name('chart.charge.count');
+
     });
 
 

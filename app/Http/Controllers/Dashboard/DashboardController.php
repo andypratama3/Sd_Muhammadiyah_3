@@ -14,6 +14,7 @@ use App\Charts\ChargeChart;
 use App\Models\KritikSaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Models\JudulPembayaran;
 use App\Charts\ChargeCountMount;
 use App\Models\TenagaPendidikan;
 use App\Http\Controllers\Controller;
@@ -39,16 +40,17 @@ class DashboardController extends Controller
         $year = $request->input('year', Carbon::now()->year);
         $month = $request->input('month', Carbon::now()->month);
 
-        $chargeCountMount_date = $request->input('chargeCountMount_date', Carbon::now()->format('Y-m'));
-
-        // Set tanggal ke objek chart
-        $chargeCountMount->setChargeCountMount_date($chargeCountMount_date);
-
-        // Bangun chart
-        $chargeCountMount = $chargeCountMount->build();
+        // $chargeCountMount_date = $request->input('chargeCountMount_date', Carbon::now()->format('Y-m'));
+        // $chargeCountMount_Category = $request->input('category', null);
+        // // Set tanggal ke objek chart
+        // $chargeCountMount->setChargeCountMountDate($chargeCountMount_date);
+        // $chargeCountMount->setCategory($chargeCountMount_Category);
+        // // Bangun chart
+        // $chargeCountMount = $chargeCountMount->build();
 
         $chargeChart->setYear($year);
         $chargeChart->setMonth($month);
+
         $chargeChart = $chargeChart->build();
 
         //count artikel data
@@ -56,6 +58,8 @@ class DashboardController extends Controller
         $artikel_like_max = Artikel::orderBy('jumlah_klik','desc')->first();
 
         $artikels = Artikel::orderBy('jumlah_klik','desc')->take(5)->get();
+        $category_payments = JudulPembayaran::orderBy('name', 'asc')->get();
+
 
         // convert to percent
         // $percent_artikel = ($artikel_like_max->jumlah_klik  / $artikel_sum_total_klik) * 100;
@@ -97,12 +101,13 @@ class DashboardController extends Controller
             'siswaChart',
             'chargeChart',
             'artikels',
+            'category_payments',
             'artikel_sum_total_klik',
             // 'percent_artikel',
             'invoice_list',
             'kritis',
             'artikel_publish',
-            'chargeCountMount'
+            // 'chargeCountMount'
         ));
     }
 
