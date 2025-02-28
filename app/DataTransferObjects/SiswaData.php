@@ -23,7 +23,7 @@ class SiswaData extends Data
         public readonly ?string $nama_jalan_pendidikan,
         public readonly string $kelas_tahun,
         public readonly string $tanggal_masuk,
-        public readonly string $beasiswa,
+        public readonly ?string $beasiswa,
         public readonly ?UploadedFile $foto,
         public readonly string $select_data,
         public readonly ?string $nama_ayah,

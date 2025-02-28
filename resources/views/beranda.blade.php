@@ -476,7 +476,7 @@
                     <img src="{{ asset('asset/img/kepala-sekolah.jpeg') }}" class="img-fluid mb-2 img-header-kepala-sekolah"
                         alt="kepala-sekolah">
                 </a>
-                <h4 class="text-center">Gr. Ansar HS. S.Pd.,M.M. </h4>
+                <h4 class="text-center">Ansar HS. S.Pd.,M.M. Gr.</h4>
                 <p class="text-center text-primary">Kepala Sekolah SD Muhammadiyah 3 Samarinda</p>
 
             </div>

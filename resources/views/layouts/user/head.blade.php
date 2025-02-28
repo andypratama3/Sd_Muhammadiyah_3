@@ -3,15 +3,18 @@
     <meta charset="utf-8">
     <title>@yield('title')</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="SD Muhammadiyah 3 Samarinda" name="keywords">
-    <meta content="Sekolah Kreatif Muhammadiyah 3" name="description">
+    <meta content="Sekolah Kreatif Muhammadiyah 3 Samarinda, SD Muhammadiyah 3 Samarinda, Sekolah Kreatif Muhammadiyah 3 Samarinda, Sekolah Muhammadiyah 3 Samarinda, SD Muhammadiyah 3 Samarinda, Sekolah Kreatif Muhammadiyah 3 Samarinda Kalimantan Timur, Sekolah Kreatif Muhammadiyah 3 Samarinda Kalimantan" name="keywords">
+    <meta content="Sekolah Kreatif Muhammadiyah 3 Samarinda adalah Sekolah Muhammadiyah 3 Samarinda yang berfokus pada pengembangan karakter dan pembelajaran inovatif. Kami memiliki visi menjadi Sekolah Kreatif Muhammadiyah 3 Samarinda yang unggul dalam pendidikan dan pengembangan karakter siswa. Kami memiliki misi untuk meningkatkan kualitas pendidikan dan pengembangan karakter siswa dengan mengembangkan potensi yang dimiliki oleh setiap siswa." name="description">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="author" content="https://sdmuhammadiyah3smd.com">
     @stack('meta_user')
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:slnt,wght@-10..0,100..900&display=swap" rel="stylesheet">
+    {{-- <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:slnt,wght@-10..0,100..900&display=swap" rel="stylesheet"> --}}
+    {{-- <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> --}}
+    <link href="https://fonts.googleapis.com/css2?family=ABeeZee:ital@0;1&display=swap" rel="stylesheet">
     <link rel="shortcut icon" href="{{ asset('asset_new/images/SD3_logo1.png') }}" type="image/x-icon">
     <!-- Icon Font Stylesheet -->
     {{-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/> --}}
