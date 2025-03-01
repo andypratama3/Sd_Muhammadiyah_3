@@ -149,7 +149,7 @@
                         render: function(data, type, full, meta) {
                             if (data === 'pending') {
                                 return '<h6 style="color: black;"><span class="badge bg-warning"><i class="fa-solid fa-clock"></i> ' + data + '</span></h6>';
-                            } else if (data === 'settlement') {
+                            } else if (data === 'settlement' || data === 'capture') {
                                 return '<h6 style="color: black;"><span class="badge bg-info" style="background-color: #blue;"><i class="fa-solid fa-circle-check"></i> ' + data + '</span></h6>';
                             } else if (data === 'Expired' || data === 'failed') {
                                 return '<h6 style="color: black;"><span class="badge bg-danger"><i class="fa-solid fa-xmark"></i> ' + data + '</span></h6>';
