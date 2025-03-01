@@ -299,7 +299,7 @@
         // Fungsi untuk memperbarui chart dengan data baru
         function updateChart(response) {
             let seriesData = [
-                response.settlement_amount + response.capture_amount || 0,
+                response.settlement_amount || 0,
                 response.pay_offline_amount || 0,
                 response.pending_amount || 0,
                 response.deny_failed_amount || 0

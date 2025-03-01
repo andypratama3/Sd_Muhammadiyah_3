@@ -19,7 +19,7 @@ class ChartController extends Controller
 
         // Query total transaksi berdasarkan status
         $query = Charge::selectRaw("
-            COALESCE(SUM(CASE WHEN transaction_status = 'settlement' THEN gross_amount ELSE 0 END), 0) as settlement_amount,
+            COALESCE(SUM(CASE WHEN transaction_status IN ('settlement', 'capture') THEN gross_amount ELSE 0 END), 0) as settlement_amount,
             COALESCE(SUM(CASE WHEN transaction_status = 'capture' THEN gross_amount ELSE 0 END), 0) as capture_amount,
             COALESCE(SUM(CASE WHEN transaction_status = 'pay_offline' THEN gross_amount ELSE 0 END), 0) as pay_offline_amount,
             COALESCE(SUM(CASE WHEN transaction_status = 'pending' THEN gross_amount ELSE 0 END), 0) as pending_amount,
