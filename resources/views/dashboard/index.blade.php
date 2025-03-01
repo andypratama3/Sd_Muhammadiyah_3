@@ -304,13 +304,12 @@
                 response.pending_amount || 0,
                 response.deny_failed_amount || 0
             ];
-            // settlement_amount + capture amount
 
             let labelsData = [
-                `Settlement: Rp ${new Intl.NumberFormat('id-ID').format(response.settlement_amount + response.capture_amount || 0)}`,
-                `Pay Offline: Rp ${new Intl.NumberFormat('id-ID').format(response.pay_offline_amount || 0)}`,
-                `Pending: Rp ${new Intl.NumberFormat('id-ID').format(response.pending_amount || 0)}`,
-                `Denied/Failed: Rp ${new Intl.NumberFormat('id-ID').format(response.deny_failed_amount || 0)}`
+                `Settlement: Rp ${new Intl.NumberFormat('id-ID').format(seriesData[0])}`,
+                `Pay Offline: Rp ${new Intl.NumberFormat('id-ID').format(seriesData[1])}`,
+                `Pending: Rp ${new Intl.NumberFormat('id-ID').format(seriesData[2])}`,
+                `Denied/Failed: Rp ${new Intl.NumberFormat('id-ID').format(seriesData[3])}`
             ];
 
             chartPie.data.labels = labelsData;
