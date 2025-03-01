@@ -1,5 +1,5 @@
 @extends('layouts.user')
-@section('title','Detail')
+@section('title',"Berita $berita->judul")
 @push('meta_user')
     <meta name="description" content="{{ Str::limit(strip_tags($berita->desc), 160) }}">
     <meta name="keywords" content="Berita, {{ $berita->judul }}, Informasi Terbaru">
@@ -35,7 +35,8 @@
         <div class="row">
             <div class="col-md-12" data-aos="fade-up">
                 <span class="date">Di Posting Pada</span> <span class="mx-1">&bullet;</span>
-                    <span> {{ \Carbon\Carbon::parse($berita->created_at)->format('d F Y')}}</span>
+                    <span>{{ \Carbon\Carbon::parse($berita->created_at)->locale('id')->translatedFormat('d F Y') }}</span>
+
                 <img src="{{ asset('storage/img/berita/'. $berita->foto) }}" alt="{{ $berita->judul }}" class="img-fluid">
             </div>
             <div class="col-md- 12 mt-3">

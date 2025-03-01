@@ -6,7 +6,7 @@
     <link rel="canonical" href="{{ url()->current() }}">
     <meta name="description" content="Artikel terbaru dan terpopuler dari Sekolah Kreatif Muhammadiyah 3. Temukan informasi terbaru mengenai aktivitas, prestasi, dan acara di sekolah kami.">
     <meta name="keywords" content="Artikel, Sekolah Kreatif Muhammadiyah 3, Prestasi, Acara Sekolah">
-    <meta name="author" content="Nama Anda atau Nama Sekolah">
+    <meta name="author" content="Sekolah Kreatif Muhammadiyah 3 Samarinda, Indonesia, Sekolah, Kreatif, Muhammadiyah, Samarinda, Pendidikan">
     <meta property="og:title" content="Artikel - Sekolah Kreatif Muhammadiyah 3">
     <meta property="og:description" content="Temukan Artikel terbaru dan informasi terkini tentang kegiatan dan prestasi siswa di Sekolah Kreatif Muhammadiyah 3.">
     <meta property="og:image" content="{{ asset('asset/img/SD3_logo.png') }}">

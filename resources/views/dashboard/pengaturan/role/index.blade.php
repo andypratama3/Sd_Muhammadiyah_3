@@ -42,10 +42,10 @@
                                     <td>{{ ++$no }}</td>
                                     <td>{{ $role->name }}</td>
                                     <td>
-                                        @can('edit-role')
+                                        @can('edit-pengaturan')
                                         <a href="{{ route('dashboard.pengaturan.role.edit', $role->slug) }}" class="btn btn-primary btn-sm" title="Ubah"><i class="fa fa-edit"></i></a>
                                         @endcan
-                                        @can('delete-role')
+                                        @can('delete-pengaturan')
                                         <a href="#" data-id="{{ $role->slug }}" class="btn btn-danger btn-sm swal-delete" title="Hapus">
                                             <form action="{{ route('dashboard.pengaturan.role.destroy', $role->slug) }}" id="delete-{{ $role->slug }}" method="POST" enctype="multipart/form-data">
                                                 @csrf

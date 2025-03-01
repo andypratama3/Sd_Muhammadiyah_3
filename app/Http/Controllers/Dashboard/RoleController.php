@@ -15,10 +15,10 @@ class RoleController extends Controller
 
     public function __contstruct()
     {
-        $this->middleware('permission:view-roles', ['only' => ['index']]);
-        $this->middleware('permission:create-roles', ['only' => ['create', 'store']]);
-        $this->middleware('permission:edit-roles', ['only' => ['edit', 'update']]);
-        $this->middleware('permission:delete-roles', ['only' => ['delete']]);
+        $this->middleware('permission:view-pengaturan', ['only' => ['index']]);
+        $this->middleware('permission:create-pengaturan', ['only' => ['create', 'store']]);
+        $this->middleware('permission:edit-pengaturan', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:delete-pengaturan', ['only' => ['delete']]);
     }
     public function index()
     {
@@ -33,6 +33,8 @@ class RoleController extends Controller
             'no'
         ));
     }
+
+    // public function data_table()
 
     public function create()
     {

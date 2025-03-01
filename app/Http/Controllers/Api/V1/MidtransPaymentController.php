@@ -15,10 +15,9 @@ class MidtransPaymentController extends Controller
     {
         $midtransResponse = $request->all();
 
-        // make rcord in activity log
-        if($midtransResponse['status_code'] == '202' || $midtransResponse['status_code'] == '300' || $midtransResponse['status_code'] == '401' || $midtransResponse['status_code'] == '405'){
+        // Log error activity
+        if (in_array($midtransResponse['status_code'], ['202', '300', '401', '405'])) {
             DB::table('error_log')->insert([
-                // 'id' => Str::uuid(),
                 'status_code' => $midtransResponse['status_code'],
                 'error' => $midtransResponse['status_message'],
                 'created_at' => now(),
@@ -26,12 +25,12 @@ class MidtransPaymentController extends Controller
             ]);
         }
 
-        // Pastikan order_id tersedia
+        // Validate order_id
         if (!isset($midtransResponse['order_id'])) {
             return response()->json(['message' => 'Invalid request, order_id not found'], 400);
         }
 
-        // Ambil data dari response Midtrans
+        // Extract data from Midtrans response
         $data = [
             'transaction_status' => $midtransResponse['transaction_status'] ?? null,
             'transaction_id' => $midtransResponse['transaction_id'] ?? null,
@@ -39,7 +38,7 @@ class MidtransPaymentController extends Controller
             'fraud_status' => $midtransResponse['fraud_status'] ?? 'accept',
         ];
 
-        // Pastikan payment_type ada dalam response
+        // Ensure payment_type is present in response
         if (isset($midtransResponse['payment_type'])) {
             switch ($midtransResponse['payment_type']) {
                 case 'bank_transfer':
@@ -60,37 +59,33 @@ class MidtransPaymentController extends Controller
                     $data['bank'] = $midtransResponse['issuer'] ?? null;
                     break;
 
-                case '':
-                    $data['bank'] = 'mandiri';
-                    $data['va_number'] = $midtransResponse['bill_key'] ?? null;
-                    break;
-
-                case 'cstore': // Indomaret / Alfamart
+                case 'cstore':
                     $data['bank'] = $midtransResponse['store'] ?? null;
                     $data['va_number'] = $midtransResponse['payment_code'] ?? null;
                     break;
-                case 'bank_transfer' :
-                    $data['bank'] = $midtransResponse['va_numbers'][0]['bank'] ?? null;
-                    $data['va_number'] = $midtransResponse['va_numbers'][0]['va_number'] ?? null;
-                    break;
+
                 default:
                     return response()->json(['message' => 'Unsupported payment type'], 400);
             }
         }
 
         $charge = Charge::where('order_id', $midtransResponse['order_id'])
-        ->orWhere('order_id_1', $midtransResponse['order_id'])
-        ->first();
+            ->orWhere('order_id_1', $midtransResponse['order_id'])
+            ->first();
 
-        if(!$charge){
+        if (!$charge) {
             return response()->json(['message' => 'Charge not found'], 404);
         }
 
-        if($charge->transaction_status == 'settlement' || $charge->transaction_status == 'capture'){
-            // cancel order_id
+        if (in_array($data['transaction_status'], ['settlement', 'capture'])) {
+            $data['transaction_status'] = 'settlement';
+        }
+
+        if (in_array($charge->transaction_status, ['settlement', 'capture'])) {
+            // Cancel order_id
             $server_key = env('MIDTRANS_SERVER_KEY');
             $client = new Client();
-            $response = $client->get("https://api.sandbox.midtrans.com/v2/{$charge->order_id}/cancel", [
+            $client->get("https://api.sandbox.midtrans.com/v2/{$charge->order_id}/cancel", [
                 'headers' => [
                     'Accept' => 'application/json',
                     'Authorization' => 'Basic ' . base64_encode($server_key . ':'),
@@ -98,26 +93,24 @@ class MidtransPaymentController extends Controller
                 ],
             ]);
 
-            if($midtransResponse['transaction_status'] == 'settlement' || $midtransResponse['transaction_status'] == 'capture'){
+            if (in_array($midtransResponse['transaction_status'], ['settlement', 'capture'])) {
                 $data['transaction_status'] = 'settlement';
             }
         }
 
-        if($charge->transaction_status == 'expire' || $charge->transaction_status == 'cancel'){
-            // update transaction_status
+        if (in_array($charge->transaction_status, ['expire', 'cancel'])) {
             $data['transaction_status'] = 'expire';
         }
 
         $siswaName = $charge->siswa ? $charge->siswa->name : 'Unknown Student';
 
-
         activity()
-        ->useLog('default') // Menggunakan log default
-        ->tap(function ($activity) {
-            $activity->causer_id = Str::uuid();
-            $activity->causer_type = 'Midtrans';
-        })
-        ->log('Pembayaran ' . $data['transaction_status'] . ' Pada Order ID: ' . $charge->order_id . ' - Murid: ' . $charge->siswa->name);
+            ->useLog('default')
+            ->tap(function ($activity) {
+                $activity->causer_id = Str::uuid();
+                $activity->causer_type = 'Midtrans';
+            })
+            ->log('Pembayaran ' . $data['transaction_status'] . ' Pada Order ID: ' . $charge->order_id . ' - Murid: ' . $siswaName);
 
         $charge->update($data);
 

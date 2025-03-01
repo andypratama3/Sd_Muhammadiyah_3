@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
     {
         // Role
         $listRoles = [
-            'Superadmin',
+            'superadmin',
             'User',
         ];
 
@@ -41,20 +41,24 @@ class UserSeeder extends Seeder
         // Task
         $listTasks = [
             [
-                'name' => 'Task',
-                'description' => 'Manajemen Task',
+                'name' => 'data-sekolah',
+                'description' => 'Manajemen Data Sekolah',
             ],
             [
-                'name' => 'Role',
-                'description' => 'Manajemen Role',
+                'name' => 'data-positingan',
+                'description' => 'Manajemen Data Positingan',
             ],
             [
-                'name' => 'Karyawan',
-                'description' => 'Manajemen Karyawan',
+                'name' => 'data-siswa',
+                'description' => 'Manajemen Data Siswa',
             ],
             [
-                'name' => 'Slider',
-                'description' => 'Manajemen Slider',
+                'name' => 'data-pembayaran',
+                'description' => 'Manajemen Data Pembayaran',
+            ],
+            [
+                'name' => 'pengaturan',
+                'description' => 'Manajemen Pengaturan',
             ],
         ];
 
@@ -74,6 +78,7 @@ class UserSeeder extends Seeder
         }
 
         $listTasks = Task::all();
+        $roleSuperAdmin = Role::where('name', 'superadmin')->first();
 
         // Permission
         foreach ($listTasks as $task) {
@@ -103,11 +108,15 @@ class UserSeeder extends Seeder
 
             foreach ($listPermissions as $listPermission) {
                 $createPermissions = Permission::Create($listPermission);
+                $roleSuperAdmin->permissions()->attach($createPermissions);
             }
+
+
         }
 
+
         // User
-        $roleSuperAdmin = Role::where('name', 'Superadmin')->first();
+
         // Call more role_id here
 
         // List User

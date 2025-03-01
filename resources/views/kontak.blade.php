@@ -9,11 +9,11 @@
 <div class="contact-us section" id="contact">
     <div class="container">
         <div class="row">
-            <div class="col-md-6 pt-4 wow fadeInLeft" style="margin-top: 100px !important;">
+            <div class="col-md-12 pt-4 wow fadeInLeft" style="margin-top: 100px !important;">
                 <div class="card">
                     <div class="card-body p-4">
                         <div class="section-heading">
-                            <h6>Kontak</h6>
+                            <h4 class="text-center">Kontak Admin SD Muhammadiyah 3 Samarinda</h4>
                             <div class="special-offer">
                                 <a href="https://api.whatsapp.com/send?phone=6281234567898">
                                     <i class="fa fa-angle-right"></i>
@@ -38,7 +38,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 pt-4 wow fadeInRight">
+            {{-- <div class="col-md-6 pt-4 wow fadeInRight">
                 <div class="card">
                     <div class="card-body">
                         <div class="col-md-12 text-center mb-4">
@@ -79,7 +79,7 @@
                     </div>
 
                 </div>
-            </div>
+            </div> --}}
 
         </div>
 
