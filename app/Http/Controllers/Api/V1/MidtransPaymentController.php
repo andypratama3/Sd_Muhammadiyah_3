@@ -81,7 +81,7 @@ class MidtransPaymentController extends Controller
             $data['transaction_status'] = 'settlement';
         }
 
-        if (in_array($charge->transaction_status, ['settlement', 'capture'])) {
+        if (in_array($data['transaction_status'], ['settlement', 'capture'])) {
             // Cancel order_id
             $server_key = env('MIDTRANS_SERVER_KEY');
             $client = new Client();
