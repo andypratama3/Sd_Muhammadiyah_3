@@ -204,10 +204,10 @@ class ChargeController extends Controller
 
         if ($transaction_status === 'pay_offline') {
             try {
-                $status = 'settlement';
+                $status = 'pay_offline';
                 if ($this->midtrans->update_transaction_status($charge, $status)) {
                     $transaction_status = $status;
-                    $payment_type = 'Offline';
+                    $payment_type = 'pay_offline';
                 } else {
                     return redirect()->route('dashboard.datamaster.charge.index')
                         ->with('error', 'Gagal Mengupdate Status Transaksi di Midtrans.');
