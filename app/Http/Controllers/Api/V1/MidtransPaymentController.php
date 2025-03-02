@@ -96,6 +96,8 @@ class MidtransPaymentController extends Controller
                 // Jika transaksi lama berhasil dibatalkan, ubah statusnya
                 if ($cancelData['status_code'] == 200 || $cancelData['status_code'] == 201) {
                     return response()->json(['message' => 'Transaksi lama berhasil dibatalkan'], 200);
+                } else {
+                    return response()->json(['message' => 'Error saat membatalkan transaksi lama: ' . $cancelData['status_message']], 500);
                 }
 
             } catch (\Exception $e) {
