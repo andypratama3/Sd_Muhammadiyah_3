@@ -113,7 +113,7 @@ class MidtransPaymentController extends Controller
             activity()
                 ->useLog('default')
                 ->tap(function ($activity) {
-                    $activity->causer_id = auth()->id() ?? null;
+                    $activity->causer_id = auth()->id() ?? Str::uuid();
                     $activity->causer_type = 'Midtrans';
                 })
                 ->log("Pembayaran {$data['transaction_status']} Pada Order ID: {$charge->order_id} - Murid: {$siswaName}");
