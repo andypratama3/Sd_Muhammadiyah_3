@@ -83,7 +83,7 @@ class MidtransPaymentController extends Controller
             try {
                 $server_key = env('MIDTRANS_SERVER_KEY');
                 $client = new Client();
-                $cancelResponse = $client->get("https://api.sandbox.midtrans.com/v2/{$charge->order_id}/cancel", [
+                $cancelResponse = $client->post("https://api.sandbox.midtrans.com/v2/{$charge->order_id}/cancel", [
                     'headers' => [
                         'Accept' => 'application/json',
                         'Authorization' => 'Basic ' . base64_encode($server_key . ':'),
