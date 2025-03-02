@@ -39,8 +39,8 @@ class ChargeSeeder extends Seeder
                     'category_payment_id' => DB::table('judulpembayarans')->inRandomOrder()->first()->id ?? Str::uuid(),
                     'transaction_status' => $transactionStatuses[array_rand($transactionStatuses)],
                     'snap_token' => Str::random(32),
-                    'created_at' => now(),
-                    'updated_at' => now(),
+                    'created_at' => $transactionTime,
+                    'updated_at' => $transactionTime,
                 ]);
             }
         }
