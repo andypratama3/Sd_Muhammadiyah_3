@@ -37,8 +37,6 @@ class ChargeController extends Controller
     public function data_table(Request $request)
     {
         $charges = Charge::with('siswa')
-                ->whereYear('created_at', Carbon::now()->year)
-                ->whereMonth('created_at', Carbon::now()->month)
                 ->orderBy('created_at', 'desc');
 
         if($request->category_payment){
