@@ -305,7 +305,7 @@
     });
 
     $(document).ready(function () {
-        
+
         // set time out
     //     setInterval(() => {
     //     $('.row, .accordion').each(function () {
@@ -346,12 +346,10 @@
                 data: { charge_id: charge_id },
                 cache: false,
                 success: function (response) {
-                    // console.log("Response dari server:", response);
 
                     if (response.status === 'success' && response.snap_token) {
                         let snapToken = response.snap_token;
 
-                        console.log("Snap Token:", snapToken);
 
                         snap.pay(snapToken, {
                             onSuccess: function (result) {

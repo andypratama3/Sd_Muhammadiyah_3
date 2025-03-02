@@ -44,7 +44,6 @@ class PembayaranController extends Controller
             }
         }
 
-        // dd($siswa, $list_pembayaran);
 
         return view('profil.pembayaran.index', compact('list_pembayaran', 'siswa'));
     }
@@ -179,7 +178,7 @@ class PembayaranController extends Controller
             ]);
         }
 
-        
+
 
         return response()->json([
             'status' => 'success',
