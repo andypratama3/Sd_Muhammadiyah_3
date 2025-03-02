@@ -93,9 +93,9 @@ class MidtransPaymentController extends Controller
 
 
                 $cancelData = json_decode($cancelResponse->getBody(), true);
-                
+
                 // Pastikan pembatalan berhasil sebelum memperbarui transaksi baru
-                if (!isset($cancelData['status_code']) || $cancelData['status_code'] != '200') {
+                if (!isset($cancelData['status_code']) || $cancelData['status_code'] != 200) {
                     return response()->json(['message' => 'Gagal membatalkan transaksi lama dengan Order ID: ' . $charge->order_id], 500);
                 }
 
