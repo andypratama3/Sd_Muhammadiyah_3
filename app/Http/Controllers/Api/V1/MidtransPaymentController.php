@@ -91,15 +91,17 @@ class MidtransPaymentController extends Controller
                     ],
                 ]);
 
+                dd($cancelResponse);
+
                 $cancelData = json_decode($cancelResponse->getBody(), true);
 
                 // Pastikan pembatalan berhasil sebelum memperbarui transaksi baru
                 if (!isset($cancelData['status_code']) || $cancelData['status_code'] != 200) {
-                    return response()->json(['Gagal membatalkan transaksi lama dengan Order ID: ' . $charge->order_id], 500);
+                    return response()->json(['message' => 'Gagal membatalkan transaksi lama dengan Order ID: ' . $charge->order_id], 500);
                 }
 
             } catch (\Exception $e) {
-                return response()->json(['Error saat membatalkan transaksi lama: ' . $e->getMessage()], 500);
+                return response()->json(['message' => 'Error saat membatalkan transaksi lama: ' . $e->getMessage()], 500);
             }
 
             // Pastikan transaksi baru tetap berstatus settlement
@@ -161,7 +163,7 @@ class MidtransPaymentController extends Controller
 
             return ($responseData['status_code'] == 200 || $responseData['status_code'] == 201);
         } catch (\Exception $e) {
-            return response()->json(['Gagal memperbarui status Midtrans: ' . $e->getMessage()], 500);
+            return response()->json(['message' => 'Gagal memperbarui status Midtrans: ' . $e->getMessage()], 500);
             return false;
         }
     }
