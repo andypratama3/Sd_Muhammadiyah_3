@@ -117,14 +117,13 @@ class ChargePayment extends Command
                     'quantity' => 1,
                     'name' => "SPP  {$monthName} {$siswa->name}",
                     'category' => $category_Spp->name,
-                    "merchant_name" => "Sekolah Kreatif SD Muhammadiyah 3 Samarinda",
+                    'merchant_name' => "Sekolah Kreatif SD Muhammadiyah 3 Samarinda",
                 ],
                 [
                     'id' => 2,
                     'name' => "Biaya Administrasi Sekolah Kreatif SD Muhammadiyah 3 Samarinda",
-                    'price' => 50000,
+                    'price' => 5000,
                     'quantity' => 1,
-
                 ]
             ],
         ];
