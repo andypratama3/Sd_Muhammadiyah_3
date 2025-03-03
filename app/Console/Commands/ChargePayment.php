@@ -74,7 +74,7 @@ class ChargePayment extends Command
                 ]);
 
                 // Kirim pembayaran ke Midtrans
-                $this->sendPaymentToMidtrans($siswa, $vaNumber,$gross_amount $order_id, $category_Spp);
+                $this->sendPaymentToMidtrans($siswa, $vaNumber,$gross_amount, $order_id, $category_Spp);
 
                 DB::commit();
             } catch (\Exception $e) {
