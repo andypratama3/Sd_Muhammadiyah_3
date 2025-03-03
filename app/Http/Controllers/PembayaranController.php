@@ -117,7 +117,7 @@ class PembayaranController extends Controller
                 'item_details' => [
                     [
                         'id' => 1,
-                        'price' => $gross_amount + $biaya,
+                        'price' => $gross_amount,
                         'quantity' => 1,
                         'name' => $charge->name,
                     ],
