@@ -107,17 +107,27 @@ class PembayaranController extends Controller
             $order_id = Str::uuid();
 
             // Persiapan parameter Snap Token
+            $biaya = 5000;
+            $charge_gross_amount = $charge->gross_amount - $biaya;
+
+            $gross_amount = $charge_gross_amount + $biaya;
             $params = [
                 'transaction_details' => [
                     'order_id' => $order_id,
-                    'gross_amount' => $charge->gross_amount,
+                    'gross_amount' => $gross_amount,
                 ],
                 'item_details' => [
                     [
-                        'id' => $order_id,
-                        'price' => $charge->gross_amount,
+                        'id' => 1,
+                        'price' => $gross_amount,
                         'quantity' => 1,
                         'name' => $charge->name,
+                    ],
+                    [
+                        'id' => 2,
+                        'name' => "Biaya Administrasi Sekolah Kreatif SD Muhammadiyah 3 Samarinda",
+                        'price' => 5000,
+                        'quantity' => 1,
                     ]
                 ],
                 'expiry' => [
