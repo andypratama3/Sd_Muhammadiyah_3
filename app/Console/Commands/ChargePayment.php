@@ -50,13 +50,16 @@ class ChargePayment extends Command
 
                 $category_Spp = JudulPembayaran::where('name', 'SPP')->first();
                 $vaNumber = $siswa->nisn . $category_Spp->code . $monthNumber;
+
+                $biaya_admin = 5000;
+                $gross_amount = $siswa->spp + $biaya_admin;
                 // Insert data ke tabel charges
                 DB::table('charges')->insert([
                     'id' => Str::uuid(),
                     'name' => "$category_Spp->name  {$monthName} {$siswa->name} test 1",
                     'order_id' => $order_id,
                     'siswa_id' => $siswa->id,
-                    'gross_amount' => $siswa->spp,
+                    'gross_amount' => $gross_amount,
                     'payment_type' => 'bank_transfer',
                     'bank' => 'bca',
                     'va_number' => $vaNumber,
@@ -81,7 +84,7 @@ class ChargePayment extends Command
         }
     }
 
-    private function sendPaymentToMidtrans(Siswa $siswa, $vaNumber, $order_id, $category_Spp)
+    private function sendPaymentToMidtrans(Siswa $siswa, $vaNumber,$gross_amount, $order_id, $category_Spp)
     {
         $monthName = Carbon::now()->locale('id_ID')->format('F');
 
@@ -91,7 +94,7 @@ class ChargePayment extends Command
             'payment_type' => 'bank_transfer',
             'transaction_details' => [
                 'order_id' => $order_id,
-                'gross_amount' => $siswa->spp,
+                'gross_amount' => $gross_amount,
             ],
             'customer_details' => [
                 'first_name' => $siswa->name,
@@ -108,13 +111,21 @@ class ChargePayment extends Command
                 'unit' => 'day',
             ],
             'item_details' => [
-                'id' => 1,
-                'price' => $siswa->spp,
-                'quantity' => 1,
-                'name' => "SPP  {$monthName} {$siswa->name}",
-                'category' => $category_Spp->name,
-                "merchant_name" => "Sekolah Kreatif SD Muhammadiyah 3 Samarinda",
+                [
+                    'id' => 1,
+                    'price' => $siswa->spp,
+                    'quantity' => 1,
+                    'name' => "SPP  {$monthName} {$siswa->name}",
+                    'category' => $category_Spp->name,
+                    "merchant_name" => "Sekolah Kreatif SD Muhammadiyah 3 Samarinda",
+                ],
+                [
+                    'id' => 2,
+                    'name' => "Biaya Administrasi Sekolah Kreatif SD Muhammadiyah 3 Samarinda",
+                    'price' => 50000,
+                    'quantity' => 1,
 
+                ]
             ],
         ];
 
