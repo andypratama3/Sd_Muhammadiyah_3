@@ -124,7 +124,7 @@ class PembayaranController extends Controller
                     [
                         'id' => 2,
                         'name' => "Biaya Administrasi Sekolah Kreatif SD Muhammadiyah 3 Samarinda",
-                        'price' => 5000,
+                        'price' => $biaya,
                         'quantity' => 1,
                     ]
 
