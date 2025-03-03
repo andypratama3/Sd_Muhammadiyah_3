@@ -78,41 +78,37 @@
             });
         });
     });
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch('{{ route('dashboard.datamaster.get.activitys') }}') // Sesuaikan dengan endpoint API kamu
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const activityCount = document.getElementById('activity_count');
+                    const activityItems = document.getElementById('activity_items');
 
-    getActivity();
+                    activityCount.textContent = data.activitys_count > 0 ? data.activitys_count : '';
 
-    function getActivity() {
-        const url = "{{ route('dashboard.datamaster.get.activitys') }}";
-        $.ajax({
-            type: "GET",
-            url: url,
-            success: function (response) {
-                const activitys = response.activitys;
-                if (response.activitys_count > 9) {
-                    $('#activity_count').text(9 + '+');
-                } else {
-                    $('#activity_count').text(response.activitys_count);
+                    activityItems.innerHTML = ''; // Kosongkan sebelum menambahkan data baru
+
+                    data.activitys.forEach(activity => {
+                        let activityItem = `
+                            <a class="dropdown-item d-flex align-items-center" href="#">
+                                <div class="mr-3">
+                                    <div class="icon-circle">
+                                        <i class="fas fa-file-alt"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="small text-gray-500">${new Date(activity.created_at).toLocaleString()}</div>
+                                    <span class="font-weight-bold">${activity.description}</span>
+                                </div>
+                            </a>
+                        `;
+                        activityItems.innerHTML += activityItem;
+                    });
                 }
+            })
+            .catch(error => console.error('Error fetching activity:', error));
+    });
 
-                const activity_icon = $('#activity_icon');
-                $.each(activitys, function (indexInArray, valueOfElement) {
-                    if (valueOfElement === 'Menambahkan') {
-                        activity_icon.addClass('fas fa-plus text-white');
-                    }
-                    if (valueOfElement === 'Mengubah') {
-                        activity_icon.addClass('fas fa-edit text-white');
-                    }
-                    if (valueOfElement === 'Menghapus') {
-                        activity_icon.addClass('fas fa-trash text-white');
-                    }
-                    if (valueOfElement === 'Mengaktifkan') {
-                        activity_icon.addClass('fas fa-toggle-on text-white');
-                    }
-                    if (valueOfElement === 'Menonaktifkan') {
-                        activity_icon.addClass('fas fa-toggle-off text-white');
-                    }
-                });
-            }
-        });
-    }
 </script>

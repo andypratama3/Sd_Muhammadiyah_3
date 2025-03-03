@@ -110,13 +110,18 @@ class MidtransPaymentController extends Controller
 
             $siswaName = $charge->siswa->name ?? 'Unknown Student';
 
-            activity()
-                ->useLog('default')
-                ->tap(function ($activity) {
-                    $activity->causer_id = auth()->id() ?? Str::uuid();
-                    $activity->causer_type = 'Midtrans';
-                })
-                ->log("Pembayaran {$data['transaction_status']} Pada Order ID: {$charge->order_id} - Murid: {$siswaName}");
+            if(in_array($midtransResponse['transaction_status'], ['settlement', 'capture'])) {
+                $status = 'settlement';
+                activity()
+                    ->useLog('default')
+                    ->tap(function ($activity) {
+                        $activity->causer_id = auth()->id() ?? Str::uuid();
+                        $activity->causer_type = 'Midtrans';
+                    })
+                    // ->log("Pembayaran {$status} Pada Order ID: {$charge->order_id} - Murid: {$siswaName}");
+                    ->log("Murid: {$siswaName} Melakukan Pembayaran Dengan Status {$status} Pada Order ID: {$charge->order_id}");
+            }
+
 
             $charge->update($data);
 

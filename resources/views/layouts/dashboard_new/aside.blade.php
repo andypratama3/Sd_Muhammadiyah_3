@@ -180,6 +180,13 @@
                          <div class="mx-3" data-i18n="Invoice">Charge</div>
                      </a>
                  </li>
+                 <li class="menu-item {{ Request::routeIs('dashboard.notifikasi.*') ? 'active' : ''  }}">
+                     <a class="menu-link"
+                         href="{{ route('dashboard.notifikasi.index') }}">
+                         <i class="menu-icon tf-icons fas fa-solid fa-bell"></i>
+                         <div class="mx-3" data-i18n="Invoice">Notifikasi</div>
+                     </a>
+                 </li>
 
 
              </ul>

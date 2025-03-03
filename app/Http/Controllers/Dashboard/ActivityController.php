@@ -22,17 +22,12 @@ class ActivityController extends Controller
     }
     public function activitys()
     {
-        $activitys = Activity::orderBy('created_at')->take(5)->get();
-        $activitys_count = $activitys->count();
-        if($activitys){
-            return response()->json([
-                'success' => true,
-                'activitys' => $activitys,
-                'activitys_count' => $activitys_count
-            ]);
-        }else{
-            return response(['error' => 'Gagal Mengambil Data']);
-        }
+        $activities = Activity::orderBy('created_at','desc')->get();
+        return response()->json([
+            "success" => true,
+            "activitys" => $activities,
+            "activitys_count" => $activities->count()
+        ]);
 
     }
 }

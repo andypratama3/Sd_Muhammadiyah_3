@@ -1,3 +1,22 @@
+
+@push('css')
+    <style>
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .bg-success { background-color: #28a745 !important; }
+        .bg-primary { background-color: #007bff !important; }
+        .bg-danger { background-color: #dc3545 !important; }
+        .bg-warning { background-color: #ffc107 !important; }
+
+    </style>
+@endpush
 <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
     id="layout-navbar">
     <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
@@ -14,34 +33,23 @@
             </div>
 
         </div>
-        
+
         <!-- /Search -->
-        {{-- <li class="nav-item dropdown no-arrow mx-1">
-            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-bell fa-fw"></i>
-                <span class="badge badge-danger badge-counter" id="activity_count"></span>
-            </a>
-            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                aria-labelledby="alertsDropdown">
-                <h6 class="dropdown-header">
-                    Activity
-                </h6>
-                <a class="dropdown-item d-flex align-items-center" href="#" id="activity_link">
-                    <div class="mr-3">
-                        <div class="icon-circle bg-primary">
-                            <i class="fas fa-file-alt text-white" id="activity_icon"></i>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="small text-gray-500" id="activity_date"></div>
-                        <span class="font-weight-bold" id="activity_data">A new monthly report is ready to download!</span>
-                    </div>
+        <ul class="navbar-nav flex-row align-items-center ms-auto ">
+            <li class="nav-item dropdown no-arrow mx-1 float-end mr-2" style="list-style: none !important; background-color: transparent !important;">
+                <a class="nav-link dropdown-toggle" style="z-index: 9999 !important;" href="#" id="alertsDropdown" role="button"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-bell fa-fw"></i>
+                    <span class="badge badge-danger badge-counter" style="color: red !important;" id="activity_count"></span>
                 </a>
-                <a class="dropdown-item text-center small text-black-500" href="{{ route('dashboard.datamaster.activity.index') }}">Show All Activity</a>
-            </div>
-        </li> --}}
-        <ul class="navbar-nav flex-row align-items-center ms-auto">
+                <div class="dropdown-list dropdown-menu shadow animated--grow-in" aria-labelledby="alertsDropdown" id="activity_list">
+                    <h6 class="dropdown-header">Activity</h6>
+                    <div id="activity_items"></div>
+                    <a class="dropdown-item text-center small text-black-500" href="{{ route('dashboard.notifikasi.index') }}">Show All Activity</a>
+                </div>
+            </li>
+            
+            
 
             <!-- User -->
             <li class="nav-item navbar-dropdown dropdown-user dropdown">
@@ -126,3 +134,25 @@
         </ul>
     </div>
 </nav>
+
+@push('js')
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        const dropdownToggle = document.getElementById("alertsDropdown");
+        const dropdownMenu = document.querySelector(".dropdown-menu");
+
+        dropdownToggle.addEventListener("click", function (event) {
+            event.preventDefault();
+            dropdownMenu.classList.toggle("show");
+        });
+
+        // Klik di luar dropdown untuk menutupnya
+        document.addEventListener("click", function (event) {
+            if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                dropdownMenu.classList.remove("show");
+            }
+        });
+    });
+    </script>
+
+@endpush

@@ -42,6 +42,7 @@ use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\AchivementController;
 use App\Http\Controllers\Dashboard\CooperationController;
 
+use App\Http\Controllers\Dashboard\NotificationController;
 use App\Http\Controllers\Dashboard\KelasCategoryController;
 use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
 use App\Http\Controllers\Dashboard\HeroController as DashboardHeroController;
@@ -146,6 +147,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
 
     Route::get('/visitors/data', [VisitorController::class, 'getVisitorData'])->name('visitors.data');
 
+    Route::resource('notifikasi', NotificationController::class, ['names' => 'dashboard.notifikasi']);
+    Route::get('notifikasis/data', [NotificationController::class, 'data_table'])->name('dashboard.notifikasi.data');
 
     Route::resource('kritik-saran', DashboardKritiSaranController::class, ['names' => 'dashboard.kritik.saran']);
 
