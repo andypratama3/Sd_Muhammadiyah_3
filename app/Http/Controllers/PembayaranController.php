@@ -142,7 +142,7 @@ class PembayaranController extends Controller
             //     // Jika expired atau snap_token kosong, buat token baru
                 $snapToken = Snap::getSnapToken($params);
                 $charge->snap_token = $snapToken;
-            //     $charge->order_id_1 = $order_id;
+                $charge->order_id_1 = $order_id;
                 $charge->update();
 
             //     return response()->json([
