@@ -153,7 +153,7 @@ class ChargeController extends Controller
                 ]);
 
                 // Kirim pembayaran ke Midtrans
-                // $midtransResponse = $this->sendPaymentToMidtrans($siswa, $order_id,$gross_amount, $kategori_pembayaran);
+                $midtransResponse = $this->sendPaymentToMidtrans($siswa, $order_id,$gross_amount, $kategori_pembayaran);
 
                 if (isset($midtransResponse['error'])) {
                     DB::rollBack();
