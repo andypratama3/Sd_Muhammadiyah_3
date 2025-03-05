@@ -143,7 +143,7 @@ class PembayaranController extends Controller
                 $snapToken = Snap::getSnapToken($params);
                 $charge->snap_token = $snapToken;
                 $charge->order_id_1 = $order_id;
-                $charge->update();
+                $charge->save();
 
             //     return response()->json([
             //         'status' => 'success',
