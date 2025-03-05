@@ -16,7 +16,7 @@ class MidtransPaymentController extends Controller
         try {
             $midtransResponse = $request->all();
 
-            $midtransResponse = json_decode($midtransResponse, true);
+            // $midtransResponse = json_decode($midtransResponse, true);
 
             if (isset($midtransResponse['status_code']) && in_array($midtransResponse['status_code'], ['202', '300', '401', '405'])) {
                 DB::table('error_log')->insert([
