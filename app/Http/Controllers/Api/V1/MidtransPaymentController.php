@@ -15,9 +15,10 @@ class MidtransPaymentController extends Controller
     {
         // retrun response oke for receive midtrans notification
 
-        if (in_array($request->method(), ['GET', 'POST']) || $request->isMethodCacheable()) {
-            return response()->json(['message' => 'OK']);
+        if ($request->isMethod('GET')) {
+            return response()->json(['message' => 'OK'], 200);
         }
+
 
         try {
             $midtransResponse = $request->all();
