@@ -5,57 +5,35 @@
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    # Allow access to necessary assets
-    RewriteCond %{REQUEST_URI} ^/asset/(lib|css|js|img|webfonts)/ [OR]
-    RewriteCond %{REQUEST_URI} ^/storage/img/
-    RewriteCond %{REQUEST_URI} ^/storage/file/jadwal/
-
-
+    # Pastikan rute API Midtrans dapat diakses
+    RewriteCond %{REQUEST_URI} ^/api/ [NC]
     RewriteRule ^ - [L]
 
-    # Block requests with certain headers and return 404
-    RewriteCond %{HTTP:Accept-Application} ^https?:// [NC,OR]
-    RewriteCond %{HTTP:Accept-Patch} ^https?:// [NC,OR]
-    RewriteCond %{HTTP:Accept-Ranges} ^https?:// [NC,OR]
-    RewriteCond %{HTTP:Access-Control-Allow-Origin} ^https?:// [NC,OR]
-    RewriteCond %{HTTP:Authorization} ^Bearer [NC,OR]
-    RewriteCond %{HTTP:Base-Url} . [NC,OR]
-    RewriteCond %{HTTP:CF-Connecting_IP} . [NC]
-    # RewriteRule ^ - [R=404,L]
-    RewriteRule ^ - index.php [L]
+    # Izinkan akses ke file statis dalam asset dan storage
+    RewriteCond %{REQUEST_URI} ^/asset/(lib|css|js|img|webfonts)/ [OR]
+    RewriteCond %{REQUEST_URI} ^/storage/img/ [OR]
+    RewriteCond %{REQUEST_URI} ^/storage/file/jadwal/
+    RewriteRule ^ - [L]
 
-    # Deny access to other 'asset' and 'storage' paths
-    RewriteCond %{REQUEST_URI} ^/asset/ [OR]
-    RewriteCond %{REQUEST_URI} ^/storage/
-    RewriteCond %{REQUEST_URI} ^/storage/
-    RewriteRule .* - index.php [L]
-
-    # Prevent access to sensitive files
+    # Cegah akses ke file sensitif
     RewriteRule ^\.env$ - [F,L]
-    RewriteRule ^composer\.json$ - [F,L]
-    RewriteRule ^composer\.lock$ - [F,L]
-
-    # Restrict access to specific file types
+    RewriteRule ^composer\.(json|lock)$ - [F,L]
     RewriteRule \.(git|svn|htaccess|htpasswd|ini|log|sh|sql|bak|old|swp|swx)$ - [F,L]
 
-    # Deny access to common attack patterns
-    RewriteCond %{QUERY_STRING} \.\./ [NC,OR]
-    RewriteCond %{QUERY_STRING} \.php [NC,OR]
-    RewriteCond %{QUERY_STRING} \%00 [NC,OR]
-    RewriteCond %{QUERY_STRING} \%2e%2e [NC,OR]
+    # Blokir akses dengan query string yang mencurigakan (SQL Injection, LFI, dll.)
+    RewriteCond %{QUERY_STRING} (\.\./|\.php|%00|%2e%2e) [NC,OR]
     RewriteCond %{QUERY_STRING} (union|select|insert|drop|delete|update|cast|create|truncate|alter|replace) [NC]
     RewriteRule .* - [F,L]
 
-    # Redirect Trailing Slashes If Not A Folder
+    # Redirect Trailing Slash jika bukan folder
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
-    # RewriteRule ^ %1 [L,R=301]
-    RewriteRule ^ %1 index.php [L]
+    RewriteRule ^ %1 [L,R=301]
 
-    # Redirect all 404 errors to Laravel
+    # Redirect semua request yang tidak ditemukan ke Laravel (index.php)
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^ index.php [L]
+    RewriteRule ^ index.php [QSA,L]
 </IfModule>
 
 <IfModule mod_headers.c>
