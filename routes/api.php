@@ -42,7 +42,9 @@ Route::get('facebook/data',[FacebookController::class, 'getData'])->name('api.fa
 Route::post('send/message/whatsapp', [SendOrderIDWhatsAppApi::class, 'sendMessage']);
 
 
-Route::post('midtrans/callback', [MidtransPaymentController::class, 'callback']);
+Route::match(['GET', 'POST'], 'midtrans/callback', [MidtransPaymentController::class, 'callback']);
+
+// Route::post('midtrans/callback', [MidtransPaymentController::class, 'callback']);
 Route::post('midtrans/handling/unfinish', [MidtransPaymentController::class, 'callback_unfinish']);
 
 Route::post('midtrans/handling/error', [MidtransPaymentController::class, 'callback_error']);
