@@ -24,7 +24,7 @@ class CheckTransactionOld extends Command
             DB::beginTransaction();
             $order_id_charge = $charge->order_id ?? $charge->order_id_1;
             try {
-                $response = $client->get("https://api.sandbox.midtrans.com/v2/{$order_id_charge}/status", [
+                $response = $client->get("https://api.midtrans.com/v2/{$order_id_charge}/status", [
                     'headers' => [
                         'Accept' => 'application/json',
                         'Authorization' => 'Basic ' . base64_encode($server_key . ':'),
@@ -37,7 +37,7 @@ class CheckTransactionOld extends Command
                 if ($responseData['transaction_status'] == 'expire' || $responseData['transaction_status'] == 'cancel' || $responseData['transaction_status'] == 'pending') //if ($responseData['transaction_status'] == '['expire', 'pending', 'cancel']') {
                 {
                     // cancel transaction in midtrans
-                    $response_cancel = $client->post("https://api.sandbox.midtrans.com/v2/{$order_id_charge}/cancel", [
+                    $response_cancel = $client->post("https://api.midtrans.com/v2/{$order_id_charge}/cancel", [
                         'headers' => [
                             'Accept' => 'application/json',
                             'Authorization' => 'Basic ' . base64_encode($server_key . ':'),
@@ -110,7 +110,7 @@ class CheckTransactionOld extends Command
         $server_key = env('MIDTRANS_SERVER_KEY');
 
         try {
-            $response = $client->post('https://api.sandbox.midtrans.com/v2/charge', [
+            $response = $client->post('https://api.midtrans.com/v2/charge', [
                 'headers' => [
                     'Accept' => 'application/json',
                     'Authorization' => 'Basic ' . base64_encode($server_key . ':'),

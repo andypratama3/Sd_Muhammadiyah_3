@@ -87,7 +87,7 @@ class PembayaranController extends Controller
 
         try {
             // Ambil data transaksi dari Midtrans
-            $response = $client->get("https://api.sandbox.midtrans.com/v2/{$charge->order_id}/status", [
+            $response = $client->get("https://api.midtrans.com/v2/{$charge->order_id}/status", [
                 'headers' => [
                     'Accept' => 'application/json',
                     'Authorization' => 'Basic ' . base64_encode($server_key . ':'),

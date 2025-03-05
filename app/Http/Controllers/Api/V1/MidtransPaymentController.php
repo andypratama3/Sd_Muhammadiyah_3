@@ -78,7 +78,7 @@ class MidtransPaymentController extends Controller
                     $server_key = env('MIDTRANS_SERVER_KEY');
                     $client = new Client();
 
-                    $check_transaction = $client->get("https://api.sandbox.midtrans.com/v2/{$charge->order_id}/status", [
+                    $check_transaction = $client->get("https://api.midtrans.com/v2/{$charge->order_id}/status", [
                         'headers' => [
                             'Authorization' => 'Basic ' . base64_encode($server_key . ':'),
                         ],
@@ -87,7 +87,7 @@ class MidtransPaymentController extends Controller
                     $transaction_status = json_decode($check_transaction->getBody(), true);
 
                     if ($transaction_status['transaction_status'] === 'expire') {
-                        $cancelResponse = $client->post("https://api.sandbox.midtrans.com/v2/{$charge->order_id}/cancel", [
+                        $cancelResponse = $client->post("https://api.midtrans.com/v2/{$charge->order_id}/cancel", [
                             'headers' => [
                                 'Authorization' => 'Basic ' . base64_encode($server_key . ':'),
                             ],
@@ -139,7 +139,7 @@ class MidtransPaymentController extends Controller
         $server_key = env('MIDTRANS_SERVER_KEY');
 
         try {
-            $response = $client->post("https://api.sandbox.midtrans.com/v2/{$charge->order_id}/cancel", [
+            $response = $client->post("https://api.midtrans.com/v2/{$charge->order_id}/cancel", [
                 'headers' => [
                     'Accept' => 'application/json',
                     'Authorization' => 'Basic ' . base64_encode("$server_key:"),
