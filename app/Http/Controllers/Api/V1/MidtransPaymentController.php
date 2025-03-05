@@ -76,33 +76,33 @@ class MidtransPaymentController extends Controller
             }
 
             if (in_array($midtransResponse['transaction_status'], ['settlement', 'capture'])) {
-                try {
-                    $server_key = env('MIDTRANS_SERVER_KEY');
-                    $client = new Client();
+                // try {
+                //     $server_key = env('MIDTRANS_SERVER_KEY');
+                //     $client = new Client();
 
-                    $check_transaction = $client->get("https://api.midtrans.com/v2/{$charge->order_id}/status", [
-                        'headers' => [
-                            'Authorization' => 'Basic ' . base64_encode($server_key . ':'),
-                        ],
-                    ]);
+                //     $check_transaction = $client->get("https://api.midtrans.com/v2/{$charge->order_id}/status", [
+                //         'headers' => [
+                //             'Authorization' => 'Basic ' . base64_encode($server_key . ':'),
+                //         ],
+                //     ]);
 
-                    $transaction_status = json_decode($check_transaction->getBody(), true);
+                //     $transaction_status = json_decode($check_transaction->getBody(), true);
 
-                    if ($transaction_status['transaction_status'] === 'expire') {
-                        $cancelResponse = $client->post("https://api.midtrans.com/v2/{$charge->order_id}/cancel", [
-                            'headers' => [
-                                'Authorization' => 'Basic ' . base64_encode($server_key . ':'),
-                            ],
-                        ]);
+                //     if ($transaction_status['transaction_status'] === 'expire') {
+                //         $cancelResponse = $client->post("https://api.midtrans.com/v2/{$charge->order_id}/cancel", [
+                //             'headers' => [
+                //                 'Authorization' => 'Basic ' . base64_encode($server_key . ':'),
+                //             ],
+                //         ]);
 
-                        $cancelData = json_decode($cancelResponse->getBody(), true);
-                        if (isset($cancelData['status_code']) && in_array($cancelData['status_code'], [200, 201])) {
-                            return response()->json(['message' => 'Transaksi lama berhasil dibatalkan'], 200);
-                        }
-                    }
-                } catch (\Exception $e) {
-                    return response()->json(['message' => 'Error saat membatalkan transaksi lama: ' . $e->getMessage()], 500);
-                }
+                //         $cancelData = json_decode($cancelResponse->getBody(), true);
+                //         if (isset($cancelData['status_code']) && in_array($cancelData['status_code'], [200, 201])) {
+                //             return response()->json(['message' => 'Transaksi lama berhasil dibatalkan'], 200);
+                //         }
+                //     }
+                // } catch (\Exception $e) {
+                //     return response()->json(['message' => 'Error saat membatalkan transaksi lama: ' . $e->getMessage()], 500);
+                // }
                 $data['transaction_status'] = 'settlement';
             }
 
