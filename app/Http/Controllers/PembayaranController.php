@@ -86,24 +86,25 @@ class PembayaranController extends Controller
         $server_key = env('MIDTRANS_SERVER_KEY');
 
         try {
-            // Ambil data transaksi dari Midtrans
-            $response = $client->get("https://api.midtrans.com/v2/{$charge->order_id}/status", [
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Authorization' => 'Basic ' . base64_encode($server_key . ':'),
-                    'Content-Type' => 'application/json',
-                ],
-            ]);
+            // // Ambil data transaksi dari Midtrans
+            // $response = $client->get("https://api.midtrans.com/v2/{$charge->order_id}/status", [
+            //     'headers' => [
+            //         'Accept' => 'application/json',
+            //         'Authorization' => 'Basic ' . base64_encode($server_key . ':'),
+            //         'Content-Type' => 'application/json',
+            //     ],
+            // ]);
 
-            $responseData = json_decode($response->getBody(), true);
+            // $responseData = json_decode($response->getBody(), true);
 
-            if (!isset($responseData['order_id'], $responseData['gross_amount'])) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Data transaksi tidak lengkap dari Midtrans',
-                    'data' => $responseData,
-                ]);
-            }
+            // if (!isset($responseData['order_id'], $responseData['gross_amount'])) {
+            //     return response()->json([
+            //         'status' => 'error',
+            //         'message' => 'Data transaksi tidak lengkap dari Midtrans',
+            //         'data' => $responseData,
+            //     ]);
+            // }
+
             $order_id = Str::uuid();
             $biaya = 5000;
             $gross_amount = $charge->gross_amount - $biaya;
