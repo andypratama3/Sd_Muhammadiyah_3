@@ -138,24 +138,29 @@ class PembayaranController extends Controller
 
             ];
 
-            if ($responseData['transaction_status'] === 'expire' || $responseData['transaction_status'] === 'pending' || $responseData['transaction_status'] === 'cancel' || empty($charge->snap_token)) {
-                // Jika expired atau snap_token kosong, buat token baru
-                $snapToken = Snap::getSnapToken($params);
-                $charge->snap_token = $snapToken;
-                $charge->order_id_1 = $order_id;
-                $charge->update();
+            // if ($responseData['transaction_status'] === 'expire' || $responseData['transaction_status'] === 'pending' || $responseData['transaction_status'] === 'cancel' || empty($charge->snap_token)) {
+            //     // Jika expired atau snap_token kosong, buat token baru
+            //     $snapToken = Snap::getSnapToken($params);
+            //     $charge->snap_token = $snapToken;
+            //     $charge->order_id_1 = $order_id;
+            //     $charge->update();
 
-                return response()->json([
-                    'status' => 'success',
-                    'snap_token' => $snapToken,
-                    'data' => $params,
-                ]);
-            } else {
-                return response()->json([
-                    'status' => 'success',
-                    'snap_token' => $charge->snap_token,
-                ]);
-            }
+            //     return response()->json([
+            //         'status' => 'success',
+            //         'snap_token' => $snapToken,
+            //         'data' => $params,
+            //     ]);
+            // } else {
+            //     return response()->json([
+            //         'status' => 'success',
+            //         'snap_token' => $charge->snap_token,
+            //     ]);
+
+            return response()->json([
+                        'status' => 'success',
+                        'snap_token' => $charge->snap_token,
+                    ]);
+            // }
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
