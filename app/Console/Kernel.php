@@ -14,10 +14,11 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('app:sync-wilayah-command')->yearly();
         // $schedule->command('app:charge-payment')->monthly();
-        $schedule->command('app:charge-payment')->everyMinute();
         // $schedule->command('app:check-transaction-old')->monthly();
         // $schedule->command('app:archive-charges')->yearly();
         // $schedule->command('app:up-class')->yearly();
+        
+        // $schedule->command('app:charge-payment')->everyMinute();
     }
 
     /**
