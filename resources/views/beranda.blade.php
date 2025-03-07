@@ -1,16 +1,25 @@
 @extends('layouts.user')
 @section('title', 'Home')
 @push('meta_user')
-<meta name="description" content="Sekolah Kreatif Muhammadiyah 3 Samarinda - Komitmen pada pembelajaran inovatif dan pengembangan karakter siswa.">
-<meta name="keywords" content="Sekolah, Kreatif, Muhammadiyah, Samarinda, Pendidikan, SD, Pembelajaran Inovatif">
-<meta property="og:title" content="Sekolah Kreatif Muhammadiyah 3 Samarinda">
-<meta property="og:description" content="Pembelajaran inovatif dan pengembangan karakter siswa.">
-<meta property="og:image" content="{{ asset('asset/img/SD3_logo.png') }}">
-<meta property="og:url" content="{{ url()->current() }}">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Sekolah Kreatif Muhammadiyah 3 Samarinda">
-<meta name="twitter:description" content="Pembelajaran inovatif dan pengembangan karakter siswa.">
+    <meta name="description" content="Sekolah Kreatif Muhammadiyah 3 Samarinda menawarkan pembelajaran inovatif, pendidikan berbasis karakter, dan lingkungan belajar yang menyenangkan untuk siswa.">
+    <meta name="keywords" content="Sekolah Kreatif Muhammadiyah 3, SD Muhammadiyah 3 Samarinda, Sekolah Islam Samarinda, Sekolah Kreatif, Pendidikan Inovatif, SD Muhammadiyah, Pembelajaran Berbasis Karakter, Sekolah Dasar Samarinda">
+    <meta name="author" content="Sekolah Kreatif Muhammadiyah 3 Samarinda">
+    <meta name="robots" content="index, follow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Sekolah Kreatif Muhammadiyah 3 Samarinda - Pembelajaran Inovatif dan Berkarakter">
+    <meta property="og:description" content="Gabung dengan Sekolah Kreatif Muhammadiyah 3 Samarinda untuk pengalaman belajar yang inovatif dan berbasis karakter!">
+    <meta property="og:image" content="{{ asset('asset_new/images/SD3_logo1.png') }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:site_name" content="Sekolah Kreatif Muhammadiyah 3 Samarinda">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Sekolah Kreatif Muhammadiyah 3 Samarinda - Pembelajaran Inovatif & Berkarakter">
+    <meta name="twitter:description" content="Sekolah dengan metode pembelajaran inovatif dan pendidikan karakter terbaik di Samarinda.">
+    <meta name="twitter:image" content="{{ asset('asset_new/images/SD3_logo1.png') }}">
 @endpush
+
 @push('css_user')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 <style>
