@@ -27,6 +27,18 @@
         padding: 10px 0;
     }
 
+    .carousel-custom {
+        object-fit: cover;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    .image-custom-feature {
+        object-fit: contain !important;
+        mix-blend-mode: multiply !important;
+        margin-top: 20px !important;
+    }
+
     .about .swiper-wrapper {
         height: auto;
     }
@@ -87,7 +99,7 @@
                         </div>
                     </div>
                     <div class="col-lg-5 animated fadeInRight">
-                        <div class="carousel-img" style="object-fit: cover; justify-content: center !important; align-items: center !important;">
+                        <div class="carousel-img carousel-custom">
                             <img src="{{ asset('asset_new/images/SD3_logo1.png') }}" class="img-fluid img-logo" alt="" style="width: 60%;" loading="lazy">
                             <div class="jargon" style="display: flex; gap: 4px; font-family: times new roman; justify-content: center; margin-top: 15px;">
                                 {{-- Jargon SD MUHAMMADIYAH 3 SAMARINDA --}}
@@ -184,8 +196,7 @@
                     </h4>
                 </div>
                 <div class="col-md-4">
-                    <img src="{{ asset('asset/img/sekolah-penggerak.jpeg') }}" class="img-fluid" alt=""
-                        style="object-fit: contain !important; mix-blend-mode: multiply; margin-top: 20px;">
+                    <img src="{{ asset('asset/img/sekolah-penggerak.jpeg') }}" class="img-fluid image-custom-feature" alt="">
                 </div>
             </div>
             <div class="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.2s" style="max-width: 800px;">
@@ -630,7 +641,7 @@
 
 
 @push('js_user')
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
     const swiper_1 = new Swiper('.init-swiper', {
         loop: true,
