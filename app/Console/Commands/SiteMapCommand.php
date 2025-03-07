@@ -35,9 +35,12 @@ class SiteMapCommand extends Command
         // Buat instance sitemap baru
         $sitemap = Sitemap::create();
 
+        // Ambil base URL tanpa trailing slash
+        $baseUrl = rtrim(config('app.url'), '/');
+
         // Tambahkan halaman utama
         $sitemap->add(
-            Url::create(config('app.url'))
+            Url::create($baseUrl)
                 ->setLastModificationDate(now())
                 ->setPriority(1.0)
         );
@@ -51,7 +54,7 @@ class SiteMapCommand extends Command
 
         foreach ($staticPages as $page) {
             $sitemap->add(
-                Url::create(config('app.url') . '/' . $page)
+                Url::create("$baseUrl/$page")
                     ->setLastModificationDate(now())
                     ->setPriority(0.7)
             );
@@ -64,7 +67,7 @@ class SiteMapCommand extends Command
         // Tambahkan berita ke sitemap
         foreach ($beritas as $berita) {
             $sitemap->add(
-                Url::create(config('app.url') . "/berita/{$berita->slug}")
+                Url::create("$baseUrl/berita/{$berita->slug}")
                     ->setLastModificationDate($berita->updated_at)
                     ->setPriority(0.8)
             );
@@ -73,7 +76,7 @@ class SiteMapCommand extends Command
         // Tambahkan artikel ke sitemap
         foreach ($artikels as $artikel) {
             $sitemap->add(
-                Url::create(config('app.url') . "/artikel/{$artikel->slug}")
+                Url::create("$baseUrl/artikel/{$artikel->slug}")
                     ->setLastModificationDate($artikel->updated_at)
                     ->setPriority(0.8)
             );
