@@ -6,6 +6,7 @@
 /storage/*.key
 /vendor
 .env
+/public/sitemap.xml
 .env.backup
 .env.production
 .phpunit.result.cache
