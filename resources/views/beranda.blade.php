@@ -60,8 +60,8 @@
                 <div class="row g-4 align-items-center">
                     <div class="col-lg-7 animated fadeInLeft">
                         <div class="text-sm-center">
-                            <h3 class="text-white text-uppercase fw-bold mb-2 mt-2">SD MUHAMMADIYAH 3 SAMARINDA </h3>
-                            <h4 class="display-2 text-white mb-4">{{ $hero->name }}</h4>
+                            <h3 class="text-white text-uppercase fw-bold mb-2 mt-2">{{ $hero->name }}</h3>
+                            {{-- <h4 class="display-2 text-white mb-4">{{ $hero->name }}</h4> --}}
                             <p class="mb-5 fs-5">{{ $hero->desc }}
                             </p>
                             <div class="d-flex justify-content-center flex-shrink-0 mb-4">
