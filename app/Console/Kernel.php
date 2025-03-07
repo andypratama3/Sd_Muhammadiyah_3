@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('app:sync-wilayah-command')->yearly();
-        $schedule->command('app:site-map-command')->everyDay();
+        $schedule->command('app:site-map-command')->sundays();
         // $schedule->command('app:charge-payment')->monthly();
         // $schedule->command('app:check-transaction-old')->monthly();
         // $schedule->command('app:archive-charges')->yearly();
