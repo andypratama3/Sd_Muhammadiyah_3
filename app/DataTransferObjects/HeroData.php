@@ -9,8 +9,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class HeroData extends Data
 {
     public function __construct(
-        public readonly string $name,
-        public readonly string $desc,
+        public readonly ?string $name,
+        public readonly ?string $desc,
         public readonly ?string $youtube,
         public readonly ?string $link,
         public readonly ?UploadedFile $image,
@@ -35,8 +35,8 @@ class HeroData extends Data
     public static function messages()
     {
         return [
-            'name.required' => 'Kolom Nama Artikel tidak boleh kosong!',
-            'desc.required' => 'Kolom Deskripsi tidak boleh kosong!',
+            // 'name.required' => 'Kolom Nama Artikel tidak boleh kosong!',
+            // 'desc.required' => 'Kolom Deskripsi tidak boleh kosong!',
             'image.required' => 'Kolom File Foto tidak boleh kosong!',
         ];
     }
