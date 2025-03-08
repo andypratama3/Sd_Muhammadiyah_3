@@ -5,6 +5,9 @@
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
+    # Pastikan sitemap.xml bisa diakses
+    RewriteRule ^sitemap\.xml$ - [L]
+
     # Pastikan rute API Midtrans dapat diakses
     RewriteCond %{REQUEST_URI} ^/api/ [NC]
     RewriteRule ^ - [L]
