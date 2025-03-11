@@ -13,9 +13,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=ABeeZee:ital@0;1&display=swap" rel="stylesheet">
 
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('asset_new/images/SD3_logo.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('asset_new/images/SD3_logo.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('asset_new/images/SD3_logo.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('asset_new/images/SD3_logo1.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('asset_new/images/SD3_logo1.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('asset_new/images/SD3_logo1.png') }}">
 
 
 
