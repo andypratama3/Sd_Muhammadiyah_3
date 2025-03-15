@@ -13,6 +13,7 @@
     RewriteRule ^ - [L]
 
     # Izinkan akses ke file statis dalam asset dan storage
+    RewriteCond %{REQUEST_URI} ^/asset_dashboard/(css|js|img|webfonts)/ [OR]
     RewriteCond %{REQUEST_URI} ^/asset/(lib|css|js|img|webfonts)/ [OR]
     RewriteCond %{REQUEST_URI} ^/storage/img/ [OR]
     RewriteCond %{REQUEST_URI} ^/storage/file/jadwal/
