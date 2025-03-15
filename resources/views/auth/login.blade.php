@@ -10,8 +10,8 @@
   <meta name="author" content="">
   <link href="{{ asset('asset_dashboard/img/logo/logo.png') }}" rel="icon">
   <title>Login</title>
-  <link href="{{ asset('asset_dashboard/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
-  <link href="{{ asset('asset_dashboard/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
+  <link href="{{ asset('asset_dashboard/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
+  <link href="{{ asset('asset_dashboard/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
   <link href="{{ asset('asset_dashboard/css/ruang-admin.min.css') }}" rel="stylesheet">
 
 </head>
