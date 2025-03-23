@@ -20,7 +20,7 @@ class BeritaController extends Controller
     public function show($slug)
     {
         $berita = Berita::where('slug', $slug)->firstOrFail();
-
+        $berita->incrementViews();
         $latest_artikel = Artikel::orderBy('created_at', 'desc')->take(15)->get();
         $artikel_trending_list = Artikel::select('id','name','artikel','image','created_at','slug')->orderBy('jumlah_klik','DESC')->take(15)->get();
 

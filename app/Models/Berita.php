@@ -22,12 +22,20 @@ class Berita extends Model
     protected $fillable = [
         'judul',
         'desc',
+        'views',
+        'slug',
         'foto',
     ];
 
     protected $dates = [
         'deleted_at',
     ];
+
+    // Fungsi untuk menambah jumlah views
+    public function incrementViews()
+    {
+        $this->increment('views');
+    }
 
     public function setJudulAttribute($value)
     {
