@@ -30,17 +30,43 @@
     }
 
     .quil-wrapper {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Menyesuaikan jumlah kolom */
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
         gap: 10px; /* Jarak antar gambar */
     }
 
     .quil-wrapper img {
         width: 100%;
+        max-width: 100%; /* Pastikan gambar tidak lebih besar dari kontainernya */
         height: auto;
+        margin-bottom: 10px; /* Jarak antar gambar ke bawah */
+        padding: 5px; /* Memberikan ruang dalam gambar */
         border-radius: 10px;
         display: block;
     }
+
+    /* Responsive Layout */
+    @media (min-width: 576px) { /* Untuk layar kecil (mobile) */
+        .quil-wrapper img {
+            max-width: 90%; /* Sedikit lebih kecil agar ada ruang di sisi */
+        }
+    }
+
+    @media (min-width: 768px) { /* Untuk tablet */
+        .quil-wrapper img {
+            max-width: 48%; /* Dua gambar per baris */
+        }
+    }
+
+    @media (min-width: 992px) { /* Untuk laptop dan desktop */
+        .quil-wrapper img {
+            max-width: 32%; /* Tiga gambar per baris */
+        }
+    }
+
+
+
 
 
 </style>
