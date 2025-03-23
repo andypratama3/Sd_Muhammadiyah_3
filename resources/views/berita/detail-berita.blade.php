@@ -96,16 +96,12 @@
 
 
     @media (min-width: 768px) {
-        .quil-wrapper-field {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-        }
-
         .quil-wrapper-field img {
-            max-width: calc(33.33% - 10px); /* 3 kolom pada tablet */
+            max-width: calc(50% - 10px);
             height: 200px;
+            border: 2px solid rgb(0, 0, 0);
+            margin: 2px;
+            display: inline-block;
             object-fit: cover;
             border-radius: 10px;
         }
@@ -113,12 +109,11 @@
 
     @media (min-width: 992px) {
         .quil-wrapper-field img {
-            max-width: calc(33.33% - 10px); /* 3 kolom tetap pada layar lebar */
+            display: inline-block;
+            margin: 10px;
+            max-width: calc(65.44% - 10px);
         }
     }
-
-
-
 
 </style>
 @endpush
@@ -136,9 +131,9 @@
                 </figure>
             </div>
 
-            <div class="col-md-12 mt-3 quil-wrapper">
+            <div class="col-md-12 mt-3 quil-wrapper-field">
                 <h1 class="mb-2 title-news text-start">{{ $berita->judul }}</h1>
-                <div class="quil-wrapper-field">{!! $berita->desc !!}</div>
+                <div>{!! $berita->desc !!}</div>
             </div>
         </div>
     </div>
