@@ -27,9 +27,6 @@
         font-weight: bold;
     }
 
-    .container {
-        overflow: hidden;
-    }
 
     .quil-wrapper-field {
         display: flex;
@@ -101,10 +98,6 @@
     @media (min-width: 768px) {
         .quil-wrapper-field img {
             max-width: 100%;
-        }
-
-        .container {
-            max-width: 720px;
         }
     }
 
