@@ -104,7 +104,7 @@
         }
 
         .quil-wrapper-field img {
-            max-width: calc(50% - 10px); /* 2 kolom pada tablet */
+            max-width: calc(33.33% - 10px); /* 3 kolom pada tablet */
             height: 200px;
             object-fit: cover;
             border-radius: 10px;
@@ -113,15 +113,11 @@
 
     @media (min-width: 992px) {
         .quil-wrapper-field img {
-            max-width: calc(33.33% - 10px);
+            max-width: calc(33.33% - 10px); /* 3 kolom tetap pada layar lebar */
         }
     }
 
-    @media (min-width: 1200px) {
-    .quil-wrapper-field img {
-            max-width: calc(25% - 10px); /* 4 kolom pada layar besar */
-        }
-    }
+
 
 
 </style>
