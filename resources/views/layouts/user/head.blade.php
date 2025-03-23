@@ -3,7 +3,7 @@
     <meta charset="utf-8">
     <title>@yield('title')</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="Sekolah Kreatif Muhammadiyah 3 Samarinda, SD Muhammadiyah 3 Samarinda, Sekolah Kreatif Muhammadiyah 3 Samarinda, Sekolah Muhammadiyah 3 Samarinda, SD Muhammadiyah 3 Samarinda, Sekolah Kreatif Muhammadiyah 3 Samarinda Kalimantan Timur, Sekolah Kreatif Muhammadiyah 3 Samarinda Kalimantan" name="keywords">
+    <meta content="Sekolah Kreatif Muhammadiyah 3 Samarinda, SD Muhammadiyah 3 Samarinda, Sekolah Kreatif Muhammadiyah 3 Samarinda, Sekolah Muhammadiyah 3 Samarinda, SD Muhammadiyah 3 Samarinda, Sekolah Kreatif Muhammadiyah 3 Samarinda Kalimantan Timur, Sekolah Kreatif Muhammadiyah 3 Samarinda Kalimantan, Sekolah Terbaik, SD Terbaik Samarinda, Sekolah Terbaik Samarinda, Sekolah Terbaik Kalimantan Timur, Sd terbaik Samarinda sekolah sd terbaik di samarinda" name="keywords">
     <meta content="Sekolah Kreatif Muhammadiyah 3 Samarinda adalah Sekolah Muhammadiyah 3 Samarinda yang berfokus pada pengembangan karakter dan pembelajaran inovatif. Kami memiliki visi menjadi Sekolah Kreatif Muhammadiyah 3 Samarinda yang unggul dalam pendidikan dan pengembangan karakter siswa. Kami memiliki misi untuk meningkatkan kualitas pendidikan dan pengembangan karakter siswa dengan mengembangkan potensi yang dimiliki oleh setiap siswa." name="description">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="author" content="https://sdmuhammadiyah3smd.com">
@@ -36,9 +36,9 @@
 
     <!-- Template Stylesheet -->
     <link href="{{ asset('asset/css/style.css') }}" rel="stylesheet">
+
+
     @stack('css_user')
-
-
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
