@@ -21,25 +21,24 @@
         margin-top: 20px;
     }
 
-    .course .title-news {
+    .title-news {
         margin-top: 20px;
         font-size: 24px;
         font-weight: bold;
+        text-align: center;
     }
 
-    /* Kontainer utama agar konten tidak keluar dari batas */
     .container {
         max-width: 100%;
         overflow: hidden;
     }
 
-    /* Style utama untuk gambar agar responsif */
     .quil-wrapper {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        gap: 10px; /* Jarak antar gambar */
-        overflow: hidden; /* Mencegah overflow pada layar kecil */
+        gap: 15px;
+        padding: 10px;
         max-width: 100%;
     }
 
@@ -48,48 +47,52 @@
         max-width: 100%;
         height: auto;
         display: block;
-        object-fit: cover; /* Pastikan gambar tetap proporsional */
+        object-fit: cover;
         border-radius: 10px;
     }
 
-    /* Gaya untuk deskripsi agar teks tidak meluber */
+    .quil-wrapper-field {
+        padding: 15px;
+    }
+
     .quil-wrapper-field p {
         word-wrap: break-word;
         overflow-wrap: break-word;
         white-space: normal;
         font-size: 16px;
         line-height: 1.6;
+        text-align: justify;
     }
 
-    /* Responsive Layout */
-    @media (max-width: 575px) { /* HP */
+    @media (max-width: 575px) {
         .quil-wrapper {
-            flex-direction: column; /* Agar gambar tersusun vertikal */
+            flex-direction: column;
+            gap: 10px;
         }
 
         .quil-wrapper img {
-            max-width: 100%; /* Gambar memenuhi layar */
+            max-width: 100%;
         }
 
         .quil-wrapper-field h1 {
-            font-size: 20px; /* Sesuaikan ukuran judul */
+            font-size: 20px;
         }
 
         .quil-wrapper-field p {
-            font-size: 14px; /* Ukuran teks lebih kecil */
+            font-size: 14px;
             line-height: 1.5;
         }
     }
 
-    @media (min-width: 768px) { /* Tablet */
+    @media (min-width: 768px) {
         .quil-wrapper img {
-            max-width: 48%; /* Dua gambar per baris */
+            max-width: 48%;
         }
     }
 
-    @media (min-width: 992px) { /* Laptop/Desktop */
+    @media (min-width: 992px) {
         .quil-wrapper img {
-            max-width: 32%; /* Tiga gambar per baris */
+            max-width: 32%;
         }
     }
 </style>
@@ -123,7 +126,6 @@
             img.setAttribute('data-title', img.getAttribute('alt') || 'Gambar ' + (index + 1));
         });
 
-        // Reinitialize Lightbox
         if (typeof lightbox !== 'undefined') {
             lightbox.option({
                 'resizeDuration': 200,
@@ -134,6 +136,5 @@
     });
 </script>
 @endpush
-
 
 @endsection
