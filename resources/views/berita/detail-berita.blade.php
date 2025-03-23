@@ -21,22 +21,21 @@
         margin-top: 20px;
     }
 
-    .course .title-news {
+    .title-news {
         margin-top: 20px;
         font-size: 24px;
         font-weight: bold;
     }
 
-    /* Kontainer utama agar konten tidak keluar dari batas */
     .container {
         max-width: 100%;
         overflow: hidden;
     }
 
-    /* Style utama untuk gambar agar responsif */
     .quil-wrapper {
         display: flex;
         flex-wrap: wrap;
+        justify-content: center;
         gap: 2px;
         overflow: hidden;
         max-width: 100%;
@@ -47,42 +46,52 @@
         max-width: 100%;
         height: auto;
         display: block;
-        object-fit: cover; /* Pastikan gambar tetap proporsional */
+        object-fit: cover;
         border-radius: 10px;
     }
 
-    /* Gaya untuk deskripsi agar teks tidak meluber */
-    .quil-wrapper-field p {
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-        white-space: normal;
+    /* Pembungkus konten berita */
+    .quil-wrapper-field {
         font-size: 16px;
         line-height: 1.6;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
     }
 
-    /* Responsive Layout */
+    /* Memastikan list tetap memiliki format yang baik */
+    .quil-wrapper-field ul,
+    .quil-wrapper-field ol {
+        margin-left: 20px;
+        padding-left: 20px;
+    }
+
+    .quil-wrapper-field ul li,
+    .quil-wrapper-field ol li {
+        margin-bottom: 5px;
+    }
+
     @media (max-width: 575px) {
         .quil-wrapper {
             flex-direction: column;
         }
 
         .quil-wrapper img {
-            max-width: 100%; /* Gambar memenuhi layar */
+            max-width: 100%;
         }
 
         .quil-wrapper-field h1 {
-            font-size: 20px; /* Sesuaikan ukuran judul */
+            font-size: 20px;
         }
 
         .quil-wrapper-field p {
-            font-size: 14px; /* Ukuran teks lebih kecil */
+            font-size: 14px;
             line-height: 1.5;
         }
     }
 
-    @media (min-width: 768px) { /* Tablet */
+    @media (min-width: 768px) {
         .quil-wrapper img {
-            max-width: 48%; /* Dua gambar per baris */
+            max-width: 48%;
         }
     }
 
@@ -102,13 +111,14 @@
                 <span class="date">Di Posting Pada</span>
                 <span class="mx-1">&bullet;</span>
                 <span>{{ \Carbon\Carbon::parse($berita->created_at)->locale('id')->translatedFormat('d F Y') }}</span>
-                <img src="{{ asset('storage/img/berita/'. $berita->foto) }}" alt="{{ $berita->judul }}" class="img-fluid">
+                <figure>
+                    <img src="{{ asset('storage/img/berita/'. $berita->foto) }}" alt="{{ $berita->judul }}" class="img-fluid">
+                </figure>
             </div>
-            <div class="col-md-12 mt-3 col-sm  quil-wrapper-field">
+
+            <div class="col-md-12 mt-3 quil-wrapper-field">
                 <h1 class="mb-2 title-news">{{ $berita->judul }}</h1>
-                <div class="quil-wrapper">
-                    {!! $berita->desc !!}
-                </div>
+                <div>{!! $berita->desc !!}</div>
             </div>
         </div>
     </div>
@@ -122,7 +132,6 @@
             img.setAttribute('data-title', img.getAttribute('alt') || 'Gambar ' + (index + 1));
         });
 
-        // Reinitialize Lightbox
         if (typeof lightbox !== 'undefined') {
             lightbox.option({
                 'resizeDuration': 200,
@@ -133,6 +142,5 @@
     });
 </script>
 @endpush
-
 
 @endsection
