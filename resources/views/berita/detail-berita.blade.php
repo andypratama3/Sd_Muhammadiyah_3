@@ -72,23 +72,31 @@
     }
 
     @media (max-width: 575px) {
-        .quil-wrapper {
-            flex-direction: column;
-        }
-
-        .quil-wrapper img {
-            max-width: 100%;
-        }
-
-        .quil-wrapper-field h1 {
-            font-size: 20px;
-        }
-
-        .quil-wrapper-field p {
-            font-size: 14px;
-            line-height: 1.5;
-        }
+    .quil-wrapper {
+        flex-direction: column;
+        align-items: center;
     }
+
+    .quil-wrapper img {
+        padding: 10px;
+        max-width: 100%;
+        height: auto;
+        margin: auto;
+        box-sizing: border-box;
+    }
+
+    .quil-wrapper-field h1 {
+        font-size: 18px;
+        text-align: center;
+    }
+
+    .quil-wrapper-field p {
+        font-size: 14px;
+        line-height: 1.5;
+        text-align: justify;
+    }
+}
+
 
     @media (min-width: 768px) {
         .quil-wrapper img {
