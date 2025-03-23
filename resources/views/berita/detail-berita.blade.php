@@ -28,7 +28,6 @@
     }
 
     .container {
-        max-width: 100%;
         overflow: hidden;
     }
 
@@ -114,9 +113,7 @@
             max-width: 100%;
         }
 
-        .container {
-            max-width: 960px;
-        }
+
     }
 
 </style>
