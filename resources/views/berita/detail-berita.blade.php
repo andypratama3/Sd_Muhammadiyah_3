@@ -16,6 +16,9 @@
 @endpush
 
 @push('css_user')
+<!-- Lightbox CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet">
+
 <style>
     .course {
         margin-top: 20px;
@@ -33,22 +36,19 @@
         overflow: hidden;
     }
 
-    .quil-wrapper {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 15px;
+    .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 10px;
         padding: 10px;
-        max-width: 100%;
     }
 
-    .quil-wrapper img {
+    .gallery img {
         width: 100%;
-        max-width: 100%;
         height: auto;
+        border-radius: 10px;
         display: block;
         object-fit: cover;
-        border-radius: 10px;
     }
 
     .quil-wrapper-field {
@@ -65,13 +65,8 @@
     }
 
     @media (max-width: 575px) {
-        .quil-wrapper {
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .quil-wrapper img {
-            max-width: 100%;
+        .gallery {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         }
 
         .quil-wrapper-field h1 {
@@ -81,18 +76,6 @@
         .quil-wrapper-field p {
             font-size: 14px;
             line-height: 1.5;
-        }
-    }
-
-    @media (min-width: 768px) {
-        .quil-wrapper img {
-            max-width: 48%;
-        }
-    }
-
-    @media (min-width: 992px) {
-        .quil-wrapper img {
-            max-width: 32%;
         }
     }
 </style>
@@ -110,20 +93,27 @@
             </div>
             <div class="col-md-12 mt-3 quil-wrapper-field">
                 <h1 class="mb-2 title-news">{{ $berita->judul }}</h1>
-                <div class="quil-wrapper">
+                <div class="gallery">
                     {!! $berita->desc !!}
                 </div>
             </div>
         </div>
     </div>
 </div>
+@endsection
 
 @push('js_user')
+<!-- Lightbox JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        document.querySelectorAll('.quil-wrapper img').forEach((img, index) => {
-            img.setAttribute('data-lightbox', 'gallery');
-            img.setAttribute('data-title', img.getAttribute('alt') || 'Gambar ' + (index + 1));
+        document.querySelectorAll('.gallery img').forEach((img, index) => {
+            let wrapper = document.createElement("a");
+            wrapper.href = img.src;
+            wrapper.setAttribute('data-lightbox', 'gallery');
+            wrapper.setAttribute('data-title', img.getAttribute('alt') || 'Gambar ' + (index + 1));
+            img.parentNode.insertBefore(wrapper, img);
+            wrapper.appendChild(img);
         });
 
         if (typeof lightbox !== 'undefined') {
@@ -136,5 +126,3 @@
     });
 </script>
 @endpush
-
-@endsection
