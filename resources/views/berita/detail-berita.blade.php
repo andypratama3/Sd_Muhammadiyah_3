@@ -26,7 +26,18 @@
 
     img {
         border-radius: 10px;
+
     }
+
+    .quil-wrapper-field img {
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+        display: block;
+        margin: 0 auto;
+        border-radius: 10px;
+    }
+
 </style>
 @endpush
 @section('content')
@@ -39,11 +50,22 @@
 
                 <img src="{{ asset('storage/img/berita/'. $berita->foto) }}" alt="{{ $berita->judul }}" class="img-fluid">
             </div>
-            <div class="col-md- 12 mt-3">
+            <div class="col-md- 12 mt-3" class="quil-wrapper-field">
                 <h1 class="mb-2" class="title-news">{{ $berita->judul }}</h1>
                 <p>{!! $berita->desc !!}</p>
             </div>
         </div>
     </div>
 </div>
+@push('js_user')
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll('.quil-wrapper img').forEach((img, index) => {
+            img.setAttribute('data-lightbox', 'gallery');
+            img.setAttribute('data-title', img.getAttribute('alt') || 'Gambar ' + (index + 1));
+        });
+    });
+</script>
+@endpush
+
 @endsection

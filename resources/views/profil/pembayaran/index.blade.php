@@ -338,7 +338,7 @@
             // Cegah klik berulang
             $(this).prop('disabled', true);
 
-            console.log("Mengambil snap_token untuk charge_id:", charge_id);
+            // console.log("Mengambil snap_token untuk charge_id:", charge_id);
 
             $.ajax({
                 type: "GET",
@@ -346,7 +346,6 @@
                 data: { charge_id: charge_id },
                 cache: false,
                 success: function (response) {
-
                     if (response.status === 'success' && response.snap_token) {
                         let snapToken = response.snap_token;
 
