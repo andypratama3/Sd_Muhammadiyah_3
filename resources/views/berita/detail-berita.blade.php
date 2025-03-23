@@ -101,13 +101,21 @@
 
     @media (min-width: 768px) {
         .quil-wrapper img {
-            max-width: 48%;
+            max-width: 100%;
+        }
+
+        .container {
+            max-width: 720px;
         }
     }
 
     @media (min-width: 992px) {
         .quil-wrapper img {
-            max-width: 32%;
+            max-width: 100%;
+        }
+
+        .container {
+            max-width: 960px;
         }
     }
 
