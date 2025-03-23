@@ -81,7 +81,7 @@
 
                 <img src="{{ asset('storage/img/berita/'. $berita->foto) }}" alt="{{ $berita->judul }}" class="img-fluid">
             </div>
-            <div class="col-md- 12 mt-3" class="quil-wrapper-field">
+            <div class="col-md-12 mt-3" class="quil-wrapper-field">
                 <h1 class="mb-2" class="title-news">{{ $berita->judul }}</h1>
                 <p>{!! $berita->desc !!}</p>
             </div>
