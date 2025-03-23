@@ -96,17 +96,33 @@
 
 
     @media (min-width: 768px) {
+        .quil-wrapper-field {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
         .quil-wrapper-field img {
-            max-width: 100%;
+            max-width: calc(50% - 10px); /* 2 kolom pada tablet */
+            height: 200px; /* Tetapkan tinggi agar seragam */
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .container {
+            max-width: 720px;
         }
     }
 
     @media (min-width: 992px) {
         .quil-wrapper-field img {
-            max-width: 100%;
+            max-width: calc(33.33% - 10px); /* 3 kolom pada PC */
         }
 
-
+        .container {
+            max-width: 960px;
+        }
     }
 
 </style>
