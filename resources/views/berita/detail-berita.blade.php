@@ -29,14 +29,19 @@
 
     }
 
-    .quil-wrapper-field img {
+    .quil-wrapper {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Menyesuaikan jumlah kolom */
+        gap: 10px; /* Jarak antar gambar */
+    }
+
+    .quil-wrapper img {
         width: 100%;
         height: auto;
-        max-width: 100%;
-        display: block;
-        margin: 0 auto;
         border-radius: 10px;
+        display: block;
     }
+
 
 </style>
 @endpush
