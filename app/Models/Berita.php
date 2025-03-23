@@ -31,11 +31,14 @@ class Berita extends Model
         'deleted_at',
     ];
 
-    // Fungsi untuk menambah jumlah views
-    public function incrementViews()
+    public static function boot()
     {
-        $this->increment('views');
+        parent::boot();
+        static::retrieved(function ($model) {
+            $model->increment('views');
+        });
     }
+
 
     public function setJudulAttribute($value)
     {
