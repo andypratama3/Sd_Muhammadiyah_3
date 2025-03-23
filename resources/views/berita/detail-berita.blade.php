@@ -100,7 +100,7 @@
 
 
     @media (min-width: 768px) {
-        .quil-wrapper img {
+        .quil-wrapper-field img {
             max-width: 100%;
         }
 
@@ -110,7 +110,7 @@
     }
 
     @media (min-width: 992px) {
-        .quil-wrapper img {
+        .quil-wrapper-field img {
             max-width: 100%;
         }
 
@@ -136,7 +136,7 @@
             </div>
 
             <div class="col-md-12 mt-3 quil-wrapper-field">
-                <h1 class="mb-2 title-news">{{ $berita->judul }}</h1>
+                <h1 class="mb-2 title-news text-start">{{ $berita->judul }}</h1>
                 <div>{!! $berita->desc !!}</div>
             </div>
         </div>
