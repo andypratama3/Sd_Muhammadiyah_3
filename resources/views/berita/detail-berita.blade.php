@@ -99,7 +99,6 @@
         .quil-wrapper-field img {
             max-width: calc(50% - 10px);
             height: 200px;
-            border: 2px solid rgb(0, 0, 0);
             margin: 2px;
             display: inline-block;
             object-fit: cover;
