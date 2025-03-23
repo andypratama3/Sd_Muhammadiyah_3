@@ -1,5 +1,5 @@
 @extends('layouts.user')
-@section('title', "Berita $berita->judul")
+@section('title',"Berita $berita->judul")
 
 @push('meta_user')
     <meta name="description" content="{{ Str::limit(strip_tags($berita->desc), 160) }}">
@@ -9,13 +9,10 @@
     <meta property="og:image" content="{{ asset('storage/img/berita/'. $berita->foto) }}">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:type" content="article">
-    <meta property="article:published_time" content="{{ $berita->created_at }}">
-    <meta property="article:modified_time" content="{{ $berita->updated_at }}">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ $berita->judul }}">
     <meta name="twitter:description" content="{{ Str::limit(strip_tags($berita->desc), 160) }}">
     <meta name="twitter:image" content="{{ asset('storage/img/berita/'. $berita->foto) }}">
-    <link rel="canonical" href="{{ url()->current() }}">
 @endpush
 
 @push('css_user')
@@ -24,42 +21,72 @@
         margin-top: 20px;
     }
 
-    .title-news {
+    .course .title-news {
         margin-top: 20px;
         font-size: 24px;
         font-weight: bold;
     }
 
-    /* Responsif Gambar */
+    /* Kontainer utama agar konten tidak keluar dari batas */
+    .container {
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    /* Style utama untuk gambar agar responsif */
     .quil-wrapper {
         display: flex;
         flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
+        gap: 2px;
+        overflow: hidden;
         max-width: 100%;
     }
 
     .quil-wrapper img {
         width: 100%;
+        max-width: 100%;
         height: auto;
-        object-fit: cover;
+        display: block;
+        object-fit: cover; /* Pastikan gambar tetap proporsional */
         border-radius: 10px;
     }
 
-    /* Responsive Grid */
-    @media (max-width: 575px) { /* Mobile */
+    /* Gaya untuk deskripsi agar teks tidak meluber */
+    .quil-wrapper-field p {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
+        font-size: 16px;
+        line-height: 1.6;
+    }
+
+    /* Responsive Layout */
+    @media (max-width: 575px) {
+        .quil-wrapper {
+            flex-direction: column;
+        }
+
         .quil-wrapper img {
-            max-width: 100%;
+            max-width: 100%; /* Gambar memenuhi layar */
+        }
+
+        .quil-wrapper-field h1 {
+            font-size: 20px; /* Sesuaikan ukuran judul */
+        }
+
+        .quil-wrapper-field p {
+            font-size: 14px; /* Ukuran teks lebih kecil */
+            line-height: 1.5;
         }
     }
 
     @media (min-width: 768px) { /* Tablet */
         .quil-wrapper img {
-            max-width: 48%;
+            max-width: 48%; /* Dua gambar per baris */
         }
     }
 
-    @media (min-width: 992px) { /* Desktop */
+    @media (min-width: 992px) {
         .quil-wrapper img {
             max-width: 32%;
         }
@@ -71,16 +98,13 @@
 <div class="course">
     <div class="container mb-4">
         <div class="row">
-            <div class="col-md-12 text-center" data-aos="fade-up">
-                <span class="date">Diposting Pada</span>
+            <div class="col-md-12" data-aos="fade-up">
+                <span class="date">Di Posting Pada</span>
                 <span class="mx-1">&bullet;</span>
                 <span>{{ \Carbon\Carbon::parse($berita->created_at)->locale('id')->translatedFormat('d F Y') }}</span>
-                <img src="{{ asset('storage/img/berita/'. $berita->foto) }}"
-                     alt="{{ $berita->judul }}"
-                     title="{{ $berita->judul }}"
-                     class="img-fluid rounded">
+                <img src="{{ asset('storage/img/berita/'. $berita->foto) }}" alt="{{ $berita->judul }}" class="img-fluid">
             </div>
-            <div class="col-md-12 mt-3 quil-wrapper-field">
+            <div class="col-md-12 mt-3 col-sm  quil-wrapper-field">
                 <h1 class="mb-2 title-news">{{ $berita->judul }}</h1>
                 <div class="quil-wrapper">
                     {!! $berita->desc !!}
@@ -98,6 +122,7 @@
             img.setAttribute('data-title', img.getAttribute('alt') || 'Gambar ' + (index + 1));
         });
 
+        // Reinitialize Lightbox
         if (typeof lightbox !== 'undefined') {
             lightbox.option({
                 'resizeDuration': 200,
@@ -108,4 +133,6 @@
     });
 </script>
 @endpush
+
+
 @endsection
