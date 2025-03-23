@@ -45,10 +45,11 @@
         width: 100%;
         max-width: 100%;
         height: auto;
+        max-height: 500px;
         display: block;
-        object-fit: cover;
         border-radius: 10px;
     }
+
 
     /* Pembungkus konten berita */
     .quil-wrapper-field {
