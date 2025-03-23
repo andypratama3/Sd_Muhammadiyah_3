@@ -77,9 +77,8 @@
             padding: 10px;
             max-width: 100%;
             height: auto;
-            margin: auto;
+            margin: 4px auto;
             box-sizing: border-box;
-            margin-top: 4px;
         }
 
         .quil-wrapper-field h1 {
