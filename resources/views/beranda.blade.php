@@ -716,5 +716,5 @@
         initSwiper('.init-swiper2');
     }
 </script>
-
+@endpush
 @endsection
