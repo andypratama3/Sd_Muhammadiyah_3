@@ -40,8 +40,8 @@
         margin-top: 20px !important;
     }
     .owl-carousel {
-    -ms-touch-action: none;
-    touch-action: none;
+        -ms-touch-action: pan-y;
+        touch-action: pan-y;
     }
 
     .about .swiper-wrapper {
@@ -668,53 +668,79 @@
 @push('js_user')
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
-    var slideCount = {{ count($heroes) }};
 
-    function initSwiper(selector) {
-        if (slideCount < 2) return; // Hindari inisialisasi Swiper jika slide kurang dari 2
-
-        new Swiper(selector, {
-            loopFillGroupWithBlank: true,
-            loop: slideCount >= 2, // Loop hanya jika slide cukup
-            speed: 600,
-            autoplay: slideCount > 1 ? { delay: 5000 } : false, // Nonaktifkan autoplay jika hanya 1 slide
-            slidesPerView: slideCount < 2 ? 1 : Math.min(slideCount, 3), // Maksimum 3 slide atau sesuai jumlah data
-            slidesPerGroup: Math.min(slideCount, 2), // Pastikan tidak lebih dari jumlah slide
-            pagination: {
-                el: '.swiper-pagination',
-                type: 'bullets',
-                clickable: true,
+    const swiper_1 = new Swiper('.init-swiper', {
+        loopFillGroupWithBlank: true,
+        loop: true,
+        speed: 600,
+        autoplay: {
+            delay: 5000,
+        },
+        slidesPerView: 'auto',
+        pagination: {
+            el: '.swiper-pagination',
+            type: 'bullets',
+            clickable: true,
+        },
+        breakpoints: {
+            320: {
+                slidesPerView: 2,
+                spaceBetween: 40
             },
-            breakpoints: {
-                320: {
-                    slidesPerView: Math.min(slideCount, 2),
-                    spaceBetween: 40
-                },
-                480: {
-                    slidesPerView: Math.min(slideCount, 3),
-                    spaceBetween: 60
-                },
-                640: {
-                    slidesPerView: Math.min(slideCount, 4),
-                    spaceBetween: 80
-                },
-                992: {
-                    slidesPerView: Math.min(slideCount, 5),
-                    spaceBetween: 120
-                },
-                1200: {
-                    slidesPerView: Math.min(slideCount, 6),
-                    spaceBetween: 120
-                }
+            480: {
+                slidesPerView: 3,
+                spaceBetween: 60
+            },
+            640: {
+                slidesPerView: 4,
+                spaceBetween: 80
+            },
+            992: {
+                slidesPerView: 5,
+                spaceBetween: 120
+            },
+            1200: {
+                slidesPerView: 6,
+                spaceBetween: 120
             }
-        });
-    }
-
-    // Hanya jalankan jika ada cukup slide
-    if (slideCount >= 2) {
-        initSwiper('.init-swiper');
-        initSwiper('.init-swiper2');
-    }
+        }
+    });
+    const swiper2 = new Swiper('.init-swiper2', {
+        loopFillGroupWithBlank: true,
+        loop: true,
+        speed: 600,
+        autoplay: {
+            delay: 5000,
+        },
+        slidesPerView: 'auto',
+        pagination: {
+            el: '.swiper-pagination',
+            type: 'bullets',
+            clickable: true,
+        },
+        breakpoints: {
+            320: {
+                slidesPerView: 2,
+                spaceBetween: 40
+            },
+            480: {
+                slidesPerView: 3,
+                spaceBetween: 60
+            },
+            640: {
+                slidesPerView: 4,
+                spaceBetween: 80
+            },
+            992: {
+                slidesPerView: 5,
+                spaceBetween: 120
+            },
+            1200: {
+                slidesPerView: 6,
+                spaceBetween: 120
+            }
+        }
+    });
 </script>
 @endpush
 @endsection
