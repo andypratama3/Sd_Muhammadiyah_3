@@ -39,6 +39,10 @@
         mix-blend-mode: multiply !important;
         margin-top: 20px !important;
     }
+    .owl-carousel {
+    -ms-touch-action: none;
+    touch-action: none;
+    }
 
     .about .swiper-wrapper {
         height: auto;
