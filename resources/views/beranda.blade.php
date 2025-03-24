@@ -669,6 +669,7 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
     const swiper_1 = new Swiper('.init-swiper', {
+        loopFillGroupWithBlank: true, 
         loop: true,
         speed: 600,
         autoplay: {
@@ -704,6 +705,7 @@
         }
     });
     const swiper2 = new Swiper('.init-swiper2', {
+        loopFillGroupWithBlank: true,
         loop: true,
         speed: 600,
         autoplay: {
