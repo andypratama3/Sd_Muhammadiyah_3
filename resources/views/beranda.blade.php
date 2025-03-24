@@ -10,8 +10,9 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="Sekolah Kreatif Muhammadiyah 3 Samarinda - Pembelajaran Inovatif dan Berkarakter">
     <meta property="og:description" content="Gabung dengan Sekolah Kreatif Muhammadiyah 3 Samarinda untuk pengalaman belajar yang inovatif dan berbasis karakter!">
-    <meta property="og:image" content="{{ asset('asset_new/images/SD3_logo1.png') }}">
-    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="https://sdmuhammadiyah3smd.com/asset_new/images/SD3_logo1.png">
+    <meta property="og:url" content="https://sdmuhammadiyah3smd.com">
+
     <meta property="og:site_name" content="Sekolah Kreatif Muhammadiyah 3 Samarinda">
 
     <meta name="twitter:card" content="summary_large_image">
