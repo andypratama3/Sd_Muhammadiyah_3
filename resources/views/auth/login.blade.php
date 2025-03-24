@@ -65,9 +65,9 @@
                     </a> --}}
                   </form>
                   <hr>
-                  <div class="text-center">
+                  {{-- <div class="text-center">
                     <a class="font-weight-bold small" href="{{ route('register') }}">Buat Akun</a>
-                  </div>
+                  </div> --}}
                   <div class="text-center">
                   </div>
                 </div>
