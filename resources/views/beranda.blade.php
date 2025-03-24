@@ -667,17 +667,19 @@
 
 @push('js_user')
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<script type="text/javascript">
+<script>
     var slideCount = {{ count($heroes) }};
 
-    // Konfigurasi Swiper
     function initSwiper(selector) {
+        if (slideCount < 2) return; // Hindari inisialisasi Swiper jika slide kurang dari 2
+
         new Swiper(selector, {
             loopFillGroupWithBlank: true,
             loop: slideCount >= 2, // Loop hanya jika slide cukup
             speed: 600,
             autoplay: slideCount > 1 ? { delay: 5000 } : false, // Nonaktifkan autoplay jika hanya 1 slide
-            slidesPerView: slideCount < 2 ? 1 : 'auto', // Jika kurang dari 2, hanya tampilkan 1
+            slidesPerView: slideCount < 2 ? 1 : Math.min(slideCount, 3), // Maksimum 3 slide atau sesuai jumlah data
+            slidesPerGroup: Math.min(slideCount, 2), // Pastikan tidak lebih dari jumlah slide
             pagination: {
                 el: '.swiper-pagination',
                 type: 'bullets',
@@ -708,12 +710,11 @@
         });
     }
 
-    // Inisialisasi Swiper
-    if (slideCount > 0) {
+    // Hanya jalankan jika ada cukup slide
+    if (slideCount >= 2) {
         initSwiper('.init-swiper');
         initSwiper('.init-swiper2');
     }
 </script>
 
-@endpush
 @endsection
