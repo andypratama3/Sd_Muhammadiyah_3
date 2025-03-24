@@ -13,7 +13,7 @@
                 <div class="small"><span class="fa fa-calendar text-primary"></span>
                     {{ \Carbon\Carbon::parse($berita->created_at)->diffForHumans() }}</div>
             </div>
-            <a href="{{ route('berita.show', $berita->slug) }}" class="h4 d-inline-block mb-3">{{ $berita->judul }}</a>
+            <a href="{{ route('berita.show', $berita->slug) }}" class="h4 d-inline-block mb-3">{{ Str::limit($berita->judul, 50) }}</a>
             <p class="mb-3">{!! Str::substr($berita->desc, 0, 50) !!}</p>
             <a href="{{ route('berita.show', $berita->slug) }}" class="btn p-0">Lihat Berita  <i class="fa fa-arrow-right"></i></a>
         </div>
