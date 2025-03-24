@@ -24,10 +24,11 @@
         opacity: 0;
     }
 }
-/*
-body {
 
-} */
+body {
+    overscroll-behavior: none;
+}
+
 
 .background-page {
     position: fixed;
