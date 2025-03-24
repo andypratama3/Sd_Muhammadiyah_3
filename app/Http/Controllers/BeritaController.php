@@ -27,7 +27,8 @@ class BeritaController extends Controller
         if(!$berita) {
             abort(404);
         }
-        $berita->increment('views'); 
+
+        // $berita->increment('views');
 
         return view('berita.detail-berita', compact('berita','latest_artikel','artikel_trending_list'));
     }
