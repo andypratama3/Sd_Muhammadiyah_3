@@ -35,9 +35,11 @@ class Berita extends Model
     {
         parent::boot();
         static::retrieved(function ($model) {
-            $model->increment('views');
+            $model->views += 1;
+            $model->saveQuietly();
         });
     }
+
 
 
     public function setJudulAttribute($value)
