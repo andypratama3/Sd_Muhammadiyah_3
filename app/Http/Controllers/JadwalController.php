@@ -10,7 +10,7 @@ class JadwalController extends Controller
 {
     public function index()
     {
-        $kelass = Kelas::select(['name'])->orderBy('name','asc')->get();
+        $kelass = Kelas::select(['name'])->where('name', '!=', 'Lulus')->orderBy('name','asc')->get();
         $jadwals = Jadwal::all();
         return view('jadwal.index', compact('kelass','jadwals'));
     }

@@ -32,6 +32,7 @@
 
                 </div>
             </div>
+            <a href="{{ route('jadwal.index') }}" class="nav-item nav-link {{ Request::routeIS('jadwal.index') ? 'active' : '' }}">Jadwal</a>
             <a href="{{ route('pembayaran.index') }}" class="nav-item nav-link {{ Request::routeIS('pembayaran.index') ? 'active' : '' }}">Pembayaran</a>
             <a href="{{ route('berita.index') }}" class="nav-item nav-link {{ Request::routeIS('berita.index') ? 'active' : '' }}">Berita</a>
             <a href="{{ route('artikel.index') }}" class="nav-item nav-link {{ Request::routeIS('artikel.index') ? 'active' : '' }}">Artikel</a>
