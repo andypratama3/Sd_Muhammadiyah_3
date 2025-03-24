@@ -80,7 +80,7 @@
             </div>
             @foreach ($category_kelas as $category)
             <div class="col-lg-4 text-center mb-5">
-                <img src="assets/img/person-1.jpg" alt="" class="img-fluid w-50 mb-4">
+                <img src="{{ asset('asset_new/images/SD3_logo1.png') }}" alt="" class="img-fluid w-50 mb-4">
                 <h4>Kelas {{ $category }}</h4>
                 <div class="form-group mb-3">
                     <input type="hidden" class="kelas" id="kelas" name="kelas" value="{{ $kelass->id }}">

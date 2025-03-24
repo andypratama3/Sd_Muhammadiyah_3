@@ -16,7 +16,7 @@
         </div>
         @foreach ($kelass as $kelas)
         <div class="col-lg-4 text-center mb-5">
-          <img src="{{ asset('assets/img/SD3_logo.png') }}" alt="" class="img-fluid w-50 mb-4">
+          <img src="{{ asset('asset_new/images/SD3_logo1.png') }}" alt="" class="img-fluid w-50 mb-4">
           <h4>{{ $kelas->name }}</h4>
           <span class="d-block mb-3 text-uppercase"><a href="{{ route('jadwal.show', $kelas->name) }}" class="btn btn-primary btn-sm">Pilih</a></span>
         </div>
