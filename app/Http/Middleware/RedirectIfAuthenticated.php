@@ -17,6 +17,11 @@ class RedirectIfAuthenticated
      */
     public function handle(Request $request, Closure $next, ...$guards)
     {
+        if ($request->is('register')) {
+            abort(404);
+        }
+
+
         $guards = empty($guards) ? [null] : $guards;
 
         foreach ($guards as $guard) {
@@ -24,6 +29,7 @@ class RedirectIfAuthenticated
                 return redirect(RouteServiceProvider::HOME);
             }
         }
+
         return $next($request);
     }
 }

@@ -37,11 +37,15 @@ class GoogleController extends Controller
 
                 Auth::login($newUser);
 
+                // assign role user
+                $role = Role::where('slug', 'User')->firstOrFail();
+                $newUser->roles()->attach($role);
+
                 return redirect('/');
             }
 
         } catch (Exception $e) {
-            dd($e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 401);
         }
     }
 }
