@@ -668,6 +668,12 @@
 @push('js_user')
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
+    const originalWarn = console.warn;
+        console.warn = function (message) {
+            if (!message.includes("Swiper Loop Warning")) {
+                originalWarn.apply(console, arguments);
+            }
+        };
 
     const swiper_1 = new Swiper('.init-swiper', {
         loopFillGroupWithBlank: true,
