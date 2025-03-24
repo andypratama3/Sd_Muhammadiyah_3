@@ -2,7 +2,7 @@
 @section('title', 'Home')
 @push('meta_user')
     <meta name="description" content="Sekolah Kreatif Muhammadiyah 3 Samarinda menawarkan pembelajaran inovatif, pendidikan berbasis karakter, dan lingkungan belajar yang menyenangkan untuk siswa.">
-    <meta name="keywords" content="Sekolah Kreatif Muhammadiyah 3, SD Muhammadiyah 3 Samarinda, Sekolah Islam Samarinda, Sekolah Kreatif, Pendidikan Inovatif, SD Muhammadiyah, Pembelajaran Berbasis Karakter, Sekolah Dasar Samarinda">
+    <meta name="keywords" content="Sekolah Kreatif Muhammadiyah 3, SD Muhammadiyah 3 Samarinda, Sekolah Islam Samarinda, Sekolah Kreatif, Pendidikan Inovatif, SD Muhammadiyah, Pembelajaran Berbasis Karakter, Sekolah Dasar Samarinda, Sekolah Kreatif Samarinda, Sd Muhammadiyah Samarinda, Sekolah Terdepan Samarinda,Sekolah Kreatif Muhammadiyah 3 Samarinda, Sekolah Sd Terdekat Samarinda Seberang, Sekolah Terbaik Di Samarinda, sekolah sd terbaik di samarinda, sd muhammadiyah, gambar sd muhammadiyah 3 samarinda, Sekolah Kreatif Muhammadiyah 3 Samarinda">
     <meta name="author" content="Sekolah Kreatif Muhammadiyah 3 Samarinda">
     <meta name="robots" content="index, follow">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
