@@ -68,6 +68,27 @@
         }
     }
 
+    @media screen and (max-width: 576px) {
+        .header-carousel-item {
+
+            background-size: cover !important;
+            background-position: center !important;
+        }
+
+        .carousel-img img {
+            width: 80% !important;
+            max-width: 250px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .carousel-caption {
+            font-size: 13px;
+            text-align: center;
+
+        }
+    }
+
 </style>
 @endpush
 @section('content')
@@ -102,7 +123,7 @@
                     <div class="col-lg-5 animated fadeInRight">
                         <div class="carousel-img carousel-custom">
                             <img src="{{ asset('asset_new/images/SD3_logo1.png') }}" class="img-fluid img-logo" alt="" style="width: 60%;" loading="lazy">
-                            <div class="jargon" style="display: flex; gap: 4px; font-family: times new roman; justify-content: center; margin-top: 15px;">
+                            <div class="jargon mx-4" style="display: flex; gap: 4px; font-family: times new roman; justify-content: center; margin-top: 15px;">
                                 {{-- Jargon SD MUHAMMADIYAH 3 SAMARINDA --}}
                                     <p>S</p>
                                     <p style="margin-right: 5px;">D</p>
