@@ -7,7 +7,7 @@
     <meta property="og:description" content="{{ Str::limit(strip_tags($berita->desc), 200) }}">
     <meta property="og:image" content="{{ asset('storage/img/berita/'. $berita->foto) }}">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:type" content="article">
+    <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ $berita->judul }}">
     <meta name="twitter:description" content="{{ Str::limit(strip_tags($berita->desc), 200) }}">

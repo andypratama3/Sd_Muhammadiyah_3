@@ -477,8 +477,7 @@
 <!-- About End -->
 
 <!-- FAQs Start -->
-<div class="container-fluid faq-section bg-light py-2"data-wow-delay="0.4s"
->
+<div class="container-fluid faq-section bg-light py-2" data-wow-delay="0.4s">
     <div class="container py-5">
         <div class="row g-5 align-items-center justify-content-center">
             <div class="col-xl-6 wow fadeInLeft" data-wow-delay="0.2s">

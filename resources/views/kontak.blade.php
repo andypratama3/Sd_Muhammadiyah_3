@@ -1,6 +1,6 @@
 @extends('layouts.user')
 @section('title','Kontak')
-@push('front_css')
+@push('css_user')
 
 
 @endpush

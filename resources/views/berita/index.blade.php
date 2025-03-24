@@ -1,16 +1,18 @@
 @extends('layouts.user')
 @section('title', 'Berita')
+@push('meta_user')
     <meta name="description" content="Berita terbaru dan terpopuler dari Sekolah Kreatif Muhammadiyah 3. Temukan informasi terbaru mengenai aktivitas, prestasi, dan acara di sekolah kami.">
     <meta name="keywords" content="Berita, Sekolah Kreatif Muhammadiyah 3, Prestasi, Acara Sekolah">
     <meta name="author" content="Sekolah Kreatif Muhammadiyah 3 Samarinda, Indonesia, Sekolah, Kreatif, Muhammadiyah, Samarinda, Pendidikan">
     <meta property="og:title" content="Berita - Sekolah Kreatif Muhammadiyah 3">
     <meta property="og:description" content="Temukan berita terbaru dan informasi terkini tentang kegiatan dan prestasi siswa di Sekolah Kreatif Muhammadiyah 3.">
-    <meta property="og:image" content="{{ asset('asset/img/SD3_logo.png') }}">
+    <meta property="og:image" content="{{ asset('asset_new/images/SD3_logo1.png') }}">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Berita - Sekolah Kreatif Muhammadiyah 3">
     <meta name="twitter:description" content="Dapatkan berita terbaru dan informasi mengenai Sekolah Kreatif Muhammadiyah 3.">
-    <meta name="twitter:image" content="{{ asset('asset/img/SD3_logo.png') }}">
+    <meta name="twitter:image" content="{{ asset('asset_new/images/SD3_logo1.png') }}">
+@endpush
 @section('content')
 <div class="container-fluid blog py-5 mt-0">
     <div class="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.2s" style="max-width: 800px;">
