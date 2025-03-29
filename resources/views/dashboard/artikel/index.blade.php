@@ -43,6 +43,8 @@ $(document).ready(function () {
         table.cleanData;
         table.ajax.reload();
     }
+    let role = {{ $role }};
+
     $('#artikel_table').DataTable({
         ordering: true,
         pagination: true,
@@ -70,9 +72,9 @@ $(document).ready(function () {
                     }
                 }
             },
-            @if (Auth::user()->hasRole('superadmin'))
+            
             { data: 'button_action',name: 'button_action'},
-            @endif
+            @endrole
             { data: 'options',name: 'options', orderable: false, searchable: false }
         ],
     });
@@ -113,7 +115,7 @@ $(document).ready(function () {
                     },
                 });
             } else {
-                
+
             }
         });
     });

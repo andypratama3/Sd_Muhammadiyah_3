@@ -41,6 +41,7 @@ class Artikel extends Model
     {
         return $this->hasMany(LikeArtikel::class);
     }
+    
     //count when article click
     public function incrementClickCount()
     {

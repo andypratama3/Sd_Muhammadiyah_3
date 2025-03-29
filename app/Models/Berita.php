@@ -31,16 +31,12 @@ class Berita extends Model
         'deleted_at',
     ];
 
-    public static function boot()
+
+    public function incrementClickCount()
     {
-        parent::boot();
-        static::retrieved(function ($model) {
-            $model->views += 1;
-            $model->saveQuietly();
-        });
+        $this->jumlah_klik++;
+        $this->save();
     }
-
-
 
     public function setJudulAttribute($value)
     {
