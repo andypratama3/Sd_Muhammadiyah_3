@@ -34,7 +34,7 @@ class Berita extends Model
 
     public function incrementClickCount()
     {
-        $this->jumlah_klik++;
+        $this->views++;
         $this->save();
     }
 
