@@ -29,7 +29,8 @@ class ArtikelController extends Controller
         }
         return DataTables::of($query)
                 ->addColumn('kategori.name', function ($artikel) {
-                    $categoryNames = $artikel->categorys->pluck('name')->implode(', ');
+                    $categoryNames = $artikel->categorys->pluck('name')->implode(', ') ?? 'Tidak Ada Kategori';
+
                     return $categoryNames;
                 })
                 ->addColumn('options', function ($row){
