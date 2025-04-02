@@ -17,8 +17,7 @@ class ArtikelController extends Controller
     public function index()
     {
 
-        $role = Auth::user()->roles->pluck('name')->first();
-        return view('dashboard.artikel.index', compact('role'));
+        return view('dashboard.artikel.index');
     }
     public function data_table()
     {
@@ -40,14 +39,29 @@ class ArtikelController extends Controller
                     <button data-id="' . $row['slug'] . '" class="btn btn-sm btn-danger me-1" id="btn-delete"><i class="fa fa-trash"></i></button>
                 ';
                 })
-                ->addColumn('button_action', function ($row) {
-                    $btn = $row->status == 'publish' ? 'warning' : 'success';
-                    $status = $row->status == 'pending' ? 'publish' : 'pending';
-                    $icon = $row->status == 'pending' ? 'check' : 'clock';
-                    return '<a href="' . route('dashboard.news.artikel.status', $row->slug) . '" class="btn btn-sm btn-' . $btn . '"><i class="fa fa-' . $icon . '"></i> ' . ucfirst($status) . '</a>';
+                ->addColumn('status', function ($row) {
+                    $userRoles = Auth::user()->roles()->pluck('name')->toArray();
+
+                    // Cek apakah user memiliki peran 'superadmin'
+                    if (in_array('superadmin', $userRoles)) {
+                        $btnClass = $row->status == 'publish' ? 'warning' : 'success';
+                        $nextStatus = $row->status == 'pending' ? 'publish' : 'pending';
+                        $icon = $row->status == 'pending' ? 'check' : 'clock';
+
+                        return '<a href="' . route('dashboard.news.artikel.status', e($row->slug)) . '"
+                                    class="btn btn-sm btn-' . $btnClass . '">
+                                    <i class="fa fa-' . $icon . '"></i> ' . ucfirst($nextStatus) . '
+                                </a>';
+                    } else {
+                        if ($row->status == 'publish') {
+                            return '<span class="badge bg-success badge-sm"><i class="bx bx-check"></i> Publish</span>';
+                        } else {
+                            return '<span class="badge bg-danger badge-sm"><i class="bx bx-time-five"></i> Pending</span>';
+                        }
+                    }
                 })
 
-                ->rawColumns(['options','button_action'])
+                ->rawColumns(['options','status'])
                 ->addIndexColumn()
                 ->make(true);
 

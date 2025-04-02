@@ -21,9 +21,6 @@
                             <th>Kategori</th>
                             <th>View</th>
                             <th>Status</th>
-                            @role('superadmin')
-                                <th>Aksi Publish</th>
-                            @endrole
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -43,7 +40,6 @@ $(document).ready(function () {
         table.cleanData;
         table.ajax.reload();
     }
-    let role = {{ $role }};
 
     $('#artikel_table').DataTable({
         ordering: true,
@@ -62,18 +58,8 @@ $(document).ready(function () {
             { data: 'name', name: 'name'},
             { data: 'kategori.name', name: 'kategori.name'},
             { data: 'jumlah_klik', name: 'jumlah_klik', orderable: true},
-            {
-                data: 'status', name: 'status',
-                render: function (data) {
-                    if (data == 'publish') {
-                        return '<button class="btn btn-sm btn-success"><i class="bx bx-check"></i> Publish</button>';
-                    } else {
-                        return '<button class="btn btn-sm btn-warning"><i class="bx bx-time-five"></i> Pending</button>';
-                    }
-                }
-            },
+            { data: 'status', name: 'status'},
 
-            { data: 'button_action',name: 'button_action'},
             { data: 'options',name: 'options', orderable: false, searchable: false }
         ],
     });
