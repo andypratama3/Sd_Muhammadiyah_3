@@ -83,6 +83,7 @@
                             <th>No</th>
                             <th>Judul</th>
                             <th>Foto</th>
+                            <th>Pengunjung</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -124,6 +125,7 @@ $(document).ready(function () {
             { data: 'DT_RowIndex',name: 'DT_RowIndex',orderable: false,searchable: false},
             { data: 'judul', name: 'judul'},
             { data: 'foto', name: 'foto', orderable: false, searchable: false },
+            { data: 'views', name: 'views'},
             { data: 'options',name: 'options', orderable: false, searchable: false }
         ],
     });

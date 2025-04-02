@@ -28,6 +28,9 @@ class BeritaController extends Controller
                 ->addColumn('foto', function ($row){
                     return '<img src="' . asset('storage/img/berita/' . $row->foto) . '" width="100" height="100" class="img-thumbnail" alt="Foto Berita">';
                 })
+                ->addColumn('views', function ($row) {
+                    return $row->views . ' kali';
+                })
                 ->addColumn('options', function ($row){
                     return '
                     <a href="' . route('dashboard.news.berita.show', $row->slug) . '" class="btn btn-sm me-1 btn-warning"><i class="fa fa-eye"></i></a>
