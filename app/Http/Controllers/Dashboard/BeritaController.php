@@ -22,7 +22,7 @@ class BeritaController extends Controller
 
     public function data_table()
     {
-        $query = Berita::select('id','judul','desc','foto','slug')->orderBy('created_at','asc');
+        $query = Berita::select('id','views','judul','desc','foto','slug')->orderBy('created_at','asc');
         return DataTables::of($query)
 
                 ->addColumn('foto', function ($row){
