@@ -74,7 +74,6 @@ $(document).ready(function () {
             },
 
             { data: 'button_action',name: 'button_action'},
-            @endrole
             { data: 'options',name: 'options', orderable: false, searchable: false }
         ],
     });
