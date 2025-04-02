@@ -14,7 +14,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('app:sync-wilayah-command')->yearly();
         $schedule->command('app:site-map-command')->sundays();
-        $schedule->command('app:charge-payment-xendit')->sundays();
+        // $schedule->command('app:charge-payment-xendit')->sundays();
 
         // $schedule->command('app:charge-payment')->monthly();
         // $schedule->command('app:check-transaction-old')->monthly();
