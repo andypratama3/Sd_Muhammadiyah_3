@@ -470,7 +470,7 @@
                     <div class="d-flex justify-content-center">
                         <div class="col-md-4">
                             <div class="card bg-primary border-0 cooperation">
-                                <h6 class="text-black text-center mt-2">Cooperation And Support</h6>
+                                <h6 class="text-black text-center mt-2">Dukunga Dan Kerja Sama</h6>
                             </div>
                         </div>
                     </div>
@@ -492,7 +492,7 @@
                     <div class="d-flex justify-content-center">
                         <div class="col-md-4">
                             <div class="card bg-primary border-0 ">
-                                <h6 class="text-black text-center mt-2">Achivement</h6>
+                                <h6 class="text-black text-center mt-2">Penghargaan</h6>
                             </div>
                         </div>
                     </div>
