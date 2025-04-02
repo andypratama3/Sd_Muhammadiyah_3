@@ -1,5 +1,5 @@
 @extends('layouts.user')
-@section('title', 'Home')
+
 @push('meta_user')
     <meta name="description" content="Sekolah Kreatif Muhammadiyah 3 Samarinda menawarkan pembelajaran inovatif, pendidikan berbasis karakter, dan lingkungan belajar yang menyenangkan untuk siswa.">
     <meta name="keywords" content="Sekolah Kreatif Muhammadiyah 3, SD Muhammadiyah 3 Samarinda, Sekolah Islam Samarinda, Sekolah Kreatif, Pendidikan Inovatif, SD Muhammadiyah, Pembelajaran Berbasis Karakter, Sekolah Dasar Samarinda, Sekolah Kreatif Samarinda, Sd Muhammadiyah Samarinda, Sekolah Terdepan Samarinda,Sekolah Kreatif Muhammadiyah 3 Samarinda, Sekolah Sd Terdekat Samarinda Seberang, Sekolah Terbaik Di Samarinda, sekolah sd terbaik di samarinda, sd muhammadiyah, gambar sd muhammadiyah 3 samarinda, Sekolah Kreatif Muhammadiyah 3 Samarinda">
@@ -70,6 +70,12 @@
             height: auto;
             width: 100%;
         }
+        .cooperation-item h6 {
+            margin: 15px;
+        }
+        .achivement-item h6 {
+            margin: 15px;
+        }
     }
 
     @media screen and (max-width: 576px) {
@@ -90,6 +96,12 @@
             font-size: 13px;
             text-align: center;
 
+        }
+        .cooperation-item h6 {
+            margin: 15px;
+        }
+        .achivement-item h6 {
+            margin: 15px;
         }
     }
 
@@ -453,11 +465,11 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-white rounded pt-3 pb-5 wow fadeInUp" data-wow-delay="0.2s">
+            <div class="bg-white rounded pt-3 pb-5 wow fadeInUp cooperation-item" data-wow-delay="0.2s">
                 <div class="row g-4">
                     <div class="d-flex justify-content-center">
                         <div class="col-md-4">
-                            <div class="card bg-primary border-0">
+                            <div class="card bg-primary border-0 cooperation">
                                 <h6 class="text-black text-center mt-2">Cooperation And Support</h6>
                             </div>
                         </div>
@@ -475,7 +487,7 @@
                 </div>
             </div>
 
-            <div class="bg-white rounded pt-3 pb-5 wow fadeInUp" data-wow-delay="0.2s">
+            <div class="bg-white rounded pt-3 pb-5 wow fadeInUp achivement-item" data-wow-delay="0.2s">
                 <div class="row g-4">
                     <div class="d-flex justify-content-center">
                         <div class="col-md-4">

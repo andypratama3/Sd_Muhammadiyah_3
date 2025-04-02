@@ -115,6 +115,9 @@ class ArtikelController extends Controller
         }else{
             $artikel->status = 'pending';
         }
+
+        
+
         $artikel->update();
 
         return redirect()->back()->with('success','Berhasil Mengubah Status Publish Artikel');

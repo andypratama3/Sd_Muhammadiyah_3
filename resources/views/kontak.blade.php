@@ -15,23 +15,23 @@
                         <div class="section-heading">
                             <h4 class="text-center">Kontak Admin SD Muhammadiyah 3 Samarinda</h4>
                             <div class="special-offer">
-                                <a href="https://api.whatsapp.com/send?phone=6281234567898">
+                                <a href="https://api.whatsapp.com/send?phone=6282225249993">
                                     <i class="fa fa-angle-right"></i>
                                     <span class="offer" style="align-items: center !important">
                                         <i class="fa-brands fa-whatsapp fa-2x" style="margin-left: 10px; padding-top: 10px !important;"></i>
                                     </span>
-                                    <h6><em>Admin: 1</em></h6>
-                                    <h4>098765679898</h4>
+                                    <h6><em>Admin Pembiayaan</em></h6>
+                                    <h4>0822-2524-9993</h4>
                                 </a>
                             </div>
                             <div class="special-offer">
-                                <a href="https://api.whatsapp.com/send?phone=6281234567898">
+                                <a href="https://api.whatsapp.com/send?phone=6285250443151">
                                     <i class="fa fa-angle-right"></i>
                                     <span class="offer" style="align-items: center !important">
                                         <i class="fa-brands fa-whatsapp fa-2x" style="margin-left: 10px; padding-top: 10px !important;"></i>
                                     </span>
-                                    <h6><em>Admin: 2</em></h6>
-                                    <h4>098765679898</h4>
+                                    <h6><em>Admin PPDB</em></h6>
+                                    <h4>0852-5044-3151</h4>
                                 </a>
                             </div>
                         </div>
