@@ -141,20 +141,20 @@
 
 @push('js_user')
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        document.querySelectorAll('.quil-wrapper-field img').forEach((img, index) => {
-            img.setAttribute('data-lightbox', 'gallery');
-            img.setAttribute('data-title', img.getAttribute('alt') || 'Gambar ' + (index + 1));
-        });
-
-        if (typeof lightbox !== 'undefined') {
-            lightbox.option({
-                'resizeDuration': 200,
-                'wrapAround': true,
-                'alwaysShowNavOnTouchDevices': true
-            });
-        }
+    document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll('.quil-wrapper-field img').forEach((img, index) => {
+        img.dataset.lightbox = 'gallery';
+        img.dataset.title = img.alt || `Gambar ${index + 1}`;
     });
+
+    if (window.lightbox) {
+        lightbox.option({
+            resizeDuration: 200,
+            wrapAround: true,
+            alwaysShowNavOnTouchDevices: true
+        });
+    }
+});
 </script>
 @endpush
 
