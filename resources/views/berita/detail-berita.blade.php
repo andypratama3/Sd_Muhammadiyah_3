@@ -142,7 +142,7 @@
 @push('js_user')
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        document.querySelectorAll('.quil-wrapper img').forEach((img, index) => {
+        document.querySelectorAll('.quil-wrapper-field img').forEach((img, index) => {
             img.setAttribute('data-lightbox', 'gallery');
             img.setAttribute('data-title', img.getAttribute('alt') || 'Gambar ' + (index + 1));
         });
