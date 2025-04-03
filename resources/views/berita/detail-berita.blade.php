@@ -133,7 +133,7 @@
 
             <div class="col-md-12 mt-3 quil-wrapper-field">
                 <h1 class="mb-2 title-news text-start">{{ $berita->judul }}</h1>
-                <div>{!! $berita->desc !!}</div>
+                <div class="quil-wrapper-content">{!! $berita->desc !!}</div>
             </div>
         </div>
     </div>
@@ -142,8 +142,8 @@
 @push('js_user')
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll('.quil-wrapper-field img').forEach((img, index) => {
-        img.dataset.lightbox = 'gallery';
+    document.querySelectorAll('.quil-wrapper-content img').forEach((img, index) => {
+        img.dataset.lightbox = 'Berita';
         img.dataset.title = img.alt || `Gambar ${index + 1}`;
     });
 
