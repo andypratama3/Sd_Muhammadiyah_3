@@ -42,6 +42,7 @@ class BerandaController extends Controller
 
         // cooperation
         $cooperations = Cooperation::orderBy('order', 'asc')->get();
+        
         $achivements = Achivement::orderBy('order', 'asc')->get();
 
         $esktrakurikuler = Esktrakurikuler::count();

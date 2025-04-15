@@ -20,6 +20,7 @@
                         <tr>
                             <th>No</th>
                             <th>Judul</th>
+                            <th>Posisi</th>
                             <th>Foto</th>
                             <th>Action</th>
                         </tr>
@@ -61,6 +62,7 @@ $(document).ready(function () {
         columns: [
             { data: 'DT_RowIndex',name: 'DT_RowIndex',orderable: false,searchable: false},
             { data: 'name', name: 'name'},
+            { data: 'order', name: 'order'},
             { data: 'foto', name: 'foto', orderable: false, searchable: false },
             { data: 'options',name: 'options', orderable: false, searchable: false }
         ],

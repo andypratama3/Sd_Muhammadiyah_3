@@ -480,6 +480,7 @@
                             @foreach ($cooperations as $cooperation)
                                 <div class="swiper-slide">
                                     <img src="{{ asset('storage/img/cooperation/'. $cooperation->foto ) }}" class="img-fluid" style="border-radius: 10px;"  alt="">
+                                    <p>{{ $cooperation->name }} </p>
                                 </div>
                             @endforeach
                         </div>

@@ -61,8 +61,8 @@ $(document).ready(function () {
         columns: [
             { data: 'DT_RowIndex',name: 'DT_RowIndex',orderable: false,searchable: false},
             { data: 'name', name: 'name'},
-            { data: 'foto', name: 'foto', orderable: false, searchable: false },
             { data: 'order', name: 'order', orderable: false, searchable: false },
+            { data: 'foto', name: 'foto', orderable: false, searchable: false },
             { data: 'options',name: 'options', orderable: false, searchable: false }
         ],
     });
