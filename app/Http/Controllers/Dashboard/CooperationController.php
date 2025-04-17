@@ -18,7 +18,7 @@ class CooperationController extends Controller
 
     public function data_table(Request $request)
     {
-        $cooperations = Cooperation::orderBy('created_at', 'desc');
+        $cooperations = Cooperation::orderBy('created_at', 'asc');
 
         return DataTables::of($cooperations)
             ->addColumn('foto', function ($row){
