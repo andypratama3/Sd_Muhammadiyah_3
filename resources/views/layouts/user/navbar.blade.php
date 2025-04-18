@@ -56,7 +56,7 @@
         </div>
     </div>
     <div class="d-none d-xl-flex flex-shrink-0 ps-4">
-        <a href="https://wa.me/6281234567890" class="btn btn-light btn-lg-square rounded-circle position-relative wow tada" data-wow-delay=".9s">
+        <a href="https://wa.me/6285250443151" class="btn btn-light btn-lg-square rounded-circle position-relative wow tada" data-wow-delay=".9s">
             {{-- <i class="fa fa-phone-alt fa-2x"></i> --}}
             <img src="{{ asset('asset/img/SD3_logo1.png') }}" alt="" class="img-fluid p-1">
             <div class="position-absolute" style="top: 7px; right: 12px;">
