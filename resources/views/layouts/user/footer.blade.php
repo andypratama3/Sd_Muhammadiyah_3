@@ -14,9 +14,9 @@
                                 </a>
                                 {{-- <p class="text-white mb-4">Dolor amet sit justo amet elitr clita ipsum elitr est.Lorem ipsum dolor sit amet, consectetur adipiscing...</p> --}}
                                 <div class="footer-btn d-flex mt-4">
-                                    <a class="btn btn-md-square rounded-circle me-3" href="#"><i class="fab fa-facebook-f"></i></a>
+                                    <a class="btn btn-md-square rounded-circle me-3" href="https://www.facebook.com/sekolahkreatif.muhammadiyahsamarinda/" target="_blank"><i class="fab fa-facebook-f"></i></a>
                                     <a class="btn btn-md-square rounded-circle me-3" href="#"><i class="fab fa-twitter"></i></a>
-                                    <a class="btn btn-md-square rounded-circle me-3" href="#"><i class="fab fa-instagram"></i></a>
+                                    <a class="btn btn-md-square rounded-circle me-3" href="https://www.instagram.com/SekolahKreatifSamarinda/" target="_blank"><i class="fab fa-instagram"></i></a>
                                     <a class="btn btn-md-square rounded-circle me-0" href="#"><i class="fab fa-linkedin-in"></i></a>
                                 </div>
                             </div>
