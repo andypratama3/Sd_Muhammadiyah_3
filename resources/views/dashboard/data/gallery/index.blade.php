@@ -16,7 +16,6 @@
                         <tr>
                             <th>No</th>
                             <th>Nama</th>
-                            <th>Foto</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -25,9 +24,7 @@
                         <tr>
                             <td>{{ ++$no }}</td>
                             <td>{{ $gallery->name }}</td>
-                            <td>
-                                <a href="{{ asset('storage/img/gallery/'. $gallery->foto) }}" target="__blank" class="btn btn-success btn-sm" id="priview-image"><i class="fa fa-image"></i> Lihat</a>
-                            </td>
+
                             <td>
                                 <a href="{{ route('dashboard.datasekolah.gallery.edit', $gallery->slug) }}"
                                     class="btn btn-primary btn-sm"><i class="fas fa-pen"></i></a>

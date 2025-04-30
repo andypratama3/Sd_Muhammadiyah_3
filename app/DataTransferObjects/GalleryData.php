@@ -12,12 +12,13 @@ class GalleryData extends Data
 {
     public function __construct(
         public readonly string $name,
-        public readonly ?UploadedFile $foto,
+        public readonly array $foto,
         public readonly ?string $slug,
 
     ) {
         //
     }
+
 
     public static function fromRequest(GalleryRequest $request): self
     {

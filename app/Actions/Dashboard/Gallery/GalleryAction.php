@@ -9,25 +9,23 @@ class GalleryAction
 {
     public function execute($galleryData)
     {
-        //request foto
-        if($galleryData->foto){
-            $foto = $galleryData->foto;
-            $ext = $foto->getClientOriginalExtension();
+        $fotorFiles = $galleryData->foto;
+        $galleryName = [];
 
-            //upload foto to folder
+        foreach ($fotorFiles as $fotorFile) {
+            $ext = $fotorFile->getClientOriginalExtension();
+            $uniqueIdentifier = Str::random(8);
+            $file_name = 'Gallery_' . Str::slug($galleryData->name) . '_' . $uniqueIdentifier . '_' . date('YmdHis') . ".$ext";
             $upload_path = public_path('storage/img/gallery/');
-            $picture_name = 'Gallery_'.Str::slug($galleryData->name).'_'.date('YmdHis').".$ext";
-            $foto->move($upload_path, $picture_name);
-        }else{
-            $gallery = Gallery::where('slug', $galleryData->slug)->first();
-            $picture_name = $gallery->foto;
-        }
+            $fotorFile->move($upload_path, $file_name);
+            $galleryName[] = $file_name;
+        } 
 
         $gallery = Gallery::updateOrCreate(
             ['slug' => $galleryData->slug],
             [
                 'name' => $galleryData->name,
-                'foto' => $picture_name,
+                'foto' =>  implode(',', $galleryName),
             ]
         );
 
