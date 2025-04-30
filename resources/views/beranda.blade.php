@@ -298,6 +298,7 @@
                                             <img src="{{ asset('storage/img/gallery/'. $firstFoto) }}" alt=""
                                                 class="img-fluid" style="border-radius: 8px;">
                                             <h5 class="card-title">{{ $gallery->name }}</h5>
+                                            <a href="{{ route('gallery.show', $gallery->slug) }}" class="btn btn-primary">Lihat</a>
                                         </div>
                                     </div>
                                 </a>
