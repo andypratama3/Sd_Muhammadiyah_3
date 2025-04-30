@@ -13,6 +13,7 @@ class GalleryData extends Data
     public function __construct(
         public readonly string $name,
         public readonly array $foto,
+        public readonly UploadedFile $cover,
         public readonly ?string $slug,
 
     ) {
@@ -25,6 +26,7 @@ class GalleryData extends Data
         return self::from([
             $request->getName(),
             $request->getFoto(),
+            $request->getCover(),
             $request->getSlug(),
         ]);
     }
@@ -33,6 +35,7 @@ class GalleryData extends Data
         return [
             'name.required' => 'Kolom Nama Foto Tidak Boleh Kosong!',
             'foto.required' => 'Kolom Foto Tidak Boleh Kosong!',
+            'cover.required' => 'Cover Untuk Gallery Tidak Boleh Kosong',
         ];
     }
 }

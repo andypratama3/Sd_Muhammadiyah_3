@@ -28,6 +28,20 @@ class GalleryAction
             }
         }
 
+        $galleryCover = null;
+
+        if($cooperationData->cover) {
+            $foto = $cooperationData->cover;
+            $ext = $foto->getClientOriginalExtension();
+
+            //upload foto to folder
+            $upload_path = public_path('storage/img/gallery/cover/');
+            $galleryCover = 'GalleryCover_'.Str::slug($cooperationData->name).'_'.date('YmdHis').".$ext";
+            $foto->move($upload_path, $galleryCover);
+
+        } else {
+            $galleryCover = Gallery::where('slug', $cooperationData->slug)->first()->cover;
+        }
         // Upload foto baru
         foreach ($fotorFiles as $fotorFile) {
             $ext = $fotorFile->getClientOriginalExtension();
@@ -43,6 +57,7 @@ class GalleryAction
             ['slug' => $galleryData->slug],
             [
                 'name' => $galleryData->name,
+                'cover' => $galleryCover,
                 'foto' => implode(',', $galleryName),
             ]
         );

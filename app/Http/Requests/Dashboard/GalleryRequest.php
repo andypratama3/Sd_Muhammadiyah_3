@@ -19,6 +19,11 @@ class GalleryRequest extends FormRequest
         return $this->name;
     }
 
+    public function getCover()
+    {
+        $this->cover;
+    }
+
     public function getFoto()
     {
         return $this->foto;

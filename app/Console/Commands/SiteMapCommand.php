@@ -2,11 +2,12 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Artikel;
 use App\Models\Berita;
-use Illuminate\Console\Command;
+use App\Models\Artikel;
+use App\Models\Gallery;
 use Spatie\Sitemap\Sitemap;
 use Spatie\Sitemap\Tags\Url;
+use Illuminate\Console\Command;
 
 class SiteMapCommand extends Command
 {
@@ -63,6 +64,7 @@ class SiteMapCommand extends Command
         // Ambil data artikel & berita
         $artikels = Artikel::orderBy('created_at', 'desc')->get();
         $beritas = Berita::orderBy('created_at', 'desc')->get();
+        $gallery = Gallery::orderBy('created_at', 'desc')->get();
 
         // Tambahkan berita ke sitemap
         foreach ($beritas as $berita) {
@@ -81,6 +83,16 @@ class SiteMapCommand extends Command
                     ->setPriority(0.8)
             );
         }
+
+        foreach ($gallery as $gallery) {
+            $sitemap->add(
+                Url::create("$baseUrl/gallery/{$gallery->slug}")
+                    ->setLastModificationDate($gallery->updated_at)
+                    ->setPriority(0.8)
+                );
+        }
+
+
 
         // Simpan sitemap ke file
         $sitemap->writeToFile($sitemapPath);

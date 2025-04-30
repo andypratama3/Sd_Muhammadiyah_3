@@ -21,6 +21,17 @@
                 </div>
 
                 <div class="form-group mt-2">
+                    <label for="">Cover Gallery</label>
+                    <div class="custom-file">
+                        <input type="file" class="form-control" id="cover" name="cover" accept="image/jpeg,image/png,image" value="{{ old('cover', $gallery->cover) }}" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])">
+                    </div>
+
+                    <div class="mt-4 text-center">
+                        <img src="{{ asset('storage/img/gallery/cover/'.$gallery->cover) }}" id="output" alt="" style="width: 100%;">
+                    </div>
+                </div>
+
+                <div class="form-group mt-2">
                     <label for="foto">Foto</label>
                     <input type="file" class="form-control {{ $errors->has('foto') ? 'is-invalid' : '' }}" id="foto" name="foto[]" multiple onchange="previewImage(event)">
                     @if ($errors->has('foto'))
