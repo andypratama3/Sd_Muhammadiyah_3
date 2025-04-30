@@ -109,6 +109,7 @@ Route::group(['prefix' => '/',], function () {
     Route::get('tenagapendidikan', [TenagaPendidikanController::class, 'index'])->name('tenagapendidikan.index');
 
     Route::get('gallery', [GalleryController::class, 'index'])->name('gallery.index');
+    Route::get('gallery/{slug}', [GalleryController::class, 'show'])->name('gallery.show');
 
     //jadwal
     Route::resource('jadwal', JadwalController::class, ['names' => 'jadwal']);
