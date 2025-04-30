@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Models\Gallery;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 use App\DataTransferObjects\GalleryData;
 use App\Actions\Dashboard\Gallery\GalleryAction;
 
@@ -43,6 +44,16 @@ class GalleryActivityController extends Controller
 
     public function destroy(Gallery $gallery)
     {
+        $oldFotos = explode(',', $gallery->foto);
+        // Hapus semua foto dari storage
+        foreach ($oldFotos as $oldFoto) {
+            $filePath = 'public/img/gallery/' . trim($oldFoto);
+            if (Storage::exists($filePath)) {
+                Storage::delete($filePath);
+            }
+        }
+
+
         $gallery->delete();
         return redirect()->route('dashboard.datasekolah.gallery.index')->with('success','Berhasil Hapus Data Gallery');
 
