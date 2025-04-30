@@ -30,17 +30,17 @@ class GalleryAction
 
         $galleryCover = null;
 
-        if($cooperationData->cover) {
-            $foto = $cooperationData->cover;
+        if($galleryData->cover) {
+            $foto = $galleryData->cover;
             $ext = $foto->getClientOriginalExtension();
 
             //upload foto to folder
             $upload_path = public_path('storage/img/gallery/cover/');
-            $galleryCover = 'GalleryCover_'.Str::slug($cooperationData->name).'_'.date('YmdHis').".$ext";
+            $galleryCover = 'GalleryCover_'.Str::slug($galleryData->name).'_'.date('YmdHis').".$ext";
             $foto->move($upload_path, $galleryCover);
 
         } else {
-            $galleryCover = Gallery::where('slug', $cooperationData->slug)->first()->cover;
+            $galleryCover = Gallery::where('slug', $galleryData->slug)->first()->cover;
         }
         // Upload foto baru
         foreach ($fotorFiles as $fotorFile) {
