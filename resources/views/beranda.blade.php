@@ -284,26 +284,30 @@
                     <div class="bg-white rounded-0 p-3 h-100 mt-5" style="border-radius: 10px !important;">
                         <h1 class="display-4 mb-4 mt-0">Aktivitas Kami</h1>
                         <p class="text-primary">Aktivitas SD Muhammadiyah 3 Samarinda</p>
-                        <div class="row g-4">
-                            @foreach ($gallerys as $gallery)
-                            @php
-                                $fotos = is_array($gallery->foto) ? $gallery->foto : explode(',', $gallery->foto);
-                                $firstFoto = trim($fotos[0] ?? 'default.jpg');
-                            @endphp
-                            <div class="col-md-3">
-                                <a href="{{ asset('storage/img/gallery/'. $firstFoto) }}"
-                                    data-lightbox="{{ $firstFoto }}" class="">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <img src="{{ asset('storage/img/gallery/'. $firstFoto) }}" alt=""
-                                                class="img-fluid" style="border-radius: 8px;">
-                                            <h5 class="card-title">{{ $gallery->name }}</h5>
-                                            <a href="{{ route('gallery.show', $gallery->slug) }}" class="btn btn-primary">Lihat</a>
+                            <div class="row g-4">
+                                @foreach ($gallerys as $gallery)
+                                    @php
+                                        $fotos = is_array($gallery->foto) ? $gallery->foto : explode(',', $gallery->foto);
+                                        $firstFoto = trim($fotos[0] ?? 'default.jpg');
+                                        $imgSrc = $gallery->cover
+                                            ? asset('storage/img/gallery/cover/' . $gallery->cover)
+                                            : asset('storage/img/gallery/' . $firstFoto);
+                                        $lightboxKey = $gallery->cover ?? $firstFoto;
+                                    @endphp
+
+                                    <div class="col-md-3">
+                                        <div class="card">
+                                            <a href="{{ $imgSrc }}" data-lightbox="{{ $lightboxKey }}">
+                                                <img src="{{ $imgSrc }}" alt="{{ $gallery->name }}" class="img-fluid" style="border-radius: 8px;">
+                                            </a>
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ $gallery->name }}</h5>
+                                                <a href="{{ route('gallery.show', $gallery->slug) }}" class="btn btn-primary">Lihat</a>
+                                            </div>
                                         </div>
                                     </div>
-                                </a>
+                                @endforeach
                             </div>
-                            @endforeach
                             <div class="col-md-12">
                                 <a href="{{ route('gallery.index') }}" class="btn btn-primary">Lihat Semua</a>
                             </div>
