@@ -297,7 +297,7 @@
                                         <div class="card-body">
                                             <img src="{{ asset('storage/img/gallery/'. $firstFoto) }}" alt=""
                                                 class="img-fluid" style="border-radius: 8px;">
-                                            <h4 class="card-title">{{ $gallery->name }}</h4>
+                                            <h5 class="card-title">{{ $gallery->name }}</h5>
                                         </div>
                                     </div>
                                 </a>
