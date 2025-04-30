@@ -1,5 +1,7 @@
 @extends('layouts.user')
-@section('title','Gallery')
+
+@section('title', 'Gallery')
+
 @section('content')
 <div class="main-banner">
     <div class="container">
@@ -7,20 +9,28 @@
             <h2>Gallery Aktivitas</h2>
             <h4>SD Muhammadiyah 3 Samarinda</h4>
         </header>
+
         <div class="form-group mt-3">
-            <a href="{{ route('index') }}" class="btn btn-primary" style="color: #ffffff; background-color: #5ce70b !important; border-color: #5ce70b !important"><i class="fa fa-arrow-left"></i> Kembali</a>
+            <a href="{{ route('index') }}" class="btn btn-primary"
+                style="color: #ffffff; background-color: #5ce70b !important; border-color: #5ce70b !important">
+                <i class="fa fa-arrow-left"></i> Kembali
+            </a>
         </div>
 
         <div class="row mt-4">
             @forelse ($gallerys as $gallery)
                 @php
                     $fotos = is_array($gallery->foto) ? $gallery->foto : explode(',', $gallery->foto);
-                    $firstFoto = trim($fotos[0] ?? 'default.jpg'); // default fallback
+                    $firstFoto = trim($fotos[0] ?? 'default.jpg');
+                    $imgSrc = $gallery->cover
+                        ? asset('storage/img/gallery/cover/' . $gallery->cover)
+                        : asset('storage/img/gallery/' . $firstFoto);
                 @endphp
 
                 <div class="col-lg-4 text-center mb-5 wow fadeInUp" data-wow-delay="0.2s">
                     <a href="{{ route('gallery.show', $gallery->slug) }}">
-                        <img src="{{ asset('storage/img/gallery/' . $firstFoto) }}" alt="{{ $gallery->name }}" class="img-fluid rounded w-100 mb-4">
+                        <img src="{{ $imgSrc }}" alt="{{ $gallery->name }}"
+                            class="img-fluid rounded w-100 mb-4">
                     </a>
                     <h5>{{ $gallery->name }}</h5>
                 </div>
