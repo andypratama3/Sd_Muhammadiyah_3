@@ -286,12 +286,16 @@
                         <p class="text-primary">Aktivitas SD Muhammadiyah 3 Samarinda</p>
                         <div class="row g-4">
                             @foreach ($gallerys as $gallery)
+                            @php
+                                $fotos = is_array($gallery->foto) ? $gallery->foto : explode(',', $gallery->foto);
+                                $firstFoto = trim($fotos[0] ?? 'default.jpg');
+                            @endphp
                             <div class="col-md-3">
-                                <a href="{{ asset('storage/img/gallery/'. $gallery->foto) }}"
-                                    data-lightbox="{{ $gallery->foto }}" class="">
+                                <a href="{{ asset('storage/img/gallery/'. $firstFoto) }}"
+                                    data-lightbox="{{ $firstFoto }}" class="">
                                     <div class="card">
                                         <div class="card-body">
-                                            <img src="{{ asset('storage/img/gallery/'. $gallery->foto) }}" alt=""
+                                            <img src="{{ asset('storage/img/gallery/'. $firstFoto) }}" alt=""
                                                 class="img-fluid" style="border-radius: 8px;">
                                             <h4 class="card-title">{{ $gallery->name }}</h4>
                                         </div>
