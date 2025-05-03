@@ -14,12 +14,62 @@
                                 </a>
                                 {{-- <p class="text-white mb-4">Dolor amet sit justo amet elitr clita ipsum elitr est.Lorem ipsum dolor sit amet, consectetur adipiscing...</p> --}}
                                 <div class="footer-btn d-flex mt-4">
-                                    <a class="btn btn-md-square rounded-circle me-3" href="https://www.facebook.com/sekolahkreatif.muhammadiyahsamarinda/" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                                    <a class="btn btn-md-square rounded-circle me-3" href="#"><i class="fab fa-twitter"></i></a>
-                                    <a class="btn btn-md-square rounded-circle me-3" href="https://www.instagram.com/SekolahKreatifSamarinda/" target="_blank"><i class="fab fa-instagram"></i></a>
-                                    <a class="btn btn-md-square rounded-circle me-0" href="#"><i class="fab fa-linkedin-in"></i></a>
+                                    <a class="btn btn-md-square rounded-circle me-3 social-icon" href="https://www.facebook.com/sekolahkreatif.muhammadiyahsamarinda/" target="_blank">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                    <a class="btn btn-md-square rounded-circle me-3 social-icon" href="#">
+                                        <i class="fab fa-twitter"></i>
+                                    </a>
+                                    <a class="btn btn-md-square rounded-circle me-3 social-icon" href="https://www.instagram.com/SekolahKreatifSamarinda/" target="_blank">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a class="btn btn-md-square rounded-circle me-0 social-icon" href="#">
+                                        <i class="fab fa-linkedin-in"></i>
+                                    </a>
+
                                 </div>
+                                <div class="mt-4" x-data>
+                                    <h5 class="fs-4 fw-bold text-white">Jumlah Pengunjung</h5>
+                                    <h5 class="text-white">
+                                        Hari Ini:
+                                        <span class="text-white" x-data="{ count: 0 }"
+                                              x-init="let interval = setInterval(() => {
+                                                  if(count < {{ $visitor_by_day }}) count++; else clearInterval(interval);
+                                              }, 30)"
+                                              x-text="count + 'x'">
+                                        </span>
+                                    </h5>
+
+                                    <h5 class="text-white">
+                                        Bulan Ini:
+                                        <span class="text-white" x-data="{ count: 0 }"
+                                              x-init="let interval = setInterval(() => {
+                                                  if(count < {{ $visitor_by_month }}) count++; else clearInterval(interval);
+                                              }, 20)"
+                                              x-text="count + 'x'">
+                                        </span>
+                                    </h5>
+
+                                    <h5 class="text-white">
+                                        Tahun Ini:
+                                        <span class="text-white" x-data="{ count: 0 }"
+                                              x-init="let interval = setInterval(() => {
+                                                  if(count < {{ $visitor_by_year }}) count++; else clearInterval(interval);
+                                              }, 10)"
+                                              x-text="count + 'x'">
+                                        </span>
+                                    </h5>
+
+                                    <p class="mt-3 text-white">
+                                        <strong>
+                                            Kami senang Anda berkunjung ke website kami. Semoga Anda menemukan informasi yang bermanfaat dan menarik.
+                                        </strong>
+                                    </p>
+                                </div>
+
+
                             </div>
+
                         </div>
                         <div class="col-md-6 col-lg-6">
                                     <h2 class="text-center text-white">Maps</h2>
@@ -91,6 +141,7 @@
 <div class="container-fluid copyright py-4">
     <div class="container">
         <div class="row g-4 align-items-center">
+
             <div class="col-md-6 text-center text-md-end mb-md-0">
                 <span class="text-body"><a href="/" class="border-bottom text-white"><i class="fas fa-copyright text-light me-2"></i>SD MUHAMMADIYAH 3 SAMARINDA</a>, All right reserved.</span>
             </div>

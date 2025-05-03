@@ -149,7 +149,6 @@
                             <select name="category_kelas" id="category_kelas" class="select2 form-control"
                                 data-placholder="Pilih Kategori Kelas">
                                 <option selected disabled>Pilih Kategori Kelas</option>
-
                             </select>
                         </div>
                     </div>

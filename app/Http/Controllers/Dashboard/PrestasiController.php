@@ -14,7 +14,7 @@ class PrestasiController extends Controller
     /**
     *   ? data Status
     *   ! status 1 prestasi Siswa
-    *   ! status 2 prestasi Sekolah
+    *   ! status 2 prestasi Sekolah 
     */
     public function index()
     {

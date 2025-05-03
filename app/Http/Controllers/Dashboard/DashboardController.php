@@ -82,6 +82,11 @@ class DashboardController extends Controller
         $visitor_by_year = Visitor::whereDate('created_at', '>=', Carbon::now()->startOfYear()->format('Y-m-d'))->count();
 
 
+        $siswas = Siswa::whereHas('kelas', function ($q) {
+            $q->where('name', '<>', 'Lulus');
+        })->count();
+
+
          // define visitor data
         //  View::composer('layouts.landing.footer', function ($view) {
             // $visitor_by_day = Visitor::whereDate('created_at', Carbon::now()->format('Y-m-d'))->count();

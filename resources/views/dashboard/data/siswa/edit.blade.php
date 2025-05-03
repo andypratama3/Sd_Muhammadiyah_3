@@ -690,7 +690,9 @@
                         $(this).val(spp);
                 });
 
-                $('#spp, #dpp, #seragam').val(formatRupiah($('#spp').val()));
+                $('#spp, #dpp, #seragam').each(function() {
+                    $(this).val(formatRupiah($(this).val()));
+                });
 
                 // Fungsi untuk memformat angka sebagai mata uang Rupiah
                 function formatRupiah(angka) {

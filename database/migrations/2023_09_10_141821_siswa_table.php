@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('spp');
             $table->integer('dpp');
             $table->integer('seragam');
-            $table->string('va_number');
+            $table->string('va_number')->nullable();
             //pendidikan sebelumnya
             $table->string('nama_pendidikan')->nullable()->default('text');
             $table->string('nama_jalan_pendidikan')->nullable()->default('text');

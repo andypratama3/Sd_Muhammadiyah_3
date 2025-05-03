@@ -9,7 +9,7 @@
 <script src="{{ asset('asset/lib/lightbox/js/lightbox.min.js') }}"></script>
 <script src="{{ asset('asset/lib/owlcarousel/owl.carousel.min.js') }}"></script>
 
-
+<script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 <!-- Template Javascript -->
 <script src="{{ asset('asset/js/main.js') }}"></script>
 @stack('js_user')

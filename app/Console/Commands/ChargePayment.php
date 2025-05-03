@@ -32,6 +32,13 @@ class ChargePayment extends Command
         $monthName = Carbon::now()->locale('id_ID')->format('F');
 
         foreach ($siswas as $siswa) {
+
+            if($siswa->spp == 'null' || $siswa->spp == '' || $siswa->spp == null){
+                // don't create charge but continue next siswa
+                $this->warn('Siswa ' . $siswa->name . ' tidak memiliki SPP');
+                continue;
+            }
+
             DB::beginTransaction();
 
             try {
@@ -48,7 +55,7 @@ class ChargePayment extends Command
                 // make number mounth
                 $monthNumber = Carbon::now()->locale('id_ID')->format('m');
 
-                $category_Spp = JudulPembayaran::where('name', 'SPP')->first();
+                $category_Spp = JudulPembayaran::where('name', 'SPP')->first() ;
                 $vaNumber = $siswa->nisn . $category_Spp->code . $monthNumber;
 
                 $biaya_admin = 5000;

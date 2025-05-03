@@ -55,6 +55,8 @@
                             <th>Nisn</th>
                             <th>Kelas</th>
                             <th>Ketagori Kelas</th>
+                            <th>SPP</th>
+                            <th>DPP</th>
                             {{-- <th>Tanggal Masuk</th>  --}}
                             <th>Action</th>
                         </tr>
@@ -94,6 +96,8 @@ $(document).ready(function () {
             { data: 'nisn', name: 'nisn'},
             { data: 'kelas.name', name: 'kelas.name'},
             { data: 'kelas.category', name: 'kelas.category'},
+            { data: 'spp', name: 'spp'},
+            { data: 'dpp', name: 'dpp'},
             { data: 'options',name: 'options', orderable: false, searchable: false }
         ],
     });

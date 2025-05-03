@@ -36,7 +36,7 @@ class SiswaController extends Controller
     }
     public function data_table(Request $request)
     {
-        $siswa = Siswa::with('kelas')->select(['id','name','nisn','jk','foto','slug']);
+        $siswa = Siswa::with('kelas')->select(['id','name','nisn','jk','foto','slug','spp','dpp'])->orderBy('name', 'asc');
 
         if ($request->kelas) {
             $siswa = $siswa->whereHas('kelas', function ($query) use ($request) {
@@ -49,11 +49,17 @@ class SiswaController extends Controller
 
         return DataTables::of($siswa)
                 ->addColumn('kelas.name', function ($kelas) {
-                    $kelas_name = $kelas->kelas->pluck('name');
-                    return $kelas_name;
+                    $kelas_name = $kelas->kelas->pluck('name')->implode(', ');
+                    return $kelas_name ?? 'Tidak Ada Kelas';
+                })
+                ->addColumn('spp', function ($row) {
+                    return 'Rp ' . number_format($row->spp,0,',','.');
+                })
+                ->addColumn('dpp', function ($row) {
+                    return 'Rp ' . number_format($row->dpp,0,',','.');
                 })
                 ->addColumn('kelas.category', function ($kelas) {
-                    return $kelas->kelas->pluck('pivot.category_kelas')->implode(', ');
+                    return $kelas->kelas->pluck('pivot.category_kelas')->implode(', ') ?? 'Tidak Ada Kelas';
 
                     // return $category_name;
                 })
@@ -64,16 +70,18 @@ class SiswaController extends Controller
                     <button data-id="' . $row['slug'] . '" class="btn btn-sm btn-danger" id="btn-delete"><i class="fa fa-trash"></i></button>
                 ';
                 })
-                ->rawColumns(['options'])
+                ->rawColumns(['options', 'kelas.name','kelas.category'])
                 ->addIndexColumn()
                 ->make(true);
     }
+
     public function create()
     {
         $result_provinsi = json_decode(json_encode($this->getprovinsi->provinsi()), true);
         $kelass = Kelas::orderBy('name','asc')->get();
         return view('dashboard.data.siswa.create', compact('kelass','result_provinsi'));
     }
+    
     public function store(SiswaData $siswaData, SiswaAction $siswaAction)
     {
         $siswaAction->execute($siswaData);

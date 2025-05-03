@@ -33,6 +33,7 @@ class BerandaController extends Controller
             $q->where('name', '!=', 'Lulus');
         })->count();
 
+
         $guru = Guru::count();
         $fasilitas = Fasilitas::count();
         $prestasis_siswa = Prestasi::where('status', '1')->count();
@@ -42,7 +43,7 @@ class BerandaController extends Controller
 
         // cooperation
         $cooperations = Cooperation::orderBy('order', 'asc')->get();
-        
+
         $achivements = Achivement::orderBy('order', 'asc')->get();
 
         $esktrakurikuler = Esktrakurikuler::count();
