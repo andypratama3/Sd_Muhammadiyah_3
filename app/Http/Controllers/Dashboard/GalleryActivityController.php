@@ -37,7 +37,7 @@ class GalleryActivityController extends Controller
                     ';
                 })
                 ->addColumn('cover', function ($row){
-                    return '<img src="' . asset('storage/img/gallery/' . $row->foto) . '" width="100" height="100" class="img-thumbnail img-fluid" alt="Foto Gallery">';
+                    return '<img src="' . asset('storage/img/gallery/' . $row->cover) . '" width="100" height="100" class="img-thumbnail img-fluid" alt="Foto Gallery">';
                 })
                 ->addIndexColumn()
                 ->rawColumns(['options','cover'])
