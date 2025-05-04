@@ -49,7 +49,7 @@ class BerandaController extends Controller
         $esktrakurikuler = Esktrakurikuler::count();
 
         $prestasi_terakhir = Prestasi::Where('status', '1')->orderBy('created_at', 'desc')->take(4)->get();
-        $gallerys = Gallery::select('name', 'foto', 'slug')->take(8)->get();
+        $gallerys = Gallery::select('name', 'foto', 'slug','cover')->take(8)->get();
         //loop prestasi sekolah dan prestasi siswa
         return view('beranda', compact(
             'beritas',
