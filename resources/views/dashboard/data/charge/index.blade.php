@@ -139,8 +139,8 @@
                 columns: [
                     { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, ordering: false },
                     { data: 'name', name: 'name' },
-                    { data: 'siswa.name', name: 'siswa.name' },
-                    { data: 'kelas.name', name: 'kelas.name' },
+                    { data: 'siswa_name', name: 'siswa_name' },
+                    { data: 'kelas_name', name: 'kelas_name' },
                     { data: 'va_number', name: 'va_number' },
                     { data: 'gross_amount', name: 'gross_amount' },
                     {
@@ -155,7 +155,10 @@
                                 return '<h6 style="color: black;"><span class="badge bg-danger"><i class="fa-solid fa-xmark"></i> ' + data + '</span></h6>';
                             } else if(data === 'pay_offline'){
                                 return '<h6 style="color: black;"><span class="badge bg-success"><i class="fa-solid fa-circle-check"></i> Pay Offline</span></h6>';
+                            } else if(data === 'free') {
+                                return '<h6 style="color: black;"><span class="badge bg-success"><i class="fa-solid fa-circle-check"></i> Gratis</span></h6>';
                             } else {
+
                                 return data;
                             }
                         }

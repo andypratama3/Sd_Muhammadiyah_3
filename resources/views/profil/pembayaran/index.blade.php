@@ -93,7 +93,7 @@
                                     <div class="col-md-6 mt-2">
                                         <div class="info-grid">
                                             <span class="text-field">Nama</span><span >:</span><span>{{ $siswa->name }}</span>
-                                            <span class="text-field">Kelas</span><span>:</span><span>{{ $siswa->kelas->first()->name }}</span>
+                                            <span class="text-field">Kelas</span><span>:</span><span>{{ $siswa->kelas->first()->name ?? '-' }}</span>
                                             <span class="text-field">NISN</span><span>:</span><span>{{ $siswa->nisn }}</span>
                                         </div>
                                     </div>
@@ -166,6 +166,8 @@
                                                                                             <span class="badge bg-warning">Belum Lunas <i class="align-center bi bi-clock" style="color: black !important;"></i> </span>
                                                                                         @elseif($charge->transaction_status == 'settlement')
                                                                                             <span class="badge bg-primary">Lunas <i class="align-center bi bi-check"></i> </span>
+                                                                                        @elseif($charge->transaction_status == 'free')
+                                                                                            <span class="badge bg-success">Gratis <i class="align-center bi bi-check"></i> </span>
                                                                                         @endif
                                                                                     </div>
                                                                                     <div class="col-md-2 text-center">
@@ -448,10 +450,13 @@
 
             // Tampilkan status transaksi dalam bentuk badge
             let statusBadge = "";
-            if (data.transaction_status === 'settlement') {
+            if (data.transaction_status === 'settlement' || data.transaction_status === 'pay_offline' || data.transaction_status === 'capture' ) {
                 statusBadge = `<span class="badge bg-success">Lunas</span>`;
             } else if (data.transaction_status === 'pending') {
                 statusBadge = `<span class="badge bg-warning">Belum Lunas</span>`;
+            } else if(data.transaction_status === 'free') {
+                statusBadge = `<span class="badge bg-success">Gratis</span>`;
+
             } else {
                 statusBadge = data.transaction_status;
             }

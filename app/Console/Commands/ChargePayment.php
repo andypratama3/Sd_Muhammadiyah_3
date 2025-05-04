@@ -51,9 +51,8 @@ class ChargePayment extends Command
                 $category_Spp = JudulPembayaran::where('name', 'SPP')->first() ;
                 $vaNumber = $siswa->nisn . $category_Spp->code . $monthNumber;
 
-                $biaya_admin = 5000;
+                $biaya_admin = ($siswa->spp > 0) ? 5000 : 0;
                 $gross_amount = $siswa->spp + $biaya_admin;
-
 
                 // Insert data ke tabel charges
                 DB::table('charges')->insert([
@@ -138,8 +137,10 @@ class ChargePayment extends Command
         $client = new Client();
         $server_key = env('MIDTRANS_SERVER_KEY');
 
+        // https://api.sandbox.midtrans.com/v2/charge
+        // prod = https://api.midtrans.com/v2/charge
         try {
-            $response = $client->post('https://api.midtrans.com/v2/charge', [
+            $response = $client->post('https://api.sandbox.midtrans.com/v2/charge', [
                 'headers' => [
                     'Accept' => 'application/json',
                     'Authorization' => 'Basic ' . base64_encode($server_key . ':'),

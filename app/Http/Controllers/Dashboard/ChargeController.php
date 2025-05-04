@@ -72,13 +72,13 @@ class ChargeController extends Controller
             ->addColumn('va_number', function ($row) {
                 return $row->va_number;
             })
-            ->addColumn('siswa.name', function ($row) {
+            ->addColumn('siswa_name', function ($row) {
                 return $row->siswa->name;
             })
-            ->addColumn('kelas.name', function ($row) {
+            ->addColumn('kelas_name', function ($row) {
                 return $row->siswa->kelas->pluck('name')->implode(', ');
             })
-            ->rawColumns(['options'])
+            ->rawColumns(['options', 'siswa_name', 'kelas_name'])
             ->addIndexColumn()
             ->make(true);
     }
