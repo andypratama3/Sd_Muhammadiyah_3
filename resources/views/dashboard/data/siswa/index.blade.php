@@ -94,8 +94,8 @@ $(document).ready(function () {
             { data: 'DT_RowIndex',name: 'DT_RowIndex',orderable: false,searchable: false},
             { data: 'name', name: 'name'},
             { data: 'nisn', name: 'nisn'},
-            { data: 'kelas.name', name: 'kelas.name'},
-            { data: 'kelas.category', name: 'kelas.category'},
+            { data: 'kelas_name', name: 'kelas_name'},
+            { data: 'kelas_category', name: 'kelas_category'},
             { data: 'spp', name: 'spp'},
             { data: 'dpp', name: 'dpp'},
             { data: 'options',name: 'options', orderable: false, searchable: false }

@@ -48,7 +48,7 @@ class SiswaController extends Controller
         }
 
         return DataTables::of($siswa)
-                ->addColumn('kelas.name', function ($kelas) {
+                ->addColumn('kelas_name', function ($kelas) {
                     $kelas_name = $kelas->kelas->pluck('name')->implode(', ');
                     return $kelas_name ?? 'Tidak Ada Kelas';
                 })
@@ -58,7 +58,7 @@ class SiswaController extends Controller
                 ->addColumn('dpp', function ($row) {
                     return 'Rp ' . number_format($row->dpp,0,',','.');
                 })
-                ->addColumn('kelas.category', function ($kelas) {
+                ->addColumn('kelas_category', function ($kelas) {
                     return $kelas->kelas->pluck('pivot.category_kelas')->implode(', ') ?? 'Tidak Ada Kelas';
 
                     // return $category_name;
@@ -70,7 +70,7 @@ class SiswaController extends Controller
                     <button data-id="' . $row['slug'] . '" class="btn btn-sm btn-danger" id="btn-delete"><i class="fa fa-trash"></i></button>
                 ';
                 })
-                ->rawColumns(['options', 'kelas.name','kelas.category'])
+                ->rawColumns(['options', 'kelas_name','kelas_category'])
                 ->addIndexColumn()
                 ->make(true);
     }
@@ -81,7 +81,7 @@ class SiswaController extends Controller
         $kelass = Kelas::orderBy('name','asc')->get();
         return view('dashboard.data.siswa.create', compact('kelass','result_provinsi'));
     }
-    
+
     public function store(SiswaData $siswaData, SiswaAction $siswaAction)
     {
         $siswaAction->execute($siswaData);

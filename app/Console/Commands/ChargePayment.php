@@ -32,13 +32,6 @@ class ChargePayment extends Command
         $monthName = Carbon::now()->locale('id_ID')->format('F');
 
         foreach ($siswas as $siswa) {
-
-            if($siswa->spp == 'null' || $siswa->spp == '' || $siswa->spp == null){
-                // don't create charge but continue next siswa
-                $this->warn('Siswa ' . $siswa->name . ' tidak memiliki SPP');
-                continue;
-            }
-
             DB::beginTransaction();
 
             try {
@@ -60,10 +53,12 @@ class ChargePayment extends Command
 
                 $biaya_admin = 5000;
                 $gross_amount = $siswa->spp + $biaya_admin;
+
+
                 // Insert data ke tabel charges
                 DB::table('charges')->insert([
                     'id' => Str::uuid(),
-                    'name' => "$category_Spp->name  {$monthName} {$siswa->name} test 1",
+                    'name' => "$category_Spp->name  {$monthName} {$siswa->name}",
                     'order_id' => $order_id,
                     'siswa_id' => $siswa->id,
                     'gross_amount' => $gross_amount,
@@ -73,12 +68,19 @@ class ChargePayment extends Command
                     'transaction_id' => Str::uuid(),
                     'transaction_time' => now(),
                     'fraud_status' => 'accept',
-                    'transaction_status' => 'pending',
+                    'transaction_status' => ($siswa->spp <= 0) ? 'free' : 'pending',
                     'category_payment_id' => $category_Spp->id,
                     'snap_token' => null,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
+
+
+                 if (empty($siswa->spp) || $siswa->spp <= 0) {
+                    $this->warn("Siswa {$siswa->name} memiliki SPP Rp0. Tidak dikirim ke Midtrans.");
+                    DB::commit();
+                    continue;
+                }
 
                 // Kirim pembayaran ke Midtrans
                 $this->sendPaymentToMidtrans($siswa, $vaNumber,$gross_amount, $order_id, $category_Spp);
@@ -94,8 +96,6 @@ class ChargePayment extends Command
     private function sendPaymentToMidtrans(Siswa $siswa, $vaNumber,$gross_amount, $order_id, $category_Spp)
     {
         $monthName = Carbon::now()->locale('id_ID')->format('F');
-
-
 
         $params = [
             'payment_type' => 'bank_transfer',
