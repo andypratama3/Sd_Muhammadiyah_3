@@ -301,7 +301,7 @@
                                                 <img src="{{ $imgSrc }}" alt="{{ $gallery->name }}" class="img-fluid" style="border-radius: 8px;">
                                             </a>
                                             <div class="card-body">
-                                                <h5 class="card-title">{{ Str::limit($gallery->name, 25) }}</h5>
+                                                <h5 class="card-title">{{ Str::limit($gallery->name, 30) }}</h5>
                                                 <a href="{{ route('gallery.show', $gallery->slug) }}" class="btn btn-primary">Lihat</a>
                                             </div>
                                         </div>
@@ -571,7 +571,7 @@
                     </div>
                     <div class="service-content p-4">
                         <div class="service-content-inner">
-                            <a href="#" class="d-inline-block h4 mb-4">{{ Str::limit($prestasi->judul, 20) }}</a>
+                            <a href="#" class="d-inline-block h5 mb-4">{{ Str::limit($prestasi->name, 30) }}</a>
                             <a class="btn btn-primary rounded-pill py-2 px-4"
                                 href="{{ route('prestasi.siswa.show', $prestasi->slug) }}">Lihat</a>
                         </div>
