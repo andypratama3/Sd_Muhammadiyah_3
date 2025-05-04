@@ -16,7 +16,7 @@ class ActionKaryawan
         $userData = [
             'name' => $karyawanData->name,
             'email' => $karyawanData->email,
-            'password' => bcrypt('12345678'),
+            'password' => bcrypt('sdmuhammadiyah3samarinda.com'),
             'avatar' => 'profile.jpg',
 
         ];
