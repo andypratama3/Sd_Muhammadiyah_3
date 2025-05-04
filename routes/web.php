@@ -179,6 +179,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::post('getSmester',[ DashboardJadwalController::class, 'getSmester'])->name('dashboard.datasekolah.jadwal.getSmester');
 
         Route::resource('gallery', DashboardGalleryActivityController::class, ['names' => 'dashboard.datasekolah.gallery']);
+        Route::get('gallerys/data', [DashboardGalleryActivityController::class,'data_table'])->name('dashboard.datasekolah.gallery.data');
 
         Route::resource('cooperation', CooperationController::class, ['names' => 'dashboard.datasekolah.cooperation']);
         Route::get('cooperations/data', [CooperationController::class,'data_table'])->name('dashboard.datasekolah.cooperation.data');

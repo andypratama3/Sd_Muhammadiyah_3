@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\DataTransferObjects\GalleryData;
+use Yajra\DataTables\Facades\DataTables;
 use App\Actions\Dashboard\Gallery\GalleryAction;
 
 class GalleryActivityController extends Controller
@@ -18,6 +19,30 @@ class GalleryActivityController extends Controller
         $count = $gallerys->count();
         $no = $limit * ($gallerys->currentPage() - 1);
         return view('dashboard.data.gallery.index', compact('gallerys','count', 'no'));
+    }
+
+    public function data_table()
+    {
+        $data = Gallery::select('name', 'foto', 'slug')->orderBy('created_at', 'desc');
+
+        return DataTables::of($data)
+                ->addColumn('name', function ($row) {
+                    return $row->name;
+                })
+                ->addColumn('options', function ($row) {
+                    return '
+                        <a href="' . route('dashboard.datasekolah.gallery.show', $row->slug) . '" class="btn btn-sm m-1 btn-warning"><i class="fa fa-eye"></i></a>
+                        <a href="' . route('dashboard.datasekolah.gallery.edit', $row->slug) . '" class="btn btn-sm m-1 btn-info"><i class="fa fa-edit"></i></a>
+                        <button data-id="' . $row['slug'] . '" class="btn btn-sm btn-danger me-1" id="btn-delete"><i class="fa fa-trash"></i></button>
+                    ';
+                })
+                ->addColumn('cover', function ($row){
+                    return '<img src="' . asset('storage/img/gallery/' . $row->foto) . '" width="100" height="100" class="img-thumbnail img-fluid" alt="Foto Gallery">';
+                })
+                ->addIndexColumn()
+                ->rawColumns(['options','cover'])
+                ->make(true);
+
     }
 
     public function create()
@@ -52,10 +77,20 @@ class GalleryActivityController extends Controller
                 Storage::delete($filePath);
             }
         }
+        $action = $gallery->delete();
 
+        if($action){
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Berhasil Menghapus Data'
+            ]);
+        }else{
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal Menghapus Data'
+            ]);
+        }
 
-        $gallery->delete();
-        return redirect()->route('dashboard.datasekolah.gallery.index')->with('success','Berhasil Hapus Data Gallery');
 
     }
 }

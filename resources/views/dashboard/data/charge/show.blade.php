@@ -3,8 +3,7 @@
 @section('content')
 @push('css')
 <link href="{{ asset('asset_dashboard/vendor/select2/dist/css/select2.css') }}" rel="stylesheet" type="text/css">
-<link href="{{ asset('asset_dashboard/vendor/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}" rel="stylesheet"
-    type="text/css">
+<link href="{{ asset('asset_dashboard/vendor/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}" rel="stylesheet"    type="text/css">
 @endpush
 <div class="card mb-4">
     @include('layouts.flashmessage')
