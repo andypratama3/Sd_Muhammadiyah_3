@@ -13,7 +13,7 @@ class KaryawanStore
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->password = bcrypt('12345678');
+        $user->password = bcrypt('sdmuhammadiyah3samarinda.com');
         $user->avatar = 'profile.jpg';
         $user->save();
 
