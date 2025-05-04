@@ -23,7 +23,7 @@ class GalleryActivityController extends Controller
 
     public function data_table()
     {
-        $data = Gallery::select('name', 'foto', 'slug')->orderBy('created_at', 'desc');
+        $data = Gallery::select(['name', 'foto', 'slug', 'cover'])->orderBy('created_at', 'desc');
 
         return DataTables::of($data)
                 ->addColumn('name', function ($row) {
