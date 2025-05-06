@@ -140,7 +140,7 @@ class ChargePayment extends Command
         // https://api.sandbox.midtrans.com/v2/charge
         // prod = https://api.midtrans.com/v2/charge
         try {
-            $response = $client->post('https://api.midtrans.com/v2/charge', [
+            $response = $client->post('https://api.sandbox.midtrans.com/v2/charge', [
                 'headers' => [
                     'Accept' => 'application/json',
                     'Authorization' => 'Basic ' . base64_encode($server_key . ':'),
@@ -150,7 +150,6 @@ class ChargePayment extends Command
             ]);
 
             $responseData = json_decode($response->getBody(), true);
-
             if ($responseData['status_code'] == 201) {
                 $this->info("VA untuk {$siswa->name}: " . $responseData['va_numbers'][0]['va_number']);
                 // $this->info("Transaksi akan kedaluwarsa dalam {$params['expiry']['duration']} {$params['expiry']['unit']}");
@@ -172,9 +171,11 @@ class ChargePayment extends Command
 
             } else {
                 $this->error("Gagal memproses pembayaran untuk {$siswa->name}: " . $responseData['status_message']);
+
             }
         } catch (\Exception $e) {
             $this->error("Gagal mengirim pembayaran ke Midtrans untuk {$siswa->name}: " . $e->getMessage());
+            // dd($e->getMessage());
         }
     }
 

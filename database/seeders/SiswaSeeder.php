@@ -31,6 +31,28 @@ class SiswaSeeder extends Seeder
 
             $selected_data = $siswa_data['nama_ayah'] && $siswa_data['nama_ibu'] ? 'orang_tua' : 'wali';
 
+            if ($siswa_data['provinsi']) {
+                $provinsi = \DB::table('provinsi')->where('province_id', $siswa_data['provinsi'])->first();
+                if ($provinsi) {
+                    $kabupaten = \DB::table('kabupaten')->where('province_id', $provinsi->province_id)->where('regency_id', $siswa_data['kabupaten_kota'])->first();
+                    if ($kabupaten) {
+                        $kecamatan_value = str_replace('Kec.', '', $siswa_data['kecamatan']);
+                        $kecamatan_value = trim($kecamatan_value);
+                        $kecamatan = \DB::table('kecamatan')->where('regency_id', $kabupaten->regency_id)->where('name', 'like', '%' . $kecamatan_value . '%')->first();
+                        if ($kecamatan) {
+                            $kelurahan = \DB::table('kelurahan')->where('district_id', $kecamatan->district_id)->where('name', 'like', '%' . $siswa_data['kelurahan'] . '%')->first();
+                            if ($kelurahan) {
+                                $siswa_data['provinsi'] = $provinsi->province_id;
+                                $siswa_data['kabupaten_kota'] = $kabupaten->regency_id;
+                                $siswa_data['kecamatan'] = $kecamatan->district_id;
+                                $siswa_data['kelurahan'] = $kelurahan->village_id;
+                            }
+                        }
+                    }
+                }
+            }
+
+
             $siswa = Siswa::create([
                 'id' => Str::uuid(),
                 'name' => $nama,
@@ -48,7 +70,7 @@ class SiswaSeeder extends Seeder
                 'kelas_tahun' => $siswa_data['kelas_tahun_ajaran'],
                 'tanggal_masuk' => null,
                 'beasiswa' => null,
-                'foto' => null,
+                'foto' => 'asset_dashboard/img/default.jpg',
                 'select_data' => $selected_data,
                 'nama_ayah' => $siswa_data['nama_ayah'],
                 'nama_ibu' => $siswa_data['nama_ibu'],

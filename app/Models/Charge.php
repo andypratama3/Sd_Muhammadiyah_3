@@ -37,7 +37,7 @@ class Charge extends Model
 
     public function siswa()
     {
-        return $this->belongsTo(Siswa::class, 'siswa_id');
+        return $this->belongsTo(Siswa::class, 'siswa_id', 'id');
     }
 
     public function kategori_pembayaran()

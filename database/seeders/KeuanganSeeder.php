@@ -25,6 +25,10 @@ class KeuanganSeeder extends Seeder
         foreach ($csv as $row) {
             $data = array_combine($header, $row);
 
+
+
+
+
             $kelas = Kelas::where('name', trim($data['kelas']))->first();
             if (!$kelas) {
                 echo "❌ Kelas tidak ditemukan: {$data['kelas']}\n";
@@ -35,7 +39,7 @@ class KeuanganSeeder extends Seeder
 
             // Try SQL-style LIKE matching
             $siswa = Siswa::where('name', trim($data['nama']))->first();
-            
+
 
             // Fallback to similar_text if LIKE fails
             if (!$siswa) {
@@ -47,10 +51,54 @@ class KeuanganSeeder extends Seeder
                 });
             }
 
+
             if (!$siswa) {
                 echo "❌ Siswa tidak ditemukan: {$data['nama']}\n";
+                // // create new siswa
+                // $siswa = Siswa::create([
+                //     'id' => Str::uuid(),
+                //     'name' => $nama,
+                //     'nisn' => $siswa_data['nisn'],
+                //     'jk' => $jenis_kelamin,
+                //     'tmpt_lahir' => $siswa_data['tempat_lahir'],
+                //     'tgl_lahir' => $siswa_data['tanggal_lahir'],
+                //     'agama' => $siswa_data['agama'],
+                //     'spp' => $spp ?? null,
+                //     'dpp' => $dpp ?? null,
+                //     'seragam' => $seragam,
+                //     'va_number' => null,
+                //     'nama_pendidikan' => $siswa_data['nama_pendidikan'],
+                //     'nama_jalan_pendidikan' => $siswa_data['alamat_pendidikan'],
+                //     'kelas_tahun' => $siswa_data['kelas_tahun_ajaran'],
+                //     'tanggal_masuk' => null,
+                //     'beasiswa' => null,
+                //     'foto' => asset('asset_dashboard/img/default.jpg'),
+                //     'select_data' => $selected_data,
+                //     'nama_ayah' => $siswa_data['nama_ayah'],
+                //     'nama_ibu' => $siswa_data['nama_ibu'],
+                //     'pendidikan_ayah' => $siswa_data['pendidikan_ayah'],
+                //     'pendidikan_ibu' => $siswa_data['pendidikan_ibu'],
+                //     'pekerjaan_ayah' => $siswa_data['pekerjaan_ayah'],
+                //     'pekerjaan_ibu' => $siswa_data['pekerjaan_ibu'],
+                //     'nama_wali' => $siswa_data['nama_wali'],
+                //     'pekerjaan_wali' => $siswa_data['pekerjaan_wali'],
+                //     'alamat_wali' => $siswa_data['alamat_wali'],
+                //     'rt' => $siswa_data['rt'],
+                //     'rw' => $siswa_data['rw'],
+                //     'provinsi_id' => $siswa_data['provinsi'],
+                //     'kabupaten_id' => $siswa_data['kabupaten_kota'],
+                //     'kecamatan_id' => $siswa_data['kecamatan'],
+                //     'kelurahan_id' => $siswa_data['kelurahan'],
+                //     'jenis_tinggal' => $siswa_data['jenis_tinggal'],
+                //     'nama_jalan' => $siswa_data['nama_jalan'],
+                //     'no_hp' => $siswa_data['no_hp'],
+                //     'slug' => Str::slug($nama . '-' . Str::random(5)),
+                // ]);
+
                 continue;
             }
+
+
 
             $category_kelas = trim($data['category_kelas']) ?? null;
             $spp = (int) str_replace(['Rp', '.', ' '], '', $data['spp']) ?: 0;

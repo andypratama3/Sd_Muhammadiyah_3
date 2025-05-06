@@ -36,8 +36,8 @@ class ChargeController extends Controller
 
     public function data_table(Request $request)
     {
-        $charges = Charge::with('siswa')
-                ->orderBy('created_at', 'desc');
+        $charges = Charge::with(['siswa'])->orderBy('name', 'asc');
+
 
         if($request->category_payment){
             $charges = $charges->where('category_payment_id', $request->category_payment);
@@ -73,11 +73,13 @@ class ChargeController extends Controller
                 return $row->va_number;
             })
             ->addColumn('siswa_name', function ($row) {
-                return $row->siswa->name;
+                return $row->siswa->name ?? 'Tidak Ada Data Siswa';
             })
             ->addColumn('kelas_name', function ($row) {
-                return $row->siswa->kelas->pluck('name')->implode(', ');
+                return $row->siswa->kelas->pluck('pivot.category_kelas')->implode(', ') ?? 'Tidak Ada Kelas';
+
             })
+
             ->rawColumns(['options', 'siswa_name', 'kelas_name'])
             ->addIndexColumn()
             ->make(true);
@@ -86,39 +88,47 @@ class ChargeController extends Controller
     public function create()
     {
         $kelas = Kelas::select('id','name')->orderBy('name','asc')->get();
-        $kategori_pembayaran = JudulPembayaran::orderBy('name')->get();
+        $kategori_pembayaran = JudulPembayaran::where('name', '!=', 'DPP')->orderBy('name')->get();
         return view('dashboard.data.charge.create', compact('kelas','kategori_pembayaran'));
     }
 
     public function store(Request $request)
     {
+        // Validate the incoming request data
         $request->validate([
             'category_payment_id' => 'required',
             'kelas_id' => 'required',
         ]);
 
+        // Find the payment category based on the provided ID
         $kategori_pembayaran = JudulPembayaran::find($request->category_payment_id);
         if (!$kategori_pembayaran) {
-            return redirect()->route('dashboard.datamaster.charge.index')->with('error', 'Kategori Pembayaran Tidak Ditemukan');
+            return redirect()->route('dashboard.datamaster.charge.index')
+                ->with('error', 'Kategori Pembayaran Tidak Ditemukan');
         }
 
+        // Get the list of students for the given class ID
         $siswaList = Siswa::whereHas('kelas', function ($query) use ($request) {
             $query->where('kelas_id', $request->kelas_id);
         })->get();
 
+        // Iterate through each student and process the charge
         foreach ($siswaList as $siswa) {
-            // Generate order_id yang lebih terstruktur
+            // Generate a unique order ID
             $order_id = Str::uuid();
 
-
-
-            // Tentukan jumlah pembayaran berdasarkan kategori pembayaran
+            // Set the gross amount based on the category of payment
             switch ($kategori_pembayaran->name) {
                 case 'SPP':
                     $gross_amount = $siswa->spp;
                     break;
                 case 'DPP':
-                    $gross_amount = $siswa->dpp;
+                    $gross_amount_80 = $siswa->dpp * 0.8; // 80%
+                    $gross_amount_20 = $siswa->dpp * 0.2; // 20%
+
+                    $this->createCharge($siswa, $order_id, $gross_amount_80, $kategori_pembayaran, '1');
+                    $this->createCharge($siswa, $order_id, $gross_amount_20, $kategori_pembayaran, '2');
+                    continue 2;
                     break;
                 case 'Seragam':
                     $gross_amount = $siswa->seragam;
@@ -128,11 +138,25 @@ class ChargeController extends Controller
                     break;
             }
 
+            // Check if charges already exist for the student in any of the predefined categories
+            $categories = JudulPembayaran::whereIn('name', ['SPP', 'DPP', 'Seragam'])->get();
+            foreach ($categories as $category) {
+                $charge = Charge::where('category_payment_id', $category->id)
+                    ->where('siswa_id', $siswa->id)
+                    ->first();
 
+                // If charge exists, skip this iteration
+                if ($charge) {
+                    $this->info("Tagihan {$category->name} {$siswa->name} sudah dibuat");
+                    continue 2; // Skip to the next student
+                }
+            }
+
+            // Start a database transaction for other charges
             try {
                 DB::beginTransaction();
 
-                // Insert data ke tabel charges
+                // Insert the charge data into the charges table
                 DB::table('charges')->insert([
                     'id' => Str::uuid(),
                     'name' => "{$kategori_pembayaran->name} {$siswa->name}",
@@ -152,25 +176,27 @@ class ChargeController extends Controller
                     'updated_at' => now(),
                 ]);
 
-                // Kirim pembayaran ke Midtrans
-                $midtransResponse = $this->sendPaymentToMidtrans($siswa, $order_id,$gross_amount, $kategori_pembayaran);
+                // Send the payment data to Midtrans for processing
+                $midtransResponse = $this->sendPaymentToMidtrans($siswa, $order_id, $gross_amount, $kategori_pembayaran);
 
+                // Handle errors from Midtrans response
                 if (isset($midtransResponse['error'])) {
                     DB::rollBack();
                     return redirect()->route('dashboard.datamaster.charge.index')->with('error', $midtransResponse['error']);
                 }
 
+                // Commit the transaction if everything goes well
                 DB::commit();
             } catch (\Exception $e) {
+                // Rollback the transaction if an exception occurs
                 DB::rollBack();
                 return redirect()->route('dashboard.datamaster.charge.index')->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
             }
         }
 
+        // Return a success message after processing all students
         return redirect()->route('dashboard.datamaster.charge.index')->with('success', 'Pembayaran berhasil dibuat.');
     }
-
-
 
     public function show($id)
     {
@@ -260,6 +286,38 @@ class ChargeController extends Controller
         return Excel::download(new ChargeExport($startDate, $endDate, $kelas), "Rekap Pembayaran SPP Dari $carbonStartDate Sampai $carbonEndDate.xlsx");
     }
 
+    // private function createCharge($siswa, $order_id, $gross_amount, $kategori_pembayaran, $percentage)
+    // {
+    //     // Insert the charge data into the charges table
+    //     DB::table('charges')->insert([
+    //         'id' => Str::uuid(),
+    //         'name' => "{$kategori_pembayaran->name} {$siswa->name} ({$percentage})",
+    //         'order_id' => $order_id,
+    //         'siswa_id' => $siswa->id,
+    //         'gross_amount' => $gross_amount,
+    //         'payment_type' => 'bank_transfer',
+    //         'bank' => 'bca',
+    //         'va_number' => $siswa->nisn . $kategori_pembayaran->code,
+    //         'transaction_id' => Str::uuid(),
+    //         'transaction_time' => now(),
+    //         'fraud_status' => 'accept',
+    //         'transaction_status' => 'pending',
+    //         'category_payment_id' => $kategori_pembayaran->id,
+    //         'snap_token' => null,
+    //         'created_at' => now(),
+    //         'updated_at' => now(),
+    //     ]);
+
+    //     // Send the payment data to Midtrans for processing
+    //     $midtransResponse = $this->sendPaymentToMidtrans($siswa, $order_id, $gross_amount, $kategori_pembayaran);
+
+    //     // Handle errors from Midtrans response
+    //     if (isset($midtransResponse['error'])) {
+    //         DB::rollBack();
+    //         return redirect()->route('dashboard.datamaster.charge.index')->with('error', $midtransResponse['error']);
+    //     }
+    // }
+
     private function sendPaymentToMidtrans(Siswa $siswa, $order_id,$gross_amount, $kategori_pembayaran)
     {
         $client = new Client();
@@ -299,7 +357,7 @@ class ChargeController extends Controller
         ];
 
         try {
-            $response = $client->post('https://api.midtrans.com/v2/charge', [
+            $response = $client->post('https://api.sandbox.midtrans.com/v2/charge', [
                 'headers' => [
                     'Accept' => 'application/json',
                     'Authorization' => 'Basic ' . base64_encode($server_key . ':'),

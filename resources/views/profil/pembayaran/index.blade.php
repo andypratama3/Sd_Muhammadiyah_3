@@ -88,7 +88,15 @@
                             <div class="box" style="padding: 10px; border-radius: 4px;">
                                 <div class="row">
                                     <div class="col-md-4 text-center mb-2">
-                                        <img src="{{ asset('storage/img/siswa/' . $siswa->foto) }}" alt="" class="img-fluid" style="border-radius: 10px;">
+
+                                        {{-- <img src="https://ui-avatars.com/api/?name={{ $siswa->name }}" alt="" class="img-fluid" style="border-radius: 10px;"> --}}
+                                        <img src="{{ $siswa->foto ? url('storage/img/siswa/' . $siswa->foto) : asset('asset_dashboard/img/default.jpg') }}"
+                                        onerror="this.onerror=null; this.src='{{ asset('asset_dashboard/img/default.jpg') }}';"
+                                        alt=""
+                                        class="img-fluid"
+                                        style="border-radius: 10px;">
+
+                                        {{-- <img src="{{ $siswa->foto ? url('storage/img/siswa/' . $siswa->foto) : asset('asset_dashboard/img/default.jpg') }}" alt="" class="img-fluid" style="border-radius: 10px;"> --}}
                                     </div>
                                     <div class="col-md-6 mt-2">
                                         <div class="info-grid">
@@ -173,7 +181,9 @@
                                                                                     <div class="col-md-2 text-center">
                                                                                         @if($charge->transaction_status == 'settlement')
                                                                                             <button class="btn btn-primary btn-sm" style="font-size: 10px;" id="detailButton" data-id="{{ $charge->id }}">Detail Pembayaran</button>
-                                                                                        @else
+                                                                                            @elseif($charge->transaction_status == 'free')
+                                                                                            <button class="btn btn-primary btn-sm" style="font-size: 10px;">Gratis</button>
+                                                                                            @else
                                                                                             <button class="btn btn-success btn-sm" data-id="{{ $charge->id }}" id="payButton">Bayar</button>
                                                                                         @endif
                                                                                     </div>
