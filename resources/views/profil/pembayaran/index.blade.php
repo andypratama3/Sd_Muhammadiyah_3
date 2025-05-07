@@ -21,18 +21,120 @@
         font-size: 15px;
     }
     .card-header {
-        /* border: 2px solid red; */
         background-color: #198754;
-        /* make have ronded in end */
-        border-top-left-radius: 40px !important; /* Adjust the value as needed */
-        border-top-right-radius: 150px !important; /* Adjust the value as needed */
+        border-top-left-radius: 40px !important;
+        border-top-right-radius: 150px !important;
+    }
+
+    .virtual-account .input-group-text {
+        /* font-size: 12px; */
+        /* width: 100%; */
+        text-align: center;
+        color: black !important;
+        background-color: transparent !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+    }
+
+        .virtual-account input {
+            border-radius: 10px !important;
+            background-color: transparent !important;
+            text-align: center;
+        }
+
+        .virtual-account  .button_copy_va {
+            border-radius: 10px;
+            margin-left: 10px !important;
+        }
+
+
+
+    .accordion-button:not(.collapsed) {
+        color: var(--bs-primary) !important;
+    }
+
+    /* responsive */
+    @media only screen and (max-width: 600px) {
+        .card-header {
+            /* make have ronded in end */
+            border-top-left-radius: 40px !important;
+            border-top-right-radius: 40px !important;
+        }
+        .card-header h4 {
+            font-size: 16px;
+        }
+
+        .card .accordion-collapse .accordion-body{
+
+        }
+
+        .card .accordion-collapse .accordion-body h5 {
+            font-size: 14px;
+        }
+
+        .card .accordion-collapse .accordion-body p {
+            font-size: 12px;
+        }
+
+        .card .accordion-body label {
+            font-size: 12px;
+        }
+
+        .card .accordion-body  {
+            font-size: 12px;
+        }
+
+        .accordion-body .button_pay {
+            margin-top: 10px;
+            text-align: end;
+        }
+        .button_pay button {
+            font-size: 12px;
+        }
+
+        .accordion-body .virtual-account {
+            margin-top: 10px;
+            text-align: end;
+        }
+        .virtual-account .input-group {
+            border-radius: 20px;
+        }
+
+        .virtual-account .input-group-text {
+            font-size: 12px;
+            width: 100%;
+            text-align: center;
+            color: black !important;
+            background-color: transparent !important;
+            border: 0 !important;
+            border-radius: 0 !important;
+        }
+
+        .virtual-account input {
+            font-size: 10px;
+            border-radius: 10px !important;
+            max-width: 100%;
+            background-color: transparent !important;
+            /* width: 100%; */
+        }
+
+        .virtual-account button {
+            font-size: 12px;
+            width: 100%;
+
+        }
+
+        .virtual-account  .button_copy_va {
+            font-size: 10px;
+            margin-top: 10px;
+            border-radius: 10px;
+            max-width: 100%;
+            /* width: 100%; */
+        }
 
 
     }
 
-    .accordion-button:not(.collapsed) {
-    color: var(--bs-primary) !important;
-}
 
 </style>
 @endpush
@@ -129,7 +231,7 @@
 
 
                                         <div id="collapse{{ $loop->index }}"
-                                             class="accordion-collapse collapse"
+                                             class="accordion-collapse collaps show"
                                              aria-labelledby="heading{{ $loop->index }}"
                                              data-bs-parent="#paymentAccordion{{ $loop->index }}">
                                             <div class="accordion-body">
@@ -146,10 +248,11 @@
                                                                 </button>
                                                             </h2>
                                                             <div id="categoryCollapse{{ $year.$category_id }}"
-                                                                 class="accordion-collapse collapse"
+
+                                                                 class="accordion-collapse collapse show"
                                                                  aria-labelledby="categoryHeading{{ $year.$category_id }}"
                                                                  data-bs-parent="#categoryAccordion{{ $year.$category_id }}">
-                                                                 <div class="accordion-body">
+                                                                 <div class="accordion-body show">
                                                                     <h5 class="mb-3">Daftar Pembayaran</h5>
                                                                     <ul style="list-style: none !important;">
                                                                         @foreach($charges as $charge)
@@ -158,27 +261,31 @@
                                                                                     <input type="hidden" name="charge_id" value="{{ $charge->id }}">
                                                                                     <hr>
 
-                                                                                    <div class="col-md-4">
+                                                                                    <div class="col-md-4 col-sm-12">
                                                                                         <label class="fw-bold">{{ $charge->kategori_pembayaran->name }} </label>
                                                                                         <br>
-                                                                                        <label class="fw-bold">Tanggal :</label>
-                                                                                        {{ \Carbon\Carbon::parse($charge->created_at)->translatedFormat('d F Y') }}
+                                                                                        <label class="fw-bold">Tanggal :
+                                                                                            {{ \Carbon\Carbon::parse($charge->created_at)->translatedFormat('d F Y') }}
+                                                                                        </label>
                                                                                     </div>
                                                                                     <div class="col-md-3">
-                                                                                        <label class="fw-bold">Total :</label>
-                                                                                        <strong>Rp. {{ number_format($charge->gross_amount, 0, ',', '.') }}</strong>
+                                                                                        <label class="fw-bold">Total :
+                                                                                            <strong>  Rp. {{ number_format($charge->gross_amount, 0, ',', '.') }}</strong>
+                                                                                        </label>
                                                                                     </div>
+
                                                                                     <div class="col-md-3">
-                                                                                        <label class="fw-bold">Status:</label>
-                                                                                        @if($charge->transaction_status == 'pending')
-                                                                                            <span class="badge bg-warning">Belum Lunas <i class="align-center bi bi-clock" style="color: black !important;"></i> </span>
-                                                                                        @elseif($charge->transaction_status == 'settlement')
-                                                                                            <span class="badge bg-primary">Lunas <i class="align-center bi bi-check"></i> </span>
-                                                                                        @elseif($charge->transaction_status == 'free')
-                                                                                            <span class="badge bg-success">Gratis <i class="align-center bi bi-check"></i> </span>
-                                                                                        @endif
+                                                                                        <label class="fw-bold">Status:
+                                                                                            @if($charge->transaction_status == 'pending')
+                                                                                                <span class="badge bg-warning">Belum Lunas <i class="align-center bi bi-clock" style="color: black !important;"></i> </span>
+                                                                                            @elseif($charge->transaction_status == 'settlement')
+                                                                                                <span class="badge bg-primary">Lunas <i class="align-center bi bi-check"></i> </span>
+                                                                                            @elseif($charge->transaction_status == 'free')
+                                                                                                <span class="badge bg-success">Gratis <i class="align-center bi bi-check"></i> </span>
+                                                                                            @endif
+                                                                                        </label>
                                                                                     </div>
-                                                                                    <div class="col-md-2 text-center">
+                                                                                    <div class="col-md-2 button_pay">
                                                                                         @if($charge->transaction_status == 'settlement')
                                                                                             <button class="btn btn-primary btn-sm" style="font-size: 10px;" id="detailButton" data-id="{{ $charge->id }}">Detail Pembayaran</button>
                                                                                             @elseif($charge->transaction_status == 'free')
@@ -189,6 +296,29 @@
                                                                                     </div>
                                                                                 </div>
                                                                             </li>
+                                                                            <br>
+                                                                            @if($charge->transaction_status == 'settlement')
+                                                                            @elseif($charge->transaction_status == 'free')
+                                                                            @else
+                                                                            <div class="col-md-12 col-sm-12 virtual-account">
+                                                                                <div class="input-group">
+                                                                                    <span class="input-group-text fw-bold"><strong>Virtual Account</strong></span>
+                                                                                    <input
+                                                                                        type="text"
+                                                                                        class="form-control"
+                                                                                        value="{{ $charge->va_number }}"
+                                                                                        readonly
+                                                                                        id="va-number"
+                                                                                        {{-- onclick="copyToClipboard(this)" --}}
+                                                                                    >
+                                                                                    <button
+                                                                                        class="btn btn-outline-primary button_copy_va"
+                                                                                        type="button">
+                                                                                        Salin
+                                                                                    </button>
+                                                                                </div>
+                                                                            </div>
+                                                                            @endif
                                                                             <hr>
                                                                         @endforeach
                                                                     </ul>
@@ -287,7 +417,9 @@
 {{-- <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script> --}}
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
 
+</script>
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function () {
         // Select all collapse elements
@@ -324,6 +456,24 @@
     //         $(this).load(location.href + " " + $(this).attr('class'));
     //     });
     // }, 5000);
+    $('.accordion').on('click', '.button_copy_va,input', function () {
+            const va_number = $(this).closest('.input-group').find('input').val(); // Ambil input value
+            navigator.clipboard.writeText(va_number).then(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: 'Nomor Virtual Account berhasil disalin',
+                });
+                // change button text
+                $(this).text('Disalin');
+            }).catch(err => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: 'Terdapat kesalahan saat menyalin nomor Virtual Account',
+                });
+            });
+        });
 
         $('#modal_how_pay_button').click(function () {
             $('#modal_how_pay').modal('show');

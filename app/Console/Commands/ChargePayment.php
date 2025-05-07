@@ -1,6 +1,7 @@
 <?php
 namespace App\Console\Commands;
 
+use App\Models\Kelas;
 use App\Models\Siswa;
 use Midtrans\CoreApi;
 use GuzzleHttp\Client;
@@ -26,7 +27,14 @@ class ChargePayment extends Command
 
     public function handle()
     {
-        $siswas = Siswa::all();
+        $kelas_lulus = Kelas::where('name', 'Lulus')->first();
+
+        $siswas = Siswa::whereHas('kelas', function ($query) use ($kelas_lulus) {
+            $query->where('id', '!=', $kelas_lulus->id);
+        })->get();
+
+        // dd($siswas);
+
 
          // make can name automatic by month
         $monthName = Carbon::now()->locale('id_ID')->format('F');
@@ -47,10 +55,8 @@ class ChargePayment extends Command
                 $order_id = Str::uuid();
                 // make number mounth
                 $monthNumber = Carbon::now()->locale('id_ID')->format('m');
-
-                $category_Spp = JudulPembayaran::where('name', 'SPP')->first() ;
-                $vaNumber = $siswa->nisn . $category_Spp->code . $monthNumber;
-
+                $category_Spp = JudulPembayaran::where('name', 'SPP')->first();
+                $vaNumber = $siswa->nisn . $monthNumber;
                 $biaya_admin = ($siswa->spp > 0) ? 5000 : 0;
                 $gross_amount = $siswa->spp + $biaya_admin;
 
@@ -62,7 +68,7 @@ class ChargePayment extends Command
                     'siswa_id' => $siswa->id,
                     'gross_amount' => $gross_amount,
                     'payment_type' => 'bank_transfer',
-                    'bank' => 'bca',
+                    'bank' => 'bri',
                     'va_number' => $vaNumber,
                     'transaction_id' => Str::uuid(),
                     'transaction_time' => now(),
@@ -96,6 +102,10 @@ class ChargePayment extends Command
     {
         $monthName = Carbon::now()->locale('id_ID')->format('F');
 
+        // nisn = 3166368409
+        // va = 666120 3166368409 05
+        // va = 666123166368409 408
+
         $params = [
             'payment_type' => 'bank_transfer',
             'transaction_details' => [
@@ -108,7 +118,7 @@ class ChargePayment extends Command
                 'phone' => $siswa->no_hp,
             ],
             'bank_transfer' => [
-                'bank' => 'bca',
+                'bank' => 'bri',
                 'va_number' => $vaNumber,
             ],
             'custom_expiry' => [
@@ -150,6 +160,7 @@ class ChargePayment extends Command
             ]);
 
             $responseData = json_decode($response->getBody(), true);
+
             if ($responseData['status_code'] == 201) {
                 $this->info("VA untuk {$siswa->name}: " . $responseData['va_numbers'][0]['va_number']);
                 // $this->info("Transaksi akan kedaluwarsa dalam {$params['expiry']['duration']} {$params['expiry']['unit']}");

@@ -21,9 +21,9 @@ class JudulPembayaranSeeder extends Seeder
     {
 
         // kode pembayaran
-        // SPP = 00
-        // DPP = 01
-        // Seragam = 02
+        // SPP = 1
+        // DPP = 2
+        // Seragam = 3
         $datas = [
 
             'SPP',

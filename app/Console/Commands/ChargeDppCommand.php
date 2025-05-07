@@ -90,11 +90,11 @@ class ChargeDppCommand extends Command
     private function createChargeForStage(Siswa $siswa, $category_Dpp, $stage, $grossAmount, $dppAmount, $totalBiayaAdmin)
     {
         $monthName = Carbon::now()->locale('id_ID')->translatedFormat('F');
-        $monthNumber = Carbon::now()->format('m');
+        // $monthNumber = Carbon::now()->format('m');
 
         // Generate order ID dan VA Number
         $order_id = Str::uuid();
-        $vaNumber = $siswa->nisn . $category_Dpp->code . $monthNumber . $stage;
+        $vaNumber = $siswa->nisn . $stage;
 
         // Insert data ke tabel charges
         DB::table('charges')->insert([
@@ -104,7 +104,7 @@ class ChargeDppCommand extends Command
             'siswa_id' => $siswa->id,
             'gross_amount' => $grossAmount,
             'payment_type' => 'bank_transfer',
-            'bank' => 'bca',
+            'bank' => 'bri',
             'va_number' => $vaNumber,
             'transaction_id' => Str::uuid(),
             'transaction_time' => now(),
@@ -141,7 +141,7 @@ class ChargeDppCommand extends Command
                 'phone' => $siswa->no_hp,
             ],
             'bank_transfer' => [
-                'bank' => 'bca',
+                'bank' => 'bri',
                 'va_number' => $vaNumber,
             ],
             'custom_expiry' => [

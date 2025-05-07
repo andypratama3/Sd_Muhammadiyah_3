@@ -164,8 +164,8 @@ class ChargeController extends Controller
                     'siswa_id' => $siswa->id,
                     'gross_amount' => $gross_amount,
                     'payment_type' => 'bank_transfer',
-                    'bank' => 'bca',
-                    'va_number' => $siswa->nisn . $kategori_pembayaran->code,
+                    'bank' => 'bri',
+                    'va_number' => $siswa->nisn . $kategori_pembayaran->kode,
                     'transaction_id' => Str::uuid(),
                     'transaction_time' => now(),
                     'fraud_status' => 'accept',
@@ -336,8 +336,8 @@ class ChargeController extends Controller
                 'phone' => $siswa->no_hp,
             ],
             'bank_transfer' => [
-                'bank' => 'bca',
-                'va_number' => $siswa->nisn . $kategori_pembayaran->code,
+                'bank' => 'bri',
+                'va_number' => $siswa->nisn . $kategori_pembayaran->kode,
             ],
             'expiry' => [
                 'start_time' => now()->toIso8601String(),
