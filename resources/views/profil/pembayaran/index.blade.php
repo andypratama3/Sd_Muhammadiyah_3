@@ -229,9 +229,8 @@
                                             </button>
                                         </h2>
 
-
                                         <div id="collapse{{ $loop->index }}"
-                                             class="accordion-collapse collaps show"
+                                             class="accordion-collapse collapse "
                                              aria-labelledby="heading{{ $loop->index }}"
                                              data-bs-parent="#paymentAccordion{{ $loop->index }}">
                                             <div class="accordion-body">
@@ -249,10 +248,10 @@
                                                             </h2>
                                                             <div id="categoryCollapse{{ $year.$category_id }}"
 
-                                                                 class="accordion-collapse collapse show"
+                                                                 class="accordion-collapse collapse"
                                                                  aria-labelledby="categoryHeading{{ $year.$category_id }}"
                                                                  data-bs-parent="#categoryAccordion{{ $year.$category_id }}">
-                                                                 <div class="accordion-body show">
+                                                                 <div class="accordion-body">
                                                                     <h5 class="mb-3">Daftar Pembayaran</h5>
                                                                     <ul style="list-style: none !important;">
                                                                         @foreach($charges as $charge)
