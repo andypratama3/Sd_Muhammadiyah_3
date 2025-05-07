@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('visitors', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('ip_address');
-            $table->string('user_agent');
-            $table->date('date');
+            $table->string('ip_address')->nullable();
+            $table->string('user_agent')->nullable();
+            $table->date('date')->nullable();
             $table->timestamps();
         });
     }

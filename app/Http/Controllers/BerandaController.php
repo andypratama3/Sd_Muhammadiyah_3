@@ -14,6 +14,7 @@ use App\Models\Fasilitas;
 use App\Models\Achivement;
 use App\Models\Cooperation;
 use App\Models\Esktrakurikuler;
+use Illuminate\Support\Facades\Cache;
 
 class BerandaController extends Controller
 {
@@ -23,9 +24,7 @@ class BerandaController extends Controller
     public function __invoke()
     {
 
-        $visitor = new Visitor();
-        $visitor->save();
-
+        Visitor::logOncePerDay();
 
         $heroes = Hero::select(['name', 'desc', 'image', 'youtube', 'link', 'slug'])->latest()->take(3)->get();
         $beritas = Berita::select(['judul', 'desc', 'foto', 'slug'])->latest()->take(5)->get();

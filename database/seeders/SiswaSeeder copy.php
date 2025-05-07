@@ -174,3 +174,9 @@ class SiswaSeeder extends Seeder
 // DELETE from siswa_kelas;
 // DELETE from siswas;
 
+
+
+// Awra Tsabita Humairah Jalil;0146087227;P;Bontang;2014-03-29;Islam;Islam Bunayya Samarinda;;;V;AL-QUDS;;;AL-QUDS;;;;Awaluddin Jalil;Taqdiraa;Diploma 3;Sarjana (S1);Jurnalis;Guru;;;;43;;;Loa Janan Ilir;Harapan Baru;;;Perumahan Tamansari Grand Samarinda, Cluster Kakaban H12/9;081134500616
+// Rafa Nauval Gautama;0147303500;L;Samarinda;2014-04-14;Islam;Rasyiqah;;;4;2025-01-22;4 Bukhara;Bukhara;;;;Iqbal Gautama;Sita Munawarah;S1;D3;BUMN;Ibu Rumah tangga;;;;09;;;Samarinda Seberang;Mangkupalas;;;Jln Pattimura Blok V No 52 Samarinda Seberang;085250060439
+// Alzea Adrena Saya;3168882847;P;Samarinda;2016-04-23;Islam;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+

@@ -21,15 +21,21 @@ class Visitor extends Model
     ];
 
     // auto save when have request from visitor
-    public static function boot()
+    public static function logOncePerDay()
     {
-        parent::boot();
-        static::creating(function ($model) {
-            $model->ip_address = request()->ip();
-            $model->user_agent = request()->header('User-Agent');
-            $model->date = now();
-        });
+        $ip = request()->ip();
+        $today = now()->toDateString();
+
+        $exists = self::where('ip_address', $ip)
+            ->whereDate('date', $today)
+            ->exists();
+
+        if (!$exists) {
+            $visitor = new self();
+            $visitor->save(); // memicu creating
+        }
     }
+
 
 
     public function getDateAttribute($value)
