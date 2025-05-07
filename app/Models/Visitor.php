@@ -31,8 +31,11 @@ class Visitor extends Model
             ->exists();
 
         if (!$exists) {
-            $visitor = new self();
-            $visitor->save(); // memicu creating
+            self::create([
+                'ip_address' => $ip,
+                'date' => $today,
+                'user_agent' => request()->userAgent(),
+            ]);
         }
     }
 
