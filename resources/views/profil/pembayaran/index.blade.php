@@ -424,28 +424,61 @@
         // Select all collapse elements
         const collapses = document.querySelectorAll('.accordion-collapse');
 
+        // when click accordion append in url when reload can open again
+
+
         collapses.forEach(function (collapse) {
             // Listen for when the collapse is shown
             collapse.addEventListener('show.bs.collapse', function () {
+                const id = collapse.getAttribute('id');
+                if (!id) return;
+
+                // Add opened ID to localStorage
+                let openAccordions = JSON.parse(localStorage.getItem('openAccordions')) || [];
+                if (!openAccordions.includes(id)) {
+                    openAccordions.push(id);
+                    localStorage.setItem('openAccordions', JSON.stringify(openAccordions));
+                }
+
+                // Toggle icons
                 const button = collapse.previousElementSibling.querySelector('.accordion-button');
                 const folderIcon = button.querySelector('.bi-folder');
                 const folderOpenIcon = button.querySelector('.bi-folder2-open');
-
-                if (folderIcon) folderIcon.classList.add('d-none');  // Hide folder icon
-                if (folderOpenIcon) folderOpenIcon.classList.remove('d-none');  // Show open folder icon
+                if (folderIcon) folderIcon.classList.add('d-none');
+                if (folderOpenIcon) folderOpenIcon.classList.remove('d-none');
             });
 
-            // Listen for when the collapse is hidden
             collapse.addEventListener('hide.bs.collapse', function () {
+                const id = collapse.getAttribute('id');
+                if (!id) return;
+
+                // Remove ID from localStorage
+                let openAccordions = JSON.parse(localStorage.getItem('openAccordions')) || [];
+                openAccordions = openAccordions.filter(item => item !== id);
+                localStorage.setItem('openAccordions', JSON.stringify(openAccordions));
+
+                // Toggle icons
                 const button = collapse.previousElementSibling.querySelector('.accordion-button');
                 const folderIcon = button.querySelector('.bi-folder');
                 const folderOpenIcon = button.querySelector('.bi-folder2-open');
-
-                if (folderIcon) folderIcon.classList.remove('d-none');  // Show folder icon
-                if (folderOpenIcon) folderOpenIcon.classList.add('d-none');  // Hide open folder icon
+                if (folderIcon) folderIcon.classList.remove('d-none');
+                if (folderOpenIcon) folderOpenIcon.classList.add('d-none');
             });
         });
     });
+
+    // Reopen accordions from localStorage on page load
+    const openAccordions = JSON.parse(localStorage.getItem('openAccordions')) || [];
+    openAccordions.forEach(id => {
+        const target = document.getElementById(id);
+        if (target && target.classList.contains('accordion-collapse')) {
+            new bootstrap.Collapse(target, {
+                toggle: true
+            });
+        }
+    });
+
+
 
     $(document).ready(function () {
 

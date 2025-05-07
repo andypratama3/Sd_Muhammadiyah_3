@@ -24,9 +24,7 @@ class PembayaranController extends Controller
             ]);
 
             $siswa = Siswa::where('nisn', $request->nisn)
-                // ->orWhere('name', 'like', '%' . $request->nisn . '%')
                 ->first();
-
 
             if (!$siswa) {
                 $list_pembayaran = collect();
