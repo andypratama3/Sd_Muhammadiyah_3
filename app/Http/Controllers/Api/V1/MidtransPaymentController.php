@@ -84,7 +84,7 @@ class MidtransPaymentController extends Controller
                 try {
                     $server_key = env('MIDTRANS_SERVER_KEY');
                     $client = new Client();
-
+                    $mode = config('midtrans.is_production');
                     $check_transaction = $client->get("https://api.midtrans.com/v2/{$charge->order_id}/status", [
                         'headers' => [
                             'Authorization' => 'Basic ' . base64_encode($server_key . ':'),

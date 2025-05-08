@@ -32,6 +32,12 @@ class ChargeDppCommand extends Command
      */
     public function handle()
     {
+        if (app()->environment('production')) {
+            $this->info("Running in PRODUCTION environment.");
+        } else {
+            $this->warn("Running in NON-PRODUCTION environment.");
+        }
+
         $siswas = Siswa::all();
         $monthName = Carbon::now()->locale('id_ID')->translatedFormat('F');
         $monthNumber = Carbon::now()->format('m');
@@ -162,9 +168,13 @@ class ChargeDppCommand extends Command
 
         $client = new Client();
         $server_key = env('MIDTRANS_SERVER_KEY');
+        $mode = config('midtrans.is_production');
+        $midtrans_url = $mode
+        ? 'https://api.midtrans.com/v2/charge'    // Production URL
+        : 'https://api.sandbox.midtrans.com/v2/charge'; // Sandbox URL
 
         try {
-            $response = $client->post('https://api.midtrans.com/v2/charge', [
+            $response = $client->post($midtrans_url, [
                 'headers' => [
                     'Accept' => 'application/json',
                     'Authorization' => 'Basic ' . base64_encode($server_key . ':'),

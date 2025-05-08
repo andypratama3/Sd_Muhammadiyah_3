@@ -27,6 +27,12 @@ class ChargePayment extends Command
 
     public function handle()
     {
+        if (app()->environment('production')) {
+            $this->info("Running in PRODUCTION environment.");
+        } else {
+            $this->warn("Running in NON-PRODUCTION environment.");
+        }
+
         $kelas_lulus = Kelas::where('name', 'Lulus')->first();
 
         $siswas = Siswa::whereHas('kelas', function ($query) use ($kelas_lulus) {
@@ -146,11 +152,11 @@ class ChargePayment extends Command
 
         $client = new Client();
         $server_key = env('MIDTRANS_SERVER_KEY');
+        $mode = config('midtrans.is_production');
+        $midtrans_url = $mode ? 'https://api.midtrans.com/v2/charge': 'https://api.sandbox.midtrans.com/v2/charge';
 
-        // https://api.sandbox.midtrans.com/v2/charge
-        // prod = https://api.midtrans.com/v2/charge
         try {
-            $response = $client->post('https://api.midtrans.com/v2/charge', [
+            $response = $client->post($midtrans_url, [
                 'headers' => [
                     'Accept' => 'application/json',
                     'Authorization' => 'Basic ' . base64_encode($server_key . ':'),
