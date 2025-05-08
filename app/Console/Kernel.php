@@ -17,8 +17,8 @@ class Kernel extends ConsoleKernel
         // $schedule->command('app:site-map-command')->sundays();
         // $schedule->command('app:charge-payment-xendit')->sundays();
 
-        // $schedule->command('app:charge-dpp-command')->monthly();
-        // $schedule->command('app:charge-payment')->monthly();
+        $schedule->command('app:charge-payment')->monthly();
+        $schedule->command('app:charge-dpp-command')->monthly();
         // $schedule->command('app:check-transaction-old')->monthly();
         // $schedule->command('app:archive-charges')->yearly();
         // $schedule->command('app:up-class')->yearly();
