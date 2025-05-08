@@ -164,7 +164,7 @@ class ChargeDppCommand extends Command
         $server_key = env('MIDTRANS_SERVER_KEY');
 
         try {
-            $response = $client->post('https://api.sandbox.midtrans.com/v2/charge', [
+            $response = $client->post('https://api.midtrans.com/v2/charge', [
                 'headers' => [
                     'Accept' => 'application/json',
                     'Authorization' => 'Basic ' . base64_encode($server_key . ':'),

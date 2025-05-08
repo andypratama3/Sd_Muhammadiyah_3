@@ -96,7 +96,6 @@ class SiswaSeeder extends Seeder
                 continue; // Lewati siswa ini
             }
 
-            dd($keuangan);
 
             // Fallback: pencocokan mirip jika tidak ditemukan
             if (!$keuangan) {
