@@ -103,7 +103,7 @@ class PembayaranController extends Controller
                     'data' => $responseData,
                 ]);
             }
-            
+
             $order_id = Str::uuid();
             $biaya = 5000;
             $gross_amount = $charge->gross_amount - $biaya;

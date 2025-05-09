@@ -5,25 +5,25 @@ namespace App\Actions\Dashboard\Hero;
 use App\Models\Hero;
 use App\Models\Artikel;
 use Illuminate\Support\Str;
+use App\Helpers\ImageHelper;
 
 
 class HeroAction
 {
     public function execute($heroData)
     {
-        if($heroData->image) {
-            //request foto
+        if ($heroData->image) {
             $foto = $heroData->image;
             $ext = $foto->getClientOriginalExtension();
-
-            //upload foto to folder
             $upload_path = public_path('storage/img/hero/');
             $picture_name = 'Hero_'.Str::slug($heroData->name).'_'.date('YmdHis').".$ext";
-            $foto->move($upload_path, $picture_name);
-        }else{
+
+            ImageHelper::resizeAndSave($foto, $upload_path, $picture_name);
+        } else {
             $hero = Hero::where('slug', $heroData->slug)->first();
             $picture_name = $hero->image;
         }
+
 
         $hero = Hero::updateOrCreate(
             ['slug' => $heroData->slug],

@@ -4,6 +4,7 @@ namespace App\Actions\Dashboard\Artikel;
 
 use App\Models\Artikel;
 use Illuminate\Support\Str;
+use App\Helpers\ImageHelper;
 use Illuminate\Support\Facades\Auth;
 use App\DataTransferObjects\ArtikelData;
 
@@ -19,7 +20,8 @@ class ArtikelAction
             //upload foto to folder
             $upload_path = public_path('storage/img/artikel/');
             $picture_name = 'Artikel_'.Str::slug($artikelData->name).'_'.date('YmdHis').".$ext";
-            $foto->move($upload_path, $picture_name);
+            ImageHelper::resizeAndSave($foto, $upload_path, $picture_name);
+
         }else{
             $artikel = Artikel::where('slug', $artikelData->slug)->first();
             $picture_name = $artikel->image;

@@ -7,7 +7,7 @@ use App\Models\Siswa;
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 
-class SiswaSeeder extends Seeder
+class SiswaSeederCopy extends Seeder
 {
     public function run(): void
     {

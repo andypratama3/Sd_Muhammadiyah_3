@@ -1,7 +1,9 @@
 <?php
 
+use Intervention\Image\Facades\Image as Image;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
+use Intervention\Image\ImageServiceProvider;
 
 
 return [
@@ -196,7 +198,9 @@ return [
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        // 'Image' => Image::class,
         'Image' => Intervention\Image\Facades\Image::class,
+
 
     ])->toArray(),
 

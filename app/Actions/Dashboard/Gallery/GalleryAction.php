@@ -4,6 +4,7 @@ namespace App\Actions\Dashboard\Gallery;
 
 use App\Models\Gallery;
 use Illuminate\Support\Str;
+use App\Helpers\ImageHelper;
 use Illuminate\Support\Facades\Storage;
 
 class GalleryAction
@@ -37,8 +38,8 @@ class GalleryAction
             //upload foto to folder
             $upload_path = public_path('storage/img/gallery/cover/');
             $galleryCover = 'GalleryCover_'.Str::slug($galleryData->name).'_'.date('YmdHis').".$ext";
-            $foto->move($upload_path, $galleryCover);
-
+            // $foto->move($upload_path, $galleryCover);
+            ImageHelper::resizeAndSave($foto, $upload_path, $galleryCover);
         } else {
             $galleryCover = Gallery::where('slug', $galleryData->slug)->first()->cover;
         }
@@ -48,7 +49,8 @@ class GalleryAction
             $uniqueIdentifier = Str::random(8);
             $file_name = 'Gallery_' . Str::slug($galleryData->name) . '_' . $uniqueIdentifier . '_' . date('YmdHis') . ".$ext";
             $upload_path = public_path('storage/img/gallery/');
-            $fotorFile->move($upload_path, $file_name);
+            ImageHelper::resizeAndSave($fotorFile, $upload_path, $file_name);
+
             $galleryName[] = $file_name;
         }
 

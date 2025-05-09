@@ -4,6 +4,7 @@ namespace App\Actions\Dashboard\Berita;
 
 use App\Models\Berita;
 use Illuminate\Support\Str;
+use App\Helpers\ImageHelper;
 
 class ActionBerita
 {
@@ -19,7 +20,8 @@ class ActionBerita
             //upload foto to folder
             $upload_path = public_path('storage/img/berita/');
             $picture_name = 'Berita_'.Str::slug($beritaData->judul).'_'.date('YmdHis').".$ext";
-            $foto->move($upload_path, $picture_name);
+            ImageHelper::resizeAndSave($foto, $upload_path, $picture_name);
+
 
         } else {
             $berita = Berita::where('slug', $beritaData->slug)->first();

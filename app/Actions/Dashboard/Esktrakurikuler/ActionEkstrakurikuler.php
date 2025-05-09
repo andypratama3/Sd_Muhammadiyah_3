@@ -4,6 +4,7 @@ namespace App\Actions\Dashboard\Esktrakurikuler;
 
 use Illuminate\Support\Str;
 
+use App\Helpers\ImageHelper;
 use App\Models\Esktrakurikuler;
 
 class ActionEkstrakurikuler
@@ -19,7 +20,7 @@ class ActionEkstrakurikuler
                 $upload_path = public_path('storage/img/ekstrakurikuler/');
                 $uniqueIdentifier = Str::random(8);
                 $file_name = 'E_kurikuler' . Str::slug($ekstrakurikulerData->name) . '_' . $uniqueIdentifier . '_' . date('YmdHis') . ".$ext";
-                $img->move($upload_path, $file_name);
+                ImageHelper::resizeAndSave($img, $upload_path, $file_name);
                 $images[] = $file_name;
             }
         }

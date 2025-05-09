@@ -2,8 +2,9 @@
 namespace App\Actions\Dashboard\Fasilitas;
 
 use App\Models\Fasilitas;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Helpers\ImageHelper;
+use Illuminate\Http\Request;
 
 class FasilitasAction
 {
@@ -18,7 +19,8 @@ class FasilitasAction
                 $uniqueIdentifier = Str::random(8);
                 $file_name = 'Fasilitas_' . Str::slug($FasilitasData->nama_fasilitas) . '_' . $uniqueIdentifier . '_' . date('YmdHis') . ".$ext";
                 $upload_path = public_path('storage/img/fasilitas/');
-                $fotorFile->move($upload_path, $file_name);
+                // $fotorFile->move($upload_path, $file_name);
+                ImageHelper::resizeAndSave($fotorFile, $upload_path, $file_name);
                 $fasilitas_name[] = $file_name;
             }
         }
