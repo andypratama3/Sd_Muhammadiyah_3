@@ -153,7 +153,7 @@ class ChargePayment extends Command
         $client = new Client();
         $server_key = env('MIDTRANS_SERVER_KEY');
         $mode = config('midtrans.is_production');
-        $midtrans_url = $mode ? 'https://api.midtrans.com/v2/charge': 'https://api.sandbox.midtrans.com/v2/charge';
+        $midtrans_url = $mode ? 'https://api.midtrans.com/v2/charge' : 'https://api.sandbox.midtrans.com/v2/charge';
 
         try {
             $response = $client->post($midtrans_url, [
