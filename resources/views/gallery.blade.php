@@ -1,5 +1,13 @@
 @extends('layouts.user')
-
+@push('meta_user')
+<meta name="description" content="Aktivitas Gallery Sekolah Kreatif SD Muhammadiyah 3 Samarinda">
+<meta name="keywords" content="Aktivitas, Sekolah Kreatif SD Muhammadiyah 3 Samarinda">
+<meta name="author" content="Sekolah Kreatif SD Muhammadiyah 3 Samarinda">
+<meta name="copyright" content="Sekolah Kreatif SD Muhammadiyah 3 Samarinda">
+<meta property="og:title" content="Gallery Sekolah Kreatif SD Muhammadiyah 3 Samarinda">
+<meta property="og:description" content="Aktivitas Gallery Sekolah Kreatif SD Muhammadiyah 3 Samarinda">
+<meta property="og:url" content="{{ url()->current() }}">
+@endpush
 @section('title', 'Gallery')
 
 @section('content')

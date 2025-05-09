@@ -1,5 +1,14 @@
 @extends('layouts.user')
 @section('title', 'Detail Aktivitas')
+@push('meta_user')
+    <meta name="description" content="{!! Str::limit($gallery->name, 160) !!}">
+    <meta name="keywords" content="{!! $gallery->name !!}">
+    <meta name="author" content="Sekolah Kreatif SD Muhammadiyah 3 Samarinda">
+    <meta name="copyright" content="Sekolah Kreatif SD Muhammadiyah 3 Samarinda">
+    <meta property="og:title" content="{{ $gallery->name }}">
+    <meta property="og:description" content="{!! Str::limit($gallery->name, 160) !!}">
+    <meta property="og:url" content="{{ url()->current() }}">
+@endpush
 @section('content')
 <div class="container mt-5">
     <h3 class="text-center mb-4">{{ $gallery->name }}</h3>
