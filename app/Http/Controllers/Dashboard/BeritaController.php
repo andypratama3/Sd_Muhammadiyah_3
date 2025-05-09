@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Models\Berita;
 use Illuminate\Support\Str;
+use App\Helpers\ImageHelper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\DataTransferObjects\BeritaData;
@@ -95,7 +96,8 @@ class BeritaController extends Controller
             $upload_path = public_path('/storage/img/berita/');
             $filename = 'berita_' . Str::slug(Str::random(6)) . '_' . date('YmdHis') . '.' . $ext;
 
-            $file->move($upload_path, $filename);
+            ImageHelper::resizeAndSave($file, $upload_path, $filename);
+
 
             // Berikan URL file yang dapat digunakan
             $fileUrl = url('storage/img/berita/' . $filename);
