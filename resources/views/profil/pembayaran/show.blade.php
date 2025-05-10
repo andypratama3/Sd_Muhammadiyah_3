@@ -156,7 +156,7 @@
                         <div class="input-group wow fadeInUp" data-wow-delay="0.2s">
                             <input type="text" class="form-control @error('nisn') is-invalid @enderror" id="nisnPembayaran"
                                 name="nisn" placeholder="Nisn" aria-label="Masukan Nisn Siswa"
-                                aria-describedby="button-addon2" value="{{ old('nisn', $nisn_plain) }}">
+                                aria-describedby="button-addon2" value="{{ old('nisn', request()->get('nisn')) }}">
                             <button class="btn btn-success" type="submit">Cari Siswa</button>
                             @error('nisn')
                             <span class="invalid-feedback" role="alert">

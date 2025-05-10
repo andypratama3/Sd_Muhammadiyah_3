@@ -34,6 +34,14 @@
                                     <h4>0852-5044-3151</h4>
                                 </a>
                             </div>
+
+                            <div class="special-offer" style="margin-top: 10px;">
+                               <h5>Alamat</h5>
+                               <p>Jl. Dato Iba RT. 04/IV, Sungai Keledang, Kec. Samarinda Seberang, Kota Samarinda, Kalimantan Timur 75242 <br>
+                                Patokan Di Depan Mesjid KH, M. MANSUR
+                            </p>
+                               <p></p>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -10,42 +10,52 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Crypt;
 
 class PembayaranController extends Controller
 {
     public function index(Request $request)
     {
         $list_pembayaran = collect();
-        $siswa = collect();
+        $siswa = null;
+        $nisn_plain = null;
 
         if ($request->filled('nisn')) {
-            $request->validate([
-                'nisn' => 'required|string',
-            ]);
+            $nisn = $request->nisn;
 
-            $siswa = Siswa::where('nisn', $request->nisn)
-                ->first();
+            try {
+                // Try to decrypt the nisn
+                $nisn_decrypted = Crypt::decryptString($request->nisn);
+            } catch (\Exception $e) {
+                // If decryption fails, encrypt the nisn and redirect
+                $encrypted = Crypt::encryptString($request->nisn);
+                return redirect()->route('pembayaran.index', ['nisn' => $encrypted]);
+            }
 
+            // Lanjut cari siswa
+            $siswa = Siswa::where('nisn', $nisn_decrypted)->first();
 
-            if (!$siswa) {
-                $list_pembayaran = collect();
-                $siswa = null;
-            } else {
+            // Assign the decrypted nisn to nisn_plain
+            $nisn_plain = $nisn_decrypted;
+
+            if ($siswa) {
                 $list_pembayaran = Charge::where('siswa_id', $siswa->id)
-                ->orderBy('created_at', 'desc')
-                ->get()
-                ->groupBy(function ($item) {
-                    return Carbon::parse($item->created_at)->format('Y'); // Group by Year
-                })
-                ->map(function ($yearGroup) {
-                    return $yearGroup->groupBy('category_payment_id'); // Group by Category
-                });
+                    ->orderBy('created_at', 'desc')
+                    ->get()
+                    ->groupBy(function ($item) {
+                        return \Carbon\Carbon::parse($item->created_at)->format('Y');
+                    })
+                    ->map(function ($yearGroup) {
+                        return $yearGroup->groupBy('category_payment_id');
+                    });
             }
         }
 
-
-        return view('profil.pembayaran.index', compact('list_pembayaran', 'siswa'));
+        return view('profil.pembayaran.index', compact('nisn_plain', 'list_pembayaran', 'siswa'));
     }
+
+
+
 
 
     // public function searchOrder()
@@ -193,6 +203,11 @@ class PembayaranController extends Controller
             'status' => 'success',
             'data' => $charge,
         ]);
+    }
+
+    public function howToPay()
+    {
+        return view('profil.pembayaran.howtopay');
     }
 }
 
