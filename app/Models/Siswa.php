@@ -27,6 +27,7 @@ class Siswa extends Model
         'spp',
         'seragam',
         'dpp',
+        'status_dpp',
         'va_number',
         //pendidikan sebelumnya
         'nama_pendidikan',

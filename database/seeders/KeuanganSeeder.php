@@ -69,6 +69,7 @@ class KeuanganSeeder extends Seeder
             $siswa->update([
                 'spp' => $spp,
                 'dpp' => $dpp,
+                'status_dpp' => $data['keterangan'],
             ]);
 
             $siswa->kelas()->sync([

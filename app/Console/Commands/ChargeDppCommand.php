@@ -64,23 +64,19 @@ class ChargeDppCommand extends Command
                 }
 
                 $dpp = $siswa->dpp;
-                if ($dpp <= 0) {
-                    $this->warn("Siswa {$siswa->name} memiliki DPP Rp0. Tidak dibuatkan tagihan.");
-
-                    continue;
-                }
 
                 // Hitung 80% dan 20% dari DPP
-                $dppStage1 = $dpp * 0.80; // 80% untuk tahap pertama
-                $dppStage2 = $dpp * 0.20; // 20% untuk tahap kedua
-                $biaya_admin = 5000; // Biaya admin tetap
-                $totalBiayaAdmin = $biaya_admin * 2; // Biaya admin untuk dua tahap
+                $dppStage1 = $dpp * 0.80;
+                $dppStage2 = $dpp * 0.20;
+                $biaya_admin = 5000;
 
-                // Pembayaran untuk tahap 1 (80%)
-                $this->createChargeForStage($siswa, $category_Dpp, 1, $dppStage1 + $biaya_admin, $dppStage1, $totalBiayaAdmin);
+                // Hitung biaya admin per tahap, hanya jika DPP > 0
+                $adminStage1 = $dppStage1 > 0 ? $biaya_admin : 0;
+                $adminStage2 = $dppStage2 > 0 ? $biaya_admin : 0;
+                $totalBiayaAdmin = $adminStage1 + $adminStage2;
 
-                // Pembayaran untuk tahap 2 (20%)
-                $this->createChargeForStage($siswa, $category_Dpp, 2, $dppStage2 + $biaya_admin, $dppStage2, $totalBiayaAdmin);
+                $this->createChargeForStage($siswa, $category_Dpp, 1, $dppStage1 + $adminStage1, $dppStage1, $totalBiayaAdmin);
+                $this->createChargeForStage($siswa, $category_Dpp, 2, $dppStage2 + $adminStage2, $dppStage2, $totalBiayaAdmin);
 
                 DB::commit();
             } catch (\Exception $e) {
@@ -89,6 +85,7 @@ class ChargeDppCommand extends Command
             }
         }
     }
+
 
     /**
      * Buat charge untuk tiap tahap
@@ -101,6 +98,18 @@ class ChargeDppCommand extends Command
         // Generate order ID dan VA Number
         $order_id = Str::uuid();
         $vaNumber = $siswa->nisn . $stage;
+
+       // check if siswa status_dpp LUNAS or BELUM LUNAS
+        $transactionStatus = 'pending';
+        $sendToMidtrans = true;
+
+        if ($siswa->status_dpp == 'LUNAS') {
+            $this->info("Siswa {$siswa->name} sudah lunas.");
+            $transactionStatus = 'settlement';
+            $sendToMidtrans = false;
+
+        }
+
 
         // Insert data ke tabel charges
         DB::table('charges')->insert([
@@ -115,7 +124,7 @@ class ChargeDppCommand extends Command
             'transaction_id' => Str::uuid(),
             'transaction_time' => now(),
             'fraud_status' => 'accept',
-            'transaction_status' => 'pending',
+            'transaction_status' => $transactionStatus,
             'category_payment_id' => $category_Dpp->id,
             'snap_token' => null,
             'created_at' => now(),
@@ -123,7 +132,7 @@ class ChargeDppCommand extends Command
         ]);
 
         // Kirim pembayaran ke Midtrans hanya jika DPP > 0
-        if ($dppAmount > 0) {
+         if ($sendToMidtrans && $dppAmount > 0) {
             $this->sendPaymentToMidtrans($siswa, $vaNumber, $grossAmount, $order_id, $category_Dpp);
         }
     }
@@ -133,7 +142,7 @@ class ChargeDppCommand extends Command
      */
     private function sendPaymentToMidtrans(Siswa $siswa, $vaNumber, $grossAmount, $order_id, $category_Dpp)
     {
-        $monthName = Carbon::now()->locale('id_ID')->translatedFormat('F');
+        // $monthName = Carbon::now()->locale('id_ID')->translatedFormat('F');
 
         $params = [
             'payment_type' => 'bank_transfer',
@@ -159,10 +168,10 @@ class ChargeDppCommand extends Command
                     'id' => 1,
                     'price' => $grossAmount,
                     'quantity' => 1,
-                    'name' => "DPP {$monthName} {$siswa->name}",
+                    'name' => "DPP {$siswa->name} + Biaya Admin",
                     'category' => $category_Dpp->name,
                     'merchant_name' => "Sekolah Kreatif SD Muhammadiyah 3 Samarinda",
-                ]
+                ],
             ],
         ];
 
