@@ -131,7 +131,7 @@ Route::group(['prefix' => '/',], function () {
     Route::get('prestasi-sekolah/{slug}', [PrestasiSekolahController::class, 'show'])->name('prestasi.sekolah.show');
 
     // PPDB
-    Route::get('ppdb', [PpdbController::class, 'index'])->name('ppdb.index');
+    // Route::get('ppdb', [PpdbController::class, 'index'])->name('ppdb.index');
 
     //login with google
     Route::get('auth/google', [GoogleController::class, 'signGoogle'])->name('login.google');
