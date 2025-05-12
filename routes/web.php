@@ -42,6 +42,7 @@ use App\Http\Controllers\Dashboard\KaryawanController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\AchivementController;
 
+use App\Http\Controllers\Dashboard\AttendancesController;
 use App\Http\Controllers\Dashboard\CooperationController;
 use App\Http\Controllers\Dashboard\NotificationController;
 use App\Http\Controllers\Dashboard\KelasCategoryController;
@@ -170,6 +171,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::get('artikels/status/{slug}', [DashboardArtikelController::class, 'status'])->name('dashboard.news.artikel.status');
 
     });
+
+    Route::resource('absensi', AttendancesController::class, ['names'=> 'dashboard.attendances']);
 
     Route::group(['prefix' => 'datasekolah'], function () {
         Route::resource('fasilitas', DashboardFasilitasController::class, ['names' => 'dashboard.datasekolah.fasilitas']);

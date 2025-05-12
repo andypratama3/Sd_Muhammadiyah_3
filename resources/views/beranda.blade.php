@@ -308,7 +308,7 @@
                                     </div>
                                 @endforeach
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-12 mt-3">
                                 <a href="{{ route('gallery.index') }}" class="btn btn-primary">Lihat Semua</a>
                             </div>
                         </div>
