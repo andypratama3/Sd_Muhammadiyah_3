@@ -48,6 +48,13 @@
       margin: 0 auto;
     }
 
+    .form-container .logo-header {
+        width: 100px;
+        position: absolute;
+        top: 10px;
+        left: 285px;
+    }
+
     h1, h4 {
       text-align: center;
       font-weight: bold;
@@ -83,78 +90,117 @@
     }
 
     .step.active {
-    display: block;
+        display: block;
     }
 
     .progressbar {
-    counter-reset: step;
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 30px;
-    padding: 0;
-    position: relative;
+        counter-reset: step;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 30px;
+        padding: 0;
+        position: relative;
     }
 
     .progressbar li {
-    list-style-type: none;
-    position: relative;
-    text-align: center;
-    width: 100%;
-    font-weight: 600;
-    color: #000;
-    z-index: 2;
+        list-style-type: none;
+        position: relative;
+        text-align: center;
+        width: 100%;
+        font-weight: 600;
+        color: #000;
+        z-index: 2;
     }
 
     .progressbar li:before {
-    counter-increment: step;
-    content: counter(step);
-    width: 40px;
-    height: 40px;
-    line-height: 36px;
-    border: 2px solid #198754;
-    display: block;
-    text-align: center;
-    margin: 0 auto 10px auto;
-    border-radius: 50%;
-    background-color: #fff;
-    position: relative;
-    z-index: 2;
+        counter-increment: step;
+        content: counter(step);
+        width: 40px;
+        height: 40px;
+        line-height: 36px;
+        border: 2px solid #198754;
+        display: block;
+        text-align: center;
+        margin: 0 auto 10px auto;
+        border-radius: 50%;
+        background-color: #fff;
+        position: relative;
+        z-index: 2;
     }
 
-    .progressbar li:after {
-    content: '';
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    height: 2px;
-    background-color: #ccc;
-    z-index: 1;
+   .progressbar li:after {
+        content: '';
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        height: 4px;
+        background-color: #ccc;
+        z-index: 1;
     }
 
-    /* Remove first and last connector overflow */
+    .progressbar li:not(:last-child)::after {
+        width: 100%;
+        left: 50%;
+        transform: translateX(0%);
+    }
+
+    .progressbar li:first-child::after {
+        left: 50%;
+        width: 100%;
+    }
+
+    .progressbar li:last-child::after {
+    content: none;
+    }
+
+
     .progressbar li:first-child:after {
         left: 50%;
-        width: 50%;
+        width: 100%;
         transform: translateX(0);
     }
 
     .progressbar li:last-child:after {
         left: 0;
-        width: 50%;
+        width: 100%;
         transform: translateX(0);
+    }
+
+    .progressbar li.active:last-child::after {
+        background-color: var(--primary-color);
+    }
+
+    .progressbar li.active:after {
+        background-color: var(--primary-color);
     }
 
     .progressbar li.active {
         color: var(--primary-color);
     }
 
-.progressbar li.active:before {
-  border-color: var(--primary-color);
-  background-color: var(--primary-color);
-  color: #fff;
-}
+    .progressbar li.active:before {
+        border-color: var(--primary-color);
+        background-color: var(--primary-color);
+        color: #fff;
+    }
+
+    /* animation image bounce */
+    .form-container .logo-header {
+        animation: logo-header 3s infinite ease-in-out;
+    }
+
+    @keyframes logo-header {
+        0%, 100% {
+            transform: translateY(0);
+            animation-timing-function: ease-in-out;
+        }
+        50% {
+            transform: translateY(-20px);
+            animation-timing-function: ease-in-out;
+        }
+    }
 
 
     @keyframes slideIn {
@@ -172,10 +218,6 @@
         transform: scale(1.1);
         transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
     }
-
-    /* icon can hover */
-
-
 
     @media screen and (max-width: 768px) {
       .form-container {
@@ -199,6 +241,7 @@
       .progressbar li:before {
         width: 30px;
         height: 30px;
+        top: 5px;
         line-height: 30px;
         font-size: 14px;
       }
@@ -206,21 +249,31 @@
       .progressbar li {
         font-size: 12px;
       }
+
+       .form-container .logo-header {
+        width: 80px;
+        top: 5px;
+        left: 10px;
+        z-index: inherit;
+      }
+
     }
   </style>
 </head>
 <body>
   <div class="container py-5">
     <div class="form-container">
+      <img src="../../../public/asset/img/SD3_logo1.png" alt="" class="logo-header img-fluid img-bordered">
       <h1>🎓 Formulir Pendaftaran Siswa Baru</h1>
       <h4>SD Kreatif Muhammadiyah 3 Samarinda<br>Tahun Ajaran 2025/2026</h4>
 
       <!-- Progress Bar -->
       <ul class="progressbar" id="progressbar">
-        <li class="active">Data Siswa</li>
-        <li class="active">Data Siswa</li>
+        <li class="active">Informasi</li>
+        <li>Data Siswa</li>
         <li>Orang Tua</li>
         <li>Lampiran</li>
+        <li>Pembayaran</li>
       </ul>
 
       <form id="ppdbForm">
@@ -229,19 +282,19 @@
           <div class="section-title">🧒 Data Calon Siswa</div>
           <div class="row">
             <div class="col-md-6 mb-3">
-              <label class="form-label">Nama Lengkap Anak:</label>
+              <label class="form-label">Nama Lengkap Anak</label>
               <input type="text" class="form-control" required />
             </div>
             <div class="col-md-3 mb-3">
-              <label class="form-label">Tempat Lahir:</label>
+              <label class="form-label">Tempat Lahir</label>
               <input type="text" class="form-control" required />
             </div>
             <div class="col-md-3 mb-3">
-              <label class="form-label">Tanggal Lahir:</label>
+              <label class="form-label">Tanggal Lahir</label>
               <input type="date" class="form-control" required />
             </div>
             <div class="col-md-6 mb-3">
-              <label class="form-label">Jenis Kelamin:</label>
+              <label class="form-label">Jenis Kelamin</label>
               <select class="form-select" required>
                 <option value="">-- Pilih --</option>
                 <option>Laki-laki</option>
@@ -249,11 +302,11 @@
               </select>
             </div>
             <div class="col-md-6 mb-3">
-              <label class="form-label">Agama:</label>
+              <label class="form-label">Agama</label>
               <input type="text" class="form-control" value="Islam" readonly />
             </div>
             <div class="col-md-12 mb-3">
-              <label class="form-label">Alamat:</label>
+              <label class="form-label">Alamat</label>
               <textarea class="form-control" rows="2" required></textarea>
             </div>
           </div>
@@ -267,23 +320,23 @@
           <div class="section-title">👨‍👩‍👧 Data Orang Tua / Wali</div>
           <div class="row">
             <div class="col-md-6 mb-3">
-              <label class="form-label">Nama Ayah:</label>
+              <label class="form-label">Nama Ayah</label>
               <input type="text" class="form-control" required />
             </div>
             <div class="col-md-6 mb-3">
-              <label class="form-label">Pekerjaan Ayah:</label>
+              <label class="form-label">Pekerjaan Ayah</label>
               <input type="text" class="form-control" />
             </div>
             <div class="col-md-6 mb-3">
-              <label class="form-label">Nama Ibu:</label>
+              <label class="form-label">Nama Ibu</label>
               <input type="text" class="form-control" required />
             </div>
             <div class="col-md-6 mb-3">
-              <label class="form-label">Pekerjaan Ibu:</label>
+              <label class="form-label">Pekerjaan Ibu</label>
               <input type="text" class="form-control" />
             </div>
             <div class="col-md-6 mb-3">
-              <label class="form-label">No. HP Orang Tua:</label>
+              <label class="form-label">No. HP Orang Tua</label>
               <input type="tel" class="form-control" placeholder="08xxxxxxxxxx" required />
             </div>
           </div>
@@ -298,15 +351,15 @@
           <div class="section-title">📎 Lampiran Dokumen</div>
           <div class="row">
             <div class="col-md-4 mb-3">
-              <label class="form-label">Upload Foto Anak (3x4):</label>
+              <label class="form-label">Upload Foto Anak (3x4)</label>
               <input type="file" class="form-control" required />
             </div>
             <div class="col-md-4 mb-3">
-              <label class="form-label">Upload Akta Kelahiran:</label>
+              <label class="form-label">Upload Akta Kelahiran</label>
               <input type="file" class="form-control" required />
             </div>
             <div class="col-md-4 mb-3">
-              <label class="form-label">Upload Kartu Keluarga:</label>
+              <label class="form-label">Upload Kartu Keluarga</label>
               <input type="file" class="form-control" required />
             </div>
           </div>
