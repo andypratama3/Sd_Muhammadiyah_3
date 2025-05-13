@@ -133,7 +133,7 @@ Route::group(['prefix' => '/',], function () {
 
     // PPDB
     // Route::get('ppdb', [PpdbController::class, 'index'])->name('ppdb.index');
-
+    Route::get('ppdb', [PpdbController::class, 'index'])->name('ppdb.index');
     //login with google
     Route::get('auth/google', [GoogleController::class, 'signGoogle'])->name('login.google');
     Route::get('auth/google/callback', [GoogleController::class, 'callbackToGoogle'])->name('google.callback');

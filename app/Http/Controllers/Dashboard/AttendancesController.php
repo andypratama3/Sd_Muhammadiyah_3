@@ -16,9 +16,8 @@ class AttendancesController extends Controller
         $siswas = Siswa::all();
         $attendances = Attendances::all();
 
-        // $attendancesSiswa = $attendances->
-
-
         return view('dashboard.attendances.index', compact('kelas'));
     }
+
+    
 }

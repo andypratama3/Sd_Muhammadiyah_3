@@ -5,42 +5,76 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Formulir PPDB - SD Kreatif</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <script script src="https://kit.fontawesome.com/2feee0b69e.js" crossorigin="anonymous"></script>
+
   <style>
+    :root {
+      --bs-font-sans-serif: 'Poppins', sans-serif;
+      --primary-color: #33b962;
+      --secondary-color: #198754;
+    }
+
     body {
-      background: linear-gradient(to right, #e3f2fd, #fce4ec);
+      background-image: url('bg-hero.jpg');
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-attachment: fixed;
+      background-position: center;
       font-family: 'Poppins', sans-serif;
     }
 
+    .btn-primary {
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+    }
+
+    .btn-primary:hover {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .btn-primary:active {
+        background-color: var(--primary-color) !important;
+        border-color: var(--primary-color) !important;
+    }
+
     .form-container {
-      background: #fff;
+      background: rgba(255, 255, 255, 1);
       border-radius: 20px;
       padding: 30px;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
       animation: fadeIn 1s ease-in-out;
+      max-width: 900px;
+      margin: 0 auto;
     }
 
     h1, h4 {
       text-align: center;
-      color: #1565c0;
+      font-weight: bold;
+      font-family: 'Trebuchet MS', sans-serif;
+    }
+
+    h4 {
+      color: var(--primary-color);
     }
 
     .section-title {
       font-weight: 600;
-      background-color: #bbdefb;
+      background-color: var(--secondary-color);
       padding: 12px;
       border-radius: 12px;
       margin-bottom: 20px;
       font-size: 1.2rem;
-      color: #0d47a1;
+      color: white;
     }
 
     .btn-submit {
-      background-color: #4caf50;
+      background-color: var(--primary-color);
       color: white;
     }
 
     .btn-submit:hover {
-      background-color: #388e3c;
+      background-color: var(--secondary-color);
     }
 
     .step {
@@ -52,6 +86,62 @@
       display: block;
     }
 
+    .progressbar {
+      counter-reset: step;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+      padding: 0;
+    }
+
+    .progressbar li {
+      list-style-type: none;
+      position: relative;
+      text-align: center;
+      width: 100%;
+      font-weight: 600;
+      color: #000000;
+    }
+
+    .progressbar li:before {
+      counter-increment: step;
+      content: counter(step);
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+      border: 2px solid #198754;
+      display: block;
+      text-align: center;
+      margin: 0 auto 10px auto;
+      border-radius: 50%;
+      background-color: #fff;
+      z-index: -1;
+    }
+
+    .progressbar li:after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background-color: var(--primary-color);
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: -1;
+    }
+
+    .progressbar li:first-child:after {
+      content: none;
+    }
+
+    .progressbar li.active {
+      color: var(--primary-color);
+    }
+
+    .progressbar li.active:before {
+      border-color: var(--primary-color);
+    }
+
     @keyframes slideIn {
       from { opacity: 0; transform: translateX(50px); }
       to { opacity: 1; transform: translateX(0); }
@@ -61,209 +151,190 @@
       from { opacity: 0; transform: scale(0.95); }
       to { opacity: 1; transform: scale(1); }
     }
-
-    .progressbar {
-      counter-reset: step;
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 30px;
+    /* animation hover */
+   .step i:hover {
+        color: var(--primary-color);
+        transform: scale(1.1);
+        transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
     }
 
-    .progressbar li {
-      list-style-type: none;
-      position: relative;
-      text-align: center;
-      width: 100%;
-      font-weight: 600;
-      color: #9e9e9e;
+    /* icon can hover */
+    .step i {
+        transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
     }
 
-    .progressbar li:before {
-      counter-increment: step;
-      content: counter(step);
-      width: 40px;
-      height: 40px;
-      line-height: 40px;
-      border: 2px solid #90caf9;
-      display: block;
-      text-align: center;
-      margin: 0 auto 10px auto;
-      border-radius: 50%;
-      background-color: #fff;
-    }
 
-    .progressbar li:after {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 2px;
-      background-color: #90caf9;
-      top: 20px;
-      left: -50%;
-      z-index: -1;
-    }
+    @media screen and (max-width: 768px) {
+      .form-container {
+        width: 80%;
+        padding: 20px;
+      }
 
-    .progressbar li:first-child:after {
-      content: none;
-    }
+      .form-container h1 {
+        font-size: 1.2rem;
+      }
 
-    .progressbar li.active {
-      color: #1565c0;
-    }
+      .form-container h4 {
+        font-size: 0.9rem;
+      }
 
-    .progressbar li.active:before {
-      border-color: #1565c0;
-      background-color: #bbdefb;
+      .section-title {
+        font-size: 1rem;
+      }
+
+
+      .progressbar li:before {
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        font-size: 14px;
+      }
+
+      .progressbar li {
+        font-size: 12px;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="container py-5">
+    <div class="form-container">
+      <h1>🎓 Formulir Pendaftaran Siswa Baru</h1>
+      <h4>SD Kreatif Muhammadiyah 3 Samarinda<br>Tahun Ajaran 2025/2026</h4>
 
-<div class="container py-5">
-  <div class="form-container">
-    <h1>🎓 Formulir Pendaftaran Siswa Baru</h1>
-    <h4>SD Kreatif Muhammadiyah 3 Samarinda<br>Tahun Ajaran 2025/2026</h4>
+      <!-- Progress Bar -->
+      <ul class="progressbar" id="progressbar">
+        <li class="active">Data Siswa</li>
+        <li>Orang Tua</li>
+        <li>Lampiran</li>
+      </ul>
 
-    <!-- Progress Bar -->
-    <ul class="progressbar mb-4" id="progressbar">
-      <li class="active">Informasi</li>
-      <li>Data Siswa</li>
-      <li>Orang Tua</li>
-      <li>Lampiran</li>
-    </ul>
-
-    <form id="ppdbForm">
-
-      <div class="step ">
-        <div class="section-title">📝 Informasi Pendaftaran</div>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis quidem laborum unde saepe deserunt earum distinctio neque accusamus repudiandae possimus, laudantium ipsam, ducimus sed iusto similique recusandae perspiciatis, quasi libero?</p>
-      </div>
-      <!-- Step 1 -->
-      <div class="step active">
-        <div class="section-title">🧒 Data Calon Siswa</div>
-        <div class="row">
-          <div class="col-md-6 mb-3">
-            <label>Nama Lengkap Anak:</label>
-            <input type="text" class="form-control" required />
+      <form id="ppdbForm">
+        <!-- Step 1 -->
+        <div class="step active">
+          <div class="section-title">🧒 Data Calon Siswa</div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Nama Lengkap Anak:</label>
+              <input type="text" class="form-control" required />
+            </div>
+            <div class="col-md-3 mb-3">
+              <label class="form-label">Tempat Lahir:</label>
+              <input type="text" class="form-control" required />
+            </div>
+            <div class="col-md-3 mb-3">
+              <label class="form-label">Tanggal Lahir:</label>
+              <input type="date" class="form-control" required />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Jenis Kelamin:</label>
+              <select class="form-select" required>
+                <option value="">-- Pilih --</option>
+                <option>Laki-laki</option>
+                <option>Perempuan</option>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Agama:</label>
+              <input type="text" class="form-control" value="Islam" readonly />
+            </div>
+            <div class="col-md-12 mb-3">
+              <label class="form-label">Alamat:</label>
+              <textarea class="form-control" rows="2" required></textarea>
+            </div>
           </div>
-          <div class="col-md-3 mb-3">
-            <label>Tempat Lahir:</label>
-            <input type="text" class="form-control" required />
-          </div>
-          <div class="col-md-3 mb-3">
-            <label>Tanggal Lahir:</label>
-            <input type="date" class="form-control" required />
-          </div>
-          <div class="col-md-3 mb-3">
-            <label>Jenis Kelamin:</label>
-            <select class="form-select" required>
-              <option value="">-- Pilih --</option>
-              <option>Laki-laki</option>
-              <option>Perempuan</option>
-            </select>
-          </div>
-          <div class="col-md-3 mb-3">
-            <label>Agama:</label>
-            <input type="text" class="form-control" value="Islam" readonly />
-          </div>
-          <div class="col-md-6 mb-3">
-            <label>Alamat:</label>
-            <textarea class="form-control" rows="2" required></textarea>
+          <div class="text-end">
+            <button type="button" class="btn btn-primary" onclick="nextStep()">Lanjut <i class="fa fa-arrow-right"></i></button>
           </div>
         </div>
-        <div class="text-end">
-          <button type="button" class="btn btn-primary" onclick="nextStep()">Lanjut</button>
-        </div>
-      </div>
 
-      <!-- Step 2 -->
-      <div class="step">
-        <div class="section-title">👨‍👩‍👧 Data Orang Tua / Wali</div>
-        <div class="row">
-          <div class="col-md-6 mb-3">
-            <label>Nama Ayah:</label>
-            <input type="text" class="form-control" required />
+        <!-- Step 2 -->
+        <div class="step">
+          <div class="section-title">👨‍👩‍👧 Data Orang Tua / Wali</div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Nama Ayah:</label>
+              <input type="text" class="form-control" required />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Pekerjaan Ayah:</label>
+              <input type="text" class="form-control" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Nama Ibu:</label>
+              <input type="text" class="form-control" required />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Pekerjaan Ibu:</label>
+              <input type="text" class="form-control" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">No. HP Orang Tua:</label>
+              <input type="tel" class="form-control" placeholder="08xxxxxxxxxx" required />
+            </div>
           </div>
-          <div class="col-md-6 mb-3">
-            <label>Pekerjaan Ayah:</label>
-            <input type="text" class="form-control" />
-          </div>
-          <div class="col-md-6 mb-3">
-            <label>Nama Ibu:</label>
-            <input type="text" class="form-control" required />
-          </div>
-          <div class="col-md-6 mb-3">
-            <label>Pekerjaan Ibu:</label>
-            <input type="text" class="form-control" />
-          </div>
-          <div class="col-md-6 mb-3">
-            <label>No. HP Orang Tua:</label>
-            <input type="tel" class="form-control" placeholder="08xxxxxxxxxx" required />
+          <div class="d-flex justify-content-between">
+            <button type="button" class="btn btn-secondary" onclick="prevStep()"><i class="fa fa-arrow-left"></i> Kembali</button>
+            <button type="button" class="btn btn-primary" onclick="nextStep()">Lanjut <i class="fa fa-arrow-right"></i></button>
           </div>
         </div>
-        <div class="d-flex justify-content-between">
-          <button type="button" class="btn btn-secondary" onclick="prevStep()">⬅️ Kembali</button>
-          <button type="button" class="btn btn-primary" onclick="nextStep()">Lanjut ➡️</button>
-        </div>
-      </div>
 
-      <!-- Step 3 -->
-      <div class="step">
-        <div class="section-title">📎 Lampiran Dokumen</div>
-        <div class="row">
-          <div class="col-md-4 mb-3">
-            <label>Upload Foto Anak (3x4):</label>
-            <input type="file" class="form-control" required />
+        <!-- Step 3 -->
+        <div class="step">
+          <div class="section-title">📎 Lampiran Dokumen</div>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Upload Foto Anak (3x4):</label>
+              <input type="file" class="form-control" required />
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Upload Akta Kelahiran:</label>
+              <input type="file" class="form-control" required />
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Upload Kartu Keluarga:</label>
+              <input type="file" class="form-control" required />
+            </div>
           </div>
-          <div class="col-md-4 mb-3">
-            <label>Upload Akta Kelahiran:</label>
-            <input type="file" class="form-control" required />
-          </div>
-          <div class="col-md-4 mb-3">
-            <label>Upload Kartu Keluarga:</label>
-            <input type="file" class="form-control" required />
+          <div class="d-flex justify-content-between">
+            <button type="button" class="btn btn-secondary" onclick="prevStep()"><i class="fa fa-arrow-left"></i> Kembali</button>
+            <button type="submit" class="btn btn-primary">Lanjut <i class="fa fa-arrow-right"></i></button>
           </div>
         </div>
-        <div class="d-flex justify-content-between">
-          <button type="button" class="btn btn-secondary" onclick="prevStep()">⬅️ Kembali</button>
-          <button type="submit" class="btn btn-submit px-4">🎒 Kirim Pendaftaran</button>
-        </div>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
-</div>
 
-<script>
-  let currentStep = 0;
-  const steps = document.querySelectorAll('.step');
-  const progressbar = document.querySelectorAll('#progressbar li');
+  <script>
+    let currentStep = 0;
+    const steps = document.querySelectorAll('.step');
+    const progressbar = document.querySelectorAll('.progressbar li');
 
-  function showStep(index) {
-    steps.forEach((step, i) => {
-      step.classList.toggle('active', i === index);
-      progressbar[i].classList.toggle('active', i <= index);
+    function showStep(index) {
+      steps.forEach((step, i) => {
+        step.classList.toggle('active', i === index);
+        progressbar[i].classList.toggle('active', i <= index);
+      });
+      currentStep = index;
+    }
+
+    function nextStep() {
+      if (currentStep < steps.length - 1) {
+        showStep(currentStep + 1);
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 0) {
+        showStep(currentStep - 1);
+      }
+    }
+
+    document.getElementById('ppdbForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Formulir berhasil dikirim! 🎉');
+      // Implementasikan pengiriman form ke backend di sini
     });
-  }
-
-  function nextStep() {
-    if (currentStep < steps.length - 1) {
-      currentStep++;
-      showStep(currentStep);
-    }
-  }
-
-  function prevStep() {
-    if (currentStep > 0) {
-      currentStep--;
-      showStep(currentStep);
-    }
-  }
-
-  document.getElementById("ppdbForm").addEventListener("submit", function (e) {
-    e.preventDefault();
-    alert("✅ Terima kasih! Formulir berhasil dikirim.");
-  });
-</script>
-
+  </script>
 </body>
 </html>

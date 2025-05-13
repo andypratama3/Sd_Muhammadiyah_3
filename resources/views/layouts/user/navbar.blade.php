@@ -35,7 +35,7 @@
             <a href="{{ route('jadwal.index') }}" class="nav-item nav-link {{ Request::routeIS('jadwal.index') ? 'active' : '' }}">Jadwal</a>
             <a href="{{ route('pembayaran.index') }}" class="nav-item nav-link {{ Request::routeIS('pembayaran.index') ? 'active' : '' }}">Pembayaran</a>
             <a href="{{ route('berita.index') }}" class="nav-item nav-link {{ Request::routeIS('berita.index') ? 'active' : '' }}">Berita</a>
-            <a href="{{ route('artikel.index') }}" class="nav-item nav-link {{ Request::routeIS('artikel.index') ? 'active' : '' }}">Artikel</a>
+            <a href="{{ route('ppdb.index') }}" class="nav-item nav-link {{ Request::routeIS('ppdb.index') ? 'active' : '' }}">PPDB</a>
             {{-- <div class="nav-item dropdown">
                 <a href="#" class="nav-link" data-bs-toggle="dropdown">
                     <span class="dropdown-toggle">Pages</span>
