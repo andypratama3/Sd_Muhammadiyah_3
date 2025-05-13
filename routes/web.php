@@ -4,8 +4,8 @@ use App\Models\JudulPembayaran;
 //User Access
 use App\Models\TenagaPendidikan;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SpmbController;
 use App\Http\Controllers\GuruController;
-use App\Http\Controllers\PpdbController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\KontakController;
@@ -25,23 +25,23 @@ use App\Http\Controllers\PrestasiSiswaController;
 use App\Http\Controllers\Api\Dashboard\WilayahApi;
 use App\Http\Controllers\CommentArtikelController;
 use App\Http\Controllers\Dashboard\RoleController;
-use App\Http\Controllers\Dashboard\TaskController;
 
 //Dashboard Access
+use App\Http\Controllers\Dashboard\TaskController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\CategoryArtikel;
 use App\Http\Controllers\Dashboard\ChartController;
+
 use App\Http\Controllers\Dashboard\KelasController;
-
 use App\Http\Controllers\EkstrakurikulerController;
-use App\Http\Controllers\PrestasiSekolahController;
 
+use App\Http\Controllers\PrestasiSekolahController;
 use App\Http\Controllers\TenagaPendidikanController;
 use App\Http\Controllers\Dashboard\ActivityController;
 use App\Http\Controllers\Dashboard\KaryawanController;
 use App\Http\Controllers\Dashboard\DashboardController;
-use App\Http\Controllers\Dashboard\AchivementController;
 
+use App\Http\Controllers\Dashboard\AchivementController;
 use App\Http\Controllers\Dashboard\AttendancesController;
 use App\Http\Controllers\Dashboard\CooperationController;
 use App\Http\Controllers\Dashboard\NotificationController;
@@ -132,8 +132,7 @@ Route::group(['prefix' => '/',], function () {
     Route::get('prestasi-sekolah/{slug}', [PrestasiSekolahController::class, 'show'])->name('prestasi.sekolah.show');
 
     // PPDB
-    // Route::get('ppdb', [PpdbController::class, 'index'])->name('ppdb.index');
-    Route::get('ppdb', [PpdbController::class, 'index'])->name('ppdb.index');
+    Route::get('spmb', [SpmbController::class, 'index'])->name('spmb.index');
     //login with google
     Route::get('auth/google', [GoogleController::class, 'signGoogle'])->name('login.google');
     Route::get('auth/google/callback', [GoogleController::class, 'callbackToGoogle'])->name('google.callback');
