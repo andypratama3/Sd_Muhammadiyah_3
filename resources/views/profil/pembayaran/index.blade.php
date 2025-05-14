@@ -265,7 +265,7 @@
                                                                                     <hr>
 
                                                                                     <div class="col-md-4 col-sm-12">
-                                                                                        <label class="fw-bold">{{ $charge->kategori_pembayaran->name }} </label>
+                                                                                        <label class="fw-bold">{{ $charge->name }} </label>
                                                                                         <br>
                                                                                         <label class="fw-bold">Tanggal :
                                                                                             {{ \Carbon\Carbon::parse($charge->created_at)->translatedFormat('d F Y') }}
