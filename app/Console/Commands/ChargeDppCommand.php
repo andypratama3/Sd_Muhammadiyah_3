@@ -110,6 +110,11 @@ class ChargeDppCommand extends Command
 
         }
 
+        if($grossAmount == 0){
+            $transactionStatus = 'free';
+            $sendToMidtrans = false;
+        }
+
 
         // Insert data ke tabel charges
         DB::table('charges')->insert([
