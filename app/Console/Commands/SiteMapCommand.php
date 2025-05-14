@@ -50,7 +50,7 @@ class SiteMapCommand extends Command
         $staticPages = [
             'berita', 'guru', 'visimisi', 'ekstrakurikuler', 'pembayaran',
             'fasilitas', 'tenagapendidikan', 'gallery', 'jadwal', 'kontak',
-            'prestasi-siswa', 'prestasi-sekolah'
+            'prestasi-siswa', 'prestasi-sekolah', 'spmb'
         ];
 
         foreach ($staticPages as $page) {
