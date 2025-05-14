@@ -57,6 +57,8 @@ class ChargeDppCommand extends Command
                     ->where('siswa_id', $siswa->id)
                     ->count();
 
+                
+
                 if ($existingCharges >= 2) {
                     $this->info("Sudah ada 2 tagihan DPP untuk {$siswa->name}.");
                     DB::rollBack();

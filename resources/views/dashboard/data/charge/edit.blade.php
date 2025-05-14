@@ -117,6 +117,7 @@
                                 <option value="settlement" {{ $charge->transaction_status === 'settlement' ? 'selected' : '' }}>Success</option>
                                 <option value="pay_offline" {{ $charge->transaction_status === 'pay_offline' ? 'selected' : '' }}>Pay Offline</option>
                                 <option value="failed" {{ $charge->transaction_status === 'failed' ? 'selected' : '' }}>Failed</option>
+                                <option value="free" {{ $charge->transaction_status === 'free' ? 'selected' : '' }}>Free</option>
                             </select>
                         </div>
                     </div>
