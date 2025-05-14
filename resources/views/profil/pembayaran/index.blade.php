@@ -319,9 +319,11 @@
                                                                                         type="button">
                                                                                         Salin
                                                                                     </button>
+                                                                                    <p><code>Hanya Melalui BRI / BRIVA</code></p>
                                                                                 </div>
                                                                             </div>
                                                                             @endif
+
                                                                             <hr>
                                                                         @endforeach
                                                                     </ul>
