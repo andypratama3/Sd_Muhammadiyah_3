@@ -240,7 +240,7 @@ class ChargeController extends Controller
                 return redirect()->route('dashboard.datamaster.charge.index')
                     ->with('error', 'Terjadi Kesalahan: ' . $e->getMessage());
             }
-        } 
+        }
 
 
         $charge->update([
