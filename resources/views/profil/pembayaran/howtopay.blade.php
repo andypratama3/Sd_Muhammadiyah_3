@@ -42,7 +42,7 @@
                             </ul>
                         </li>
                         <li>Jika memilih Virtual Account, salin nomor VA yang muncul di halaman pembayaran.</li>
-                        <li>Pada aplikasi mobile banking atau ATM, pilih bank <strong>BRI</strong> sebagai metode transfer VA.</li>
+                        <li>Pada aplikasi mobile banking atau ATM, pilih <strong>BRIVA</strong> sebagai metode VA.</li>
                         <li>Setelah pembayaran berhasil, sistem akan <strong>otomatis mengonfirmasi</strong> transaksi Anda.</li>
                         <li>Pastikan status tagihan berubah menjadi <strong>Lunas</strong> di halaman riwayat pembayaran.</li>
                         <li>Jika terjadi kendala atau status belum berubah, Tunggu Beberapa Saat, Atau silakan unggah bukti pembayaran secara manual atau hubungi admin keuangan.</li>
