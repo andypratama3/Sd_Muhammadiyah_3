@@ -321,8 +321,8 @@
                                                                                     </button>
                                                                                 </div>
                                                                             </div>
-                                                                            @endif
                                                                             <p><code>Hanya Melalui BRI / BRIVA</code></p>
+                                                                            @endif
                                                                             <hr>
                                                                         @endforeach
                                                                     </ul>
