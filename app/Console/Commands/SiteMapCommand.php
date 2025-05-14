@@ -2,55 +2,73 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Route;
 use App\Models\Berita;
 use App\Models\Artikel;
 use App\Models\Gallery;
+use App\Models\Fasilitas;
 use Spatie\Sitemap\Sitemap;
 use Spatie\Sitemap\Tags\Url;
+use App\Models\Esktrakurikuler;
+use Illuminate\Console\Command;
 
 class SiteMapCommand extends Command
 {
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
     protected $signature = 'app:site-map-command';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
     protected $description = 'Generate the sitemap for the website';
 
+    /**
+     * Execute the console command.
+     */
     public function handle()
     {
+        // Path file sitemap.xml
         $sitemapPath = public_path('sitemap.xml');
+
+        // Buat instance sitemap baru
         $sitemap = Sitemap::create();
+
+        // Ambil base URL tanpa trailing slash
         $baseUrl = rtrim(config('app.url'), '/');
 
-        // ✅ Tambahkan halaman utama
+        // Tambahkan halaman utama
         $sitemap->add(
             Url::create($baseUrl)
                 ->setLastModificationDate(now())
                 ->setPriority(1.0)
         );
 
-        // ✅ Ambil semua route web statis tanpa parameter
-        $staticRoutes = collect(Route::getRoutes())->filter(function ($route) {
-            return
-                $route->methods === ['GET'] &&
-                $route->getPrefix() === null &&
-                count($route->parameterNames()) === 0 &&
-                !str_contains($route->uri(), 'dashboard') &&
-                !str_contains($route->uri(), '{');
-        });
+        // Tambahkan halaman statis
+        $staticPages = [
+            'berita', 'guru', 'visimisi', 'ekstrakurikuler', 'pembayaran',
+            'fasilitas', 'tenagapendidikan', 'gallery', 'jadwal', 'kontak',
+            'prestasi-siswa', 'prestasi-sekolah', 'spmb'
+        ];
 
-        foreach ($staticRoutes as $route) {
-            $uri = $route->uri();
-            $url = $baseUrl . '/' . ltrim($uri, '/');
-
+        foreach ($staticPages as $page) {
             $sitemap->add(
-                Url::create($url)
+                Url::create("$baseUrl/$page")
                     ->setLastModificationDate(now())
                     ->setPriority(0.7)
             );
         }
 
-        // ✅ Tambahkan berita
+        // Ambil data artikel & berita
+        $artikels = Artikel::orderBy('created_at', 'desc')->get();
         $beritas = Berita::orderBy('created_at', 'desc')->get();
+        $gallery = Gallery::orderBy('created_at', 'desc')->get();
+
+        // Tambahkan berita ke sitemap
         foreach ($beritas as $berita) {
             $sitemap->add(
                 Url::create("$baseUrl/berita/{$berita->slug}")
@@ -59,8 +77,7 @@ class SiteMapCommand extends Command
             );
         }
 
-        // ✅ Tambahkan artikel
-        $artikels = Artikel::orderBy('created_at', 'desc')->get();
+        // Tambahkan artikel ke sitemap
         foreach ($artikels as $artikel) {
             $sitemap->add(
                 Url::create("$baseUrl/artikel/{$artikel->slug}")
@@ -69,45 +86,37 @@ class SiteMapCommand extends Command
             );
         }
 
-        // ✅ Tambahkan gallery
-        $galleries = Gallery::orderBy('created_at', 'desc')->get();
-        foreach ($galleries as $gallery) {
+        foreach ($gallery as $gallery) {
             $sitemap->add(
                 Url::create("$baseUrl/gallery/{$gallery->slug}")
                     ->setLastModificationDate($gallery->updated_at)
                     ->setPriority(0.8)
-            );
+                );
         }
 
-        $prestasi = Prestasi::orderBy('created_at', 'desc')->get();
-        foreach ($prestasi as $prestasi) {
+        $esktrakurikuler = Esktrakurikuler::orderBy('created_at', 'desc')->get();
+        foreach ($esktrakurikuler as $eks) {
             $sitemap->add(
-                Url::create("$baseUrl/prestasi/{$prestasi->slug}")
-                    ->setLastModificationDate($prestasi->updated_at)
+                Url::create("$baseUrl/esktrakurikuler/{$eks->slug}")
+                    ->setLastModificationDate($eks->updated_at)
                     ->setPriority(0.8)
             );
         }
 
-        $Esktrakurikuler = Esktrakurikuler::orderBy('created_at', 'desc')->get();
-        foreach ($Esktrakurikuler as $esktrakurikuler) {
+        $fasilitass = Fasilitas::orderBy('created_at', 'desc')->get();
+        foreach ($fasilitass as $fasilitas) {
             $sitemap->add(
-                Url::create("$baseUrl/esktrakurikuler/{$esktrakurikuler->slug}")
-                    ->setLastModificationDate($esktrakurikuler->updated_at)
+                Url::create("$baseUrl/fasilitas/{$fasilitass->slug}")
+                    ->setLastModificationDate($fasilitass->updated_at)
                     ->setPriority(0.8)
             );
         }
 
-        $fasilitas = Fasilitas::orderBy('created_at', 'desc')->get();
-        foreach ($fasilitas as $fasilitas) {
-            $sitemap->add(
-                Url::create("$baseUrl/fasilitas/{$fasilitas->slug}")
-                    ->setLastModificationDate($fasilitas->updated_at)
-                    ->setPriority(0.8)
-            );
-        }
 
-        // ✅ Simpan ke file
+
+        // Simpan sitemap ke file
         $sitemap->writeToFile($sitemapPath);
-        $this->info('✅ Sitemap berhasil diperbarui!');
+
+        $this->info('✅ Sitemap berhasil diperbarui tanpa duplikasi!');
     }
 }
