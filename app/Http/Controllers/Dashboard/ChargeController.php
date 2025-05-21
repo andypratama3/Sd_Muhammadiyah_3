@@ -54,8 +54,10 @@ class ChargeController extends Controller
             $startDate = Carbon::createFromFormat('d-m-Y', trim($dates[0]))->format('Y-m-d');
             $endDate = Carbon::createFromFormat('d-m-Y', trim($dates[1]))->format('Y-m-d');
 
-            $charges = Charge::whereBetween(DB::raw('date(created_at)'), [$startDate, $endDate]);
+            $charges = $charges->whereBetween(DB::raw('date(created_at)'), [$startDate, $endDate]);
         }
+
+
 
         return DataTables::of($charges)
             ->addColumn('options', function ($row) {
@@ -278,12 +280,14 @@ class ChargeController extends Controller
         $startDate = Carbon::createFromFormat('d-m-Y', trim($dates[0]))->format('Y-m-d');
         $endDate = Carbon::createFromFormat('d-m-Y', trim($dates[1]))->format('Y-m-d');
         $kelas = $request->kelas;
+        $category_payment = $request->category_payment;
 
         // Format Name
         $carbonStartDate = Carbon::parse($startDate)->locale('id')->translatedFormat('d F Y');
         $carbonEndDate = Carbon::parse($endDate)->locale('id')->translatedFormat('d F Y');
 
-        return Excel::download(new ChargeExport($startDate, $endDate, $kelas), "Rekap Pembayaran SPP Dari $carbonStartDate Sampai $carbonEndDate.xlsx");
+        $kategoriPembayaran = JudulPembayaran::where('id', $category_payment)->first();
+        return Excel::download(new ChargeExport($startDate, $endDate, $kelas, $category_payment), "Rekap Pembayaran $kategoriPembayaran->name Dari $carbonStartDate Sampai $carbonEndDate.xlsx");
     }
 
     // private function createCharge($siswa, $order_id, $gross_amount, $kategori_pembayaran, $percentage)

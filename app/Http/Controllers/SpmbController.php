@@ -9,6 +9,15 @@ class SpmbController extends Controller
 {
     public function index()
     {
+        // return view('spmb.index');
         return view('spmb.comming_soon');
+    }
+
+
+    public function store(Request $request)
+    {
+        $request->validate([
+
+        ]);
     }
 }

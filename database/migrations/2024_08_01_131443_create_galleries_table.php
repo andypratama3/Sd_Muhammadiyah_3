@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('cover');
             $table->longText('foto');
+            $table->longText('link');
             $table->string('slug');
             $table->timestamps();
         });

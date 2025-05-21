@@ -30,6 +30,16 @@
                 </div>
 
                 <div class="form-group mt-2">
+                    <label for="link">Link</label>
+                    <input type="url" class="form-control {{ $errors->has('link') ? 'is-invalid' : '' }}" name="link" id="link" placeholder="Masukan Link" value="{{ old('link') }}">
+                    @if ($errors->has('link'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('link') }}
+                        </div>
+                    @endif
+                </div>
+
+                <div class="form-group mt-2">
                     <label for="foto">Foto</label>
                     <input type="file" class="form-control {{ $errors->has('foto') ? 'is-invalid' : '' }}" id="foto" name="foto[]" multiple onchange="previewImage(event)">
                     @if ($errors->has('foto'))

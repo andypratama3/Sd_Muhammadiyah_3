@@ -20,13 +20,15 @@ class ChargeExport implements FromQuery, WithHeadings, WithMapping, WithTitle, W
     protected $tanggalSelesai;
     protected $kelas;
     protected $totalBayar = 0;
-    protected $nomor = 1; // Tambahkan variabel untuk auto increment
+    protected $nomor = 1;
+    protected $category_payment;
 
-    public function __construct($tanggalMulai, $tanggalSelesai, $kelas = null)
+    public function __construct($tanggalMulai, $tanggalSelesai, $kelas = null, $category_payment = null)
     {
         $this->tanggalMulai = $tanggalMulai;
         $this->tanggalSelesai = $tanggalSelesai;
         $this->kelas = $kelas;
+        $this->category_payment = $category_payment;
     }
 
     public function query()
@@ -40,6 +42,11 @@ class ChargeExport implements FromQuery, WithHeadings, WithMapping, WithTitle, W
             });
         }
 
+        if($this->category_payment) {
+            // dd($this->category_payment);
+            $tagihan->where('category_payment_id', $this->category_payment);
+        }
+
         return $tagihan;
     }
 
@@ -51,6 +58,7 @@ class ChargeExport implements FromQuery, WithHeadings, WithMapping, WithTitle, W
             optional($tagihan->siswa)->name ?? 'Tidak Ada',
             "Rp " . number_format($tagihan->gross_amount, 2, ',', '.'),
             $tagihan->payment_type,
+            $tagihan->kategori_pembayaran->name ?? 'Tidak Ada',
             $tagihan->bank ?? 'Tidak Ada',
             $tagihan->va_number ?? 'Tidak Ada',
             $tagihan->transaction_id,
@@ -71,6 +79,7 @@ class ChargeExport implements FromQuery, WithHeadings, WithMapping, WithTitle, W
             "Nama Siswa",
             "Jumlah Bayar",
             "Jenis Pembayaran",
+            "Pembayaran",
             "Bank",
             "Nomor Virtual Account",
             "ID Transaksi",
@@ -91,7 +100,7 @@ class ChargeExport implements FromQuery, WithHeadings, WithMapping, WithTitle, W
             AfterSheet::class => function (AfterSheet $event) {
                 $lembar = $event->sheet->getDelegate();
                 $jumlahBaris = count($this->query()->get()) + 2;
-                $kolomTerakhir = 'J'; // Kolom terakhir setelah menambahkan "No"
+                $kolomTerakhir = 'K'; // Kolom terakhir setelah menambahkan "No"
                 $rentangSel = "A1:{$kolomTerakhir}{$jumlahBaris}";
 
                 // Tambahkan garis tepi pada seluruh sel
@@ -111,7 +120,7 @@ class ChargeExport implements FromQuery, WithHeadings, WithMapping, WithTitle, W
 
                 // Format warna berdasarkan status transaksi
                 for ($baris = 2; $baris <= $jumlahBaris; $baris++) {
-                    $selStatus = "J{$baris}";
+                    $selStatus = "K{$baris}";
                     $nilaiStatus = $lembar->getCell($selStatus)->getValue();
 
                     $warnaStatus = [
@@ -119,6 +128,7 @@ class ChargeExport implements FromQuery, WithHeadings, WithMapping, WithTitle, W
                         'Pembayaran Online' => '87CEEB',
                         'Gagal' => 'FF0000',
                         'Bayar Offline' => '5ce70b',
+                        'free' => '5ce70b',
                     ];
 
                     if (isset($warnaStatus[$nilaiStatus])) {
@@ -133,8 +143,8 @@ class ChargeExport implements FromQuery, WithHeadings, WithMapping, WithTitle, W
                 }
 
                 // Tambahkan total di bawah tabel
-                $selSubtotal = "D{$jumlahBaris}";
-                $selTotal = "E{$jumlahBaris}";
+                $selSubtotal = "C{$jumlahBaris}";
+                $selTotal = "D{$jumlahBaris}";
 
                 $lembar->setCellValue($selSubtotal, "Total:");
                 $lembar->setCellValue($selTotal, "Rp " . number_format($this->totalBayar, 2, ',', '.'));
@@ -155,6 +165,7 @@ class ChargeExport implements FromQuery, WithHeadings, WithMapping, WithTitle, W
             'Expired' => 'Gagal',
             'failed' => 'Gagal',
             'pay_offline' => 'Bayar Offline',
+            'free' => 'Gratis',
         ];
 
         return $statusTerjemahan[$status] ?? $status;

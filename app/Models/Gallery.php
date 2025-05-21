@@ -17,6 +17,7 @@ class Gallery extends Model
         'name',
         'foto',
         'cover',
+        'link',
         'slug',
     ];
 }

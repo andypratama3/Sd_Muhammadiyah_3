@@ -43,16 +43,23 @@ class GalleryAction
         } else {
             $galleryCover = Gallery::where('slug', $galleryData->slug)->first()->cover;
         }
-        // Upload foto baru
-        foreach ($fotorFiles as $fotorFile) {
-            $ext = $fotorFile->getClientOriginalExtension();
-            $uniqueIdentifier = Str::random(8);
-            $file_name = 'Gallery_' . Str::slug($galleryData->name) . '_' . $uniqueIdentifier . '_' . date('YmdHis') . ".$ext";
-            $upload_path = public_path('storage/img/gallery/');
-            ImageHelper::resizeAndSave($fotorFile, $upload_path, $file_name);
 
-            $galleryName[] = $file_name;
+        if($fotorFiles) {
+            // Upload foto baru
+            foreach ($fotorFiles as $fotorFile) {
+                $ext = $fotorFile->getClientOriginalExtension();
+                $uniqueIdentifier = Str::random(8);
+                $file_name = 'Gallery_' . Str::slug($galleryData->name) . '_' . $uniqueIdentifier . '_' . date('YmdHis') . ".$ext";
+                $upload_path = public_path('storage/img/gallery/');
+                ImageHelper::resizeAndSave($fotorFile, $upload_path, $file_name);
+
+                $galleryName[] = $file_name;
+            }
+        } else {
+            $gallery = Gallery::where('slug', $galleryData->slug)->first();
+            $galleryName = explode(',', $gallery->foto);
         }
+
 
         // Simpan galeri
         $gallery = Gallery::updateOrCreate(
@@ -60,6 +67,7 @@ class GalleryAction
             [
                 'name' => $galleryData->name,
                 'cover' => $galleryCover,
+                'link' => $galleryData->link,
                 'foto' => implode(',', $galleryName),
             ]
         );

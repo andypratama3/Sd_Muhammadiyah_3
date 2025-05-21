@@ -20,6 +20,7 @@
                     @endif
                 </div>
 
+
                 <div class="form-group mt-2">
                     <label for="">Cover Gallery</label>
                     <div class="custom-file">
@@ -29,6 +30,16 @@
                     <div class="mt-4 text-center">
                         <img src="{{ asset('storage/img/gallery/cover/'.$gallery->cover) }}" id="output" alt="" style="width: 100%;">
                     </div>
+                </div>
+
+                 <div class="form-group mt-2">
+                    <label for="link">Link</label>
+                    <input type="url" class="form-control {{ $errors->has('link') ? 'is-invalid' : '' }}" name="link" id="link" placeholder="Masukan Link" value="{{ old('link', $gallery->link) }}">
+                    @if ($errors->has('link'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('link') }}
+                        </div>
+                    @endif
                 </div>
 
                 <div class="form-group mt-2">

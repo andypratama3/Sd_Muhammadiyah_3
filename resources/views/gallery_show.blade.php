@@ -20,7 +20,26 @@
                 </a>
             </div>
         @endforeach
+        @if (!empty($gallery->video_id))
+            <div class="col-md-12 mt-2">
+                <h4 class="text-center">Video</h4>
+                <iframe width="560" height="315"
+                        src="https://www.youtube.com/embed/{{ $gallery->video_id }}"
+                        title="YouTube video player"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allowfullscreen
+                        style="border-radius: 10px; width: 100%; height: 500px;">
+
+                </iframe>
+            </div>
+        @endif
+
+
+
     </div>
+
     <div class="text-center mb-2">
         <a href="{{ route('gallery.index') }}" class="btn btn-primary mt-3"><i class="fa fa-arrow-left"></i> Kembali</a>
     </div>

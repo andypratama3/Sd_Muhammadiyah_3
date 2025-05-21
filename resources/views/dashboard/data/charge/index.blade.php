@@ -60,6 +60,7 @@
                             id="exportForm" style="display: none;">
                             @csrf
                             <input type="hidden" name="kelas" id="export_kelas">
+                            <input type="hidden" name="category_payment" id="export_category_payment">
                             <input type="hidden" name="date" id="export_date">
                         </form>
                     </div>
@@ -245,6 +246,7 @@
                 e.preventDefault();
                 $('#export_kelas').val($('#kelas').val());
                 $('#export_date').val($('#date_range').val());
+                $('#export_category_payment').val($('#category_payment').val());
                 $('#exportForm').submit();
             });
         });

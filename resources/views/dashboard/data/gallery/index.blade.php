@@ -25,6 +25,7 @@
                                 <th>No</th>
                                 <th>Nama</th>
                                 <th>Cover</th>
+                                <th>Link</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -60,6 +61,7 @@
                 { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, ordering: false },
                 { data: 'name', name: 'name' },
                 { data: 'cover', name: 'cover' },
+                { data: 'link', name: 'link' },
                 { data: 'options', name: 'options', orderable: false, searchable: false }
             ],
         });
