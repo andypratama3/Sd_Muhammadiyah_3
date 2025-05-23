@@ -13,6 +13,32 @@ class Spmb extends Model
 
     protected $table = 'spmbs';
 
-    // protected $fillable = [
+    protected $fillable = [
+        'nama',
+        'tempat_lahir',
+        'tanggal_lahir',
+        'jenis_kelamin',
+        'agama',
+        'suku',
+        'alamat',
+        'nama_asal_sekolah',
+        'sttb',
+        'alamat_sekolah',
+        'select_data',
+        'nama_ayah',
+        'nama_ibu',
+        'pendidikan_ayah',
+        'pendidikan_ibu',
+        'pekerjaan_ayah',
+        'pekerjaan_ibu',
+        'nama_wali',
+        'pekerjaan_wali',
+        'alamat_wali',
+        'file_sttb',
+        'akta_kelahiran',
+        'kk',
+        'pas_foto',
+        'status_pembayaran',
+    ];
 
 }

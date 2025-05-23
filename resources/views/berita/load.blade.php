@@ -10,8 +10,10 @@
         <div class="blog-content p-4">
             <div class="blog-comment d-flex justify-content-between mb-3">
                 {{-- <div class="small"><span class="fa fa-user text-primary"></span> Martin.C</div> --}}
-                <div class="small"><span class="fa fa-calendar text-primary"></span>
-                    {{ \Carbon\Carbon::parse($berita->created_at)->diffForHumans() }}</div>
+               <div class="small">
+                    <span class="fa fa-calendar text-primary"> </span> {{ \Carbon\Carbon::parse($berita->created_at)->diffForHumans() }}
+                    <span class="fa fa-eye text-primary"> </span>  {{ $berita->views }}
+                </div>
             </div>
             <a href="{{ route('berita.show', $berita->slug) }}" class="h4 d-inline-block mb-3">{{ Str::limit($berita->judul, 50) }}</a>
             <p class="mb-3">{!! Str::substr($berita->desc, 0, 50) !!}</p>

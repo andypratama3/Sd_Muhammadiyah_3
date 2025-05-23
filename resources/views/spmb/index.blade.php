@@ -26,18 +26,33 @@
                 <li>Pembayaran</li>
             </ul>
 
-            <form id="ppdbForm">
+            <form action="{{ route('spmb.store') }}" method="POST" id="ppdbForm">
+                @csrf
                 <!-- step information -->
                 <div class="step active">
                     <div class="section-title">📝 Informasi Pendaftaran</div>
                     <div class="row mx-2">
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quae?</p>
-                        <ul style="list-style: decimal">
-                            <li>Lorem ipsum dolor sit amet consectetur adipisicing elit.</li>
-                            <li>Lorem ipsum dolor sit amet consectetur adipisicing elit.</li>
-                            <li>Lorem ipsum dolor sit amet consectetur adipisicing elit.</li>
-                            <li>Lorem ipsum dolor sit amet consectetur adipisicing elit.</li>
-                        </ul>
+                         <p>Penerimaan Peserta Didik Baru (PPDB) SD Muhammadiyah 3 Samarinda dilakukan secara **online dan offline** melalui website resmi SD Muhammadiyah 3 Samarinda.</p>
+                            <ul style="list-style: decimal">
+                                <li>Pendaftaran wajib dilakukan melalui website resmi SD Muhammadiyah 3 Samarinda dengan mengisi data secara benar dan lengkap.</li>
+                                <li>Data yang diisi terdiri dari:
+                                    <ul>
+                                        <li>Data Calon Siswa</li>
+                                        <li>Data Orang Tua/Wali</li>
+                                        <li>Data Lampiran</li>
+                                    </ul>
+                                </li>
+                                <li>Pengisian data memerlukan pembayaran sebesar <strong>Rp300.000</strong>, yang mencakup:
+                                    <ul>
+                                        <li>Biaya Analisis Psikologi</li>
+                                        <li>Biaya Administrasi</li>
+                                    </ul>
+                                </li>
+                                <li>Jika pengisian data dilakukan tanpa pembayaran, maka data yang telah diisi tidak akan tersimpan.</li>
+                                <li>Setelah melakukan pendaftaran dan pembayaran, data akan dikonfirmasi melalui website resmi SD Muhammadiyah 3 Samarinda.</li>
+                                <li>Jika data sudah terkonfirmasi, proses akan dilanjutkan ke tahap berikutnya, termasuk pengisian data lanjutan.</li>
+                                <li>Jika terjadi kendala atau status belum berubah, Tunggu Beberapa Saat, Atau silakan unggah bukti pembayaran secara manual atau hubungi admin keuangan.</li>
+                            </ul>
                         <div class="col-md-12 mb-3">
                             <button type="button" onclick="nextStep()" class="btn btn-primary float-end">Setuju & Lanjut
                                 <i class="fa fa-arrow-right"></i></button>
@@ -49,52 +64,102 @@
                     <div class="section-title">🧒 Data Calon Siswa</div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Nama Lengkap Anak</label>
-                            <input type="text" class="form-control" />
+                            <label for="nama" class="form-label">Nama Lengkap Anak</label>
+                            <input type="text" class="form-control @error('nama') is-invalid @enderror" id="nama" value="{{ old('nama') }}" />
+                            @error('nama')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                         <div class="col-md-3 mb-3">
-                            <label class="form-label">Tempat Lahir</label>
-                            <input type="text" class="form-control" />
+                            <label for="tempat_lahir" class="form-label">Tempat Lahir</label>
+                            <input type="text" class="form-control @error('tempat_lahir') is-invalid @enderror" id="tempat_lahir" value="{{ old('tempat_lahir') }}" />
+                            @error('tempat_lahir')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                         <div class="col-md-3 mb-3">
-                            <label class="form-label">Tanggal Lahir</label>
-                            <input type="date" class="form-control" />
+                            <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
+                            <input type="date" class="form-control @error('tanggal_lahir') is-invalid @enderror" id="tanggal_lahir" value="{{ old('tanggal_lahir') }}" />
+                            @error('tanggal_lahir')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Jenis Kelamin</label>
-                            <select class="form-select">
+                            <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
+                            <select class="form-select @error('jenis_kelamin') is-invalid @enderror" id="jenis_kelamin" name="jenis_kelamin">
                                 <option value="">-- Pilih --</option>
-                                <option>Laki-laki</option>
-                                <option>Perempuan</option>
+                                <option value="Laki-laki" {{ old('jenis_kelamin') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                                <option value="Perempuan" {{ old('jenis_kelamin') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
                             </select>
+                            @error('jenis_kelamin')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Agama</label>
-                            <input type="text" class="form-control" value="Islam" readonly />
+                            <label for="agama" class="form-label">Agama</label>
+                            <input type="text" class="form-control @error('agama') is-invalid @enderror" id="agama" value="{{ old('agama') }}" readonly />
+                            @error('agama')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                         <div class="col-md-6 col-sm-6 mb-3">
-                            <label class="form-label">Warga Negara / Suku</label>
-                            <input type="text" class="form-control" value="" />
+                            <label for="warga_negara" class="form-label">Warga Negara / Suku</label>
+                            <input type="text" class="form-control @error('warga_negara') is-invalid @enderror" id="warga_negara" value="{{ old('warga_negara') }}" />
+                            @error('warga_negara')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                         <div class="col-md-12 mb-3">
-                            <label class="form-label">Alamat</label>
-                            <textarea class="form-control" rows="2"></textarea>
+                            <label for="alamat" class="form-label">Alamat</label>
+                            <textarea class="form-control @error('alamat') is-invalid @enderror" id="alamat" rows="2">{{ old('alamat') }}</textarea>
+                            @error('alamat')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                     </div>
                     <div class="section-title">🏫 Asal Sekolah</div>
                     <div class="row">
                         <div class="col-md-4 mb-3">
-                            <label class="form-label">Nama Sekolah Asal</label>
-                            <input type="text" class="form-control" />
+                            <label for="nama_asal_sekolah" class="form-label">Nama Asal Sekolah</label>
+                            <input type="text" class="form-control @error('nama_asal_sekolah') is-invalid @enderror" id="nama_asal_sekolah" value="{{ old('nama_asal_sekolah') }}" />
+                            @error('nama_asal_sekolah')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
 
                         <div class="col-md-4 mb-3">
-                            <label class="form-label">Nomor / Tanggal STTB</label>
-                            <input type="text" class="form-control" />
+                            <label for="sttb" class="form-label">Nomor / Tanggal STTB</label>
+                            <input type="text" class="form-control @error('sttb') is-invalid @enderror" id="sttb" value="{{ old('sttb') }}" />
+                            @error('sttb')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label class="form-label">Alamat Sekolah Asal</label>
-                            <input type="text" class="form-control" />
+                            <label for="alamat_sekolah" class="form-label">Alamat Sekolah Asal</label>
+                            <input type="text" class="form-control @error('alamat_sekolah') is-invalid @enderror" id="alamat_sekolah" value="{{ old('alamat_sekolah') }}" />
+                            @error('alamat_sekolah')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                     </div>
                     <div class="d-flex justify-content-between">
@@ -219,7 +284,7 @@
                     <div class="d-flex justify-content-between">
                         <button type="button" class="btn btn-secondary" onclick="prevStep()"><i
                                 class="fa fa-arrow-left"></i> Kembali</button>
-                        <button type="button" class="btn btn-primary">Selesai</button>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i>Bayar</button>
                     </div>
             </form>
         </div>
@@ -227,6 +292,8 @@
     <script src="{{ asset('ppdb_asset/js/index.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+    <script src="https://app.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}"></script>
 
     <script>
         function previewImage($file) {
@@ -239,9 +306,11 @@
             reader.readAsDataURL(file);
         }
 
-        // $(document).ready(function () {
+        $(document).ready(function () {
+            $('.step').on('click', '.button_pay', function () {
 
-        // });
+            });
+        });
     </script>
 </body>
 
