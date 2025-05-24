@@ -56,6 +56,8 @@ class SpmbController extends Controller
             'status_pembayaran' => 'required|string|max:100',
         ]);
 
+
+
         $uploadedFiles = [];
         $fileFields = ['file_sttb', 'akta_kelahiran', 'kk', 'pas_foto'];
 
@@ -96,7 +98,6 @@ class SpmbController extends Controller
             'sttb' => $request->sttb,
             'alamat_sekolah' => $request->alamat_sekolah,
             'select_data' => $request->select_data,
-
             'nama_ayah' => $request->nama_ayah,
             'nama_ibu' => $request->nama_ibu,
             'pendidikan_ayah' => $request->pendidikan_ayah,
@@ -121,9 +122,34 @@ class SpmbController extends Controller
         ]);
     }
 
-    public function pay(Reques $request)
+    private function pay($data)
     {
         // spmb pay 300.000
+        Config::$serverKey = env('MIDTRANS_SERVER_KEY');
+        Config::$isProduction = env('MIDTRANS_IS_PRODUCTION');
+        Config::$isSanitized = true;
+        Config::$is3ds = true;
+
+        $client = new Client();
+        $server_key = env('MIDTRANS_SERVER_KEY');
+
+        $snapToken = Snap::getSnapToken($server_key);
+
+        $params = [
+            'transaction_details' => [
+                'order_id' => 'SPMB-' . Str::random(10),
+                'gross_amount' => 300000,
+            ],
+            'customer_details' => [
+                'first_name' => 'Fadli',
+                'last_name' => 'Pratama',
+                'email' => 'wTb9L@example.com',
+                'phone' => '08123456789',
+            ],
+        ];
+
+
+
         return response()->json([
             'status' => 'success',
             'data' => 'data',

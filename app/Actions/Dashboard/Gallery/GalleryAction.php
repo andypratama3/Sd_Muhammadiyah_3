@@ -17,18 +17,6 @@ class GalleryAction
         // Ambil galeri lama (jika ada)
         $existingGallery = Gallery::where('slug', $galleryData->slug)->first();
 
-        if ($existingGallery) {
-            $oldFotos = explode(',', $existingGallery->foto);
-
-            // Hapus semua foto lama dari storage
-            foreach ($oldFotos as $oldFoto) {
-                $filePath = 'public/img/gallery/' . trim($oldFoto);
-                if (Storage::exists($filePath)) {
-                    Storage::delete($filePath);
-                }
-            }
-        }
-
         $galleryCover = null;
 
         if($galleryData->cover) {
@@ -46,6 +34,18 @@ class GalleryAction
 
         if($fotorFiles) {
             // Upload foto baru
+             if ($existingGallery) {
+                $oldFotos = explode(',', $existingGallery->foto);
+
+                // Hapus semua foto lama dari storage
+                foreach ($oldFotos as $oldFoto) {
+                    $filePath = 'public/img/gallery/' . trim($oldFoto);
+                    if (Storage::exists($filePath)) {
+                        Storage::delete($filePath);
+                    }
+                }
+            }
+
             foreach ($fotorFiles as $fotorFile) {
                 $ext = $fotorFile->getClientOriginalExtension();
                 $uniqueIdentifier = Str::random(8);
