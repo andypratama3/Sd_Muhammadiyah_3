@@ -14,7 +14,7 @@ class JudulPembayaranController extends Controller
     public function index()
     {
         $limit = 15;
-        $judul_pembayarans = JudulPembayaran::select(['name','slug'])->paginate($limit);
+        $judul_pembayarans = JudulPembayaran::select(['name','kode','slug'])->paginate($limit);
         $count = $judul_pembayarans->count();
         $no = $limit * ($judul_pembayarans->currentPage() - 1);
         return view('dashboard.data.judulpembayaran.index', compact('judul_pembayarans','count','no'));
