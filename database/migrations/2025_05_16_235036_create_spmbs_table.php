@@ -41,6 +41,7 @@ return new class extends Migration
             $table->string('akta_kelahiran');
             $table->string('kk');
             $table->string('pas_foto');
+            $table->string('phone');
             $table->string('status_pembayaran')->default('pending');
             $table->timestamps();
         });

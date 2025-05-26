@@ -30,6 +30,7 @@ class JudulPembayaranSeeder extends Seeder
             'DPP',
             // Biaya seragam
             'Seragam',
+            'SPMB',
 
         ];
 

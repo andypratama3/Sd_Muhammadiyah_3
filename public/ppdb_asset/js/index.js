@@ -32,22 +32,22 @@
 
 
     function nextStep() {
-    const currentInputs = steps[currentStep].querySelectorAll('input[required], select[required], textarea[required]');
-    let isValid = true;
+        const currentInputs = steps[currentStep].querySelectorAll('input[required], select[required], textarea[required]');
+        let isValid = true;
 
-    currentInputs.forEach(input => {
-        if (!input.checkValidity()) {
-        isValid = false;
-        input.classList.add('is-invalid'); // Optional: tambahkan efek visual
-        } else {
-        input.classList.remove('is-invalid');
+        currentInputs.forEach(input => {
+            if (!input.checkValidity()) {
+            isValid = false;
+            input.classList.add('is-invalid'); // Optional: tambahkan efek visual
+            } else {
+            input.classList.remove('is-invalid');
+            }
+        });
+
+        // Jika semua input valid, lanjut ke step berikutnya
+        if (isValid && currentStep < steps.length - 1) {
+            showStep(currentStep + 1);
         }
-    });
-
-    // Jika semua input valid, lanjut ke step berikutnya
-    if (isValid && currentStep < steps.length - 1) {
-        showStep(currentStep + 1);
-    }
     }
 
 

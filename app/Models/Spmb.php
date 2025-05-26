@@ -39,6 +39,7 @@ class Spmb extends Model
         'kk',
         'pas_foto',
         'status_pembayaran',
+        'phone',
     ];
 
 }

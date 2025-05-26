@@ -13,7 +13,7 @@ class JudulPembayaranAction
             [ 'slug' => $judulPembayaranData->slug ],
             [
                 'name' => $judulPembayaranData->name,
-                'code' => $judulPembayaranData->code,
+                'kode' => $judulPembayaranData->kode,
             ]
             );
         return $kategori;

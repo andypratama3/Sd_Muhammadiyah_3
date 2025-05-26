@@ -9,7 +9,7 @@ class JudulPembayaranData extends Data
 {
     public function __construct(
         public readonly string $name,
-        public readonly string $code,
+        public readonly string $kode,
         public readonly ?string $slug,
     ){
         //
@@ -19,7 +19,7 @@ class JudulPembayaranData extends Data
     {
         return self::from([
             $request->getName(),
-            $request->getCode(),
+            $request->getKode(),
             $request->getSlug(),
 
         ]);
@@ -28,7 +28,7 @@ class JudulPembayaranData extends Data
     {
         return [
             'name.required' => 'Kolom Kategori Pembayaran tidak boleh kosong!',
-            'code.required' => 'Kolom Kode Pembayaran tidak boleh kosong!',
+            'kode.required' => 'Kolom Kode Pembayaran tidak boleh kosong!',
         ];
     }
 }

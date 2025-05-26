@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Helpers\ImageHelper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\V1\MidtransPaymentController;
 
 class SpmbController extends Controller
 {
-    // public function __construct($midatransPayment)
-    // {
-    //     $this->midatransPaymentCallback = $midatransPayment;
-    // }
+    public function __construct(MidtransPaymentController $midtrans)
+    {
+        $this->midtrans = $midtrans;
+    }
 
     public function index()
     {
@@ -115,6 +116,8 @@ class SpmbController extends Controller
             'status_pembayaran' => $request->status_pembayaran,
         ]);
 
+        // make charge
+
         return response()->json([
             'status' => $spmb ? 'success' : 'error',
             'data' => $spmb,
@@ -141,14 +144,12 @@ class SpmbController extends Controller
                 'gross_amount' => 300000,
             ],
             'customer_details' => [
-                'first_name' => 'Fadli',
-                'last_name' => 'Pratama',
-                'email' => 'wTb9L@example.com',
+                'first_name' => $data->nama,
+                'last_name' => '',
+                'email' => '',
                 'phone' => '08123456789',
             ],
         ];
-
-
 
         return response()->json([
             'status' => 'success',
@@ -156,8 +157,4 @@ class SpmbController extends Controller
         ]);
     }
 
-    private function payment()
-    {
-
-    }
 }
