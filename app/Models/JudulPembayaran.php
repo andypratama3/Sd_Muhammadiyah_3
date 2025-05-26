@@ -16,7 +16,7 @@ class JudulPembayaran extends Model
     protected $table = 'judulpembayarans';
     protected $fillable = [
         'name',
-        'code',
+        'kode',
         'slug',
     ];
 }
