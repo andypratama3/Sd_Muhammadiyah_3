@@ -20,8 +20,8 @@
                 @enderror
             </div>
             <div class="form-group mt-2 mb-2">
-                <label for="code">Kode Pembayaran</label>
-                <input type="text" class="form-control @error('code') is-invalid @enderror" name="code" id="code" value="{{ old('code', $judulPembayaran->code) }}" placeholder="Masukan Kode Pembayaran">
+                <label for="kode">Kode Pembayaran</label>
+                <input type="text" class="form-control @error('kode') is-invalid @enderror" name="kode" id="kode" value="{{ old('kode', $judulPembayaran->kode) }}" placeholder="Masukan Kode Pembayaran">
                 @error('code')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror

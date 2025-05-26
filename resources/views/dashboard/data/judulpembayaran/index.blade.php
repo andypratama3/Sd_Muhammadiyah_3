@@ -24,7 +24,7 @@
                         <tr>
                             <td>{{ ++$no }}</td>
                             <td>{{ $judul->name }}</td>
-                            <td>{{ $judul->code}}</td>
+                            <td>{{ $judul->kode }}</td>
                             <td>
                                 <a href="{{ route('dashboard.datamaster.judul.pembayaran.edit', $judul->slug) }}"
                                     class="btn btn-primary btn-sm"><i class="fas fa-pen"></i></a>
