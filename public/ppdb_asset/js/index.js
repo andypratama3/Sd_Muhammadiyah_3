@@ -57,7 +57,7 @@
       }
     }
 
-    document.getElementById('ppdbForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      alert('Formulir berhasil dikirim! 🎉');
-    });
+    // document.getElementById('ppdbForm').addEventListener('submit', function(e) {
+    //   e.preventDefault();
+    //   alert('Formulir berhasil dikirim! 🎉');
+    // });

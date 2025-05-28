@@ -134,6 +134,8 @@ Route::group(['prefix' => '/',], function () {
     // PPDB
     Route::get('spmb', [SpmbController::class, 'index'])->name('spmb.index');
     Route::post('spmb/store',[SpmbController::class, 'store'])->name('spmb.store');
+    Route::get('spmb/detail/{orderID',[SpmbController::class, 'formDetail'])->name('formDetail');
+    Route::post('spmb/detail/store', [SpmbController::class ,'formDetailStore'])->name('formDetail.store');
     //login with google
     Route::get('auth/google', [GoogleController::class, 'signGoogle'])->name('login.google');
     Route::get('auth/google/callback', [GoogleController::class, 'callbackToGoogle'])->name('google.callback');

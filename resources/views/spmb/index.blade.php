@@ -118,9 +118,9 @@
                             @enderror
                         </div>
                         <div class="col-md-6 col-sm-6 mb-3">
-                            <label for="warga_negara" class="form-label">Warga Negara / Suku</label>
-                            <input type="text" class="form-control @error('warga_negara') is-invalid @enderror" id="warga_negara" value="{{ old('warga_negara') }}" />
-                            @error('warga_negara')
+                            <label for="suku" class="form-label">Warga Negara / Suku</label>
+                            <input type="text" class="form-control @error('suku') is-invalid @enderror" id="suku" value="{{ old('suku') }}" />
+                            @error('suku')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
@@ -369,7 +369,7 @@
                     <div class="d-flex justify-content-between">
                         <button type="button" class="btn btn-secondary" onclick="prevStep()"><i
                                 class="fa fa-arrow-left"></i> Kembali</button>
-                        <button type="button" class="btn btn-primary"><i class="fa fa-check"></i>Bayar</button>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i>Bayar</button>
                     </div>
                 </div>
             </form>
@@ -392,11 +392,11 @@
             reader.readAsDataURL(file);
         }
 
-        $(document).ready(function () {
-            $('.step').on('click', '.button_pay', function () {
+        // $(document).ready(function () {
+        //     $('.step').on('click', '.button_pay', function () {
 
-            });
-        });
+        //     });
+        // });
     </script>
 </body>
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Charge;
+use Illuminate\Support\Str;
 use App\Helpers\ImageHelper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -53,9 +55,10 @@ class SpmbController extends Controller
             'akta_kelahiran' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'kk' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'pas_foto' => 'required|file|mimes:jpg,jpeg,png|max:2048',
-
             'status_pembayaran' => 'required|string|max:100',
         ]);
+
+        dd($request->all());
 
 
 
@@ -116,7 +119,31 @@ class SpmbController extends Controller
             'status_pembayaran' => $request->status_pembayaran,
         ]);
 
+
+        $judulPembayaran = JudulPembayaran::where('name', 'SPMB')->first();
+
         // make charge
+        $charge = Charge::create([
+                'name' => "$judulPembayaran->name {$request->name}",
+                'order_id' => $order_id,
+                'siswa_id' => $siswa->id,
+                'gross_amount' => $gross_amount,
+                'payment_type' => 'bank_transfer',
+                'bank' => 'bri',
+                'va_number' => $vaNumber,
+                'transaction_id' => Str::uuid(),
+                'transaction_time' => now(),
+                'fraud_status' => 'accept',
+                'transaction_status' => 'pending',
+                'category_payment_id' => $judulPembayaran->id,
+                'snap_token' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+        ]);
+
+        if($spmb){
+            $this->pay($charge);
+        }
 
         return response()->json([
             'status' => $spmb ? 'success' : 'error',
@@ -125,17 +152,15 @@ class SpmbController extends Controller
         ]);
     }
 
-    private function pay($data)
+    private function pay($charge)
     {
         // spmb pay 300.000
-        Config::$serverKey = env('MIDTRANS_SERVER_KEY');
         Config::$isProduction = env('MIDTRANS_IS_PRODUCTION');
         Config::$isSanitized = true;
         Config::$is3ds = true;
 
         $client = new Client();
         $server_key = env('MIDTRANS_SERVER_KEY');
-
         $snapToken = Snap::getSnapToken($server_key);
 
         $params = [
@@ -144,10 +169,20 @@ class SpmbController extends Controller
                 'gross_amount' => 300000,
             ],
             'customer_details' => [
-                'first_name' => $data->nama,
+                'first_name' => $charge->nama,
                 'last_name' => '',
                 'email' => '',
                 'phone' => '08123456789',
+            ],
+            [
+                'item_details' => [
+                    [
+                        'id' => $charge->id,
+                        'price' => 300000,
+                        'quantity' => 1,
+                        'name' => $charge->nama . ' - ' . $charge->name,
+                    ],
+                ],
             ],
         ];
 
@@ -157,4 +192,24 @@ class SpmbController extends Controller
         ]);
     }
 
+    public function formDetail($orderId)
+    {
+        $spmb = Spmb::where('order_id', $orderId)->firstOrFail();
+
+        if(!$spmb) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data Tidak Di Temukan'
+            ]);
+        }
+
+        return view('spmb.form_detail', compact('spmb'));
+    }
+
+    public function formDetailStore(Request $request)
+    {
+        $request->validate([
+            // ''
+        ]);
+    }
 }
