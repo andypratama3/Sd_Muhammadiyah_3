@@ -367,6 +367,13 @@
                             <label class="form-label">Pembayaran</label>
                             <input type="text" class="form-control" value="Rp. 300.000" readonly />
                         </div>
+                        <div class="col-md-12 col-sm-6">
+                            <ul>
+                                <li>Silakan melakukan pembayaran sebesar <b>Rp. 300.000</b> melalui metode pembayaran yang tersedia.</li>
+                                <li>Pastikan setelah melakukan pembayaran dengan Virtual Account, tekan tombol "Cek Status" agar formulir pendaftaran terkonfirmasi dan tersimpan.</li>
+                                <li>Pembayaran hanya dapat dilakukan satu kali untuk setiap siswa.</li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="d-flex justify-content-between">
                         <button type="button" class="btn btn-secondary" onclick="prevStep()"><i
