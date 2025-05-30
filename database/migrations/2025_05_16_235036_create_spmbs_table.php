@@ -29,6 +29,8 @@ return new class extends Migration
             $table->string('nama_ibu')->nullable();
             $table->string('pendidikan_ayah')->nullable();
             $table->string('pendidikan_ibu')->nullable();
+            $table->text('alamat_ayah')->nullable();
+            $table->text('alamat_ibu')->nullable();
             //pekerjaan
             $table->string('pekerjaan_ayah')->nullable();
             $table->string('pekerjaan_ibu')->nullable();
@@ -42,7 +44,9 @@ return new class extends Migration
             $table->string('kk');
             $table->string('pas_foto');
             $table->string('phone');
-            $table->string('status_pembayaran')->default('pending');
+            $table->string('nomor_urut');
+            $table->string('status_pembayaran');
+            $table->string('order_id');
             $table->timestamps();
         });
     }

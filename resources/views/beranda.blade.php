@@ -479,7 +479,7 @@
                     <div class="d-flex justify-content-center">
                         <div class="col-md-4">
                             <div class="card bg-primary border-0 cooperation">
-                                <h6 class="text-black text-center mt-2">Dukunga Dan Kerja Sama</h6>
+                                <h6 class="text-black text-center mt-2">Dukungan Dan Kerja Sama</h6>
                             </div>
                         </div>
                     </div>

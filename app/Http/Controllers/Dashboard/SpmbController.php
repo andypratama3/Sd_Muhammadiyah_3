@@ -19,11 +19,36 @@ class SpmbController extends Controller
 
         return DataTables::of($spmb)
             ->addColumn('action', function ($row) {
-
+                
             })
             ->addIndexColumn()
             ->make(true);
     }
 
-    // public
+    // public function
+
+    public function edit(Spmb $spmb)
+    {
+        return view('dashboard.spmb.show', compact('spmb'));
+    }
+
+    public function destroy()
+    {
+        $spmb = Spmb::where('id', $id)->firstOrFail();
+
+        $action = $spmb->delete();
+
+        if(!$action) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal Menghapus Data'
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Berhasil Menghapus Data'
+        ]);
+    }
 }
+

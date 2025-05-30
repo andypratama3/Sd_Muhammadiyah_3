@@ -46,6 +46,7 @@ use App\Http\Controllers\Dashboard\AttendancesController;
 use App\Http\Controllers\Dashboard\CooperationController;
 use App\Http\Controllers\Dashboard\NotificationController;
 use App\Http\Controllers\Dashboard\KelasCategoryController;
+use App\Http\Controllers\Dashboard\SpmbController as DashboardSpmController;
 use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
 use App\Http\Controllers\Dashboard\HeroController as DashboardHeroController;
 use App\Http\Controllers\Dashboard\SiswaController as DashboardSiswaController;
@@ -133,7 +134,10 @@ Route::group(['prefix' => '/',], function () {
 
     // PPDB
     Route::get('spmb', [SpmbController::class, 'index'])->name('spmb.index');
+
+    Route::get('spmb/pay',[SpmbController::class, 'pay'])->name('spmb.pay');
     Route::post('spmb/store',[SpmbController::class, 'store'])->name('spmb.store');
+    Route::get('spmb/success/{orderID}',[SpmbController::class, 'success'])->name('spmb.success');
     Route::get('spmb/detail/{orderID',[SpmbController::class, 'formDetail'])->name('formDetail');
     Route::post('spmb/detail/store', [SpmbController::class ,'formDetailStore'])->name('formDetail.store');
     //login with google
@@ -175,6 +179,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
     });
 
     Route::resource('absensi', AttendancesController::class, ['names'=> 'dashboard.attendances']);
+
+    Route::resource('spmb', DashboardSpmController::class, ['names' => 'dashboard.spmb']);
 
     Route::group(['prefix' => 'datasekolah'], function () {
         Route::resource('fasilitas', DashboardFasilitasController::class, ['names' => 'dashboard.datasekolah.fasilitas']);

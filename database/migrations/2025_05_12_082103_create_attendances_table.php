@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('attendances', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignId('siswa_id')->references('id')->on('siswas')->onDelete('cascade');
-            $table->foreignId('kelas_id')->references('id')->on('kelas')->onDelete('cascade');
+            // $table->foreignId('siswa_id')->references('id')->on('siswas')->onDelete('cascade');
+            // $table->foreignId('kelas_id')->references('id')->on('kelas')->onDelete('cascade');
             $table->string('kategori_kelas');
             $table->date('tanggal');
             $table->enum('status', ['hadir','izin','pulang','sakit','alpa'])->default('hadir');

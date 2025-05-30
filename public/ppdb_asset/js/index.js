@@ -2,12 +2,32 @@
     const steps = document.querySelectorAll('.step');
     const progressbar = document.querySelectorAll('.progressbar li');
 
+    const form = document.querySelector('form');
+    let SubmitType = false;
+
+    // Blokir semua submit default
+    form.addEventListener('submit', function(e) {
+        if (!SubmitType) {
+            e.preventDefault();
+        } else {
+        }
+    });
+
+    // Override submit method untuk kontrol
+    form.submit = function() {
+        if (SubmitType) {
+            HTMLFormElement.prototype.submit.call(form);
+        } else {
+        }
+    };
+
+
 
     // show
     const ortu = document.getElementById('ortu');
     const wali = document.getElementById('wali');
 
-    document.getElementById('selected_data').addEventListener('change', function() {
+    document.getElementById('select_data').addEventListener('change', function() {
       if (this.value === 'orang_tua') {
         ortu.classList.remove('d-none');
         document.querySelectorAll('#ortu input').forEach(input => input.setAttribute('required', true));

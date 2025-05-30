@@ -31,6 +31,8 @@ class Spmb extends Model
         'pendidikan_ibu',
         'pekerjaan_ayah',
         'pekerjaan_ibu',
+        'alamat_ayah',
+        'alamat_ibu',
         'nama_wali',
         'pekerjaan_wali',
         'alamat_wali',
@@ -40,6 +42,9 @@ class Spmb extends Model
         'pas_foto',
         'status_pembayaran',
         'phone',
+        'nomor_urut',
+        'status_pembayaran',
+        'order_id',
     ];
 
 }
