@@ -45,6 +45,7 @@ class Spmb extends Model
         'nomor_urut',
         'status_pembayaran',
         'order_id',
+        'status_spmb',
     ];
 
 }

@@ -412,17 +412,13 @@
                 },
                 success: function (response) {
                     currentOrderId = response.order_id;
-
-                    // Simpan order_id ke localStorage
                     localStorage.setItem('currentOrderId', currentOrderId);
-
                     if (response.status === 'already_paid') {
                         Swal.fire({
                             icon: 'success',
                             title: 'Sudah Dibayar',
                             text: 'Transaksi ini telah dibayar sebelumnya.',
                         }).then(() => {
-                            // Inject order_id dan status ke form jika belum ada
                             if ($('#order_id').length) {
                                 $('#order_id').val(currentOrderId);
                             } else {
@@ -436,7 +432,10 @@
                             }
 
                             SubmitType = true;
+                            localStorage.removeItem('currentOrderId');
+
                             $('#form-spmb')[0].submit();
+
                         });
 
                         return;
@@ -464,6 +463,7 @@
                                 }
 
                                 SubmitType = true;
+                                localStorage.removeItem('currentOrderId');
                                 $('#form-spmb')[0].submit();
                             });
                         },
@@ -486,7 +486,6 @@
             });
         });
 
-        // Isi order_id dari localStorage jika ada (optional)
         if (currentOrderId) {
             if ($('#order_id').length) {
                 $('#order_id').val(currentOrderId);

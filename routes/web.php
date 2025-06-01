@@ -4,8 +4,8 @@ use App\Models\JudulPembayaran;
 //User Access
 use App\Models\TenagaPendidikan;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SpmbController;
 use App\Http\Controllers\GuruController;
+use App\Http\Controllers\SpmbController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\KontakController;
@@ -42,6 +42,7 @@ use App\Http\Controllers\Dashboard\KaryawanController;
 use App\Http\Controllers\Dashboard\DashboardController;
 
 use App\Http\Controllers\Dashboard\AchivementController;
+use App\Http\Controllers\Dashboard\UrlVisitorController;
 use App\Http\Controllers\Dashboard\AttendancesController;
 use App\Http\Controllers\Dashboard\CooperationController;
 use App\Http\Controllers\Dashboard\NotificationController;
@@ -181,6 +182,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
     Route::resource('absensi', AttendancesController::class, ['names'=> 'dashboard.attendances']);
 
     Route::resource('spmb', DashboardSpmController::class, ['names' => 'dashboard.spmb']);
+    Route::get('spmbs/datas', [DashboardSpmController::class, 'data_table'])->name('dashboard.spmb.data_table');
 
     Route::group(['prefix' => 'datasekolah'], function () {
         Route::resource('fasilitas', DashboardFasilitasController::class, ['names' => 'dashboard.datasekolah.fasilitas']);
@@ -203,6 +205,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::resource('achivement', AchivementController::class, ['names' => 'dashboard.datasekolah.achivement']);
         Route::get('achivements/data', [AchivementController::class,'data_table'])->name('dashboard.datasekolah.achivement.data');
     });
+
+    Route::resource('pengunjung-halaman', UrlVisitorController::class, ['names' => 'dashboard.url.visitor']);
 
     Route::group(['prefix' => 'datamaster'], function () {
         Route::resource('siswa',  DashboardSiswaController::class, ['names' => 'dashboard.datamaster.siswa']);

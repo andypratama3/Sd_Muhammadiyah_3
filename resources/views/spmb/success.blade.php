@@ -84,8 +84,8 @@
                 </div>
             </div>
         </div>
-        <a href="{{ route('spmb.index') }}" class="btn btn-outline-primary m-4">
-            <i class="fas fa-arrow-left me-2"></i> Daftar Lagi
+        <a href="{{ route('spmb.index') }}" class="btn btn-primary m-4">
+            <i class="fas fa-book me-2"></i> Daftar Lagi
         </a>
         <a href="{{ url('/') }}" class="btn btn-outline-primary m-4">
             <i class="fas fa-arrow-left me-2"></i> Kembali ke Beranda

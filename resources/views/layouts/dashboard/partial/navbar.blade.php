@@ -174,6 +174,17 @@
     </li>
     <hr class="sidebar-divider">
     <div class="sidebar-heading">
+        Pengunjung
+    </div>
+      <li class="nav-item {{ Request::routeIs('dashboard.url.visitor.*') ? 'active' : '' }}">
+        <a class="nav-link  {{ Request::routeIs('dashboard.url.visitor.*') ? 'active' : '' }}" href="{{ route('dashboard.url.visitor.index') }}">
+            <i class="fa-solid fa-envelope-open-text"></i>
+            <span>Kritik Saran</span></a>
+    </li>
+
+
+    <hr class="sidebar-divider">
+    <div class="sidebar-heading">
         Kritik
     </div>
     <li class="nav-item {{ Request::routeIs('dashboard.kiritik.saran.*') ? 'active' : '' }}">

@@ -47,6 +47,7 @@ return new class extends Migration
             $table->string('nomor_urut');
             $table->string('status_pembayaran');
             $table->string('order_id');
+            $table->string('status')->default('pending');
             $table->timestamps();
         });
     }

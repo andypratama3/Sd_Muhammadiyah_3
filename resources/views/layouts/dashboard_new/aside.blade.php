@@ -192,9 +192,16 @@
              </ul>
          </li>
 
-         <li class="menu-header small text-uppercase"><span class="menu-header-text">Artikel</span></li>
+         <li class="menu-header small text-uppercase"><span class="menu-header-text">Pengunjung</span></li>
 
+         <li class="menu-item {{ Request::routeIs('dashboard.url.visitor.*') ? 'active' : '' }}">
+            <a class="menu-link" href="{{ route('dashboard.url.visitor.index') }}">
+                <i class="menu-icon tf-icons bx bx-link"></i>
+                <div data-i18n="Halaman Pengunjung">Halaman Pengunjung</div>
+            </a>
+        </li>
 
+         <li class="menu-header small text-uppercase"><span class="menu-header-text">Kritik</span></li>
 
          <li class="menu-item {{ Request::routeIs('dashboard.kritik.saran.*') ? 'active' : '' }}">
             <a class="menu-link" href="{{ route('dashboard.kritik.saran.index') }}">

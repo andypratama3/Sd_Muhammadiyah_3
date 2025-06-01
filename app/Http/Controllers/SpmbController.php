@@ -35,7 +35,7 @@ class SpmbController extends Controller
         Config::$isSanitized = true;
         Config::$is3ds = true;
 
-        // Cek apakah sudah ada order_id di session, gunakan jika ada
+        // Cek apakah sudah ada order_id di session, gunakan jika ad || localstorage
         if ($request->session()->has('spmb_order_id')) {
             $orderId = $request->session()->get('spmb_order_id');
         } else {
