@@ -24,12 +24,14 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrap();
+        $exclude = ['dashboard', 'chart', 'storage', 'api', '.well-known'];
 
-       $exclude = ['dashboard','chart','storage','api','.well-known','berita?_'];
         if (
             request()->isMethod('get') &&
             !app()->runningInConsole() &&
-            !collect($exclude)->contains(fn($prefix) => str_contains(request()->path(), $prefix))
+            !collect($exclude)->contains(fn($prefix) => str_contains(request()->path(), $prefix)) &&
+            !request()->has('_') &&
+            !request()->has('page')
         ) {
             \DB::table('url_visitor')->insert([
                 'id' => \Str::uuid(),
@@ -39,6 +41,7 @@ class AppServiceProvider extends ServiceProvider
                 'updated_at' => now(),
             ]);
         }
+
 
 
          // define visitor data
