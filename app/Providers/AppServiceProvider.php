@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrap();
 
-       $exclude = ['dashboard','chart','storage','api'];
+       $exclude = ['dashboard','chart','storage','api','.well-known'];
         if (
             request()->isMethod('get') &&
             !app()->runningInConsole() &&

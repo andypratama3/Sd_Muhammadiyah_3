@@ -206,7 +206,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::get('achivements/data', [AchivementController::class,'data_table'])->name('dashboard.datasekolah.achivement.data');
     });
 
-    Route::resource('pengunjung-halaman', UrlVisitorController::class, ['names' => 'dashboard.url.visitor']);
+    Route::get('pengunjung-halaman', [UrlVisitorController::class, 'index'])->name('dashboard.url.visitor.index');
 
     Route::group(['prefix' => 'datamaster'], function () {
         Route::resource('siswa',  DashboardSiswaController::class, ['names' => 'dashboard.datamaster.siswa']);

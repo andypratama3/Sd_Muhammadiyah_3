@@ -35,7 +35,9 @@
     }
 
 
-    $('.select2').select2();
+    if ($('.select2').length) {
+        $('.select2').select2();
+    }
 
     $(document).ready(function () {
         $('.navbar-nav-right').on('click', '.swal-logout', function (e) {
