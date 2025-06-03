@@ -38,10 +38,10 @@
     }
 
     .quil-wrapper-field img {
-        width: 100%;
-        max-width: 100%;
+        /* width: 80% !important; */
+        max-width: 80%;
         height: auto;
-        max-height: 500px;
+        max-height: fit-content;
         display: block;
         border-radius: 10px;
     }
@@ -76,7 +76,7 @@
         .quil-wrapper img {
             padding: 10px;
             max-width: 100%;
-            height: max-content;
+            height: auto;
             margin: 4px auto;
             box-sizing: border-box;
         }
@@ -99,7 +99,7 @@
         .quil-wrapper-field img {
             max-width: calc(50% - 10px);
             height: 200px;
-            margin: 4px;
+            margin: 2px 5px 2px;
             display: inline-block;
             object-fit: cover;
             border-radius: 10px;
@@ -108,7 +108,7 @@
 
     @media (min-width: 992px) {
         .quil-wrapper-field img {
-            /* display: inline-block; */
+            display: inline-block;
             /* margin: 10px; */
             width: 100%;
             height: max-content;
