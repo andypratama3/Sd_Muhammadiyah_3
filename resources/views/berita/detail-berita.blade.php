@@ -127,8 +127,8 @@
                 <span class="mx-1">&bullet;</span>
                 <span>{{ \Carbon\Carbon::parse($berita->created_at)->locale('id')->translatedFormat('d F Y') }}</span>
                 <span class="mx-1"><bi class="bi bi-eye"></bi> {{ $berita->views }} Pengunjung</span>
-                <figure >
-                    <img src="{{ asset('storage/img/berita/'. $berita->foto) }}" alt="{{ $berita->judul }}" class="img-fluid" style="border-radius: 10px;">
+                <figure class="text-center">
+                    <img src="{{ asset('storage/img/berita/'. $berita->foto) }}" alt="{{ $berita->judul }}" class="img-fluid text-center" style="border-radius: 10px;">
                 </figure>
             </div>
 
