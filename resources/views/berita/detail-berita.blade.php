@@ -76,7 +76,7 @@
         .quil-wrapper img {
             padding: 10px;
             max-width: 100%;
-            height: auto;
+            height: max-content;
             margin: 4px auto;
             box-sizing: border-box;
         }
@@ -99,7 +99,7 @@
         .quil-wrapper-field img {
             max-width: calc(50% - 10px);
             height: 200px;
-            margin: 2px;
+            margin: 4px;
             display: inline-block;
             object-fit: cover;
             border-radius: 10px;
