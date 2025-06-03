@@ -38,9 +38,7 @@
     }
 
     .quil-wrapper-field img {
-        /* width: 80% !important; */
-        max-width: 80%;
-        height: auto;
+        max-width: 100%;
         max-height: fit-content;
         display: block;
         border-radius: 10px;
@@ -142,32 +140,18 @@
 
 @push('js_user')
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-    const container = document.querySelector('.quil-wrapper-content');
-
-    if (!container) return;
-
-    // Buat div.row sekali saja
-    const rowDiv = document.createElement('div');
-    rowDiv.classList.add('row');
-
-    // Ambil semua <p> dalam container
-    const paragraphs = container.querySelectorAll('p');
-
-    paragraphs.forEach(paragraph => {
-        const images = paragraph.querySelectorAll('img');
-
-        images.forEach(img => {
-            // Tambahkan class jika perlu
-            img.classList.add('img-fluid', 'col-md-6', 'mb-3'); // optional
-            // Pindahkan gambar ke div.row
-            rowDiv.appendChild(img);
-        });
+    document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll('.quil-wrapper-content img').forEach((img, index) => {
+        img.dataset.lightbox = 'Berita';
+        img.dataset.title = img.alt || `Gambar ${index + 1}`;
     });
 
-    // Jika ada gambar yang ditemukan dan ditambahkan ke row, sisipkan ke container
-    if (rowDiv.children.length > 0) {
-        container.insertBefore(rowDiv, container.firstChild);
+    if (window.lightbox) {
+        lightbox.option({
+            resizeDuration: 200,
+            wrapAround: true,
+            alwaysShowNavOnTouchDevices: true
+        });
     }
 });
 </script>
