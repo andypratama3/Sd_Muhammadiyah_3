@@ -142,26 +142,35 @@
 
 @push('js_user')
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const paragraphs = document.querySelectorAll(".quil-wrapper-content p");
+document.addEventListener("DOMContentLoaded", () => {
+    const container = document.querySelector('.quil-wrapper-content');
 
-        paragraphs.forEach(paragraph => {
-            const images = paragraph.querySelectorAll("img");
+    if (!container) return;
 
-            images.forEach(img => {
-                if (img.parentElement.tagName.toLowerCase() === "p") {
-                    const rowDiv = document.createElement("div");
-                    rowDiv.classList.add("row");
+    // Buat div.row sekali saja
+    const rowDiv = document.createElement('div');
+    rowDiv.classList.add('row');
 
-                    // Pindahkan <img> ke dalam div.row
-                    img.parentElement.insertBefore(rowDiv, img);
-                    rowDiv.appendChild(img);
-                }
-            });
+    // Ambil semua <p> dalam container
+    const paragraphs = container.querySelectorAll('p');
+
+    paragraphs.forEach(paragraph => {
+        const images = paragraph.querySelectorAll('img');
+
+        images.forEach(img => {
+            // Tambahkan class jika perlu
+            img.classList.add('img-fluid', 'col-md-6', 'mb-3'); // optional
+            // Pindahkan gambar ke div.row
+            rowDiv.appendChild(img);
         });
     });
-</script>
 
+    // Jika ada gambar yang ditemukan dan ditambahkan ke row, sisipkan ke container
+    if (rowDiv.children.length > 0) {
+        container.insertBefore(rowDiv, container.firstChild);
+    }
+});
+</script>
 @endpush
 
 @endsection
