@@ -29,7 +29,7 @@
             <div class="form-group mt-2 mb-2">
                 <label for="">Deskripsi</label>
                 <div id="editor"></div>
-                <textarea name="desc" id="content-editor" style="display: none;"></textarea>
+                <textarea name="desc" id="content-editor" style="display: none;">{{ $berita->desc }}</textarea>
 
             </div>
             <a href="{{ route('dashboard.news.berita.index') }}" class="btn btn-danger btn-sm">Kembali</a>

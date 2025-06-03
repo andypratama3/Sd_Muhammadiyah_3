@@ -108,9 +108,10 @@
 
     @media (min-width: 992px) {
         .quil-wrapper-field img {
-            display: inline-block;
-            margin: 10px;
-            max-width: calc(65.44% - 10px);
+            /* display: inline-block; */
+            /* margin: 10px; */
+            width: 100%;
+            height: max-content;
         }
     }
 
@@ -126,7 +127,7 @@
                 <span class="mx-1">&bullet;</span>
                 <span>{{ \Carbon\Carbon::parse($berita->created_at)->locale('id')->translatedFormat('d F Y') }}</span>
                 <span class="mx-1"><bi class="bi bi-eye"></bi> {{ $berita->views }} Pengunjung</span>
-                <figure>
+                <figure >
                     <img src="{{ asset('storage/img/berita/'. $berita->foto) }}" alt="{{ $berita->judul }}" class="img-fluid" style="border-radius: 10px;">
                 </figure>
             </div>

@@ -169,7 +169,6 @@ class SpmbController extends Controller
                 }
 
                 if (in_array($ext, ['jpg', 'jpeg', 'png'])) {
-                    // Contoh helper resize, sesuaikan dengan implementasi kamu
                     ImageHelper::resizeAndSave($file, $destination, $filename);
                 } else {
                     $file->move($destination, $filename);
