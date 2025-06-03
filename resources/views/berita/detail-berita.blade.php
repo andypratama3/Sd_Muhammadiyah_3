@@ -143,20 +143,25 @@
 @push('js_user')
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll('.quil-wrapper-content img').forEach((img, index) => {
-        img.dataset.lightbox = 'Berita';
-        img.dataset.title = img.alt || `Gambar ${index + 1}`;
-    });
+        const paragraphs = document.querySelectorAll(".quil-wrapper-content p");
 
-    if (window.lightbox) {
-        lightbox.option({
-            resizeDuration: 200,
-            wrapAround: true,
-            alwaysShowNavOnTouchDevices: true
+        paragraphs.forEach(paragraph => {
+            const images = paragraph.querySelectorAll("img");
+
+            images.forEach(img => {
+                if (img.parentElement.tagName.toLowerCase() === "p") {
+                    const rowDiv = document.createElement("div");
+                    rowDiv.classList.add("row");
+
+                    // Pindahkan <img> ke dalam div.row
+                    img.parentElement.insertBefore(rowDiv, img);
+                    rowDiv.appendChild(img);
+                }
+            });
         });
-    }
-});
+    });
 </script>
+
 @endpush
 
 @endsection
