@@ -30,7 +30,7 @@ class SiswaExport implements FromView,WithHeadings
             $siswa->umur = now()->diffInYears($siswa->tgl_lahir);
             // Fetch regency (kabupaten) data
 
-            $response_kabupaten = \DB::table('kabupaten')->where('provinsi_id', $siswa->province_id)->get();
+            $response_kabupaten = \DB::table('kabupaten')->where('province_id', $siswa->province_id)->get();
             $kabupaten = $response_kabupaten ? collect($response_kabupaten->toArray()) : [];
 
             // Fetch district (kecamatan) data
