@@ -46,10 +46,10 @@ class SiswaExport implements FromView,WithHeadings
             $kecamatan_take = $kecamatan->where('district_id', $siswa->kecamatan_id)->first();
             $kelurahan_take = $kelurahan->where('village_id', $siswa->kelurahan_id)->first();
 
-            $siswa->provinsi = $provinsi_take ? $provinsi_take['name'] : '';
-            $siswa->kabupaten = $kabupaten_take ? $kabupaten_take['name'] : '';
-            $siswa->kecamatan = $kecamatan_take ? $kecamatan_take['name'] : '';
-            $siswa->kelurahan = $kelurahan_take ? $kelurahan_take['name'] : '';
+            $siswa->provinsi = $provinsi_take ? $provinsi_take->name : '';
+            $siswa->kabupaten = $kabupaten_take ? $kabupaten_take->name : '';
+            $siswa->kecamatan = $kecamatan_take ? $kecamatan_take->name : '';
+            $siswa->kelurahan = $kelurahan_take ? $kelurahan_take->name : '';
 
             return $siswa;
         });
