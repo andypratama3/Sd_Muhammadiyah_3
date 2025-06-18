@@ -34,11 +34,11 @@ class SiswaExport implements FromView,WithHeadings
             $kabupaten = $response_kabupaten ? collect($response_kabupaten->toArray()) : [];
 
             // Fetch district (kecamatan) data
-            $response_kecamatan = \DB::table('kecamatan')->where('kabupaten_id', $siswa->kabupaten_id)->get();
+            $response_kecamatan = \DB::table('kecamatan')->where('regency_id', $siswa->kabupaten_id)->get();
             $kecamatan = $response_kecamatan ? collect($response_kecamatan->toArray()) : [];
 
             // Fetch village (kelurahan) data
-            $response_kelurahan = \DB::table('kelurahan')->where('kecamatan_id', $siswa->kecamatan_id)->get();
+            $response_kelurahan = \DB::table('kelurahan')->where('district_id', $siswa->kecamatan_id)->get();
             $kelurahan = $response_kelurahan ? collect($response_kelurahan->toArray()) : [];
 
             $provinsi_take = $provinsi->where('province_id', $siswa->provinsi_id)->first();
