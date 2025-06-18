@@ -46,5 +46,4 @@
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-T28Z28V9');</script>
     <!-- End Google Tag Manager -->
-    <script async src="https://static.linguise.com/script-js/switcher.bundle.js?d=pk_F9bshTBmlrcU3gQx6VtGxUz0hI3OyJKT"></script>
 </head>
