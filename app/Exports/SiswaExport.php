@@ -23,7 +23,7 @@ class SiswaExport implements FromView,WithHeadings
 
         // Fetch province data
         $response_provinsi = \DB::table('provinsi')->orderBy('name')->get();
-        $provinsi = $response_provinsi->successful() ? collect($response_provinsi->toArray()) : [];
+        $provinsi = $response_provinsi ? collect($response_provinsi->toArray()) : [];
 
         // Transform student data
         $siswas->transform(function ($siswa) use ($provinsi) {
@@ -31,15 +31,15 @@ class SiswaExport implements FromView,WithHeadings
             // Fetch regency (kabupaten) data
 
             $response_kabupaten = \DB::table('kabupaten')->where('provinsi_id', $siswa->provinsi_id)->get();
-            $kabupaten = $response_kabupaten->successful() ? collect($response_kabupaten->toArray()) : [];
+            $kabupaten = $response_kabupaten ? collect($response_kabupaten->toArray()) : [];
 
             // Fetch district (kecamatan) data
             $response_kecamatan = \DB::table('kecamatan')->where('kabupaten_id', $siswa->kabupaten_id)->get();
-            $kecamatan = $response_kecamatan->successful() ? collect($response_kecamatan->toArray()) : [];
+            $kecamatan = $response_kecamatan ? collect($response_kecamatan->toArray()) : [];
 
             // Fetch village (kelurahan) data
             $response_kelurahan = \DB::table('kelurahan')->where('kecamatan_id', $siswa->kecamatan_id)->get();
-            $kelurahan = $response_kelurahan->successful() ? collect($response_kelurahan->toArray()) : [];
+            $kelurahan = $response_kelurahan ? collect($response_kelurahan->toArray()) : [];
 
             $provinsi_take = $provinsi->where('province_id', $siswa->provinsi_id)->first();
             $kabupaten_take = $kabupaten->where('regency_id', $siswa->kabupaten_id)->first();
