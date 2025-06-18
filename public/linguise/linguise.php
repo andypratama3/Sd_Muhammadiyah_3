@@ -9,7 +9,9 @@ define('LINGUISE_SCRIPT_TRANSLATION_VERSION', '1.3.15');
 
 ini_set('display_errors', false);
 
-require_once('./vendor/autoload.php');
+// require_once(__DIR__ . '/vendor/autoload.php');
+require_once(__DIR__ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php');
+// require_once('./vendor/autoload.php');
 
 if (file_exists(__DIR__ . DIRECTORY_SEPARATOR . 'Configuration.php')) {
     require(__DIR__ . DIRECTORY_SEPARATOR . 'Configuration.php');

@@ -21,7 +21,7 @@ class Configuration {
      * Update the CMS value according to your CMS
      * Available CMS are: laravel, prestashop, magento
      */
-    public static $cms = 'auto';
+    public static $cms = 'laravel';
 
     public $cache_enabled = false;
     public $cache_max_size = 200; // In megabyte
