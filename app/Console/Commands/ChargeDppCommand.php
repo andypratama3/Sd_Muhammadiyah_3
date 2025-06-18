@@ -10,6 +10,7 @@ use Illuminate\Support\Carbon;
 use App\Models\JudulPembayaran;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Api\Dashboard\SendOrderIDWhatsAppApi;
 
 class ChargeDppCommand extends Command
 {
@@ -19,13 +20,19 @@ class ChargeDppCommand extends Command
      * @var string
      */
     protected $signature = 'app:charge-dpp-command';
-
+    protected $whatsapp;
     /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Command description';
+
+    public function __construct(SendOrderIDWhatsAppApi $whatsapp)
+    {
+        parent::__construct();
+        $this->whatsapp = $whatsapp;
+    }
 
     /**
      * Execute the console command.
@@ -99,7 +106,7 @@ class ChargeDppCommand extends Command
 
         // Generate order ID dan VA Number
         $order_id = Str::uuid();
-        $vaNumber = $siswa->nisn . $stage;
+        // $vaNumber = $siswa->nisn . $stage;
 
        // check if siswa status_dpp LUNAS or BELUM LUNAS
         $transactionStatus = 'pending';
@@ -127,7 +134,7 @@ class ChargeDppCommand extends Command
             'gross_amount' => $grossAmount,
             'payment_type' => 'bank_transfer',
             'bank' => 'bri',
-            'va_number' => $vaNumber,
+            // 'va_number' => $vaNumber,
             'transaction_id' => Str::uuid(),
             'transaction_time' => now(),
             'fraud_status' => 'accept',
@@ -140,14 +147,14 @@ class ChargeDppCommand extends Command
 
         // Kirim pembayaran ke Midtrans hanya jika DPP > 0
          if ($sendToMidtrans && $dppAmount > 0) {
-            $this->sendPaymentToMidtrans($siswa, $vaNumber, $grossAmount, $order_id, $category_Dpp);
+            $this->sendPaymentToMidtrans($siswa, $grossAmount, $order_id, $category_Dpp);
         }
     }
 
     /**
      * Kirim pembayaran ke Midtrans
      */
-    private function sendPaymentToMidtrans(Siswa $siswa, $vaNumber, $grossAmount, $order_id, $category_Dpp)
+    private function sendPaymentToMidtrans(Siswa $siswa, $grossAmount, $order_id, $category_Dpp)
     {
         // $monthName = Carbon::now()->locale('id_ID')->translatedFormat('F');
 
@@ -164,7 +171,7 @@ class ChargeDppCommand extends Command
             ],
             'bank_transfer' => [
                 'bank' => 'bri',
-                'va_number' => $vaNumber,
+                // 'va_number' => $vaNumber,
             ],
             'custom_expiry' => [
                 'expiry_duration' => 365,
@@ -211,6 +218,8 @@ class ChargeDppCommand extends Command
                     ]);
 
                 $this->info("Pembayaran untuk {$siswa->name} berhasil dikirim ke Midtrans.");
+                // Send WhatsApp message
+                $this->whatsapp->sendMessage($responseData['order_id']);
             } else {
                 $this->error("Gagal Midtrans untuk {$siswa->name}: " . ($responseData['status_message'] ?? 'Tidak diketahui'));
             }

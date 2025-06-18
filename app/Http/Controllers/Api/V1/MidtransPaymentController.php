@@ -72,7 +72,36 @@ class MidtransPaymentController extends Controller
                 ->first();
 
             if (! $charge) {
-                return response()->json(['message' => 'Charge not found'], 404);
+                $newData = \DB::table('charge_not_found')->updateOrInsert(
+                    [
+                        'order_id' => $midtransResponse['order_id'] ?? null,
+                    ],
+                    [
+                        'id' => Str::uuid(),
+                        'transaction_type' => $midtransResponse['transaction_type'] ?? null,
+                        'transaction_time' => $midtransResponse['transaction_time'] ?? null,
+                        'transaction_status' => $midtransResponse['transaction_status'] ?? null,
+                        'transaction_id' => $midtransResponse['transaction_id'] ?? null,
+                        'status_message' => json_encode($midtransResponse['status_message'] ?? null),
+                        'status_code' => $midtransResponse['status_code'] ?? null,
+                        'signature_key' => $midtransResponse['signature_key'] ?? null,
+                        'settlement_time' => $midtransResponse['settlement_time'] ?? null,
+                        'payment_type' => $midtransResponse['payment_type'] ?? null,
+                        'metadata' => json_encode($midtransResponse['metadata'] ?? null),
+                        'merchant_id' => $midtransResponse['merchant_id'] ?? null,
+                        'issuer' => $midtransResponse['issuer'] ?? null,
+                        'gross_amount' => $midtransResponse['gross_amount'] ?? null,
+                        'fraud_status' => $midtransResponse['fraud_status'] ?? null,
+                        'expiry_time' => $midtransResponse['expiry_time'] ?? null,
+                        'currency' => $midtransResponse['currency'] ?? null,
+                        'acquirer' => $midtransResponse['acquirer'] ?? null,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]
+                );
+
+                return response()->json(['message' => 'Charge not found in database and saved'], 404);
+
             }
 
             if (in_array($data['transaction_status'], ['settlement', 'capture'])) {

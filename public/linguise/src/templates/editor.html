@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Editor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            text-align: center;
+            background: url(https://www.linguise.com/bacgkround.svg);
+            margin: 0;
+            height: 100%;
+        }
+        html {
+            height: 100%;
+        }
+        .wrapper {
+            background-color: rgba(255,255,255,0.7);
+            background-size: cover;
+            height: 100%;
+        }
+        button {
+            font-size: 16px;
+            font-weight: 500;
+            color: #FFFFFF;
+            background-color: #5E46BE;
+            border-radius: 20px 20px 20px 20px;
+            padding: 12px 40px 12px 40px;
+            margin-top: 20px;
+            border: 0;
+            cursor: pointer;
+        }
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            -ms-appearance: none;
+            appearance: none;
+            outline: 0;
+            box-shadow: none;
+            border: 0 !important;
+            background: #5E46BE;
+            background-image: none;
+            font-weight: bold;
+        }
+        /* Remove IE arrow */
+        select::-ms-expand {
+            display: none;
+        }
+        /* Custom Select */
+        .select {
+            margin: 20px auto;
+            position: relative;
+            display: flex;
+            width: 20em;
+            height: 3em;
+            line-height: 3;
+            background: #FFFFFF;
+            overflow: hidden;
+            border-radius: .25em;
+        }
+        select {
+            flex: 1;
+            padding: 0 .5em;
+            color: #fff;
+            cursor: pointer;
+        }
+        /* Arrow */
+        .select::after {
+            content: '\25BC';
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 0 1em;
+            background: #525252;
+            cursor: pointer;
+            pointer-events: none;
+            -webkit-transition: .25s all ease;
+            -o-transition: .25s all ease;
+            transition: .25s all ease;
+            color: #FFFFFF;
+        }
+        /* Transition */
+        .select:hover::after {
+            color: #bdbdbd;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <img src="https://www.linguise.com/logo.png">
+        <h1>Welcome to the frontend editor</h1>
+        <p>You're ready to translate your website</p>
+        <form id="form">
+            Choose the language you want to translate your website into and click the Translate button: <br/>
+            <div class="select">
+                <select id="language">
+                    {{options}}
+                </select>
+            </div>
+            <button type="submit">Translate</button>
+        </form>
+        <script>
+            document.getElementById('form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                window.location.href = window.location.href.replace('zz-zz', document.getElementById('language').value);
+            });
+        </script>
+    </div>
+</body>
+</html>

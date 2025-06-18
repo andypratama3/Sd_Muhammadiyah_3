@@ -294,7 +294,7 @@
                                                                                             @elseif($charge->transaction_status == 'free')
                                                                                             <button class="btn btn-primary btn-sm" style="font-size: 10px;">Gratis</button>
                                                                                             @elseif($charge->kategori_pembayaran->name === 'SPP')
-                                                                                           @if($charge->url_action !== null)
+                                                                                            @if($charge->url_action !== null)
                                                                                                     <button
                                                                                                         class="btn btn-primary btn-sm btn-show-qr btn-qr-show-{{ $charge->id }} mt-2"
                                                                                                         data-id="{{ $charge->id }}"

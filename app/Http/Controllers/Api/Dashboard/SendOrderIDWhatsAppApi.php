@@ -12,6 +12,7 @@ class SendOrderIDWhatsAppApi extends Controller
     public function sendMessage($orderId)
     {
         $charge = Charge::with(['siswa'])->where('order_id', $orderId)->first();
+
         if (! $charge) {
             return response()->json(['status' => 'error', 'message' => 'Payment not found.'], 404);
         }
@@ -52,52 +53,4 @@ class SendOrderIDWhatsAppApi extends Controller
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
-    // public function sendMessage($orderId)
-    // {
-    //     // Ambil data pembayaran dan relasi siswa & kelas
-    //     $charge = Charge::with(['siswa.kelas'])->where('order_id', $orderId)->first();
-
-    //     if (!$charge || !$charge->siswa) {
-    //         return response()->json(['status' => 'error', 'message' => 'Data pembayaran tidak ditemukan.'], 404);
-    //     }
-
-    //     $siswa = $charge->siswa->first(); // Jika relasinya hasMany
-    //     if (!$siswa || !$siswa->kelas) {
-    //         return response()->json(['status' => 'error', 'message' => 'Data siswa atau kelas tidak lengkap.'], 422);
-    //     }
-
-    //     $namaSiswa = $siswa->name;
-    //     $kelas = $siswa->kelas->first()->name;
-    //     $noHp = $siswa->no_hp ?? '0';
-    //     $nomorTujuan = '62' . ltrim($noHp, '0');
-    //     $jumlahTagihan = number_format(intval($siswa->spp), 0, ',', '.');
-
-    //     $pesan = " *Tagihan SPP*\n\n"
-    //         . "SD Muhammadiyah 3\n"
-    //         . "Kepada Yth. Bapak/Ibu dari *$namaSiswa*.\n"
-    //         . "Siswa kelas *$kelas*.\n"
-    //         . "NISN: *$siswa->nisn*\n"
-    //         . "*Order ID:* $orderId\n"
-    //         . "*Jumlah Tagihan:* Rp $jumlahTagihan\n\n"
-    //         . "Silakan melakukan pembayaran ke Virtual Account berikut: *$charge->va_number*\n\n"
-    //         . "Terima kasih atas perhatian dan kerja samanya 🙏";
-
-    //     // Ganti semua karakter newline dengan whitespace
-
-    //     // Kirim melalui Fonnte
-    //     $response = Http::withHeaders([
-    //         'Authorization' => env('FONNTE_TOKEN')
-    //     ])->asForm()->post('https://api.fonnte.com/send', [
-    //         'target' => $nomorTujuan,
-    //         'message' => $pesan,
-    //         'delay' => 5,
-    //         'countryCode' => '62'
-    //     ]);
-
-    //     if ($response->successful()) {
-    //         return response()->json(['status' => 'success', 'response' => $response->json()], 200);
-    //     } else {
-    //         return response()->json(['status' => 'error', 'message' => $response->body()], 500);
-    //     }
-    // }
 }
