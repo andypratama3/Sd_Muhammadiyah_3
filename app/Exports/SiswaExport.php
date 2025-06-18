@@ -26,7 +26,7 @@ class SiswaExport implements FromView,WithHeadings
         $provinsi = $response_provinsi ? collect($response_provinsi->toArray()) : [];
 
         // Transform student data
-        $siswas->transform(function ($siswa) use ($provinsi) {
+        $siswas = $siswas->get()->map(function ($siswa) use ($provinsi) {
             $siswa->umur = now()->diffInYears($siswa->tgl_lahir);
             // Fetch regency (kabupaten) data
 
