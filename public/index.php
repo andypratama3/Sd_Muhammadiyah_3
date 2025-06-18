@@ -44,6 +44,11 @@ require __DIR__.'/../vendor/autoload.php';
 |
 */
 
+if (file_exists(__DIR__.'/linguise/linguise.php')) {
+    include_once __DIR__.'/linguise/linguise.php';
+}
+
+
 $app = require_once __DIR__.'/../bootstrap/app.php';
 
 $kernel = $app->make(Kernel::class);
