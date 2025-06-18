@@ -2,22 +2,21 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Models\Guru;
-use App\Models\Siswa;
-use App\Models\Artikel;
-use App\Models\Visitor;
-use App\Models\Prestasi;
-use App\Charts\SiswaChart;
-use App\Models\Pembayaran;
-use App\Charts\ArtikelView;
 use App\Charts\ChargeChart;
+use App\Charts\ChargeCountMount;
+use App\Charts\SiswaChart;
+use App\Http\Controllers\Controller;
+use App\Models\Artikel;
+use App\Models\Guru;
+use App\Models\JudulPembayaran;
 use App\Models\KritikSaran;
+use App\Models\Pembayaran;
+use App\Models\Prestasi;
+use App\Models\Siswa;
+use App\Models\TenagaPendidikan;
+use App\Models\Visitor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use App\Models\JudulPembayaran;
-use App\Charts\ChargeCountMount;
-use App\Models\TenagaPendidikan;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -32,10 +31,9 @@ class DashboardController extends Controller
         $guru = Guru::count();
         $prestasi = Prestasi::count();
         $tenagakependidikan = TenagaPendidikan::count();
-        //chart
+        // chart
         // $ArtikelChart = $ArtikelChart->build();
         $siswaChart = $siswaChart->build();
-
 
         $year = $request->input('year', Carbon::now()->year);
         $month = $request->input('month', Carbon::now()->month);
@@ -53,13 +51,12 @@ class DashboardController extends Controller
 
         $chargeChart = $chargeChart->build();
 
-        //count artikel data
+        // count artikel data
         $artikel_sum_total_klik = Artikel::sum('jumlah_klik');
-        $artikel_like_max = Artikel::orderBy('jumlah_klik','desc')->first();
+        $artikel_like_max = Artikel::orderBy('jumlah_klik', 'desc')->first();
 
-        $artikels = Artikel::orderBy('jumlah_klik','desc')->take(5)->get();
+        $artikels = Artikel::orderBy('jumlah_klik', 'desc')->take(5)->get();
         $category_payments = JudulPembayaran::orderBy('name', 'asc')->get();
-
 
         // convert to percent
         // $percent_artikel = ($artikel_like_max->jumlah_klik  / $artikel_sum_total_klik) * 100;
@@ -68,7 +65,7 @@ class DashboardController extends Controller
 
         $kritis = KritikSaran::orderBy('created_at', 'desc')->take(5)->get();
 
-        $artikel_publish = Artikel::where('user_id', Auth::user()->id)->where('status','publish')->count();
+        $artikel_publish = Artikel::where('user_id', Auth::user()->id)->where('status', 'publish')->count();
 
         if ($request->ajax()) {
             return response()->json([
@@ -81,17 +78,15 @@ class DashboardController extends Controller
         $visitor_by_month = Visitor::whereDate('created_at', '>=', Carbon::now()->startOfMonth()->format('Y-m-d'))->count();
         $visitor_by_year = Visitor::whereDate('created_at', '>=', Carbon::now()->startOfYear()->format('Y-m-d'))->count();
 
-
         $siswas = Siswa::whereHas('kelas', function ($q) {
             $q->where('name', '<>', 'Lulus');
         })->count();
 
-
-         // define visitor data
+        // define visitor data
         //  View::composer('layouts.landing.footer', function ($view) {
-            // $visitor_by_day = Visitor::whereDate('created_at', Carbon::now()->format('Y-m-d'))->count();
-            // $visitor_by_month = Visitor::whereDate('created_at', '>=', Carbon::now()->startOfMonth()->format('Y-m-d'))->count();
-            // $visitor_by_year = Visitor::whereDate('created_at', '>=', Carbon::now()->startOfYear()->format('Y-m-d'))->count();
+        // $visitor_by_day = Visitor::whereDate('created_at', Carbon::now()->format('Y-m-d'))->count();
+        // $visitor_by_month = Visitor::whereDate('created_at', '>=', Carbon::now()->startOfMonth()->format('Y-m-d'))->count();
+        // $visitor_by_year = Visitor::whereDate('created_at', '>=', Carbon::now()->startOfYear()->format('Y-m-d'))->count();
 
         //     $view->with(compact('visitor_by_day', 'visitor_by_month', 'visitor_by_year'));
         // });
@@ -115,5 +110,4 @@ class DashboardController extends Controller
             // 'chargeCountMount'
         ));
     }
-
 }

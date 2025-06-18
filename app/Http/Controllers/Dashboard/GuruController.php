@@ -2,26 +2,25 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Actions\Dashboard\Guru\DeleteGuruAction;
+use App\Actions\Dashboard\Guru\GuruAction;
+use App\DataTransferObjects\GuruData;
+use App\Http\Controllers\Controller;
 use App\Models\Guru;
 use App\Models\Karyawan;
 use App\Models\Pelajaran;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\DataTransferObjects\GuruData;
-use App\Actions\Dashboard\Guru\GuruAction;
-use App\Actions\Dashboard\Guru\DeleteGuruAction;
 
 class GuruController extends Controller
 {
-
     public function index(Request $request)
     {
         $limit = 15;
-        $gurus = Guru::select(['name','description','lulusan','foto','slug'])->with('pelajarans');
+        $gurus = Guru::select(['name', 'description', 'lulusan', 'foto', 'slug'])->with('pelajarans');
 
         $mataPelajarans = Pelajaran::all();
 
-        if($request->mata_pelajaran) {
+        if ($request->mata_pelajaran) {
 
             $gurus = $gurus->whereHas('pelajarans', function ($query) use ($request) {
                 $query->where('pelajaran_id', $request->mata_pelajaran);
@@ -33,53 +32,59 @@ class GuruController extends Controller
         $count = $gurus->count();
         $no = $limit * ($gurus->currentPage() - 1);
 
-        return view('dashboard.guru.index', compact('gurus','count','no', 'mataPelajarans'));
+        return view('dashboard.guru.index', compact('gurus', 'count', 'no', 'mataPelajarans'));
     }
+
     public function create()
     {
         $pelajarans = Pelajaran::all();
-        $karyawans = Karyawan::select(['id','name','slug'])->get();
-        return view('dashboard.guru.create', compact('pelajarans','karyawans'));
+        $karyawans = Karyawan::select(['id', 'name', 'slug'])->get();
+
+        return view('dashboard.guru.create', compact('pelajarans', 'karyawans'));
     }
+
     public function store(GuruData $GuruData, GuruAction $guruAction)
     {
         /*
             todo check karyawan at database with karyawan_id
         */
-        $karyawan = Guru::where('karyawan_id',$GuruData->karyawan_id)->first();
+        $karyawan = Guru::where('karyawan_id', $GuruData->karyawan_id)->first();
 
-        if (!$karyawan) {
+        if (! $karyawan) {
             $guruAction->execute($GuruData);
+
             return redirect()->route('dashboard.datasekolah.guru.index')->with('success', 'Berhasil Menambahkan Guru!');
         } else {
             return redirect()->route('dashboard.datasekolah.guru.index')->with('error', 'Gagal Guru Telah Ada!');
         }
     }
 
-
-
     public function show(Guru $guru)
     {
-      return view('dashboard.guru.show', compact('guru'));
+        return view('dashboard.guru.show', compact('guru'));
     }
+
     public function edit($slug)
     {
-        $guru = Guru::with('karyawan')->where('slug',$slug)->firstOrFail();
-        $karyawans = Karyawan::select(['id','name','slug'])->get();
+        $guru = Guru::with('karyawan')->where('slug', $slug)->firstOrFail();
+        $karyawans = Karyawan::select(['id', 'name', 'slug'])->get();
 
         $pelajarans = Pelajaran::all();
-        return view('dashboard.guru.edit', compact('guru','pelajarans', 'karyawans'));
+
+        return view('dashboard.guru.edit', compact('guru', 'pelajarans', 'karyawans'));
     }
+
     public function update(GuruData $GuruData, GuruAction $guruAction)
     {
         $guruAction->execute($GuruData);
 
-        return redirect()->route('dashboard.datasekolah.guru.index')->with('success','Berhasil Update Guru!');
+        return redirect()->route('dashboard.datasekolah.guru.index')->with('success', 'Berhasil Update Guru!');
     }
+
     public function destroy(DeleteGuruAction $DeleteGuruAction, $slug)
     {
         $DeleteGuruAction->execute($slug);
-        return redirect()->route('dashboard.datasekolah.guru.index')->with('success','Berhasil Hapus Guru!');
-    }
 
+        return redirect()->route('dashboard.datasekolah.guru.index')->with('success', 'Berhasil Hapus Guru!');
+    }
 }

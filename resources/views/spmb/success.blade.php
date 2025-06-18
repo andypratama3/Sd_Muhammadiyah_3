@@ -43,8 +43,8 @@
 
 @section('content')
     <div class="container d-flex flex-column justify-content-center align-items-center" style="min-height: 70vh; text-align: center;">
+        <h2 class="display-4 fw-bold mb-3">Pendaftaran SPMB Berhasil </h2>
         <i class="fas fa-check fa-5x text-success mb-4 animate-icon"></i>
-        <h1 class="display-4 fw-bold mb-3">Pendaftaran SPMB Berhasil </h1>
         <div class="card mb-3">
             <div class="card-header bg-primary text-white">
                 <h5 class="card-title m-0">Detail Pendaftaran</h5>

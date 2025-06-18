@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Models\Berita;
-use Illuminate\Support\Str;
-use App\Helpers\ImageHelper;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\DataTransferObjects\BeritaData;
-use Yajra\DataTables\Facades\DataTables;
 use App\Actions\Dashboard\Berita\ActionBerita;
 use App\Actions\Dashboard\Berita\DeleteBeritaAction;
+use App\DataTransferObjects\BeritaData;
+use App\Helpers\ImageHelper;
+use App\Http\Controllers\Controller;
+use App\Models\Berita;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Yajra\DataTables\Facades\DataTables;
 
 class BeritaController extends Controller
 {
@@ -18,32 +18,34 @@ class BeritaController extends Controller
     {
         $no = 0;
         $beritas = Berita::select(['judul', 'desc', 'foto', 'slug'])->get();
+
         return view('dashboard.berita.index', compact('no', 'beritas'));
     }
 
     public function data_table()
     {
-        $query = Berita::select('id','views','judul','desc','foto','slug')->orderBy('created_at','asc');
-        return DataTables::of($query)
+        $query = Berita::select('id', 'views', 'judul', 'desc', 'foto', 'slug')->orderBy('created_at', 'asc');
 
-                ->addColumn('foto', function ($row){
-                    return '<img src="' . asset('storage/img/berita/' . $row->foto) . '" width="100" height="100" class="img-thumbnail" alt="Foto Berita">';
-                })
-                ->addColumn('views', function ($row) {
-                    return $row->views . ' kali';
-                })
-                ->addColumn('options', function ($row){
-                    return '
-                    <a href="' . route('dashboard.news.berita.show', $row->slug) . '" class="btn btn-sm me-1 btn-warning"><i class="fa fa-eye"></i></a>
-                    <a href="' . route('dashboard.news.berita.edit', $row->slug) . '" class="btn btn-sm me-1 btn-primary"><i class="fa fa-pen"></i></a>
-                    <button data-id="' . $row['slug'] . '" class="btn btn-sm btn-danger" id="btn-delete"><i class="fa fa-trash"></i></button>
+        return DataTables::of($query)
+            ->addColumn('foto', function ($row) {
+                return '<img src="'.asset('storage/img/berita/'.$row->foto).'" width="100" height="100" class="img-thumbnail" alt="Foto Berita">';
+            })
+            ->addColumn('views', function ($row) {
+                return $row->views.' kali';
+            })
+            ->addColumn('options', function ($row) {
+                return '
+                    <a href="'.route('dashboard.news.berita.show', $row->slug).'" class="btn btn-sm me-1 btn-warning"><i class="fa fa-eye"></i></a>
+                    <a href="'.route('dashboard.news.berita.edit', $row->slug).'" class="btn btn-sm me-1 btn-primary"><i class="fa fa-pen"></i></a>
+                    <button data-id="'.$row['slug'].'" class="btn btn-sm btn-danger" id="btn-delete"><i class="fa fa-trash"></i></button>
                 ';
-                })
-                ->rawColumns(['foto','options'])
-                ->addIndexColumn()
-                ->make(true);
+            })
+            ->rawColumns(['foto', 'options'])
+            ->addIndexColumn()
+            ->make(true);
 
     }
+
     public function create()
     {
         return view('dashboard.berita.create');
@@ -73,16 +75,17 @@ class BeritaController extends Controller
     public function update(ActionBerita $ActionBerita, BeritaData $beritaData)
     {
         $ActionBerita->execute($beritaData);
+
         return redirect()->route('dashboard.news.berita.index')->with('success', 'Berita Berhasil Di Update');
     }
 
     public function destroy(DeleteBeritaAction $deleteBeritaAction, $slug)
     {
-        if($deleteBeritaAction)
-        {
+        if ($deleteBeritaAction) {
             $deleteBeritaAction->execute($slug);
+
             return response()->json(['status' => 'success', 'message' => 'Berhasil Menghapus Berita']);
-        }else{
+        } else {
             return response()->json(['status' => 'error', 'message' => 'Gagal Menghapus Berita']);
         }
     }
@@ -94,13 +97,13 @@ class BeritaController extends Controller
             $ext = $file->getClientOriginalExtension();
 
             $upload_path = public_path('/storage/img/berita/');
-            $filename = 'berita_' . Str::slug(Str::random(6)) . '_' . date('YmdHis') . '.' . $ext;
+            $filename = 'berita_'.Str::slug(Str::random(6)).'_'.date('YmdHis').'.'.$ext;
 
             ImageHelper::resizeAndSave($file, $upload_path, $filename);
 
-
             // Berikan URL file yang dapat digunakan
-            $fileUrl = url('storage/img/berita/' . $filename);
+            $fileUrl = url('storage/img/berita/'.$filename);
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Berhasil Mengupload Gambar',

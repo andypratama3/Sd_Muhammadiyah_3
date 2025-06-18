@@ -2,24 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Kelas;
 use App\Models\Jadwal;
+use App\Models\Kelas;
 use Illuminate\Http\Request;
 
 class JadwalController extends Controller
 {
     public function index()
     {
-        $kelass = Kelas::select(['name'])->where('name', '!=', 'Lulus')->orderBy('name','asc')->get();
+        $kelass = Kelas::select(['name'])->where('name', '!=', 'Lulus')->orderBy('name', 'asc')->get();
         $jadwals = Jadwal::all();
-        return view('jadwal.index', compact('kelass','jadwals'));
+
+        return view('jadwal.index', compact('kelass', 'jadwals'));
     }
+
     public function show($kelas)
     {
         $kelass = Kelas::where('name', $kelas)->first();
         $category_kelas = json_decode($kelass->category_kelas);
+
         return view('jadwal.show', compact('kelass', 'category_kelas'));
     }
+
     public function tahun_ajaran(Request $request)
     {
         $kelas = $request->kelas;
@@ -28,9 +32,9 @@ class JadwalController extends Controller
 
         $kelas = Jadwal::where('kelas', $kelas)->where('tahun_ajaran', $tahun_ajaran)->where('category_kelas', $category_kelas)->first();
 
-        if($kelas){
+        if ($kelas) {
             return response()->json($kelas);
-        }else{
+        } else {
             return response()->json(['message' => 'Tidak Ada Data Jadwal']);
 
         }

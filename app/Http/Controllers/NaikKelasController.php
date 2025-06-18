@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Siswa;
+
 use App\Models\Kelas;
+use App\Models\Siswa;
 
 class NaikKelasController extends Controller
 {
@@ -22,6 +23,7 @@ class NaikKelasController extends Controller
             // If the current class is "Lulus" or greater than 6, move the student to "Lulus" class and continue to the next student
             if ($currentKelas && intval(substr($currentKelas->name, 6)) >= 6) {
                 $siswa->kelas()->sync([$lulus->id => ['category_kelas' => $siswa->kelas->first()->pivot->category_kelas]]);
+
                 continue; // Skip the rest of the loop for this student
             }
 
@@ -41,7 +43,6 @@ class NaikKelasController extends Controller
         }
 
         // Optionally, you may return a response indicating the process is completed
-        return redirect()->route('dashboard.datamaster.siswa.index')->with('success','Fungsi Naik Kelas Berhasil');
+        return redirect()->route('dashboard.datamaster.siswa.index')->with('success', 'Fungsi Naik Kelas Berhasil');
     }
-
 }

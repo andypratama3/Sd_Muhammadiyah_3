@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Artikel;
-use App\Models\Comment;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -52,7 +51,6 @@ class ArtikelController extends Controller
         return view('artikel.index', compact('artikels_trending', 'maxClicks', 'categorys'));
     }
 
-
     public function show(Artikel $artikel)
     {
         $artikel->incrementClickCount();
@@ -63,8 +61,8 @@ class ArtikelController extends Controller
         $comments = $artikel->comments()->orderBy('created_at', 'DESC')->get();
         $latest_artikel = Artikel::orderBy('created_at', 'desc')->take(15)->get();
         $count = $comments->count();
-        $artikel_trending_list = Artikel::select('id','name','artikel','image','created_at','slug')->orderBy('jumlah_klik','DESC')->take(15)->get();
-        return view('artikel.show', compact('artikel','firstCharacter','contentWithoutFirstCharacter','comments','count','artikel_trending_list','latest_artikel'));
-    }
+        $artikel_trending_list = Artikel::select('id', 'name', 'artikel', 'image', 'created_at', 'slug')->orderBy('jumlah_klik', 'DESC')->take(15)->get();
 
+        return view('artikel.show', compact('artikel', 'firstCharacter', 'contentWithoutFirstCharacter', 'comments', 'count', 'artikel_trending_list', 'latest_artikel'));
+    }
 }

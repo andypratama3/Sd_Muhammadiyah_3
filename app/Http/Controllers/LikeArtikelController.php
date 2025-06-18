@@ -10,8 +10,8 @@ class LikeArtikelController extends Controller
 {
     public function like(Request $request)
     {
-        
-        if(Auth::check()){
+
+        if (Auth::check()) {
             $likeData = [
                 'comment_id' => $request->comment_id,
                 'user_id' => Auth::id(),
@@ -24,11 +24,11 @@ class LikeArtikelController extends Controller
             } else {
                 LikeArtikel::create($likeData);
             }
+
             return null;
-        }else{
+        } else {
             return redirect()->route('login')->with('error', 'Anda harus login terlebih dahulu');
         }
 
     }
-
 }

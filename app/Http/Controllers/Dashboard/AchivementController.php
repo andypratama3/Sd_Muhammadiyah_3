@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Models\Achivement;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Yajra\DataTables\Facades\DataTables;
-use App\DataTransferObjects\AchivementData;
 use App\Actions\Dashboard\Achivement\AchivementAction;
+use App\DataTransferObjects\AchivementData;
+use App\Http\Controllers\Controller;
+use App\Models\Achivement;
+use Yajra\DataTables\Facades\DataTables;
 
 class AchivementController extends Controller
 {
@@ -21,20 +20,20 @@ class AchivementController extends Controller
         $achivements = Achivement::orderBy('order', 'asc');
 
         return DataTables::of($achivements)
-            ->addColumn('foto', function ($row){
-                return '<img src="' . asset('storage/img/achivement/' . $row->foto) . '" width="100" height="100" class="img-thumbnail" alt="Foto Achivement">';
+            ->addColumn('foto', function ($row) {
+                return '<img src="'.asset('storage/img/achivement/'.$row->foto).'" width="100" height="100" class="img-thumbnail" alt="Foto Achivement">';
             })
             ->addColumn('options', function ($achivement) {
                 $actions = '';
 
-                $actions .= '<a href="' . route('dashboard.datasekolah.achivement.edit', $achivement->slug) . '" class="btn me-2 btn-primary btn-sm"><i class="fa fa-edit"></i></a>';
+                $actions .= '<a href="'.route('dashboard.datasekolah.achivement.edit', $achivement->slug).'" class="btn me-2 btn-primary btn-sm"><i class="fa fa-edit"></i></a>';
 
-                $actions .= '<button data-id="' . $achivement['slug'] . '" class="btn me-2 btn-danger btn-sm" id="btn-delete"><i class="fa fa-trash"></i></button>';
+                $actions .= '<button data-id="'.$achivement['slug'].'" class="btn me-2 btn-danger btn-sm" id="btn-delete"><i class="fa fa-trash"></i></button>';
 
                 return $actions;
             })
             ->addIndexColumn()
-            ->rawColumns(['foto','options'])
+            ->rawColumns(['foto', 'options'])
             ->make(true);
     }
 
@@ -66,17 +65,16 @@ class AchivementController extends Controller
     {
         $action = $achivement->delete();
 
-        if($action){
+        if ($action) {
             return response()->json([
                 'status' => 'success',
-                'message' => 'Berhasil Menghapus Data'
+                'message' => 'Berhasil Menghapus Data',
             ]);
-        }else{
+        } else {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Gagal Menghapus Data'
+                'message' => 'Gagal Menghapus Data',
             ]);
         }
     }
-
 }

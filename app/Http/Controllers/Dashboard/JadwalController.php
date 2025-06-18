@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Models\Kelas;
-use App\Models\Jadwal;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\DataTransferObjects\JadwalData;
 use App\Actions\Dashboard\Jadwal\JadwalAction;
 use App\Actions\Dashboard\Jadwal\JadwalActionDelete;
+use App\DataTransferObjects\JadwalData;
+use App\Http\Controllers\Controller;
+use App\Models\Jadwal;
+use App\Models\Kelas;
+use Illuminate\Http\Request;
 
 class JadwalController extends Controller
 {
@@ -18,14 +18,18 @@ class JadwalController extends Controller
             ! ada ada saja
         */
         $no = 0;
-        $jadwals = Jadwal::with('kelas_jadwal')->select('id','tahun_ajaran','jadwal','kelas','category_kelas','slug')->orderBy('kelas', 'desc')->get();
-        return view('dashboard.data.jadwal.index', compact('no','jadwals'));
+        $jadwals = Jadwal::with('kelas_jadwal')->select('id', 'tahun_ajaran', 'jadwal', 'kelas', 'category_kelas', 'slug')->orderBy('kelas', 'desc')->get();
+
+        return view('dashboard.data.jadwal.index', compact('no', 'jadwals'));
     }
+
     public function create()
     {
-        $kelass = Kelas::select('id','name','category_kelas','slug')->orderBy('name')->get();
+        $kelass = Kelas::select('id', 'name', 'category_kelas', 'slug')->orderBy('name')->get();
+
         return view('dashboard.data.jadwal.create', compact('kelass'));
     }
+
     public function getCategoryKelas(Request $request)
     {
         $kelasId = $request->input('id');
@@ -33,6 +37,7 @@ class JadwalController extends Controller
 
         $categoryKelas = json_decode($kelas->category_kelas, true);
         sort($categoryKelas);
+
         return response()->json($categoryKelas);
     }
 
@@ -41,7 +46,7 @@ class JadwalController extends Controller
         $kelas = $request->kelas;
         $category_kelas = $request->category_kelas;
 
-        $existingGenap = Jadwal::where('kelas', $kelas)->where('category_kelas', $category_kelas)->where('tahun_ajaran',)->exists();
+        $existingGenap = Jadwal::where('kelas', $kelas)->where('category_kelas', $category_kelas)->where('tahun_ajaran')->exists();
         $existingGanjil = Jadwal::where('kelas', $kelas)->where('category_kelas', $category_kelas)->where('smester', 'ganjil')->exists();
 
         $response = [
@@ -52,32 +57,37 @@ class JadwalController extends Controller
         return response()->json($response);
     }
 
-    public function store(JadwalData $jadwalData , JadwalAction $jadwalAction)
+    public function store(JadwalData $jadwalData, JadwalAction $jadwalAction)
     {
         $jadwal = Jadwal::where('kelas', $jadwalData->kelas)->where('tahun_ajaran', $jadwalData->tahun_ajaran)->where('category_kelas', $jadwalData->category_kelas)->exists();
-        if($jadwalData != $jadwal){
-                $jadwalAction->execute($jadwalData);
-                return redirect()->route('dashboard.datasekolah.jadwal.index')->with('success', 'Berhasil Menambahkan Jadwal');
-            }else{
-                return redirect()->route('dashboard.datasekolah.jadwal.index')->with('error', 'Jadwal Telah Ada');
-            }
+        if ($jadwalData != $jadwal) {
+            $jadwalAction->execute($jadwalData);
+
+            return redirect()->route('dashboard.datasekolah.jadwal.index')->with('success', 'Berhasil Menambahkan Jadwal');
+        } else {
+            return redirect()->route('dashboard.datasekolah.jadwal.index')->with('error', 'Jadwal Telah Ada');
         }
+    }
 
     public function edit(Jadwal $jadwal)
     {
         $kelass = Kelas::all();
+
         return view('dashboard.data.jadwal.edit', compact('jadwal', 'kelass'));
     }
+
     public function update(JadwalData $jadwalData, JadwalAction $jadwalAction)
     {
         $jadwalAction->execute($jadwalData);
+
         return redirect()->route('dashboard.datasekolah.jadwal.index')->with('success', 'Berhasil Update Jadwal');
 
     }
-    public function destroy(JadwalActionDelete $jadwalActionDelete,$slug)
+
+    public function destroy(JadwalActionDelete $jadwalActionDelete, $slug)
     {
         $jadwalActionDelete->execute($slug);
+
         return redirect()->route('dashboard.datasekolah.jadwal.index')->with('success', 'Data Jadwal Berhasil Di Hapus');
     }
-
 }

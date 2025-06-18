@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Actions\Dashboard\Cooperation\CooperationAction;
+use App\DataTransferObjects\CooperationData;
+use App\Http\Controllers\Controller;
 use App\Models\Cooperation;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Yajra\DataTables\Facades\DataTables;
-use App\DataTransferObjects\CooperationData;
-use App\Actions\Dashboard\Cooperation\CooperationAction;
 
 class CooperationController extends Controller
 {
@@ -21,19 +21,19 @@ class CooperationController extends Controller
         $cooperations = Cooperation::orderBy('created_at', 'asc');
 
         return DataTables::of($cooperations)
-            ->addColumn('foto', function ($row){
-                return '<img src="' . asset('storage/img/cooperation/' . $row->foto) . '" width="100" height="100" class="img-thumbnail" alt="Foto Berita">';
+            ->addColumn('foto', function ($row) {
+                return '<img src="'.asset('storage/img/cooperation/'.$row->foto).'" width="100" height="100" class="img-thumbnail" alt="Foto Berita">';
             })
             ->addColumn('options', function ($cooperation) {
                 $actions = '';
 
-                $actions .= '<a href="' . route('dashboard.datasekolah.cooperation.edit', $cooperation->slug) . '" class="btn me-2 btn-primary btn-sm"><i class="fa fa-edit"></i></a>';
+                $actions .= '<a href="'.route('dashboard.datasekolah.cooperation.edit', $cooperation->slug).'" class="btn me-2 btn-primary btn-sm"><i class="fa fa-edit"></i></a>';
 
-                $actions .= '<button data-id="' . $cooperation['slug'] . '" class="btn me-2 btn-danger btn-sm" id="btn-delete"><i class="fa fa-trash"></i></button>';
+                $actions .= '<button data-id="'.$cooperation['slug'].'" class="btn me-2 btn-danger btn-sm" id="btn-delete"><i class="fa fa-trash"></i></button>';
 
                 return $actions;
             })
-            ->rawColumns(['foto','options'])
+            ->rawColumns(['foto', 'options'])
             ->addIndexColumn()
             ->make(true);
     }
@@ -68,18 +68,16 @@ class CooperationController extends Controller
     {
         // $cooperation = Cooperation::find($id);
         $action = $cooperation->delete();
-        if($action){
+        if ($action) {
             return response()->json([
                 'status' => 'success',
-                'message' => 'Berhasil Menghapus Data'
+                'message' => 'Berhasil Menghapus Data',
             ]);
-        }else{
+        } else {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Gagal Menghapus Data'
+                'message' => 'Gagal Menghapus Data',
             ]);
         }
     }
-
-
 }

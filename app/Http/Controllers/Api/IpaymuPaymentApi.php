@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\Pembayaran;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class IpaymuPaymentApi extends Controller
 {
@@ -15,18 +15,18 @@ class IpaymuPaymentApi extends Controller
             ! Payment Callback From Ipaymu And Update data at database
         */
         $trx_id = $request->trx_id;
-        $sessionID    = $request->sid;
-        $status    = $request->status;
+        $sessionID = $request->sid;
+        $status = $request->status;
         $pembayaran = Pembayaran::where('sessionID', $sessionID)->first();
 
-        if($status == 'berhasil'){
+        if ($status == 'berhasil') {
             $pembayaran->trx_id = $trx_id;
             $pembayaran->status = 'Berhasil';
 
-        }elseif($status == 'pending'){
+        } elseif ($status == 'pending') {
             $pembayaran->trx_id = $trx_id;
             $pembayaran->status = 'Pending';
-        }else{
+        } else {
             $pembayaran->trx_id = $trx_id;
             $pembayaran->status = 'Expired';
         }

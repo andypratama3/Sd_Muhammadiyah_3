@@ -2,24 +2,23 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use Carbon\Carbon;
+use App\Exports\ChargeExport;
+use App\Http\Controllers\Api\V1\MidtransPaymentController;
+use App\Http\Controllers\Controller;
+use App\Models\Charge;
+use App\Models\JudulPembayaran;
 use App\Models\Kelas;
 use App\Models\Siswa;
-use App\Models\Charge;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Exports\ChargeExport;
-use App\Models\JudulPembayaran;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
-use App\Http\Controllers\Api\V1\MidtransPaymentController;
 
 class ChargeController extends Controller
 {
-
     protected $midtrans;
 
     public function __construct(MidtransPaymentController $midtrans)
@@ -30,20 +29,20 @@ class ChargeController extends Controller
     public function index()
     {
         $category_payments = JudulPembayaran::orderBy('name')->get();
-        $kelass = Kelas::select('id','name')->orderBy('name','asc')->get();
-        return view('dashboard.data.charge.index', compact('category_payments','kelass'));
+        $kelass = Kelas::select('id', 'name')->orderBy('name', 'asc')->get();
+
+        return view('dashboard.data.charge.index', compact('category_payments', 'kelass'));
     }
 
     public function data_table(Request $request)
     {
         $charges = Charge::with(['siswa'])->orderBy('name', 'asc');
 
-
-        if($request->category_payment){
+        if ($request->category_payment) {
             $charges = $charges->where('category_payment_id', $request->category_payment);
         }
 
-        if($request->kelas){
+        if ($request->kelas) {
             $charges = $charges->whereHas('siswa.kelas', function ($query) use ($request) {
                 $query->where('id', $request->kelas);
             });
@@ -57,19 +56,17 @@ class ChargeController extends Controller
             $charges = $charges->whereBetween(DB::raw('date(created_at)'), [$startDate, $endDate]);
         }
 
-
-
         return DataTables::of($charges)
             ->addColumn('options', function ($row) {
                 return '
-                    <a href="' . route('dashboard.datamaster.charge.show', $row->id) . '" class="btn btn-sm m-1 btn-warning"><i class="fa fa-eye"></i></a>
-                    <a href="' . route('dashboard.datamaster.charge.edit', $row->id) . '" class="btn btn-sm m-1 btn-info"><i class="fa fa-edit"></i></a>
-                    <button data-id="' . $row['id'] . '" class="btn btn-sm btn-danger me-1" id="btn-delete"><i class="fa fa-trash"></i></button>
+                    <a href="'.route('dashboard.datamaster.charge.show', $row->id).'" class="btn btn-sm m-1 btn-warning"><i class="fa fa-eye"></i></a>
+                    <a href="'.route('dashboard.datamaster.charge.edit', $row->id).'" class="btn btn-sm m-1 btn-info"><i class="fa fa-edit"></i></a>
+                    <button data-id="'.$row['id'].'" class="btn btn-sm btn-danger me-1" id="btn-delete"><i class="fa fa-trash"></i></button>
                 ';
             })
             ->addColumn('gross_amount', function ($row) {
                 // with .
-                return "Rp " . number_format($row->gross_amount, 0, ',', '.');
+                return 'Rp '.number_format($row->gross_amount, 0, ',', '.');
             })
             ->addColumn('va_number', function ($row) {
                 return $row->va_number;
@@ -89,9 +86,10 @@ class ChargeController extends Controller
 
     public function create()
     {
-        $kelas = Kelas::select('id','name')->orderBy('name','asc')->get();
+        $kelas = Kelas::select('id', 'name')->orderBy('name', 'asc')->get();
         $kategori_pembayaran = JudulPembayaran::where('name', '!=', 'DPP')->orderBy('name')->get();
-        return view('dashboard.data.charge.create', compact('kelas','kategori_pembayaran'));
+
+        return view('dashboard.data.charge.create', compact('kelas', 'kategori_pembayaran'));
     }
 
     public function store(Request $request)
@@ -104,7 +102,7 @@ class ChargeController extends Controller
 
         // Find the payment category based on the provided ID
         $kategori_pembayaran = JudulPembayaran::find($request->category_payment_id);
-        if (!$kategori_pembayaran) {
+        if (! $kategori_pembayaran) {
             return redirect()->route('dashboard.datamaster.charge.index')
                 ->with('error', 'Kategori Pembayaran Tidak Ditemukan');
         }
@@ -130,6 +128,7 @@ class ChargeController extends Controller
 
                     $this->createCharge($siswa, $order_id, $gross_amount_80, $kategori_pembayaran, '1');
                     $this->createCharge($siswa, $order_id, $gross_amount_20, $kategori_pembayaran, '2');
+
                     continue 2;
                     break;
                 case 'Seragam':
@@ -150,6 +149,7 @@ class ChargeController extends Controller
                 // If charge exists, skip this iteration
                 if ($charge) {
                     $this->info("Tagihan {$category->name} {$siswa->name} sudah dibuat");
+
                     continue 2; // Skip to the next student
                 }
             }
@@ -167,7 +167,7 @@ class ChargeController extends Controller
                     'gross_amount' => $gross_amount,
                     'payment_type' => 'bank_transfer',
                     'bank' => 'bri',
-                    'va_number' => $siswa->nisn . $kategori_pembayaran->kode,
+                    'va_number' => $siswa->nisn.$kategori_pembayaran->kode,
                     'transaction_id' => Str::uuid(),
                     'transaction_time' => now(),
                     'fraud_status' => 'accept',
@@ -184,6 +184,7 @@ class ChargeController extends Controller
                 // Handle errors from Midtrans response
                 if (isset($midtransResponse['error'])) {
                     DB::rollBack();
+
                     return redirect()->route('dashboard.datamaster.charge.index')->with('error', $midtransResponse['error']);
                 }
 
@@ -192,7 +193,8 @@ class ChargeController extends Controller
             } catch (\Exception $e) {
                 // Rollback the transaction if an exception occurs
                 DB::rollBack();
-                return redirect()->route('dashboard.datamaster.charge.index')->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+
+                return redirect()->route('dashboard.datamaster.charge.index')->with('error', 'Terjadi kesalahan: '.$e->getMessage());
             }
         }
 
@@ -203,6 +205,7 @@ class ChargeController extends Controller
     public function show($id)
     {
         $charge = Charge::with('siswa')->find($id);
+
         return view('dashboard.data.charge.show', compact('charge'));
     }
 
@@ -221,7 +224,7 @@ class ChargeController extends Controller
 
         $charge = Charge::find($id);
 
-        if (!$charge) {
+        if (! $charge) {
             return redirect()->route('dashboard.datamaster.charge.index')->with('error', 'Data Tidak Ditemukan');
         }
 
@@ -240,10 +243,9 @@ class ChargeController extends Controller
                 }
             } catch (\Exception $e) {
                 return redirect()->route('dashboard.datamaster.charge.index')
-                    ->with('error', 'Terjadi Kesalahan: ' . $e->getMessage());
+                    ->with('error', 'Terjadi Kesalahan: '.$e->getMessage());
             }
         }
-
 
         $charge->update([
             'transaction_status' => $transaction_status,
@@ -257,15 +259,15 @@ class ChargeController extends Controller
     {
         $charge = Charge::find($id);
         $action = $charge->delete();
-        if($action){
+        if ($action) {
             return response()->json([
                 'status' => 'success',
-                'message' => 'Berhasil Menghapus Data'
+                'message' => 'Berhasil Menghapus Data',
             ]);
-        }else{
+        } else {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Gagal Menghapus Data'
+                'message' => 'Gagal Menghapus Data',
             ]);
         }
     }
@@ -287,6 +289,7 @@ class ChargeController extends Controller
         $carbonEndDate = Carbon::parse($endDate)->locale('id')->translatedFormat('d F Y');
 
         $kategoriPembayaran = JudulPembayaran::where('id', $category_payment)->first();
+
         return Excel::download(new ChargeExport($startDate, $endDate, $kelas, $category_payment), "Rekap Pembayaran $kategoriPembayaran->name Dari $carbonStartDate Sampai $carbonEndDate.xlsx");
     }
 
@@ -322,9 +325,9 @@ class ChargeController extends Controller
     //     }
     // }
 
-    private function sendPaymentToMidtrans(Siswa $siswa, $order_id,$gross_amount, $kategori_pembayaran)
+    private function sendPaymentToMidtrans(Siswa $siswa, $order_id, $gross_amount, $kategori_pembayaran)
     {
-        $client = new Client();
+        $client = new Client;
         $server_key = env('MIDTRANS_SERVER_KEY');
         $monthName = Carbon::now()->locale('id_ID')->format('F');
 
@@ -341,7 +344,7 @@ class ChargeController extends Controller
             ],
             'bank_transfer' => [
                 'bank' => 'bri',
-                'va_number' => $siswa->nisn . $kategori_pembayaran->kode,
+                'va_number' => $siswa->nisn.$kategori_pembayaran->kode,
             ],
             'expiry' => [
                 'start_time' => now()->toIso8601String(),
@@ -355,16 +358,16 @@ class ChargeController extends Controller
                     'quantity' => 1,
                     'name' => "Pembayaran {$kategori_pembayaran->name} {$siswa->name}",
                     'category' => $kategori_pembayaran->name,
-                    'merchant_name' => "Sekolah Kreatif SD Muhammadiyah 3 Samarinda",
-                ]
-            ]
+                    'merchant_name' => 'Sekolah Kreatif SD Muhammadiyah 3 Samarinda',
+                ],
+            ],
         ];
 
         try {
             $response = $client->post('https://api.midtrans.com/v2/charge', [
                 'headers' => [
                     'Accept' => 'application/json',
-                    'Authorization' => 'Basic ' . base64_encode($server_key . ':'),
+                    'Authorization' => 'Basic '.base64_encode($server_key.':'),
                     'Content-Type' => 'application/json',
                 ],
                 'json' => $params,
@@ -376,12 +379,9 @@ class ChargeController extends Controller
             $charge->va_number = $responseData['va_numbers'][0]['va_number'];
             $charge->save();
 
-
             return $responseData;
         } catch (\Exception $e) {
             return ['error' => $e->getMessage()];
         }
     }
-
-
 }

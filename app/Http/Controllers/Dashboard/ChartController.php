@@ -1,10 +1,11 @@
 <?php
+
 namespace App\Http\Controllers\Dashboard;
 
+use App\Http\Controllers\Controller;
 use App\Models\Charge;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use App\Http\Controllers\Controller;
 
 class ChartController extends Controller
 {
@@ -31,7 +32,7 @@ class ChartController extends Controller
         $query->whereRaw("DATE_FORMAT(created_at, '%Y-%m') = ?", [$chargeCountMountDate]);
 
         // Filter berdasarkan kategori jika ada
-        if (!empty($categoryPayment)) {
+        if (! empty($categoryPayment)) {
             $query->where('category_payment_id', $categoryPayment);
         }
 

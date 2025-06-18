@@ -14,38 +14,37 @@ class SiswaExport implements FromView,WithHeadings
     /**
     * @return \Illuminate\Support\Collection
     */
-    // public function collection()
-    // {
 
-    // }
-    public function view(): view
+    public function view(): View
     {
-        $siswas = Siswa::all();
-         // Retrieve all students
+        $siswas = Siswa::whereHas('kelas', function ($query) {
+            $query->where('name', '!=', 'Lulus');
+        });
 
         // Fetch province data
-        $response_provinsi = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/provinces.json");
-        $provinsi = $response_provinsi->successful() ? collect($response_provinsi->json()) : [];
+        $response_provinsi = \DB::table('provinsi')->orderBy('name')->get();
+        $provinsi = $response_provinsi->successful() ? collect($response_provinsi->toArray()) : [];
 
         // Transform student data
         $siswas->transform(function ($siswa) use ($provinsi) {
             $siswa->umur = now()->diffInYears($siswa->tgl_lahir);
             // Fetch regency (kabupaten) data
-            $response_kabupaten = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/regencies/$siswa->provinsi_id.json");
-            $kabupaten = $response_kabupaten->successful() ? collect($response_kabupaten->json()) : [];
+
+            $response_kabupaten = \DB::table('kabupaten')->where('provinsi_id', $siswa->provinsi_id)->get();
+            $kabupaten = $response_kabupaten->successful() ? collect($response_kabupaten->toArray()) : [];
 
             // Fetch district (kecamatan) data
-            $response_kecamatan = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/districts/$siswa->kabupaten_id.json");
-            $kecamatan = $response_kecamatan->successful() ? collect($response_kecamatan->json()) : [];
+            $response_kecamatan = \DB::table('kecamatan')->where('kabupaten_id', $siswa->kabupaten_id)->get();
+            $kecamatan = $response_kecamatan->successful() ? collect($response_kecamatan->toArray()) : [];
 
             // Fetch village (kelurahan) data
-            $response_kelurahan = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/villages/$siswa->kecamatan_id.json");
-            $kelurahan = $response_kelurahan->successful() ? collect($response_kelurahan->json()) : [];
+            $response_kelurahan = \DB::table('kelurahan')->where('kecamatan_id', $siswa->kecamatan_id)->get();
+            $kelurahan = $response_kelurahan->successful() ? collect($response_kelurahan->toArray()) : [];
 
-            $provinsi_take = $provinsi->where('id', $siswa->provinsi_id)->first();
-            $kabupaten_take = $kabupaten->where('id', $siswa->kabupaten_id)->first();
-            $kecamatan_take = $kecamatan->where('id', $siswa->kecamatan_id)->first();
-            $kelurahan_take = $kelurahan->where('id', $siswa->kelurahan_id)->first();
+            $provinsi_take = $provinsi->where('province_id', $siswa->provinsi_id)->first();
+            $kabupaten_take = $kabupaten->where('regency_id', $siswa->kabupaten_id)->first();
+            $kecamatan_take = $kecamatan->where('district_id', $siswa->kecamatan_id)->first();
+            $kelurahan_take = $kelurahan->where('village_id', $siswa->kelurahan_id)->first();
 
             $siswa->provinsi = $provinsi_take ? $provinsi_take['name'] : '';
             $siswa->kabupaten = $kabupaten_take ? $kabupaten_take['name'] : '';

@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\Api\Dashboard;
 
-use DB;
-use App\Models\Siswa;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use DB;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-
 
 class WilayahApi extends Controller
 {
@@ -15,9 +13,11 @@ class WilayahApi extends Controller
     {
         // $provinsi = Http::get("https://andypratama3.github.io/api-wilayah-indonesia/api/provinces.json");
         $provinsi = DB::table('provinsi')->orderBy('name')->get();
+
         // dd($provinsi);
         return $provinsi;
     }
+
     public function kabupaten(Request $request)
     {
         // $url = Http::get("https://andypratama3.github.io/api-wilayah-indonesia/api/regencies/$provinsi_id.json")->json();
@@ -26,12 +26,13 @@ class WilayahApi extends Controller
 
         $url = json_decode(json_encode($url), true);
 
-        if($url){
+        if ($url) {
             return response()->json(['data' => $url, 'success', 'Data Wilayah Sukses Di Ambil']);
-        }else{
+        } else {
             return response()->json(['error', 'Data Wilayah Tidak Ada']);
         }
     }
+
     public function kecamatan(Request $request)
     {
         // $url = Http::get("https://andypratama3.github.io/api-wilayah-indonesia/api/districts/$regency_id.json")->json();
@@ -40,12 +41,13 @@ class WilayahApi extends Controller
 
         $url = json_decode(json_encode($url), true);
 
-        if($url){
+        if ($url) {
             return response()->json(['data' => $url, 'success', 'Data Kecamatan Sukses Di Ambil']);
-        }else{
+        } else {
             return response()->json(['error', 'Data Wilayah Tidak Ada']);
         }
     }
+
     public function kelurahan(Request $request)
     {
         // $url = Http::get("https://andypratama3.github.io/api-wilayah-indonesia/api/villages/$district_id.json")->json();
@@ -55,9 +57,9 @@ class WilayahApi extends Controller
 
         $url = json_decode(json_encode($url), true);
 
-        if($url){
+        if ($url) {
             return response()->json(['data' => $url, 'success', 'Data Kecamatan Sukses Di Ambil']);
-        }else{
+        } else {
             return response()->json(['error', 'Data Wilayah Tidak Ada']);
         }
     }
@@ -79,8 +81,7 @@ class WilayahApi extends Controller
         $kecamatan = DB::table('kecamatan')->where('district_id', $kecamatan_id)->first();
         $kelurahan = DB::table('kelurahan')->where('village_id', $kelurahan_id)->first();
 
-
-        if (!$provinsi || !$kabupaten || !$kecamatan || !$kelurahan) {
+        if (! $provinsi || ! $kabupaten || ! $kecamatan || ! $kelurahan) {
             return response()->json([
                 'success' => false,
                 'message' => 'Data tidak ditemukan',

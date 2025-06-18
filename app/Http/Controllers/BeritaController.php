@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Berita;
 use App\Models\Artikel;
+use App\Models\Berita;
+use Illuminate\Http\Request;
+
 class BeritaController extends Controller
 {
     public function index(Request $request)
@@ -14,6 +15,7 @@ class BeritaController extends Controller
         if ($request->ajax()) {
             return view('berita.load', compact('beritas'));
         }
+
         return view('berita.index', compact('beritas'));
     }
 
@@ -23,14 +25,14 @@ class BeritaController extends Controller
         $berita->incrementClickCount();
 
         $latest_artikel = Artikel::orderBy('created_at', 'desc')->take(15)->get();
-        $artikel_trending_list = Artikel::select('id','name','artikel','image','created_at','slug')->orderBy('jumlah_klik','DESC')->take(15)->get();
+        $artikel_trending_list = Artikel::select('id', 'name', 'artikel', 'image', 'created_at', 'slug')->orderBy('jumlah_klik', 'DESC')->take(15)->get();
 
-        if(!$berita) {
+        if (! $berita) {
             abort(404);
         }
 
         // $berita->increment('views');
 
-        return view('berita.detail-berita', compact('berita','latest_artikel','artikel_trending_list'));
+        return view('berita.detail-berita', compact('berita', 'latest_artikel', 'artikel_trending_list'));
     }
 }

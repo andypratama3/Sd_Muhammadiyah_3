@@ -106,6 +106,7 @@ Route::group(['prefix' => '/',], function () {
     Route::get('pembayaran/pay', [PembayaranController::class, 'searchOrder'])->name('pembayaran.searchOrder');
     Route::get('pembayaran/detail', [PembayaranController::class, 'searchOrderDetail'])->name('pembayaran.searchOrderDetail');
     Route::get('pembayaran/snap/{order_id}', [PembayaranController::class, 'snap_url'])->name('snap_url');
+    Route::get('pembayaran/downloadQr/{order_id}', [PembayaranController::class, 'downloadQr'])->name('pembayaran.downloadQr');
     Route::get('pembayaran/cara-melakukan-pembayaran', [PembayaranController::class,'howToPay'])->name('howToPay');
     //fasilitas
     Route::get('fasilitas', [FasilitasController::class, 'index'])->name('fasilitas.index');
@@ -139,7 +140,7 @@ Route::group(['prefix' => '/',], function () {
     Route::get('spmb/pay',[SpmbController::class, 'pay'])->name('spmb.pay');
     Route::post('spmb/store',[SpmbController::class, 'store'])->name('spmb.store');
     Route::get('spmb/success/{orderID}',[SpmbController::class, 'success'])->name('spmb.success');
-    Route::get('spmb/detail/{orderID',[SpmbController::class, 'formDetail'])->name('formDetail');
+    Route::get('spmb/detail/{orderID}',[SpmbController::class, 'formDetail'])->name('formDetail');
     Route::post('spmb/detail/store', [SpmbController::class ,'formDetailStore'])->name('formDetail.store');
     //login with google
     Route::get('auth/google', [GoogleController::class, 'signGoogle'])->name('login.google');

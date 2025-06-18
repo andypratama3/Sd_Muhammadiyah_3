@@ -10,7 +10,7 @@ class AttendancesController extends Controller
     public function webhook(Request $request)
     {
         $request->validate([
-            
+
         ]);
     }
 }

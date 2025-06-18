@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Midtrans\Snap;
-use App\Models\Spmb;
-use Midtrans\Config;
-use App\Models\Charge;
-use GuzzleHttp\Client;
-use Illuminate\Support\Str;
 use App\Helpers\ImageHelper;
-use Illuminate\Http\Request;
-use App\Models\JudulPembayaran;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\Api\V1\MidtransPaymentController;
+use App\Models\JudulPembayaran;
+use App\Models\Spmb;
+use GuzzleHttp\Client;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
+use Midtrans\Config;
+use Midtrans\Snap;
 
 class SpmbController extends Controller
 {
@@ -25,11 +23,12 @@ class SpmbController extends Controller
     public function index()
     {
         // $nomor_urut = Spmb::max('nomor_urut');
+
         // return view('spmb.index', compact('nomor_urut'));
         return view('spmb.comming_soon');
     }
 
-     public function pay(Request $request)
+    public function pay(Request $request)
     {
         Config::$serverKey = env('MIDTRANS_SERVER_KEY');
         Config::$isSanitized = true;
@@ -46,11 +45,11 @@ class SpmbController extends Controller
         $judulPembayaran = JudulPembayaran::where('name', 'SPMB')->first();
 
         $server_key = env('MIDTRANS_SERVER_KEY');
-        $client = new Client();
+        $client = new Client;
         $mode = config('midtrans.is_production');
         $check_transaction = $client->get("https://api.sandbox.midtrans.com/v2/{$orderId}/status", [
             'headers' => [
-                'Authorization' => 'Basic ' . base64_encode($server_key . ':'),
+                'Authorization' => 'Basic '.base64_encode($server_key.':'),
             ],
         ]);
 
@@ -63,7 +62,6 @@ class SpmbController extends Controller
                 'transaction_status' => $transaction_status['transaction_status'],
             ]);
         }
-
 
         $params = [
             'transaction_details' => [
@@ -79,7 +77,7 @@ class SpmbController extends Controller
                     'id' => (string) Str::uuid(),
                     'price' => 300000,
                     'quantity' => 1,
-                    'name' => ($judulPembayaran ? $judulPembayaran->name : 'SPMB') . ' - ' . ($request->nama ?? ''),
+                    'name' => ($judulPembayaran ? $judulPembayaran->name : 'SPMB').' - '.($request->nama ?? ''),
                 ],
                 [
                     'id' => (string) Str::uuid(),
@@ -143,7 +141,7 @@ class SpmbController extends Controller
         $response = Http::withBasicAuth($server_key, '')
             ->get("https://api.sandbox.midtrans.com/v2/{$orderId}/status");
 
-        if (!$response->successful()) {
+        if (! $response->successful()) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Gagal memverifikasi status transaksi dari Midtrans.',
@@ -161,10 +159,10 @@ class SpmbController extends Controller
             if ($request->hasFile($field)) {
                 $file = $request->file($field);
                 $ext = strtolower($file->getClientOriginalExtension());
-                $filename = ucfirst($field) . '_' . Str::slug($validatedData['nama']) . '_' . date('YmdHis') . '.' . $ext;
+                $filename = ucfirst($field).'_'.Str::slug($validatedData['nama']).'_'.date('YmdHis').'.'.$ext;
                 $destination = public_path("storage/files/spmb/$field/");
 
-                if (!file_exists($destination)) {
+                if (! file_exists($destination)) {
                     mkdir($destination, 0755, true);
                 }
 
@@ -182,7 +180,7 @@ class SpmbController extends Controller
 
         $phone = $request->phone_orang_tua ?? $request->phone_wali ?? null;
 
-        if(Spmb::where('order_id', $orderId)->exists()) {
+        if (Spmb::where('order_id', $orderId)->exists()) {
             $spmb = Spmb::where('order_id', $orderId)->first();
             $spmb->update([
                 'phone' => $phone,
@@ -242,6 +240,7 @@ class SpmbController extends Controller
     public function success($orderID)
     {
         $spmb = Spmb::where('order_id', $orderID)->firstOrFail();
+
         return view('spmb.success', compact('spmb'));
     }
 
@@ -249,20 +248,32 @@ class SpmbController extends Controller
     {
         $spmb = Spmb::where('order_id', $orderId)->firstOrFail();
 
-        if($spmb->status_pembayaran != 'settlement') {
+        if (! $spmb) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Pembayaran Belum Lunas'
+                'message' => 'Data Tidak Di Temukan',
             ]);
         }
 
-        if(!$spmb) {
+        if ($spmb->status_pembayaran != 'settlement') {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Data Tidak Di Temukan'
+                'message' => 'Pembayaran Belum Lunas',
             ]);
-        }
 
+            $server_key = env('MIDTRANS_SERVER_KEY');
+            $orderId = $validatedData['order_id'];
+
+            $response = Http::withBasicAuth($server_key, '')
+                ->get("https://api.sandbox.midtrans.com/v2/{$orderId}/status");
+
+            if (! $response->successful()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Gagal memverifikasi status transaksi dari Midtrans.',
+                ], 500);
+            }
+        }
 
         return view('spmb.form_detail', compact('spmb'));
     }
@@ -270,7 +281,7 @@ class SpmbController extends Controller
     public function formDetailStore(Request $request)
     {
         $request->validate([
-            // ''
+            'nama' => 'required|string',
         ]);
     }
 }

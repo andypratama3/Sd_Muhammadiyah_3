@@ -2,45 +2,53 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Models\Category;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\DataTransferObjects\CategoryData;
 use App\Actions\Dashboard\Category\CategoryAction;
 use App\Actions\Dashboard\Category\categoryDeleteAction;
+use App\DataTransferObjects\CategoryData;
+use App\Http\Controllers\Controller;
+use App\Models\Category;
 
 class CategoryArtikel extends Controller
 {
     public function index()
     {
         $limit = 15;
-        $categorys = Category::select(['name','slug'])->latest()->paginate($limit);
+        $categorys = Category::select(['name', 'slug'])->latest()->paginate($limit);
         $count = Category::all()->count();
         $no = $limit * ($categorys->currentPage() - 1);
-        return view('dashboard.artikel.category.index', compact('categorys','no','count'));
+
+        return view('dashboard.artikel.category.index', compact('categorys', 'no', 'count'));
     }
+
     public function create()
     {
         return view('dashboard.artikel.category.create');
     }
+
     public function store(CategoryData $categoryData, CategoryAction $categoryAction)
     {
         $categoryAction->execute($categoryData);
-        return redirect()->route('dashboard.news.category.index')->with('success','Berhasil Menambhakan Category Artikel');
+
+        return redirect()->route('dashboard.news.category.index')->with('success', 'Berhasil Menambhakan Category Artikel');
     }
+
     public function edit(Category $category)
     {
         return view('dashboard.artikel.category.edit', compact('category'));
     }
+
     public function update(CategoryData $categoryData, CategoryAction $categoryAction)
     {
         $categoryAction->execute($categoryData);
-        return redirect()->route('dashboard.news.category.index')->with('success','Berhasil Update Category Artikel');
+
+        return redirect()->route('dashboard.news.category.index')->with('success', 'Berhasil Update Category Artikel');
     }
+
     public function destroy(Category $category, categoryDeleteAction $categoryDeleteAction)
     {
         $categoryDeleteAction->execute($category);
-        return redirect()->route('dashboard.news.category.index')->with('success','Berhasil Manghapus Category Artikel');
+
+        return redirect()->route('dashboard.news.category.index')->with('success', 'Berhasil Manghapus Category Artikel');
 
     }
 }

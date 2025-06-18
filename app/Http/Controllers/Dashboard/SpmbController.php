@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Http\Controllers\Controller;
 use App\Models\Spmb;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Yajra\DataTables\Facades\DataTables;
 
 class SpmbController extends Controller
@@ -20,14 +20,15 @@ class SpmbController extends Controller
 
         return DataTables::of($spmb)
             ->addColumn('nomor_urut', function ($row) {
-                $nomor_urut =  sprintf('%03d', $row->nomor_urut);
+                $nomor_urut = sprintf('%03d', $row->nomor_urut);
+
                 return $nomor_urut;
             })
             ->addColumn('action', function ($row) {
                 return '
-                    <a href="' . route('dashboard.spmb.show', $row->id) . '" class="btn btn-sm btn-warning"><i class="fa fa-eye"></i></a>
-                    <a href="' . route('dashboard.spmb.edit', $row->id) . '" class="btn btn-sm btn-primary"><i class="fa fa-pen"></i></a>
-                    <button data-id="' . $row['id'] . '" class="btn btn-sm btn-danger" id="btn-delete"><i class="fa fa-trash"></i></button>
+                    <a href="'.route('dashboard.spmb.show', $row->id).'" class="btn btn-sm btn-warning"><i class="fa fa-eye"></i></a>
+                    <a href="'.route('dashboard.spmb.edit', $row->id).'" class="btn btn-sm btn-primary"><i class="fa fa-pen"></i></a>
+                    <button data-id="'.$row['id'].'" class="btn btn-sm btn-danger" id="btn-delete"><i class="fa fa-trash"></i></button>
                 ';
             })
             ->addColumn('status', function ($row) {
@@ -40,7 +41,7 @@ class SpmbController extends Controller
                 }
 
             })
-            ->rawColumns(['action','status'])
+            ->rawColumns(['action', 'status'])
             ->addIndexColumn()
             ->make(true);
     }
@@ -58,17 +59,16 @@ class SpmbController extends Controller
 
         $action = $spmb->delete();
 
-        if(!$action) {
+        if (! $action) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Gagal Menghapus Data'
+                'message' => 'Gagal Menghapus Data',
             ]);
         }
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Berhasil Menghapus Data'
+            'message' => 'Berhasil Menghapus Data',
         ]);
     }
 }
-

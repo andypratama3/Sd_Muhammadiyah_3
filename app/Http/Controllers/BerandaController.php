@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Achivement;
+use App\Models\Berita;
+use App\Models\Cooperation;
+use App\Models\Esktrakurikuler;
+use App\Models\Fasilitas;
+use App\Models\Gallery;
 use App\Models\Guru;
 use App\Models\Hero;
 use App\Models\Kelas;
-use App\Models\Siswa;
-use App\Models\Berita;
-use App\Models\Gallery;
-use App\Models\Visitor;
 use App\Models\Prestasi;
-use App\Models\Fasilitas;
-use App\Models\Achivement;
-use App\Models\Cooperation;
-use App\Models\Esktrakurikuler;
-use Illuminate\Support\Facades\Cache;
+use App\Models\Siswa;
+use App\Models\Visitor;
 
 class BerandaController extends Controller
 {
@@ -32,7 +31,6 @@ class BerandaController extends Controller
             $q->where('name', '!=', 'Lulus');
         })->count();
 
-
         $guru = Guru::count();
         $fasilitas = Fasilitas::count();
         $prestasis_siswa = Prestasi::where('status', '1')->count();
@@ -48,8 +46,9 @@ class BerandaController extends Controller
         $esktrakurikuler = Esktrakurikuler::count();
 
         $prestasi_terakhir = Prestasi::Where('status', '1')->orderBy('created_at', 'desc')->take(4)->get();
-        $gallerys = Gallery::select('name', 'foto', 'slug','cover')->take(8)->get();
-        //loop prestasi sekolah dan prestasi siswa
+        $gallerys = Gallery::select('name', 'foto', 'slug', 'cover')->take(8)->get();
+
+        // loop prestasi sekolah dan prestasi siswa
         return view('beranda', compact(
             'beritas',
             'siswas',

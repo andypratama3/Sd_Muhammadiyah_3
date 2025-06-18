@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Siswa;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 class MidtransApi extends Controller
 {
@@ -12,15 +11,15 @@ class MidtransApi extends Controller
     {
         $charge = Charge::where('order_id', $request->order_id)->first();
 
-        if($request->status == 'settlement'){
-            
+        if ($request->status == 'settlement') {
+
         }
 
         if ($charge) {
             return response()->json([
                 'status' => 'success',
                 'message' => 'Charge found',
-                'data' => $charge
+                'data' => $charge,
             ]);
         }
     }

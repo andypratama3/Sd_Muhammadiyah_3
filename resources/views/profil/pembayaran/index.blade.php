@@ -293,6 +293,21 @@
                                                                                             <button class="btn btn-primary btn-sm" style="font-size: 10px;" id="detailButton" data-id="{{ $charge->id }}">Detail Pembayaran</button>
                                                                                             @elseif($charge->transaction_status == 'free')
                                                                                             <button class="btn btn-primary btn-sm" style="font-size: 10px;">Gratis</button>
+                                                                                            @elseif($charge->kategori_pembayaran->name === 'SPP')
+                                                                                           @if($charge->url_action !== null)
+                                                                                                    <button
+                                                                                                        class="btn btn-primary btn-sm btn-show-qr btn-qr-show-{{ $charge->id }} mt-2"
+                                                                                                        data-id="{{ $charge->id }}"
+                                                                                                        data-url="{{ $charge->url_action }}">
+                                                                                                        Lihat Gambar QR
+                                                                                                    </button>
+                                                                                                    <button
+                                                                                                        class="btn btn-danger d-none btn-sm btn-qr-hide btn-qr-hide-{{ $charge->id }} mt-2"
+                                                                                                        data-id="{{ $charge->id }}"
+                                                                                                        data-url="{{ $charge->url_action }}">
+                                                                                                        Tutup Gambar QR
+                                                                                                    </button>
+                                                                                                @endif
                                                                                             @else
                                                                                             <button class="btn btn-success btn-sm" data-id="{{ $charge->id }}" id="payButton">Bayar</button>
                                                                                         @endif
@@ -302,7 +317,7 @@
                                                                             <br>
                                                                             @if($charge->transaction_status == 'settlement')
                                                                             @elseif($charge->transaction_status == 'free')
-                                                                            @else
+                                                                            @elseif($charge->kategori_pembayaran->name === 'DPP')
                                                                             <div class="col-md-12 col-sm-12 virtual-account">
                                                                                 <div class="input-group">
                                                                                     <span class="input-group-text fw-bold"><strong>Virtual Account</strong></span>
@@ -322,6 +337,19 @@
                                                                                 </div>
                                                                             </div>
                                                                             <p><code>Hanya Melalui BRI / BRIVA</code></p>
+                                                                            @elseif($charge->kategori_pembayaran->name === 'SPP')
+                                                                                <div class="col-md-12 col-sm-12 text-center">
+                                                                                    <div class="spinner-border text-primary d-none spinner-qr-{{ $charge->id }}" role="status">
+                                                                                        <span class="visually-hidden">Loading...</span>
+                                                                                    </div>
+                                                                                    @if($charge->url_action !== null)
+                                                                                    <img src="" alt="" class="img-fluid w-30 text-center img-qr-{{ $charge->id }}">
+                                                                                    <p class=".p-{{ $charge->id }} d-none"><code>Scan QR Code Untuk Melakukan Pembayaran</code></p>
+                                                                                    <a href="{{ route('pembayaran.downloadQr', $charge->id) }}" download="qr-code-{{ $charge->url_action }}.png" class="btn btn-primary btn-sm d-none btn-qr-download-{{ $charge->id }}">
+                                                                                        Download QR
+                                                                                    </a>
+                                                                                    @endif
+                                                                                </div>
                                                                             @endif
                                                                             <hr>
                                                                         @endforeach
@@ -358,8 +386,6 @@
                     <a href="{{ route('howToPay') }}" class="btn btn-primary ">Cara Melakukan Pembayaran</a>
                 </div>
             </div>
-
-
 
             <!-- Modal -->
             <div class="modal fade bd-example-modal-lg" id="modal_detail" tabindex="-1" role="dialog" aria-labelledby="modal_detailTitle" aria-hidden="true">
@@ -413,14 +439,12 @@
                     </div>
                 </div>
             </div>
-
-
         </div>
     </div>
 </div>
 
 @push('js_user')
-<script src="https://app.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}"></script>
+<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}"></script>
 {{-- <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script> --}}
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -429,11 +453,7 @@
 </script>
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function () {
-        // Select all collapse elements
         const collapses = document.querySelectorAll('.accordion-collapse');
-
-        // when click accordion append in url when reload can open again
-
 
         collapses.forEach(function (collapse) {
             // Listen for when the collapse is shown
@@ -489,31 +509,53 @@
 
 
     $(document).ready(function () {
-
-        // set time out
-    //     setInterval(() => {
-    //     $('.row, .accordion').each(function () {
-    //         $(this).load(location.href + " " + $(this).attr('class'));
-    //     });
-    // }, 5000);
-    $('.accordion').on('click', '.button_copy_va,input', function () {
-            const va_number = $(this).closest('.input-group').find('input').val(); // Ambil input value
-            navigator.clipboard.writeText(va_number).then(() => {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil',
-                    text: 'Nomor Virtual Account berhasil disalin',
-                });
-                // change button text
-                $(this).text('Disalin');
-            }).catch(err => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Gagal',
-                    text: 'Terdapat kesalahan saat menyalin nomor Virtual Account',
+        $('.accordion').on('click', '.button_copy_va,input', function () {
+                const va_number = $(this).closest('.input-group').find('input').val(); // Ambil input value
+                navigator.clipboard.writeText(va_number).then(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: 'Nomor Virtual Account berhasil disalin',
+                    });
+                    // change button text
+                    $(this).text('Disalin');
+                }).catch(err => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: 'Terdapat kesalahan saat menyalin nomor Virtual Account',
+                    });
                 });
             });
+
+      $('.accordion').on('click', '.btn-show-qr', function () {
+            let charge_id = $(this).data('id');
+            const url_action = $(this).data('url');
+
+            // Show loading
+            $(`.spinner-qr-${charge_id}`).removeClass('d-none');
+
+            // Load image and then show it
+            const img = new Image();
+            img.onload = function () {
+                $(`.img-qr-${charge_id}`).attr('src', url_action).removeClass('d-none');
+                $(`.spinner-qr-${charge_id}`).addClass('d-none');
+                $(`.p-${charge_id}`).addClass('d-none');
+                $(`.btn-qr-download-${charge_id}`).removeClass('d-none');
+                $(`.btn-qr-show-${charge_id}`).addClass('d-none');
+                $(`.btn-qr-hide-${charge_id}`).removeClass('d-none');
+                $(`.btn-qr-hide-${charge_id}`).on('click', function () {
+                    $(`.img-qr-${charge_id}`).addClass('d-none');
+                    $(`.p-${charge_id}`).removeClass('d-none');
+                    $(`.btn-qr-download-${charge_id}`).addClass('d-none');
+                    $(`.btn-qr-show-${charge_id}`).removeClass('d-none');
+                    $(`.btn-qr-hide-${charge_id}`).addClass('d-none');
+                });
+            };
+            img.src = url_action;
         });
+
+
 
         $('#modal_how_pay_button').click(function () {
             $('#modal_how_pay').modal('show');
@@ -550,7 +592,7 @@
                 success: function (response) {
                     if (response.status === 'success' && response.snap_token) {
                         let snapToken = response.snap_token;
-
+                        console.log(snapToken);
 
                         snap.pay(snapToken, {
                             onSuccess: function (result) {

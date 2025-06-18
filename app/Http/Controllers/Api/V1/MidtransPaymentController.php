@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use DB;
-use App\Models\Charge;
-use GuzzleHttp\Client;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Charge;
+use DB;
+use GuzzleHttp\Client;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class MidtransPaymentController extends Controller
 {
@@ -18,7 +18,6 @@ class MidtransPaymentController extends Controller
         if ($request->isMethod('GET')) {
             return response()->json(['message' => 'OK'], 200);
         }
-
 
         try {
             $midtransResponse = $request->all();
@@ -32,7 +31,7 @@ class MidtransPaymentController extends Controller
                 ]);
             }
 
-            if (!isset($midtransResponse['order_id'])) {
+            if (! isset($midtransResponse['order_id'])) {
                 return response()->json(['message' => 'Invalid request, order_id not found'], 400);
             }
 
@@ -72,7 +71,7 @@ class MidtransPaymentController extends Controller
                 ->orWhere('order_id_1', $midtransResponse['order_id'])
                 ->first();
 
-            if (!$charge) {
+            if (! $charge) {
                 return response()->json(['message' => 'Charge not found'], 404);
             }
 
@@ -83,11 +82,11 @@ class MidtransPaymentController extends Controller
             if (in_array($midtransResponse['transaction_status'], ['settlement', 'capture'])) {
                 try {
                     $server_key = env('MIDTRANS_SERVER_KEY');
-                    $client = new Client();
+                    $client = new Client;
                     $mode = config('midtrans.is_production');
                     $check_transaction = $client->get("https://api.midtrans.com/v2/{$charge->order_id}/status", [
                         'headers' => [
-                            'Authorization' => 'Basic ' . base64_encode($server_key . ':'),
+                            'Authorization' => 'Basic '.base64_encode($server_key.':'),
                         ],
                     ]);
 
@@ -96,7 +95,7 @@ class MidtransPaymentController extends Controller
                     if ($transaction_status['transaction_status'] === 'expire') {
                         $cancelResponse = $client->post("https://api.midtrans.com/v2/{$charge->order_id}/cancel", [
                             'headers' => [
-                                'Authorization' => 'Basic ' . base64_encode($server_key . ':'),
+                                'Authorization' => 'Basic '.base64_encode($server_key.':'),
                             ],
                         ]);
 
@@ -106,7 +105,7 @@ class MidtransPaymentController extends Controller
                         }
                     }
                 } catch (\Exception $e) {
-                    return response()->json(['message' => 'Error saat membatalkan transaksi lama: ' . $e->getMessage()], 500);
+                    return response()->json(['message' => 'Error saat membatalkan transaksi lama: '.$e->getMessage()], 500);
                 }
                 $data['transaction_status'] = 'settlement';
             }
@@ -117,7 +116,7 @@ class MidtransPaymentController extends Controller
 
             $siswaName = $charge->siswa->name ?? 'Unknown Student';
 
-            if(in_array($midtransResponse['transaction_status'], ['settlement', 'capture'])) {
+            if (in_array($midtransResponse['transaction_status'], ['settlement', 'capture'])) {
                 $status = 'settlement';
                 activity()
                     ->useLog('default')
@@ -129,27 +128,24 @@ class MidtransPaymentController extends Controller
                     ->log("Murid: {$siswaName} Melakukan Pembayaran Dengan Status {$status} Pada Order ID: {$charge->order_id}");
             }
 
-
             $charge->update($data);
 
             return response()->json(['message' => 'Payment data updated successfully'], 200);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
+            return response()->json(['message' => 'Terjadi kesalahan: '.$e->getMessage()], 500);
         }
     }
 
-
-
     public function update_transaction_status($charge, $status)
     {
-        $client = new Client();
+        $client = new Client;
         $server_key = env('MIDTRANS_SERVER_KEY');
 
         try {
             $response = $client->post("https://api.midtrans.com/v2/{$charge->order_id}/cancel", [
                 'headers' => [
                     'Accept' => 'application/json',
-                    'Authorization' => 'Basic ' . base64_encode("$server_key:"),
+                    'Authorization' => 'Basic '.base64_encode("$server_key:"),
                     'Content-Type' => 'application/json',
                 ],
             ]);
@@ -157,8 +153,8 @@ class MidtransPaymentController extends Controller
             $responseData = json_decode($response->getBody(), true);
 
             // Jika status transaksi tidak bisa diubah
-            if (isset($responseData['status_code']) && $responseData['status_code'] == "412") {
-                //save meesage error
+            if (isset($responseData['status_code']) && $responseData['status_code'] == '412') {
+                // save meesage error
                 DB::table('error_log')->insert([
                     'error' => $responseData['status_message'],
                     'status_code' => $responseData['status_code'],
@@ -169,9 +165,10 @@ class MidtransPaymentController extends Controller
                 throw new \Exception($responseData['status_message']);
             }
 
-            return ($responseData['status_code'] == 200 || $responseData['status_code'] == 201);
+            return $responseData['status_code'] == 200 || $responseData['status_code'] == 201;
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Gagal memperbarui status Midtrans: ' . $e->getMessage()], 500);
+            return response()->json(['message' => 'Gagal memperbarui status Midtrans: '.$e->getMessage()], 500);
+
             return false;
         }
     }
@@ -181,8 +178,5 @@ class MidtransPaymentController extends Controller
         //
     }
 
-    public function callback_error(Request $request)
-    {
-
-    }
+    public function callback_error(Request $request) {}
 }

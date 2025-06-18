@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Models\Fasilitas;
-use App\Http\Controllers\Controller;
-use App\DataTransferObjects\FasilitasData;
-use App\Actions\Dashboard\Fasilitas\FasilitasAction;
 use App\Actions\Dashboard\Fasilitas\DeleteFasilitasAction;
+use App\Actions\Dashboard\Fasilitas\FasilitasAction;
+use App\DataTransferObjects\FasilitasData;
+use App\Http\Controllers\Controller;
+use App\Models\Fasilitas;
 
 class FasilitasController extends Controller
 {
     /**
      * ! Fasilitas Change Name Sarana &  Prasarana
-     *
-     *
      */
     public function index()
     {
@@ -21,7 +19,8 @@ class FasilitasController extends Controller
         $fasilitass = Fasilitas::select(['nama_fasilitas', 'desc', 'foto', 'slug'])->orderBy('created_at', 'desc')->paginate($limit);
         $count = Fasilitas::count();
         $no = $limit * ($fasilitass->currentPage() - 1);
-        return view('dashboard.fasilitas.index', compact('no','count','fasilitass'));
+
+        return view('dashboard.fasilitas.index', compact('no', 'count', 'fasilitass'));
     }
 
     public function create()
@@ -34,13 +33,13 @@ class FasilitasController extends Controller
 
         $FasilitasAction->execute($FasilitasData);
 
-
         return redirect()->route('dashboard.datasekolah.fasilitas.index')->with('success', 'Fasilitas Berhasil Di Tambah');
     }
 
     public function show($slug)
     {
         $fasilitas = Fasilitas::where('slug', $slug)->firstOrFail();
+
         return view('dashboard.fasilitas.show', compact('fasilitas'));
     }
 
@@ -49,10 +48,11 @@ class FasilitasController extends Controller
 
         $fasilitas = Fasilitas::where('slug', $slug)->firstOrFail();
         $images = explode(',', $fasilitas->foto);
-        return view('dashboard.fasilitas.edit', compact('fasilitas','images'));
+
+        return view('dashboard.fasilitas.edit', compact('fasilitas', 'images'));
     }
 
-    public function update(FasilitasAction $FasilitasAction,FasilitasData $FasilitasData )
+    public function update(FasilitasAction $FasilitasAction, FasilitasData $FasilitasData)
     {
         $FasilitasAction->execute($FasilitasData);
 
@@ -62,6 +62,7 @@ class FasilitasController extends Controller
     public function destroy(DeleteFasilitasAction $deleteFasilitasAction, $slug)
     {
         $deleteFasilitasAction->execute($slug);
+
         return redirect()->route('dashboard.datasekolah.fasilitas.index')->with('success', 'Fasilitas Berhasil Di Hapus!');
     }
 }

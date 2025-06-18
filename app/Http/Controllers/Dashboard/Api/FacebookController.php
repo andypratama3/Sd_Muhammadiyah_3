@@ -10,6 +10,7 @@ class FacebookController extends Controller
     public function getData(Request $request)
     {
         $data = $request->all();
+
         return response()->json(['data' => 'data']);
     }
 }

@@ -73,8 +73,8 @@ class ChargePayment extends Command
                     'order_id' => $order_id,
                     'siswa_id' => $siswa->id,
                     'gross_amount' => $gross_amount,
-                    'payment_type' => 'bank_transfer',
-                    'bank' => 'bri',
+                    'payment_type' => 'qris',
+                    'bank' => 'gopay',
                     'va_number' => $vaNumber,
                     'transaction_id' => Str::uuid(),
                     'transaction_time' => now(),
@@ -108,12 +108,8 @@ class ChargePayment extends Command
     {
         $monthName = Carbon::now()->locale('id_ID')->format('F');
 
-        // nisn = 3166368409
-        // va = 666120 3166368409 05
-        // va = 666123166368409 408
-
         $params = [
-            'payment_type' => 'bank_transfer',
+            'payment_type' => 'qris',
             'transaction_details' => [
                 'order_id' => $order_id,
                 'gross_amount' => $gross_amount,
@@ -123,12 +119,10 @@ class ChargePayment extends Command
                 'email' => $siswa->email,
                 'phone' => $siswa->no_hp,
             ],
-            'bank_transfer' => [
-                'bank' => 'bri',
-                'va_number' => $vaNumber,
+            'qris' => [
+                'acquirer' => 'gopay',
             ],
             'custom_expiry' => [
-                // 'order_time' => now()->toIso8601String(),
                 'expiry_duration' => 365,
                 'unit' => 'day',
             ],
@@ -168,17 +162,18 @@ class ChargePayment extends Command
             $responseData = json_decode($response->getBody(), true);
 
             if ($responseData['status_code'] == 201) {
-                $this->info("VA untuk {$siswa->name}: " . $responseData['va_numbers'][0]['va_number']);
-                // $this->info("Transaksi akan kedaluwarsa dalam {$params['expiry']['duration']} {$params['expiry']['unit']}");
-
-
+                // $this->info("VA untuk {$siswa->name}: " . $responseData['va_numbers'][0]['va_number']);
+                $this->info("Transaksi akan kedaluwarsa dalam {$responseData['expiry_time']}.");
                 DB::table('charges')
                     ->where('order_id', $responseData['order_id'])
                     ->update([
-                        'va_number' => $responseData['va_numbers'][0]['va_number'],
+                        'va_number' => $responseData['va_numbers'][0]['va_number'] ?? null,
                         'snap_token' => $responseData['token'] ?? null,
                         'transaction_status' => $responseData['transaction_status'],
                         'transaction_id' => $responseData['transaction_id'],
+                        'name_action' => $responseData['actions'][0]['name'] ?? null,
+                        'method' => $responseData['actions'][0]['method'] ?? null,
+                        'url_action' => $responseData['actions'][0]['url'] ?? null,
                     ]);
 
                 $this->info("Pembayaran untuk {$siswa->name} berhasil dikirim ke Midtrans.");
@@ -192,17 +187,6 @@ class ChargePayment extends Command
             }
         } catch (\Exception $e) {
             $this->error("Gagal mengirim pembayaran ke Midtrans untuk {$siswa->name}: " . $e->getMessage());
-            // dd($e->getMessage());
         }
     }
-
-    // private function generateNewVaNumber()
-    // {
-    //     do {
-    //         $vaNumber = rand(1000000000, 9999999999);
-    //         $exists = DB::table('siswas')->where('va_number', $vaNumber)->exists();
-    //     } while ($exists);
-
-    //     return $vaNumber;
-    // }
 }

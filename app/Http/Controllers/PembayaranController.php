@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Midtrans\Snap;
-use Midtrans\Config;
-use App\Models\Siswa;
 use App\Models\Charge;
+use App\Models\Siswa;
 use GuzzleHttp\Client;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Str;
+use Midtrans\Config;
+use Midtrans\Snap;
 
 class PembayaranController extends Controller
 {
@@ -29,6 +28,7 @@ class PembayaranController extends Controller
             } catch (\Exception $e) {
                 // If decryption fails, encrypt the nisn and redirect
                 $encrypted = Crypt::encryptString($request->nisn);
+
                 return redirect()->route('pembayaran.index', ['nisn' => $encrypted]);
             }
 
@@ -54,10 +54,6 @@ class PembayaranController extends Controller
         return view('profil.pembayaran.index', compact('nisn_plain', 'list_pembayaran', 'siswa'));
     }
 
-
-
-
-
     // public function searchOrder()
     // {
 
@@ -70,7 +66,7 @@ class PembayaranController extends Controller
         ]);
 
         $charge = Charge::find($request->charge_id);
-        if (!$charge) {
+        if (! $charge) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Charge tidak ditemukan',
@@ -78,7 +74,7 @@ class PembayaranController extends Controller
         }
 
         $siswa = Siswa::find($charge->siswa_id);
-        if (!$siswa) {
+        if (! $siswa) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Data siswa tidak ditemukan',
@@ -91,22 +87,22 @@ class PembayaranController extends Controller
         Config::$isSanitized = true;
         Config::$is3ds = true;
 
-        $client = new Client();
+        $client = new Client;
         $server_key = env('MIDTRANS_SERVER_KEY');
 
         try {
             // Ambil data transaksi dari Midtrans
-            $response = $client->get("https://api.midtrans.com/v2/{$charge->order_id}/status", [
+            $response = $client->get("https://api.sandbox.midtrans.com/v2/{$charge->order_id}/status", [
                 'headers' => [
                     'Accept' => 'application/json',
-                    'Authorization' => 'Basic ' . base64_encode($server_key . ':'),
+                    'Authorization' => 'Basic '.base64_encode($server_key.':'),
                     'Content-Type' => 'application/json',
                 ],
             ]);
 
             $responseData = json_decode($response->getBody(), true);
 
-            if (!isset($responseData['order_id'], $responseData['gross_amount'])) {
+            if (! isset($responseData['order_id'], $responseData['gross_amount'])) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Data transaksi tidak lengkap dari Midtrans',
@@ -133,16 +129,16 @@ class PembayaranController extends Controller
                     ],
                     [
                         'id' => 2,
-                        'name' => "Biaya Administrasi Sekolah Kreatif SD Muhammadiyah 3 Samarinda",
+                        'name' => 'Biaya Administrasi Sekolah Kreatif SD Muhammadiyah 3 Samarinda',
                         'price' => $biaya,
                         'quantity' => 1,
-                    ]
+                    ],
 
                 ],
                 'expiry' => [
-                    "unit" => "days",
+                    'unit' => 'days',
                     // "unit" => "minutes",
-                    "duration" => 20,
+                    'duration' => 20,
                 ],
 
             ];
@@ -153,6 +149,8 @@ class PembayaranController extends Controller
                 $charge->snap_token = $snapToken;
                 $charge->order_id_1 = $order_id;
                 $charge->update();
+
+                // dd($snapToken);
 
                 return response()->json([
                     'status' => 'success',
@@ -174,7 +172,6 @@ class PembayaranController extends Controller
         }
     }
 
-
     public function searchOrderDetail(Request $request)
     {
         $request->validate([
@@ -182,7 +179,7 @@ class PembayaranController extends Controller
         ]);
 
         $charge = Charge::find($request->charge_id);
-        if (!$charge) {
+        if (! $charge) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Charge tidak ditemukan',
@@ -190,14 +187,12 @@ class PembayaranController extends Controller
         }
 
         $siswa = Siswa::find($charge->siswa_id);
-        if (!$siswa) {
+        if (! $siswa) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Data siswa tidak ditemukan',
             ]);
         }
-
-
 
         return response()->json([
             'status' => 'success',
@@ -209,5 +204,16 @@ class PembayaranController extends Controller
     {
         return view('profil.pembayaran.howtopay');
     }
-}
 
+    public function downloadQr($id)
+    {
+        $charge = Charge::findOrFail($id);
+        $url = $charge->url_action;
+
+        $contents = file_get_contents($url);
+
+        return response($contents)
+            ->header('Content-Type', 'image/png')
+            ->header('Content-Disposition', 'attachment; filename="qr-siswa-'.$charge->name.'.png"');
+    }
+}
