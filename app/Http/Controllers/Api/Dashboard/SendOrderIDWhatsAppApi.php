@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Api\Dashboard;
 
-use App\Http\Controllers\Controller;
 use App\Models\Charge;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use Twilio\Rest\Client as TwilioClient;
 
@@ -11,46 +12,70 @@ class SendOrderIDWhatsAppApi extends Controller
 {
     public function sendMessage($orderId)
     {
-        $charge = Charge::with(['siswa'])->where('order_id', $orderId)->first();
-
+        $charge = Charge::with(['siswa.kelas'])->where('order_id', $orderId)->first();
         if (! $charge) {
-            return response()->json(['status' => 'error', 'message' => 'Payment not found.'], 404);
+            return response()->json(['status' => 'error', 'message' => 'Pembayaran tidak ditemukan.'], 404);
         }
 
-        // Prepare recipient details
-        // $no_hp = '+62' . ltrim($pembayaran->siswa->no_hp, '0'); // Format phone number for WhatsApp
-        $no_hp = '+6285349734475';
-        $siswa_name = $charge->siswa->first()->name;
-        $siswa_kelas = $charge->siswa->kelas->first()->name;
-        $gross_amount = intval($charge->siswa->first()->spp);
+        $categoryname = $charge->kategori_pembayaran->name;
 
-        // Retrieve Twilio credentials from environment variables
+
+        $siswa = $charge->siswa->first();
+        $kelas = $siswa->kelas->first();
+        $grossAmount = intval($charge->gross_amount);
+        $namaSiswa = $siswa->name;
+        $kelasSiswa = $kelas ? $kelas->name : 'Tidak diketahui';
+        $noHp = '+62' . ltrim($siswa->no_hp ?? '85349734475', '0');
+
+
+        // Twilio credentials
         $sid = env('TWILIO_SID');
         $token = env('TWILIO_AUTH_TOKEN');
         $whatsappFrom = env('TWILIO_WHATSAPP_FROM');
 
         if (! $sid || ! $token || ! $whatsappFrom) {
-            return response()->json(['status' => 'error', 'message' => 'Twilio configuration is missing.'], 500);
+            return response()->json(['status' => 'error', 'message' => 'Konfigurasi Twilio tidak lengkap.'], 500);
         }
 
         try {
-            // Initialize the Twilio client
-            $client = new TwilioClient($sid, $token);
+            $qrImageUrl = $charge->url_action;
+            $categoryname = $charge->kategori_pembayaran->name;
 
+            // Pesan WhatsApp
+            $body = "🌟 *INFORMASI TAGIHAN SPP* 🌟\n\n"
+                    . "Assalamu'alaikum Warahmatullahi Wabarakatuh.\n\n"
+                    . "Yth. Bapak/Ibu Wali dari ananda *$namaSiswa* (Kelas *$kelasSiswa*),\n\n"
+                    . "Kami sampaikan bahwa terdapat tagihan pembayaran pendidikan dengan rincian sebagai berikut:\n\n"
+                    . "📌 *Kategori Pembayaran*: $categoryname\n"
+                    . "💰 *Jumlah Tagihan*: Rp " . number_format($grossAmount, 0, ',', '.') . "\n\n"
+                    . "Untuk kemudahan transaksi, silakan melakukan pembayaran dengan memindai QR Code berikut:\n"
+                    . "$qrImageUrl\n\n"
+                    . "🕊️ Mohon melakukan pembayaran tepat waktu demi kelancaran proses belajar-mengajar.\n\n"
+                    . "Apabila telah melakukan pembayaran, Bapak/Ibu tidak perlu membalas pesan ini.\n\n"
+                    . "Terima kasih atas perhatian dan kerjasamanya.\n\n"
+                    . "Wassalamu'alaikum Warahmatullahi Wabarakatuh.";
+
+
+            // Kirim pesan dengan gambar
+            $client = new TwilioClient($sid, $token);
             $message = $client->messages->create(
-                'whatsapp:+6282217160075',
+                'whatsapp:' . $noHp,
                 [
-                    // 'from' => $whatsappFrom,
-                    'from' => 'whatsapp:+14155238886',
-                    'body' => "Halo Bapak/Ibu Dari $siswa_name, \n\n $siswa_kelas Memiliki Pembayaran with Order ID: $orderId has been received. The amount is Rp ".number_format($gross_amount, 0, ',', '.').'. Thank you!',
+                    'from' => $whatsappFrom,
+                    'body' => $body,
+                    "mediaUrl" => ["https://images.unsplash.com/photo-1431250620804-78b175d2fada?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1600&h=900&fit=crop&ixid=eyJhcHBfaWQiOjF9"],
+
                 ]
             );
 
             return response()->json(['status' => 'success', 'message_sid' => $message->sid], 200);
-
         } catch (\Exception $e) {
-            // Handle exceptions
-            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+            return response()->json(['status' => 'error', 'message' => 'Gagal mengirim pesan: ' . $e->getMessage()], 500);
         }
+    }
+
+    public function webhook(Request $request)
+    {
+
     }
 }

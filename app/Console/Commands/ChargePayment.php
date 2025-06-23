@@ -162,7 +162,6 @@ class ChargePayment extends Command
             $responseData = json_decode($response->getBody(), true);
 
             if ($responseData['status_code'] == 201) {
-                // $this->info("VA untuk {$siswa->name}: " . $responseData['va_numbers'][0]['va_number']);
                 $this->info("Transaksi akan kedaluwarsa dalam {$responseData['expiry_time']}.");
                 DB::table('charges')
                     ->where('order_id', $responseData['order_id'])
