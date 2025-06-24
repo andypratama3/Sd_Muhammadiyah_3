@@ -17,6 +17,7 @@ use App\Http\Controllers\VisiMisiController;
 use App\Http\Controllers\FasilitasController;
 use App\Http\Controllers\NaikKelasController;
 use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\SiswaLulusController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\KritikSaranController;
 use App\Http\Controllers\LikeArtikelController;
@@ -24,23 +25,23 @@ use App\Http\Controllers\DetailBeritaController;
 use App\Http\Controllers\PrestasiSiswaController;
 use App\Http\Controllers\Api\Dashboard\WilayahApi;
 use App\Http\Controllers\CommentArtikelController;
-use App\Http\Controllers\Dashboard\RoleController;
 
 //Dashboard Access
+use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\TaskController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\CategoryArtikel;
+
 use App\Http\Controllers\Dashboard\ChartController;
-
 use App\Http\Controllers\Dashboard\KelasController;
-use App\Http\Controllers\EkstrakurikulerController;
 
+use App\Http\Controllers\EkstrakurikulerController;
 use App\Http\Controllers\PrestasiSekolahController;
 use App\Http\Controllers\TenagaPendidikanController;
 use App\Http\Controllers\Dashboard\ActivityController;
 use App\Http\Controllers\Dashboard\KaryawanController;
-use App\Http\Controllers\Dashboard\DashboardController;
 
+use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\AchivementController;
 use App\Http\Controllers\Dashboard\UrlVisitorController;
 use App\Http\Controllers\Dashboard\AttendancesController;
@@ -94,6 +95,8 @@ Route::group(['prefix' => '/',], function () {
     Route::get('berita', [BeritaController::class, 'index'])->name('berita.index');
     Route::get('berita/{slug}', [BeritaController::class, 'show'])->name('berita.show');
 
+    // Siswa Lulus
+    Route::get('siswa-lulus', [SiswaLulusController::class, 'index'])->name('siswa-lulus.index');
     //guru
     Route::get('guru', [GuruController::class, 'index'])->name('guru.index');
     //visi misi
@@ -121,7 +124,7 @@ Route::group(['prefix' => '/',], function () {
     Route::resource('jadwal', JadwalController::class, ['names' => 'jadwal']);
     Route::post('jadwal/getjadwal/smester', [JadwalController::class, 'tahun_ajaran'])->name('jadwal.tahun.ajaran');
     //artikel
-    Route::resource('artikel', ArtikelController::class, ['names' => 'artikel']);
+    // Route::resource('artikel', ArtikelController::class, ['names' => 'artikel']);
     //new fiture kontak and prestasi
     Route::get('kontak', [KontakController::class, 'index'])->name('kontak.index');
     Route::get('kontak/success', [KontakController::class, 'success'])->name('kontak.success');

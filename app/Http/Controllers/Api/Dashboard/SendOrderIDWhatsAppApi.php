@@ -42,17 +42,16 @@ class SendOrderIDWhatsAppApi extends Controller
             $categoryname = $charge->kategori_pembayaran->name;
 
             // Pesan WhatsApp
-            $body = "🌟 *INFORMASI TAGIHAN SPP* 🌟\n\n"
-                    . "Assalamu'alaikum Warahmatullahi Wabarakatuh.\n\n"
-                    . "Yth. Bapak/Ibu Wali dari ananda *$namaSiswa* (Kelas *$kelasSiswa*),\n\n"
-                    . "Kami sampaikan bahwa terdapat tagihan pembayaran pendidikan dengan rincian sebagai berikut:\n\n"
-                    . "📌 *Kategori Pembayaran*: $categoryname\n"
-                    . "💰 *Jumlah Tagihan*: Rp " . number_format($grossAmount, 0, ',', '.') . "\n\n"
-                    . "Untuk kemudahan transaksi, silakan melakukan pembayaran dengan memindai QR Code berikut:\n"
-                    . "$qrImageUrl\n\n"
-                    . "🕊️ Mohon melakukan pembayaran tepat waktu demi kelancaran proses belajar-mengajar.\n\n"
-                    . "Apabila telah melakukan pembayaran, Bapak/Ibu tidak perlu membalas pesan ini.\n\n"
-                    . "Terima kasih atas perhatian dan kerjasamanya.\n\n"
+            $body = "Assalamu'alaikum Warahmatullahi Wabarakatuh.  "
+                    . "Yth. Ayah/Bunda Wali dari ananda *$namaSiswa* (Kelas *$kelasSiswa*),  "
+                    . "Izin kami sampaikan bahwa terdapat tagihan pembayaran pendidikan dengan rincian sebagai berikut:  "
+                    . "📌 *Kategori Pembayaran*: $categoryname "
+                    . "💰 *Jumlah Tagihan*: Rp " . number_format($grossAmount, 0, ',', '.') . " Bulan :   "
+                    . "Untuk kemudahan transaksi, silakan melakukan pembayaran dengan memindai QR Code berikut: "
+                    . "$qrImageUrl  "
+                    . "🕊️ Mohon melakukan pembayaran tepat waktu demi kelancaran proses belajar-mengajar.  "
+                    . "Apabila telah melakukan pembayaran, Ayah/Bunda tidak perlu membalas pesan ini.  "
+                    . "Terima kasih atas perhatian dan kerjasamanya.  "
                     . "Wassalamu'alaikum Warahmatullahi Wabarakatuh.";
 
 
