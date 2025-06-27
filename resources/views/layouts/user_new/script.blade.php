@@ -9,6 +9,7 @@
 
 @stack('js_user')
 
+
 <script>
     // document.addEventListener('DOMContentLoaded', function() {
     //     $(window).on('load', function() {

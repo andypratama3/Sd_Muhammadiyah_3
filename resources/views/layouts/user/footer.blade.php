@@ -23,8 +23,8 @@
                                     <a class="btn btn-md-square rounded-circle me-3 social-icon" href="https://www.instagram.com/SekolahKreatifSamarinda/" target="_blank">
                                         <i class="fab fa-instagram"></i>
                                     </a>
-                                    <a class="btn btn-md-square rounded-circle me-0 social-icon" href="#">
-                                        <i class="fab fa-linkedin-in"></i>
+                                    <a class="btn btn-md-square rounded-circle me-0 social-icon" href="https://id.wikipedia.org/wiki/SD_muhammadiyah_3_Samarinda" target="_blank">
+                                        <i class="fa-brands fa-wikipedia-w"></i>
                                     </a>
 
                                 </div>
@@ -72,62 +72,10 @@
 
                         </div>
                         <div class="col-md-6 col-lg-6">
-                                    <h2 class="text-center text-white">Maps</h2>
-                                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d9477.659215305792!2d117.12429426373527!3d-0.5122169736669224!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2df67fb245dc458f%3A0xa8ef3e4834a26bd!2sSekolah%20Kreatif%20SD%20Muhammadiyah%203%20Samarinda!5e0!3m2!1sid!2sid!4v1722696990256!5m2!1sid!2sid"
-                                        width="100%" height="400" style="border: 0; border-radius: 10px !important;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                            {{-- <div class="footer-item">
-                                <h4 class="mb-4 text-white">Instagram</h4>
-                                <div class="row g-3">
-                                    <div class="col-4">
-                                        <div class="footer-instagram rounded">
-                                            <img src="{{ asset('asset/img/instagram-footer-1.jpg') }}" class="img-fluid w-100" alt="">
-                                            <div class="footer-search-icon">
-                                                <a href="{{ asset('asset/img/instagram-footer-1.jpg') }}" data-lightbox="footerInstagram-1" class="my-auto"><i class="fas fa-link text-white"></i></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="footer-instagram rounded">
-                                            <img src="{{ asset('asset/img/instagram-footer-2.jpg') }}" class="img-fluid w-100" alt="">
-                                            <div class="footer-search-icon">
-                                                <a href="{{ asset('asset/img/instagram-footer-2.jpg') }}" data-lightbox="footerInstagram-2" class="my-auto"><i class="fas fa-link text-white"></i></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="footer-instagram rounded">
-                                            <img src="{{ asset('asset/img/instagram-footer-3.jpg') }}" class="img-fluid w-100" alt="">
-                                            <div class="footer-search-icon">
-                                                <a href="{{ asset('asset/img/instagram-footer-3.jpg') }}" data-lightbox="footerInstagram-3" class="my-auto"><i class="fas fa-link text-white"></i></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="footer-instagram rounded">
-                                            <img src="{{ asset('asset/img/instagram-footer-4.jpg') }}" class="img-fluid w-100" alt="">
-                                            <div class="footer-search-icon">
-                                                <a href="{{ asset('asset/img/instagram-footer-4.jpg') }}" data-lightbox="footerInstagram-4" class="my-auto"><i class="fas fa-link text-white"></i></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="footer-instagram rounded">
-                                            <img src="{{ asset('asset/img/instagram-footer-5.jpg') }}" class="img-fluid w-100" alt="">
-                                            <div class="footer-search-icon">
-                                                <a href="{{ asset('asset/img/instagram-footer-5.jpg') }}" data-lightbox="footerInstagram-5" class="my-auto"><i class="fas fa-link text-white"></i></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="footer-instagram rounded">
-                                            <img src="{{ asset('asset/img/instagram-footer-6.jpg') }}" class="img-fluid w-100" alt="">
-                                            <div class="footer-search-icon">
-                                                <a href="{{ asset('asset/img/instagram-footer-6.jpg') }}" data-lightbox="footerInstagram-6" class="my-auto"><i class="fas fa-link text-white"></i></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> --}}
+                            <h2 class="text-center text-white">Maps</h2>
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d9477.659215305792!2d117.12429426373527!3d-0.5122169736669224!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2df67fb245dc458f%3A0xa8ef3e4834a26bd!2sSekolah%20Kreatif%20SD%20Muhammadiyah%203%20Samarinda!5e0!3m2!1sid!2sid!4v1722696990256!5m2!1sid!2sid"
+                                width="100%" height="400" style="border: 0; border-radius: 10px !important;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
                         </div>
                     </div>
                 </div>

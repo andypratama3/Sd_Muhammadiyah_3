@@ -39,11 +39,9 @@ class ChargePayment extends Command
             $query->where('id', '!=', $kelas_lulus->id);
         })->get();
 
-        // dd($siswas);
-
 
          // make can name automatic by month
-        $monthName = Carbon::now()->locale('id_ID')->format('F');
+        $monthName = Carbon::now()->locale('id')->translatedFormat('F');
 
         foreach ($siswas as $siswa) {
             DB::beginTransaction();
@@ -69,7 +67,7 @@ class ChargePayment extends Command
                 // Insert data ke tabel charges
                 DB::table('charges')->insert([
                     'id' => Str::uuid(),
-                    'name' => "$category_Spp->name  {$monthName} {$siswa->name}",
+                    'name' => "$category_Spp->name {$monthName} {$siswa->name}",
                     'order_id' => $order_id,
                     'siswa_id' => $siswa->id,
                     'gross_amount' => $gross_amount,
@@ -131,7 +129,7 @@ class ChargePayment extends Command
                     'id' => 1,
                     'price' => $siswa->spp,
                     'quantity' => 1,
-                    'name' => "SPP  {$monthName} {$siswa->name}",
+                    'name' => "SPP {$monthName} {$siswa->name}",
                     'category' => $category_Spp->name,
                     'merchant_name' => "Sekolah Kreatif SD Muhammadiyah 3 Samarinda",
                 ],

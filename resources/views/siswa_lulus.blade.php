@@ -157,13 +157,16 @@
         <div class="section-title text-start mx-2">
             <div class="d-flex justify-content-between flex-wrap">
                 <h2 class="ms-3" style="color: #20AD57;">Siswa Alumni</h2>
-                <select class="form-control w-auto me-3">
+                <select class="form-control w-auto me-3 text-center">
                     <option>--Pilih Tahun--</option>
+                    @for($i = 2019; $i <= date('Y'); $i++)
+                        <option value="{{ $i }}">Tahun {{ $i }}</option>
+                    @endfor
                 </select>
             </div>
             <hr>
             <div class="col-md-2 float-end">
-                <h4 class="text-end me-5 text-muted bold underline">2019</h4>
+                <h4 class="text-end me-5 text-muted bold underline" id="tahun_lulus">Tahun 2019</h4>
                 <hr>
             </div>
         </div>

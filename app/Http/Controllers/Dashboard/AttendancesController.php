@@ -15,14 +15,18 @@ class AttendancesController extends Controller
     {
         $kelas = Kelas::orderBy('name', 'asc')->get();
 
-        $siswas = Siswa::orderBy('name', 'asc')->limit(15);
+        $siswas = Siswa::with('kelas');
 
         $attendances = Attendances::orderBy('tanggal', 'asc')->get()->keyBy('siswa_id');
-        // if($request->kelas_id){
-        //     $siswas = $siswas->whereHas('kelas', function($q) use ($request){
-        //         $q->where('kelas_id', $request->kelas_id);
-        //     });
-        // }
+
+        if($request->kelas_id){
+           $siswas = $siswas->whereHas('kelas', function ($query) use ($request) {
+                $query->where('kelas_id', $request->kelas_id);
+                if ($request->category_kelas) {
+                    $query->where('siswa_kelas.category_kelas', $request->category_kelas);
+                }
+            });
+        }
 
         // if($request->category_kelas){
         //     $siswas = $siswas->whereHas('kelas', function($q) use ($request){
@@ -36,9 +40,9 @@ class AttendancesController extends Controller
         //     });
         // }
 
-        // if($request->nama) {
-        //     $siswas = $siswas->where('name', 'like', '%'.$request->nama.'%');
-        // }
+        if($request->nama) {
+            $siswas = $siswas->where('name', 'like', '%'.$request->nama.'%');
+        }
 
         // return DataTables::of($siswas)
         // ->addColumn('siswa_name', function ($row) {
@@ -62,7 +66,11 @@ class AttendancesController extends Controller
         // ->addIndexColumn()
         // ->make(true);
 
-        return view('dashboard.attendances.index', compact('kelas'));
+
+
+        $siswas = $siswas->get();
+
+        return view('dashboard.attendances.index', compact('siswas','kelas'));
     }
 
     public function data_table() {}

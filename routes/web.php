@@ -30,17 +30,18 @@ use App\Http\Controllers\CommentArtikelController;
 use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\TaskController;
 use App\Http\Controllers\Dashboard\UserController;
+use App\Http\Controllers\ProfilSekolahController;
+
 use App\Http\Controllers\Dashboard\CategoryArtikel;
-
 use App\Http\Controllers\Dashboard\ChartController;
-use App\Http\Controllers\Dashboard\KelasController;
 
+use App\Http\Controllers\Dashboard\KelasController;
 use App\Http\Controllers\EkstrakurikulerController;
 use App\Http\Controllers\PrestasiSekolahController;
 use App\Http\Controllers\TenagaPendidikanController;
 use App\Http\Controllers\Dashboard\ActivityController;
-use App\Http\Controllers\Dashboard\KaryawanController;
 
+use App\Http\Controllers\Dashboard\KaryawanController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\AchivementController;
 use App\Http\Controllers\Dashboard\UrlVisitorController;
@@ -90,6 +91,11 @@ Route::get('/asset/{any}', function () {
 Route::group(['prefix' => '/',], function () {
 
     Route::get('/', BerandaController::class)->name('index');
+
+
+    // Tentang Sekolah
+    Route::get('profil-sekolah', [ProfilSekolahController::class , 'index'])->name('profil.index');
+
 
     // Berita
     Route::get('berita', [BeritaController::class, 'index'])->name('berita.index');
