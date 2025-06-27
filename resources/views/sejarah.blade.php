@@ -201,12 +201,11 @@
                     <div class="row g-4">
                         @php
                             $facilities = [
-                                ['icon' => 'chalkboard-teacher', 'title' => 'Ruang Kelas Modern', 'desc' => '18 ruang kelas ber-AC dengan teknologi smart board', 'color' => '#2E8B57'],
-                                ['icon' => 'laptop', 'title' => 'Lab. Komputer', 'desc' => 'Teknologi pembelajaran digital terdepan', 'color' => '#f093fb'],
+                                // ['icon' => 'laptop', 'title' => 'Lab. Komputer', 'desc' => 'Teknologi pembelajaran digital terdepan', 'color' => '#f093fb'],
                                 ['icon' => 'book', 'title' => 'Perpustakaan Digital', 'desc' => 'Koleksi buku fisik dan digital lengkap', 'color' => '#56ab2f'],
-                                ['icon' => 'mosque', 'title' => 'Musholla Nyaman', 'desc' => 'Tempat ibadah dan pembinaan rohani', 'color' => '#ff6b6b'],
+                                ['icon' => 'mosque', 'title' => 'Musholla Nyaman', 'desc' => 'Tempat ibadah', 'color' => '#ff6b6b'],
                                 ['icon' => 'running', 'title' => 'Lapangan Olahraga', 'desc' => 'Fasilitas olahraga dan aktivitas fisik', 'color' => '#4ecdc4'],
-                                ['icon' => 'paint-brush', 'title' => 'Studio Seni', 'desc' => 'Ruang kreativitas dan pengembangan bakat', 'color' => '#45b7d1'],
+                                // ['icon' => 'paint-brush', 'title' => 'Studio Seni', 'desc' => 'Ruang kreativitas dan pengembangan bakat', 'color' => '#45b7d1'],
                                 ['icon' => 'utensils', 'title' => 'Kantin Sehat', 'desc' => 'Makanan bergizi dan higienis tersertifikasi', 'color' => '#f39c12'],
                                 ['icon' => 'shield-alt', 'title' => 'Keamanan 24/7', 'desc' => 'Sistem keamanan terintegrasi dan CCTV', 'color' => '#e74c3c']
                             ];
