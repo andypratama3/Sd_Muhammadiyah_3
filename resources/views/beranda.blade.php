@@ -418,7 +418,7 @@
                         dinamis dan menarik. Misi kami adalah untuk menumbuhkan kreativitas dan cinta belajar pada
                         setiap siswa. Dengan fokus pada pengembangan holistik, kami memastikan bahwa siswa kami unggul
                         secara akademis dan tumbuh menjadi individu yang berkarakter.</p>
-                    <a href="{{ route('visimisi.index') }}" class="btn btn-primary">Lihat Visi & Misi</a>
+                    <a href="{{ route('profil.index') }}" class="btn btn-primary">Profil Selengkapnya</a>
                 </div>
             </div>
             <div class="col-xl-6 wow fadeInRight" data-wow-delay="0.2s">

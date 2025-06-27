@@ -23,7 +23,7 @@
                 <div class="dropdown-menu">
                     <a href="{{ route('profil.index') }}" class="dropdown-item">Profil Sekolah</a>
                     <a href="{{ route('guru.index') }}" class="dropdown-item">Guru</a>
-                    <a href="{{ route('visimisi.index') }}" class="dropdown-item">Visi & Misi</a>
+                    {{-- <a href="{{ route('visimisi.index') }}" class="dropdown-item">Visi & Misi</a> --}}
                     <a href="{{ route('gallery.index') }}" class="dropdown-item">Gallery Aktivitas</a>
                     <a href="{{ route('fasilitas.index') }}" class="dropdown-item">Sarana & Prasarana</a>
                     <a href="{{ route('prestasi.siswa.index') }}" class="dropdown-item">Prestasi Siswa</a>

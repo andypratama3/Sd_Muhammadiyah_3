@@ -106,7 +106,7 @@ Route::group(['prefix' => '/',], function () {
     //guru
     Route::get('guru', [GuruController::class, 'index'])->name('guru.index');
     //visi misi
-    Route::get('visimisi', VisiMisiController::class)->name('visimisi.index');
+    // Route::get('visimisi', VisiMisiController::class)->name('visimisi.index');
     //ekstrakurikuler
     Route::get('ekstrakurikuler', [EkstrakurikulerController::class, 'index'])->name('esktrakurikuler.index');
     Route::get('ekstrakurikuler/{name}', [EkstrakurikulerController::class, 'show'])->name('esktrakurikuler.show');
