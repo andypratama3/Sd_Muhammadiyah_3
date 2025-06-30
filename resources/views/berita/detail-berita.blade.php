@@ -12,6 +12,34 @@
     <meta name="twitter:title" content="{{ $berita->judul }}">
     <meta name="twitter:description" content="{{ Str::limit(strip_tags($berita->desc), 200) }}">
     <meta name="twitter:image" content="{{ asset('storage/img/berita/'. $berita->foto) }}">
+     <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": {!! json_encode($berita->judul) !!},
+      "image": [{!! json_encode(asset('storage/img/berita/' . $berita->foto)) !!}],
+      "url": "{{ url()->current() }}",
+      "author": {
+        "@type": "Organization",
+        "name": "SD Muhammadiyah 3 Samarinda"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SD Muhammadiyah 3 Samarinda",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "{{ asset('asset_new/images/SD3_logo1.png') }}"
+        }
+      },
+      "datePublished": "{{ \Carbon\Carbon::parse($berita->created_at)->toIso8601String() }}",
+      "dateModified": "{{ \Carbon\Carbon::parse($berita->updated_at ?? $berita->created_at)->toIso8601String() }}",
+      "description": {!! json_encode(Str::limit(strip_tags($berita->desc), 160)) !!},
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "{{ url()->current() }}"
+      }
+    }
+    </script>
 @endpush
 
 

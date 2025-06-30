@@ -1,14 +1,45 @@
 @extends('layouts.user')
 @section('title', 'Detail Aktivitas')
 @push('meta_user')
-    <meta name="description" content="{!! Str::limit($gallery->name, 160) !!}">
-    <meta name="keywords" content="{!! $gallery->name !!}">
-    <meta name="author" content="Sekolah Kreatif SD Muhammadiyah 3 Samarinda">
-    <meta name="copyright" content="Sekolah Kreatif SD Muhammadiyah 3 Samarinda">
-    <meta property="og:title" content="{{ $gallery->name }}">
-    <meta property="og:description" content="{!! Str::limit($gallery->name, 160) !!}">
-    <meta property="og:url" content="{{ url()->current() }}">
+<meta name="description" content="{{ Str::limit(strip_tags($gallery->name), 160) }}">
+<meta name="keywords" content="{{ $gallery->name }}">
+<meta name="author" content="Sekolah Kreatif SD Muhammadiyah 3 Samarinda">
+<meta name="copyright" content="Sekolah Kreatif SD Muhammadiyah 3 Samarinda">
+<meta property="og:title" content="{{ $gallery->name }}">
+<meta property="og:description" content="{{ Str::limit(strip_tags($gallery->name), 160) }}">
+<meta property="og:url" content="{{ url()->current() }}">
+<meta property="og:type" content="article">
+<meta property="og:image" content="{{ asset('storage/img/gallery/' . trim($gallery->foto[0] ?? 'default.jpg')) }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ $gallery->name }}">
+<meta name="twitter:description" content="{{ Str::limit(strip_tags($gallery->name), 160) }}">
+<meta name="twitter:image" content="{{ asset('storage/img/gallery/' . trim($gallery->foto[0] ?? 'default.jpg')) }}">
+
+{{-- Schema JSON-LD --}}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ImageGallery",
+  "name": {!! json_encode($gallery->name) !!},
+  "description": "Dokumentasi aktivitas dan kegiatan siswa SD Muhammadiyah 3 Samarinda.",
+  "url": "{{ url()->current() }}",
+  "image": [
+    @foreach ($gallery->foto as $index => $foto)
+      "{{ asset('storage/img/gallery/' . trim($foto)) }}"@if (!$loop->last),@endif
+    @endforeach
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "SD Muhammadiyah 3 Samarinda",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{ asset('asset_new/images/SD3_logo1.png') }}"
+    }
+  }
+}
+</script>
 @endpush
+
 @section('content')
 <div class="container mt-5">
     <h3 class="text-center mb-4">{{ $gallery->name }}</h3>

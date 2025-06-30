@@ -1,13 +1,50 @@
 @extends('layouts.user')
 @push('meta_user')
 <meta name="description" content="Aktivitas Gallery Sekolah Kreatif SD Muhammadiyah 3 Samarinda">
-<meta name="keywords" content="Aktivitas, Sekolah Kreatif SD Muhammadiyah 3 Samarinda">
+<meta name="keywords" content="Aktivitas, Sekolah Kreatif SD Muhammadiyah 3 Samarinda, Galeri, Dokumentasi">
 <meta name="author" content="Sekolah Kreatif SD Muhammadiyah 3 Samarinda">
 <meta name="copyright" content="Sekolah Kreatif SD Muhammadiyah 3 Samarinda">
 <meta property="og:title" content="Gallery Sekolah Kreatif SD Muhammadiyah 3 Samarinda">
 <meta property="og:description" content="Aktivitas Gallery Sekolah Kreatif SD Muhammadiyah 3 Samarinda">
 <meta property="og:url" content="{{ url()->current() }}">
+<meta property="og:image" content="{{ count($gallerys) ? (asset('storage/img/gallery/cover/' . $gallerys[0]->cover ?? '')) : asset('asset_new/images/SD3_logo1.png') }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Gallery Sekolah Kreatif SD Muhammadiyah 3 Samarinda">
+<meta name="twitter:description" content="Dokumentasi kegiatan dan aktivitas siswa Sekolah Kreatif SD Muhammadiyah 3 Samarinda.">
+<meta name="twitter:image" content="{{ count($gallerys) ? (asset('storage/img/gallery/cover/' . $gallerys[0]->cover ?? '')) : asset('asset_new/images/SD3_logo1.png') }}">
+
+{{-- Schema JSON-LD for ImageGallery --}}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ImageGallery",
+  "name": "Gallery Aktivitas Sekolah Kreatif SD Muhammadiyah 3 Samarinda",
+  "url": "{{ url()->current() }}",
+  "description": "Kumpulan dokumentasi foto aktivitas dan kegiatan siswa Sekolah Kreatif SD Muhammadiyah 3 Samarinda.",
+  "image": [
+    @foreach ($gallerys->take(6) as $gallery)
+      @php
+        $fotos = is_array($gallery->foto) ? $gallery->foto : explode(',', $gallery->foto);
+        $firstFoto = trim($fotos[0] ?? '');
+        $imgSrc = $gallery->cover
+            ? asset('storage/img/gallery/cover/' . $gallery->cover)
+            : asset('storage/img/gallery/' . $firstFoto);
+      @endphp
+      "{{ $imgSrc }}"{!! !$loop->last ? ',' : '' !!}
+    @endforeach
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "SD Muhammadiyah 3 Samarinda",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{ asset('asset_new/images/SD3_logo1.png') }}"
+    }
+  }
+}
+</script>
 @endpush
+
 @section('title', 'Gallery')
 
 @section('content')
