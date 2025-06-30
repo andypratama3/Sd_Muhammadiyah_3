@@ -23,14 +23,14 @@ use App\Http\Controllers\KritikSaranController;
 use App\Http\Controllers\LikeArtikelController;
 use App\Http\Controllers\DetailBeritaController;
 use App\Http\Controllers\PrestasiSiswaController;
+use App\Http\Controllers\ProfilSekolahController;
 use App\Http\Controllers\Api\Dashboard\WilayahApi;
-use App\Http\Controllers\CommentArtikelController;
 
 //Dashboard Access
+use App\Http\Controllers\CommentArtikelController;
 use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\TaskController;
 use App\Http\Controllers\Dashboard\UserController;
-use App\Http\Controllers\ProfilSekolahController;
 
 use App\Http\Controllers\Dashboard\CategoryArtikel;
 use App\Http\Controllers\Dashboard\ChartController;
@@ -39,8 +39,9 @@ use App\Http\Controllers\Dashboard\KelasController;
 use App\Http\Controllers\EkstrakurikulerController;
 use App\Http\Controllers\PrestasiSekolahController;
 use App\Http\Controllers\TenagaPendidikanController;
-use App\Http\Controllers\Dashboard\ActivityController;
+use App\Http\Controllers\PengisianOrangTuaController;
 
+use App\Http\Controllers\Dashboard\ActivityController;
 use App\Http\Controllers\Dashboard\KaryawanController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\AchivementController;
@@ -92,6 +93,7 @@ Route::group(['prefix' => '/',], function () {
 
     Route::get('/', BerandaController::class)->name('index');
 
+    // Route::get('pengisian-formulir/whatsaap', [PengisianOrangTuaController::class, 'index'])->name('pengisian.index');
 
     // Tentang Sekolah
     Route::get('profil-sekolah', [ProfilSekolahController::class , 'index'])->name('profil.index');

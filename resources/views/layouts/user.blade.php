@@ -44,6 +44,7 @@
 
     @include('layouts.user.footer')
     @include('layouts.user.script')
+
 </body>
 
 </html>
