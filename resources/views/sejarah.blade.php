@@ -98,14 +98,14 @@
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="stats-card text-center">
                     <i class="fas fa-calendar-check fa-2x mb-3"></i>
-                    <h2 class="fw-bold counter" data-target="44">0</h2>
+                    <h2 class="fw-bold counter" data-target="{{ $pengalaman }}">{{ $pengalaman }}</h2>
                     <p class="mb-0">Tahun Pengalaman</p>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="stats-card text-center">
                     <i class="fas fa-user-graduate fa-2x mb-3"></i>
-                    <h2 class="fw-bold counter" data-target="2500">0</h2>
+                    <h2 class="fw-bold counter" data-target="{{ $alumni }}">{{ $alumni }}</h2>
                     <p class="mb-0">Alumni Sukses</p>
                 </div>
             </div>
@@ -119,7 +119,7 @@
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="stats-card text-center">
                     <i class="fas fa-users fa-2x mb-3"></i>
-                    <h2 class="fw-bold counter" data-target="600">0</h2>
+                    <h2 class="fw-bold counter" data-target="{{ $siswas }}">{{ $siswas }}</h2>
                     <p class="mb-0">Siswa Aktif</p>
                 </div>
             </div>

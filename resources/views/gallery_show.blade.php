@@ -47,7 +47,7 @@
         @foreach ($gallery->foto as $foto)
             <div class="col-md-4 mb-4">
                 <a href="{{ asset('storage/img/gallery/' . trim($foto)) }}" data-lightbox="gallery" data-title="{{ $gallery->name }}">
-                    <img src="{{ asset('storage/img/gallery/' . trim($foto)) }}" class="img-fluid rounded w-100" alt="Gallery Image">
+                    <img src="{{ asset('storage/img/gallery/' . trim($foto)) }}" class="img-fluid rounded w-100" alt="{{ trim($foto) }}">
                 </a>
             </div>
         @endforeach

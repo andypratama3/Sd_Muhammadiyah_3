@@ -55,6 +55,28 @@ class SiswaSeeder extends Seeder
                 $siswa_data['kelurahan'] = null;
             }
 
+            // Mapping kelas Romawi ke angka
+            $kelasMap = [
+                'I' => 1,
+                'II' => 2,
+                'III' => 3,
+                'IV' => 4,
+                'V' => 5,
+                'VI' => 6,
+            ];
+
+            $kelasRomawi = strtoupper(trim($siswa_data['kelas']));
+            $tahunSekarang = date('Y');
+            $tahunMasuk = null;
+
+            if (array_key_exists($kelasRomawi, $kelasMap)) {
+                $kelasAngka = $kelasMap[$kelasRomawi];
+                $tahunMasuk = $tahunSekarang - ($kelasAngka - 1);
+            }
+
+            $siswa_data['kelas_tahun_ajaran'] = $tahunMasuk;
+
+
 
             $siswa = Siswa::create([
                 'id' => Str::uuid(),
