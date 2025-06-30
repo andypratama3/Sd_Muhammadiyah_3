@@ -4,8 +4,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- SEO Meta Tags -->
-    <meta name="keywords" content="SD Muhammadiyah 3 Samarinda, Sekolah Kreatif, Sekolah Dasar Islam Samarinda, SD Unggulan Kalimantan Timur, Sekolah Penggerak Samarinda">
-    <meta name="description" content="SD Muhammadiyah 3 Samarinda adalah sekolah kreatif unggulan di Samarinda yang fokus pada karakter dan pembelajaran inovatif. Daftar sekarang!">
+    <meta name="keywords" content="SD Muhammadiyah 3 Samarinda, Sekolah Kreatif, Sekolah Dasar Islam Samarinda, SD Unggulan Kalimantan Timur, Sekolah Penggerak Samarinda, Sekolah Terbaik Di Samarinda Kalimantan Timur, SD Muhammadiyah, Sekolah Kreatif Muhammadiyah 3 Samarinda, Sekolah Dasar Negeri Samarinda, Sekolah Dasar Islam Terbaik Di Samarinda, Pembelajaran Inovatif, Pendidikan Berkarakter, Sekolah Kreatif Kalimantan Timur">
+    <meta name="description" content="SD Muhammadiyah 3 Samarinda adalah sekolah kreatif unggulan di Samarinda yang fokus pada karakter dan pembelajaran inovatif. Daftar sekarang!, Sekolah Kreatif Muhammadiyah 3 Samarinda, ">
     <meta name="author" content="https://sdmuhammadiyah3smd.com">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
