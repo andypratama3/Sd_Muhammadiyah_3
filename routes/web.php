@@ -17,6 +17,7 @@ use App\Http\Controllers\VisiMisiController;
 use App\Http\Controllers\FasilitasController;
 use App\Http\Controllers\NaikKelasController;
 use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\SiswaAktifController;
 use App\Http\Controllers\SiswaLulusController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\KritikSaranController;
@@ -24,23 +25,23 @@ use App\Http\Controllers\LikeArtikelController;
 use App\Http\Controllers\DetailBeritaController;
 use App\Http\Controllers\PrestasiSiswaController;
 use App\Http\Controllers\ProfilSekolahController;
-use App\Http\Controllers\Api\Dashboard\WilayahApi;
 
 //Dashboard Access
+use App\Http\Controllers\Api\Dashboard\WilayahApi;
 use App\Http\Controllers\CommentArtikelController;
 use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\TaskController;
+
 use App\Http\Controllers\Dashboard\UserController;
-
 use App\Http\Controllers\Dashboard\CategoryArtikel;
-use App\Http\Controllers\Dashboard\ChartController;
 
+use App\Http\Controllers\Dashboard\ChartController;
 use App\Http\Controllers\Dashboard\KelasController;
 use App\Http\Controllers\EkstrakurikulerController;
 use App\Http\Controllers\PrestasiSekolahController;
 use App\Http\Controllers\TenagaPendidikanController;
-use App\Http\Controllers\PengisianOrangTuaController;
 
+use App\Http\Controllers\PengisianOrangTuaController;
 use App\Http\Controllers\Dashboard\ActivityController;
 use App\Http\Controllers\Dashboard\KaryawanController;
 use App\Http\Controllers\Dashboard\DashboardController;
@@ -93,8 +94,10 @@ Route::group(['prefix' => '/',], function () {
 
     Route::get('/', BerandaController::class)->name('index');
 
-    // Route::get('pengisian-formulir/whatsaap', [PengisianOrangTuaController::class, 'index'])->name('pengisian.index');
-
+    Route::get('/pengisian-formulir/whatsaap', [PengisianOrangTuaController::class, 'index'])->name('pengisian.index');
+    Route::get('/pengisian-formulir/whatsaap/{nisn}', [PengisianOrangTuaController::class, 'show'])->name('pengisian.show');
+    Route::post('/pengisian-formulir/whatsaap/verifikasi', [PengisianOrangTuaController::class, 'verifikasi'])->name('pengisian.verifikasi');
+    Route::PUT('/pengisian-formulir/whatsaap/update/{nisn}', [PengisianOrangTuaController::class, 'update'])->name('pengisian.update');
     // Tentang Sekolah
     Route::get('profil-sekolah', [ProfilSekolahController::class , 'index'])->name('profil.index');
 
@@ -104,6 +107,7 @@ Route::group(['prefix' => '/',], function () {
     Route::get('berita/{slug}', [BeritaController::class, 'show'])->name('berita.show');
 
     // Siswa Lulus
+    Route::get('siswa-aktif', [SiswaAktifController::class, 'index'])->name('siswa-aktif.index');
     Route::get('siswa-lulus', [SiswaLulusController::class, 'index'])->name('siswa-lulus.index');
     //guru
     Route::get('guru', [GuruController::class, 'index'])->name('guru.index');

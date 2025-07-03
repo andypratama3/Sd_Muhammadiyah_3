@@ -176,7 +176,7 @@ class ChargePayment extends Command
                 $this->info("Pembayaran untuk {$siswa->name} berhasil dikirim ke Midtrans.");
 
                 // mengirim pesan ke WhatsApp
-                $this->whatsApp->sendMessage($responseData['order_id']);
+                // $this->whatsApp->sendMessage($responseData['order_id']);
 
             } else {
                 $this->error("Gagal memproses pembayaran untuk {$siswa->name}: " . $responseData['status_message']);

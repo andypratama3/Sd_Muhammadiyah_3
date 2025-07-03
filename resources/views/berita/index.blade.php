@@ -98,7 +98,7 @@
 
         $(window).scroll(function () {
             let scrollPercentage = ($(window).scrollTop() / ($(document).height() - $(window).height())) * 100;
-            if (scrollPercentage >= 80 && itemsLoaded % 3 === 0 && checkInternetConnection()) {
+            if (scrollPercentage >= 40 && itemsLoaded % 3 === 0 && checkInternetConnection()) {
                 loading.show();
                 page++;
                 $.ajax({

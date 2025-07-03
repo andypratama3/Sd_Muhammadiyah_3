@@ -63,7 +63,7 @@
                         <div class="col-md-5 mb-4 mb-md-0">
                             <div class="position-relative">
                                 <img src="{{ asset('asset_new/images/old_foto.webp') }}" alt="Foto sekolah tahun 2010" class="img-fluid rounded-3 shadow">
-                                <div class="position-absolute bottom-0 start-0 end-0 p-3 bg-dark bg-opacity-75 text-white rounded-bottom-3">
+                                <div class="position-absolute bottom-0 start-0 end-0 p-3 bg-dark bg-opacity-75 text-white rounded-bottom-3 rounded-md">
                                     <small><i class="fas fa-camera me-1"></i>Dokumentasi Tahun 2010</small>
                                 </div>
                             </div>
@@ -107,6 +107,7 @@
                     <i class="fas fa-user-graduate fa-2x mb-3"></i>
                     <h2 class="fw-bold counter" data-target="{{ $alumni }}">{{ $alumni }}</h2>
                     <p class="mb-0">Alumni Sukses</p>
+                    <a href="{{ route('siswa-lulus.index') }}" class="btn btn-primary btn-sm">Lihat</a>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 mb-4">

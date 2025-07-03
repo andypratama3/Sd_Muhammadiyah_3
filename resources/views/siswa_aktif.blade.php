@@ -1,6 +1,6 @@
 @extends('layouts.user')
 
-@section('title', 'Siswa Lulus')
+@section('title', 'Siswa Aktif')
 @push('css_user')
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
 @endpush
@@ -158,7 +158,7 @@
     <div class="col-md-12 mt-2 mb-2">
         <div class="section-title text-start mx-2">
             <div class="d-flex justify-content-between flex-wrap">
-                <h2 class="ms-3" style="color: #20AD57;">Siswa Alumni</h2>
+                <h2 class="ms-3" style="color: #20AD57;">Siswa Aktif</h2>
                     <select name="tahun" id="tahun" class="form-control w-auto text-center">
                         <option value="">--Pilih Tahun--</option>
                         @for($i = 2019; $i <= date('Y'); $i++)
