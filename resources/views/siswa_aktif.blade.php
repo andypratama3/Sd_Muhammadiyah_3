@@ -179,6 +179,7 @@
             @foreach ($siswas as $year => $siswa)
                 <div class="col-md-12 mt-3 mb-2">
                     <h5 class="text-center text-success fw-bold">Angkatan Tahun {{ $year }}</h5>
+                    <h5 class="text-center text-success fw-bold">{{ $siswa->first()->kelas->first()->name }}</h5>
                     <hr class="mx-auto" style="width: 60px; border-color: #20AD57;">
                 </div>
                 @foreach ($siswa as $s)
@@ -218,7 +219,7 @@
             $('#tahun').on('change', function () {
                 let tahun = $(this).val();
                 if (tahun) {
-                    window.location.href = `{{ route('siswa-lulus.index') }}?tahun=${tahun}`;
+                    window.location.href = `{{ route('siswa-aktif.index') }}?tahun=${tahun}`;
                 }
             });
         });

@@ -50,7 +50,9 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-            "app/Helpers/ImageHelper.php"
+            "app/Helpers/ImageHelper.php",
+            "app/Helpers/AttendanceHelper.php"
+
         ]
     },
     "autoload-dev": {

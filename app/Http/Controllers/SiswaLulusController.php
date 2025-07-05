@@ -10,7 +10,7 @@ class SiswaLulusController extends Controller
     public function index(Request $request)
     {
         $siswas = Siswa::whereHas('kelas', function ($q) {
-            // $q->where('name', 'Lulus');
+            $q->where('name', 'Lulus');
         });
 
         if ($request->has('tahun') && $request->tahun !== null) {

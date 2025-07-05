@@ -2,78 +2,55 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Http\Controllers\Controller;
-use App\Models\Attendances;
 use App\Models\Kelas;
 use App\Models\Siswa;
+use App\Models\Attendances;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use App\Http\Controllers\Controller;
 use Yajra\DataTables\Facades\DataTables;
 
 class AttendancesController extends Controller
 {
-    public function index(Request $request)
+   public function index(Request $request)
     {
-        $kelas = Kelas::orderBy('name', 'asc')->get();
+        $kelas = Kelas::orderByRaw('CAST(SUBSTRING(name, 7) AS UNSIGNED) ASC')->get();
 
-        $siswas = Siswa::with('kelas');
-
-        $attendances = Attendances::orderBy('tanggal', 'asc')->get()->keyBy('siswa_id');
-
-        if($request->kelas_id){
-           $siswas = $siswas->whereHas('kelas', function ($query) use ($request) {
-                $query->where('kelas_id', $request->kelas_id);
-                if ($request->category_kelas) {
-                    $query->where('siswa_kelas.category_kelas', $request->category_kelas);
+        $siswas = Siswa::with(['kelas' => function ($query) {
+            $query->orderByRaw('CAST(SUBSTRING(name, 7) AS UNSIGNED) ASC');
+        }])
+        ->when($request->kelas_id || ($request->category_kelas && $request->category_kelas !== 'null'), function ($query) use ($request) {
+            $query->whereHas('kelas', function ($q) use ($request) {
+                if ($request->kelas_id) {
+                    $q->where('id', $request->kelas_id);
+                }
+                if ($request->category_kelas && $request->category_kelas !== 'null') {
+                    $q->where('siswa_kelas.category_kelas', $request->category_kelas);
                 }
             });
-        }
+        })
+        ->when($request->filled('nama'), function ($query) use ($request) {
+            $query->where('name', 'like', '%' . $request->nama . '%');
+        })
+        ->get();
 
-        // if($request->category_kelas){
-        //     $siswas = $siswas->whereHas('kelas', function($q) use ($request){
-        //         $q->where('category_kelas', $request->category_kelas);
-        //     });
-        // }
+        // Ambil tanggal dari request atau default hari ini
+        $tanggal = $request->input('tanggal') ?? date('Y-m-d');
 
-        // if($request->tanggal) {
-        //     $siswas = $siswas->whereHas('attendances', function($q) use ($request){
-        //         $q->where('tanggal', $request->tanggal);
-        //     });
-        // }
+        // Ambil data absensi per siswa untuk tanggal tersebut
+        $attendances = Attendances::whereDate('tanggal', $tanggal)->get()->keyBy('siswa_id');
 
-        if($request->nama) {
-            $siswas = $siswas->where('name', 'like', '%'.$request->nama.'%');
-        }
-
-        // return DataTables::of($siswas)
-        // ->addColumn('siswa_name', function ($row) {
-        //     return $row->name ?? 'Tidak Ada Siswa';
-        // })
-        // ->addColumn('kelas_name', function ($row) {
-        //     $kelas_name = $row->kelas->pluck('name')->implode(', ');
-        //     $category_kelas = $row->kelas->first()->pivot->category_kelas ?? '';
-        //     return $kelas_name . ' - ' . $category_kelas;
-        // })
-        // ->addColumn('status_masuk', function ($row) use ($attendances) {
-
-        //     return $attendances[$row->id]->statsu ?? '';
-        // })
-        // ->addColumn('jam_keluar', function ($row) use ($attendances) {
-        //     return $attendances[$row->id]->jam_keluar ?? '';
-        // })
-        // ->addColumn('action', function($row){
-
-        // })
-        // ->addIndexColumn()
-        // ->make(true);
-
-
-
-        $siswas = $siswas->get();
-
-        return view('dashboard.attendances.index', compact('siswas','kelas'));
+        return view('dashboard.attendances.index', compact('siswas', 'kelas', 'attendances', 'tanggal'));
     }
 
-    public function data_table() {}
+
+
+
+
+    public function data_table()
+    {
+
+    }
 
     public function store(Request $request)
     {
@@ -81,11 +58,12 @@ class AttendancesController extends Controller
             'siswa_id' => 'required|string',
             'kelas_id' => 'required|string',
             'tanggal' => 'required|string',
+            'kategori_kelas' => 'required|string',
             'status' => 'required|string',
             'keterangan' => 'nullable|string',
         ]);
 
-        $carbonNow = \Carbon::now()->format('Y-m-d');
+        $carbonNow = Carbon::now()->format('Y-m-d');
 
         // checked data siswa
         $siswa = Siswa::where('id', $request->siswa_id)->first();
@@ -101,6 +79,7 @@ class AttendancesController extends Controller
             $attendance = new Attendances;
             $attendance->siswa_id = $request->siswa_id;
             $attendance->kelas_id = $request->kelas_id;
+            $attendance->kategori_kelas = $request->kategori_kelas;
             $attendance->tanggal = $carbonNow;
             $attendance->status = $request->status;
             $attendance->keterangan = $request->keterangan;

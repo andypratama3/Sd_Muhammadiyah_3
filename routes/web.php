@@ -106,7 +106,7 @@ Route::group(['prefix' => '/',], function () {
     Route::get('berita', [BeritaController::class, 'index'])->name('berita.index');
     Route::get('berita/{slug}', [BeritaController::class, 'show'])->name('berita.show');
 
-    // Siswa Lulus
+    // Siswa Lulus & Siswa Aktif
     Route::get('siswa-aktif', [SiswaAktifController::class, 'index'])->name('siswa-aktif.index');
     Route::get('siswa-lulus', [SiswaLulusController::class, 'index'])->name('siswa-lulus.index');
     //guru
