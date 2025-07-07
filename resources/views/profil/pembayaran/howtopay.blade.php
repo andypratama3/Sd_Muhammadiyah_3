@@ -22,8 +22,8 @@
                 <i class="fa fa-arrow-left"></i> Kembali
             </a>
 
-            <div class="card shadow-sm border-0 mt-3">
-                <div class="card-header bg-primary text-white">
+            <div class="mt-3 border-0 shadow-sm card">
+                <div class="text-white card-header bg-primary">
                     <h4 class="mb-0">Panduan Pembayaran Sekolah Kreatif SD Muhammadiyah 3 Samarinda</h4>
                 </div>
                 <div class="card-body">
@@ -38,7 +38,8 @@
                             <ul>
                                 <li>Tekan tombol <strong>Bayar</strong> untuk melanjutkan.</li>
                                 <li>Pembayaran via <strong>Virtual Account (VA)</strong> bank.</li>
-                                <li>Pembayaran <strong>online</strong> melalui Midtrans (e-Wallet, QRIS, dll).</li>
+                                <li>Untuk pembayaran SPP, silakan scan QR-code yang tersedia dengan mengklik "Lihat Kode QR".</li>
+                                <li>Pembayaran <strong>online</strong> dapat dilakukan melalui Midtrans (e-Wallet, QRIS, dll).</li>
                             </ul>
                         </li>
                         <li>Jika memilih Virtual Account, salin nomor VA yang muncul di halaman pembayaran.</li>
