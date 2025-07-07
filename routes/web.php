@@ -127,7 +127,7 @@ Route::group(['prefix' => '/',], function () {
     Route::get('fasilitas', [FasilitasController::class, 'index'])->name('fasilitas.index');
     Route::get('fasilitas/{nama_fasilitas}', [FasilitasController::class, 'show'])->name('fasilitas.show');
     //tenaga pendidikan
-    Route::get('tenagapendidikan', [TenagaPendidikanController::class, 'index'])->name('tenagapendidikan.index');
+    Route::get('tenaga-pendidikan', [TenagaPendidikanController::class, 'index'])->name('tenagapendidikan.index');
 
     Route::get('gallery', [GalleryController::class, 'index'])->name('gallery.index');
     Route::get('gallery/{slug}', [GalleryController::class, 'show'])->name('gallery.show');

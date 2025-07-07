@@ -103,8 +103,8 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <div class="small text-gray-500">${new Date(activity.created_at).toLocaleString()}</div>
-                                    <span class="font-weight-bold">${activity.description}</span>
+                                    <div class="text-gray-500 small">${new Date(activity.created_at).toLocaleString()}</div>
+                                    <span class="font-weight-bold">${activity.description.split(' ').slice(0, 5).join(' ') + (activity.description.split(' ').length > 5 ? '...' : '')}</span>
                                 </div>
                             </a>
                         `;

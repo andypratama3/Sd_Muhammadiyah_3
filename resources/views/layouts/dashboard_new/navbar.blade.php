@@ -1,5 +1,4 @@
 
-@push('css')
     <style>
         .icon-circle {
             width: 40px;
@@ -15,12 +14,27 @@
         .bg-danger { background-color: #dc3545 !important; }
         .bg-warning { background-color: #ffc107 !important; }
 
+        @media (min-width: 1200px) {
+           .navbar-expand-xl .navbar-nav .dropdown-menu {
+               margin-top: 350px !important;
+           }
+        }
+
+        @media (min-width: 992px) {
+            .navbar-expand-lg .navbar-nav .dropdown-menu #activity_items > *{
+                /* max word wrap max 10*/
+                word-break: break-word;
+                hyphens: auto;
+                max-width: 10em;
+            }
+        }
+
+
     </style>
-@endpush
 <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
     id="layout-navbar">
     <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
-        <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+        <a class="px-0 nav-item nav-link me-xl-4" href="javascript:void(0)">
             <i class="bx bx-menu bx-sm"></i>
         </a>
     </div>
@@ -35,21 +49,21 @@
         </div>
 
         <!-- /Search -->
-        <ul class="navbar-nav flex-row align-items-center ms-auto ">
-            <li class="nav-item dropdown no-arrow mx-1 float-end mr-2" style="list-style: none !important; background-color: transparent !important;">
+        <ul class="flex-row navbar-nav align-items-center ms-auto ">
+            <li class="mx-1 mr-2 nav-item dropdown no-arrow float-end " style="list-style: none !important; background-color: transparent !important;">
                 <a class="nav-link dropdown-toggle" style="z-index: 9999 !important;" href="#" id="alertsDropdown" role="button"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-bell fa-fw"></i>
                     <span class="badge badge-danger badge-counter" style="color: red !important;" id="activity_count"></span>
                 </a>
-                <div class="dropdown-list dropdown-menu shadow animated--grow-in" aria-labelledby="alertsDropdown" id="activity_list">
+                <div class="shadow dropdown-list dropdown-menu show animated--grow-in" spellcheck="" aria-labelledby="alertsDropdown" id="activity_list">
                     <h6 class="dropdown-header">Activity</h6>
                     <div id="activity_items"></div>
-                    <a class="dropdown-item text-center small text-black-500" href="{{ route('dashboard.notifikasi.index') }}">Show All Activity</a>
+                    <a class="text-center dropdown-item small text-black-500" href="{{ route('dashboard.notifikasi.index') }}">Show All Activity</a>
                 </div>
             </li>
-            
-            
+
+
 
             <!-- User -->
             <li class="nav-item navbar-dropdown dropdown-user dropdown">
@@ -57,10 +71,10 @@
                     <div class="avatar avatar-online">
                         @if(Auth::user()->avatar === 'default.jpg')
                         <img src="{{ asset('asset_dashboard_new/img/avatars/1.png') }}" alt
-                            class="w-px-40 h-auto rounded-circle" />
+                            class="h-auto w-px-40 rounded-circle" />
                         @else
                         <img src="{{ asset('storage/img/profile/'. Auth::user()->avatar) }}"
-                            class="w-px-40 h-auto rounded-circle" alt="Profile" id="profile">
+                            class="h-auto w-px-40 rounded-circle" alt="Profile" id="profile">
                         @endif
 
                     </div>
@@ -73,13 +87,13 @@
                                     <div class="avatar avatar-online">
                                         @if(Auth::user()->avatar === 'default.jpg')
                                         <img src="{{ asset('asset_dashboard_new/img/avatars/1.png') }}" alt
-                                            class="w-px-40 h-auto rounded-circle" />
+                                            class="h-auto w-px-40 rounded-circle" />
                                         @elseif(Auth::user()->avatar == null)
                                         <img src="{{ asset('asset_dashboard_new/img/avatars/1.png') }}" alt
-                                            class="w-px-40 h-auto rounded-circle" />
+                                            class="h-auto w-px-40 rounded-circle" />
                                         @else
                                         <img src="{{ asset('storage/img/profile/'. Auth::user()->avatar) }}"
-                                            class="w-px-40 h-auto rounded-circle" alt="Profile" id="profile">
+                                            class="h-auto w-px-40 rounded-circle" alt="Profile" id="profile">
                                         @endif
                                     </div>
                                 </div>
@@ -107,9 +121,9 @@
                     </li>
                     <li>
                         <a class="dropdown-item" href="#">
-                            <span class="d-flex align-items-center align-middle">
+                            <span class="align-middle d-flex align-items-center">
                                 <i class="flex-shrink-0 bx bx-credit-card me-2"></i>
-                                <span class="flex-grow-1 align-middle">Billing</span>
+                                <span class="align-middle flex-grow-1">Billing</span>
                                 <span class="flex-shrink-0 badge badge-center rounded-pill bg-danger w-px-20 h-px-20">
                                     4
                                 </span>
@@ -125,7 +139,7 @@
                                 enctype="multipart/form-data">
                                 @csrf
                             </form>
-                            <i class="fas fa-sign-out-alt mr-2"></i>
+                            <i class="mr-2 fas fa-sign-out-alt"></i>
                             <span class="d-none d-sm-inline-block">Logout</span>
                         </a>
                     </li>
@@ -135,7 +149,6 @@
     </div>
 </nav>
 
-@push('js')
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function () {
         const dropdownToggle = document.getElementById("alertsDropdown");
@@ -155,4 +168,3 @@
     });
     </script>
 
-@endpush
