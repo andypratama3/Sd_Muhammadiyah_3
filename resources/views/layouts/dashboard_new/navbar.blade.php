@@ -56,7 +56,7 @@
                     <i class="fas fa-bell fa-fw"></i>
                     <span class="badge badge-danger badge-counter" style="color: red !important;" id="activity_count"></span>
                 </a>
-                <div class="shadow dropdown-list dropdown-menu show animated--grow-in" spellcheck="" aria-labelledby="alertsDropdown" id="activity_list">
+                <div class="shadow dropdown-list dropdown-menu animated--grow-in" spellcheck="" aria-labelledby="alertsDropdown" id="activity_list">
                     <h6 class="dropdown-header">Activity</h6>
                     <div id="activity_items"></div>
                     <a class="text-center dropdown-item small text-black-500" href="{{ route('dashboard.notifikasi.index') }}">Show All Activity</a>
