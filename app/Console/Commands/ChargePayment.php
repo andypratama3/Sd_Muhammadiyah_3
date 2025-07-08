@@ -51,7 +51,7 @@ class ChargePayment extends Command
 
                 $order_id = Str::uuid();
                 // make number mounth
-                $monthNumber = Carbon::now()->locale('id_ID')->format('m');
+                $monthNumber = Carbon::now()->locale('id')->translatedFormat('F');
                 $category_Spp = JudulPembayaran::where('name', 'SPP')->first();
                 $vaNumber = $siswa->nisn . $monthNumber;
                 $biaya_admin = ($siswa->spp > 0) ? 5000 : 0;
