@@ -48,13 +48,6 @@ class ChargePayment extends Command
 
             try {
                 // // Periksa apakah siswa sudah punya VA Number
-                // if (!$siswa->va_number) {
-                //     $vaNumber = $this->generateNewVaNumber();
-                //     $siswa->update(['va_number' => $vaNumber]);
-                // } else {
-                //     $vaNumber = $siswa->va_number;
-                // }
-
 
                 $order_id = Str::uuid();
                 // make number mounth
@@ -176,7 +169,7 @@ class ChargePayment extends Command
                 $this->info("Pembayaran untuk {$siswa->name} berhasil dikirim ke Midtrans.");
 
                 // mengirim pesan ke WhatsApp
-                // $this->whatsApp->sendMessage($responseData['order_id']);
+                $this->whatsApp->sendMessage($responseData['order_id']);
 
             } else {
                 $this->error("Gagal memproses pembayaran untuk {$siswa->name}: " . $responseData['status_message']);

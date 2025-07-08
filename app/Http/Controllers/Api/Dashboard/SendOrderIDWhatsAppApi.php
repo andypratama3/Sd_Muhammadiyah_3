@@ -11,6 +11,79 @@ use Twilio\Rest\Client as TwilioClient;
 
 class SendOrderIDWhatsAppApi extends Controller
 {
+    // public function sendMessage($orderId)
+    // {
+    //     $charge = Charge::with(['siswa.kelas'])->where('order_id', $orderId)->first();
+    //     if (! $charge) {
+    //         return response()->json(['status' => 'error', 'message' => 'Pembayaran tidak ditemukan.'], 404);
+    //     }
+
+    //     $categoryname = $charge->kategori_pembayaran->name;
+
+    //     $monthName = Carbon::now()->locale('id')->translatedFormat('F');
+
+
+    //     $siswa = $charge->siswa->first();
+    //     $kelas = $siswa->kelas->first();
+    //     $grossAmount = intval($charge->gross_amount);
+    //     $namaSiswa = $siswa->name;
+    //     $kelasSiswa = $kelas ? $kelas->name : 'Tidak diketahui';
+    //     $noHp = '+62' . ltrim($siswa->no_hp ?? '85349734475', '0');
+
+
+    //     // Twilio credentials
+    //     $sid = env('TWILIO_SID');
+    //     $token = env('TWILIO_AUTH_TOKEN');
+    //     $whatsappFrom = env('TWILIO_WHATSAPP_FROM');
+
+    //     if (! $sid || ! $token || ! $whatsappFrom) {
+    //         return response()->json(['status' => 'error', 'message' => 'Konfigurasi Twilio tidak lengkap.'], 500);
+    //     }
+
+    //     try {
+    //         $qrImageUrl = $charge->url_action;
+    //         $categoryname = $charge->kategori_pembayaran->name;
+    //         // Pesan WhatsApp
+    //         $body = "Assalamu'alaikum Warahmatullahi Wabarakatuh.  \n\n"
+    //                 . "Yth. Ayah/Bunda Wali dari ananda *$namaSiswa* (Kelas *$kelasSiswa*),  \n\n"
+    //                 . "Izin kami sampaikan bahwa terdapat tagihan pembayaran pendidikan dengan rincian sebagai berikut: \n\n"
+    //                 . "📌 *Kategori Pembayaran*: $categoryname \n"
+    //                 . "💰 *Jumlah Tagihan*: Rp " . number_format($grossAmount, 0, ',', '.') . "\n"
+    //                 . " Bulan : $monthName \n"
+    //                 . "Untuk kemudahan transaksi, silakan melakukan pembayaran dengan memindai QR Code berikut: \n"
+    //                 . "$qrImageUrl \n\n"
+    //                 . "🕊️ Mohon melakukan pembayaran tepat waktu demi kelancaran proses belajar-mengajar.  \n"
+    //                 . "Apabila telah melakukan pembayaran, Ayah/Bunda tidak perlu membalas pesan ini.\n\n"
+    //                 . "Terima kasih atas perhatian dan kerjasamanya.  \n"
+    //                 . "Wassalamu'alaikum Warahmatullahi Wabarakatuh. \n";
+
+    //         // save the url to jpg or png  from midtrans qr code
+
+
+    //         $contents = file_get_contents($qrImageUrl);
+
+    //         $qrImageUrl = return response($contents)
+    //             ->header('Content-Type', 'image/png')
+    //             ->header('Content-Disposition', 'attachment; filename="qr-siswa-'.$charge->name. $monthName .'.png"');
+
+
+    //         // Kirim pesan dengan gambar
+    //         $client = new TwilioClient($sid, $token);
+    //         $message = $client->messages->create(
+    //             'whatsapp:' . $noHp,
+    //             [
+    //                 'from' => $whatsappFrom,
+    //                 'body' => $body,
+    //                 "mediaUrl" => ["qrImageUrl"],
+
+    //             ]
+    //         );
+
+    //         return response()->json(['status' => 'success', 'message_sid' => $message->sid], 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['status' => 'error', 'message' => 'Gagal mengirim pesan: ' . $e->getMessage()], 500);
+    //     }
+    // }
     public function sendMessage($orderId)
     {
         $charge = Charge::with(['siswa.kelas'])->where('order_id', $orderId)->first();
@@ -19,9 +92,7 @@ class SendOrderIDWhatsAppApi extends Controller
         }
 
         $categoryname = $charge->kategori_pembayaran->name;
-
         $monthName = Carbon::now()->locale('id')->translatedFormat('F');
-
 
         $siswa = $charge->siswa->first();
         $kelas = $siswa->kelas->first();
@@ -30,8 +101,6 @@ class SendOrderIDWhatsAppApi extends Controller
         $kelasSiswa = $kelas ? $kelas->name : 'Tidak diketahui';
         $noHp = '+62' . ltrim($siswa->no_hp ?? '85349734475', '0');
 
-
-        // Twilio credentials
         $sid = env('TWILIO_SID');
         $token = env('TWILIO_AUTH_TOKEN');
         $whatsappFrom = env('TWILIO_WHATSAPP_FROM');
@@ -42,32 +111,46 @@ class SendOrderIDWhatsAppApi extends Controller
 
         try {
             $qrImageUrl = $charge->url_action;
-            $categoryname = $charge->kategori_pembayaran->name;
-            // Pesan WhatsApp
+
+            // Ambil isi gambar dari URL
+            $contents = file_get_contents($qrImageUrl);
+
+            // Pastikan folder penyimpanan QR ada
+            $folderPath = public_path('storage/img/waqr/spp');
+            if (!file_exists($folderPath)) {
+                mkdir($folderPath, 0775, true);
+            }
+
+            // Simpan QR code ke file
+            $fileName = 'qr-siswa-' . $charge->name . '-' . $monthName . '.png';
+            $filePath = $folderPath . '/' . $fileName;
+            file_put_contents($filePath, $contents);
+
+            // Buat URL publik ke gambar
+            $publicUrl = url('storage/img/waqr/spp/' . $fileName);
+
+            // Isi pesan WhatsApp
             $body = "Assalamu'alaikum Warahmatullahi Wabarakatuh.  \n\n"
-                    . "Yth. Ayah/Bunda Wali dari ananda *$namaSiswa* (Kelas *$kelasSiswa*),  \n\n"
-                    . "Izin kami sampaikan bahwa terdapat tagihan pembayaran pendidikan dengan rincian sebagai berikut: \n\n"
-                    . "📌 *Kategori Pembayaran*: $categoryname \n"
-                    . "💰 *Jumlah Tagihan*: Rp " . number_format($grossAmount, 0, ',', '.') . "\n"
-                    . " Bulan : $monthName \n"
-                    . "Untuk kemudahan transaksi, silakan melakukan pembayaran dengan memindai QR Code berikut: \n"
-                    . "$qrImageUrl \n\n"
-                    . "🕊️ Mohon melakukan pembayaran tepat waktu demi kelancaran proses belajar-mengajar.  \n"
-                    . "Apabila telah melakukan pembayaran, Ayah/Bunda tidak perlu membalas pesan ini.\n\n"
-                    . "Terima kasih atas perhatian dan kerjasamanya.  \n"
-                    . "Wassalamu'alaikum Warahmatullahi Wabarakatuh. \n";
+                . "Yth. Ayah/Bunda Wali dari ananda *$namaSiswa* (*$kelasSiswa*),  \n\n"
+                . "Izin kami sampaikan bahwa terdapat tagihan pembayaran pendidikan dengan rincian sebagai berikut: \n\n"
+                . "📌 *Kategori Pembayaran*: $categoryname \n"
+                . "💰 *Jumlah Tagihan*: Rp " . number_format($grossAmount, 0, ',', '.') . "\n"
+                . " Bulan : $monthName \n"
+                . "Untuk kemudahan transaksi, silakan melakukan pembayaran dengan memindai QR Code berikut: \n"
+                // . "$publicUrl \n\n"
+                . "🕊️ Mohon melakukan pembayaran tepat waktu demi kelancaran proses belajar-mengajar.  \n"
+                . "Apabila telah melakukan pembayaran, Ayah/Bunda tidak perlu membalas pesan ini.\n\n"
+                . "Terima kasih atas perhatian dan kerjasamanya.  \n"
+                . "Wassalamu'alaikum Warahmatullahi Wabarakatuh. \n";
 
-
-
-            // Kirim pesan dengan gambar
+            // Kirim pesan WA via Twilio
             $client = new TwilioClient($sid, $token);
             $message = $client->messages->create(
                 'whatsapp:' . $noHp,
                 [
                     'from' => $whatsappFrom,
                     'body' => $body,
-                    "mediaUrl" => ["$qrImageUrl"],
-
+                    // 'mediaUrl' => [$publicUrl],
                 ]
             );
 
@@ -76,6 +159,8 @@ class SendOrderIDWhatsAppApi extends Controller
             return response()->json(['status' => 'error', 'message' => 'Gagal mengirim pesan: ' . $e->getMessage()], 500);
         }
     }
+
+
 
     public function webhook(Request $request)
     {
