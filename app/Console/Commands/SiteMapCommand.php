@@ -48,8 +48,6 @@ class SiteMapCommand extends Command
                 ->setPriority(1.0)
         );
 
-
-
         // Tambahkan halaman statis
         $staticPages = [
             'berita', 'guru', 'profil-sekolah', 'ekstrakurikuler', 'pembayaran',
@@ -58,18 +56,17 @@ class SiteMapCommand extends Command
         ];
 
          $excludedPages = [
-            'pembayaran/pay',
-            'spmb/pay',
-            'jadwal/getjadwal',
-            'pembayaran/detail'
+            '/pembayaran/pay',
+            '/spmb/pay',
+            '/jadwal/getjadwal',
+            '/pembayaran/detail',
         ];
 
         foreach ($staticPages as $page) {
 
-            if(in_array($page, $excludedPages)) {
+            if(in_array("/$page", $excludedPages)) {
                 continue;
             }
-
             $sitemap->add(
                 Url::create("$baseUrl/$page")
                     ->setLastModificationDate(now())
@@ -77,12 +74,6 @@ class SiteMapCommand extends Command
             );
         }
 
-        // exlude halaman
-        $sitemap->add(
-            Url::create("$baseUrl/exclude")
-                ->setLastModificationDate(now())
-                ->setPriority(0.7)
-        );
 
         // Ambil data artikel & berita
         $artikels = Artikel::orderBy('created_at', 'desc')->get();
@@ -132,8 +123,6 @@ class SiteMapCommand extends Command
                     ->setPriority(0.8)
             );
         }
-
-
 
         // Simpan sitemap ke file
         $sitemap->writeToFile($sitemapPath);
