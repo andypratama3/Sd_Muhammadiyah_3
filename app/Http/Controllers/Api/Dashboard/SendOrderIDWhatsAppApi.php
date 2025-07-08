@@ -111,54 +111,43 @@ class SendOrderIDWhatsAppApi extends Controller
             return response()->json(['status' => 'error', 'message' => 'Konfigurasi Twilio tidak lengkap.'], 500);
         }
 
-        // Ambil isi gambar dari URL (QR Code)
+        // Ambil dan simpan QR image dari URL
         $qrImageUrl = $charge->url_action;
-        $fileName = 'qr-siswa-' . \Str::slug($charge->name) . '-' . $monthName . '.png';
-        $relativePath = 'img/waqr/spp/' . $fileName;
+        $fileName = 'qr-siswa-' . \Str::slug($categoryname . '-' . $monthName . '-' . $namaSiswa, '-') . '.png';
+        $relativePath = 'img/waqr/spp/';
         $storagePath = storage_path('app/public/' . $relativePath);
 
-        // try {
-            // Pastikan folder ada
-            if (!file_exists(dirname($storagePath))) {
-                mkdir(dirname($storagePath), 0775, true);
-            }
+        // Resize dan simpan menggunakan ImageHelper
+        \App\Helpers\ImageHelper::resizeAndSave($qrImageUrl, $storagePath, $fileName, 512, 512);
 
-            // Ambil isi gambar dan simpan ke file
-            $imageContent = file_get_contents($qrImageUrl);
-            file_put_contents($storagePath, $imageContent);
+        // URL publik
+        $publicUrl = asset('storage/' . $relativePath . $fileName);
 
-            // Buat URL publik (akses via storage symlink)
-            $publicUrl = asset('storage/' . $relativePath);
+        // Format pesan
+        $body = "Assalamu'alaikum Warahmatullahi Wabarakatuh.  \n\n"
+            . "Yth. Ayah/Bunda Wali dari ananda *$namaSiswa* (*$kelasSiswa*),  \n\n"
+            . "Izin kami sampaikan bahwa terdapat tagihan pembayaran pendidikan dengan rincian sebagai berikut: \n\n"
+            . "📌 *Kategori Pembayaran*: $categoryname \n"
+            . "💰 *Jumlah Tagihan*: Rp " . number_format($grossAmount, 0, ',', '.') . "\n"
+            . "🗓️ Bulan: $monthName \n"
+            . "Untuk kemudahan transaksi, silakan melakukan pembayaran dengan memindai QR Code berikut: \n"
+            . "🕊️ Mohon melakukan pembayaran tepat waktu demi kelancaran proses belajar-mengajar.  \n"
+            . "Apabila telah melakukan pembayaran, Ayah/Bunda tidak perlu membalas pesan ini.\n\n"
+            . "Terima kasih atas perhatian dan kerjasamanya.  \n"
+            . "Wassalamu'alaikum Warahmatullahi Wabarakatuh. \n";
 
-            // Isi pesan WA
-            $body = "Assalamu'alaikum Warahmatullahi Wabarakatuh.  \n\n"
-                . "Yth. Ayah/Bunda Wali dari ananda *$namaSiswa* (*$kelasSiswa*),  \n\n"
-                . "Izin kami sampaikan bahwa terdapat tagihan pembayaran pendidikan dengan rincian sebagai berikut: \n\n"
-                . "📌 *Kategori Pembayaran*: $categoryname \n"
-                . "💰 *Jumlah Tagihan*: Rp " . number_format($grossAmount, 0, ',', '.') . "\n"
-                . "🗓️ Bulan: $monthName \n"
-                . "Untuk kemudahan transaksi, silakan melakukan pembayaran dengan memindai QR Code berikut: \n"
-                . "🕊️ Mohon melakukan pembayaran tepat waktu demi kelancaran proses belajar-mengajar.  \n"
-                . "Apabila telah melakukan pembayaran, Ayah/Bunda tidak perlu membalas pesan ini.\n\n"
-                . "Terima kasih atas perhatian dan kerjasamanya.  \n"
-                . "Wassalamu'alaikum Warahmatullahi Wabarakatuh. \n";
+        // Kirim pesan ke WhatsApp
+        $client = new TwilioClient($sid, $token);
+        $message = $client->messages->create(
+            'whatsapp:' . $noHp,
+            [
+                'from' => $whatsappFrom,
+                'body' => $body,
+                'mediaUrl' => [$publicUrl],
+            ]
+        );
 
-            // Kirim ke WhatsApp
-            $client = new TwilioClient($sid, $token);
-            $message = $client->messages->create(
-                'whatsapp:' . $noHp,
-                [
-                    'from' => $whatsappFrom,
-                    'body' => $body,
-                    'mediaUrl' => [$publicUrl],
-                ]
-            );
-
-
-            return response()->json(['status' => 'success', 'message_sid' => $message->sid], 200);
-        // } catch (\Exception $e) {
-        //     return response()->json(['status' => 'error', 'message' => 'Gagal mengirim pesan: ' . $e->getMessage()], 500);
-        // }
+        return response()->json(['status' => 'success', 'message_sid' => $message->sid, 'media_url' => $publicUrl], 200);
     }
 
 
