@@ -30,9 +30,9 @@
 <body>
     <div class="container">
         <!-- <div class="row"> -->
-        <div class="align-items-center justify-items-center text-center">
+        <div class="text-center align-items-center justify-items-center">
             <h6>IDENTITAS PESERTA DIDIK</h6>
-            <!-- <table class="table d-table-row m-0 d-flex" > -->
+            <!-- <table class="table m-0 d-table-row d-flex" > -->
             <table class="d-table-cell">
                 <tr>
                     <td>A.</td>
@@ -119,17 +119,17 @@
                 <tr>
                     <td colspan="2"> - Kelurahan/Desa</td>
                     <th>:</th>
-                    <td>{{ $kelurahan_take['name'] }}</td>
+                    <td>{{ $kelurahan_take['name'] ?? '-' }}</td>
                 </tr>
                 <tr>
                     <td colspan="2"> - Kecamatan</td>
                     <th>:</th>
-                    <td>{{ $kecamatan_take['name'] }}</td>
+                    <td>{{ $kecamatan_take['name'] ?? '-'}}</td>
                 </tr>
                 <tr>
                     <td colspan="2"> - Provinsi</td>
                     <th>:</th>
-                    <td>{{ $provinsi_take['name'] }}</td>
+                    <td>{{ $provinsi_take['name'] ?? '-' }}</td>
 
                 </tr>
                 <tr>

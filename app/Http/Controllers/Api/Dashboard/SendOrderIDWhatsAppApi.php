@@ -122,12 +122,15 @@ class SendOrderIDWhatsAppApi extends Controller
             }
 
             // Simpan QR code ke file
-            $fileName = 'qr-siswa-' . $charge->name . '-' . $monthName . '.png';
+            $fileName = 'qr-siswa-' . \Str::slug($charge->name) . '-' . $monthName . '.png';
+
             $filePath = $folderPath . '/' . $fileName;
             file_put_contents($filePath, $contents);
 
             // Buat URL publik ke gambar
             $publicUrl = url('storage/img/waqr/spp/' . $fileName);
+
+            
 
             // Isi pesan WhatsApp
             $body = "Assalamu'alaikum Warahmatullahi Wabarakatuh.  \n\n"
