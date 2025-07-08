@@ -150,9 +150,10 @@ class SendOrderIDWhatsAppApi extends Controller
                 [
                     'from' => $whatsappFrom,
                     'body' => $body,
-                    // 'mediaUrl' => [$publicUrl],
+                    'mediaUrl' => [$publicUrl],
                 ]
             );
+
 
             return response()->json(['status' => 'success', 'message_sid' => $message->sid], 200);
         // } catch (\Exception $e) {
