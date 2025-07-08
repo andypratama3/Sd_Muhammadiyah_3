@@ -84,6 +84,7 @@ class SendOrderIDWhatsAppApi extends Controller
     //         return response()->json(['status' => 'error', 'message' => 'Gagal mengirim pesan: ' . $e->getMessage()], 500);
     //     }
     // }
+
     public function sendMessage($orderId)
     {
         $charge = Charge::with(['siswa.kelas'])->where('order_id', $orderId)->first();
@@ -109,26 +110,25 @@ class SendOrderIDWhatsAppApi extends Controller
             return response()->json(['status' => 'error', 'message' => 'Konfigurasi Twilio tidak lengkap.'], 500);
         }
 
-        try {
+        // try {
             $qrImageUrl = $charge->url_action;
 
             // Ambil isi gambar dari URL
-            $contents = file_get_contents($qrImageUrl);
+            $fileName = 'qr-siswa-' . \Str::slug($charge->name) . '-' . $monthName . '.png';
+            // Simpan di storage/app/public/img/waqr/spp/
+            $relativePath = 'img/waqr/spp/' . $fileName;
+            $storagePath = storage_path('app/public/' . $relativePath);
 
-            // Pastikan folder penyimpanan QR ada
-            $folderPath = public_path('storage/img/waqr/spp');
-            if (!file_exists($folderPath)) {
-                mkdir($folderPath, 0775, true);
+            // Pastikan foldernya ada
+            if (!file_exists(dirname($storagePath))) {
+                mkdir(dirname($storagePath), 0775, true);
             }
 
-            // Simpan QR code ke file
-            $fileName = 'qr-siswa-' . \Str::slug($charge->name) . '-' . $monthName . '.png';
+            // Simpan file
+            file_put_contents($storagePath, $contents);
 
-            $filePath = $folderPath . '/' . $fileName;
-            file_put_contents($filePath, $contents);
-
-            // Buat URL publik ke gambar
-            $publicUrl = url('storage/img/waqr/spp/' . $fileName);
+            // Public URL via storage:link
+            $publicUrl = asset('storage/' . $relativePath);
 
 
 
@@ -158,10 +158,11 @@ class SendOrderIDWhatsAppApi extends Controller
                 ]
             );
 
+
             return response()->json(['status' => 'success', 'message_sid' => $message->sid], 200);
-        } catch (\Exception $e) {
-            return response()->json(['status' => 'error', 'message' => 'Gagal mengirim pesan: ' . $e->getMessage()], 500);
-        }
+        // } catch (\Exception $e) {
+        //     return response()->json(['status' => 'error', 'message' => 'Gagal mengirim pesan: ' . $e->getMessage()], 500);
+        // }
     }
 
 

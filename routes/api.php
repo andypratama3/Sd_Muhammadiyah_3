@@ -48,3 +48,9 @@ Route::match(['GET', 'POST'], 'midtrans/callback', [MidtransPaymentController::c
 Route::post('midtrans/handling/unfinish', [MidtransPaymentController::class, 'callback_unfinish']);
 
 Route::post('midtrans/handling/error', [MidtransPaymentController::class, 'callback_error']);
+
+
+
+// Whatsaap Callback
+
+Route::post('/whatsapp/callback', [SendOrderIDWhatsAppApi::class, 'webhook'])->name('whatsapp.webhook');
