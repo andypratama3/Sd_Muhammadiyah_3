@@ -87,7 +87,8 @@ class SendOrderIDWhatsAppApi extends Controller
 
     public function sendMessage($orderId)
     {
-        $charge = Charge::with(['siswa.kelas'])->where('order_id', $orderId)->first();
+        $charge = Charge::with(['siswa.kelas', 'kategori_pembayaran'])->where('order_id', $orderId)->first();
+
         if (! $charge) {
             return response()->json(['status' => 'error', 'message' => 'Pembayaran tidak ditemukan.'], 404);
         }
@@ -110,59 +111,53 @@ class SendOrderIDWhatsAppApi extends Controller
             return response()->json(['status' => 'error', 'message' => 'Konfigurasi Twilio tidak lengkap.'], 500);
         }
 
-        // try {
-            $qrImageUrl = $charge->url_action;
+        // Ambil isi gambar dari URL (QR Code)
+        $qrImageUrl = $charge->url_action;
+        $fileName = 'qr-siswa-' . \Str::slug($charge->name) . '-' . $monthName . '.png';
+        $relativePath = 'img/waqr/spp/' . $fileName;
+        $storagePath = storage_path('app/public/' . $relativePath);
 
-            // Ambil isi gambar dari URL
-            $fileName = 'qr-siswa-' . \Str::slug($charge->name) . '-' . $monthName . '.png';
-            // Simpan di storage/app/public/img/waqr/spp/
-            $relativePath = 'img/waqr/spp/' . $fileName;
-            $storagePath = storage_path('app/public/' . $relativePath);
-
-            // Pastikan foldernya ada
+        try {
+            // Pastikan folder ada
             if (!file_exists(dirname($storagePath))) {
                 mkdir(dirname($storagePath), 0775, true);
             }
 
-            // Simpan file
-            file_put_contents($storagePath, $contents);
+            // Ambil isi gambar dan simpan ke file
+            $imageContent = file_get_contents($qrImageUrl);
+            file_put_contents($storagePath, $imageContent);
 
-            // Public URL via storage:link
+            // Buat URL publik (akses via storage symlink)
             $publicUrl = asset('storage/' . $relativePath);
 
-
-
-            // Isi pesan WhatsApp
+            // Isi pesan WA
             $body = "Assalamu'alaikum Warahmatullahi Wabarakatuh.  \n\n"
                 . "Yth. Ayah/Bunda Wali dari ananda *$namaSiswa* (*$kelasSiswa*),  \n\n"
                 . "Izin kami sampaikan bahwa terdapat tagihan pembayaran pendidikan dengan rincian sebagai berikut: \n\n"
                 . "📌 *Kategori Pembayaran*: $categoryname \n"
                 . "💰 *Jumlah Tagihan*: Rp " . number_format($grossAmount, 0, ',', '.') . "\n"
-                . " Bulan : $monthName \n"
+                . "🗓️ Bulan: $monthName \n"
                 . "Untuk kemudahan transaksi, silakan melakukan pembayaran dengan memindai QR Code berikut: \n"
-                // . "$publicUrl \n\n"
                 . "🕊️ Mohon melakukan pembayaran tepat waktu demi kelancaran proses belajar-mengajar.  \n"
                 . "Apabila telah melakukan pembayaran, Ayah/Bunda tidak perlu membalas pesan ini.\n\n"
                 . "Terima kasih atas perhatian dan kerjasamanya.  \n"
                 . "Wassalamu'alaikum Warahmatullahi Wabarakatuh. \n";
 
-            // Kirim pesan WA via Twilio
+            // Kirim ke WhatsApp
             $client = new TwilioClient($sid, $token);
             $message = $client->messages->create(
                 'whatsapp:' . $noHp,
                 [
                     'from' => $whatsappFrom,
                     'body' => $body,
-                    // 'mediaUrl' => ["$publicUrl"],
-                    'mediaUrl' => ["https://sdmuhammadiyah3smd.com/storage/img/waqr/spp/qr-siswa-SPP%20Juli%20Abdillah%20Abqari%20Agam-Juli.png"],
+                    'mediaUrl' => [$publicUrl],
                 ]
             );
 
-
             return response()->json(['status' => 'success', 'message_sid' => $message->sid], 200);
-        // } catch (\Exception $e) {
-        //     return response()->json(['status' => 'error', 'message' => 'Gagal mengirim pesan: ' . $e->getMessage()], 500);
-        // }
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => 'Gagal mengirim pesan: ' . $e->getMessage()], 500);
+        }
     }
 
 

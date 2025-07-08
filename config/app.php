@@ -3,7 +3,7 @@
 use Intervention\Image\Facades\Image as Image;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
-use Intervention\Image\ImageServiceProvider;
+// use Intervention\Image\ImageServiceProvider;
 
 
 return [
@@ -177,7 +177,8 @@ return [
         Laravel\Socialite\SocialiteServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
-        Intervention\Image\ImageServiceProvider::class,
+        // Intervention\Image\ImageServiceProvider::class,
+
 
 
     ])->toArray(),
