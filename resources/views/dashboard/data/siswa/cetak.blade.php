@@ -262,7 +262,7 @@
                 <!-- <div class="col-12" style="border: 2px solid blue;"> -->
                 <h6 class="text-end">Samarinda,
                     @php
-                        $currentDate = \Carbon::now()->locale('id')->translatedFormat('d F Y');
+                        $currentDate = \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y');
                         echo $currentDate;
                     @endphp
                 </h6>
