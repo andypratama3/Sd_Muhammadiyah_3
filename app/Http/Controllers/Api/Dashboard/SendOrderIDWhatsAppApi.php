@@ -153,7 +153,8 @@ class SendOrderIDWhatsAppApi extends Controller
                 [
                     'from' => $whatsappFrom,
                     'body' => $body,
-                    'mediaUrl' => ["$publicUrl"],
+                    // 'mediaUrl' => ["$publicUrl"],
+                    'mediaUrl' => ["https://sdmuhammadiyah3smd.com/storage/img/waqr/spp/qr-siswa-SPP%20Juli%20Abdillah%20Abqari%20Agam-Juli.png"],
                 ]
             );
 
