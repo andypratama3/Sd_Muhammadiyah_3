@@ -130,7 +130,7 @@ class SendOrderIDWhatsAppApi extends Controller
             // Buat URL publik ke gambar
             $publicUrl = url('storage/img/waqr/spp/' . $fileName);
 
-            
+
 
             // Isi pesan WhatsApp
             $body = "Assalamu'alaikum Warahmatullahi Wabarakatuh.  \n\n"
@@ -153,7 +153,7 @@ class SendOrderIDWhatsAppApi extends Controller
                 [
                     'from' => $whatsappFrom,
                     'body' => $body,
-                    'mediaUrl' => [$publicUrl],
+                    'mediaUrl' => ["$publicUrl"],
                 ]
             );
 
