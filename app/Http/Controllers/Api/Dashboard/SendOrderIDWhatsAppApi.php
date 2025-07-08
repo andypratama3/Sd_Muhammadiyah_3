@@ -150,7 +150,7 @@ class SendOrderIDWhatsAppApi extends Controller
                 [
                     'from' => $whatsappFrom,
                     'body' => $body,
-                    // 'mediaUrl' => [$publicUrl],
+                    'mediaUrl' => [$publicUrl],
                 ]
             );
 
