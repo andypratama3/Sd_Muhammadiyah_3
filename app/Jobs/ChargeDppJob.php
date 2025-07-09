@@ -48,52 +48,54 @@ class ChargeDppJob implements ShouldQueue
         $stage2 = $dpp * 0.20;
 
         $this->createChargeStage($category, 1, $stage1, $adminFee);
-
         sleep(3);
-
         $this->createChargeStage($category, 2, $stage2, $adminFee);
     }
 
     private function createChargeStage($category, $stage, $amount, $adminFee)
     {
-        $total = $amount + $adminFee;
-        $orderId = Str::uuid();
-        $vaNumber = $this->siswa->nisn . $stage . now()->format('m');
-        $transactionStatus = 'pending';
-        $sendToMidtrans = true;
+        try {
+            $total = $amount + $adminFee;
+            $orderId = Str::uuid()->toString();
+            $vaNumber = $this->siswa->nisn . $stage . now()->format('m');
+            $transactionStatus = 'pending';
+            $sendToMidtrans = true;
 
-        if ($this->siswa->status_dpp === 'LUNAS' || $total <= 0) {
-            $transactionStatus = $total <= 0 ? 'free' : 'pay_offline';
-            $sendToMidtrans = false;
-        }
+            if ($this->siswa->status_dpp === 'LUNAS' || $total <= 0) {
+                $transactionStatus = $total <= 0 ? 'free' : 'pay_offline';
+                $sendToMidtrans = false;
+            }
 
-        DB::table('charges')->insert([
-            'id' => $orderId,
-            'name' => "{$category->name} Tahap {$stage} - {$this->siswa->name}",
-            'order_id' => Str::uuid(),
-            'siswa_id' => $this->siswa->id,
-            'gross_amount' => $total,
-            'payment_type' => 'bank_transfer',
-            'bank' => 'permata',
-            'va_number' => $vaNumber,
-            'transaction_id' => Str::uuid(),
-            'transaction_time' => now(),
-            'fraud_status' => 'accept',
-            'transaction_status' => $transactionStatus,
-            'category_payment_id' => $category->id,
-            'snap_token' => null,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+            DB::table('charges')->insert([
+                'id' => $orderId,
+                'name' => "{$category->name} Tahap {$stage} - {$this->siswa->name}",
+                'order_id' => Str::uuid()->toString(),
+                'siswa_id' => $this->siswa->id,
+                'gross_amount' => $total,
+                'payment_type' => 'bank_transfer',
+                'bank' => 'permata',
+                'va_number' => $vaNumber,
+                'transaction_id' => Str::uuid()->toString(),
+                'transaction_time' => now(),
+                'fraud_status' => 'accept',
+                'transaction_status' => $transactionStatus,
+                'category_payment_id' => $category->id,
+                'snap_token' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
 
-        \Log::info("[CREATE] DPP Tahap {$stage} untuk {$this->siswa->name}");
+            \Log::info("[CREATE] DPP Tahap {$stage} untuk {$this->siswa->name}");
 
-        if ($sendToMidtrans) {
-            $this->sendToMidtrans($category, $stage, $orderId, $total, $vaNumber);
+            if ($sendToMidtrans) {
+                $this->sendToMidtrans($category, $stage, $orderId, $total, $vaNumber);
+            }
+        } catch (\Exception $e) {
+            \Log::error("[CREATE ❌] Gagal membuat charge tahap {$stage} untuk {$this->siswa->name}: " . $e->getMessage());
         }
     }
 
-    private function sendToMidtrans($category, $stage,$orderId, $amount, $vaNumber)
+    private function sendToMidtrans($category, $stage, $orderId, $amount, $vaNumber)
     {
         $client = new Client();
         $serverKey = env('MIDTRANS_SERVER_KEY');
@@ -114,9 +116,9 @@ class ChargeDppJob implements ShouldQueue
             ],
             'bank_transfer' => [
                 'bank' => 'permata',
-                 "permata" => [
-                     "recipient_name" => "Sekolah Kreatif SD Muhammadiyah 3 Samarinda"
-                 ]
+                'permata' => [
+                    'recipient_name' => 'Sekolah Kreatif SD Muhammadiyah 3 Samarinda',
+                ],
             ],
             'custom_expiry' => [
                 'expiry_duration' => 365,
@@ -126,9 +128,9 @@ class ChargeDppJob implements ShouldQueue
                 'id' => 1,
                 'price' => $amount,
                 'quantity' => 1,
-                'name' => "DPP {$stage} {$this->siswa->name}",
+                'name' => "DPP Tahap {$stage} - {$this->siswa->name}",
                 'category' => $category->name,
-                'merchant_name' => "Sekolah Kreatif SD Muhammadiyah 3 Samarinda",
+                'merchant_name' => 'Sekolah Kreatif SD Muhammadiyah 3 Samarinda',
             ]],
         ];
 
@@ -144,21 +146,19 @@ class ChargeDppJob implements ShouldQueue
 
             $data = json_decode($response->getBody(), true);
 
-            // $this->info('Response Midtrans: ' . json_encode($data));
-
             if ($data['status_code'] == 201) {
-                DB::table('charges')->where('id', $order_id)->update([
+                DB::table('charges')->where('id', $orderId)->update([
                     'bank' => 'permata',
-                    'va_number' => $data['permata_va_number'],
-                    'transaction_id' => $data['transaction_id'],
-                    'transaction_time' => $data['transaction_time'],
-                    'transaction_status' => $data['transaction_status'],
+                    'va_number' => $data['permata_va_number'] ?? $vaNumber,
+                    'transaction_id' => $data['transaction_id'] ?? null,
+                    'transaction_time' => $data['transaction_time'] ?? now(),
+                    'transaction_status' => $data['transaction_status'] ?? 'pending',
                     'snap_token' => null,
                 ]);
 
-                \Log::info("[MIDTRANS ✅] {$this->siswa->name} | {$orderId}");
+                \Log::info("[MIDTRANS ✅] {$this->siswa->name} | Order ID: {$orderId}");
             } else {
-                \Log::warning("[MIDTRANS ⚠️] Response tidak 201 untuk {$this->siswa->name} | {$orderId}");
+                \Log::warning("[MIDTRANS ⚠️] Response bukan 201 untuk {$this->siswa->name} | Order ID: {$orderId}");
             }
         } catch (\Exception $e) {
             \Log::error("[MIDTRANS ❌] {$this->siswa->name} error: " . $e->getMessage());
