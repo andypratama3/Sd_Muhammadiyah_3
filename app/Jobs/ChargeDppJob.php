@@ -90,11 +90,11 @@ class ChargeDppJob implements ShouldQueue
         \Log::info("[CREATE] DPP Tahap {$stage} untuk {$this->siswa->name}");
 
         if ($sendToMidtrans) {
-            $this->sendToMidtrans($category, $orderId, $total, $vaNumber);
+            $this->sendToMidtrans($category, $stage, $orderId, $total, $vaNumber);
         }
     }
 
-    private function sendToMidtrans($category, $orderId, $amount, $vaNumber)
+    private function sendToMidtrans($category, $stage,$orderId, $amount, $vaNumber)
     {
         $client = new Client();
         $serverKey = env('MIDTRANS_SERVER_KEY');
@@ -124,7 +124,7 @@ class ChargeDppJob implements ShouldQueue
                 'id' => 1,
                 'price' => $amount,
                 'quantity' => 1,
-                'name' => "DPP {$this->siswa->name}",
+                'name' => "DPP {$stage} {$this->siswa->name}",
                 'category' => $category->name,
                 'merchant_name' => "Sekolah Kreatif SD Muhammadiyah 3 Samarinda",
             ]],
@@ -142,6 +142,8 @@ class ChargeDppJob implements ShouldQueue
 
             $data = json_decode($response->getBody(), true);
 
+
+
             if ($data['status_code'] == 201) {
                 // DB::table('charges')->where('order_id', $orderId)->update([
                 //     'va_number' => $data['va_numbers'][0]['va_number'] ?? $vaNumber,
@@ -151,7 +153,7 @@ class ChargeDppJob implements ShouldQueue
                 // ]);
                 DB::table('charges')->where('order_id', $order_id)->update([
                     'bank' => 'permata',
-                    'va_number' => $data['permata_va_number'] ?? $vaNumber,
+                    'va_number' => $data['permata_va_number'],
                     'transaction_id' => $data['transaction_id'],
                     'transaction_time' => $data['transaction_time'],
                     'transaction_status' => $data['transaction_status'],
