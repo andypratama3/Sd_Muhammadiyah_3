@@ -76,7 +76,7 @@ class SendWhatsappNotification implements ShouldQueue
             $client->messages->create('whatsapp:' . $noHp, [
                 'from' => $whatsappFrom,
                 'body' => $body,
-                'mediaUrl' => [$publicUr] ?? [],
+                'mediaUrl' => [$publicUrl] ?? [],
             ]);
         }
         else if ($categoryname === 'DPP') {
