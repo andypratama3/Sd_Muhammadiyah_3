@@ -143,11 +143,19 @@ class ChargeDppJob implements ShouldQueue
             $data = json_decode($response->getBody(), true);
 
             if ($data['status_code'] == 201) {
-                DB::table('charges')->where('order_id', $orderId)->update([
-                    'va_number' => $data['va_numbers'][0]['va_number'] ?? $vaNumber,
-                    'snap_token' => $data['token'] ?? null,
-                    'transaction_status' => $data['transaction_status'] ?? 'pending',
-                    'transaction_id' => $data['transaction_id'] ?? null,
+                // DB::table('charges')->where('order_id', $orderId)->update([
+                //     'va_number' => $data['va_numbers'][0]['va_number'] ?? $vaNumber,
+                //     'snap_token' => $data['token'] ?? null,
+                //     'transaction_status' => $data['transaction_status'] ?? 'pending',
+                //     'transaction_id' => $data['transaction_id'] ?? null,
+                // ]);
+                DB::table('charges')->where('order_id', $order_id)->update([
+                    'bank' => 'permata',
+                    'va_number' => $data['permata_va_number'] ?? $vaNumber,
+                    'transaction_id' => $data['transaction_id'],
+                    'transaction_time' => $data['transaction_time'],
+                    'transaction_status' => $data['transaction_status'],
+                    'snap_token' => null,
                 ]);
 
                 \Log::info("[MIDTRANS ✅] {$this->siswa->name} | {$orderId}");
