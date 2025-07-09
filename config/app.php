@@ -178,6 +178,7 @@ return [
         Yajra\DataTables\DataTablesServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         // Intervention\Image\ImageServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class
 
 
 
@@ -200,8 +201,7 @@ return [
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         // 'Image' => Image::class,
-        'Image' => Intervention\Image\Facades\Image::class,
-
+        'Image' => Intervention\Image\Facades\Image::class
 
     ])->toArray(),
 

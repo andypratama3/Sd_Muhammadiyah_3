@@ -5,10 +5,13 @@ namespace App\Jobs;
 use App\Models\Siswa;
 use App\Models\Charge;
 use GuzzleHttp\Client;
+use Illuminate\Support\Str;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Carbon;
 use App\Models\JudulPembayaran;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Bus;
+use App\Jobs\SendWhatsappNotification;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -18,15 +21,12 @@ class ChargeDppJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * Create a new job instance.
-     */
     protected $siswa;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($siswa)
+    public function __construct(Siswa $siswa)
     {
         $this->siswa = $siswa;
     }
@@ -37,84 +37,72 @@ class ChargeDppJob implements ShouldQueue
     public function handle()
     {
         $category_Dpp = JudulPembayaran::where('name', 'DPP')->first();
-        if (!$category_Dpp) {
-            return;
-        }
+        if (!$category_Dpp) return;
 
-        DB::beginTransaction();
+        $existingCharges = Charge::where('category_payment_id', $category_Dpp->id)
+            ->where('siswa_id', $this->siswa->id)
+            ->count();
 
-        try {
-            $existingCharges = Charge::where('category_payment_id', $category_Dpp->id)
-                ->where('siswa_id', $this->siswa->id)
-                ->count();
+        if ($existingCharges >= 2) return;
 
-            if ($existingCharges >= 2) {
-                return;
-            }
+        $dpp = $this->siswa->dpp;
+        if ($dpp <= 0) return;
 
-            $dpp = $this->siswa->dpp;
-            if ($dpp <= 0) {
-                return;
-            }
+        $dppStage1 = $dpp * 0.80;
+        $dppStage2 = $dpp * 0.20;
+        $biaya_admin = 5000;
 
-            $dppStage1 = $dpp * 0.80;
-            $dppStage2 = $dpp * 0.20;
-            $biaya_admin = 5000;
-            $totalBiayaAdmin = $biaya_admin * 2;
+        // Tahap 1
+        $this->createChargeForStage($category_Dpp, 1, $dppStage1, $biaya_admin);
 
-            // Stage 1 payment (80%)
-            $this->createChargeForStage($this->siswa, $category_Dpp, 1, $dppStage1 + $biaya_admin, $dppStage1, $totalBiayaAdmin);
-
-            // Stage 2 payment (20%)
-            $this->createChargeForStage($this->siswa, $category_Dpp, 2, $dppStage2 + $biaya_admin, $dppStage2, $totalBiayaAdmin);
-
-            DB::commit();
-        } catch (\Exception $e) {
-            $this->info('Error creating charge: '. $e->getMessage());
-
-            DB::rollBack();
-        }
+        // Tahap 2
+        $this->createChargeForStage($category_Dpp, 2, $dppStage2, $biaya_admin);
     }
 
-    /**
-     * Create a charge for each stage.
-     */
-    private function createChargeForStage(Siswa $siswa, $category_Dpp, $stage, $grossAmount, $dppAmount, $totalBiayaAdmin)
+    private function createChargeForStage($category_Dpp, $stage, $dppAmount, $biaya_admin)
     {
-        $monthNumber = Carbon::now()->format('m');
+        $grossAmount = $dppAmount + $biaya_admin;
         $order_id = Str::uuid();
-        $vaNumber = $siswa->nisn . $category_Dpp->code . $monthNumber . $stage;
+        $vaNumber = $this->siswa->nisn . $stage . now()->format('m');
 
-        // Insert charge into the charges table
+        $transactionStatus = 'pending';
+        $sendToMidtrans = true;
+
+        if ($this->siswa->status_dpp == 'LUNAS') {
+            $transactionStatus = 'pay_offline';
+            $sendToMidtrans = false;
+        }
+
+        if ($grossAmount == 0) {
+            $transactionStatus = 'free';
+            $sendToMidtrans = false;
+        }
+
         DB::table('charges')->insert([
             'id' => Str::uuid(),
-            'name' => "{$category_Dpp->name} {$siswa->name} #{$stage}",
+            'name' => "{$category_Dpp->name} {$this->siswa->name} #{$stage}",
             'order_id' => $order_id,
-            'siswa_id' => $siswa->id,
+            'siswa_id' => $this->siswa->id,
             'gross_amount' => $grossAmount,
             'payment_type' => 'bank_transfer',
-            'bank' => 'bca',
+            'bank' => 'bri',
             'va_number' => $vaNumber,
             'transaction_id' => Str::uuid(),
             'transaction_time' => now(),
             'fraud_status' => 'accept',
-            'transaction_status' => 'pending',
+            'transaction_status' => $transactionStatus,
             'category_payment_id' => $category_Dpp->id,
             'snap_token' => null,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-        // Send payment to Midtrans
-        if ($dppAmount > 0) {
-            $this->sendPaymentToMidtrans($siswa, $vaNumber, $grossAmount, $order_id, $category_Dpp);
+        if ($sendToMidtrans) {
+            $this->sendToMidtrans($category_Dpp, $order_id, $grossAmount, $vaNumber);
         }
     }
 
-    /**
-     * Send payment to Midtrans.
-     */
-    private function sendPaymentToMidtrans(Siswa $siswa, $vaNumber, $grossAmount, $order_id, $category_Dpp)
+    private function sendToMidtrans($category_Dpp, $order_id, $grossAmount, $vaNumber)
     {
         $params = [
             'payment_type' => 'bank_transfer',
@@ -123,13 +111,12 @@ class ChargeDppJob implements ShouldQueue
                 'gross_amount' => $grossAmount,
             ],
             'customer_details' => [
-                'first_name' => $siswa->name,
-                'email' => $siswa->email,
-                'phone' => $siswa->no_hp,
+                'first_name' => $this->siswa->name,
+                'email' => $this->siswa->email,
+                'phone' => $this->siswa->no_hp,
             ],
             'bank_transfer' => [
-                'bank' => 'bca',
-                'va_number' => $vaNumber,
+                'bank' => 'bri',
             ],
             'custom_expiry' => [
                 'expiry_duration' => 365,
@@ -140,7 +127,7 @@ class ChargeDppJob implements ShouldQueue
                     'id' => 1,
                     'price' => $grossAmount,
                     'quantity' => 1,
-                    'name' => "DPP {$siswa->name}",
+                    'name' => "DPP {$this->siswa->name}",
                     'category' => $category_Dpp->name,
                     'merchant_name' => "Sekolah Kreatif SD Muhammadiyah 3 Samarinda",
                 ]
@@ -149,9 +136,12 @@ class ChargeDppJob implements ShouldQueue
 
         $client = new Client();
         $server_key = env('MIDTRANS_SERVER_KEY');
+        $url = config('midtrans.is_production')
+            ? 'https://api.midtrans.com/v2/charge'
+            : 'https://api.sandbox.midtrans.com/v2/charge';
 
         try {
-            $response = $client->post('https://api.sandbox.midtrans.com/v2/charge', [
+            $response = $client->post($url, [
                 'headers' => [
                     'Accept' => 'application/json',
                     'Authorization' => 'Basic ' . base64_encode($server_key . ':'),
@@ -160,20 +150,22 @@ class ChargeDppJob implements ShouldQueue
                 'json' => $params,
             ]);
 
-            $responseData = json_decode($response->getBody(), true);
-            if ($responseData['status_code'] == 201) {
-                DB::table('charges')
-                    ->where('order_id', $responseData['order_id'])
-                    ->update([
-                        'va_number' => $responseData['va_numbers'][0]['va_number'] ?? $vaNumber,
-                        'snap_token' => $responseData['token'] ?? null,
-                        'transaction_status' => $responseData['transaction_status'] ?? 'pending',
-                        'transaction_id' => $responseData['transaction_id'] ?? null,
-                    ]);
+            $data = json_decode($response->getBody(), true);
+
+            if ($data['status_code'] == 201) {
+                DB::table('charges')->where('order_id', $order_id)->update([
+                    'va_number' => $data['va_numbers'][0]['va_number'] ?? $vaNumber,
+                    'snap_token' => $data['token'] ?? null,
+                    'transaction_status' => $data['transaction_status'] ?? 'pending',
+                    'transaction_id' => $data['transaction_id'] ?? null,
+                ]);
+
+                // Kirim WhatsApp
+                SendWhatsappNotification::dispatch($order_id)->delay(now()->addSeconds(10));
+
             }
         } catch (\Exception $e) {
-            $this->info(''. $e->getMessage());
-
+            \Log::error("Midtrans error for {$this->siswa->name}: " . $e->getMessage());
         }
     }
 }
