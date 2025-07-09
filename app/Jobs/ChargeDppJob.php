@@ -49,7 +49,6 @@ class ChargeDppJob implements ShouldQueue
 
         $this->createChargeStage($category, 1, $stage1, $adminFee);
 
-        // ✅ Tambahkan delay aman antar request ke Midtrans
         sleep(3);
 
         $this->createChargeStage($category, 2, $stage2, $adminFee);
@@ -115,6 +114,9 @@ class ChargeDppJob implements ShouldQueue
             ],
             'bank_transfer' => [
                 'bank' => 'permata',
+                 "permata" => [
+                     "recipient_name" => "Sekolah Kreatif SD Muhammadiyah 3 Samarinda"
+                 ]
             ],
             'custom_expiry' => [
                 'expiry_duration' => 365,
@@ -142,15 +144,9 @@ class ChargeDppJob implements ShouldQueue
 
             $data = json_decode($response->getBody(), true);
 
-
+            $this->info('Response Midtrans: ' . json_encode($data));
 
             if ($data['status_code'] == 201) {
-                // DB::table('charges')->where('order_id', $orderId)->update([
-                //     'va_number' => $data['va_numbers'][0]['va_number'] ?? $vaNumber,
-                //     'snap_token' => $data['token'] ?? null,
-                //     'transaction_status' => $data['transaction_status'] ?? 'pending',
-                //     'transaction_id' => $data['transaction_id'] ?? null,
-                // ]);
                 DB::table('charges')->where('order_id', $order_id)->update([
                     'bank' => 'permata',
                     'va_number' => $data['permata_va_number'],
