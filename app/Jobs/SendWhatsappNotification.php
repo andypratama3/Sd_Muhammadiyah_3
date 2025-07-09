@@ -76,7 +76,7 @@ class SendWhatsappNotification implements ShouldQueue
                 . "https://sdmuhammadiyah3smd.com/pembayaran \n\n"
                 . "atau menggunakan menggunakan metode Virtual Account.\n\n"
                 . "Menggunakan Virtual Account : \n"
-                . "- Bank Permata Virtual Account : *$charge->va_number*\n\n"
+                . "- Bank Permata Virtual Account : *$charge->va_number *\n\n"
                 . "Terima kasih atas perhatian dan kerjasamanya. \n"
                 . "Wassalamu'alaikum Warahmatullahi Wabarakatuh.";
 
