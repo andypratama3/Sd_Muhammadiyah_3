@@ -10,7 +10,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Support\Carbon;
 use App\Models\JudulPembayaran;
 use Illuminate\Support\Facades\DB;
-use App\Jobs\SendWhatsappNotification;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -20,7 +19,6 @@ class ChargeDppJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    // public $queue = 'dpp'; // Optional: agar bisa dipisah dari queue lain
     protected $siswa;
 
     public function __construct(Siswa $siswa)
@@ -30,56 +28,52 @@ class ChargeDppJob implements ShouldQueue
 
     public function handle()
     {
-        $category_Dpp = JudulPembayaran::where('name', 'DPP')->first();
-        if (!$category_Dpp) return;
+        $category = JudulPembayaran::where('name', 'DPP')->first();
+        if (!$category) return;
 
-        $existingCharges = Charge::where('category_payment_id', $category_Dpp->id)
+        $existing = Charge::where('category_payment_id', $category->id)
             ->where('siswa_id', $this->siswa->id)
             ->count();
 
-        if ($existingCharges >= 2) {
-            \Log::info("Siswa {$this->siswa->name} sudah memiliki 2 tagihan DPP.");
+        if ($existing >= 2) {
+            \Log::info("[SKIP] {$this->siswa->name} sudah punya 2 tagihan DPP.");
             return;
         }
 
         $dpp = $this->siswa->dpp;
         if ($dpp <= 0) return;
 
-        $dppStage1 = $dpp * 0.80;
-        $dppStage2 = $dpp * 0.20;
-        $biaya_admin = 5000;
+        $adminFee = 5000;
+        $stage1 = $dpp * 0.80;
+        $stage2 = $dpp * 0.20;
 
-        // Tahap 1
-        $this->createChargeForStage($category_Dpp, 1, $dppStage1, $biaya_admin);
+        $this->createChargeStage($category, 1, $stage1, $adminFee);
+
+        // ✅ Tambahkan delay aman antar request ke Midtrans
         sleep(3);
-        // Tahap 2
-        $this->createChargeForStage($category_Dpp, 2, $dppStage2, $biaya_admin);
+
+        $this->createChargeStage($category, 2, $stage2, $adminFee);
     }
 
-    private function createChargeForStage($category_Dpp, $stage, $dppAmount, $biaya_admin)
+    private function createChargeStage($category, $stage, $amount, $adminFee)
     {
-        $grossAmount = $dppAmount + $biaya_admin;
-        $order_id = Str::uuid();
+        $total = $amount + $adminFee;
+        $orderId = Str::uuid();
         $vaNumber = $this->siswa->nisn . $stage . now()->format('m');
         $transactionStatus = 'pending';
         $sendToMidtrans = true;
 
-        if ($this->siswa->status_dpp == 'LUNAS') {
-            $transactionStatus = 'pay_offline';
-            $sendToMidtrans = false;
-        }
-
-        if ($grossAmount == 0) {
-            $transactionStatus = 'free';
+        if ($this->siswa->status_dpp === 'LUNAS' || $total <= 0) {
+            $transactionStatus = $total <= 0 ? 'free' : 'pay_offline';
             $sendToMidtrans = false;
         }
 
         DB::table('charges')->insert([
             'id' => Str::uuid(),
-            'name' => "{$category_Dpp->name} Tahap {$stage} - {$this->siswa->name}",
-            'order_id' => $order_id,
+            'name' => "{$category->name} Tahap {$stage} - {$this->siswa->name}",
+            'order_id' => $orderId,
             'siswa_id' => $this->siswa->id,
-            'gross_amount' => $grossAmount,
+            'gross_amount' => $total,
             'payment_type' => 'bank_transfer',
             'bank' => 'permata',
             'va_number' => $vaNumber,
@@ -87,26 +81,32 @@ class ChargeDppJob implements ShouldQueue
             'transaction_time' => now(),
             'fraud_status' => 'accept',
             'transaction_status' => $transactionStatus,
-            'category_payment_id' => $category_Dpp->id,
+            'category_payment_id' => $category->id,
             'snap_token' => null,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-        \Log::info("Tagihan DPP Tahap {$stage} untuk {$this->siswa->name} berhasil dibuat.");
+        \Log::info("[CREATE] DPP Tahap {$stage} untuk {$this->siswa->name}");
 
         if ($sendToMidtrans) {
-            $this->sendToMidtrans($category_Dpp, $order_id, $grossAmount, $vaNumber);
+            $this->sendToMidtrans($category, $orderId, $total, $vaNumber);
         }
     }
 
-    private function sendToMidtrans($category_Dpp, $order_id, $grossAmount, $vaNumber)
+    private function sendToMidtrans($category, $orderId, $amount, $vaNumber)
     {
+        $client = new Client();
+        $serverKey = env('MIDTRANS_SERVER_KEY');
+        $url = config('midtrans.is_production')
+            ? 'https://api.midtrans.com/v2/charge'
+            : 'https://api.sandbox.midtrans.com/v2/charge';
+
         $params = [
             'payment_type' => 'bank_transfer',
             'transaction_details' => [
-                'order_id' => $order_id,
-                'gross_amount' => $grossAmount,
+                'order_id' => $orderId,
+                'gross_amount' => $amount,
             ],
             'customer_details' => [
                 'first_name' => $this->siswa->name,
@@ -120,29 +120,21 @@ class ChargeDppJob implements ShouldQueue
                 'expiry_duration' => 365,
                 'unit' => 'day',
             ],
-            'item_details' => [
-                [
-                    'id' => 1,
-                    'price' => $grossAmount,
-                    'quantity' => 1,
-                    'name' => "DPP {$this->siswa->name}",
-                    'category' => $category_Dpp->name,
-                    'merchant_name' => "Sekolah Kreatif SD Muhammadiyah 3 Samarinda",
-                ]
-            ],
+            'item_details' => [[
+                'id' => 1,
+                'price' => $amount,
+                'quantity' => 1,
+                'name' => "DPP {$this->siswa->name}",
+                'category' => $category->name,
+                'merchant_name' => "Sekolah Kreatif SD Muhammadiyah 3 Samarinda",
+            ]],
         ];
-
-        $client = new Client();
-        $server_key = env('MIDTRANS_SERVER_KEY');
-        $url = config('midtrans.is_production')
-            ? 'https://api.midtrans.com/v2/charge'
-            : 'https://api.sandbox.midtrans.com/v2/charge';
 
         try {
             $response = $client->post($url, [
                 'headers' => [
                     'Accept' => 'application/json',
-                    'Authorization' => 'Basic ' . base64_encode($server_key . ':'),
+                    'Authorization' => 'Basic ' . base64_encode($serverKey . ':'),
                     'Content-Type' => 'application/json',
                 ],
                 'json' => $params,
@@ -150,23 +142,20 @@ class ChargeDppJob implements ShouldQueue
 
             $data = json_decode($response->getBody(), true);
 
-
             if ($data['status_code'] == 201) {
-                DB::table('charges')->where('order_id', $order_id)->update([
+                DB::table('charges')->where('order_id', $orderId)->update([
                     'va_number' => $data['va_numbers'][0]['va_number'] ?? $vaNumber,
                     'snap_token' => $data['token'] ?? null,
                     'transaction_status' => $data['transaction_status'] ?? 'pending',
                     'transaction_id' => $data['transaction_id'] ?? null,
                 ]);
 
-
-                \Log::info("Midtrans berhasil untuk DPP {$this->siswa->name} order_id: {$order_id}");
-
-                // Kirim notifikasi WhatsApp
-                // SendWhatsappNotification::dispatch($order_id)->delay(now()->addSeconds(10));
+                \Log::info("[MIDTRANS ✅] {$this->siswa->name} | {$orderId}");
+            } else {
+                \Log::warning("[MIDTRANS ⚠️] Response tidak 201 untuk {$this->siswa->name} | {$orderId}");
             }
         } catch (\Exception $e) {
-            \Log::error("Midtrans error untuk {$this->siswa->name}: " . $e->getMessage());
+            \Log::error("[MIDTRANS ❌] {$this->siswa->name} error: " . $e->getMessage());
         }
     }
 }
