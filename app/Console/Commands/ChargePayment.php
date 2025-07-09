@@ -25,10 +25,10 @@ class ChargePayment extends Command
             try {
                 ChargePaymentJob::dispatch($siswa)->delay(now()->addSeconds($index * 2));
             } catch (\Throwable $e) {
-                \Log::error("Gagal ChargeDppJob untuk siswa {$siswa->name}: " . $e->getMessage());
+                \Log::error("Gagal ChargePaymentJob untuk siswa {$siswa->name}: " . $e->getMessage());
             }
         }
 
-        $this->info("Semua job pengisian DPP telah dikirim ke queue.");
+        $this->info("Semua job pengisian Charge Payment telah dikirim ke queue.");
     }
 }

@@ -40,18 +40,23 @@ class SendWhatsappNotification implements ShouldQueue
         $kelasSiswa = $kelas ? $kelas->name : 'Tidak diketahui';
         $noHp = '+62' . ltrim($siswa->no_hp ?? '85349734475', '0');
 
+        $publicUrl = null;
+
         $sid = env('TWILIO_SID');
         $token = env('TWILIO_AUTH_TOKEN');
         $whatsappFrom = env('TWILIO_WHATSAPP_FROM');
 
-        $qrImageUrl = $charge->url_action;
-        $fileName = 'qr-siswa-' . Str::slug($categoryname . '-' . $monthName . '-' . $namaSiswa, '-') . '.png';
-        $relativePath = 'img/waqr/spp/';
-        $storagePath = storage_path('app/public/' . $relativePath);
+        if($categoryname == 'SPP') {
+            $qrImageUrl = $charge->url_action;
+            $fileName = 'qr-siswa-' . Str::slug($categoryname . '-' . $monthName . '-' . $namaSiswa, '-') . '.png';
+            $relativePath = 'img/waqr/spp/';
+            $storagePath = storage_path('app/public/' . $relativePath);
 
-        ImageHelper::resizeAndSave($qrImageUrl, $storagePath, $fileName, 512, 512);
+            ImageHelper::resizeAndSave($qrImageUrl, $storagePath, $fileName, 512, 512);
 
-        $publicUrl = asset('storage/' . $relativePath . $fileName);
+            $publicUrl = asset('storage/' . $relativePath . $fileName);
+        }
+
 
         $body = "Assalamu'alaikum Warahmatullahi Wabarakatuh.  \n\n"
             . "Yth. Ayah/Bunda Wali dari ananda *$namaSiswa* (*$kelasSiswa*),  \n\n"
@@ -60,7 +65,6 @@ class SendWhatsappNotification implements ShouldQueue
             . "💰 *Jumlah*: Rp " . number_format($grossAmount, 0, ',', '.') . "\n"
             . "🗓️ Bulan: $monthName \n\n"
             . "Silakan pindai QR Code berikut untuk pembayaran:\n"
-            . "$publicUrl\n\n"
             . "Terima kasih. \n"
             . "Wassalamu'alaikum Warahmatullahi Wabarakatuh.";
 
