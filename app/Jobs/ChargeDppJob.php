@@ -10,6 +10,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Support\Carbon;
 use App\Models\JudulPembayaran;
 use Illuminate\Support\Facades\DB;
+use App\Jobs\SendWhatsappNotification;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -156,7 +157,10 @@ class ChargeDppJob implements ShouldQueue
                     'snap_token' => null,
                 ]);
 
+
                 \Log::info("[MIDTRANS ✅] {$this->siswa->name} | Order ID: {$orderId}");
+                SendWhatsappNotification::dispatch($orderId)->delay(now()->addSeconds(10));
+
             } else {
                 \Log::warning("[MIDTRANS ⚠️] Response bukan 201 untuk {$this->siswa->name} | Order ID: {$orderId}");
             }
