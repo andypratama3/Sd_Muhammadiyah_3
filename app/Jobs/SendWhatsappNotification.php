@@ -45,34 +45,57 @@ class SendWhatsappNotification implements ShouldQueue
         $sid = env('TWILIO_SID');
         $token = env('TWILIO_AUTH_TOKEN');
         $whatsappFrom = env('TWILIO_WHATSAPP_FROM');
+        $client = new TwilioClient($sid, $token);
 
-        if($categoryname == 'SPP') {
+        if ($categoryname === 'SPP') {
             $qrImageUrl = $charge->url_action;
             $fileName = 'qr-siswa-' . Str::slug($categoryname . '-' . $monthName . '-' . $namaSiswa, '-') . '.png';
             $relativePath = 'img/waqr/spp/';
             $storagePath = storage_path('app/public/' . $relativePath);
-
             ImageHelper::resizeAndSave($qrImageUrl, $storagePath, $fileName, 512, 512);
-
             $publicUrl = asset('storage/' . $relativePath . $fileName);
+
+            $body = "Assalamu'alaikum Warahmatullahi Wabarakatuh.  \n\n"
+                . "Yth. Ayah/Bunda Wali dari ananda *$namaSiswa* (*$kelasSiswa*),  \n\n"
+                . "Tagihan *SPP bulan $monthName* sebesar *Rp " . number_format($grossAmount, 0, ',', '.') . "*.\n\n"
+                . "📌 Silakan pindai QR Code berikut untuk pembayaran.\n\n"
+                . "Terima kasih atas kerjasamanya. \n"
+                . "Wassalamu'alaikum Warahmatullahi Wabarakatuh.";
+
+            $client->messages->create('whatsapp:' . $noHp, [
+                'from' => $whatsappFrom,
+                'body' => $body,
+                'mediaUrl' => [$publicUrl],
+            ]);
         }
+        else if ($categoryname === 'DPP') {
+            $body = "Assalamu'alaikum Warahmatullahi Wabarakatuh.  \n\n"
+                . "Yth. Ayah/Bunda Wali dari ananda *$namaSiswa* (*$kelasSiswa*),  \n\n"
+                . "Tagihan *DPP* sebesar *Rp " . number_format($grossAmount, 0, ',', '.') . "*.\n\n"
+                . "Silakan lakukan pembayaran melalui metode yang telah disediakan.\n\n"
+                . "Menggunakan Virtual Account : \n"
+                . "- BRI Virtual Account : *$charge->va_number*\n\n"
+                . "Terima kasih atas perhatian dan kerjasamanya. \n"
+                . "Wassalamu'alaikum Warahmatullahi Wabarakatuh.";
 
+            $client->messages->create('whatsapp:' . $noHp, [
+                'from' => $whatsappFrom,
+                'body' => $body,
+            ]);
+        }
+        else {
+            $body = "Assalamu'alaikum Warahmatullahi Wabarakatuh.  \n\n"
+                . "Yth. Ayah/Bunda Wali dari ananda *$namaSiswa* (*$kelasSiswa*),  \n\n"
+                . "Kami informasikan terdapat tagihan pembayaran *$categoryname* sebesar *Rp " . number_format($grossAmount, 0, ',', '.') . "*.\n\n"
+                . "Silakan cek aplikasi atau hubungi pihak sekolah untuk info lebih lanjut.\n\n"
+                . "Terima kasih atas perhatian dan kerjasamanya. \n"
+                . "Wassalamu'alaikum Warahmatullahi Wabarakatuh.";
 
-        $body = "Assalamu'alaikum Warahmatullahi Wabarakatuh.  \n\n"
-            . "Yth. Ayah/Bunda Wali dari ananda *$namaSiswa* (*$kelasSiswa*),  \n\n"
-            . "Izin kami sampaikan bahwa terdapat tagihan pembayaran pendidikan:\n\n"
-            . "📌 *Kategori*: $categoryname \n"
-            . "💰 *Jumlah*: Rp " . number_format($grossAmount, 0, ',', '.') . "\n"
-            . "🗓️ Bulan: $monthName \n\n"
-            . "Silakan pindai QR Code berikut untuk pembayaran:\n"
-            . "Terima kasih. \n"
-            . "Wassalamu'alaikum Warahmatullahi Wabarakatuh.";
-
-        $client = new TwilioClient($sid, $token);
-        $client->messages->create('whatsapp:' . $noHp, [
-            'from' => $whatsappFrom,
-            'body' => $body,
-            'mediaUrl' => [$publicUrl],
-        ]);
+            $client->messages->create('whatsapp:' . $noHp, [
+                'from' => $whatsappFrom,
+                'body' => $body,
+            ]);
+        }
     }
+
 }
