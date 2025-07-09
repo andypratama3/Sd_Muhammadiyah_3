@@ -102,7 +102,7 @@ class MidtransPaymentController extends Controller
                     ]
                 );
 
-                return response()->json(['message' => 'Charge not found in database and saved'], 404);
+                return response()->json(['message' => 'Charge not found in database and saved'], 200);
 
             }
 
