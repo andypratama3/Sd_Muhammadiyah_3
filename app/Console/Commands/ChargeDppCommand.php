@@ -3,42 +3,40 @@
 namespace App\Console\Commands;
 
 use App\Models\Siswa;
-use App\Models\Charge;
-use GuzzleHttp\Client;
 use App\Jobs\ChargeDppJob;
-use Illuminate\Support\Str;
-use Illuminate\Support\Carbon;
-use App\Models\JudulPembayaran;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
+use App\Models\Charge;
 
 class ChargeDppCommand extends Command
 {
-
     protected $signature = 'app:charge-dpp-command';
-    protected $whatsapp;
-
-    protected $description = 'Command description';
+    protected $description = 'Kirim job pengisian DPP ke queue';
 
     public function handle()
     {
-        if (app()->environment('production')) {
-            $this->info("Running in PRODUCTION environment.");
-        } else {
-            $this->warn("Running in NON-PRODUCTION environment.");
-        }
+        $this->info("Mulai kirim job DPP...");
 
         $siswas = Siswa::all();
 
         foreach ($siswas as $index => $siswa) {
+            $existingCharges = Charge::where('siswa_id', $siswa->id)
+                ->whereHas('kategori_pembayaran', function ($q) {
+                    $q->where('name', 'DPP');
+                })->count();
+
+            if ($existingCharges >= 2) {
+                $this->warn("Lewati {$siswa->name}, sudah ada 2 tagihan DPP.");
+                continue;
+            }
+
             try {
-                $charge = ChargeDppJob::dispatch($siswa)->delay(now()->addSeconds($index * 2));
-                } catch (\Throwable $e) {
-                    \Log::error("Gagal ChargeDppJob untuk siswa {$siswa->name}: " . $e->getMessage());
-                }
+                ChargeDppJob::dispatch($siswa)->delay(now()->addSeconds($index * 2));
+                $this->info("Job DPP untuk {$siswa->name} dikirim.");
+            } catch (\Throwable $e) {
+                \Log::error("Gagal dispatch job untuk {$siswa->name}: " . $e->getMessage());
+            }
         }
 
-        $this->info("Semua job pengisian DPP telah dikirim ke queue.");
+        $this->info("Semua job DPP selesai dikirim ke queue.");
     }
-
 }

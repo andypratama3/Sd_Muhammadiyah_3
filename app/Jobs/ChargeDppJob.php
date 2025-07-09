@@ -10,7 +10,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Support\Carbon;
 use App\Models\JudulPembayaran;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Bus;
 use App\Jobs\SendWhatsappNotification;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -21,19 +20,14 @@ class ChargeDppJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    // public $queue = 'dpp'; // Optional: agar bisa dipisah dari queue lain
     protected $siswa;
 
-    /**
-     * Create a new job instance.
-     */
     public function __construct(Siswa $siswa)
     {
         $this->siswa = $siswa;
     }
 
-    /**
-     * Execute the job.
-     */
     public function handle()
     {
         $category_Dpp = JudulPembayaran::where('name', 'DPP')->first();
@@ -43,7 +37,10 @@ class ChargeDppJob implements ShouldQueue
             ->where('siswa_id', $this->siswa->id)
             ->count();
 
-        if ($existingCharges >= 2) return;
+        if ($existingCharges >= 2) {
+            \Log::info("Siswa {$this->siswa->name} sudah memiliki 2 tagihan DPP.");
+            return;
+        }
 
         $dpp = $this->siswa->dpp;
         if ($dpp <= 0) return;
@@ -64,7 +61,6 @@ class ChargeDppJob implements ShouldQueue
         $grossAmount = $dppAmount + $biaya_admin;
         $order_id = Str::uuid();
         $vaNumber = $this->siswa->nisn . $stage . now()->format('m');
-
         $transactionStatus = 'pending';
         $sendToMidtrans = true;
 
@@ -80,7 +76,7 @@ class ChargeDppJob implements ShouldQueue
 
         DB::table('charges')->insert([
             'id' => Str::uuid(),
-            'name' => "{$category_Dpp->name} {$this->siswa->name} #{$stage}",
+            'name' => "{$category_Dpp->name} Tahap {$stage} - {$this->siswa->name}",
             'order_id' => $order_id,
             'siswa_id' => $this->siswa->id,
             'gross_amount' => $grossAmount,
@@ -96,6 +92,8 @@ class ChargeDppJob implements ShouldQueue
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+        \Log::info("Tagihan DPP Tahap {$stage} untuk {$this->siswa->name} berhasil dibuat.");
 
         if ($sendToMidtrans) {
             $this->sendToMidtrans($category_Dpp, $order_id, $grossAmount, $vaNumber);
@@ -160,12 +158,13 @@ class ChargeDppJob implements ShouldQueue
                     'transaction_id' => $data['transaction_id'] ?? null,
                 ]);
 
-                // Kirim WhatsApp
-                SendWhatsappNotification::dispatch($order_id)->delay(now()->addSeconds(10));
+                \Log::info("Midtrans berhasil untuk DPP {$this->siswa->name} order_id: {$order_id}");
 
+                // Kirim notifikasi WhatsApp
+                SendWhatsappNotification::dispatch($order_id)->delay(now()->addSeconds(10));
             }
         } catch (\Exception $e) {
-            \Log::error("Midtrans error for {$this->siswa->name}: " . $e->getMessage());
+            \Log::error("Midtrans error untuk {$this->siswa->name}: " . $e->getMessage());
         }
     }
 }
