@@ -158,8 +158,8 @@ class ChargeDppJob implements ShouldQueue
                 ]);
 
 
-                \Log::info("[MIDTRANS ✅] {$this->siswa->name} | Order ID: {$orderId}");
                 SendWhatsappNotification::dispatch($orderId)->delay(now()->addSeconds(10));
+                \Log::info("[MIDTRANS ✅] {$this->siswa->name} | Order ID: {$orderId}");
 
             } else {
                 \Log::warning("[MIDTRANS ⚠️] Response bukan 201 untuk {$this->siswa->name} | Order ID: {$orderId}");
