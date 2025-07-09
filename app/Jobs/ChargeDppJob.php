@@ -144,7 +144,7 @@ class ChargeDppJob implements ShouldQueue
 
             $data = json_decode($response->getBody(), true);
 
-            $this->info('Response Midtrans: ' . json_encode($data));
+            // $this->info('Response Midtrans: ' . json_encode($data));
 
             if ($data['status_code'] == 201) {
                 DB::table('charges')->where('order_id', $order_id)->update([
