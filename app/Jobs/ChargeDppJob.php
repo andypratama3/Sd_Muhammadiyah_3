@@ -114,7 +114,10 @@ class ChargeDppJob implements ShouldQueue
                 'phone' => $this->siswa->no_hp,
             ],
             'bank_transfer' => [
-                'bank' => 'bri',
+                'bank' => 'permata',
+                 'permata' => [
+                    'recipient_name' => 'Sekolah Kreatif'
+                ]
             ],
             'custom_expiry' => [
                 'expiry_duration' => 365,
