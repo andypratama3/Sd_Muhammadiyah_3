@@ -44,7 +44,7 @@ class SendWhatsappNotification implements ShouldQueue
         $kelasSiswa = $kelas ? $kelas->name : 'Tidak diketahui';
         $noHp = '+62' . ltrim($siswa->no_hp ?? '85349734475', '0');
 
-        $publicUrl = null;
+        // $publicUrl = null;
 
         $sid = env('TWILIO_SID');
         $token = env('TWILIO_AUTH_TOKEN');
@@ -53,6 +53,13 @@ class SendWhatsappNotification implements ShouldQueue
 
         if ($categoryname === 'SPP') {
             $qrImageUrl = $charge->url_action;
+
+            $folderPath = public_path('storage/img/waqr/spp');
+            if (!file_exists($folderPath)) {
+                mkdir($folderPath, 0775, true);
+            }
+
+
             $fileName = 'qr-siswa-' . Str::slug($categoryname . '-' . $monthName . '-' . $namaSiswa, '-') . '.png';
             $relativePath = 'img/waqr/spp/';
             $storagePath = storage_path('app/public/' . $relativePath);
@@ -69,7 +76,7 @@ class SendWhatsappNotification implements ShouldQueue
             $client->messages->create('whatsapp:' . $noHp, [
                 'from' => $whatsappFrom,
                 'body' => $body,
-                'mediaUrl' => [$publicUrl],
+                'mediaUrl' => [$publicUr] ?? [],
             ]);
         }
         else if ($categoryname === 'DPP') {
