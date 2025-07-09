@@ -113,9 +113,6 @@ class ChargeDppJob implements ShouldQueue
                 'email' => $this->siswa->email,
                 'phone' => $this->siswa->no_hp,
             ],
-            'bank_transfer' => [
-                'bank' => 'permata',
-            ],
             'custom_expiry' => [
                 'expiry_duration' => 365,
                 'unit' => 'day',
@@ -150,6 +147,7 @@ class ChargeDppJob implements ShouldQueue
 
             $data = json_decode($response->getBody(), true);
 
+
             if ($data['status_code'] == 201) {
                 DB::table('charges')->where('order_id', $order_id)->update([
                     'va_number' => $data['va_numbers'][0]['va_number'] ?? $vaNumber,
@@ -158,10 +156,11 @@ class ChargeDppJob implements ShouldQueue
                     'transaction_id' => $data['transaction_id'] ?? null,
                 ]);
 
+
                 \Log::info("Midtrans berhasil untuk DPP {$this->siswa->name} order_id: {$order_id}");
 
                 // Kirim notifikasi WhatsApp
-                SendWhatsappNotification::dispatch($order_id)->delay(now()->addSeconds(10));
+                // SendWhatsappNotification::dispatch($order_id)->delay(now()->addSeconds(10));
             }
         } catch (\Exception $e) {
             \Log::error("Midtrans error untuk {$this->siswa->name}: " . $e->getMessage());

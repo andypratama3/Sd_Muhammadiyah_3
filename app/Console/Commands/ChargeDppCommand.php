@@ -30,10 +30,12 @@ class ChargeDppCommand extends Command
             }
 
             try {
-                ChargeDppJob::dispatch($siswa)->delay(now()->addSeconds($index * 2));
+                $charge = ChargeDppJob::dispatch($siswa)->delay(now()->addSeconds($index * 2));
+
                 $this->info("Job DPP untuk {$siswa->name} dikirim.");
-            } catch (\Throwable $e) {
+            } catch (\Exception $e) {
                 \Log::error("Gagal dispatch job untuk {$siswa->name}: " . $e->getMessage());
+                $this->error("❌ Gagal dispatch job untuk {$siswa->name}: " . $e->getMessage());
             }
         }
 
