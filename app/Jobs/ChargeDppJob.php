@@ -68,9 +68,9 @@ class ChargeDppJob implements ShouldQueue
         }
 
         DB::table('charges')->insert([
-            'id' => Str::uuid(),
+            'id' => $orderId,
             'name' => "{$category->name} Tahap {$stage} - {$this->siswa->name}",
-            'order_id' => $orderId,
+            'order_id' => Str::uuid(),
             'siswa_id' => $this->siswa->id,
             'gross_amount' => $total,
             'payment_type' => 'bank_transfer',
@@ -147,7 +147,7 @@ class ChargeDppJob implements ShouldQueue
             // $this->info('Response Midtrans: ' . json_encode($data));
 
             if ($data['status_code'] == 201) {
-                DB::table('charges')->where('order_id', $order_id)->update([
+                DB::table('charges')->where('id', $order_id)->update([
                     'bank' => 'permata',
                     'va_number' => $data['permata_va_number'],
                     'transaction_id' => $data['transaction_id'],
