@@ -137,8 +137,9 @@ class ChargePaymentJob implements ShouldQueue
             if ($responseData['status_code'] == 201) {
                 DB::table('charges')
                     ->where('order_id', $order_id)
+                    ->orWhere('id', $order_id)
                     ->update([
-                        'va_number' => $responseData['va_numbers'][0]['va_number'] ?? null,
+                        'bank' => 'gopay',
                         'snap_token' => $responseData['token'] ?? null,
                         'transaction_status' => $responseData['transaction_status'],
                         'transaction_id' => $responseData['transaction_id'],
@@ -149,7 +150,7 @@ class ChargePaymentJob implements ShouldQueue
 
                 // Kirim notifikasi WhatsApp
                 SendWhatsappNotification::dispatch($order_id)->delay(now()->addSeconds(10));
-                
+
             } else {
                 logger()->warning("Gagal pembayaran Midtrans untuk {$siswa->name}: " . $responseData['status_message']);
             }
