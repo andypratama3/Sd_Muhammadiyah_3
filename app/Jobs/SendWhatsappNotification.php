@@ -72,9 +72,11 @@ class SendWhatsappNotification implements ShouldQueue
             $body = "Assalamu'alaikum Warahmatullahi Wabarakatuh.  \n\n"
                 . "Yth. Ayah/Bunda Wali dari ananda *$namaSiswa* (*$kelasSiswa*),  \n\n"
                 . "Tagihan *DPP* sebesar *Rp " . number_format($grossAmount, 0, ',', '.') . "*.\n\n"
-                . "Silakan lakukan pembayaran melalui metode yang telah disediakan.\n\n"
+                . "Silakan lakukan pembayaran melalui metode yang telah disediakan Pada Website.\n\n"
+                . "https://sdmuhammadiyah3smd.com/pembayaran \n\n"
+                . "atau menggunakan menggunakan metode Virtual Account.\n\n"
                 . "Menggunakan Virtual Account : \n"
-                . "- BRI Virtual Account : *$charge->va_number*\n\n"
+                . "- Bank Permata Virtual Account : *$charge->va_number*\n\n"
                 . "Terima kasih atas perhatian dan kerjasamanya. \n"
                 . "Wassalamu'alaikum Warahmatullahi Wabarakatuh.";
 

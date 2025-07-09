@@ -81,7 +81,7 @@ class ChargeDppJob implements ShouldQueue
             'siswa_id' => $this->siswa->id,
             'gross_amount' => $grossAmount,
             'payment_type' => 'bank_transfer',
-            'bank' => 'bri',
+            'bank' => 'Permata Virtual Account',
             'va_number' => $vaNumber,
             'transaction_id' => Str::uuid(),
             'transaction_time' => now(),
@@ -115,9 +115,6 @@ class ChargeDppJob implements ShouldQueue
             ],
             'bank_transfer' => [
                 'bank' => 'permata',
-                 'permata' => [
-                    'recipient_name' => 'Sekolah Kreatif'
-                ]
             ],
             'custom_expiry' => [
                 'expiry_duration' => 365,
