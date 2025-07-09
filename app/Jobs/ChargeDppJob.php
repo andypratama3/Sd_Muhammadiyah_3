@@ -51,7 +51,7 @@ class ChargeDppJob implements ShouldQueue
 
         // Tahap 1
         $this->createChargeForStage($category_Dpp, 1, $dppStage1, $biaya_admin);
-
+        sleep(3);
         // Tahap 2
         $this->createChargeForStage($category_Dpp, 2, $dppStage2, $biaya_admin);
     }
