@@ -26,7 +26,9 @@ class SendWhatsappNotification implements ShouldQueue
     public function handle()
     {
         $charge = Charge::with(['siswa.kelas', 'kategori_pembayaran'])
-                        ->where('order_id', $this->orderId)->first();
+                        ->where('order_id', $this->orderId)
+                        ->orWhere('id', $this->orderId)
+                        ->first();
 
         if (! $charge) return;
 
