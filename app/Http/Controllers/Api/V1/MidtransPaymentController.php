@@ -32,7 +32,9 @@ class MidtransPaymentController extends Controller
             }
 
             if (! isset($midtransResponse['order_id'])) {
-                return response()->json(['message' => 'Invalid request, order_id not found'], 400);
+                // return response()->json(['message' => 'Invalid request, order_id not found'], 400);
+                return response()->json(['message' => 'Callback received, but order_id missing'], 200);
+
             }
 
             $data = [
