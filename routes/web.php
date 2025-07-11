@@ -9,6 +9,7 @@ use App\Http\Controllers\SpmbController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\KontakController;
+use App\Http\Controllers\RatingController;
 use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\GalleryController;
@@ -24,23 +25,23 @@ use App\Http\Controllers\KritikSaranController;
 use App\Http\Controllers\LikeArtikelController;
 use App\Http\Controllers\DetailBeritaController;
 use App\Http\Controllers\PrestasiSiswaController;
-use App\Http\Controllers\ProfilSekolahController;
 
 //Dashboard Access
+use App\Http\Controllers\ProfilSekolahController;
 use App\Http\Controllers\Api\Dashboard\WilayahApi;
 use App\Http\Controllers\CommentArtikelController;
 use App\Http\Controllers\Dashboard\RoleController;
+
 use App\Http\Controllers\Dashboard\TaskController;
-
 use App\Http\Controllers\Dashboard\UserController;
-use App\Http\Controllers\Dashboard\CategoryArtikel;
 
+use App\Http\Controllers\Dashboard\CategoryArtikel;
 use App\Http\Controllers\Dashboard\ChartController;
 use App\Http\Controllers\Dashboard\KelasController;
 use App\Http\Controllers\EkstrakurikulerController;
 use App\Http\Controllers\PrestasiSekolahController;
-use App\Http\Controllers\TenagaPendidikanController;
 
+use App\Http\Controllers\TenagaPendidikanController;
 use App\Http\Controllers\PengisianOrangTuaController;
 use App\Http\Controllers\Dashboard\ActivityController;
 use App\Http\Controllers\Dashboard\KaryawanController;
@@ -93,6 +94,8 @@ Route::get('/asset/{any}', function () {
 Route::group(['prefix' => '/',], function () {
 
     Route::get('/', BerandaController::class)->name('index');
+
+    Route::post('/rating',[RatingController::class, 'store'])->name('rating.store');
 
     Route::get('/pengisian-formulir/whatsaap', [PengisianOrangTuaController::class, 'index'])->name('pengisian.index');
     Route::get('/pengisian-formulir/whatsaap/{nisn}', [PengisianOrangTuaController::class, 'show'])->name('pengisian.show');

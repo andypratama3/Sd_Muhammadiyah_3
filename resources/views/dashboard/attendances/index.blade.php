@@ -1,4 +1,3 @@
-@php use App\Helpers\AttendanceHelper; @endphp
 
 @extends('layouts.dashboard')
 
@@ -102,7 +101,7 @@
                     </p>
 
                     @if($status)
-                        <span class="badge bg-{{ AttendanceHelper::badgeColor($status) }}">
+                        <span class="badge bg-{{ \App\Helpers\AttendanceHelper::badgeColor($status) }}">
                             {{ ucfirst($status) }}
                         </span>
                     @endif

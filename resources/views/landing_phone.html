@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Slick Features Clone with iPhone Frame</title>
+  <style>
+    body {
+      background-color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 40px;
+    }
+    .wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .left-text, .right-text {
+      width: 30%;
+    }
+    .center-phone {
+      width: 300px;
+      position: relative;
+    }
+    .iphone-screen {
+      position: relative;
+      z-index: 1;
+      border-radius: 2rem;
+      overflow: hidden;
+      width: 100%;
+      aspect-ratio: 9/19.5;
+    }
+    .iphone-screen video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .iphone-frame {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .feature-title {
+      color: #ef3f3f;
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+    }
+    .feature-text {
+      color: #333;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    .btn-dark {
+      display: inline-block;
+      background-color: #000;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 999px;
+      text-decoration: none;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+  <!-- Left Text -->
+  <div class="left-text">
+    <p class="feature-text">
+      Based on Bootstrap 5.<br>
+      Update every single element in all new<br>
+      Slick, individually and Flawlessly.
+    </p>
+    <a href="#" class="btn-dark"> GET SLICK</a>
+  </div>
+
+  <!-- iPhone Frame with Video -->
+  <div class="center-phone">
+    <div class="iphone-screen">
+      <video src="video.mp4" autoplay muted loop playsinline></video>
+    </div>
+    <img src="iphone_frame_transparent.png" class="iphone-frame" alt="iPhone Frame">
+  </div>
+
+  <!-- Right Features -->
+  <div class="right-text">
+    <p class="feature-title">CSS Helper Classes</p>
+    <p class="feature-text">Easily change and tweak your gaps, spaces, borders, fonts, sizes, colors, weights and almost everything with 2500+ featured inside the Slick.</p>
+
+    <p class="feature-title">Save Your Bucks</p>
+    <p class="feature-text">Buy the developer license once and Slick is yours forever. Don’t waste money on generic templates. Do multiple projects for you.</p>
+
+    <p class="feature-title">Copy + Paste / Drag + Drop</p>
+    <p class="feature-text">Edit and design in a seamless manner. Copy and paste or drag and drop any sections, anywhere.</p>
+  </div>
+</div>
+
+</body>
+</html>

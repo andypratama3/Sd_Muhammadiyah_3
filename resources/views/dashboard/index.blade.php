@@ -29,17 +29,17 @@
 @if(Auth::user()->hasRole ('user'))
 @include('dashboard.user.index')
 @else
-<div class="row mb-3">
+<div class="mb-3 row">
     <!-- Siswa -->
-    <div class="col-xl-3 col-md-6 mb-4">
+    <div class="mb-4 col-xl-3 col-md-6">
         <div class="card h-100">
             <div class="card-body">
                 <div class="row align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-uppercase mb-1">Siswa</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $siswa }}</div>
-                        {{-- <div class="mt-2 mb-0 text-muted text-xs">
-                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                    <div class="mr-2 col">
+                        <div class="mb-1 text-xs font-weight-bold text-uppercase">Siswa</div>
+                        <div class="mb-0 text-gray-800 h5 font-weight-bold">{{ $siswa }}</div>
+                        {{-- <div class="mt-2 mb-0 text-xs text-muted">
+                    <span class="mr-2 text-success"><i class="fa fa-arrow-up"></i> 3.48%</span>
                     <span>Since last month</span>
                 </div> --}}
                     </div>
@@ -51,15 +51,15 @@
         </div>
     </div>
     <!-- Guru -->
-    <div class="col-xl-3 col-md-6 mb-4">
+    <div class="mb-4 col-xl-3 col-md-6">
         <div class="card h-100">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-uppercase mb-1">Guru</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $guru }}</div>
-                        {{-- <div class="mt-2 mb-0 text-muted text-xs">
-                    <span class="text-success mr-2"><i class="fas fa-arrow-up"></i> 12%</span>
+                    <div class="mr-2 col">
+                        <div class="mb-1 text-xs font-weight-bold text-uppercase">Guru</div>
+                        <div class="mb-0 text-gray-800 h5 font-weight-bold">{{ $guru }}</div>
+                        {{-- <div class="mt-2 mb-0 text-xs text-muted">
+                    <span class="mr-2 text-success"><i class="fas fa-arrow-up"></i> 12%</span>
                     <span>Since last years</span>
                 </div> --}}
                     </div>
@@ -71,15 +71,15 @@
         </div>
     </div>
     <!-- Tenaga Pendidikan -->
-    <div class="col-xl-3 col-md-6 mb-4">
+    <div class="mb-4 col-xl-3 col-md-6">
         <div class="card h-100">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-uppercase mb-1">Tenaga Kependidikan</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $tenagakependidikan }}</div>
-                        {{-- <div class="mt-2 mb-0 text-muted text-xs">
-                    <span class="text-danger mr-2"><i class="fas fa-arrow-down"></i> 1.10%</span>
+                    <div class="mr-2 col">
+                        <div class="mb-1 text-xs font-weight-bold text-uppercase">Tenaga Kependidikan</div>
+                        <div class="mb-0 text-gray-800 h5 font-weight-bold">{{ $tenagakependidikan }}</div>
+                        {{-- <div class="mt-2 mb-0 text-xs text-muted">
+                    <span class="mr-2 text-danger"><i class="fas fa-arrow-down"></i> 1.10%</span>
                     <span>Since yesterday</span>
                 </div> --}}
                     </div>
@@ -91,15 +91,15 @@
         </div>
     </div>
     <!-- Prestasi -->
-    <div class="col-xl-3 col-md-6 mb-4">
+    <div class="mb-4 col-xl-3 col-md-6">
         <div class="card h-100">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-uppercase mb-1">Prestasi</div>
-                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ $prestasi }}</div>
-                        {{-- <div class="mt-2 mb-0 text-muted text-xs">
-                    <span class="text-success mr-2"><i class="fas fa-arrow-up"></i> 20.4%</span>
+                    <div class="mr-2 col">
+                        <div class="mb-1 text-xs font-weight-bold text-uppercase">Prestasi</div>
+                        <div class="mb-0 mr-3 text-gray-800 h5 font-weight-bold">{{ $prestasi }}</div>
+                        {{-- <div class="mt-2 mb-0 text-xs text-muted">
+                    <span class="mr-2 text-success"><i class="fas fa-arrow-up"></i> 20.4%</span>
                     <span>Since last month</span>
                     </div> --}}
                     </div>
@@ -110,13 +110,14 @@
             </div>
         </div>
     </div>
+
     <!-- Area Chart -->
-    <div class="col-md-12 d-flex justify-content-center align-items-center mb-2">
+    <div class="mb-2 col-md-12 d-flex justify-content-center align-items-center">
         <div class="card flex-fill w-100">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0">Total Pembayaran</h5>
+                <h5 class="mb-0 card-title">Total Pembayaran</h5>
             </div>
-            <div class="row mx-2">
+            <div class="mx-2 row">
                 <div class="col-md-12">
                     <label for="">Sortir Waktu</label>
                     <input type="month" id="range-pie" class="form-control" value="{{ request()->query('chargeCountMount_date') }}" name="range-pie" placeholder="Pilih Bulan dan Tahun">
@@ -144,8 +145,80 @@
     </div>
 
     <div class="col-xl-12 col-lg-7">
-        <div class="card mb-4">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+       <div class="mb-4 card">
+            <div class="flex-row py-3 card-header d-flex align-items-center justify-content-between">
+                <h6 class="m-0 text-center font-weight-bold text-primary">Rata-rata Penilaian Website</h6>
+               @if ($totalVotes > 0)
+                    <div style="font-size: 1.5rem; color: #fcd34d;">
+                        @for ($i = 1; $i <= 5; $i++)
+                            @if ($i <= floor($averageRating))
+                                <i class="fa-solid fa-star"></i>
+                            @elseif ($i - $averageRating < 1)
+                                <span style="position: relative; display: inline-block; width: 1em;">
+                                    <span style="position: absolute; overflow: hidden; width: {{ ($averageRating - floor($averageRating)) * 100 }}%;">
+                                        <i class="fa-solid fa-star"></i>
+                                    </span>
+                                    <i class="fa-regular fa-star" style="color: #ccc;"></i>
+                                </span>
+                            @else
+                                <i class="fa-regular fa-star" style="color: #ccc;"></i>
+                            @endif
+                        @endfor
+                    </div>
+
+                    <small>
+                        {{ number_format($averageRating, 1) }} dari 5 • {{ $totalVotes }} penilai
+                        <br>
+                        <span class="text-white badge bg-success">
+                            @php
+                                if ($averageRating < 2) {
+                                    echo 'Tidak Membantu';
+                                } elseif ($averageRating < 3) {
+                                    echo 'Kurang Membantu';
+                                } elseif ($averageRating < 4) {
+                                    echo 'Cukup Membantu';
+                                } elseif ($averageRating < 4.5) {
+                                    echo 'Membantu';
+                                } else {
+                                    echo 'Sangat Membantu';
+                                }
+                            @endphp
+                        </span>
+                    </small>
+                @else
+                    <p class="text-muted">Belum ada penilaian.</p>
+                @endif
+            </div>
+
+            @if ($totalVotes > 0)
+                <div class="pt-0 card-body">
+                    <h6 class="mt-3 mb-3 font-weight-bold text-dark">10 Penilaian Terbaru</h6>
+                    @foreach ($latestRatings as $rating)
+                        <div class="pb-2 mb-3 border-bottom">
+                            <div class="d-flex justify-content-between">
+                                <strong>{{ $rating->nama }}</strong>
+                                <small class="text-muted">{{ $rating->created_at->format('d M Y H:i') }}</small>
+                            </div>
+                            <div style="color: #fcd34d; font-size: 1.1rem;">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    @if ($i <= $rating->rating)
+                                        <i class="fa-solid fa-star"></i>
+                                    @else
+                                        <i class="fa-regular fa-star" style="color: #ccc;"></i>
+                                    @endif
+                                @endfor
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+
+    </div>
+
+    <div class="col-xl-12 col-lg-7">
+        <div class="mb-4 card">
+            <div class="flex-row py-3 card-header d-flex align-items-center justify-content-between">
                 <form id="yearForm" method="GET" action="{{ route('dashboard') }}">
                     <div class="row">
                         <h5>Sortir Tahun</h5>
@@ -179,14 +252,14 @@
         </div>
     </div>
     <div class="col-md-12 ">
-        <div class="card mb-4">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <div class="mb-4 card">
+            <div class="flex-row py-3 card-header d-flex align-items-center justify-content-between">
                 <div class="dropdown no-arrow">
                     <a class="dropdown-toggle float-end" href="#" role="button" id="dropdownMenuLink"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                        <i class="text-gray-400 fas fa-ellipsis-v fa-sm fa-fw"></i>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                    <div class="shadow dropdown-menu dropdown-menu-right animated--fade-in"
                         aria-labelledby="dropdownMenuLink">
                         <div class="dropdown-header">Dropdown Header:</div>
                         <a class="dropdown-item" href="#">Action</a>
@@ -202,11 +275,11 @@
             </div>
         </div>
     </div>
-    <div class="col-md-12 d-flex mb-2">
+    <div class="mb-2 col-md-12 d-flex">
         <div class="card flex-fill w-100">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0">Pengunjung</h5>
-                <select id="dataRange" class="form-select w-auto">
+                <h5 class="mb-0 card-title">Pengunjung</h5>
+                <select id="dataRange" class="w-auto form-select">
                     <option value="day">Harian</option>
                     <option value="month" selected>Bulanan</option>
                     <option value="year">Tahunan</option>
@@ -221,19 +294,19 @@
     </div>
     <div class="col-xl-4 col-lg-5">
         <div class="card ">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary text-center">5 Top Pengunjung Artikel / Click</h6>
+            <div class="flex-row py-3 card-header d-flex align-items-center justify-content-between">
+                <h6 class="m-0 text-center font-weight-bold text-primary">5 Top Pengunjung Artikel / Click</h6>
             </div>
             <div class="card-body">
                 @foreach ($artikels as $artikel)
                 <div class="mb-3">
-                    <div class="small text-gray-500">{{ $artikel->name }}
-                        <div class="small float-right"><b>{{ $artikel->jumlah_klik }} of
+                    <div class="text-gray-500 small">{{ $artikel->name }}
+                        <div class="float-right small"><b>{{ $artikel->jumlah_klik }} of
                                 {{ $artikel_sum_total_klik }}</b></div>
                     </div>
                 </div>
                 @endforeach
-                <div class="card-footer text-center">
+                <div class="text-center card-footer">
                     <a class="m-0 small text-primary card-link" href="#">View More <i class="fas fa-chevron-right"></i></a>
                 </div>
             </div>

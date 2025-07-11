@@ -1,19 +1,19 @@
  <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-     <div class="app-brand demo d-flex justify-content-center mb-3">
+     <div class="mb-3 app-brand demo d-flex justify-content-center">
          <a href="{{ route('index') }}" class="app-brand-link">
-             <span class="app-brand-logo demo w-100 d-flex justify-content-center align-items-center m-0 p-0">
+             <span class="p-0 m-0 app-brand-logo demo w-100 d-flex justify-content-center align-items-center">
                  <img src="{{ asset('asset_dashboard/img/SD3_logo.png') }}" alt="" style="width: 25%;">
              </span>
          </a>
 
          <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
-             <i class="bx bx-chevron-left bx-sm align-middle"></i>
+             <i class="align-middle bx bx-chevron-left bx-sm"></i>
          </a>
      </div>
 
      <div class="menu-inner-shadow"></div>
 
-     <ul class="menu-inner py-1">
+     <ul class="py-1 menu-inner">
          <!-- Dashboard -->
          <li class="menu-item {{ Request::routeIs('dashboard') ? 'active' : '' }}">
              <a href="{{ route('dashboard') }}" class="menu-link">
@@ -136,7 +136,7 @@
          </li>
 
 
-         <li class="menu-item">
+         <li class="menu-item {{ Request::routeIs('dashboard.attendances.*') ? 'active' : '' }}">
              <a href="{{ route('dashboard.attendances.index') }}" class="menu-link">
                  <i class="menu-icon tf-icons bx bx-crown"></i>
                  <div data-i18n="Boxicons">Absensi Siswa</div>

@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Charts\ChargeChart;
-use App\Charts\ChargeCountMount;
-use App\Charts\SiswaChart;
-use App\Http\Controllers\Controller;
-use App\Models\Artikel;
 use App\Models\Guru;
-use App\Models\JudulPembayaran;
-use App\Models\KritikSaran;
-use App\Models\Pembayaran;
-use App\Models\Prestasi;
 use App\Models\Siswa;
-use App\Models\TenagaPendidikan;
+use App\Models\Rating;
+use App\Models\Artikel;
 use App\Models\Visitor;
+use App\Models\Prestasi;
+use App\Charts\SiswaChart;
+use App\Models\Pembayaran;
+use App\Charts\ChargeChart;
+use App\Models\KritikSaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Models\JudulPembayaran;
+use App\Charts\ChargeCountMount;
+use App\Models\TenagaPendidikan;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -82,6 +83,9 @@ class DashboardController extends Controller
             $q->where('name', '<>', 'Lulus');
         })->count();
 
+        $averageRating = Rating::avg('rating');
+        $totalVotes = Rating::count();
+        $latestRatings = Rating::latest()->take(10)->get();
         // define visitor data
         //  View::composer('layouts.landing.footer', function ($view) {
         // $visitor_by_day = Visitor::whereDate('created_at', Carbon::now()->format('Y-m-d'))->count();
@@ -107,7 +111,10 @@ class DashboardController extends Controller
             'invoice_list',
             'kritis',
             'artikel_publish',
-            // 'chargeCountMount'
+            // 'chargeCountMount',
+            'averageRating',
+            'totalVotes',
+            'latestRatings'
         ));
     }
 }

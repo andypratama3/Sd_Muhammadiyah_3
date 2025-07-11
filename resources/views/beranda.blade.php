@@ -67,6 +67,241 @@
         object-fit: cover;
         mix-blend-mode: multiply;
     }
+    /* PHONE CARD */
+    .custom-phone-card {
+        width: 210px;
+        height: 400px;
+        background: black;
+        border-radius: 35px;
+        border: 2px solid rgb(40, 40, 40);
+        padding: 7px;
+        position: relative;
+        box-shadow: 2px 5px 15px rgba(0, 0, 0, 0.486);
+        overflow: hidden;
+        margin: auto;
+    }
+
+    .card-int {
+        background-size: 200% 200%;
+        background-position: 0% 0%;
+        height: 100%;
+        border-radius: 25px;
+        transition: all 0.6s ease-out;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .card-int video {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: translate(-50%, -50%);
+        border-radius: inherit;
+        z-index: 0;
+    }
+
+    .custom-phone-card:hover .card-int {
+        background-position: 100% 100%;
+    }
+
+    .custom-top {
+        position: absolute;
+        top: 0;
+        right: 50%;
+        transform: translate(50%, 0%);
+        width: 35%;
+        height: 18px;
+        background-color: black;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        z-index: 2;
+    }
+
+    .speaker {
+        position: absolute;
+        top: 2px;
+        right: 50%;
+        transform: translate(50%, 0%);
+        width: 40%;
+        height: 2px;
+        border-radius: 2px;
+        background-color: rgb(20, 20, 20);
+    }
+
+    .camera {
+        position: absolute;
+        top: 6px;
+        right: 84%;
+        transform: translate(50%, 0%);
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.048);
+    }
+
+    .int {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        top: 50%;
+        right: 50%;
+        transform: translate(50%, -50%);
+        background-color: rgba(255, 255, 255, 0.212);
+    }
+
+    .btn1,
+    .btn2,
+    .btn3,
+    .btn4 {
+        position: absolute;
+        width: 2px;
+        background-image: linear-gradient(to right, #111111, #222222, #333333, #464646, #595959);
+    }
+
+    .btn1 {
+        height: 45px;
+        top: 30%;
+        right: -4px;
+    }
+
+    .btn2,
+    .btn3 {
+        height: 30px;
+        left: -4px;
+        transform: scale(-1);
+    }
+
+    .btn2 {
+        top: 26%;
+    }
+
+    .btn3 {
+        top: 36%;
+    }
+
+    .hidden {
+        display: block;
+        opacity: 0;
+        transition: all 0.3s ease-in;
+    }
+
+    .custom-phone-card:hover .hidden {
+        opacity: 1;
+    }
+
+    .custom-phone-card:hover .hello {
+        transform: translateY(-20px);
+    }
+
+    /* ABOUT WRAPPER */
+    .wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* RESPONSIVE LAYOUT */
+    .left-text,
+    .right-text {
+        margin: 20px;
+        flex: 1 1 300px;
+        max-width: 400px;
+    }
+
+    .feature-title {
+        color: #ef3f3f;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.875rem;
+    }
+
+    .feature-text {
+        color: #343a40;
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    .btn-dark-custom {
+        display: inline-block;
+        background-color: #000;
+        color: #fff;
+        padding: 0.5rem 1.25rem;
+        border-radius: 50rem;
+        text-decoration: none;
+        margin-top: 1rem;
+        transition: background-color 0.3s;
+    }
+
+    .btn-dark-custom:hover {
+        background-color: #333;
+    }
+
+
+    .feature-title {
+        color: #ef3f3f;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.875rem;
+    }
+
+    .feature-text {
+        color: #343a40;
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    .btn-dark-custom {
+        display: inline-block;
+        background-color: #000;
+        color: #fff;
+        padding: 0.5rem 1.25rem;
+        border-radius: 50rem;
+        text-decoration: none;
+        margin-top: 1rem;
+        transition: background-color 0.3s;
+    }
+
+    .btn-dark-custom:hover {
+        background-color: #333;
+    }
+   .star-rating {
+    direction: rtl;
+    display: flex;
+    justify-content: center;
+    font-size: 2.2rem; /* PERBESAR bintang */
+    gap: 5px;
+}
+
+.star-rating input[type="radio"] {
+    display: none;
+}
+
+.star-rating label {
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+}
+
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: #ffc107;
+}
+
+    .feature-title {
+        margin-top: 1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #ef3f3f;
+        font-size: 0.9rem;
+    }
+
 
     @media screen and (max-width: 768px) {
         .img-header-kepala-sekolah {
@@ -321,93 +556,78 @@
     </div>
 </div>
 <!-- Feature End -->
-{{-- <div class="pb-5 container-fluid bg-light about">
-    <div class="container p-3 pb-5 bg-white wow fadeInUp" data-wow-delay="0.2s" style="border-radius: 10px;">
-        <div class="section-title">
-            <small>FITUR</small>
-            <h3>Fitur Website SD Muhammadiyah 3 Samarinda
-            </h3>
+<div class="pb-5 container-fluid bg-light about" id="feature">
+  <div class="container p-3 pb-5 bg-white wow fadeInUp" data-wow-delay="0.2s" style="border-radius: 10px;">
+    <div class="wrapper">
+
+    <div class="left-text">
+        <p class="feature-text">
+            SD Muhammadiyah 3 Samarinda<br>
+            terus berinovasi mengikuti perkembangan teknologi<br>
+            dengan menghadirkan sistem informasi yang lebih modern dan efektif.
+        </p>
+
+        <form class="mt-4 rating-wrapper" action="{{ route('rating.store') }}" method="POST">
+            @csrf
+            <p class="mb-2 feature-title">Apakah website ini sangat membantu?</p>
+            <input type="text" class="mb-3 form-control" name="nama" placeholder="Masukkan Nama Anda" required>
+
+            <div class="mb-3 star-rating">
+                <input type="radio" id="star5" name="rating" value="5" required /><label for="star5" title="Sangat Membantu">★</label>
+                <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="Membantu">★</label>
+                <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="Cukup Membantu">★</label>
+                <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="Kurang Membantu">★</label>
+                <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="Tidak Membantu">★</label>
+            </div>
+
+            <button type="submit" class="btn btn-dark-custom">Kirim Penilaian</button>
+        </form>
+    </div>
+
+      <!-- Phone dengan video -->
+      <div class="custom-phone-card">
+        <div class="btn1"></div>
+        <div class="btn2"></div>
+        <div class="btn3"></div>
+        <div class="btn4"></div>
+
+        <div class="card-int">
+          <video src="{{ asset('asset/video/opening1.mp4') }}"  controls
+                {{-- autoplay --}}
+                muted
+                loop
+                playsinline>
+            </video>
         </div>
 
-        <ul class="nav nav-tabs nav-justified" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#communication">Pembayaran</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#berita-tab">Berita</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#artikel-tab">Artikel</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#prestasi-tab">Prestasi</a>
-            </li>
-        </ul>
-        <div class="tab-content">
-            <div class="tab-pane fade show active" id="communication">
-                <div class="mt-2 d-flex flex-column flex-lg-row">
-                    <img src="{{ asset('asset/img/website_midtrans_resized.png') }}" alt="graphic" style="border-radius: 10px !important;" class="p-2 mb-5 img-fluid align-self-start mr-lg-5 mb-lg-0">
-                    <div>
-                        <h2>Fitur Pembayaran</h2>
-
-                        <p>Pembayaran Online Menggunakan Pihak Ketiga Dari Midtrans Yang Dapat Memudahkan Pembayaran Dengan Tampilan Sederhana Dengan Support Banyak Pembayaran Seperti
-                        </p>
-                        <p> <p class="text-primary">OVO</p>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="berita-tab">
-                <div class="d-flex flex-column flex-lg-row">
-                    <img src="images/graphic.png" alt="graphic" class="mb-5 rounded img-fluid align-self-start mr-lg-5 mb-lg-0">
-                    <div>
-                        <h2>Realtime Messaging service</h2>
-                        <p class="lead">Uniquely underwhelm premium outsourcing with proactive leadership skills. </p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer rutrum, urna eu pellentesque pretium, nisi nisi fermentum enim, et sagittis dolor nulla vel sapien. Vestibulum sit amet mattis ante. Ut placerat dui eu nulla
-                            congue tincidunt ac a nibh. Mauris accumsan pulvinar lorem placerat volutpat. Praesent quis facilisis elit. Sed condimentum neque quis ex porttitor,
-                        </p>
-                        <p> malesuada faucibus augue aliquet. Sed elit est, eleifend sed dapibus a, semper a eros. Vestibulum blandit vulputate pharetra. Phasellus lobortis leo a nisl euismod, eu faucibus justo sollicitudin. Mauris consectetur, tortor
-                            sed tempor malesuada, sem nunc porta augue, in dictum arcu tortor id turpis. Proin aliquet vulputate aliquam.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="artikel-tab">
-                <div class="d-flex flex-column flex-lg-row">
-                    <div>
-                        <h2>Scheduling when you want</h2>
-                        <p class="lead">Uniquely underwhelm premium outsourcing with proactive leadership skills. </p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer rutrum, urna eu pellentesque pretium, nisi nisi fermentum enim, et sagittis dolor nulla vel sapien. Vestibulum sit amet mattis ante. Ut placerat dui eu nulla
-                            congue tincidunt ac a nibh. Mauris accumsan pulvinar lorem placerat volutpat. Praesent quis facilisis elit. Sed condimentum neque quis ex porttitor,
-                        </p>
-                        <p> malesuada faucibus augue aliquet. Sed elit est, eleifend sed dapibus a, semper a eros. Vestibulum blandit vulputate pharetra. Phasellus lobortis leo a nisl euismod, eu faucibus justo sollicitudin. Mauris consectetur, tortor
-                            sed tempor malesuada, sem nunc porta augue, in dictum arcu tortor id turpis. Proin aliquet vulputate aliquam.
-                        </p>
-                    </div>
-                    <img src="images/graphic.png" alt="graphic" class="mb-5 rounded img-fluid align-self-start mr-lg-5 mb-lg-0">
-                </div>
-            </div>
-
-            <div class="tab-pane fade" id="prestasi-tab">
-                <div class="d-flex flex-column flex-lg-row">
-                    <div>
-                        <h2>Live chat when you needed</h2>
-                        <p class="lead">Uniquely underwhelm premium outsourcing with proactive leadership skills. </p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer rutrum, urna eu pellentesque pretium, nisi nisi fermentum enim, et sagittis dolor nulla vel sapien. Vestibulum sit amet mattis ante. Ut placerat dui eu nulla
-                            congue tincidunt ac a nibh. Mauris accumsan pulvinar lorem placerat volutpat. Praesent quis facilisis elit. Sed condimentum neque quis ex porttitor,
-                        </p>
-                        <p> malesuada faucibus augue aliquet. Sed elit est, eleifend sed dapibus a, semper a eros. Vestibulum blandit vulputate pharetra. Phasellus lobortis leo a nisl euismod, eu faucibus justo sollicitudin. Mauris consectetur, tortor
-                            sed tempor malesuada, sem nunc porta augue, in dictum arcu tortor id turpis. Proin aliquet vulputate aliquam.
-                        </p>
-                    </div>
-                    <img src="images/graphic.png" alt="graphic" class="mb-5 rounded img-fluid align-self-start mr-lg-5 mb-lg-0">
-                </div>
-            </div>
+        <div class="custom-top">
+          <div class="camera">
+            <div class="int"></div>
+          </div>
+          <div class="speaker"></div>
         </div>
+      </div>
+
+      <!-- Kanan -->
+     <div class="right-text">
+        <p class="feature-title">Informasi Lengkap Sekolah</p>
+        <p class="feature-text">
+            Website menyediakan profil sekolah, data guru, galeri kegiatan, jadwal pelajaran, serta berbagai informasi penting lainnya yang mudah diakses oleh orang tua dan siswa.
+        </p>
+
+        <p class="feature-title">Pembayaran Digital</p>
+        <p class="feature-text">
+            Dilengkapi sistem pembayaran online melalui Midtrans, termasuk fitur virtual account dan Snap, memudahkan orang tua dalam membayar biaya sekolah secara aman dan transparan.
+        </p>
+
+        <p class="feature-title">Pemberitahuan Pembayaran via WhatsApp</p>
+        <p class="feature-text">
+            Fitur pemberitahuan pembayaran via WhatsApp memudahkan orang tua menerima notifikasi tagihan dan melakukan pembayaran dengan kode QR.
 
 
     </div>
-</div> --}}
+  </div>
+</div>
 
 <!-- About Start -->
 <div class="pb-5 container-fluid bg-light about" id="tentang">
