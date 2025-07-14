@@ -560,6 +560,13 @@
   <div class="container p-3 pb-5 bg-white wow fadeInUp" data-wow-delay="0.2s" style="border-radius: 10px;">
     <div class="wrapper">
 
+    <div class="left-text">
+        <p class="feature-text">
+            SD Muhammadiyah 3 Samarinda<br>
+            terus berinovasi mengikuti perkembangan teknologi<br>
+            dengan menghadirkan sistem informasi yang lebih modern dan efektif.
+        </p>
+    </div>
 
       <!-- Phone dengan video -->
       <div class="custom-phone-card">
@@ -567,6 +574,8 @@
         <div class="btn2"></div>
         <div class="btn3"></div>
         <div class="btn4"></div>
+
+
 
         <div class="card-int">
           <video src="{{ asset('asset/video/opening1.mp4') }}"  controls
