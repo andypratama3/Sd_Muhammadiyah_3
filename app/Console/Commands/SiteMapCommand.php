@@ -51,7 +51,7 @@ class SiteMapCommand extends Command
         // Tambahkan halaman statis
         $staticPages = [
             'berita', 'guru', 'profil-sekolah', 'ekstrakurikuler', 'pembayaran',
-            'fasilitas', 'tenagapendidikan', 'gallery', 'jadwal', 'kontak',
+            'fasilitas', 'tenaga-pendidikan', 'gallery', 'jadwal', 'kontak',
             'prestasi-siswa', 'prestasi-sekolah', 'spmb'
         ];
 

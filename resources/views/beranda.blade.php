@@ -560,29 +560,6 @@
   <div class="container p-3 pb-5 bg-white wow fadeInUp" data-wow-delay="0.2s" style="border-radius: 10px;">
     <div class="wrapper">
 
-    <div class="left-text">
-        <p class="feature-text">
-            SD Muhammadiyah 3 Samarinda<br>
-            terus berinovasi mengikuti perkembangan teknologi<br>
-            dengan menghadirkan sistem informasi yang lebih modern dan efektif.
-        </p>
-
-        <form class="mt-4 rating-wrapper" action="{{ route('rating.store') }}" method="POST">
-            @csrf
-            <p class="mb-2 feature-title">Apakah website ini sangat membantu?</p>
-            <input type="text" class="mb-3 form-control" name="nama" placeholder="Masukkan Nama Anda" required>
-
-            <div class="mb-3 star-rating">
-                <input type="radio" id="star5" name="rating" value="5" required /><label for="star5" title="Sangat Membantu">★</label>
-                <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="Membantu">★</label>
-                <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="Cukup Membantu">★</label>
-                <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="Kurang Membantu">★</label>
-                <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="Tidak Membantu">★</label>
-            </div>
-
-            <button type="submit" class="btn btn-dark-custom">Kirim Penilaian</button>
-        </form>
-    </div>
 
       <!-- Phone dengan video -->
       <div class="custom-phone-card">
