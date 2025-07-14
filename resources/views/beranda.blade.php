@@ -557,62 +557,61 @@
 </div>
 <!-- Feature End -->
 <div class="pb-5 container-fluid bg-light about" id="feature">
-  <div class="container p-3 pb-5 bg-white wow fadeInUp" data-wow-delay="0.2s" style="border-radius: 10px;">
-    <div class="wrapper">
+    <div class="container p-3 pb-5 bg-white wow fadeInUp" data-wow-delay="0.2s" style="border-radius: 10px;">
+        <div class="wrapper">
 
-    <div class="left-text">
-        <p class="feature-text">
-            SD Muhammadiyah 3 Samarinda<br>
-            terus berinovasi mengikuti perkembangan teknologi<br>
-            dengan menghadirkan sistem informasi yang lebih modern dan efektif.
-        </p>
-    </div>
-
-      <!-- Phone dengan video -->
-      <div class="custom-phone-card">
-        <div class="btn1"></div>
-        <div class="btn2"></div>
-        <div class="btn3"></div>
-        <div class="btn4"></div>
-
+            <div class="left-text">
+                <p class="feature-text">
+                    SD Muhammadiyah 3 Samarinda<br>
+                    terus berinovasi mengikuti perkembangan teknologi<br>
+                    dengan menghadirkan sistem informasi yang lebih modern dan efektif.
+                </p>
+            </div>
+            <!-- Phone dengan video -->
+            <div class="custom-phone-card">
+                <div class="btn1"></div>
+                <div class="btn2"></div>
+                <div class="btn3"></div>
+                <div class="btn4"></div>
 
 
-        <div class="card-int">
-          <video src="{{ asset('asset/video/opening1.mp4') }}"  controls
-                {{-- autoplay --}}
-                muted
-                loop
-                playsinline>
-            </video>
+
+                <div class="card-int">
+                    <video src="{{ asset('asset/video/opening1.mp4') }}" controls {{-- autoplay --}} muted loop
+                        playsinline>
+                    </video>
+                </div>
+
+                <div class="custom-top">
+                    <div class="camera">
+                        <div class="int"></div>
+                    </div>
+                    <div class="speaker"></div>
+                </div>
+            </div>
+
+            <!-- Kanan -->
+            <div class="right-text">
+                <p class="feature-title">Informasi Lengkap Sekolah</p>
+                <p class="feature-text">
+                    Website menyediakan profil sekolah, data guru, galeri kegiatan, jadwal pelajaran, serta berbagai
+                    informasi penting lainnya yang mudah diakses oleh orang tua dan siswa.
+                </p>
+
+                <p class="feature-title">Pembayaran Digital</p>
+                <p class="feature-text">
+                    Dilengkapi sistem pembayaran online melalui Midtrans, termasuk fitur virtual account dan Snap,
+                    memudahkan orang tua dalam membayar biaya sekolah secara aman dan transparan.
+                </p>
+
+                <p class="feature-title">Pemberitahuan Pembayaran via WhatsApp</p>
+                <p class="feature-text">
+                    Fitur pemberitahuan pembayaran via WhatsApp memudahkan orang tua menerima notifikasi tagihan dan
+                    melakukan pembayaran dengan kode QR.
+                </p>
+            </div>
         </div>
-
-        <div class="custom-top">
-          <div class="camera">
-            <div class="int"></div>
-          </div>
-          <div class="speaker"></div>
-        </div>
-      </div>
-
-      <!-- Kanan -->
-     <div class="right-text">
-        <p class="feature-title">Informasi Lengkap Sekolah</p>
-        <p class="feature-text">
-            Website menyediakan profil sekolah, data guru, galeri kegiatan, jadwal pelajaran, serta berbagai informasi penting lainnya yang mudah diakses oleh orang tua dan siswa.
-        </p>
-
-        <p class="feature-title">Pembayaran Digital</p>
-        <p class="feature-text">
-            Dilengkapi sistem pembayaran online melalui Midtrans, termasuk fitur virtual account dan Snap, memudahkan orang tua dalam membayar biaya sekolah secara aman dan transparan.
-        </p>
-
-        <p class="feature-title">Pemberitahuan Pembayaran via WhatsApp</p>
-        <p class="feature-text">
-            Fitur pemberitahuan pembayaran via WhatsApp memudahkan orang tua menerima notifikasi tagihan dan melakukan pembayaran dengan kode QR.
-
-
     </div>
-  </div>
 </div>
 
 <!-- About Start -->
