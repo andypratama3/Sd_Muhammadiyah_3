@@ -271,28 +271,28 @@
         background-color: #333;
     }
    .star-rating {
-    direction: rtl;
-    display: flex;
-    justify-content: center;
-    font-size: 2.2rem; /* PERBESAR bintang */
-    gap: 5px;
-}
+        direction: rtl;
+        display: flex;
+        justify-content: center;
+        font-size: 2.2rem; /* PERBESAR bintang */
+        gap: 5px;
+    }
 
-.star-rating input[type="radio"] {
-    display: none;
-}
+    .star-rating input[type="radio"] {
+        display: none;
+    }
 
-.star-rating label {
-    color: #ccc;
-    cursor: pointer;
-    transition: color 0.2s ease-in-out;
-}
+    .star-rating label {
+        color: #ccc;
+        cursor: pointer;
+        transition: color 0.2s ease-in-out;
+    }
 
-.star-rating input:checked ~ label,
-.star-rating label:hover,
-.star-rating label:hover ~ label {
-    color: #ffc107;
-}
+    .star-rating input:checked ~ label,
+    .star-rating label:hover,
+    .star-rating label:hover ~ label {
+        color: #ffc107;
+    }
 
     .feature-title {
         margin-top: 1rem;
@@ -573,12 +573,10 @@
                 <div class="btn2"></div>
                 <div class="btn3"></div>
                 <div class="btn4"></div>
-
-
-
                 <div class="card-int">
-                    <video src="{{ asset('asset/video/opening1.mp4') }}" controls {{-- autoplay --}} muted loop
-                        playsinline>
+                    <video src="{{ asset('asset/video/opening1.mp4') }}" controls  muted loop
+                        playsinline
+                        id="videoSekolah">
                     </video>
                 </div>
 
@@ -897,6 +895,29 @@
 @push('js_user')
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const video = document.getElementById("videoSekolah");
+
+        if (!('IntersectionObserver' in window)) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        video.play();
+                    } else {
+                        video.pause();
+                    }
+                });
+            },
+            {
+                threshold: 0.3, // Minimal 30% terlihat baru dianggap "in view"
+            }
+        );
+
+        observer.observe(video);
+    });
+
     const originalWarn = console.warn;
         console.warn = function (message) {
             if (!message.includes("Swiper Loop Warning")) {

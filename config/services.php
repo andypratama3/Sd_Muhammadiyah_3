@@ -30,6 +30,13 @@ return [
         'token' => env('POSTMARK_TOKEN'),
     ],
 
+    'whatsapp' => [
+        'token' => env('WA_ACCESS_TOKEN'),
+        'phone_number_id' => env('WA_PHONE_NUMBER_ID'),
+        'version' => env('WA_API_VERSION', 'v19.0'),
+    ],
+
+
     'ses' => [
         'key' => env('AWS_ACCESS_KEY_ID'),
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
