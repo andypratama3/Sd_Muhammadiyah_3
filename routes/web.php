@@ -118,7 +118,7 @@ Route::group(['prefix' => '/',], function () {
     // Route::get('visimisi', VisiMisiController::class)->name('visimisi.index');
     //ekstrakurikuler
     Route::get('ekstrakurikuler', [EkstrakurikulerController::class, 'index'])->name('esktrakurikuler.index');
-    Route::get('ekstrakurikuler/{name}', [EkstrakurikulerController::class, 'show'])->name('esktrakurikuler.show');
+    // Route::get('ekstrakurikuler/{name}', [EkstrakurikulerController::class, 'show'])->name('esktrakurikuler.show');
     // pembayaran
     Route::get('pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
     Route::get('pembayaran/pay', [PembayaranController::class, 'searchOrder'])->name('pembayaran.searchOrder');
