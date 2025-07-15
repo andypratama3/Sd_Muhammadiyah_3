@@ -574,8 +574,7 @@
                 <div class="btn3"></div>
                 <div class="btn4"></div>
                 <div class="card-int">
-                    <video src="{{ asset('asset/video/opening1.mp4') }}" controls  loop
-                        playsinline
+                    <video src="{{ asset('asset/video/opening1.mp4') }}" controls autoplay loop playsinline
                         id="videoSekolah">
                     </video>
                 </div>
