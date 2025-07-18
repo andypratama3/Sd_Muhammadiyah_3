@@ -37,7 +37,7 @@
                 <div class="row align-items-center">
                     <div class="mr-2 col">
                         <div class="mb-1 text-xs font-weight-bold text-uppercase">Siswa</div>
-                        <div class="mb-0 text-gray-800 h5 font-weight-bold">{{ $siswa }}</div>
+                        <div class="mb-0 text-gray-800 h5 font-weight-bold"><span class="text-primary">{{ $siswas }}</span> Aktif</div>
                         {{-- <div class="mt-2 mb-0 text-xs text-muted">
                     <span class="mr-2 text-success"><i class="fa fa-arrow-up"></i> 3.48%</span>
                     <span>Since last month</span>

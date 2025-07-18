@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Models\Guru;
+use App\Models\Kelas;
 use App\Models\Siswa;
 use App\Models\Rating;
 use App\Models\Artikel;
@@ -28,7 +29,6 @@ class DashboardController extends Controller
         ChargeCountMount $chargeCountMount,
         Request $request
     ) {
-        $siswa = Siswa::count();
         $guru = Guru::count();
         $prestasi = Prestasi::count();
         $tenagakependidikan = TenagaPendidikan::count();
@@ -79,8 +79,11 @@ class DashboardController extends Controller
         $visitor_by_month = Visitor::whereDate('created_at', '>=', Carbon::now()->startOfMonth()->format('Y-m-d'))->count();
         $visitor_by_year = Visitor::whereDate('created_at', '>=', Carbon::now()->startOfYear()->format('Y-m-d'))->count();
 
-        $siswas = Siswa::whereHas('kelas', function ($q) {
-            $q->where('name', '<>', 'Lulus');
+        $kelasLulus = Kelas::where('name', 'Lulus')->first();
+
+
+        $siswas = Siswa::whereHas('kelas', function ($q) use ( $kelasLulus ) {
+            $q->where('id', '!=', $kelasLulus->id);
         })->count();
 
         $averageRating = Rating::avg('rating');
@@ -97,7 +100,7 @@ class DashboardController extends Controller
         // dd($chagreChart)
 
         return view('dashboard.index', compact(
-            'siswa',
+            'siswas',
             'guru',
             'prestasi',
             'tenagakependidikan',
