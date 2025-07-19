@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Actions\Dashboard\Siswa\SiswaAction;
-use App\Actions\Dashboard\Siswa\SiswaActionDelete;
-use App\DataTransferObjects\SiswaData;
-use App\Exports\SiswaExport;
-use App\Exports\SiswaExportKelas;
-use App\Http\Controllers\Api\Dashboard\WilayahApi;
-use App\Http\Controllers\Controller;
+use Response;
 use App\Models\Kelas;
 use App\Models\Siswa;
 use Barryvdh\DomPDF\PDF;
+use App\Exports\SiswaExport;
+use App\Imports\SiswaImport;
 use Illuminate\Http\Request;
+use App\Exports\SiswaExportKelas;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Facades\Excel;
-use Response;
+use App\DataTransferObjects\SiswaData;
 use Yajra\DataTables\Facades\DataTables;
+use App\Actions\Dashboard\Siswa\SiswaAction;
+use App\Actions\Dashboard\Siswa\SiswaActionDelete;
+use App\Http\Controllers\Api\Dashboard\WilayahApi;
 
 class SiswaController extends Controller
 {
@@ -199,12 +200,31 @@ class SiswaController extends Controller
         ];
 
         $pdf = \PDF::loadView('dashboard.data.siswa.cetak', $data);
-
         // return $pdf->download('siswa'. $siswa->name .'.pdf');
         return view('dashboard.data.siswa.cetak', compact('siswa', 'provinsi_take', 'kabupaten_take', 'kecamatan_take', 'kelurahan_take'));
     }
 
-    public function export_pdf() {}
+    public function export_pdf()
+    {
+
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:csv,txt,xlsx',
+        ]);
+
+        $action = Excel::import(new SiswaImport, $request->file('file'));
+
+        if($action) {
+            return redirect()->route('dashboard.datamaster.siswa.index')->with('success','Berhasil Import Data Siswa');
+        } else {
+            return redirect()->route('dashboard.datamaster.siswa.index')->with('error','Gagal Import Data Siswa');
+        }
+
+        return back()->with('success', 'Data siswa berhasil diimport.');
+    }
 
     public function export_excel()
     {

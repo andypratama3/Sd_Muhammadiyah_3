@@ -3,95 +3,67 @@
 namespace App\Exports;
 
 use App\Models\Siswa;
+use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Collection;
-use Illuminate\Contracts\View\View;
 
-class SiswaExport implements FromView,WithHeadings
+class SiswaExport implements FromView, WithHeadings
 {
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-
     public function view(): View
     {
         $siswas = Siswa::whereHas('kelas', function ($query) {
             $query->where('name', '!=', 'Lulus');
-        });
+        })->get();
 
-        // Fetch province data
-        $response_provinsi = \DB::table('provinsi')->orderBy('name')->get();
-        $provinsi = $response_provinsi ? collect($response_provinsi->toArray()) : [];
+        // Ambil semua data lokasi di awal agar tidak looping query
+        $provinsi = \DB::table('provinsi')->pluck('name', 'province_id');
+        $kabupaten = \DB::table('kabupaten')->pluck('name', 'regency_id');
+        $kecamatan = \DB::table('kecamatan')->pluck('name', 'district_id');
+        $kelurahan = \DB::table('kelurahan')->pluck('name', 'village_id');
 
-        // Transform student data
-        $siswas = $siswas->get()->map(function ($siswa) use ($provinsi) {
-            $siswa->umur = now()->diffInYears($siswa->tgl_lahir);
-            // Fetch regency (kabupaten) data
-
-            $response_kabupaten = \DB::table('kabupaten')->where('province_id', $siswa->province_id)->get();
-            $kabupaten = $response_kabupaten ? collect($response_kabupaten->toArray()) : [];
-
-            // Fetch district (kecamatan) data
-            $response_kecamatan = \DB::table('kecamatan')->where('regency_id', $siswa->kabupaten_id)->get();
-            $kecamatan = $response_kecamatan ? collect($response_kecamatan->toArray()) : [];
-
-            // Fetch village (kelurahan) data
-            $response_kelurahan = \DB::table('kelurahan')->where('district_id', $siswa->kecamatan_id)->get();
-            $kelurahan = $response_kelurahan ? collect($response_kelurahan->toArray()) : [];
-
-            $provinsi_take = $provinsi->where('province_id', $siswa->provinsi_id)->first();
-            $kabupaten_take = $kabupaten->where('regency_id', $siswa->kabupaten_id)->first();
-            $kecamatan_take = $kecamatan->where('district_id', $siswa->kecamatan_id)->first();
-            $kelurahan_take = $kelurahan->where('village_id', $siswa->kelurahan_id)->first();
-
-            $siswa->provinsi = $provinsi_take ? $provinsi_take->name : '';
-            $siswa->kabupaten = $kabupaten_take ? $kabupaten_take->name : '';
-            $siswa->kecamatan = $kecamatan_take ? $kecamatan_take->name : '';
-            $siswa->kelurahan = $kelurahan_take ? $kelurahan_take->name : '';
-
+        // Transform data siswa
+        $siswas->transform(function ($siswa) use ($provinsi, $kabupaten, $kecamatan, $kelurahan) {
+            $siswa->provinsi = $provinsi[$siswa->provinsi_id] ?? '';
+            $siswa->kabupaten = $kabupaten[$siswa->kabupaten_id] ?? '';
+            $siswa->kecamatan = $kecamatan[$siswa->kecamatan_id] ?? '';
+            $siswa->kelurahan = $kelurahan[$siswa->kelurahan_id] ?? '';
             return $siswa;
         });
-        // Pass data to the view
-        return view('dashboard.data.siswa.excel', compact('siswas'));
 
+        return view('dashboard.data.siswa.excel', compact('siswas'));
     }
+
     public function headings(): array
     {
         return [
-                "Nama",
-                "Jenis Kelamin",
-                "Tempat Lahir",
-                "Tanggal Lahir",
-                "Nisn",
-                "Agama",
-                // data sekolah
-                "Kelas/tahun",
-                "Tanggal Masuk",
-                "Beasiswa",
-                // data orang tua
-                "Nama Ayah",
-                "Nama Ibu",
-                "Pendidikan Ayah",
-                "Pendidikan Ibu",
-                //pekerjaan
-                "Pekerjaan_Ayah",
-                "Pekerjaan Ibu",
-                //wali
-                "Nama wali",
-                "Pekerjaan wali",
-                "Alamat wali",
-                //alamat
-                "Rt",
-                "Rw",
-                "provinsi",
-                "kabupaten",
-                "kecamatan",
-                "kelurahan",
-                "Nama Jalan",
-                "Jenis Tinggal",
-                "No HP",
+            "No",
+            "Nama",
+            "Jenis Kelamin",
+            "Tempat Lahir",
+            "Tanggal Lahir",
+            "Nisn",
+            "Agama",
+            "Kelas/tahun",
+            "Tanggal Masuk",
+            "Beasiswa",
+            "Nama Ayah",
+            "Nama Ibu",
+            "Pendidikan Ayah",
+            "Pendidikan Ibu",
+            "Pekerjaan Ayah",
+            "Pekerjaan Ibu",
+            "Nama Wali",
+            "Pekerjaan Wali",
+            "Alamat Wali",
+            "Rt",
+            "Rw",
+            "Provinsi",
+            "Kabupaten",
+            "Kecamatan",
+            "Kelurahan",
+            "Nama Jalan",
+            "Jenis Tinggal",
+            "No HP",
         ];
     }
 }

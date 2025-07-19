@@ -3,28 +3,28 @@
 @push('css')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
 <link href="{{ asset('asset_dashboard/vendor/select2/dist/css/select2.css') }}" rel="stylesheet" type="text/css">
+<style>
+    button, a{
+        border-radius: 10px !important;
+    }
+</style>
 
 @endpush
 @section('content')
 <div class="col-lg-12 grid-margin stretch-card">
     @include('layouts.flashmessage')
     <div class="card">
-        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <div class="flex-row py-3 card-header d-flex align-items-center justify-content-between">
             <h4 class="card-title">Siswa</h4>
             <a href="{{ route('dashboard.datamaster.siswa.create') }}" class="btn btn-success btn-sm float-end">Tambah <i class="fas fa-plus"></i></a>
         </div>
         <div class="card-body">
-            <div class="row mb-2">
-                <div class="col-md-2">
+            <div class="mb-2 row">
+                <div class="mb-2 col-md-12">
                     <div class="form-group">
-                        <div class="gap-4">
-                            <a href="{{ route('siswa.export_excel') }}" class="btn btn-success btn-sm "><i class="fas fa-file-excel"></i> Export Excel</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 ">
-                    <div class="form-group">
-                        <div class="input-group gap-3">
+                        <div class="gap-3 input-group">
+                           <a href="{{ route('siswa.export_excel') }}" class="btn btn-success "><i class="fas fa-file-excel"></i> Export Excel</a>
+
                             <select name="kelas" id="kelas" class="form-control">
                                 <option selected value="">Pilih Kelas</option>
                                 @foreach ($kelass as $kelas)
@@ -41,12 +41,21 @@
                                     <input type="hidden" name="kelas_id" id="export_kelas_id">
                                     <input type="hidden" name="category" id="export_category">
                                 </form>
+
+                              <button type="button" class="btn btn-primary btn-sm" id="importSiswa" data-toggle="modal" data-target="#modalImportSiswa">
+                                Import Data Siswa <i class="fas fa-file-import"></i>
+                            </button>
                         </div>
+                    </div>
+                </div>
+                <div class="mt-2 mb-2 col-md-6">
+                    <div class="form-group">
+
                     </div>
                 </div>
             </div>
 
-            <div class="table-responsive mt-2">
+            <div class="mt-2 table-responsive">
                 <table class="table mt-4" id="siswa_table">
                     <thead>
                         <tr>
@@ -57,7 +66,6 @@
                             <th>Ketagori Kelas</th>
                             <th>SPP</th>
                             <th>DPP</th>
-                            {{-- <th>Tanggal Masuk</th>  --}}
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -66,6 +74,38 @@
         </div>
     </div>
 </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="modalImportSiswa" tabindex="-1" role="dialog" aria-labelledby="modalImportSiswaLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalImportSiswaLabel">Import Data Siswa</h5>
+            </div>
+            <form action="{{ route('siswa.import') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="file">Masukan File Csv</label>
+                                <input type="file" name="file" class="form-control"
+                                    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="closeModal" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Import Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <input type="hidden" id="siswa_data" value="{{ route('siswa.get.records') }}">
 @push('js')
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.0.js"></script>
@@ -74,6 +114,15 @@
 
 <script>
 $(document).ready(function () {
+
+    $('.card-body').on('click', '#importSiswa', function () {
+        $('#modalImportSiswaLabel').text('Import Data Siswa');
+        $('#modalImportSiswa').modal('show');
+    });
+
+    $('.modal').on('click','#closeModal', function () {
+        $('#modalImportSiswa').modal('hide');
+    });
 
     $('#siswa_table').DataTable({
         ordering: true,
