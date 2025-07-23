@@ -20,59 +20,67 @@ class ChargePaymentJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    protected $siswa;
+
+    public function __construct($siswa)
+    {
+        $this->siswa = $siswa;
+    }
+
     public function handle(): void
     {
         $kelas_lulus = Kelas::where('name', 'Lulus')->first();
 
-        $siswas = Siswa::whereHas('kelas', function ($query) use ($kelas_lulus) {
-            $query->where('id', '!=', $kelas_lulus->id);
-        })->get();
+
 
         $monthName = Carbon::now()->locale('id')->translatedFormat('F');
 
-        foreach ($siswas as $siswa) {
-            DB::beginTransaction();
+        DB::beginTransaction();
 
-            try {
-                $order_id = Str::uuid();
-                $monthNumber = Carbon::now()->locale('id')->translatedFormat('F');
-                $category_Spp = JudulPembayaran::where('name', 'SPP')->first();
-                $vaNumber = $siswa->nisn . $monthNumber;
-                $biaya_admin = ($siswa->spp > 0) ? 5000 : 0;
-                $gross_amount = $siswa->spp + $biaya_admin;
+        try {
+            $order_id = Str::uuid();
+            $monthNumber = Carbon::now()->translatedFormat('F');
+            $category_Spp = JudulPembayaran::where('name', 'SPP')->first();
+            $vaNumber = $this->siswa->nisn . $monthNumber;
+            $biaya_admin = ($this->siswa->spp > 0) ? 5000 : 0;
+            $gross_amount = $this->siswa->spp + $biaya_admin;
 
-                DB::table('charges')->insert([
-                    'id' => Str::uuid(),
-                    'name' => "$category_Spp->name {$monthName} {$siswa->name}",
-                    'order_id' => $order_id,
-                    'siswa_id' => $siswa->id,
-                    'gross_amount' => $gross_amount,
-                    'payment_type' => 'qris',
-                    'bank' => 'gopay',
-                    'va_number' => $vaNumber,
-                    'transaction_id' => Str::uuid(),
-                    'transaction_time' => now(),
-                    'fraud_status' => 'accept',
-                    'transaction_status' => ($siswa->spp <= 0) ? 'free' : 'pending',
-                    'category_payment_id' => $category_Spp->id,
-                    'snap_token' => null,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+            DB::table('charges')->insert([
+                'id' => Str::uuid(),
+                'name' => "{$category_Spp->name} {$monthName} {$this->siswa->name}",
+                'order_id' => $order_id,
+                'siswa_id' => $this->siswa->id,
+                'gross_amount' => $gross_amount,
+                'payment_type' => 'qris',
+                'bank' => 'gopay',
+                'va_number' => $vaNumber,
+                'transaction_id' => Str::uuid(),
+                'transaction_time' => now(),
+                'fraud_status' => 'accept',
+                'transaction_status' => ($this->siswa->spp <= 0) ? 'free' : 'pending',
+                'category_payment_id' => $category_Spp->id,
+                'snap_token' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
 
-                if (empty($siswa->spp) || $siswa->spp <= 0) {
-                    DB::commit();
-                    continue;
-                }
-
-                // Kirim ke Midtrans
-                $this->sendPaymentToMidtrans($siswa, $vaNumber, $gross_amount, $order_id, $category_Spp);
-
+            if (empty($this->siswa->spp) || $this->siswa->spp <= 0) {
                 DB::commit();
-            } catch (\Exception $e) {
-                DB::rollBack();
-                logger()->error("Gagal memproses pembayaran {$siswa->name}: " . $e->getMessage());
+                return;
             }
+
+            $this->sendPaymentToMidtrans(
+                $this->siswa,
+                $vaNumber,
+                $gross_amount,
+                $order_id,
+                $category_Spp
+            );
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            logger()->error("Gagal memproses pembayaran {$this->siswa->name}: " . $e->getMessage());
         }
     }
 
@@ -137,7 +145,6 @@ class ChargePaymentJob implements ShouldQueue
             if ($responseData['status_code'] == 201) {
                 DB::table('charges')
                     ->where('order_id', $order_id)
-                    ->orWhere('id', $order_id)
                     ->update([
                         'bank' => 'gopay',
                         'snap_token' => $responseData['token'] ?? null,
@@ -148,9 +155,7 @@ class ChargePaymentJob implements ShouldQueue
                         'url_action' => $responseData['actions'][0]['url'] ?? null,
                     ]);
 
-                // Kirim notifikasi WhatsApp
                 SendWhatsappNotification::dispatch($order_id)->delay(now()->addSeconds(10));
-
             } else {
                 logger()->warning("Gagal pembayaran Midtrans untuk {$siswa->name}: " . $responseData['status_message']);
             }

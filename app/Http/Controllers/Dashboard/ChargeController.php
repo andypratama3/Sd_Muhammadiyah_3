@@ -59,8 +59,8 @@ class ChargeController extends Controller
         return DataTables::of($charges)
             ->addColumn('options', function ($row) {
                 return '
-                    <a href="'.route('dashboard.datamaster.charge.show', $row->id).'" class="btn btn-sm m-1 btn-warning"><i class="fa fa-eye"></i></a>
-                    <a href="'.route('dashboard.datamaster.charge.edit', $row->id).'" class="btn btn-sm m-1 btn-info"><i class="fa fa-edit"></i></a>
+                    <a href="'.route('dashboard.datamaster.charge.show', $row->id).'" class="m-1 btn btn-sm btn-warning"><i class="fa fa-eye"></i></a>
+                    <a href="'.route('dashboard.datamaster.charge.edit', $row->id).'" class="m-1 btn btn-sm btn-info"><i class="fa fa-edit"></i></a>
                     <button data-id="'.$row['id'].'" class="btn btn-sm btn-danger me-1" id="btn-delete"><i class="fa fa-trash"></i></button>
                 ';
             })

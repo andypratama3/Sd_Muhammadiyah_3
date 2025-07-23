@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Kelas;
 use App\Models\Siswa;
 use App\Jobs\ChargePaymentJob;
 use Illuminate\Console\Command;
@@ -19,16 +20,31 @@ class ChargePayment extends Command
             $this->warn("Running in NON-PRODUCTION environment.");
         }
 
-        $siswas = Siswa::all();
+        $kelasLulus = Kelas::where('name', 'Lulus')->first();
 
-        foreach ($siswas as $index => $siswa) {
+        if (!$kelasLulus) {
+            $this->error("Kelas 'Lulus' tidak ditemukan.");
+            return;
+        }
+
+        $kelasLulusId = $kelasLulus->id;
+
+        // Ambil siswa yang TIDAK berada di kelas 'Lulus'
+        $siswaQuery = Siswa::whereDoesntHave('kelas', function ($query) use ($kelasLulusId) {
+            $query->where('kelas.id', $kelasLulusId);
+        })->cursor();
+
+        $index = 0;
+        foreach ($siswaQuery as $siswa) {
             try {
                 ChargePaymentJob::dispatch($siswa)->delay(now()->addSeconds($index * 2));
+                $index++;
             } catch (\Throwable $e) {
-                \Log::error("Gagal ChargePaymentJob untuk siswa {$siswa->name}: " . $e->getMessage());
+                \Log::error('Job gagal: ' . $e->getMessage());
+                throw $e;
             }
         }
 
-        $this->info("Semua job pengisian Charge Payment telah dikirim ke queue.");
+        $this->info("Semua job Charge Payment telah dikirim ke queue.");
     }
 }

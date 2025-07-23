@@ -10,6 +10,7 @@ use App\Exports\SiswaExport;
 use App\Imports\SiswaImport;
 use Illuminate\Http\Request;
 use App\Exports\SiswaExportKelas;
+use App\Imports\SiswaKelasImport;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Facades\Excel;
@@ -51,6 +52,9 @@ class SiswaController extends Controller
         }
 
         return DataTables::of($siswa)
+            // ->addColumn('name', function ($siswa) {
+            //     return ucwords(strtolower($siswa->name));
+            // })
             ->addColumn('kelas_name', function ($kelas) {
                 $kelas_name = $kelas->kelas->pluck('name')->implode(', ');
 
@@ -213,17 +217,26 @@ class SiswaController extends Controller
     {
         $request->validate([
             'file' => 'required|mimes:csv,txt,xlsx',
+            'category_import' => 'required|string',
         ]);
 
-        $action = Excel::import(new SiswaImport, $request->file('file'));
 
-        if($action) {
-            return redirect()->route('dashboard.datamaster.siswa.index')->with('success','Berhasil Import Data Siswa');
+        if($request->category_import == 'import_siswa') {
+            $action = Excel::import(new SiswaImport, $request->file('file'));
+
+             if($action) {
+                    return redirect()->route('dashboard.datamaster.siswa.index')->with('success','Berhasil Import Data Siswa');
+                } else {
+                    return redirect()->route('dashboard.datamaster.siswa.index')->with('error','Gagal Import Data Siswa');
+                }
         } else {
-            return redirect()->route('dashboard.datamaster.siswa.index')->with('error','Gagal Import Data Siswa');
+            $action = Excel::import(new SiswaKelasImport, $request->file('file'));
+            if($action) {
+                return redirect()->route('dashboard.datamaster.siswa.index')->with('success','Berhasil Import Data Siswa Kelas');
+            } else {
+                return redirect()->route('dashboard.datamaster.siswa.index')->with('error','Gagal Import Data Siswa Kelas');
+            }
         }
-
-        return back()->with('success', 'Data siswa berhasil diimport.');
     }
 
     public function export_excel()

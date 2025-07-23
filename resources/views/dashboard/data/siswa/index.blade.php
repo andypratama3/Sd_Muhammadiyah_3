@@ -90,10 +90,32 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="file">Masukan File Csv</label>
+                                <label for="file">Masukan File Excel/Csv</label>
                                 <input type="file" name="file" class="form-control"
                                     accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required>
                             </div>
+                        </div>
+                        <div class="mt-2 col-md-12">
+                            <div class="form-group">
+                                <label for="">Pilih Kategori Import</label>
+                                <select name="category_import" id="" class="form-control">
+                                    <option value="">Pilih Kategori</option>
+                                    <option value="import_siswa">Data Siswa Baru</option>
+                                    <option value="import_kelas">Data Kelas Baru</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 col-md-12">
+                        <div class="container">
+                            {{-- Link list Templaet For Download --}}
+                            <h5>Silahkan Download Template Untuk Menggunakan Import</h5>
+                            <p><code>Jangan Merubah Header Pada Template *</code></p>
+                            <ul class="list-group">
+                                <li class="list-group-item"><a href="{{ asset('asset_dashboard/template/siswa_import.xlsx') }}">Download Template Siswa</a></li>
+                                <li class="list-group-item"><a href="{{ asset('asset_dashboard/template/siswa_kelas.xlsx') }}">Download Template Kelas</a></li>
+                            </ul>
                         </div>
                     </div>
                 </div>
