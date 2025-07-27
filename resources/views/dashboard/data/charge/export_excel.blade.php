@@ -14,7 +14,7 @@
 </head>
 <body>
 
-<h2>REKAPITULASI SPP DAN DPP<br>SD MUHAMMADIYAH 3 Tahun Ajaran 2025/2026</h2>
+<h2>REKAPITULASI SPP DAN DPP<br>SD MUHAMMADIYAH 3 Tahun Ajaran {{ $tahun }}/{{ $tahun + 1 }}</h2>
 
 @foreach($rekapitulasi as $namaKelas => $siswaList)
 

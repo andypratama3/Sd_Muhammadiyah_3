@@ -338,7 +338,7 @@ class ChargeController extends Controller
             return isset($matches[1]) ? (int)$matches[1] : 99; // "Lulus" atau lain-lain taruh di akhir
         })->toArray();
 
-        return view('dashboard.data.charge.export_excel', compact('bulan', 'rekapitulasi'));
+        return view('dashboard.data.charge.export_excel', compact('tahun','bulan', 'rekapitulasi'));
     }
 
 
