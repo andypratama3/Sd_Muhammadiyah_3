@@ -17,14 +17,16 @@
 <div class="col-lg-12 grid-margin stretch-card">
     @include('layouts.flashmessage')
     <div class="card">
-        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <div class="flex-row py-3 card-header d-flex align-items-center justify-content-between">
             <h4 class="card-title">Pembayaran Siswa</h4>
-            <a href="{{ route('dashboard.datamaster.charge.create') }}" class="btn btn-primary float-end btn-sm">Buat Pembayaran <i class="fa fa-plus align-middle"></i></a>
-
+            <a href="{{ route('dashboard.datamaster.charge.create') }}" class="btn btn-primary float-end btn-sm">Buat Pembayaran <i class="align-middle fa fa-plus"></i></a>
         </div>
         <div class="card-body">
-            <div class="form-group row gap-3">
-                <div class="col-md-3">
+            <div class="form-group row">
+               <div class="col-md-12">
+                 <p class="fw-bold">Filter Data <code>*</code></p>
+               </div>
+                <div class="col-md-4">
                     <div class="form-group">
                         <select name="category_payment" id="category_payment" class="form-control">
                             <option selected value="">Pilih Kategori Pembayaran</option>
@@ -34,7 +36,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-4">
                     <div class="form-group">
                         <select name="kelas" id="kelas" class="form-control">
                             <option selected value="">Pilih Kelas</option>
@@ -49,24 +51,36 @@
                         <input type="text" name="date" id="date_range" class="form-control" placeholder="Pilih Tanggal">
                     </div>
                 </div>
-
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <button class="btn btn-success" id="exportData-excel">
-                            <i class="fas fa-file-excel"></i>
-                            Export
-                        </button>
-                        <form action="{{ route('dashboard.datamaster.charge.exportExcel') }}" method="POST"
-                            id="exportForm" style="display: none;">
-                            @csrf
-                            <input type="hidden" name="kelas" id="export_kelas">
-                            <input type="hidden" name="category_payment" id="export_category_payment">
-                            <input type="hidden" name="date" id="export_date">
-                        </form>
+                <div class="mt-2 col-md-12">
+                    <p class="fw-bold">Export <code>*</code></p>
+                </div>
+                <div class=" form-group row">
+                    <div class="col-md-10">
+                        <div class="form-group">
+                            <label for="tahun">Tahun</label>
+                            <select name="tahun" id="tahun" class="form-control">
+                                <option selected value="">--Pilih Tahun--</option>
+                                @for($i = 2019; $i <= date('Y'); $i++)
+                                    <option value="{{ $i }}" {{ request('tahun') == $i ? 'selected' : '' }}>Tahun {{ $i }}</option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
+                     <div class="mt-4 col-md-2">
+                        <div class="form-group">
+                            <button class="btn btn-success" id="exportData-excel">
+                                <i class="fas fa-file-excel"></i>
+                                Export
+                            </button>
+                            <form action="{{ route('dashboard.datamaster.charge.export_excel') }}" method="get"
+                                id="exportForm" style="display: none;">
+                                <input type="hidden" name="tahun" id="export_tahun">
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="table-responsive mt-4">
+            <div class="mt-4 table-responsive">
                 <table class="table mt-4 w-100" id="charge_table" >
                     <thead>
                         <tr>
@@ -244,9 +258,7 @@
             });
             $('#exportData-excel').click(function(e) {
                 e.preventDefault();
-                $('#export_kelas').val($('#kelas').val());
-                $('#export_date').val($('#date_range').val());
-                $('#export_category_payment').val($('#category_payment').val());
+                $('#export_tahun').val($('#tahun').val());
                 $('#exportForm').submit();
             });
         });

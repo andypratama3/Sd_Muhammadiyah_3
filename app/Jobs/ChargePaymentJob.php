@@ -31,8 +31,6 @@ class ChargePaymentJob implements ShouldQueue
     {
         $kelas_lulus = Kelas::where('name', 'Lulus')->first();
 
-
-
         $monthName = Carbon::now()->locale('id')->translatedFormat('F');
 
         DB::beginTransaction();

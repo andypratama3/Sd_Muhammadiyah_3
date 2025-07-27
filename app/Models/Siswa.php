@@ -77,4 +77,9 @@ class Siswa extends Model
     {
         return $this->hasMany(Attendances::class );
     }
+
+    public function charges()
+    {
+        return $this->hasMany(Charge::class, 'siswa_id', 'id');
+    }
 }

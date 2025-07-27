@@ -252,7 +252,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::resource('charge',  DashboardChargeController::class, ['names' => 'dashboard.datamaster.charge']);
         Route::get('charges/records', [DashboardChargeController::class, 'data_table'])->name('dashboard.datamaster.charge.get.records');
         Route::post('charges/export', [DashboardChargeController::class, 'exportExcel'])->name('dashboard.datamaster.charge.exportExcel');
-
+        Route::get('charges/export_excel', [DashboardChargeController::class, 'export_excel'])->name('dashboard.datamaster.charge.export_excel');
         //activity user
         Route::resource('activity',  ActivityController::class, ['names' => 'dashboard.datamaster.activity']);
         Route::get('get/activitys', [ActivityController::class, 'activitys'])->name('dashboard.datamaster.get.activitys');

@@ -272,6 +272,77 @@ class ChargeController extends Controller
         }
     }
 
+
+    public function export_excel(Request $request)
+    {
+        $tahun = $request->input('tahun');
+
+        if (!$tahun) {
+            return back()->with('error', 'Tahun harus dipilih untuk melakukan export.');
+        }
+
+        // Ambil siswa non-lulus beserta kelas dan charges-nya
+        $siswas = Siswa::with(['kelas', 'charges' => function ($query) use ($tahun) {
+            $query->whereYear('created_at', $tahun)->with('kategori_pembayaran');
+        }])
+        ->whereHas('kelas', function ($query) {
+            $query->where('name', '!=', 'Lulus');
+        })
+        ->get();
+
+        // Bulan dari Januari sampai Desember
+        $bulan = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $bulan[] = Carbon::createFromDate($tahun, $i, 1)->translatedFormat('F');
+        }
+
+        $rekapitulasi = [];
+
+        foreach ($siswas as $siswa) {
+            if (!$siswa->kelas || $siswa->kelas->isEmpty()) continue;
+
+            $kelasObj = $siswa->kelas->first(); // ambil kelas utama
+            $namaKelas = $kelasObj->name . ' - ' . ($kelasObj->pivot->category_kelas ?? 'Tidak Ada Kategori');
+            $namaSiswa = $siswa->name ?? 'Tidak Ada Nama';
+
+            if (!isset($rekapitulasi[$namaKelas][$namaSiswa])) {
+                $rekapitulasi[$namaKelas][$namaSiswa] = [
+                    'nama' => $namaSiswa,
+                    'pembayaran' => array_fill_keys($bulan, '❌'),
+                    'dpp_1' => '',
+                    'dpp_2' => '',
+                ];
+            }
+
+            foreach ($siswa->charges as $charge) {
+                $kategori = strtolower($charge->kategori_pembayaran->name ?? '');
+                $bulanTransaksi = Carbon::parse($charge->created_at)->translatedFormat('F');
+
+                if ($kategori === 'spp' && in_array($charge->transaction_status, ['pay_offline', 'settlement', 'free'])) {
+                    $rekapitulasi[$namaKelas][$namaSiswa]['pembayaran'][$bulanTransaksi] = '✅';
+                }
+
+                if ($kategori === 'dpp') {
+                    if ($rekapitulasi[$namaKelas][$namaSiswa]['dpp_1'] === '') {
+                        $rekapitulasi[$namaKelas][$namaSiswa]['dpp_1'] = '✅';
+                    } else {
+                        $rekapitulasi[$namaKelas][$namaSiswa]['dpp_2'] = '✅';
+                    }
+                }
+            }
+        }
+
+        // ✅ Urutkan berdasarkan angka kelas
+        $rekapitulasi = collect($rekapitulasi)->sortBy(function ($item, $kelasName) {
+            preg_match('/Kelas\s(\d+)/', $kelasName, $matches);
+            return isset($matches[1]) ? (int)$matches[1] : 99; // "Lulus" atau lain-lain taruh di akhir
+        })->toArray();
+
+        return view('dashboard.data.charge.export_excel', compact('bulan', 'rekapitulasi'));
+    }
+
+
+
     public function exportExcel(Request $request)
     {
         $request->validate([
