@@ -73,7 +73,6 @@ class SendOrderIDWhatsAppApi extends Controller
             ]
         );
 
-        dd($message);
 
         return response()->json(['status' => 'success', 'message_sid' => $message->sid, 'media_url' => $publicUrl], 200);
     }

@@ -13,4 +13,6 @@ class AttendanceHelper
             default => 'secondary',
         };
     }
+
+    
 }

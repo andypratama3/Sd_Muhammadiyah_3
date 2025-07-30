@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Exports\ChargeExport;
-use App\Http\Controllers\Api\V1\MidtransPaymentController;
-use App\Http\Controllers\Controller;
-use App\Models\Charge;
-use App\Models\JudulPembayaran;
+use Carbon\Carbon;
 use App\Models\Kelas;
 use App\Models\Siswa;
-use Carbon\Carbon;
+use App\Models\Charge;
 use GuzzleHttp\Client;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Exports\ChargeExport;
+use App\Models\JudulPembayaran;
+use Illuminate\Support\Facades\DB;
+use App\Exports\RekapitulasiExport;
+use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
+use App\Http\Controllers\Api\V1\MidtransPaymentController;
 
 class ChargeController extends Controller
 {
@@ -338,7 +339,15 @@ class ChargeController extends Controller
             return isset($matches[1]) ? (int)$matches[1] : 99; // "Lulus" atau lain-lain taruh di akhir
         })->toArray();
 
-        return view('dashboard.data.charge.export_excel', compact('tahun','bulan', 'rekapitulasi'));
+
+        $tahunAjaran = $tahun . '_' . ($tahun + 1);
+        
+        return Excel::download(
+            new RekapitulasiExport($rekapitulasi, $bulan),
+            "rekapitulasi_spp_dpp_{$tahunAjaran}.xlsx"
+        );
+
+        // return view('dashboard.data.charge.export_excel', compact('tahun','bulan', 'rekapitulasi'));
     }
 
 

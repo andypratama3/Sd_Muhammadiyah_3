@@ -12,27 +12,43 @@ use Yajra\DataTables\Facades\DataTables;
 
 class AttendancesController extends Controller
 {
-   public function index(Request $request)
+    public function index(Request $request)
     {
-        $kelas = Kelas::orderByRaw('CAST(SUBSTRING(name, 7) AS UNSIGNED) ASC')->get();
+        // Ambil daftar kelas dan urutkan berdasarkan angka setelah kata 'Kelas'
+        $kelas = Kelas::where('name', '!=', 'Lulus')
+            ->orderByRaw('CAST(SUBSTRING(name, 7) AS UNSIGNED) ASC')
+            ->get();
 
+        // Ambil siswa dengan relasi kelas
         $siswas = Siswa::with(['kelas' => function ($query) {
-            $query->orderByRaw('CAST(SUBSTRING(name, 7) AS UNSIGNED) ASC');
-        }])
-        ->when($request->kelas_id || ($request->category_kelas && $request->category_kelas !== 'null'), function ($query) use ($request) {
-            $query->whereHas('kelas', function ($q) use ($request) {
-                if ($request->kelas_id) {
-                    $q->where('id', $request->kelas_id);
-                }
-                if ($request->category_kelas && $request->category_kelas !== 'null') {
-                    $q->where('siswa_kelas.category_kelas', $request->category_kelas);
-                }
-            });
-        })
-        ->when($request->filled('nama'), function ($query) use ($request) {
-            $query->where('name', 'like', '%' . $request->nama . '%');
-        })
-        ->get();
+                $query->where('name', '!=', 'Lulus')
+                    ->orderByRaw('CAST(SUBSTRING(name, 7) AS UNSIGNED) ASC');
+            }])
+            ->whereHas('kelas', function ($query) {
+                $query->where('name', '!=', 'Lulus');
+            })
+            ->when($request->kelas_id || ($request->category_kelas && $request->category_kelas !== 'null'), function ($query) use ($request) {
+                $query->whereHas('kelas', function ($q) use ($request) {
+                    if ($request->kelas_id) {
+                        $q->where('id', $request->kelas_id);
+                    }
+                    if ($request->category_kelas && $request->category_kelas !== 'null') {
+                        $q->where('siswa_kelas.category_kelas', $request->category_kelas);
+                    }
+                });
+            })
+            ->when($request->filled('nama'), function ($query) use ($request) {
+                $query->where('name', 'like', '%' . $request->nama . '%');
+            })
+            ->get();
+
+        // Sortir siswa berdasarkan angka kelas dari relasi
+        $siswas = $siswas->sortBy(function ($siswa) {
+            // Ambil kelas pertama dari siswa (karena bisa ada banyak)
+            $kelasName = $siswa->kelas->first()->name ?? 'Kelas 99';
+            preg_match('/Kelas\s(\d+)/', $kelasName, $matches);
+            return isset($matches[1]) ? (int)$matches[1] : 99;
+        })->values();
 
         // Ambil tanggal dari request atau default hari ini
         $tanggal = $request->input('tanggal') ?? date('Y-m-d');
@@ -42,10 +58,6 @@ class AttendancesController extends Controller
 
         return view('dashboard.attendances.index', compact('siswas', 'kelas', 'attendances', 'tanggal'));
     }
-
-
-
-
 
     public function data_table()
     {
