@@ -21,13 +21,13 @@
   <div class="container-login">
     <div class="row justify-content-center">
       <div class="col-xl-6 col-lg-12 col-md-9">
-        <div class="card shadow-sm my-5">
-          <div class="card-body p-0">
+        <div class="my-5 shadow-sm card">
+          <div class="p-0 card-body">
             <div class="row">
               <div class="col-lg-12">
                 <div class="login-form">
                   <div class="text-center">
-                    <h1 class="h4 text-gray-900 mb-4">Login</h1>
+                    <h1 class="mb-4 text-gray-900 h4">Login</h1>
                   </div>
                   <form class="user" action="{{ route('login') }}" method="POST">
                     @csrf
@@ -36,7 +36,7 @@
                         placeholder="Enter Email Address" name="email">
                     </div>
                     @if ($errors->has('password'))
-                    <div class="alert alert-primary alert-dismissible fade show text-center text-black" role="alert">
+                    <div class="text-center text-black alert alert-primary alert-dismissible fade show" role="alert">
                         <strong>{{ $errors->first('email') }}</strong>
                     </div>
                     @endif
@@ -44,7 +44,7 @@
                       <input type="password" class="form-control" id="exampleInputPassword" name="password" placeholder="Password">
                     </div>
                     @if ($errors->has('email'))
-                    <div class="alert alert-danger alert-dismissible fade show text-center text-black" role="alert">
+                    <div class="text-center text-black alert alert-danger alert-dismissible fade show" role="alert">
                         <strong>{{ $errors->first('email') }}</strong>
                     </div>
                     @endif

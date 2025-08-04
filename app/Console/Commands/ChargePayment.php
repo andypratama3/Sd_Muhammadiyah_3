@@ -32,7 +32,8 @@ class ChargePayment extends Command
         // Ambil siswa yang TIDAK berada di kelas 'Lulus'
         $siswaQuery = Siswa::whereDoesntHave('kelas', function ($query) use ($kelasLulusId) {
             $query->where('kelas.id', $kelasLulusId);
-        })->cursor();
+        }) ->where('no_hp', ['085750893938'])
+        ->cursor();
 
         $index = 0;
         foreach ($siswaQuery as $siswa) {

@@ -37,7 +37,8 @@ class ChargePaymentJob implements ShouldQueue
 
         try {
             $order_id = Str::uuid();
-            $monthNumber = Carbon::now()->translatedFormat('F');
+            $monthNumber = Carbon::now()->locale('id')->format('m');
+            $monthName = Carbon::now()->locale('id')->translatedFormat('F');
             $category_Spp = JudulPembayaran::where('name', 'SPP')->first();
             $vaNumber = $this->siswa->nisn . $monthNumber;
             $biaya_admin = ($this->siswa->spp > 0) ? 5000 : 0;

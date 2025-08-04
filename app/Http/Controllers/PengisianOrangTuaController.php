@@ -28,7 +28,7 @@ class PengisianOrangTuaController extends Controller
             'status' => 'success',
             'data' => [
                 'no_hp' => $siswa->no_hp,
-            ]
+            ], 200
         ]);
     }
 
