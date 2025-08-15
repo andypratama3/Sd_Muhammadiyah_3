@@ -1,35 +1,36 @@
 <?php
+
 namespace App\Jobs;
 
 use App\Models\Charge;
+use Illuminate\Support\Str;
+use App\Helpers\ImageHelper;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Str;
+use App\Services\WhatsappService;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Twilio\Rest\Client as TwilioClient;
-use App\Helpers\ImageHelper;
 
 class SendWhatsappNotification implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $orderId;
+    protected $whatsApp;
 
     public function __construct($orderId)
     {
         $this->orderId = $orderId;
+        $this->whatsApp = new WhatsAppService();
     }
 
     public function handle()
     {
         $charge = Charge::with(['siswa.kelas', 'kategori_pembayaran'])
-            ->where(function ($query) {
-                $query->where('order_id', $this->orderId)
-                    ->orWhere('id', $this->orderId);
-            })
+            ->where('order_id', $this->orderId)
+            ->orWhere('id', $this->orderId)
             ->first();
 
         if (! $charge) return;
@@ -44,21 +45,12 @@ class SendWhatsappNotification implements ShouldQueue
         $kelasSiswa = $kelas ? $kelas->name : 'Tidak diketahui';
         $noHp = '+62' . ltrim($siswa->no_hp ?? '85349734475', '0');
 
-        // $publicUrl = null;
-
-        $sid = env('TWILIO_SID');
-        $token = env('TWILIO_AUTH_TOKEN');
-        $whatsappFrom = env('TWILIO_WHATSAPP_FROM');
-        $client = new TwilioClient($sid, $token);
-
         if ($categoryname === 'SPP') {
             $qrImageUrl = $charge->url_action;
-
             $folderPath = public_path('storage/img/waqr/spp');
             if (!file_exists($folderPath)) {
                 mkdir($folderPath, 0775, true);
             }
-
 
             $fileName = 'qr-siswa-' . Str::slug($categoryname . '-' . $monthName . '-' . $namaSiswa, '-') . '.png';
             $relativePath = 'img/waqr/spp/';
@@ -73,42 +65,31 @@ class SendWhatsappNotification implements ShouldQueue
                 . "Terima kasih atas kerjasamanya. \n"
                 . "Wassalamu'alaikum Warahmatullahi Wabarakatuh.";
 
-            $client->messages->create('whatsapp:' . $noHp, [
-                'from' => $whatsappFrom,
-                'body' => $body,
-                'mediaUrl' => [$publicUrl] ?? [],
-            ]);
+            $this->whatsApp->sendMessageWithImage($noHp, $body, [$publicUrl]);
+
         }
-        else if ($categoryname === 'DPP') {
+        elseif ($categoryname === 'DPP') {
             $body = "Assalamu'alaikum Warahmatullahi Wabarakatuh.  \n\n"
                 . "Yth. Ayah/Bunda Wali dari ananda *$namaSiswa* (*$kelasSiswa*),  \n\n"
                 . "Tagihan *DPP* sebesar *Rp " . number_format($grossAmount, 0, ',', '.') . "*.\n\n"
-                . "Silakan lakukan pembayaran melalui metode yang telah disediakan Pada Website.\n\n"
+                . "Silakan lakukan pembayaran melalui website sekolah:\n"
                 . "https://sdmuhammadiyah3smd.com/pembayaran \n\n"
-                . "atau menggunakan menggunakan metode Virtual Account.\n\n"
-                . "Menggunakan Virtual Account : \n"
-                . "- Bank Permata Virtual Account : *$charge->va_number*\n\n"
-                . "Terima kasih atas perhatian dan kerjasamanya. \n"
+                . "Atau gunakan Virtual Account: \n"
+                . "- Bank Permata: *$charge->va_number*\n\n"
+                . "Terima kasih atas perhatian dan kerjasamanya.\n"
                 . "Wassalamu'alaikum Warahmatullahi Wabarakatuh.";
 
-            $client->messages->create('whatsapp:' . $noHp, [
-                'from' => $whatsappFrom,
-                'body' => $body,
-            ]);
+            $this->whatsApp->sendMessage($noHp, $body);
         }
         else {
             $body = "Assalamu'alaikum Warahmatullahi Wabarakatuh.  \n\n"
                 . "Yth. Ayah/Bunda Wali dari ananda *$namaSiswa* (*$kelasSiswa*),  \n\n"
-                . "Kami informasikan terdapat tagihan pembayaran *$categoryname* sebesar *Rp " . number_format($grossAmount, 0, ',', '.') . "*.\n\n"
+                . "Tagihan *$categoryname* sebesar *Rp " . number_format($grossAmount, 0, ',', '.') . "*.\n\n"
                 . "Silakan cek aplikasi atau hubungi pihak sekolah untuk info lebih lanjut.\n\n"
                 . "Terima kasih atas perhatian dan kerjasamanya. \n"
                 . "Wassalamu'alaikum Warahmatullahi Wabarakatuh.";
 
-            $client->messages->create('whatsapp:' . $noHp, [
-                'from' => $whatsappFrom,
-                'body' => $body,
-            ]);
+            $this->whatsApp->sendMessage($noHp, $body);
         }
     }
-
 }

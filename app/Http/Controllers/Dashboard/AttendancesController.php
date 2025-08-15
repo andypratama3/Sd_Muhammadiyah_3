@@ -8,6 +8,7 @@ use App\Models\Attendances;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
 class AttendancesController extends Controller
@@ -109,7 +110,7 @@ class AttendancesController extends Controller
     {
         $attendance = Attendances::where('id', $id)->first();
         if (! $attendance) {
-            return response()->json(['status' => 'error', 'message' => 'Data Tidak Ditemukan']);
+            return response()->json(['status' => 'wrror', 'message' => 'Data Tidak Ditemukan']);
         }
 
         return response()->json(['status' => 'success', 'data' => $attendance]);
@@ -133,5 +134,14 @@ class AttendancesController extends Controller
         $attendance->save();
 
         return response()->json(['status' => 'success', 'message' => 'Data Berhasil Disimpan']);
+    }
+
+    public function export(Request $request)
+    {
+        $request->validate([
+            'date' => 'required',
+        ]);
+
+        return Excel::download(new AttendancesExport, "absensi_$request->date.xlsx");
     }
 }

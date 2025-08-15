@@ -9,69 +9,38 @@
 @section('content')
 <div class="col-lg-12 grid-margin stretch-card">
     <div class="card">
-        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <div class="flex-row py-3 card-header d-flex align-items-center justify-content-between">
             <h4 class="card-title"> Data SPMB</h4>
-            <a href="{{ route('dashboard.datamaster.pembayaran.create') }}" class="btn btn-success btn-sm float-right">
+            <a href="{{ route('dashboard.datamaster.pembayaran.create') }}" class="float-right btn btn-success btn-sm">
                 Tambah
                 <i class="fas fa-plus"></i>
             </a>
         </div>
         <div class="card-body">
-
-            {{-- <div class="form-group row">
+            <div class="form-group row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <select name="tahun" id="tahun" class="form-control">
+                            <option selected value="">Pilih Tahun SPMB</option>
+                            @for($i = 2019; $i <= date('Y'); $i++)
+                                <option value="{{ $i }}" {{ request('tahun', date('Y')) == $i ? 'selected' : '' }}>Tahun {{ $i }}</option>
+                            @endfor
+                        </select>
+                    </div>
+                </div>
                 <div class="col-md-3">
-                    <div class="form-group">
-                        <select name="judul_pembayaran" id="judul_pembayaran" class="form-control">
-                            <option selected value="">Pilih Kategori Pembayaran</option>
-                            @foreach ($juduls as $judul)
-                                <option value="{{ $judul->id }}">{{ $judul->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                    <button class="btn btn-primary export_data" type="button"><i class="fa fa-excel"></i> Export Excel</button>
                 </div>
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <select name="kelas" id="kelas" class="form-control">
-                            <option selected value="">Pilih Kelas</option>
-                            @foreach ($kelass as $kelas)
-                                <option value="{{ $kelas->id }}">{{ $kelas->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <select name="category_kelas" id="category_kelas" class="form-control">
-                            <option selected disabled>Pilih Kategori Kelas</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <button class="btn btn-success" id="exportData-excel"><i class="fas fa-file-excel"></i>
-                            Export</button>
-                        <form action="{{ route('dashboard.datamaster.pembayaran.exportExcel') }}" method="POST"
-                            id="exportForm" style="display: none;">
-                            @csrf
-                            <input type="hidden" name="judul_id" id="export_judul_id">
-                            <input type="hidden" name="kelas" id="export_kelas">
-                            <input type="hidden" name="category_kelas" id="export_category_kelas">
-                        </form>
-                    </div>
-                </div>
-            </div> --}}
-            <div class="table-responsive mt-4">
+            </div>
+            <div class="mt-4 table-responsive">
                 <table class="table mt-4 w-100" id="spmb_table" >
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Kategori</th>
+                            <th>Nomor Urut</th>
                             <th>Nama</th>
-                            <th>Kelas</th>
-                            <th>Order ID</th>
-                            <th>Total</th>
-                            <th>Status</th>
+                            <th>Status Pembayaran</th>
+                            <th>Status SPMB</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -81,7 +50,6 @@
     </div>
 </div>
 @push('js')
-    {{-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.0.js"></script> --}}
     <script type="text/javascript" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
     <script type="text/javascript"
         src="https://cdn.datatables.net/v/dt/jqc-1.12.3/dt-1.10.16/b-1.4.2/b-html5-1.4.2/datatables.min.js"></script>
@@ -101,11 +69,9 @@
                 processing: true,
                 pageLength: 100,
                 ajax: {
-                    'url': $('#invoice_data').val(),
+                    'url': "{{ route('dashboard.spmb.data_table') }}",
                     'data': function(d) {
-                        d.judul_pembayaran = $('#judul_pembayaran').val();
-                        d.kelas = $('#kelas').val();
-                        d.category_kelas = $('#category_kelas').val();
+                        d.tahun = $('#tahun').val();
                     }
                 },
                 columns: [{
@@ -116,67 +82,46 @@
                         ordering: false
                     },
                     {
-                        data: 'name',
-                        name: 'name'
+                        data: 'nomor_urut',
+                        name: 'nomor_urut'
                     },
                     {
-                        data: 'siswa.name',
-                        name: 'siswa.name'
+                        data: 'nama',
+                        name: 'nama'
                     },
                     {
-                        data: 'kelas.name',
-                        name: 'kelas.name'
-                    },
-                    {
-                        data: 'order_id',
-                        name: 'order_id'
-                    },
-                    {
-                        data: 'gross_amount', // Refers to the data field in your dataset
-                        name: 'gross_amount', // Name of the column
-                        render: function(data, type, full, meta) { // Custom rendering function
-                            return 'Rp. ' + data; // Formats the data with 'Rp.' prefix
-                        }
+                        data: 'status_pembayaran',
+                        name: 'status_pembayaran'
                     },
                     {
                         data: 'status',
                         name: 'status',
-                        render: function(data, type, full, meta) {
-                            if (data === 'pending') {
-                                return '<h5 style="color: black;"><span class="badge bg-warning"><i class="fa-solid fa-clock"></i> ' +
-                                    data + '</span></h5>';
-                            } else if (data === 'Berhasil') {
-                                return '<h5 style="color: black;"><span class="badge bg-success"><i class="fa-solid fa-circle-check"></i> ' +
-                                    data + '</span></h5>';
-                            } else if (data === 'Expired') {
-                                return '<h5 style="color: black;"><span class="badge bg-danger"><i class="fa-solid fa-xmark"></i> ' +
-                                    data + '</span></h5>';
-                            } else {
-                                return data;
-                            }
-                        }
                     },
                     {
-                        data: 'options',
-                        name: 'options',
+                        data: 'action',
+                        name: 'action',
                         orderable: false,
                         searchable: false
                     }
                 ],
             });
+
             $('#spmb_table').on('click', '#btn-delete', function() {
                 var order_id = $(this).data('id');
                 var url =
-                '{{ route('dashboard.datamaster.pembayaran.destroy', ':order_id') }}'; // Use the correct route name "destroy"
+                '{{ route('dashboard.spmb.destroy', ':order_id') }}'; // Use the correct route name "destroy"
                 url = url.replace(':order_id', order_id);
-                swal({
-                    title: 'Anda yakin?',
-                    text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
-                    icon: 'warning',
-                    buttons: true,
-                    dangerMode: true,
+                Swal.fire({
+                        title: 'Anda yakin?',
+                        text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Ya, Hapus Data',
+                        cancelButtonText: 'Tidak, Batalkan!',
+                        reverseButtons: true,
+                        dangerMode: true,
                 }).then((willDelete) => {
-                    if (willDelete) {
+                    if (willDelete.isConfirmed) {
                         $.ajaxSetup({
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -189,7 +134,7 @@
                             type: 'DELETE', // Use the DELETE method
                             success: function(data) {
                                 if (data.status === 'success') {
-                                    swal({
+                                    Swal.fire({
                                         title: 'Berhasil',
                                         text: data.message,
                                         icon: 'success',
@@ -202,7 +147,7 @@
 
                                 } else {
                                     // Reload the page with an error message
-                                    swal('Error', data.message, 'error');
+                                    Swal.fire('Error', data.message, 'error');
                                     window.location.href =
                                         "{{ route('dashboard.datamaster.siswa.index') }}";
                                 }
@@ -213,59 +158,32 @@
                     }
                 });
             });
-            $('#kelas').on('change', function () {
-                var selectedKelasId = $('#kelas').val();
-                let categoryKelasDropdown = $('#category_kelas');
-                //clear area dropdown
-                categoryKelasDropdown.empty();
-                //add option for category_kelas
-                categoryKelasDropdown.append('<option selected disabled>Pilih Kategori Kelas</option>');
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-                $.ajax({
-                    url: '{{ route("dashboard.datasekolah.jadwal.kelas_category") }}',
-                    method: 'POST',
-                    data: {
-                        id: selectedKelasId
-                    },
-                    success: function (response) {
-                        let data_category = response.categoryKelas
-                        $.each(response, function (index, category) {
-                            categoryKelasDropdown.append('<option data-id="' +
-                                category + '" value="' + category + '">' +
-                                category + '</option>');
-                        });
-                    },
-                    error: function (error) {
-                        console.log(error);
-                    }
-                });
-            });
-            $('#judul_pembayaran').on('change', function() {
+
+            $('#tahun').on('change', function() {
                 reloadTable('#spmb_table');
             });
-            $('#kelas').on('change', function () {
-                reloadTable('#spmb_table');
-            });
-            $('#category_kelas').on('change', function () {
-                reloadTable('#spmb_table');
-            });
-            $('#exportData-excel').click(function(e) {
-                e.preventDefault();
-                let judul_id = $('#judul_pembayaran').val();
-                let kelas = $('#kelas').val();
-                let category_kelas = $('#category_kelas').val();
-
-                $('#export_judul_id').val(judul_id);
-                $('#export_kelas').val(kelas);
-                $('#export_category_kelas').val(category_kelas);
-                $('#exportForm').submit();
 
 
+            $('.export_data').on('click', function() {
+                let tahun = $('#tahun').val();
+
+                if (!tahun) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: "Tahun Tidak Boleh Kosong",
+                        icon: 'error',
+                    });
+                    return;
+                }
+
+                // Membuat URL dengan query param tahun
+                let url = "{{ route('dashboard.spmb.export_excel') }}?year=" + tahun;
+
+                // Redirect browser ke URL tersebut untuk trigger download
+                window.location.href = url;
             });
+
+
         });
     </script>
 @endpush

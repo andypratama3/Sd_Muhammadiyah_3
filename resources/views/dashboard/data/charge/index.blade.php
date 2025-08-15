@@ -144,6 +144,7 @@
                         d.category_payment = $('#category_payment').val();
                         d.kelas = $('#kelas').val();
                         d.date = $('#date_range').val();
+                        d.tahun = $('#tahun').val();
                     }
                 },
                 autoWidth: false,
@@ -256,6 +257,13 @@
             $('#category_payment').on('change', function () {
                 reloadTable('#charge_table');
             });
+
+            $('#tahun').on('change', function() {
+                reloadTable('#charge_table');
+                console.log("well");
+
+            });
+
             $('#exportData-excel').click(function(e) {
                 e.preventDefault();
                 $('#export_tahun').val($('#tahun').val());

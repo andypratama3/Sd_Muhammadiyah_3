@@ -1,6 +1,6 @@
 
 <!-- Footer Start -->
-<div class="container-fluid footer py-5 wow fadeIn" data-wow-delay="0.2s">
+<div class="py-5 container-fluid footer wow fadeIn" data-wow-delay="0.2s">
     <div class="container py-5">
         <div class="row g-5">
             <div class="col-md-12">
@@ -12,8 +12,8 @@
                                     <h3 class="text-white"> SD Muhammadiyah 3 Samarinda</h3>
                                     <img src="{{ asset('asset_new/images/SD3_logo1.png') }}" alt="Logo" class="img-fluid" style="width: 20%;">
                                 </a>
-                                {{-- <p class="text-white mb-4">Dolor amet sit justo amet elitr clita ipsum elitr est.Lorem ipsum dolor sit amet, consectetur adipiscing...</p> --}}
-                                <div class="footer-btn d-flex mt-4">
+                                {{-- <p class="mb-4 text-white">Dolor amet sit justo amet elitr clita ipsum elitr est.Lorem ipsum dolor sit amet, consectetur adipiscing...</p> --}}
+                                <div class="mt-4 footer-btn d-flex">
                                     <a class="btn btn-md-square rounded-circle me-3 social-icon" href="https://www.facebook.com/sekolahkreatif.muhammadiyahsamarinda/" target="_blank">
                                         <i class="fab fa-facebook-f"></i>
                                     </a>
@@ -23,13 +23,13 @@
                                     <a class="btn btn-md-square rounded-circle me-3 social-icon" href="https://www.instagram.com/SekolahKreatifSamarinda/" target="_blank">
                                         <i class="fab fa-instagram"></i>
                                     </a>
-                                    <a class="btn btn-md-square rounded-circle me-0 social-icon" href="https://id.wikipedia.org/wiki/SD_muhammadiyah_3_Samarinda" target="_blank">
+                                    <a class="btn btn-md-square rounded-circle me-0 social-icon" href="https://id.wikipedia.org/wiki/Sd_Muhammadiyah_3_Samarinda" target="_blank">
                                         <i class="fa-brands fa-wikipedia-w"></i>
                                     </a>
 
                                 </div>
                                 <div class="mt-4" x-data>
-                                    <h5 class="fs-4 fw-bold text-white">Jumlah Pengunjung</h5>
+                                    <h5 class="text-white fs-4 fw-bold">Jumlah Pengunjung</h5>
                                     <h5 class="text-white">
                                         Hari Ini:
                                         <span class="text-white" x-data="{ count: 0 }"
@@ -55,10 +55,11 @@
                                         <span class="text-white" x-data="{ count: 0 }"
                                               x-init="let interval = setInterval(() => {
                                                   if(count < {{ $visitor_by_year }}) count++; else clearInterval(interval);
-                                              }, 10)"
+                                              }, 1)"
                                               x-text="count + 'x'">
                                         </span>
                                     </h5>
+
 
                                     <p class="mt-3 text-white">
                                         <strong>
@@ -86,15 +87,15 @@
 <!-- Footer End -->
 
 <!-- Copyright Start -->
-<div class="container-fluid copyright py-4">
+<div class="py-4 container-fluid copyright">
     <div class="container">
         <div class="row g-4 align-items-center">
 
-            <div class="col-md-6 text-center text-md-end mb-md-0">
-                <span class="text-body"><a href="/" class="border-bottom text-white"><i class="fas fa-copyright text-light me-2"></i>SD MUHAMMADIYAH 3 SAMARINDA</a>, All right reserved.</span>
+            <div class="text-center col-md-6 text-md-end mb-md-0">
+                <span class="text-body"><a href="/" class="text-white border-bottom"><i class="fas fa-copyright text-light me-2"></i>SD MUHAMMADIYAH 3 SAMARINDA</a>, All right reserved.</span>
             </div>
-            <div class="col-md-6 text-center text-md-start text-body">
-                Develop By <a class="border-bottom text-white" href="https://www.linkedin.com/in/andypratama3/">Andy Pratama</a>
+            <div class="text-center col-md-6 text-md-start text-body">
+                Develop By <a class="text-white border-bottom" href="https://www.linkedin.com/in/andypratama3/">Andy Pratama</a>
             </div>
         </div>
     </div>

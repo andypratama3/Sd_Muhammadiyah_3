@@ -61,11 +61,14 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-3">
                     <label class="form-label">Kategori Kelas</label>
                     <select id="category_kelas" class="form-control">
                         <option value="">Pilih Kategori Kelas</option>
                     </select>
+                </div>
+                <div class="mt-4 col-md-3">
+                    <button class="btn btn-primary"><i class="fa fa-file-excel"></i> Download Excel</button>
                 </div>
                 <div class="mt-2 col-md-12">
                     <label class="form-label">Nama Siswa</label>
@@ -278,6 +281,8 @@
                 }
             });
         });
+
+
 
     });
 </script>

@@ -12,6 +12,6 @@
     {!! Form::text('nama', null, ['class' => 'form-control','id' => 'nama' , 'placeholder' => 'Nama Siswa']) !!}
 </div>
 
-<div class="col-md-12">
+<div class="mt-2 col-md-12">
     <button class="btn btn-primary" type="submit">Simpan</button>
 </div>

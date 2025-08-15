@@ -57,6 +57,10 @@ class ChargeController extends Controller
             $charges = $charges->whereBetween(DB::raw('date(created_at)'), [$startDate, $endDate]);
         }
 
+        if($request->tahun) {
+            $charges = $charges->whereYear('created_at', $request->tahun);
+        }
+
         return DataTables::of($charges)
             ->addColumn('options', function ($row) {
                 return '
@@ -341,7 +345,7 @@ class ChargeController extends Controller
 
 
         $tahunAjaran = $tahun . '_' . ($tahun + 1);
-        
+
         return Excel::download(
             new RekapitulasiExport($rekapitulasi, $bulan),
             "rekapitulasi_spp_dpp_{$tahunAjaran}.xlsx"

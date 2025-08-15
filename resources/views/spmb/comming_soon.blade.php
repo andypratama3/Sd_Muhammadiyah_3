@@ -43,10 +43,10 @@
 
 @section('content')
     <div class="container d-flex flex-column justify-content-center align-items-center" style="min-height: 70vh; text-align: center;">
-        
-        <i class="fas fa-tools fa-5x text-warning mb-4 animate-icon"></i>
-        <h1 class="display-4 fw-bold mb-3">Coming Soon</h1>
-        <p class="lead text-muted mb-4">
+
+        <i class="mb-4 fas fa-tools fa-5x text-warning animate-icon"></i>
+        <h1 class="mb-3 display-4 fw-bold">Coming Soon</h1>
+        <p class="mb-4 lead text-muted">
             Sistem Penerimaan Murid Baru (SPMB) untuk <strong>SD Muhammadiyah 3 Samarinda</strong> akan segera dibuka.<br>
             Kami sedang menyiapkan sistem terbaik untuk kenyamanan Anda.<br>
             Silakan kembali lagi nanti untuk informasi lengkap.

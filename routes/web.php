@@ -158,8 +158,10 @@ Route::group(['prefix' => '/',], function () {
     Route::get('spmb/pay',[SpmbController::class, 'pay'])->name('spmb.pay');
     Route::post('spmb/store',[SpmbController::class, 'store'])->name('spmb.store');
     Route::get('spmb/success/{orderID}',[SpmbController::class, 'success'])->name('spmb.success');
-    Route::get('spmb/detail/{orderID}',[SpmbController::class, 'formDetail'])->name('formDetail');
-    Route::post('spmb/detail/store', [SpmbController::class ,'formDetailStore'])->name('formDetail.store');
+
+    // Route::get('spmb/kelengkapan-data/{orderID}',[SpmbController::class, 'formDetail'])->name('formDetail');
+    // Route::post('spmb/detail/store', [SpmbController::class ,'formDetailStore'])->name('formDetail.store');
+    // Route::get('spmb/detail/success/{orderID}',[SpmbController::class, 'formDetailSuccess'])->name('formDetail.success');
     //login with google
     Route::get('auth/google', [GoogleController::class, 'signGoogle'])->name('login.google');
     Route::get('auth/google/callback', [GoogleController::class, 'callbackToGoogle'])->name('google.callback');
@@ -199,9 +201,11 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
     });
 
     Route::resource('absensi', AttendancesController::class, ['names'=> 'dashboard.attendances']);
+    Route::get('absensis/export', [AttendancesController::class, 'export'])->name('dashboard.attendances.export');
 
     Route::resource('spmb', DashboardSpmController::class, ['names' => 'dashboard.spmb']);
     Route::get('spmbs/datas', [DashboardSpmController::class, 'data_table'])->name('dashboard.spmb.data_table');
+    Route::get('spmbs/export-excel', [DashboardSpmController::class, 'export'])->name('dashboard.spmb.export_excel');
 
     Route::group(['prefix' => 'datasekolah'], function () {
         Route::resource('fasilitas', DashboardFasilitasController::class, ['names' => 'dashboard.datasekolah.fasilitas']);

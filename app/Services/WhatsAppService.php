@@ -2,44 +2,40 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Http;
+use Twilio\Rest\Client as TwilioClient;
 
-class WhatsAppService
+class WhatsappService
 {
-    protected $token;
-    protected $phoneNumberId;
-    protected $version;
+    protected $client;
+    protected $from;
 
     public function __construct()
     {
-        $this->token = config('services.whatsapp.token');
-        $this->phoneNumberId = config('services.whatsapp.phone_number_id');
-        $this->version = config('services.whatsapp.version', 'v19.0');
+        $sid = env('TWILIO_SID');
+        $token = env('TWILIO_AUTH_TOKEN');
+        $this->from = env('TWILIO_WHATSAPP_FROM');
+        $this->client = new TwilioClient($sid, $token);
     }
 
-    public function sendMessage($to, $message, $mediaUrl = null)
+    /**
+     * Kirim pesan WhatsApp dengan opsi media
+     *
+     * @param string $to Nomor tujuan format internasional (+62...)
+     * @param string $body Pesan teks
+     * @param array $mediaUrls Array URL media (opsional)
+     * @return void
+     */
+    public function sendMessage(string $to, string $body, array $mediaUrls = [])
     {
-        $url = "https://graph.facebook.com/{$this->version}/{$this->phoneNumberId}/messages";
-
-        $data = [
-            'messaging_product' => 'whatsapp',
-            'to' => $to,
-            'type' => $mediaUrl ? 'image' : 'text',
+        $params = [
+            'from' => $this->from,
+            'body' => $body,
         ];
 
-        if ($mediaUrl) {
-            $data['image'] = [
-                'link' => $mediaUrl,
-                'caption' => $message
-            ];
-        } else {
-            $data['text'] = [
-                'body' => $message
-            ];
+        if (!empty($mediaUrls)) {
+            $params['mediaUrl'] = $mediaUrls;
         }
 
-        return Http::withToken($this->token)
-            ->post($url, $data)
-            ->json();
+        $this->client->messages->create('whatsapp:' . $to, $params);
     }
 }

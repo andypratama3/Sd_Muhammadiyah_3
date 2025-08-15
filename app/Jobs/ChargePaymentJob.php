@@ -155,6 +155,7 @@ class ChargePaymentJob implements ShouldQueue
                     ]);
 
                 SendWhatsappNotification::dispatch($order_id)->delay(now()->addSeconds(10));
+
             } else {
                 logger()->warning("Gagal pembayaran Midtrans untuk {$siswa->name}: " . $responseData['status_message']);
             }

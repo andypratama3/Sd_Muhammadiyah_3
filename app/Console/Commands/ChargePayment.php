@@ -32,13 +32,23 @@ class ChargePayment extends Command
         // Ambil siswa yang TIDAK berada di kelas 'Lulus'
         $siswaQuery = Siswa::whereDoesntHave('kelas', function ($query) use ($kelasLulusId) {
             $query->where('kelas.id', $kelasLulusId);
-        }) ->where('no_hp', ['085750893938'])
+        })
         ->cursor();
+
+
+        $jumlahSiswa = $siswaQuery->count();
+        $this->info("Jumlah siswa ditemukan: {$jumlahSiswa}");
+
+        if ($jumlahSiswa === 0) {
+            $this->warn("Tidak ada siswa yang memenuhi kriteria.");
+            return;
+        }
 
         $index = 0;
         foreach ($siswaQuery as $siswa) {
             try {
                 ChargePaymentJob::dispatch($siswa)->delay(now()->addSeconds($index * 2));
+                $this->line("✅ Job untuk {$siswa->name} dikirim ke queue (No HP: {$siswa->no_hp})");
                 $index++;
             } catch (\Throwable $e) {
                 \Log::error('Job gagal: ' . $e->getMessage());

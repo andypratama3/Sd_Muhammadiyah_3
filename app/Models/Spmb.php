@@ -40,12 +40,11 @@ class Spmb extends Model
         'akta_kelahiran',
         'kk',
         'pas_foto',
-        'status_pembayaran',
         'phone',
         'nomor_urut',
         'status_pembayaran',
         'order_id',
-        'status_spmb',
+        'status',
     ];
 
 }

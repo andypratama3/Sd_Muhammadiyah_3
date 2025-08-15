@@ -129,10 +129,10 @@ class SpmbController extends Controller
             'alamat_wali' => 'nullable|string|max:255',
 
             // file upload
-            'file_sttb' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'akta_kelahiran' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'kk' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'pas_foto' => 'required|file|mimes:jpg,jpeg,png|max:2048',
+            'file_sttb' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
+            'akta_kelahiran' => 'required|file|mimes:jpg,jpeg,png,pdf|max:10240',
+            'kk' => 'required|file|mimes:jpg,jpeg,png,pdf|max:10240',
+            'pas_foto' => 'required|file|mimes:jpg,jpeg,png|max:10240',
         ]);
 
         $server_key = env('MIDTRANS_SERVER_KEY');
@@ -180,24 +180,14 @@ class SpmbController extends Controller
 
         $phone = $request->phone_orang_tua ?? $request->phone_wali ?? null;
 
-        if (Spmb::where('order_id', $orderId)->exists()) {
-            $spmb = Spmb::where('order_id', $orderId)->first();
-            $spmb->update([
-                'phone' => $phone,
-                'file_sttb' => $uploadedFiles['file_sttb'],
-                'akta_kelahiran' => $uploadedFiles['akta_kelahiran'],
-                'kk' => $uploadedFiles['kk'],
-                'pas_foto' => $uploadedFiles['pas_foto'],
-            ]);
-        }
+        $existing = Spmb::where('order_id', $validatedData['order_id'])->first();
+        $lastNomorUrut = Spmb::max('nomor_urut') ?? 0;
 
-        // Buat data SPMB
-        $spmb = Spmb::updateOrCreate(
-            [
-                'order_id' => $validatedData['order_id'],
-            ],
-            [
-                // 'order_id' => $validatedData['order_id'],
+        $newNomorUrut = $lastNomorUrut + 1;
+
+
+        if ($existing) {
+            $existing->update([
                 'nama' => $validatedData['nama'],
                 'tempat_lahir' => $validatedData['tempat_lahir'],
                 'tanggal_lahir' => $validatedData['tanggal_lahir'],
@@ -225,16 +215,47 @@ class SpmbController extends Controller
                 'akta_kelahiran' => $uploadedFiles['akta_kelahiran'],
                 'kk' => $uploadedFiles['kk'],
                 'pas_foto' => $uploadedFiles['pas_foto'],
-                'nomor_urut' => Spmb::max('nomor_urut') + 1,
                 'status_pembayaran' => $transactionStatus,
-            ]
-        );
-
+            ]);
+            $spmb = $existing;
+        } else {
+            $spmb = Spmb::create([
+                'order_id' => $validatedData['order_id'],
+                'nama' => $validatedData['nama'],
+                'tempat_lahir' => $validatedData['tempat_lahir'],
+                'tanggal_lahir' => $validatedData['tanggal_lahir'],
+                'jenis_kelamin' => $validatedData['jenis_kelamin'],
+                'agama' => $validatedData['agama'],
+                'suku' => $validatedData['suku'],
+                'alamat' => $validatedData['alamat'],
+                'nama_asal_sekolah' => $validatedData['nama_asal_sekolah'] ?? null,
+                'sttb' => $validatedData['sttb'] ?? null,
+                'alamat_sekolah' => $validatedData['alamat_sekolah'] ?? null,
+                'select_data' => $validatedData['select_data'],
+                'nama_ayah' => $validatedData['nama_ayah'] ?? null,
+                'nama_ibu' => $validatedData['nama_ibu'] ?? null,
+                'alamat_ayah' => $validatedData['alamat_ayah'] ?? null,
+                'alamat_ibu' => $validatedData['alamat_ibu'] ?? null,
+                'pendidikan_ayah' => $validatedData['pendidikan_ayah'] ?? null,
+                'pendidikan_ibu' => $validatedData['pendidikan_ibu'] ?? null,
+                'pekerjaan_ayah' => $validatedData['pekerjaan_ayah'] ?? null,
+                'pekerjaan_ibu' => $validatedData['pekerjaan_ibu'] ?? null,
+                'nama_wali' => $validatedData['nama_wali'] ?? null,
+                'pekerjaan_wali' => $validatedData['pekerjaan_wali'] ?? null,
+                'alamat_wali' => $validatedData['alamat_wali'] ?? null,
+                'phone' => $phone,
+                'file_sttb' => $uploadedFiles['file_sttb'],
+                'akta_kelahiran' => $uploadedFiles['akta_kelahiran'],
+                'kk' => $uploadedFiles['kk'],
+                'pas_foto' => $uploadedFiles['pas_foto'],
+                'nomor_urut' => $newNomorUrut,
+                'status_pembayaran' => $transactionStatus,
+            ]);
+        }
         // Hapus order_id dari session agar tidak dipakai lagi
         $request->session()->forget('spmb_order_id');
 
         return redirect()->route('spmb.success', $orderId)->with('success', 'Pendaftaran Berhasil!');
-
     }
 
     public function success($orderID)
