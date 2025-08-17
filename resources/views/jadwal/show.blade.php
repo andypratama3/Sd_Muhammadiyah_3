@@ -205,8 +205,7 @@
                 },
                 success: function (response) {
                     let tahun_ajaran = response.tahun_ajaran;
-                    let foto = response.jadwal;
-
+                    let foto = response.file;
                     if (tahun_ajaran && foto) {
                         preview(foto);
                     } else {
