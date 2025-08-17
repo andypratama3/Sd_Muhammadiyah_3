@@ -12,4 +12,17 @@
 <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 <!-- Template Javascript -->
 <script src="{{ asset('asset/js/main.js') }}"></script>
+<script>
+    window.gtranslateSettings = {
+        "default_language": "id",
+        "detect_browser_language": true,
+        "languages": ["id", "en", "ar", "ru", "de"],
+        "wrapper_selector": ".gtranslate_wrapper",
+        "switcher_horizontal_position": "left",
+        "switcher_vertical_position": "bottom",
+        "float_switcher_open_direction": "bottom",
+        "flag_style": "3d"
+    }
+</script>
+<script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>
 @stack('js_user')

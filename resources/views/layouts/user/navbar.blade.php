@@ -47,10 +47,8 @@
     </div>
     <div class="flex-shrink-0 d-none d-xl-flex ps-4">
         <a href="https://wa.me/6285250443151" class="btn btn-light btn-lg-square rounded-circle position-relative wow tada" data-wow-delay=".9s">
-            {{-- <i class="fa fa-phone-alt fa-2x"></i> --}}
             <img src="{{ asset('asset/img/SD3_logo1.png') }}" alt="" class="p-1 img-fluid">
             <div class="position-absolute" style="top: 7px; right: 12px;">
-                {{-- <span><i class="fa fa-comment-dots text-secondary"></i></span> --}}
             </div>
         </a>
         {{-- <div class="d-flex flex-column ms-3">
