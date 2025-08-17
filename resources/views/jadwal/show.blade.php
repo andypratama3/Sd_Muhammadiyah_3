@@ -119,21 +119,19 @@
 </section>
 
 <!-- Modal -->
-<div id="myModal" class="modal" data-aos="zoom-in-down" data-duration="200">
+<div id="myModal" class="mt-4 modal show" data-aos="zoom-in-down" data-duration="200">
     <!-- The Close Button -->
     <span class="closeheader">&times;</span>
 
     <!-- Modal Content -->
-    <div class="modal-content">
-        <img id="foto" src="" class="w-100 d-none" />
+    <div class="text-center modal-content">
+        <img id="foto" src="" class="w-100 d-none" style="max-height: 600px;" />
         <iframe id="pdf_frame" src="" class="w-100 d-none" style="height: 600px;" frameborder="0"></iframe>
     </div>
 
     <!-- Modal Caption -->
-    <div id="caption" class="caption justify-content-center">
-        <div class="col-12">
-            <a href="" id="download_link" class="btn btn-danger d-flex justify-content-center" download>Download</a>
-        </div>
+    <div id="caption" class="text-center">
+        <a href="" id="download_link" class="mt-2 btn btn-danger btn-sm" style="display: inline-block;" download>Download</a>
     </div>
 </div>
 @endsection
