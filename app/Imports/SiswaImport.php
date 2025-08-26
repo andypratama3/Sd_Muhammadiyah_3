@@ -114,13 +114,20 @@ class SiswaImport implements ToModel, WithHeadingRow
             $select_data = (!empty($row['nama_ayah']) && !empty($row['nama_ibu'])) ? 'orang_tua' : 'wali';
 
 
+            // nisn replace dot
+            $nisn = $row['nisn'];
+            $nisn = str_replace('.', '', $nisn);
+
+
+
+
             // Simpan siswa
             $siswa = Siswa::create([
                 'name'                  => $row['name'],
                 'jk'                    => $jenis_kelamin,
                 'tmpt_lahir'            => $row['tmpt_lahir'],
                 'tgl_lahir'             => $tanggal_lahir,
-                'nisn'                  => $row['nisn'],
+                'nisn'                  => $nisn,
                 'va_number'             => $row['nisn'],
                 'agama'                 => $row['agama'],
                 'spp'                   => (int) str_replace('.', '', $row['spp']),

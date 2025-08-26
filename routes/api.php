@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\IpaymuPaymentApi;
+use App\Http\Controllers\Api\V2\DataController;
 use App\Http\Controllers\Api\Dashboard\SiswaApi;
 use App\Http\Controllers\Api\Dashboard\WilayahApi;
 use App\Http\Controllers\Api\V1\MidtransPaymentController;
@@ -56,4 +57,9 @@ Route::post('/whatsapp/callback', [SendOrderIDWhatsAppApi::class, 'webhook'])->n
 
 
 // attendances
+
+// App Android
+Route::group(['prefix' => 'v2'], function () {
+    Route::get('siswas', [DataController::class, 'siswa'])->name('api.siswa');
+});
 

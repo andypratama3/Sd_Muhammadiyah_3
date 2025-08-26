@@ -77,6 +77,7 @@ class MidtransPaymentController extends Controller
                 $newData = \DB::table('charge_not_found')->updateOrInsert(
                     [
                         'order_id' => $midtransResponse['order_id'] ?? null,
+                        'transaction_id' => $midtransResponse['transaction_id'] ?? null,
                     ],
                     [
                         'id' => Str::uuid(),
@@ -101,6 +102,10 @@ class MidtransPaymentController extends Controller
                         'updated_at' => now(),
                     ]
                 );
+
+                if($newData) {
+                    return response()->json(['message' => 'Charge not found in database and saved'], 200);
+                }
 
                 return response()->json(['message' => 'Charge not found in database and saved'], 200);
 

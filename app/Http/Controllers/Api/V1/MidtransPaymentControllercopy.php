@@ -100,9 +100,10 @@ class MidtransPaymentController extends Controller
 
             // Jika charge tidak ditemukan, simpan ke charge_not_found
             if (! $charge) {
-                \DB::table('charge_not_found')->updateOrInsert(
+                $chargeNotFound = \DB::table('charge_not_found')->updateOrInsert(
                     [
                         'order_id' => $midtransResponse['order_id'] ?? null,
+                        'transaction_id' => $midtransResponse['transaction_id'] ?? null,
                     ],
                     [
                         'id' => Str::uuid(),
@@ -127,6 +128,11 @@ class MidtransPaymentController extends Controller
                         'updated_at' => now(),
                     ]
                 );
+
+
+                if(!$chargeNotFound) {
+                    return response()->json(['message' => 'Charge Already Saved'], 200);
+                }
 
                 return response()->json(['message' => 'Charge not found in database and saved'], 200);
             }
