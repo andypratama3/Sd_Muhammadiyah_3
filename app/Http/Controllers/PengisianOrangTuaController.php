@@ -35,7 +35,7 @@ class PengisianOrangTuaController extends Controller
     public function update(Request $request, $nisn)
     {
         $request->validate([
-            'no_hp' => 'required|string|regex:/^08[0-9]{9,11}$/|unique:siswas,no_hp,' . $nisn . ',nisn',
+            'no_hp' => 'required|string|regex:/^08[0-9]{9,11}$/',
         ]);
 
         $siswa = Siswa::where('nisn', $nisn)->firstOrFail();

@@ -120,7 +120,6 @@ class SiswaImport implements ToModel, WithHeadingRow
 
 
 
-
             // Simpan siswa
             $siswa = Siswa::create([
                 'name'                  => $row['name'],

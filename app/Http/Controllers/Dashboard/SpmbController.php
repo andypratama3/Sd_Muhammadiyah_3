@@ -175,7 +175,7 @@ class SpmbController extends Controller
                     "$appUrl/spmb/kelengkapan-data/{$spmb->order_id}\n\n" .
                     "Terima kasih, kami nantikan kehadiran Anda.";
 
-            $this->whatsApp->sendMessage($noHp, $pesan);
+            // $this->whatsApp->sendMessage($noHp, $pesan);
         }
 
         return redirect()->route('dashboard.spmb.index')->with('success', 'Data SPMB berhasil diperbarui.');
