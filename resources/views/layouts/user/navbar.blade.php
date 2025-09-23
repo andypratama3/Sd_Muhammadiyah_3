@@ -37,7 +37,7 @@
             <a href="{{ route('pembayaran.index') }}" class="nav-item nav-link {{ Request::routeIS('pembayaran.index') ? 'active' : '' }}">Pembayaran</a>
             <a href="{{ route('berita.index') }}" class="nav-item nav-link {{ Request::routeIS('berita.index') ? 'active' : '' }}">Berita</a>
             <a href="{{ route('spmb.index') }}" class="nav-item nav-link {{ Request::routeIS('spmb.index') ? 'active' : '' }}">SPMB</a>
-            <a href="{{ route('pengisian.index') }}" class="nav-item nav-link {{ Request::routeIS('pengisian.index') ? 'active' : '' }}">Pengisian Whatsaap</a>
+            {{-- <a href="{{ route('pengisian.index') }}" class="nav-item nav-link {{ Request::routeIS('pengisian.index') ? 'active' : '' }}">Pengisian Whatsaap</a> --}}
             <a href="{{ route('kontak.index') }}" class="nav-item nav-link">Kontak</a>
             {{-- <div class="px-3 nav-btn">
                 <button class="flex-shrink-0 btn-search btn btn-primary btn-md-square rounded-circle" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search"></i></button>

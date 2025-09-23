@@ -97,10 +97,10 @@ Route::group(['prefix' => '/',], function () {
 
     Route::post('/rating',[RatingController::class, 'store'])->name('rating.store');
 
-    Route::get('/pengisian-formulir/whatsaap', [PengisianOrangTuaController::class, 'index'])->name('pengisian.index');
-    Route::get('/pengisian-formulir/whatsaap/{nisn}', [PengisianOrangTuaController::class, 'show'])->name('pengisian.show');
-    Route::post('/pengisian-formulir/whatsaap/verifikasi', [PengisianOrangTuaController::class, 'verifikasi'])->name('pengisian.verifikasi');
-    Route::PUT('/pengisian-formulir/whatsaap/update/{nisn}', [PengisianOrangTuaController::class, 'update'])->name('pengisian.update');
+    // Route::get('/pengisian-formulir/whatsaap', [PengisianOrangTuaController::class, 'index'])->name('pengisian.index');
+    // Route::get('/pengisian-formulir/whatsaap/{nisn}', [PengisianOrangTuaController::class, 'show'])->name('pengisian.show');
+    // Route::post('/pengisian-formulir/whatsaap/verifikasi', [PengisianOrangTuaController::class, 'verifikasi'])->name('pengisian.verifikasi');
+    // Route::PUT('/pengisian-formulir/whatsaap/update/{nisn}', [PengisianOrangTuaController::class, 'update'])->name('pengisian.update');
     // Tentang Sekolah
     Route::get('profil-sekolah', [ProfilSekolahController::class , 'index'])->name('profil.index');
 
