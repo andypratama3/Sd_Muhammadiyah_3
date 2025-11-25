@@ -30,17 +30,17 @@ return [
         'token' => env('POSTMARK_TOKEN'),
     ],
 
-    'whatsapp' => [
-        'token' => env('WA_ACCESS_TOKEN'),
-        'phone_number_id' => env('WA_PHONE_NUMBER_ID'),
-        'version' => env('WA_API_VERSION', 'v19.0'),
-    ],
-
-
     'ses' => [
         'key' => env('AWS_ACCESS_KEY_ID'),
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
+    ],
+
+    'whatsapp' => [
+        'api_url' => env('WHATSAPP_API_URL', 'https://graph.facebook.com/v24.0/'),
+        'phone_id' => env('WHATSAPP_PHONE_ID'),
+        'access_token' => env('WHATSAPP_ACCESS_TOKEN'),
+        'business_id' => env('WHATSAPP_BUSINESS_ID'),
     ],
 
 ];

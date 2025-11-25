@@ -241,7 +241,6 @@ class AttendancesController extends Controller
         }
 
         $lateSeconds = $scanTime->gt($startTime) ? $scanTime->diffInSeconds($startTime) : 0;
-        $fine = $this->calculateFine($user->branch_id, $lateSeconds);
 
         // Create new attendance record for check-in
         $attendance = Attendances::create([

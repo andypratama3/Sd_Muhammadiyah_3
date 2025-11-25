@@ -47,7 +47,7 @@ class ChargePayment extends Command
         $index = 0;
         foreach ($siswaQuery as $siswa) {
             try {
-                ChargePaymentJob::dispatch($siswa)->delay(now()->addSeconds($index * 2));
+                ChargePaymentJob::dispatch($siswa);
                 $this->line("✅ Job untuk {$siswa->name} dikirim ke queue (No HP: {$siswa->no_hp})");
                 $index++;
             } catch (\Throwable $e) {

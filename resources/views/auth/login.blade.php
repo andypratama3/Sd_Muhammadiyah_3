@@ -27,7 +27,8 @@
               <div class="col-lg-12">
                 <div class="login-form">
                   <div class="text-center">
-                    <h1 class="mb-4 text-gray-900 h4">Login</h1>
+                    <img src="{{ asset('asset/img/SD3_logo1.png') }}" alt="" class="mb-2 img-fluid w-25">
+                    <h1 class="mb-4 text-gray-900 h4">Portal Login SD Muhammadiyah 3 Samarinda</h1>
                   </div>
                   <form class="user" action="{{ route('login') }}" method="POST">
                     @csrf
@@ -49,27 +50,9 @@
                     </div>
                     @endif
                     <div class="form-group">
-                      <div class="custom-control custom-checkbox small" style="line-height: 1.5rem;">
-                        <input type="checkbox" class="custom-control-input" id="customCheck">
-                        <label class="custom-control-label" for="customCheck">Remember
-                          Me</label>
-                      </div>
+                      <button type="submit" class="btn btn-success btn-block">Login</button>
                     </div>
-                    <div class="form-group">
-
-                      <button type="submit" class="btn btn-primary btn-block">Login</button>
-                    </div>
-                    <hr>
-                    {{-- <a href="{{ route('login.google') }}" class="btn btn-google btn-block">
-                      <i class="fab fa-google fa-fw"></i> Masuk Dengan Google
-                    </a> --}}
                   </form>
-                  <hr>
-                  {{-- <div class="text-center">
-                    <a class="font-weight-bold small" href="{{ route('register') }}">Buat Akun</a>
-                  </div> --}}
-                  <div class="text-center">
-                  </div>
                 </div>
               </div>
             </div>

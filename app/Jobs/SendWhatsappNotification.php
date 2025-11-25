@@ -3,11 +3,9 @@
 namespace App\Jobs;
 
 use App\Models\Charge;
-use Illuminate\Support\Str;
-use App\Helpers\ImageHelper;
-use Illuminate\Bus\Queueable;
 use Illuminate\Support\Carbon;
-use App\Services\WhatsappService;
+use Illuminate\Support\Facades\Log;
+use App\Services\WhatsappMetaService;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -15,25 +13,30 @@ use Illuminate\Foundation\Bus\Dispatchable;
 
 class SendWhatsappNotification implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, SerializesModels;
 
     protected $orderId;
-    protected $whatsApp;
+    public $tries = 3;
+    public $timeout = 120;
 
     public function __construct($orderId)
     {
         $this->orderId = $orderId;
-        $this->whatsApp = new WhatsAppService();
     }
 
     public function handle()
     {
+        $whatsApp = new WhatsappMetaService();
+
         $charge = Charge::with(['siswa.kelas', 'kategori_pembayaran'])
             ->where('order_id', $this->orderId)
             ->orWhere('id', $this->orderId)
             ->first();
 
-        if (! $charge) return;
+        if (!$charge) {
+            Log::warning('Charge not found', ['orderId' => $this->orderId]);
+            return;
+        }
 
         $categoryname = $charge->kategori_pembayaran->name;
         $monthName = Carbon::now()->locale('id')->translatedFormat('F');
@@ -43,53 +46,39 @@ class SendWhatsappNotification implements ShouldQueue
         $grossAmount = intval($charge->gross_amount);
         $namaSiswa = $siswa->name;
         $kelasSiswa = $kelas ? $kelas->name : 'Tidak diketahui';
-        $noHp = '+62' . ltrim($siswa->no_hp ?? '85349734475', '0');
+        $noHp = $siswa->no_hp ?? '85349734475';
 
         if ($categoryname === 'SPP') {
-            $qrImageUrl = $charge->url_action;
-            $folderPath = public_path('storage/img/waqr/spp');
-            if (!file_exists($folderPath)) {
-                mkdir($folderPath, 0775, true);
-            }
+            // Send SPP template
+            $parameters = [
+                $namaSiswa,
+                $kelasSiswa,
+                $monthName,
+                number_format($grossAmount, 0, ',', '.'),
+            ];
+            $whatsApp->sendTemplate($noHp, 'spp_reminder', $parameters);
 
-            $fileName = 'qr-siswa-' . Str::slug($categoryname . '-' . $monthName . '-' . $namaSiswa, '-') . '.png';
-            $relativePath = 'img/waqr/spp/';
-            $storagePath = storage_path('app/public/' . $relativePath);
-            ImageHelper::resizeAndSave($qrImageUrl, $storagePath, $fileName, 512, 512);
-            $publicUrl = asset('storage/' . $relativePath . $fileName);
+        } elseif ($categoryname === 'DPP') {
+            // Send DPP template
+            $parameters = [
+                $namaSiswa,
+                $kelasSiswa,
+                number_format($grossAmount, 0, ',', '.'),
+                $charge->va_number ?? 'N/A',
+            ];
+            $whatsApp->sendTemplate($noHp, 'dpp_reminder', $parameters);
 
-            $body = "Assalamu'alaikum Warahmatullahi Wabarakatuh.  \n\n"
-                . "Yth. Ayah/Bunda Wali dari ananda *$namaSiswa* (*$kelasSiswa*),  \n\n"
-                . "Tagihan *SPP bulan $monthName* sebesar *Rp " . number_format($grossAmount, 0, ',', '.') . "*.\n\n"
-                . "📌 Silakan pindai QR Code berikut untuk pembayaran.\n\n"
-                . "Terima kasih atas kerjasamanya. \n"
-                . "Wassalamu'alaikum Warahmatullahi Wabarakatuh.";
-
-            $this->whatsApp->sendMessageWithImage($noHp, $body, [$publicUrl]);
-
+        } else {
+            // Send general template
+            $parameters = [
+                $namaSiswa,
+                $kelasSiswa,
+                $categoryname,
+                number_format($grossAmount, 0, ',', '.'),
+            ];
+            $whatsApp->sendTemplate($noHp, 'general_payment_reminder', $parameters);
         }
-        elseif ($categoryname === 'DPP') {
-            $body = "Assalamu'alaikum Warahmatullahi Wabarakatuh.  \n\n"
-                . "Yth. Ayah/Bunda Wali dari ananda *$namaSiswa* (*$kelasSiswa*),  \n\n"
-                . "Tagihan *DPP* sebesar *Rp " . number_format($grossAmount, 0, ',', '.') . "*.\n\n"
-                . "Silakan lakukan pembayaran melalui website sekolah:\n"
-                . "https://sdmuhammadiyah3smd.com/pembayaran \n\n"
-                . "Atau gunakan Virtual Account: \n"
-                . "- Bank Permata: *$charge->va_number*\n\n"
-                . "Terima kasih atas perhatian dan kerjasamanya.\n"
-                . "Wassalamu'alaikum Warahmatullahi Wabarakatuh.";
 
-            $this->whatsApp->sendMessage($noHp, $body);
-        }
-        else {
-            $body = "Assalamu'alaikum Warahmatullahi Wabarakatuh.  \n\n"
-                . "Yth. Ayah/Bunda Wali dari ananda *$namaSiswa* (*$kelasSiswa*),  \n\n"
-                . "Tagihan *$categoryname* sebesar *Rp " . number_format($grossAmount, 0, ',', '.') . "*.\n\n"
-                . "Silakan cek aplikasi atau hubungi pihak sekolah untuk info lebih lanjut.\n\n"
-                . "Terima kasih atas perhatian dan kerjasamanya. \n"
-                . "Wassalamu'alaikum Warahmatullahi Wabarakatuh.";
-
-            $this->whatsApp->sendMessage($noHp, $body);
-        }
+        Log::info('WhatsApp sent', ['orderId' => $this->orderId]);
     }
 }

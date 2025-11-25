@@ -52,9 +52,6 @@ class SiswaController extends Controller
         }
 
         return DataTables::of($siswa)
-            // ->addColumn('name', function ($siswa) {
-            //     return ucwords(strtolower($siswa->name));
-            // })
             ->addColumn('kelas_name', function ($kelas) {
                 $kelas_name = $kelas->kelas->pluck('name')->implode(', ');
 

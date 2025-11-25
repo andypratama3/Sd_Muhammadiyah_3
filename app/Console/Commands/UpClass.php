@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Kelas;
 use App\Models\Siswa;
+use Illuminate\Support\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -40,7 +41,7 @@ class UpClass extends Command
 
             // If the current class is "Lulus" or greater than 6, move the student to "Lulus" class and continue to the next student
             if ($currentKelas && intval(substr($currentKelas->name, 6)) >= 6) {
-                $siswa->kelas()->sync([$lulus->id => ['category_kelas' => $siswa->kelas->first()->pivot->category_kelas]]);
+                $siswa->kelas()->sync([$lulus->id => ['category_kelas' => Carbon::now()->format('Y')]]);
                 continue; // Skip the rest of the loop for this student
             }
 

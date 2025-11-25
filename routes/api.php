@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\IpaymuPaymentApi;
+use App\Http\Controllers\Api\V2\AuthController;
 use App\Http\Controllers\Api\V2\DataController;
 use App\Http\Controllers\Api\Dashboard\SiswaApi;
 use App\Http\Controllers\Api\Dashboard\WilayahApi;
@@ -51,15 +52,33 @@ Route::post('midtrans/handling/unfinish', [MidtransPaymentController::class, 'ca
 Route::post('midtrans/handling/error', [MidtransPaymentController::class, 'callback_error']);
 
 
+Route::prefix('v1')->group(function () {
+    // WhatsApp Webhook
+    Route::post('/webhook/whatsapp', [App\Http\Controllers\Api\V1\WhatsAppWebhookController::class, 'handle']);
+    Route::get('/webhook/whatsapp', [App\Http\Controllers\Api\V1\WhatsAppWebhookController::class, 'verify']);
+    // Route::post('/webhook/test', [App\Http\Controllers\Api\V1\WhatsAppWebhookController::class, 'test']);
+    // Route::get('/webhook/template', [App\Http\Controllers\Api\V1\WhatsAppWebhookController::class, 'getTemplate']);
+
+});
 
 // Whatsaap Callback
 Route::post('/whatsapp/callback', [SendOrderIDWhatsAppApi::class, 'webhook'])->name('whatsapp.webhook');
 
 
-// attendances
+Route::prefix('v2')->group(function () {
+    // Login → hanya butuh signature
+    Route::post('login', [AuthController::class, 'login'])
+        ->middleware('verify.signature');
 
-// App Android
-Route::group(['prefix' => 'v2'], function () {
-    Route::get('siswas', [DataController::class, 'siswa'])->name('api.siswa');
+    // Semua route lain → butuh auth + signature
+    Route::middleware(['auth:api'])->group(function () {
+        Route::get('me', [AuthController::class, 'me']);
+        Route::get('profile', [DataController::class, 'profile']);
+        Route::post('logout', [AuthController::class, 'logout']);
+        Route::post('siswa', [DataController::class, 'siswa']);
+
+        Route::prefix('payment')->group(function () {
+            Route::post('list', [DataController::class, 'list_payment']);
+        });
+    });
 });
-

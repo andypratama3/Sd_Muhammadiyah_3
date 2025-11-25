@@ -111,7 +111,7 @@ Route::group(['prefix' => '/',], function () {
 
     // Siswa Lulus & Siswa Aktif
     // Route::get('siswa-aktif', [SiswaAktifController::class, 'index'])->name('siswa-aktif.index');
-    // Route::get('siswa-lulus', [SiswaLulusController::class, 'index'])->name('siswa-lulus.index');
+    Route::get('siswa-lulus', [SiswaLulusController::class, 'index'])->name('siswa-lulus.index');
     //guru
     Route::get('guru', [GuruController::class, 'index'])->name('guru.index');
     //visi misi

@@ -39,21 +39,32 @@
             <a href="{{ route('spmb.index') }}" class="nav-item nav-link {{ Request::routeIS('spmb.index') ? 'active' : '' }}">SPMB</a>
             {{-- <a href="{{ route('pengisian.index') }}" class="nav-item nav-link {{ Request::routeIS('pengisian.index') ? 'active' : '' }}">Pengisian Whatsaap</a> --}}
             <a href="{{ route('kontak.index') }}" class="nav-item nav-link">Kontak</a>
-            {{-- <div class="px-3 nav-btn">
-                <button class="flex-shrink-0 btn-search btn btn-primary btn-md-square rounded-circle" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search"></i></button>
-                <a href="#" class="flex-shrink-0 px-4 py-2 btn btn-primary rounded-pill ms-3"> Get a Quote</a>
-            </div> --}}
+
+
         </div>
     </div>
     <div class="flex-shrink-0 d-none d-xl-flex ps-4">
-        <a href="https://wa.me/6285250443151" class="btn btn-light btn-lg-square rounded-circle position-relative wow tada" data-wow-delay=".9s">
-            <img src="{{ asset('asset/img/SD3_logo1.png') }}" alt="" class="p-1 img-fluid">
-            <div class="position-absolute" style="top: 7px; right: 12px;">
-            </div>
-        </a>
-        {{-- <div class="d-flex flex-column ms-3">
-            <span>Contact As</span>
-            <a href="https://wa.me/6281234567890"><span class="text-dark">0123 456 7890</span></a>
-        </div> --}}
+        {{-- <button class="btn btn-sm" id="btn-toggle-mode"><i class="fa fa-sun"></i> Light</button> --}}
     </div>
 </nav>
+{{--
+@push('js_user')
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const body = document.querySelector("body");
+            const toggle_button_mode = document.querySelector("#btn-toggle-mode");
+
+            toggle_button_mode.addEventListener("click", function () {
+                body.classList.toggle("dark-mode");
+                if (body.classList.contains("dark-mode")) {
+                    toggle_button_mode.innerHTML = '<i class="fa fa-sun"></i> Light';
+                } else {
+                    toggle_button_mode.innerHTML = '<i class="fa fa-moon"></i> Dark';
+
+                    // parse html to dark mode
+
+                }
+            })
+        });
+    </script>
+@endpush --}}

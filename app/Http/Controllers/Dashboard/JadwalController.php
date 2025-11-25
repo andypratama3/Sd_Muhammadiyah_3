@@ -35,11 +35,24 @@ class JadwalController extends Controller
         $kelasId = $request->input('id');
         $kelas = Kelas::find($kelasId);
 
+        if (!$kelas) {
+            return response()->json(['error' => 'Kelas tidak ditemukan'], 404);
+        }
+
+        if ($kelas->name === 'Lulus') {
+            $currentYear = date('Y');
+            $years = range(2019, $currentYear);
+            $categoryKelas = array_map(fn($year) => $year, $years);
+
+            return response()->json($categoryKelas);
+        }
+
         $categoryKelas = json_decode($kelas->category_kelas, true);
         sort($categoryKelas);
 
         return response()->json($categoryKelas);
     }
+
 
     public function getSmester(Request $request)
     {
@@ -50,7 +63,7 @@ class JadwalController extends Controller
         $existingGanjil = Jadwal::where('kelas', $kelas)->where('category_kelas', $category_kelas)->where('smester', 'ganjil')->exists();
 
         $response = [
-            'genap' => $existingGenap,
+            'genap' => $existingGenap,  
             'ganjil' => $existingGanjil,
         ];
 

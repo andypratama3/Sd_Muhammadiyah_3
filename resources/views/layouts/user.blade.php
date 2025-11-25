@@ -3,7 +3,7 @@
 
 @include('layouts.user.head')
 
-<body>
+<body data-bs-mode="light">
     <div class="google_translate_element">
 
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T28Z28V9" height="0" width="0"
@@ -38,6 +38,7 @@
             @include('layouts.user.navbar')
         </div>
     </div>
+
     <!-- Navbar & Hero End -->
 
     <div class="gtranslate_wrapper">

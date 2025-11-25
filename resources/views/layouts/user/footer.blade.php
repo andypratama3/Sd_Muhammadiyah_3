@@ -91,12 +91,14 @@
     <div class="container">
         <div class="row g-4 align-items-center">
 
-            <div class="text-center col-md-6 text-md-end mb-md-0">
+            <div class="text-center col-md-12 mb-md-0">
                 <span class="text-body"><a href="/" class="text-white border-bottom"><i class="fas fa-copyright text-light me-2"></i>SD MUHAMMADIYAH 3 SAMARINDA</a>, All right reserved.</span>
+
             </div>
-            <div class="text-center col-md-6 text-md-start text-body">
+            {{-- <div class="text-center col-md-6 text-md-start text-body">
+
                 Develop By <a class="text-white border-bottom" href="https://www.linkedin.com/in/andypratama3/">Andy Pratama</a>
-            </div>
+            </div> --}}
         </div>
     </div>
 </div>

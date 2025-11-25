@@ -9,15 +9,18 @@ use App\Http\Traits\NameHasSlug;
 // use Laravel\Jetstream\HasProfilePhoto;
 // use Laravel\Sanctum\HasApiTokens;
 use Spatie\Activitylog\Models\Activity;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 use App\Http\Traits\HasPermissionsTrait;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     // use HasApiTokens;
     use HasFactory;
+
 
 
     // use HasProfilePhoto;
@@ -27,20 +30,36 @@ class User extends Authenticatable
     use NameHasSlug;
     use HasPermissionsTrait;
     use SoftDeletes;
-
+    use Notifiable;
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
+
+
     protected $fillable = [
         'id',
         'name',
         'email',
         'password',
         'avatar',
+        'nisn',
         'slug',
     ];
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 
     /**
      * The attributes that should be hidden for serialization.
