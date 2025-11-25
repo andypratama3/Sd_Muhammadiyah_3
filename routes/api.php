@@ -51,11 +51,11 @@ Route::post('midtrans/handling/unfinish', [MidtransPaymentController::class, 'ca
 
 Route::post('midtrans/handling/error', [MidtransPaymentController::class, 'callback_error']);
 
+Route::post('/webhook/whatsapp', [App\Http\Controllers\Api\V1\WhatsAppWebhookController::class, 'handle']);
+Route::get('/webhook/whatsapp', [App\Http\Controllers\Api\V1\WhatsAppWebhookController::class, 'verify']);
 
 Route::prefix('v1')->group(function () {
     // WhatsApp Webhook
-    Route::post('/webhook/whatsapp', [App\Http\Controllers\Api\V1\WhatsAppWebhookController::class, 'handle']);
-    Route::get('/webhook/whatsapp', [App\Http\Controllers\Api\V1\WhatsAppWebhookController::class, 'verify']);
     // Route::post('/webhook/test', [App\Http\Controllers\Api\V1\WhatsAppWebhookController::class, 'test']);
     // Route::get('/webhook/template', [App\Http\Controllers\Api\V1\WhatsAppWebhookController::class, 'getTemplate']);
 
