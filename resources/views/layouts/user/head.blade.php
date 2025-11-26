@@ -49,6 +49,7 @@
     <meta property="og:image" content="{{ asset('asset_new/images/SD3_logo1.png') }}">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:site_name" content="SD Muhammadiyah 3 Samarinda">
+    <meta name="facebook-domain-verification" content="cbnz4gvgpivdm1d0kqotrtk0srjk0k" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
