@@ -6,7 +6,7 @@
     <title>Kebijakan Privasi - SD Muhammadiyah 3</title>
 
     <!-- Facebook App ID (Required by Meta) -->
-    <meta property="fb:app_id" content="{{ config('services.facebook.app_id') }}" />
+    <meta property="fb:app_id" content="{{ config('services.whatsapp.app_id') }}" />
 
     <!-- Additional Meta Tags -->
     <meta property="og:title" content="Kebijakan Privasi - SD Muhammadiyah 3" />
