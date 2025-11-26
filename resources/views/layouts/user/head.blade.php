@@ -50,6 +50,7 @@
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:site_name" content="SD Muhammadiyah 3 Samarinda">
     <meta name="facebook-domain-verification" content="cbnz4gvgpivdm1d0kqotrtk0srjk0k" />
+    <meta name="facebook-domain-verification" content="ixdmq2wq3hx0qksy7h5ndjoelxc956" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
