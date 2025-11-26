@@ -95,6 +95,10 @@ Route::group(['prefix' => '/',], function () {
 
     Route::get('/', BerandaController::class)->name('index');
 
+    Route::get('privacy-policy', function () {
+        return view('privacy-policy');
+    })->name('privacy-policy');
+
     Route::post('/rating',[RatingController::class, 'store'])->name('rating.store');
 
     // Route::get('/pengisian-formulir/whatsaap', [PengisianOrangTuaController::class, 'index'])->name('pengisian.index');

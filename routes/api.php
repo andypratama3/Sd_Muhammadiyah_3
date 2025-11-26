@@ -57,7 +57,7 @@ Route::get('/webhook/whatsapp', [App\Http\Controllers\Api\V1\WhatsAppWebhookCont
 Route::prefix('v1')->group(function () {
     // WhatsApp Webhook
     // Route::post('/webhook/test', [App\Http\Controllers\Api\V1\WhatsAppWebhookController::class, 'test']);
-    // Route::get('/webhook/template', [App\Http\Controllers\Api\V1\WhatsAppWebhookController::class, 'getTemplate']);
+    Route::get('/webhook/template', [App\Http\Controllers\Api\V1\WhatsAppWebhookController::class, 'getTemplate']);
 
 });
 
