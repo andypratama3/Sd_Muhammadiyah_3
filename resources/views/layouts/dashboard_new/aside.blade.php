@@ -207,6 +207,15 @@
             </a>
         </li>
 
+        <li class="menu-header small text-uppercase"><span class="menu-header-text">Webhook</span></li>
+
+         <li class="menu-item {{ Request::routeIs('dashboard.monitoring.whatsapp.*') ? 'active' : '' }}">
+            <a class="menu-link" href="{{ route('dashboard.monitoring.whatsapp') }}">
+                <i class="menu-icon tf-icons bx bx-desktop-alt"></i>
+                <div data-i18n="Halaman Pengunjung">WhatsApp Webhook</div>
+            </a>
+        </li>
+
          <li class="menu-header small text-uppercase"><span class="menu-header-text">Kritik</span></li>
 
          <li class="menu-item {{ Request::routeIs('dashboard.kritik.saran.*') ? 'active' : '' }}">

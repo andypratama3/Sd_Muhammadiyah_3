@@ -129,7 +129,7 @@ class WhatsAppWebhookController extends Controller
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);
-            return response('ok', 200); // Return 200 anyway to prevent retry
+            return response('Error', 500);
         }
     }
 

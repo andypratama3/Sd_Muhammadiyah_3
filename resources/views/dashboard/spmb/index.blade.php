@@ -60,6 +60,8 @@
                 table.cleanData;
                 table.ajax.reload();
             }
+
+
             $('#spmb_table').DataTable({
                 ordering: true,
                 pagination: true,

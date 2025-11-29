@@ -45,6 +45,7 @@ use App\Http\Controllers\TenagaPendidikanController;
 use App\Http\Controllers\PengisianOrangTuaController;
 use App\Http\Controllers\Dashboard\ActivityController;
 use App\Http\Controllers\Dashboard\KaryawanController;
+use App\Http\Controllers\Dashboard\WhatsappController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\AchivementController;
 use App\Http\Controllers\Dashboard\UrlVisitorController;
@@ -234,6 +235,11 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
     });
 
     Route::get('pengunjung-halaman', [UrlVisitorController::class, 'index'])->name('dashboard.url.visitor.index');
+
+    Route::get('/monitoring/whatsapp', [WhatsappController::class, 'index'])->name('dashboard.monitoring.whatsapp');
+    Route::get('/monitoring/whatsapp/{id}', [WhatsappController::class, 'show'])->name('dashboard.monitoring.whatsapp.show');
+    Route::get('/monitoring/whatsapps/datas', [WhatsappController::class, 'data_table'])->name('dashboard.monitoring.whatsapp.data');
+
 
     Route::group(['prefix' => 'datamaster'], function () {
         Route::resource('siswa',  DashboardSiswaController::class, ['names' => 'dashboard.datamaster.siswa']);
