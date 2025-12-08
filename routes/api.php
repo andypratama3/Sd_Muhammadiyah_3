@@ -53,8 +53,11 @@ Route::post('midtrans/handling/error', [MidtransPaymentController::class, 'callb
 
 Route::prefix('v1')->group(function () {
     // WhatsApp Webhook
+    Route::post('/whatsapp/test', [App\Http\Controllers\Api\V1\WhatsAppWebhookController::class, 'test']);
+    Route::get('/whatsapp/template', [App\Http\Controllers\Api\V1\WhatsAppWebhookController::class, 'getTemplate']);
+    // Route::get('/whatsapp/config', [App\Http\Controllers\Api\V1\WhatsAppWebhookController::class, 'debugConfig']);
+
     Route::post('/webhook/whatsapp', [App\Http\Controllers\Api\V1\WhatsAppWebhookController::class, 'handle']);
-    Route::get('/webhook/template', [App\Http\Controllers\Api\V1\WhatsAppWebhookController::class, 'getTemplate']);
 
 });
 

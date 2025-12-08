@@ -37,11 +37,10 @@ return [
     ],
 
     'whatsapp' => [
-        'api_url' => env('WHATSAPP_API_URL', 'https://graph.facebook.com/v24.0/'),
+        'api_url' => env('WHATSAPP_API_URL', 'https://graph.facebook.com/v22.0'),
         'phone_id' => env('WHATSAPP_PHONE_ID'),
-        'access_token' => env('WHATSAPP_ACCESS_TOKEN'),
         'business_id' => env('WHATSAPP_BUSINESS_ID'),
-        'app_id' => env('APP_ID'),
+        'access_token' => env('WHATSAPP_ACCESS_TOKEN'),
     ],
 
 ];

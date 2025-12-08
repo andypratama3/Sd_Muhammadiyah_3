@@ -12,23 +12,39 @@ class WhatsappMetaService
     protected $apiUrl;
     protected $phoneId;
     protected $accessToken;
+    protected $client;
 
     public function __construct()
     {
         $this->client = new Client();
-        $this->apiUrl = config('services.whatsapp.api_url');
+        // ✅ PENTING: api_url harus base URL saja, tanpa phone_id di akhir
+        $this->apiUrl = 'https://graph.facebook.com/v22.0'; // atau dari config yang benar
         $this->phoneId = config('services.whatsapp.phone_id');
         $this->bisnisId = config('services.whatsapp.business_id');
         $this->accessToken = config('services.whatsapp.access_token');
+
+        // Debug - log config
+        Log::channel('whatsapp')->info('WhatsApp Service Initialized', [
+            'api_url' => $this->apiUrl,
+            'phone_id' => $this->phoneId,
+            'business_id' => $this->bisnisId,
+            'has_token' => !empty($this->accessToken),
+        ]);
     }
 
     /**
      * Send template message (recommended)
      */
-    public function sendTemplate(string $phone, string $templateName, array $parameters = []): bool
+    public function sendTemplate(string $phone, string $templateName, array $parameters = []): array
     {
         try {
             $phone = $this->formatPhone($phone);
+
+            Log::channel('whatsapp')->info('Sending template', [
+                'phone' => $phone,
+                'template' => $templateName,
+                'parameters' => $parameters,
+            ]);
 
             $body = [
                 'messaging_product' => 'whatsapp',
@@ -40,6 +56,7 @@ class WhatsappMetaService
                 ],
             ];
 
+            // Jika ada parameters, struktur harus sesuai Meta API spec
             if (!empty($parameters)) {
                 $bodyParams = array_map(
                     fn($param) => ['type' => 'text', 'text' => (string)$param],
@@ -48,39 +65,71 @@ class WhatsappMetaService
                 $body['template']['parameters'] = ['body' => ['parameters' => $bodyParams]];
             }
 
+            Log::channel('whatsapp')->debug('Request body', $body);
+
             $response = Http::timeout(30)
                 ->withToken($this->accessToken)
                 ->post("{$this->apiUrl}/{$this->phoneId}/messages", $body);
 
+            $responseData = $response->json();
+
+            Log::channel('whatsapp')->info('API Response', [
+                'status' => $response->status(),
+                'body' => $responseData,
+            ]);
+
             if ($response->successful()) {
-                $data = $response->json();
                 Log::channel('whatsapp')->info('Template sent', [
                     'phone' => $phone,
                     'template' => $templateName,
-                    'messageId' => $data['messages'][0]['id'] ?? null,
+                    'messageId' => $responseData['messages'][0]['id'] ?? null,
                 ]);
-                return true;
+                return [
+                    'success' => true,
+                    'message' => 'Template sent successfully',
+                    'data' => $responseData,
+                ];
             }
 
+            // Status bukan 200 - ada error
             Log::channel('whatsapp')->error('Template failed', [
                 'status' => $response->status(),
-                'error' => $response->json(),
+                'error' => $responseData,
             ]);
-            return false;
+
+            return [
+                'success' => false,
+                'message' => 'Template failed to send',
+                'error' => $responseData,
+                'status' => $response->status(),
+            ];
 
         } catch (Exception $e) {
-            Log::channel('whatsapp')->error('Template error', ['error' => $e->getMessage()]);
-            return false;
+            Log::channel('whatsapp')->error('Template error', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return [
+                'success' => false,
+                'message' => 'Exception occurred',
+                'error' => $e->getMessage(),
+            ];
         }
     }
 
     /**
      * Send text message (free text, limited)
      */
-    public function sendMessage(string $phone, string $message): bool
+    public function sendMessage(string $phone, string $message): array
     {
         try {
             $phone = $this->formatPhone($phone);
+
+            Log::channel('whatsapp')->info('Sending message', [
+                'phone' => $phone,
+                'message_length' => strlen($message),
+            ]);
 
             $response = Http::timeout(30)
                 ->withToken($this->accessToken)
@@ -91,24 +140,41 @@ class WhatsappMetaService
                     'text' => ['body' => $message],
                 ]);
 
+            $responseData = $response->json();
+
             if ($response->successful()) {
                 Log::channel('whatsapp')->info('Message sent', ['phone' => $phone]);
-                return true;
+                return [
+                    'success' => true,
+                    'message' => 'Message sent successfully',
+                    'data' => $responseData,
+                ];
             }
 
             Log::channel('whatsapp')->error('Message failed', [
-                'error' => $response->json(),
+                'status' => $response->status(),
+                'error' => $responseData,
             ]);
-            return false;
+
+            return [
+                'success' => false,
+                'message' => 'Message failed to send',
+                'error' => $responseData,
+                'status' => $response->status(),
+            ];
 
         } catch (Exception $e) {
             Log::channel('whatsapp')->error('Message error', ['error' => $e->getMessage()]);
-            return false;
+            return [
+                'success' => false,
+                'message' => 'Exception occurred',
+                'error' => $e->getMessage(),
+            ];
         }
     }
 
     /**
-     * Format phone number
+     * Format phone number to WhatsApp format (62...)
      */
     private function formatPhone(string $phone): string
     {
@@ -125,77 +191,42 @@ class WhatsappMetaService
         return '62' . $cleaned;
     }
 
-    public function debugSendTemplate($to, $templateName, $parameters = [])
+    /**
+     * Get all templates from Meta
+     * URL yang benar: https://graph.facebook.com/v22.0/{business_id}/message_templates
+     */
+    public function getTemplates(): array
     {
         try {
-            $url = "$this->apiUrl/" . $this->phoneId . "/messages";
+            // ✅ PENTING: Gunakan Business ID bukan Phone ID
+            $url = "{$this->apiUrl}/{$this->bisnisId}/message_templates";
 
-            $body = [
-                "messaging_product" => "whatsapp",
-                "to" => $to,
-                "type" => "template",
-                "template" => [
-                    "name" => $templateName,
-                    "language" => ["code" => "id"],
-                    "components" => [
-                        [
-                            "type" => "body",
-                            "parameters" => [
-                                ["type" => "text", "text" => $parameters['name']],
-                                ["type" => "text", "text" => $parameters['kelasSiswa']],
-                                ["type" => "text", "text" => $parameters['monthName']],
-                                ["type" => "text", "text" => number_format($parameters['grossAmount'], 0, ',', '.')],
-                            ]
-                        ]
-                    ]
-                ]
-            ];
-
-            $response = $this->client->post($url, [
-                "headers" => [
-                    "Authorization" => "Bearer " . $this->accessToken,
-                    "Content-Type" => "application/json"
-                ],
-                "json" => $body
+            Log::channel('whatsapp')->info('Fetching templates', [
+                'url' => $url,
+                'business_id' => $this->bisnisId,
             ]);
-
-            // 🔥 return hasil response API
-            return json_decode($response->getBody()->getContents(), true);
-
-        } catch (\GuzzleHttp\Exception\BadResponseException $e) {
-            // 🚨 lempar error API ke controller
-            throw $e;
-        } catch (\Exception $e) {
-            // 🚨 lempar error umum ke controller
-            throw $e;
-        }
-    }
-
-    // getTemplate Meta Messgae
-
-    public function getTemplates()
-    {
-        try {
-            $url = "$this->apiUrl/" . $this->bisnisId . "/message_templates";
-
 
             $response = $this->client->get($url, [
-                "headers" => [
-                    "Authorization" => "Bearer " . $this->accessToken,
-                    "Content-Type" => "application/json"
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->accessToken,
+                    'Content-Type' => 'application/json'
                 ]
             ]);
 
-            // 🔥 return hasil response API
-            return json_decode($response->getBody()->getContents(), true);
+            $templates = json_decode($response->getBody()->getContents(), true);
 
-        } catch (\GuzzleHttp\Exception\BadResponseException $e) {
-            // 🚨 lempar error API ke controller
-            throw $e;
-        } catch (\Exception $e) {
-            // 🚨 lempar error umum ke controller
+            Log::channel('whatsapp')->info('Templates fetched', [
+                'count' => count($templates['data'] ?? []),
+            ]);
+
+            return $templates;
+
+        } catch (Exception $e) {
+            Log::channel('whatsapp')->error('Get templates error', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             throw $e;
         }
     }
-
 }

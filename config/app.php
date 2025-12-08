@@ -20,6 +20,8 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+    'school_name' => env('SCHOOL_NAME', 'Sekolah Kreatif SD Muhammadiyah 3 Samarinda'),
+
 
     /*
     |--------------------------------------------------------------------------
@@ -112,7 +114,7 @@ return [
     |
     */
 
-    'faker_locale' => 'en_US',
+    'faker_locale' => 'id_ID',
 
     /*
     |--------------------------------------------------------------------------

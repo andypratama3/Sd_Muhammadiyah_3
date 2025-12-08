@@ -15,44 +15,24 @@ class WhatsAppWebhookController extends Controller
      * GET /api/v1/webhook/whatsapp
      */
 
-    public function test()
+    public function debugConfig()
     {
-        try {
-            $whatsApp = new WhatsappMetaService();
-            $parameters = [
-                'name'        => 'John Doe',
-                'kelasSiswa'  => 'X',
-                'monthName'   => 'January',
-                'grossAmount' => 100000,
-            ];
-
-            $result = $whatsApp->debugSendTemplate('082217160075', 'spp_reminder', $parameters);
-
-            return [
-                'status'  => 'success',
-                'message' => 'Pesan WhatsApp berhasil dikirim! ✅',
-                'result'  => $result,
-            ];
-
-        } catch (\GuzzleHttp\Exception\BadResponseException $e) {
-
-            $responseBody = $e->getResponse()->getBody()->getContents();
-
-            return [
-                'status'  => 'error',
-                'message' => 'API Error',
-                'details' => json_decode($responseBody, true), // tampil utuh
-            ];
-
-        } catch (\Exception $e) {
-
-            return [
-                'status'  => 'error',
-                'message' => 'Exception Error: ' . $e->getMessage(),
-            ];
-        }
+        return response()->json([
+            'api_url' => config('services.whatsapp.api_url'),
+            'phone_id' => config('services.whatsapp.phone_id'),
+            'business_id' => config('services.whatsapp.business_id'),
+            'has_token' => !empty(config('services.whatsapp.access_token')),
+        ]);
     }
 
+    public function test()
+    {
+        $whatsApp = new WhatsappMetaService();
+        $result = $whatsApp->sendTemplate('082217160075', 'hello_world');
+
+        // Return response lengkap untuk debugging
+        return response()->json($result, $result['success'] ? 200 : 400);
+    }
     public function getTemplate()
     {
         $whatsApp = new WhatsappMetaService();

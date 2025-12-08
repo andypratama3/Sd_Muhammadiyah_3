@@ -14,7 +14,14 @@
         <div class="card-body">
             <div class="form-group row">
                 <div class="col-md-6">
-
+                    <label for="">Kelas</label>
+                    <select name="" id="" class="form-control">
+                        <option value="">Pilih Kelas</option>
+                        <option value="">1</option>
+                        <option value="">2</option>
+                        <option value="">3</option>
+                        <option value="">4</option>
+                    </select>
                 </div>
             </div>
             <div class="mt-4 table-responsive">
