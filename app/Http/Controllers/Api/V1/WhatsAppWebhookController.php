@@ -66,7 +66,7 @@ class WhatsAppWebhookController extends Controller
             $challenge = $request->get('hub_challenge');
 
             // Get webhook token from .env
-            $verifyToken = config('services.whatsapp.webhook_token');
+            $verifyToken = config('services.whatsapp.webhook_url');
 
             Log::channel('whatsapp')->info('Webhook verify request', [
                 'mode' => $mode,
