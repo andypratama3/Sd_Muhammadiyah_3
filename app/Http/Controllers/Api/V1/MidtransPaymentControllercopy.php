@@ -244,4 +244,5 @@ class MidtransPaymentController extends Controller
         // Jika dibutuhkan, bisa diisi logika untuk transaksi yang error
         return response()->json(['message' => 'Error callback received'], 200);
     }
+
 }

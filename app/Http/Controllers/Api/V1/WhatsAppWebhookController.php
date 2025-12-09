@@ -28,11 +28,29 @@ class WhatsAppWebhookController extends Controller
     public function test()
     {
         $whatsApp = new WhatsappMetaService();
-        $result = $whatsApp->sendTemplate('082217160075', 'hello_world');
+
+        $parameters = [
+            'name'        => 'John Doe',
+            'kelasSiswa'  => 'X',
+            'categoryName'   => 'January',
+            'grossAmount' => 100000,
+        ];
+
+        $body = "Assalamu'alaikum Warahmatullahi Wabarakatuh.\n\n"
+        . "Yth. Ayah/Bunda Wali dari ananda *andypratama* (*kelas 1*),\n\n"
+        . "Tagihan *SPP bulan Januari* sebesar *Rp " . number_format(200.000, 0, ',', '.') . "*.\n\n"
+        . "📌 Silakan pindai QR Code berikut untuk pembayaran.\n\n"
+        . "Terima kasih atas kerjasamanya.\n"
+        . "Wassalamu'alaikum Warahmatullahi Wabarakatuh.";
+
+        $imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg';
+
+        $result = $whatsApp->sendMessage('082217160075', $body, );
 
         // Return response lengkap untuk debugging
         return response()->json($result, $result['success'] ? 200 : 400);
     }
+
     public function getTemplate()
     {
         $whatsApp = new WhatsappMetaService();

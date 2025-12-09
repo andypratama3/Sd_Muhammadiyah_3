@@ -17,7 +17,6 @@ class WhatsappMetaService
     public function __construct()
     {
         $this->client = new Client();
-        // ✅ PENTING: api_url harus base URL saja, tanpa phone_id di akhir
         $this->apiUrl = 'https://graph.facebook.com/v22.0'; // atau dari config yang benar
         $this->phoneId = config('services.whatsapp.phone_id');
         $this->bisnisId = config('services.whatsapp.business_id');
@@ -56,14 +55,21 @@ class WhatsappMetaService
                 ],
             ];
 
-            // Jika ada parameters, struktur harus sesuai Meta API spec
-            if (!empty($parameters)) {
-                $bodyParams = array_map(
-                    fn($param) => ['type' => 'text', 'text' => (string)$param],
-                    $parameters
+                if (!empty($parameters)) {
+
+                    $bodyParams = array_map(
+                        fn($param) => ['type' => 'text', 'text' => (string)$param],
+                        $parameters
                 );
-                $body['template']['parameters'] = ['body' => ['parameters' => $bodyParams]];
-            }
+
+                    $body['template']['components'] = [
+                        [
+                            'type' => 'body',
+                            'parameters' => $bodyParams
+                        ]
+                    ];
+                }
+
 
             Log::channel('whatsapp')->debug('Request body', $body);
 
@@ -121,7 +127,7 @@ class WhatsappMetaService
     /**
      * Send text message (free text, limited)
      */
-    public function sendMessage(string $phone, string $message): array
+    public function sendMessage(string $phone, string $message, ?string $imageUrl = null): array
     {
         try {
             $phone = $this->formatPhone($phone);
@@ -129,21 +135,38 @@ class WhatsappMetaService
             Log::channel('whatsapp')->info('Sending message', [
                 'phone' => $phone,
                 'message_length' => strlen($message),
+                'has_image' => !is_null($imageUrl),
             ]);
+
+            $payload = [
+                'messaging_product' => 'whatsapp',
+                'to' => $phone,
+            ];
+
+            // Jika ada gambar, kirim sebagai image dengan caption
+            if ($imageUrl) {
+                $payload['type'] = 'image';
+                $payload['image'] = [
+                    'link' => $imageUrl,
+                    'caption' => $message,
+                ];
+            } else {
+                // Jika tidak ada gambar, kirim sebagai text biasa
+                $payload['type'] = 'text';
+                $payload['text'] = ['body' => $message];
+            }
 
             $response = Http::timeout(30)
                 ->withToken($this->accessToken)
-                ->post("{$this->apiUrl}/{$this->phoneId}/messages", [
-                    'messaging_product' => 'whatsapp',
-                    'to' => $phone,
-                    'type' => 'text',
-                    'text' => ['body' => $message],
-                ]);
+                ->post("{$this->apiUrl}/{$this->phoneId}/messages", $payload);
 
             $responseData = $response->json();
 
             if ($response->successful()) {
-                Log::channel('whatsapp')->info('Message sent', ['phone' => $phone]);
+                Log::channel('whatsapp')->info('Message sent', [
+                    'phone' => $phone,
+                    'type' => $payload['type'],
+                ]);
                 return [
                     'success' => true,
                     'message' => 'Message sent successfully',
