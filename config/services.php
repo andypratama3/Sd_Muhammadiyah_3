@@ -41,7 +41,7 @@ return [
         'phone_id' => env('WHATSAPP_PHONE_ID'),
         'business_id' => env('WHATSAPP_BUSINESS_ID'),
         'access_token' => env('WHATSAPP_ACCESS_TOKEN'),
-        'webhook_url' => env('WHATSAPP_WEBHOOK_TOKEN'),
+        'webhook_verify_token' => env('WHATSAPP_WEBHOOK_TOKEN'),
     ],
 
 ];

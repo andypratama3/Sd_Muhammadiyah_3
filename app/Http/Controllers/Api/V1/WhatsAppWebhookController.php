@@ -14,50 +14,6 @@ class WhatsAppWebhookController extends Controller
      * Verify webhook token from Meta
      * GET /api/v1/webhook/whatsapp
      */
-
-    public function debugConfig()
-    {
-        return response()->json([
-            'api_url' => config('services.whatsapp.api_url'),
-            'phone_id' => config('services.whatsapp.phone_id'),
-            'business_id' => config('services.whatsapp.business_id'),
-            'has_token' => !empty(config('services.whatsapp.access_token')),
-        ]);
-    }
-
-    public function test()
-    {
-        $whatsApp = new WhatsappMetaService();
-
-        $parameters = [
-            'name'        => 'John Doe',
-            'kelasSiswa'  => 'X',
-            'categoryName'   => 'January',
-            'grossAmount' => 100000,
-        ];
-
-        $body = "Assalamu'alaikum Warahmatullahi Wabarakatuh.\n\n"
-        . "Yth. Ayah/Bunda Wali dari ananda *andypratama* (*kelas 1*),\n\n"
-        . "Tagihan *SPP bulan Januari* sebesar *Rp " . number_format(200.000, 0, ',', '.') . "*.\n\n"
-        . "📌 Silakan pindai QR Code berikut untuk pembayaran.\n\n"
-        . "Terima kasih atas kerjasamanya.\n"
-        . "Wassalamu'alaikum Warahmatullahi Wabarakatuh.";
-
-        $imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg';
-
-        $result = $whatsApp->sendMessage('082217160075', $body, );
-
-        // Return response lengkap untuk debugging
-        return response()->json($result, $result['success'] ? 200 : 400);
-    }
-
-    public function getTemplate()
-    {
-        $whatsApp = new WhatsappMetaService();
-        $templates = $whatsApp->getTemplates();
-        return response()->json($templates);
-    }
-
     public function verify(Request $request)
     {
         try {
@@ -65,15 +21,14 @@ class WhatsAppWebhookController extends Controller
             $token = $request->get('hub_verify_token');
             $challenge = $request->get('hub_challenge');
 
-            // Get webhook token from .env
-            $verifyToken = config('services.whatsapp.webhook_url');
+            // FIX: Gunakan webhook_verify_token
+            $verifyToken = config('services.whatsapp.webhook_verify_token');
 
             Log::channel('whatsapp')->info('Webhook verify request', [
                 'mode' => $mode,
                 'token_match' => $token === $verifyToken,
             ]);
 
-            // Verify token
             if ($mode === 'subscribe' && $token === $verifyToken) {
                 Log::channel('whatsapp')->info('Webhook verified successfully');
                 return response($challenge, 200);
@@ -105,18 +60,22 @@ class WhatsAppWebhookController extends Controller
             $data = $request->json()->all();
 
             Log::channel('whatsapp')->info('Webhook POST received', [
-                'raw' => $data
+                'field' => $data['field'] ?? null,
             ]);
 
-            // Jika bukan event WA, tetap OK
-            if (($data['object'] ?? null) !== 'whatsapp_business_account') {
-                return response('ok', 200);
-            }
+            // Meta mengirim dengan struktur berbeda untuk field yang berbeda
+            // Field bisa: "messages", "account_alerts", "account_billing", dll
 
-            if (!empty($data['entry']) && is_array($data['entry'])) {
-                foreach ($data['entry'] as $entry) {
-                    $this->processEntry($entry);
-                }
+            $field = $data['field'] ?? null;
+            $value = $data['value'] ?? [];
+
+            // Handle messages webhook
+            if ($field === 'messages') {
+                $this->processMessages($value);
+            }
+            // Handle account alerts (optional)
+            elseif ($field === 'account_alerts') {
+                $this->processAccountAlerts($value);
             }
 
             return response('ok', 200);
@@ -126,39 +85,70 @@ class WhatsAppWebhookController extends Controller
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);
-            return response([
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ], 500);
+            return response('ok', 200); // Selalu return 200 agar Meta tidak retry
         }
     }
 
-
     /**
-     * Process webhook entry
+     * Process messages from webhook
+     * Struktur dari Meta:
+     * {
+     *   "field": "messages",
+     *   "value": {
+     *     "messaging_product": "whatsapp",
+     *     "metadata": {...},
+     *     "contacts": [...],
+     *     "messages": [...]
+     *   }
+     * }
      */
-    private function processEntry($entry)
+    private function processMessages($value)
     {
-        if (!isset($entry['changes']) || !is_array($entry['changes'])) {
-            return;
+        // Handle incoming messages
+        if (isset($value['messages']) && is_array($value['messages'])) {
+            foreach ($value['messages'] as $message) {
+                $this->handleMessage($message, $value);
+            }
         }
 
-        foreach ($entry['changes'] as $change) {
-            $value = $change['value'] ?? [];
-
-            // Handle messages
-            if (isset($value['messages']) && is_array($value['messages'])) {
-                foreach ($value['messages'] as $message) {
-                    $this->handleMessage($message, $value);
-                }
+        // Handle message statuses
+        if (isset($value['statuses']) && is_array($value['statuses'])) {
+            foreach ($value['statuses'] as $status) {
+                $this->handleMessageStatus($status);
             }
+        }
+    }
 
-            // Handle message statuses (delivery, read, failed)
-            if (isset($value['statuses']) && is_array($value['statuses'])) {
-                foreach ($value['statuses'] as $status) {
-                    $this->handleMessageStatus($status);
-                }
-            }
+    /**
+     * Process account alerts
+     */
+    private function processAccountAlerts($value)
+    {
+        $alertType = $value['alert_type'] ?? null;
+        $alertSeverity = $value['alert_severity'] ?? null;
+
+        Log::channel('whatsapp')->info('Account alert received', [
+            'alertType' => $alertType,
+            'alertSeverity' => $alertSeverity,
+        ]);
+
+        // Handle berbagai tipe alert
+        switch ($alertType) {
+            case 'OBA_APPROVED':
+                Log::channel('whatsapp')->info('OBA approved - WhatsApp Business Account verified');
+                break;
+
+            case 'OBA_REJECTED':
+                Log::channel('whatsapp')->error('OBA rejected - need to check requirements');
+                break;
+
+            case 'PHONE_NUMBER_QUALITY_ISSUE':
+                Log::channel('whatsapp')->warning('Phone number quality issue detected');
+                break;
+
+            case 'PHONE_NUMBER_FLAGGED':
+                Log::channel('whatsapp')->error('Phone number flagged');
+                break;
         }
     }
 
@@ -179,13 +169,19 @@ class WhatsAppWebhookController extends Controller
                 'messageId' => $messageId,
             ]);
 
+            // Ambil contact info
+            $profileName = null;
+            if (isset($value['contacts']) && is_array($value['contacts']) && count($value['contacts']) > 0) {
+                $profileName = $value['contacts'][0]['profile']['name'] ?? null;
+            }
+
             // Store message in database
             DB::table('whatsapp_incoming_messages')->insert([
                 'message_id' => $messageId,
                 'phone' => $from,
                 'type' => $type,
                 'content' => json_encode($message),
-                'profile_name' => $value['contacts'][0]['profile']['name'] ?? null,
+                'profile_name' => $profileName,
                 'status' => 'received',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -222,6 +218,7 @@ class WhatsAppWebhookController extends Controller
         } catch (\Exception $e) {
             Log::channel('whatsapp')->error('Handle message error', [
                 'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
             ]);
         }
     }
@@ -238,7 +235,7 @@ class WhatsAppWebhookController extends Controller
             'text' => substr($text, 0, 100),
         ]);
 
-        // Auto-reply example
+        // Auto-reply
         $this->sendAutoReply($from);
 
         // Process command if needed
@@ -261,9 +258,6 @@ class WhatsAppWebhookController extends Controller
             'mediaId' => $mediaId,
             'mimeType' => $mimeType,
         ]);
-
-        // Download and store image if needed
-        // $this->downloadMedia($mediaId);
     }
 
     /**
@@ -283,7 +277,7 @@ class WhatsAppWebhookController extends Controller
     }
 
     /**
-     * Handle button message (interactive)
+     * Handle button message
      */
     private function handleButtonMessage($message, $from)
     {
@@ -340,7 +334,6 @@ class WhatsAppWebhookController extends Controller
         try {
             $messageId = $status['id'] ?? null;
             $statusType = $status['status'] ?? null;
-            $timestamp = $status['timestamp'] ?? now()->timestamp;
 
             Log::channel('whatsapp')->info('Message status update', [
                 'messageId' => $messageId,
@@ -390,13 +383,13 @@ class WhatsAppWebhookController extends Controller
     private function sendAutoReply($phone)
     {
         try {
-            $whatsappService = new \App\Services\WhatsappService();
+            $whatsapp = new WhatsappMetaService();
 
             $message = "Terima kasih sudah menghubungi SD Muhammadiyah.\n\n"
                 . "Kami akan merespon pertanyaan Anda dalam waktu 2 jam kerja.\n\n"
                 . "Reply STOP untuk berhenti menerima pesan.";
 
-            $whatsappService->sendMessage($phone, $message);
+            $whatsapp->sendMessage($phone, $message);
 
             Log::channel('whatsapp')->info('Auto-reply sent', ['phone' => $phone]);
 
@@ -408,7 +401,7 @@ class WhatsAppWebhookController extends Controller
     }
 
     /**
-     * Handle opt-out (user want to stop receiving messages)
+     * Handle opt-out (user wants to stop receiving messages)
      */
     private function handleOptOut($phone)
     {
@@ -431,5 +424,50 @@ class WhatsAppWebhookController extends Controller
                 'error' => $e->getMessage(),
             ]);
         }
+    }
+
+    /**
+     * Debug configuration
+     * GET /api/v1/whatsapp/config
+     */
+    public function debugConfig()
+    {
+        return response()->json([
+            'api_url' => config('services.whatsapp.api_url'),
+            'phone_id' => config('services.whatsapp.phone_id'),
+            'business_id' => config('services.whatsapp.business_id'),
+            'has_token' => !empty(config('services.whatsapp.access_token')),
+        ]);
+    }
+
+    /**
+     * Test sending message
+     * POST /api/v1/whatsapp/test
+     */
+    public function test()
+    {
+        $whatsapp = new WhatsappMetaService();
+
+        $body = "Assalamu'alaikum Warahmatullahi Wabarakatuh.\n\n"
+            . "Yth. Ayah/Bunda Wali dari ananda *andypratama* (*kelas 1*),\n\n"
+            . "Tagihan *SPP bulan Januari* sebesar *Rp " . number_format(200000, 0, ',', '.') . "*.\n\n"
+            . "📌 Silakan pindai QR Code berikut untuk pembayaran.\n\n"
+            . "Terima kasih atas kerjasamanya.\n"
+            . "Wassalamu'alaikum Warahmatullahi Wabarakatuh.";
+
+        $result = $whatsapp->sendMessage('082217160075', $body);
+
+        return response()->json($result, $result['success'] ? 200 : 400);
+    }
+
+    /**
+     * Get templates
+     * GET /api/v1/whatsapp/template
+     */
+    public function getTemplate()
+    {
+        $whatsapp = new WhatsappMetaService();
+        $templates = $whatsapp->getTemplates();
+        return response()->json($templates);
     }
 }
