@@ -25,7 +25,6 @@ class WhatsAppWebhookController extends Controller
                 'mode' => $mode,
                 'token_received' => $token ? '***' . substr($token, -10) : null,
                 'challenge' => $challenge ? substr($challenge, 0, 20) . '...' : null,
-                'all_params' => $request->all(),
             ]);
 
             $verifyToken = config('services.whatsapp.webhook_verify_token');
@@ -45,8 +44,6 @@ class WhatsAppWebhookController extends Controller
                 'expected_mode' => 'subscribe',
                 'received_mode' => $mode,
                 'token_match' => $token === $verifyToken,
-                'token_length_received' => $token ? strlen($token) : 0,
-                'token_length_expected' => strlen($verifyToken),
             ]);
 
             return response('Unauthorized', 403);
@@ -54,8 +51,6 @@ class WhatsAppWebhookController extends Controller
         } catch (\Exception $e) {
             Log::channel('whatsapp')->error('❌ Webhook verify exception', [
                 'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
             ]);
             return response('Error', 500);
         }
@@ -71,41 +66,35 @@ class WhatsAppWebhookController extends Controller
             $data = $request->json()->all();
 
             Log::channel('whatsapp')->info('📨 Webhook POST received', [
-                'raw_payload' => $data,
+                'object' => $data['object'] ?? null,
+                'has_entry' => isset($data['entry']) && is_array($data['entry']),
+                'has_field' => isset($data['field']),
             ]);
 
-            // Cek structure berbeda dari Meta
-            // Bisa format: {"field": "...", "value": {...}}
-            // Atau: {"object": "...", "entry": [...]}
-
-            $field = $data['field'] ?? null;
-            $value = $data['value'] ?? [];
-            $object = $data['object'] ?? null;
-            $entry = $data['entry'] ?? [];
-
             // Handle format baru (field/value)
-            if ($field === 'messages') {
-                Log::channel('whatsapp')->info('✉️ Processing messages webhook');
-                $this->processMessages($value);
-            }
-            elseif ($field === 'account_alerts') {
-                Log::channel('whatsapp')->info('🔔 Processing account alerts webhook');
-                $this->processAccountAlerts($value);
-            }
-            // Handle format lama (object/entry)
-            elseif ($object === 'whatsapp_business_account' && !empty($entry)) {
-                Log::channel('whatsapp')->info('Processing legacy format webhook');
-                foreach ($entry as $entryItem) {
-                    $this->processEntry($entryItem);
+            if (isset($data['field'])) {
+                $field = $data['field'];
+                $value = $data['value'] ?? [];
+
+                if ($field === 'messages') {
+                    Log::channel('whatsapp')->info('✉️ Processing messages webhook');
+                    $this->processMessages($value);
+                } elseif ($field === 'account_alerts') {
+                    Log::channel('whatsapp')->info('🔔 Processing account alerts webhook');
+                    $this->processAccountAlerts($value);
                 }
             }
-            // Handle empty payload
+            // Handle format lama (object/entry)
+            elseif ($data['object'] === 'whatsapp_business_account' && isset($data['entry'])) {
+                Log::channel('whatsapp')->info('📦 Processing legacy format webhook');
+                foreach ($data['entry'] as $entry) {
+                    $this->processEntry($entry);
+                }
+            }
+            // Unknown format
             else {
-                Log::channel('whatsapp')->warning('⚠️ Empty or unknown webhook format', [
-                    'field' => $field,
-                    'object' => $object,
-                    'has_value' => !empty($value),
-                    'has_entry' => !empty($entry),
+                Log::channel('whatsapp')->warning('⚠️ Unknown webhook format', [
+                    'keys' => array_keys($data),
                 ]);
             }
 
@@ -114,7 +103,7 @@ class WhatsAppWebhookController extends Controller
         } catch (\Exception $e) {
             Log::channel('whatsapp')->error('❌ Webhook handle error', [
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
             ]);
             return response('ok', 200);
         }
@@ -130,29 +119,26 @@ class WhatsAppWebhookController extends Controller
         }
 
         foreach ($entry['changes'] as $change) {
-            $value = $change['value'] ?? [];
             $field = $change['field'] ?? null;
+            $value = $change['value'] ?? [];
+
+            Log::channel('whatsapp')->info('Processing change field', [
+                'field' => $field,
+            ]);
 
             if ($field === 'messages') {
                 $this->processMessages($value);
             } elseif ($field === 'account_alerts') {
                 $this->processAccountAlerts($value);
+            } else {
+                // Ignore other fields (user_preferences, etc)
+                Log::channel('whatsapp')->debug('Ignoring field', ['field' => $field]);
             }
         }
     }
 
     /**
      * Process messages from webhook
-     * Struktur dari Meta:
-     * {
-     *   "field": "messages",
-     *   "value": {
-     *     "messaging_product": "whatsapp",
-     *     "metadata": {...},
-     *     "contacts": [...],
-     *     "messages": [...]
-     *   }
-     * }
      */
     private function processMessages($value)
     {
@@ -179,27 +165,26 @@ class WhatsAppWebhookController extends Controller
         $alertType = $value['alert_type'] ?? null;
         $alertSeverity = $value['alert_severity'] ?? null;
 
-        Log::channel('whatsapp')->info('Account alert received', [
+        Log::channel('whatsapp')->info('🚨 Account alert received', [
             'alertType' => $alertType,
             'alertSeverity' => $alertSeverity,
         ]);
 
-        // Handle berbagai tipe alert
         switch ($alertType) {
             case 'OBA_APPROVED':
-                Log::channel('whatsapp')->info('OBA approved - WhatsApp Business Account verified');
+                Log::channel('whatsapp')->info('✅ OBA approved - WhatsApp Business Account verified');
                 break;
 
             case 'OBA_REJECTED':
-                Log::channel('whatsapp')->error('OBA rejected - need to check requirements');
+                Log::channel('whatsapp')->error('❌ OBA rejected - need to check requirements');
                 break;
 
             case 'PHONE_NUMBER_QUALITY_ISSUE':
-                Log::channel('whatsapp')->warning('Phone number quality issue detected');
+                Log::channel('whatsapp')->warning('⚠️ Phone number quality issue detected');
                 break;
 
             case 'PHONE_NUMBER_FLAGGED':
-                Log::channel('whatsapp')->error('Phone number flagged');
+                Log::channel('whatsapp')->error('❌ Phone number flagged');
                 break;
         }
     }
@@ -215,7 +200,16 @@ class WhatsAppWebhookController extends Controller
             $timestamp = $message['timestamp'] ?? now()->timestamp;
             $type = $message['type'] ?? 'text';
 
-            Log::channel('whatsapp')->info('Message received', [
+            // Validasi data penting
+            if (!$from || !$messageId) {
+                Log::channel('whatsapp')->warning('⚠️ Message missing from or messageId', [
+                    'from' => $from,
+                    'messageId' => $messageId,
+                ]);
+                return;
+            }
+
+            Log::channel('whatsapp')->info('📬 Message received', [
                 'from' => $from,
                 'type' => $type,
                 'messageId' => $messageId,
@@ -227,17 +221,25 @@ class WhatsAppWebhookController extends Controller
                 $profileName = $value['contacts'][0]['profile']['name'] ?? null;
             }
 
-            // Store message in database
-            DB::table('whatsapp_incoming_messages')->insert([
-                'message_id' => $messageId,
-                'phone' => $from,
-                'type' => $type,
-                'content' => json_encode($message),
-                'profile_name' => $profileName,
-                'status' => 'received',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            // Store message in database dengan error handling
+            try {
+                DB::table('whatsapp_incoming_messages')->insert([
+                    'message_id' => $messageId,
+                    'phone' => $from,
+                    'type' => $type,
+                    'content' => json_encode($message),
+                    'profile_name' => $profileName ?? 'Unknown',
+                    'status' => 'received',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            } catch (\Exception $e) {
+                Log::channel('whatsapp')->error('❌ Failed to insert message', [
+                    'error' => $e->getMessage(),
+                    'messageId' => $messageId,
+                ]);
+                return;
+            }
 
             // Handle different message types
             switch ($type) {
@@ -262,15 +264,14 @@ class WhatsAppWebhookController extends Controller
                     break;
 
                 default:
-                    Log::channel('whatsapp')->warning('Unknown message type', [
+                    Log::channel('whatsapp')->warning('⚠️ Unknown message type', [
                         'type' => $type,
                     ]);
             }
 
         } catch (\Exception $e) {
-            Log::channel('whatsapp')->error('Handle message error', [
+            Log::channel('whatsapp')->error('❌ Handle message error', [
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
             ]);
         }
     }
@@ -282,7 +283,7 @@ class WhatsAppWebhookController extends Controller
     {
         $text = $message['text']['body'] ?? '';
 
-        Log::channel('whatsapp')->info('Text message received', [
+        Log::channel('whatsapp')->info('💬 Text message received', [
             'from' => $from,
             'text' => substr($text, 0, 100),
         ]);
@@ -291,7 +292,7 @@ class WhatsAppWebhookController extends Controller
         $this->sendAutoReply($from);
 
         // Process command if needed
-        if (strtoupper($text) === 'STOP') {
+        if (strtoupper(trim($text)) === 'STOP') {
             $this->handleOptOut($from);
         }
     }
@@ -305,7 +306,7 @@ class WhatsAppWebhookController extends Controller
         $mediaId = $imageData['id'] ?? null;
         $mimeType = $imageData['mime_type'] ?? null;
 
-        Log::channel('whatsapp')->info('Image message received', [
+        Log::channel('whatsapp')->info('🖼️ Image message received', [
             'from' => $from,
             'mediaId' => $mediaId,
             'mimeType' => $mimeType,
@@ -321,7 +322,7 @@ class WhatsAppWebhookController extends Controller
         $mediaId = $documentData['id'] ?? null;
         $filename = $documentData['filename'] ?? null;
 
-        Log::channel('whatsapp')->info('Document message received', [
+        Log::channel('whatsapp')->info('📄 Document message received', [
             'from' => $from,
             'mediaId' => $mediaId,
             'filename' => $filename,
@@ -336,7 +337,7 @@ class WhatsAppWebhookController extends Controller
         $buttonData = $message['button'] ?? [];
         $buttonText = $buttonData['text'] ?? '';
 
-        Log::channel('whatsapp')->info('Button message received', [
+        Log::channel('whatsapp')->info('🔘 Button message received', [
             'from' => $from,
             'buttonText' => $buttonText,
         ]);
@@ -350,7 +351,7 @@ class WhatsAppWebhookController extends Controller
         $interactive = $message['interactive'] ?? [];
         $type = $interactive['type'] ?? null;
 
-        Log::channel('whatsapp')->info('Interactive message received', [
+        Log::channel('whatsapp')->info('📋 Interactive message received', [
             'from' => $from,
             'type' => $type,
         ]);
@@ -359,7 +360,7 @@ class WhatsAppWebhookController extends Controller
             $buttonId = $interactive['button_reply']['id'] ?? null;
             $buttonTitle = $interactive['button_reply']['title'] ?? null;
 
-            Log::channel('whatsapp')->info('Button clicked', [
+            Log::channel('whatsapp')->info('✓ Button clicked', [
                 'from' => $from,
                 'buttonId' => $buttonId,
                 'buttonTitle' => $buttonTitle,
@@ -370,7 +371,7 @@ class WhatsAppWebhookController extends Controller
             $itemId = $interactive['list_reply']['id'] ?? null;
             $itemTitle = $interactive['list_reply']['title'] ?? null;
 
-            Log::channel('whatsapp')->info('List item selected', [
+            Log::channel('whatsapp')->info('✓ List item selected', [
                 'from' => $from,
                 'itemId' => $itemId,
                 'itemTitle' => $itemTitle,
@@ -387,7 +388,12 @@ class WhatsAppWebhookController extends Controller
             $messageId = $status['id'] ?? null;
             $statusType = $status['status'] ?? null;
 
-            Log::channel('whatsapp')->info('Message status update', [
+            if (!$messageId) {
+                Log::channel('whatsapp')->warning('⚠️ Status update missing messageId');
+                return;
+            }
+
+            Log::channel('whatsapp')->info('📊 Message status update', [
                 'messageId' => $messageId,
                 'status' => $statusType,
             ]);
@@ -400,22 +406,22 @@ class WhatsAppWebhookController extends Controller
                     'updated_at' => now(),
                 ]);
 
-            // Handle different statuses
+            // Log status changes
             switch ($statusType) {
                 case 'sent':
-                    Log::channel('whatsapp')->info('Message sent', ['messageId' => $messageId]);
+                    Log::channel('whatsapp')->info('✉️ Message sent', ['messageId' => $messageId]);
                     break;
 
                 case 'delivered':
-                    Log::channel('whatsapp')->info('Message delivered', ['messageId' => $messageId]);
+                    Log::channel('whatsapp')->info('📦 Message delivered', ['messageId' => $messageId]);
                     break;
 
                 case 'read':
-                    Log::channel('whatsapp')->info('Message read', ['messageId' => $messageId]);
+                    Log::channel('whatsapp')->info('👁️ Message read', ['messageId' => $messageId]);
                     break;
 
                 case 'failed':
-                    Log::channel('whatsapp')->error('Message failed', [
+                    Log::channel('whatsapp')->error('❌ Message failed', [
                         'messageId' => $messageId,
                         'error' => $status['errors'] ?? [],
                     ]);
@@ -423,7 +429,7 @@ class WhatsAppWebhookController extends Controller
             }
 
         } catch (\Exception $e) {
-            Log::channel('whatsapp')->error('Handle status error', [
+            Log::channel('whatsapp')->error('❌ Handle status error', [
                 'error' => $e->getMessage(),
             ]);
         }
@@ -443,10 +449,10 @@ class WhatsAppWebhookController extends Controller
 
             $whatsapp->sendMessage($phone, $message);
 
-            Log::channel('whatsapp')->info('Auto-reply sent', ['phone' => $phone]);
+            Log::channel('whatsapp')->info('🤖 Auto-reply sent', ['phone' => $phone]);
 
         } catch (\Exception $e) {
-            Log::channel('whatsapp')->error('Auto-reply error', [
+            Log::channel('whatsapp')->error('❌ Auto-reply error', [
                 'error' => $e->getMessage(),
             ]);
         }
@@ -469,10 +475,10 @@ class WhatsAppWebhookController extends Controller
                     ]
                 );
 
-            Log::channel('whatsapp')->info('User opted out', ['phone' => $phone]);
+            Log::channel('whatsapp')->info('🚫 User opted out', ['phone' => $phone]);
 
         } catch (\Exception $e) {
-            Log::channel('whatsapp')->error('Opt-out error', [
+            Log::channel('whatsapp')->error('❌ Opt-out error', [
                 'error' => $e->getMessage(),
             ]);
         }
