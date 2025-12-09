@@ -104,17 +104,16 @@ class WhatsAppWebhookController extends Controller
         try {
             $data = $request->json()->all();
 
-            Log::channel('whatsapp')->info('Webhook received', [
-                'object' => $data['object'] ?? null,
+            Log::channel('whatsapp')->info('Webhook POST received', [
+                'raw' => $data
             ]);
 
-            // Verify it's from WhatsApp
-            if ($data['object'] !== 'whatsapp_business_account') {
+            // Jika bukan event WA, tetap OK
+            if (($data['object'] ?? null) !== 'whatsapp_business_account') {
                 return response('ok', 200);
             }
 
-            // Process entries
-            if (isset($data['entry']) && is_array($data['entry'])) {
+            if (!empty($data['entry']) && is_array($data['entry'])) {
                 foreach ($data['entry'] as $entry) {
                     $this->processEntry($entry);
                 }
@@ -127,9 +126,13 @@ class WhatsAppWebhookController extends Controller
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);
-            return response('Error', 500);
+            return response([
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ], 500);
         }
     }
+
 
     /**
      * Process webhook entry
