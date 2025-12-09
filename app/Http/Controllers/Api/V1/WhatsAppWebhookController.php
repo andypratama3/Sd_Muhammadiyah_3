@@ -21,30 +21,41 @@ class WhatsAppWebhookController extends Controller
             $token = $request->get('hub_verify_token');
             $challenge = $request->get('hub_challenge');
 
-            // FIX: Gunakan webhook_verify_token
-            $verifyToken = config('services.whatsapp.webhook_verify_token');
-
-            Log::channel('whatsapp')->info('Webhook verify request', [
+            Log::channel('whatsapp')->info('🔍 Webhook verify request received', [
                 'mode' => $mode,
-                'token_match' => $token === $verifyToken,
+                'token_received' => $token ? '***' . substr($token, -10) : null,
+                'challenge' => $challenge ? substr($challenge, 0, 20) . '...' : null,
+                'all_params' => $request->all(),
             ]);
 
+            $verifyToken = config('services.whatsapp.webhook_verify_token');
+
+            if (!$verifyToken) {
+                Log::channel('whatsapp')->error('❌ WHATSAPP_WEBHOOK_VERIFY_TOKEN not configured in .env');
+                return response('Verify token not configured', 500);
+            }
+
+            // Verifikasi
             if ($mode === 'subscribe' && $token === $verifyToken) {
-                Log::channel('whatsapp')->info('Webhook verified successfully');
+                Log::channel('whatsapp')->info('✅ Webhook verified successfully');
                 return response($challenge, 200);
             }
 
-            Log::channel('whatsapp')->error('Webhook verification failed', [
-                'mode' => $mode,
-                'token_provided' => $token,
-                'token_expected' => $verifyToken,
+            Log::channel('whatsapp')->error('❌ Webhook verification failed', [
+                'expected_mode' => 'subscribe',
+                'received_mode' => $mode,
+                'token_match' => $token === $verifyToken,
+                'token_length_received' => $token ? strlen($token) : 0,
+                'token_length_expected' => strlen($verifyToken),
             ]);
 
             return response('Unauthorized', 403);
 
         } catch (\Exception $e) {
-            Log::channel('whatsapp')->error('Webhook verify error', [
+            Log::channel('whatsapp')->error('❌ Webhook verify exception', [
                 'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
             ]);
             return response('Error', 500);
         }
@@ -59,33 +70,74 @@ class WhatsAppWebhookController extends Controller
         try {
             $data = $request->json()->all();
 
-            Log::channel('whatsapp')->info('Webhook POST received', [
-                'field' => $data['field'] ?? null,
+            Log::channel('whatsapp')->info('📨 Webhook POST received', [
+                'raw_payload' => $data,
             ]);
 
-            // Meta mengirim dengan struktur berbeda untuk field yang berbeda
-            // Field bisa: "messages", "account_alerts", "account_billing", dll
+            // Cek structure berbeda dari Meta
+            // Bisa format: {"field": "...", "value": {...}}
+            // Atau: {"object": "...", "entry": [...]}
 
             $field = $data['field'] ?? null;
             $value = $data['value'] ?? [];
+            $object = $data['object'] ?? null;
+            $entry = $data['entry'] ?? [];
 
-            // Handle messages webhook
+            // Handle format baru (field/value)
             if ($field === 'messages') {
+                Log::channel('whatsapp')->info('✉️ Processing messages webhook');
                 $this->processMessages($value);
             }
-            // Handle account alerts (optional)
             elseif ($field === 'account_alerts') {
+                Log::channel('whatsapp')->info('🔔 Processing account alerts webhook');
                 $this->processAccountAlerts($value);
+            }
+            // Handle format lama (object/entry)
+            elseif ($object === 'whatsapp_business_account' && !empty($entry)) {
+                Log::channel('whatsapp')->info('Processing legacy format webhook');
+                foreach ($entry as $entryItem) {
+                    $this->processEntry($entryItem);
+                }
+            }
+            // Handle empty payload
+            else {
+                Log::channel('whatsapp')->warning('⚠️ Empty or unknown webhook format', [
+                    'field' => $field,
+                    'object' => $object,
+                    'has_value' => !empty($value),
+                    'has_entry' => !empty($entry),
+                ]);
             }
 
             return response('ok', 200);
 
         } catch (\Exception $e) {
-            Log::channel('whatsapp')->error('Webhook handle error', [
+            Log::channel('whatsapp')->error('❌ Webhook handle error', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);
-            return response('ok', 200); // Selalu return 200 agar Meta tidak retry
+            return response('ok', 200);
+        }
+    }
+
+    /**
+     * Process entry (legacy format support)
+     */
+    private function processEntry($entry)
+    {
+        if (!isset($entry['changes']) || !is_array($entry['changes'])) {
+            return;
+        }
+
+        foreach ($entry['changes'] as $change) {
+            $value = $change['value'] ?? [];
+            $field = $change['field'] ?? null;
+
+            if ($field === 'messages') {
+                $this->processMessages($value);
+            } elseif ($field === 'account_alerts') {
+                $this->processAccountAlerts($value);
+            }
         }
     }
 
