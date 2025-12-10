@@ -172,16 +172,10 @@ class WhatsappMetaService
                     'link' => $imageUrl,
                     'caption' => $message,
                 ];
-                $payload['footer'] = [
-                    'text' => 'sdmuhammadiyah3smd.com',
-                ];
             } else {
                 // Jika tidak ada gambar, kirim sebagai text biasa
                 $payload['type'] = 'text';
                 $payload['text'] = ['body' => $message];
-                 $payload['footer'] = [
-                    'text' => 'sdmuhammadiyah3smd.com',
-                ];
             }
 
             $response = Http::timeout(30)

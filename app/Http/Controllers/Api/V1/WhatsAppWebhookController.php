@@ -289,7 +289,7 @@ class WhatsAppWebhookController extends Controller
         ]);
 
         // Auto-reply
-        $this->sendAutoReply($from);
+        // $this->sendAutoReply($from);
 
         // Process command if needed
         if (strtoupper(trim($text)) === 'STOP') {
@@ -496,25 +496,23 @@ class WhatsAppWebhookController extends Controller
      */
     public function test()
     {
-        $whatsapp = new WhatsappMetaService();
+        $whatsApp = new WhatsappMetaService();
+        $result = $whatsApp->sendTemplate(
+            '082217160075',
+            'spp_reminder',
+            [
+                'Andy Pratama',
+                'Kelas 2',
+                'Januari',
+                '20.000'
+            ],
+            "https://ansor.sdmuhammadiyah3smd.com//storage/1/qr_code_1.png"
+        );
 
-        $urlImg = "https://ansor.sdmuhammadiyah3smd.com/storage/1/qr_code_1.png";
-
-        $kelasSiswa = 'kelas 1';
-        $categoryName = 'SPP';
-        $grossAmount = 100000;
-
-        $body = "Assalamu'alaikum Warahmatullahi Wabarakatuh.\n\n"
-            . "Yth. Ayah/Bunda Wali dari ananda ** {$kelasSiswa}**, \n\n"
-            . "Tagihan *{$categoryName}* sebesar *Rp " . number_format($grossAmount, 0, ',', '.') . "*.\n\n"
-            . "Silakan cek aplikasi atau hubungi pihak sekolah.\n\n"
-            . "Terima kasih.\n"
-            . "Wassalamu'alaikum Warahmatullahi Wabarakatuh.";
-
-        $result = $whatsapp->sendMessage('085156305556', $body);
-
+        // Return response lengkap untuk debugging
         return response()->json($result, $result['success'] ? 200 : 400);
     }
+
     /**
      * Get templates
      * GET /api/v1/whatsapp/template
