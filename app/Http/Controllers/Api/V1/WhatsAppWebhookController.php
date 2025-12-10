@@ -398,35 +398,27 @@ class WhatsAppWebhookController extends Controller
                 'status' => $statusType,
             ]);
 
-            // Update message status in database
-            DB::table('whatsapp_message_logs')
-                ->where('message_id', $messageId)
-                ->update([
-                    'status' => $statusType,
-                    'updated_at' => now(),
-                ]);
+            // Save to database
+            DB::table('whatsapp_message_statuses')->insert([
+                'message_id' => $messageId,
+                'status' => $statusType,
+                'recipient' => $status['recipient_id'] ?? null,
+                'raw' => json_encode($status),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
 
             // Log status changes
-            switch ($statusType) {
-                case 'sent':
-                    Log::channel('whatsapp')->info('✉️ Message sent', ['messageId' => $messageId]);
-                    break;
-
-                case 'delivered':
-                    Log::channel('whatsapp')->info('📦 Message delivered', ['messageId' => $messageId]);
-                    break;
-
-                case 'read':
-                    Log::channel('whatsapp')->info('👁️ Message read', ['messageId' => $messageId]);
-                    break;
-
-                case 'failed':
-                    Log::channel('whatsapp')->error('❌ Message failed', [
-                        'messageId' => $messageId,
-                        'error' => $status['errors'] ?? [],
-                    ]);
-                    break;
-            }
+            match ($statusType) {
+                'sent' => Log::channel('whatsapp')->info('✉️ Message sent', ['messageId' => $messageId]),
+                'delivered' => Log::channel('whatsapp')->info('📦 Message delivered', ['messageId' => $messageId]),
+                'read' => Log::channel('whatsapp')->info('👁️ Message read', ['messageId' => $messageId]),
+                'failed' => Log::channel('whatsapp')->error('❌ Message failed', [
+                    'messageId' => $messageId,
+                    'error' => $status['errors'] ?? [],
+                ]),
+                default => null
+            };
 
         } catch (\Exception $e) {
             Log::channel('whatsapp')->error('❌ Handle status error', [
@@ -506,18 +498,23 @@ class WhatsAppWebhookController extends Controller
     {
         $whatsapp = new WhatsappMetaService();
 
+        $urlImg = "https://ansor.sdmuhammadiyah3smd.com/storage/1/qr_code_1.png";
+
+        $kelasSiswa = 'kelas 1';
+        $categoryName = 'SPP';
+        $grossAmount = 100000;
+
         $body = "Assalamu'alaikum Warahmatullahi Wabarakatuh.\n\n"
-            . "Yth. Ayah/Bunda Wali dari ananda *andypratama* (*kelas 1*),\n\n"
-            . "Tagihan *SPP bulan Januari* sebesar *Rp " . number_format(200000, 0, ',', '.') . "*.\n\n"
-            . "📌 Silakan pindai QR Code berikut untuk pembayaran.\n\n"
-            . "Terima kasih atas kerjasamanya.\n"
+            . "Yth. Ayah/Bunda Wali dari ananda ** {$kelasSiswa}**, \n\n"
+            . "Tagihan *{$categoryName}* sebesar *Rp " . number_format($grossAmount, 0, ',', '.') . "*.\n\n"
+            . "Silakan cek aplikasi atau hubungi pihak sekolah.\n\n"
+            . "Terima kasih.\n"
             . "Wassalamu'alaikum Warahmatullahi Wabarakatuh.";
 
-        $result = $whatsapp->sendMessage('082217160075', $body);
+        $result = $whatsapp->sendMessage('085156305556', $body);
 
         return response()->json($result, $result['success'] ? 200 : 400);
     }
-
     /**
      * Get templates
      * GET /api/v1/whatsapp/template

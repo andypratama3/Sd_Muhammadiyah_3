@@ -34,8 +34,12 @@ class WhatsappMetaService
     /**
      * Send template message (recommended)
      */
-    public function sendTemplate(string $phone, string $templateName, array $parameters = []): array
-    {
+    public function sendTemplate(
+        string $phone,
+        string $templateName,
+        array $parameters = [],
+        ?string $imageUrl = null
+    ): array {
         try {
             $phone = $this->formatPhone($phone);
 
@@ -43,6 +47,7 @@ class WhatsappMetaService
                 'phone' => $phone,
                 'template' => $templateName,
                 'parameters' => $parameters,
+                'imageUrl' => $imageUrl,
             ]);
 
             $body = [
@@ -55,21 +60,39 @@ class WhatsappMetaService
                 ],
             ];
 
-                if (!empty($parameters)) {
+            $components = [];
 
-                    $bodyParams = array_map(
-                        fn($param) => ['type' => 'text', 'text' => (string)$param],
-                        $parameters
+            // Add header component with image if provided
+            if (!empty($imageUrl)) {
+                $components[] = [
+                    'type' => 'header',
+                    'parameters' => [
+                        [
+                            'type' => 'image',
+                            'image' => [
+                                'link' => $imageUrl
+                            ]
+                        ]
+                    ]
+                ];
+            }
+
+            // Add body component with text parameters
+            if (!empty($parameters)) {
+                $bodyParams = array_map(
+                    fn($param) => ['type' => 'text', 'text' => (string)$param],
+                    $parameters
                 );
 
-                    $body['template']['components'] = [
-                        [
-                            'type' => 'body',
-                            'parameters' => $bodyParams
-                        ]
-                    ];
-                }
+                $components[] = [
+                    'type' => 'body',
+                    'parameters' => $bodyParams
+                ];
+            }
 
+            if (!empty($components)) {
+                $body['template']['components'] = $components;
+            }
 
             Log::channel('whatsapp')->debug('Request body', $body);
 
@@ -97,7 +120,6 @@ class WhatsappMetaService
                 ];
             }
 
-            // Status bukan 200 - ada error
             Log::channel('whatsapp')->error('Template failed', [
                 'status' => $response->status(),
                 'error' => $responseData,
@@ -150,10 +172,16 @@ class WhatsappMetaService
                     'link' => $imageUrl,
                     'caption' => $message,
                 ];
+                $payload['footer'] = [
+                    'text' => 'sdmuhammadiyah3smd.com',
+                ];
             } else {
                 // Jika tidak ada gambar, kirim sebagai text biasa
                 $payload['type'] = 'text';
                 $payload['text'] = ['body' => $message];
+                 $payload['footer'] = [
+                    'text' => 'sdmuhammadiyah3smd.com',
+                ];
             }
 
             $response = Http::timeout(30)
@@ -199,19 +227,37 @@ class WhatsappMetaService
     /**
      * Format phone number to WhatsApp format (62...)
      */
-    private function formatPhone(string $phone): string
+   private function formatPhone(string $phone): string
     {
         $cleaned = preg_replace('/\D/', '', $phone);
 
+        // ⚠️ TAMBAHKAN VALIDASI INI
+        // Nomor Indonesia harus 10-12 digit setelah 62
+        if (strlen($cleaned) < 11 || strlen($cleaned) > 14) {
+            throw new \Exception("Invalid phone number length: $phone");
+        }
+
         if (strpos($cleaned, '62') === 0) {
+            // Cek panjang: 62XXXXXXXXXX (12-13 digit)
+            if (strlen($cleaned) < 12) {
+                throw new \Exception("Invalid phone format: $phone");
+            }
             return $cleaned;
         }
 
         if (strpos($cleaned, '0') === 0) {
-            return '62' . substr($cleaned, 1);
+            $formatted = '62' . substr($cleaned, 1);
+            if (strlen($formatted) < 12) {
+                throw new \Exception("Invalid phone format after conversion: $phone");
+            }
+            return $formatted;
         }
 
-        return '62' . $cleaned;
+        $formatted = '62' . $cleaned;
+        if (strlen($formatted) < 12) {
+            throw new \Exception("Invalid phone format after prefixing: $phone");
+        }
+        return $formatted;
     }
 
     /**

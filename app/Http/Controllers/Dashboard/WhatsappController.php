@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Models\Kelas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -34,7 +35,6 @@ class WhatsappController extends Controller
             ->addIndexColumn()
             ->make(true);
     }
-
 
     public function show($id)
     {

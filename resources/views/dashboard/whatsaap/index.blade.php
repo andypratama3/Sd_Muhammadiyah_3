@@ -10,20 +10,10 @@
     <div class="card">
         <div class="flex-row py-3 card-header d-flex align-items-center justify-content-between">
             <h4 class="card-title">Webhook WhatsApp</h4>
+            <a href="{{ route('dashboard.monitoring.whatsapp.create') }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-bullhorn"></i> Buat Pemberitahuan</a>
         </div>
         <div class="card-body">
-            <div class="form-group row">
-                <div class="col-md-6">
-                    <label for="">Kelas</label>
-                    <select name="" id="" class="form-control">
-                        <option value="">Pilih Kelas</option>
-                        <option value="">1</option>
-                        <option value="">2</option>
-                        <option value="">3</option>
-                        <option value="">4</option>
-                    </select>
-                </div>
-            </div>
+
             <div class="mt-4 table-responsive">
                 <table class="table mt-4 w-100" id="webhookTable" >
                     <thead>
