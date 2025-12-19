@@ -501,7 +501,7 @@ class WhatsAppWebhookController extends Controller
             '082217160075',
             'spp_reminder',
             [
-                'Andy Pratama',
+                'User Test',
                 'Kelas 2',
                 'Januari',
                 '20.000'
@@ -511,6 +511,13 @@ class WhatsAppWebhookController extends Controller
 
         // Return response lengkap untuk debugging
         return response()->json($result, $result['success'] ? 200 : 400);
+    }
+
+    public function verifyAcc(Request $request)
+    {
+        $request->validate([
+            'token' => 'required|string',
+        ]);
     }
 
     /**

@@ -24,6 +24,7 @@
         "maatwebsite/excel": "^3.1",
         "midtrans/midtrans-php": "^2.5",
         "php-flasher/flasher-toastr-laravel": "*",
+        "php-open-source-saver/jwt-auth": "^2.3",
         "predis/predis": "^3.0",
         "spatie/laravel-activitylog": "^4.7",
         "spatie/laravel-csp": "^2.9",
@@ -32,7 +33,6 @@
         "spatie/laravel-sitemap": "^7.3",
         "tightenco/ziggy": "^1.0",
         "twilio/sdk": "^8.2",
-        "tymon/jwt-auth": "^2.2",
         "yajra/laravel-datatables": "10.0"
     },
     "require-dev": {

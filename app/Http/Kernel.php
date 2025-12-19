@@ -80,7 +80,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'role' => \App\Http\Middleware\RoleMiddleware::class,
         'permission' => \App\Http\Middleware\PermissionMiddleware::class,
-        'jwt.verify' => \App\Http\Middleware\JwtMiddleware::class,
+        'jwt' => \App\Http\Middleware\JwtMiddleware::class,
         'verify.signature' => \App\Http\Middleware\VerifyApiSignature::class,
 
 

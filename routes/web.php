@@ -92,94 +92,98 @@ Route::get('/asset/{any}', function () {
 })->where('any', '.*');
 
 
-Route::group(['prefix' => '/',], function () {
+// Route::group(['prefix' => '/',], function () {
 
-    Route::get('/', BerandaController::class)->name('index');
+//     Route::get('/', BerandaController::class)->name('index');
 
-    Route::get('privacy-policy', function () {
-        return view('privacy-policy');
-    })->name('privacy-policy');
+//     Route::get('privacy-policy', function () {
+//         return view('privacy-policy');
+//     })->name('privacy-policy');
 
-    Route::post('/rating',[RatingController::class, 'store'])->name('rating.store');
+//     Route::post('/rating',[RatingController::class, 'store'])->name('rating.store');
 
-    // Route::get('/pengisian-formulir/whatsaap', [PengisianOrangTuaController::class, 'index'])->name('pengisian.index');
-    // Route::get('/pengisian-formulir/whatsaap/{nisn}', [PengisianOrangTuaController::class, 'show'])->name('pengisian.show');
-    // Route::post('/pengisian-formulir/whatsaap/verifikasi', [PengisianOrangTuaController::class, 'verifikasi'])->name('pengisian.verifikasi');
-    // Route::PUT('/pengisian-formulir/whatsaap/update/{nisn}', [PengisianOrangTuaController::class, 'update'])->name('pengisian.update');
-    // Tentang Sekolah
-    Route::get('profil-sekolah', [ProfilSekolahController::class , 'index'])->name('profil.index');
-
-
-    // Berita
-    Route::get('berita', [BeritaController::class, 'index'])->name('berita.index');
-    Route::get('berita/{slug}', [BeritaController::class, 'show'])->name('berita.show');
-
-    // Siswa Lulus & Siswa Aktif
-    // Route::get('siswa-aktif', [SiswaAktifController::class, 'index'])->name('siswa-aktif.index');
-    Route::get('siswa-lulus', [SiswaLulusController::class, 'index'])->name('siswa-lulus.index');
-    //guru
-    Route::get('guru', [GuruController::class, 'index'])->name('guru.index');
-    //visi misi
-    // Route::get('visimisi', VisiMisiController::class)->name('visimisi.index');
-    //ekstrakurikuler
-    Route::get('ekstrakurikuler', [EkstrakurikulerController::class, 'index'])->name('esktrakurikuler.index');
-    // Route::get('ekstrakurikuler/{name}', [EkstrakurikulerController::class, 'show'])->name('esktrakurikuler.show');
-    // pembayaran
-    Route::get('pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
-    Route::get('pembayaran/pay', [PembayaranController::class, 'searchOrder'])->name('pembayaran.searchOrder');
-    Route::get('pembayaran/detail', [PembayaranController::class, 'searchOrderDetail'])->name('pembayaran.searchOrderDetail');
-    Route::get('pembayaran/snap/{order_id}', [PembayaranController::class, 'snap_url'])->name('snap_url');
-    Route::get('pembayaran/downloadQr/{order_id}', [PembayaranController::class, 'downloadQr'])->name('pembayaran.downloadQr');
-    Route::get('pembayaran/cara-melakukan-pembayaran', [PembayaranController::class,'howToPay'])->name('howToPay');
-    //fasilitas
-    Route::get('fasilitas', [FasilitasController::class, 'index'])->name('fasilitas.index');
-    Route::get('fasilitas/{nama_fasilitas}', [FasilitasController::class, 'show'])->name('fasilitas.show');
-    //tenaga pendidikan
-    Route::get('tenaga-pendidikan', [TenagaPendidikanController::class, 'index'])->name('tenagapendidikan.index');
-
-    Route::get('gallery', [GalleryController::class, 'index'])->name('gallery.index');
-    Route::get('gallery/{slug}', [GalleryController::class, 'show'])->name('gallery.show');
-
-    //jadwal
-    Route::resource('jadwal', JadwalController::class, ['names' => 'jadwal']);
-    Route::post('jadwal/getjadwal/smester', [JadwalController::class, 'tahun_ajaran'])->name('jadwal.tahun.ajaran');
-    //artikel
-    // Route::resource('artikel', ArtikelController::class, ['names' => 'artikel']);
-    //new fiture kontak and prestasi
-    Route::get('kontak', [KontakController::class, 'index'])->name('kontak.index');
-    Route::get('kontak/success', [KontakController::class, 'success'])->name('kontak.success');
-
-    //kritik saran
-    Route::post('kritik-saran/post', [KritikSaranController::class, 'store'])->name('kritik.saran.store');
-    Route::get('prestasi-siswa', [PrestasiSiswaController::class, 'index'])->name('prestasi.siswa.index');
-    Route::get('prestasi-siswa/{slug}', [PrestasiSiswaController::class, 'show'])->name('prestasi.siswa.show');
-    //prestasi sekolah
-    Route::get('prestasi-sekolah', [PrestasiSekolahController::class, 'index'])->name('prestasi.sekolah.index');
-    Route::get('prestasi-sekolah/{slug}', [PrestasiSekolahController::class, 'show'])->name('prestasi.sekolah.show');
-
-    // PPDB
-    Route::get('spmb', [SpmbController::class, 'index'])->name('spmb.index');
-
-    Route::get('spmb/pay',[SpmbController::class, 'pay'])->name('spmb.pay');
-    Route::post('spmb/store',[SpmbController::class, 'store'])->name('spmb.store');
-    Route::get('spmb/success/{orderID}',[SpmbController::class, 'success'])->name('spmb.success');
-
-    // Route::get('spmb/kelengkapan-data/{orderID}',[SpmbController::class, 'formDetail'])->name('formDetail');
-    // Route::post('spmb/detail/store', [SpmbController::class ,'formDetailStore'])->name('formDetail.store');
-    // Route::get('spmb/detail/success/{orderID}',[SpmbController::class, 'formDetailSuccess'])->name('formDetail.success');
-    //login with google
-    Route::get('auth/google', [GoogleController::class, 'signGoogle'])->name('login.google');
-    Route::get('auth/google/callback', [GoogleController::class, 'callbackToGoogle'])->name('google.callback');
-
-});
+//     // Route::get('/pengisian-formulir/whatsaap', [PengisianOrangTuaController::class, 'index'])->name('pengisian.index');
+//     // Route::get('/pengisian-formulir/whatsaap/{nisn}', [PengisianOrangTuaController::class, 'show'])->name('pengisian.show');
+//     // Route::post('/pengisian-formulir/whatsaap/verifikasi', [PengisianOrangTuaController::class, 'verifikasi'])->name('pengisian.verifikasi');
+//     // Route::PUT('/pengisian-formulir/whatsaap/update/{nisn}', [PengisianOrangTuaController::class, 'update'])->name('pengisian.update');
+//     // Tentang Sekolah
+//     Route::get('profil-sekolah', [ProfilSekolahController::class , 'index'])->name('profil.index');
 
 
-//users after login
-Route::group(['prefix' => 'artikel', 'middleware'], function () {
-    //CommentArtikel
-    Route::resource('comment', CommentArtikelController::class, ['names' => 'comment']);
-    Route::post('like', [LikeArtikelController::class, 'like'])->name('like.comment');
+//     // Berita
+//     Route::get('berita', [BeritaController::class, 'index'])->name('berita.index');
+//     Route::get('berita/{slug}', [BeritaController::class, 'show'])->name('berita.show');
 
+//     // Siswa Lulus & Siswa Aktif
+//     // Route::get('siswa-aktif', [SiswaAktifController::class, 'index'])->name('siswa-aktif.index');
+//     Route::get('siswa-lulus', [SiswaLulusController::class, 'index'])->name('siswa-lulus.index');
+//     //guru
+//     Route::get('guru', [GuruController::class, 'index'])->name('guru.index');
+//     //visi misi
+//     // Route::get('visimisi', VisiMisiController::class)->name('visimisi.index');
+//     //ekstrakurikuler
+//     Route::get('ekstrakurikuler', [EkstrakurikulerController::class, 'index'])->name('esktrakurikuler.index');
+//     // Route::get('ekstrakurikuler/{name}', [EkstrakurikulerController::class, 'show'])->name('esktrakurikuler.show');
+//     // pembayaran
+//     Route::get('pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
+//     Route::get('pembayaran/pay', [PembayaranController::class, 'searchOrder'])->name('pembayaran.searchOrder');
+//     Route::get('pembayaran/detail', [PembayaranController::class, 'searchOrderDetail'])->name('pembayaran.searchOrderDetail');
+//     Route::get('pembayaran/snap/{order_id}', [PembayaranController::class, 'snap_url'])->name('snap_url');
+//     Route::get('pembayaran/downloadQr/{order_id}', [PembayaranController::class, 'downloadQr'])->name('pembayaran.downloadQr');
+//     Route::get('pembayaran/cara-melakukan-pembayaran', [PembayaranController::class,'howToPay'])->name('howToPay');
+//     //fasilitas
+//     Route::get('fasilitas', [FasilitasController::class, 'index'])->name('fasilitas.index');
+//     Route::get('fasilitas/{nama_fasilitas}', [FasilitasController::class, 'show'])->name('fasilitas.show');
+//     //tenaga pendidikan
+//     Route::get('tenaga-pendidikan', [TenagaPendidikanController::class, 'index'])->name('tenagapendidikan.index');
+
+//     Route::get('gallery', [GalleryController::class, 'index'])->name('gallery.index');
+//     Route::get('gallery/{slug}', [GalleryController::class, 'show'])->name('gallery.show');
+
+//     //jadwal
+//     Route::resource('jadwal', JadwalController::class, ['names' => 'jadwal']);
+//     Route::post('jadwal/getjadwal/smester', [JadwalController::class, 'tahun_ajaran'])->name('jadwal.tahun.ajaran');
+//     //artikel
+//     // Route::resource('artikel', ArtikelController::class, ['names' => 'artikel']);
+//     //new fiture kontak and prestasi
+//     Route::get('kontak', [KontakController::class, 'index'])->name('kontak.index');
+//     Route::get('kontak/success', [KontakController::class, 'success'])->name('kontak.success');
+
+//     //kritik saran
+//     Route::post('kritik-saran/post', [KritikSaranController::class, 'store'])->name('kritik.saran.store');
+//     Route::get('prestasi-siswa', [PrestasiSiswaController::class, 'index'])->name('prestasi.siswa.index');
+//     Route::get('prestasi-siswa/{slug}', [PrestasiSiswaController::class, 'show'])->name('prestasi.siswa.show');
+//     //prestasi sekolah
+//     Route::get('prestasi-sekolah', [PrestasiSekolahController::class, 'index'])->name('prestasi.sekolah.index');
+//     Route::get('prestasi-sekolah/{slug}', [PrestasiSekolahController::class, 'show'])->name('prestasi.sekolah.show');
+
+//     // PPDB
+//     Route::get('spmb', [SpmbController::class, 'index'])->name('spmb.index');
+
+//     Route::get('spmb/pay',[SpmbController::class, 'pay'])->name('spmb.pay');
+//     Route::post('spmb/store',[SpmbController::class, 'store'])->name('spmb.store');
+//     Route::get('spmb/success/{orderID}',[SpmbController::class, 'success'])->name('spmb.success');
+
+//     // Route::get('spmb/kelengkapan-data/{orderID}',[SpmbController::class, 'formDetail'])->name('formDetail');
+//     // Route::post('spmb/detail/store', [SpmbController::class ,'formDetailStore'])->name('formDetail.store');
+//     // Route::get('spmb/detail/success/{orderID}',[SpmbController::class, 'formDetailSuccess'])->name('formDetail.success');
+//     //login with google
+//     Route::get('auth/google', [GoogleController::class, 'signGoogle'])->name('login.google');
+//     Route::get('auth/google/callback', [GoogleController::class, 'callbackToGoogle'])->name('google.callback');
+
+// });
+
+
+// //users after login
+// Route::group(['prefix' => 'artikel', 'middleware'], function () {
+//     //CommentArtikel
+//     Route::resource('comment', CommentArtikelController::class, ['names' => 'comment']);
+//     Route::post('like', [LikeArtikelController::class, 'like'])->name('like.comment');
+
+// });
+
+Route::get('/', function (){
+    return redirect()->route('login');
 });
 
 Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], function () {
@@ -240,7 +244,6 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
     Route::get('/monitoring/whatsapp/{id}', [WhatsappController::class, 'show'])->name('dashboard.monitoring.whatsapp.show');
 
     Route::get('/monitoring/whatsapps/create', [WhatsappController::class, 'create'])->name('dashboard.monitoring.whatsapp.create');
-    Route::post('/broadcast', [BroadcastMessageController::class, 'store']);
     Route::get('/broadcast/status/{siswa_id}', [BroadcastMessageController::class, 'status']);
     Route::get('/monitoring/whatsapps/datas', [WhatsappController::class, 'data_table'])->name('dashboard.monitoring.whatsapp.data');
 

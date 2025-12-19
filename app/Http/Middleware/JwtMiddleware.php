@@ -3,36 +3,43 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Helpers\ApiResponse;
+use App\Services\JwtService;
 use Illuminate\Http\Request;
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
 
 class JwtMiddleware
 {
-    public function handle(Request $request, Closure $next)
+    use ApiResponse;
+
+    protected JwtService $jwtService;
+
+    public function __construct(JwtService $jwtService)
+    {
+        $this->jwtService = $jwtService;
+    }
+
+    public function handle(Request $request, Closure $next): mixed
     {
         $token = $request->bearerToken();
 
         if (!$token) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Token not provided'
-            ], 401);
+            return $this->unauthorized('Token not provided');
         }
 
-        try {
-            $secretKey = env('JWT_SECRET'); 
-            $credentials = JWT::decode($token, new Key($secretKey, 'HS256'));
-
-            // simpan data user dari token ke request
-            $request->attributes->set('auth', $credentials);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Invalid or expired token',
-                'error' => $e->getMessage()
-            ], 401);
+        if (!$this->jwtService->validateAccessToken($token)) {
+            return $this->unauthorized('Invalid or expired token');
         }
+
+        $payload = $this->jwtService->getPayload($token);
+
+        if (!$payload) {
+            return $this->unauthorized('Invalid token payload');
+        }
+
+        // Simpan payload agar bisa dipakai controller
+        $request->merge([
+            'token_payload' => $payload
+        ]);
 
         return $next($request);
     }

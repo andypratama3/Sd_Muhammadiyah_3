@@ -1,6 +1,6 @@
  <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
      <div class="mb-3 app-brand demo d-flex justify-content-center">
-         <a href="{{ route('index') }}" class="app-brand-link">
+         <a href="{{ route('dashboard') }}" class="app-brand-link">
              <span class="p-0 m-0 app-brand-logo demo w-100 d-flex justify-content-center align-items-center">
                  <img src="{{ asset('asset_dashboard/img/SD3_logo.png') }}" alt="" style="width: 25%;">
              </span>
