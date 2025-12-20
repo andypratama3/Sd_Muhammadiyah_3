@@ -72,18 +72,13 @@ trait ApiResponse
     /**
      * Error response
      */
-    protected function error(string $message, $errors = null, int $statusCode = 400): JsonResponse
+    protected function error(string $message = 'Error', int $statusCode = 400, $data = null): JsonResponse
     {
-        $response = [
+        return response()->json([
             'success' => false,
             'message' => $message,
-        ];
-
-        if ($errors !== null) {
-            $response['errors'] = $errors;
-        }
-
-        return response()->json($response, $statusCode);
+            'data' => $data,
+        ], $statusCode);
     }
 
     /**

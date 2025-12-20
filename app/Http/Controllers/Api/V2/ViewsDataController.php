@@ -16,19 +16,11 @@ class ViewsDataController extends Controller
         $visitor_by_year = Visitor::whereDate('created_at', '>=', Carbon::now()->startOfYear()->format('Y-m-d'))->count();
 
         if($visitor_by_day >= 1){
-            $data = [
-                'visitor_by_day' => $visitor_by_day,
-                'visitor_by_month' => $visitor_by_month,
-                'visitor_by_year' => $visitor_by_year,
-            ];
-            return response()->json($data);
-        } else {
-            $data = [
-                'visitor_by_day' => 0,
-                'visitor_by_month' => 0,
-                'visitor_by_year' => 0,
-            ];
-            return response()->json($data);
+           return $this->success([
+            'visitor_by_day' => $visitor_by_day,
+            'visitor_by_month' => $visitor_by_month,
+            'visitor_by_year' => $visitor_by_year,
+           ]);
         }
     }
 }

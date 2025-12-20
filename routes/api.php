@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\IpaymuPaymentApi;
 use App\Http\Controllers\Api\V2\DataController;
 use App\Http\Controllers\Api\Dashboard\SiswaApi;
 use App\Http\Controllers\Api\Dashboard\WilayahApi;
+use App\Http\Controllers\Api\V2\LandingController;
 use App\Http\Controllers\Api\V2\ViewsDataController;
 use App\Http\Controllers\Api\V2\BeritaDataController;
 use App\Http\Controllers\Api\V2\FasilitasDataController;
@@ -78,8 +79,11 @@ Route::group(['prefix' => 'v2'], function () {
     });
 
     Route::group(['middleware' => 'jwt'], function () {
-        Route::get('/views', [ViewsDataController::class, 'viewData']);
 
+
+        Route::get('count-landing',[LandingController::class, 'count']);
+        Route::get('gallery-landing',[LandingController::class, 'gallery_activity']);
+        Route::get('/views', [ViewsDataController::class, 'viewData']);
         // Pembayaran
         Route::get('/siswa',[PembayaranDataController::class, 'search']);
         // Route::get()
