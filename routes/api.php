@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Dashboard\WilayahApi;
 use App\Http\Controllers\Api\V2\LandingController;
 use App\Http\Controllers\Api\V2\ViewsDataController;
 use App\Http\Controllers\Api\V2\BeritaDataController;
+use App\Http\Controllers\Api\V2\JadwalDataController;
 use App\Http\Controllers\Api\V2\FasilitasDataController;
 use App\Http\Controllers\Api\V2\PembayaranDataController;
 use App\Http\Controllers\Api\V1\MidtransPaymentController;
@@ -86,7 +87,13 @@ Route::group(['prefix' => 'v2'], function () {
         Route::get('/views', [ViewsDataController::class, 'viewData']);
         // Pembayaran
         Route::get('/siswa',[PembayaranDataController::class, 'search']);
-        // Route::get()
+
+        // Jadwal
+        Route::get('jadwal/tahun-ajaran',[JadwalDataController::class, 'tahunAjaran']);
+        Route::get('jadwal/kelas',[JadwalDataController::class, 'kelas']);
+        Route::get('jadwal/category-kelas',[JadwalDataController::class, 'categoryKelas']);
+        Route::get('jadwal/list-jadwal',[JadwalDataController::class, 'list_jadwal']);
+
 
         // Data Core
         Route::get('berita', [BeritaDataController::class, 'list']);

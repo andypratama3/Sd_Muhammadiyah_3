@@ -8,7 +8,9 @@ class JadwalActionDelete
 {
     public function execute($slug)
     {
-        $jadwal = Jadwal::where('slug', $slug)->firstOrFail();
+
+        $jadwal = Jadwal::where('id', $slug)->firstOrFail();
+        $jadwal->jadwal_details()->delete();
         $jadwal->delete();
 
     }

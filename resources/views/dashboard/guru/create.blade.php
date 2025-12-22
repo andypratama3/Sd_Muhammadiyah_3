@@ -6,16 +6,16 @@
 <link href="{{ asset('asset_dashboard/vendor/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}" rel="stylesheet" type="text/css">
 @endpush
 @section('content')
-<div class="card mb-4">
+<div class="mb-4 card">
     @include('layouts.flashmessage')
-    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+    <div class="flex-row py-3 card-header d-flex align-items-center justify-content-between">
         <h6 class="m-0 font-weight-bold text-primary">Tambah guru</h6>
     </div>
     <div class="card-body">
         <form action="{{ route('dashboard.datasekolah.guru.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            <div class="form-group mt-2">
-                <label for="judul">Guru</label>
+            <div class="mt-2 form-group">
+                <label class="form-label" for="judul">Guru</label>
                 <select name="karyawan_id" id="" class="form-control select2">
                     <option selected disabled>Pilih Guru</option>
                     @foreach ($karyawans as $karyawan)
@@ -23,16 +23,16 @@
                     @endforeach
                 </select>
             </div>
-            <div class="form-group mt-2">
-                <label for="">Deskripsi</label>
+            <div class="mt-2 form-group">
+                <label class="form-label" for="">Deskripsi</label>
                 <input type="text" class="form-control" id="" name="description" placeholder="Deskripsi">
             </div>
-            <div class="form-group mt-2">
-                <label for="">Lulusan</label>
+            <div class="mt-2 form-group">
+                <label class="form-label" for="">Lulusan</label>
                 <input type="text" class="form-control" id="" name="lulusan" placeholder="lulusan">
             </div>
-            <div class="form-group mt-2">
-                <label for="">Pelajaran</label>
+            <div class="mt-2 form-group">
+                <label class="form-label" for="">Pelajaran</label>
                 <select name="pelajarans[]" multiple class="form-control select2" aria-placeholder="Pilih Pelajaran">
                     <option disabled>Pilih Pelajaran</option>
                     @foreach ($pelajarans as $pelajaran)
@@ -40,8 +40,8 @@
                     @endforeach
                 </select>
             </div>
-            <div class="form-group mb-2 mt-2">
-                <label for="">Foto</label>
+            <div class="mt-2 mb-2 form-group">
+                <label class="form-label" for="">Foto</label>
                 <div class="custom-file">
                     <input type="file" class="form-control" id="foto" name="foto" accept="image/*" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])">
                 </div>

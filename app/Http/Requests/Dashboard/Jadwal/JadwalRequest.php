@@ -4,7 +4,7 @@ namespace App\Http\Requests\Dashboard\Jadwal;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class Jadwal extends FormRequest
+class JadwalRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,7 +20,7 @@ class Jadwal extends FormRequest
     }
     public function getJadwal()
     {
-        return $this->jadwal;
+        return $this->jadwal_file;
     }
     public function getKelas()
     {
@@ -35,7 +35,10 @@ class Jadwal extends FormRequest
         return $this->slug;
     }
 
-
+    public function getJadwalDetail()
+    {
+        return $this->jadwal;
+    }
 
     /**
      * Get the validation rules that apply to the request.
