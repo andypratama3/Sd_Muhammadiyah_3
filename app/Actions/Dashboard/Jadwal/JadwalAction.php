@@ -5,71 +5,93 @@ namespace App\Actions\Dashboard\Jadwal;
 use App\Models\Jadwal;
 use App\Models\JadwalDetail;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class JadwalAction
 {
-    public function execute($jadwalData)
+    public function execute($request, $isUpdate = false, $jadwalId = null)
     {
-        /** =====================
-         * UPLOAD FILE (OPTIONAL)
-         * ===================== */
-        $pictureName = null;
+        return DB::transaction(function () use ($request, $isUpdate, $jadwalId) {
 
-        if ($jadwalData->jadwal_file) {
-            $file = $jadwalData->file('jadwal_file');
-            $ext  = $file->getClientOriginalExtension();
+            // =====================
+            // HANDLE FILE UPLOAD
+            // =====================
+            $fileName = null;
 
-            $uploadPath = public_path('storage/file/jadwal/');
-            $pictureName = 'Jadwal_' . Str::slug($jadwalData->kelas) . '_' . now()->format('YmdHis') . '.' . $ext;
+            if ($request->hasFile('jadwal_file')) {
+                $file = $request->file('jadwal_file');
+                $ext = $file->getClientOriginalExtension();
+                $kelasName = $request->input('kelas'); // Idealnya ambil nama kelas dari DB
 
-            $file->move($uploadPath, $pictureName);
-        }
+                $fileName = 'Jadwal_' . Str::slug($kelasName) . '_' . now()->format('YmdHis') . '.' . $ext;
 
-        /** =====================
-         * CREATE / UPDATE JADWAL
-         * ===================== */
-        if (!empty($jadwalData->slug)) {
-            // UPDATE
-            $jadwal = Jadwal::findOrFail($jadwalData->slug);
+                // Simpan ke storage
+                $file->storeAs('public/file/jadwal/', $fileName);
+            }
 
-            $jadwal->update([
-                'tahun_ajaran'   => $jadwalData->tahun_ajaran,
-                'kelas'          => $jadwalData->kelas, // sesuaikan nama kolom
-                'category_kelas' => $jadwalData->category_kelas,
-                'jadwal'         => $pictureName ?? $jadwal->jadwal,
-            ]);
+            // =====================
+            // CREATE OR UPDATE JADWAL
+            // =====================
+            if ($isUpdate && $jadwalId) {
 
-            // hapus detail lama
-            $jadwal->jadwal_details()->delete();
+                // UPDATE
+                $jadwal = Jadwal::findOrFail($jadwalId);
 
-        } else {
-            // CREATE
-            $jadwal = Jadwal::create([
-                'tahun_ajaran'   => $jadwalData->tahun_ajaran,
-                'kelas_id'          => $jadwalData->kelas,
-                'category_kelas' => $jadwalData->category_kelas,
-                'jadwal'         => $pictureName,
-                'slug'           => Str::slug($jadwalData->kelas) . '-' . Str::random(5),
-            ]);
-        }
+                $updateData = [
+                    'tahun_ajaran' => $request->input('tahun_ajaran'),
+                    'kelas_id' => $request->input('kelas'),
+                    'category_kelas' => $request->input('category_kelas'),
+                ];
 
-        /** =====================
-         * SIMPAN DETAIL JADWAL
-         * ===================== */
-        if (!empty($jadwalData->jadwal)) {
-            foreach ($jadwalData->jadwal as $detail) {
-                JadwalDetail::create([
-                    'jadwal_id'    => $jadwal->id,
-                    'hari'         => $detail['hari'],
-                    'time_start'   => $detail['mulai'],
-                    'time_end'     => $detail['selesai'],
-                    'pelajaran_id' => $detail['pelajaran_id'],
-                    'guru_id'      => $detail['guru_id'],
-                    'color'        => $detail['color'] ?? '#3b82f6',
+                // Update file jika ada file baru
+                if ($fileName) {
+                    // Hapus file lama jika ada
+                    if ($jadwal->jadwal && Storage::exists('public/file/jadwal/' . $jadwal->jadwal)) {
+                        Storage::delete('public/file/jadwal/' . $jadwal->jadwal);
+                    }
+                    $updateData['jadwal'] = $fileName;
+                }
+
+                $jadwal->update($updateData);
+
+                // Hapus detail jadwal lama
+                $jadwal->jadwal_details()->delete();
+
+            } else {
+
+                // CREATE
+                $jadwal = Jadwal::create([
+                    'tahun_ajaran' => $request->input('tahun_ajaran'),
+                    'kelas_id' => $request->input('kelas'),
+                    'category_kelas' => $request->input('category_kelas'),
+                    'jadwal' => $fileName,
                 ]);
             }
-        }
 
-        return $jadwal;
+            // =====================
+            // SIMPAN DETAIL JADWAL
+            // =====================
+            $jadwalDetails = $request->input('jadwal', []);
+
+            foreach ($jadwalDetails as $detail) {
+                // Skip jika data kosong
+                if (empty($detail['hari']) || empty($detail['mulai']) || empty($detail['selesai'])) {
+                    continue;
+                }
+
+                JadwalDetail::create([
+                    'jadwal_id' => $jadwal->id,
+                    'hari' => ucfirst(strtolower(trim($detail['hari']))),
+                    'time_start' => substr($detail['mulai'], 0, 5),
+                    'time_end' => substr($detail['selesai'], 0, 5),
+                    'pelajaran_id' => !empty($detail['pelajaran_id']) ? $detail['pelajaran_id'] : null,
+                    'guru_id' => !empty($detail['guru_id']) ? $detail['guru_id'] : null,
+                    'color' => !empty($detail['color']) ? $detail['color'] : 'bg-blue-100',
+                ]);
+            }
+
+            return $jadwal;
+        });
     }
 }

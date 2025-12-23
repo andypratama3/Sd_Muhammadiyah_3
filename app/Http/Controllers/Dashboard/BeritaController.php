@@ -17,14 +17,14 @@ class BeritaController extends Controller
     public function index()
     {
         $no = 0;
-        $beritas = Berita::select(['judul', 'desc', 'foto', 'slug'])->get();
+        $beritas = Berita::select(['judul', 'desc', 'foto','category', 'slug'])->get();
 
         return view('dashboard.berita.index', compact('no', 'beritas'));
     }
 
     public function data_table()
     {
-        $query = Berita::select('id', 'views', 'judul', 'desc', 'foto', 'slug')->orderBy('created_at', 'asc');
+        $query = Berita::select('id', 'views', 'judul', 'desc','category', 'foto', 'slug')->orderBy('created_at', 'asc');
 
         return DataTables::of($query)
             ->addColumn('foto', function ($row) {
@@ -32,6 +32,25 @@ class BeritaController extends Controller
             })
             ->addColumn('views', function ($row) {
                 return $row->views.' kali';
+            })
+            ->addColumn('category', function ($row) {
+                switch ($row->category) {
+                    case 'pengumuman':
+                        return 'Pengumuman';
+                        break;
+                    case 'akademik':
+                        return 'Akademik';
+                        break;
+                    case 'prestasi':
+                        return 'Prestasi';
+                        break;
+                    case 'kegiatan':
+                        return 'Kegiatan';
+                        break;
+                    default:
+                        return 'Tidak diketahui';
+                        break;
+                }
             })
             ->addColumn('options', function ($row) {
                 return '
@@ -60,14 +79,14 @@ class BeritaController extends Controller
 
     public function show($slug)
     {
-        $berita = Berita::where('slug', $slug)->select(['judul', 'desc', 'foto', 'slug'])->firstOrFail();
+        $berita = Berita::where('slug', $slug)->select(['judul', 'desc', 'foto', 'slug','category'])->firstOrFail();
 
         return view('dashboard.berita.show', compact('berita'));
     }
 
     public function edit($slug)
     {
-        $berita = Berita::where('slug', $slug)->select(['judul', 'desc', 'foto', 'slug'])->firstOrFail();
+        $berita = Berita::where('slug', $slug)->select(['judul', 'desc', 'foto', 'slug','category'])->firstOrFail();
 
         return view('dashboard.berita.edit', compact('berita'));
     }

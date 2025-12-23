@@ -26,14 +26,13 @@
                     <tbody>
                         @foreach ($jadwals as $jadwal)
                         <tr>
-                            <td>{{ ++$no }}</td>
+                            <td>{{ $loop->iteration }}</td>
                             <td> {{ $jadwal->tahun_ajaran }} </td>
                             <td><a href="{{ asset('storage/file/jadwal/'. $jadwal->jadwal) }}">Lihat Jadwal</a></td>
                             <td> {{ $jadwal->kelas_jadwal->name ?? '-' }} </td>
                             <td> {{ $jadwal->category_kelas }} </td>
                             <td>
-                                <a href="{{ route('dashboard.datasekolah.jadwal.show', $jadwal->id) }}" class="btn btn-dark btn-sm"><i
-                                        class="fas fa-info-circle"></i></a>
+                            
                                 <a href="{{ route('dashboard.datasekolah.jadwal.edit', $jadwal->id) }}" class="btn btn-primary btn-sm"><i
                                         class="fa fa-pen"></i></a>
                                 <a href="#" data-id="{{ $jadwal->slug }}" class="btn btn-danger btn-sm delete" title="Hapus">

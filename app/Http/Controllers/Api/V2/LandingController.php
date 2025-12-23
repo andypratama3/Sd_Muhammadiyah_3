@@ -7,6 +7,7 @@ use App\Models\Siswa;
 use App\Models\Gallery;
 use App\Models\Prestasi;
 use App\Models\Fasilitas;
+use App\Models\Cooperation;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -41,6 +42,17 @@ class LandingController extends Controller
         }
 
         return $this->error('Data tidak ditemukan');
+    }
 
+    public function dukungan()
+    {
+        $cooperation = Cooperation::orderBy('order', 'asc')->get();
+
+
+        if($cooperation){
+            return $this->success($cooperation, 'Berhasil Menerima Data');
+        }
+
+        return $this->error('Data tidak ditemukan');
     }
 }

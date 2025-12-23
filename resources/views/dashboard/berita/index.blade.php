@@ -69,9 +69,9 @@
 @section('content')
 <div class="col-lg-12 grid-margin stretch-card">
     <div class="card">
-        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-            <h4 class="m-0 font-weight-bold text-center">Berita</h4>
-            <a href="{{ route('dashboard.news.berita.create') }}" class="btn btn-primary btn-sm float-right">Tambah <i
+        <div class="flex-row py-3 card-header d-flex align-items-center justify-content-between">
+            <h4 class="m-0 text-center font-weight-bold">Berita</h4>
+            <a href="{{ route('dashboard.news.berita.create') }}" class="float-right btn btn-primary btn-sm">Tambah <i
                     class="fas fa-plus"></i></a>
         </div>
 
@@ -82,6 +82,7 @@
                         <tr>
                             <th>No</th>
                             <th>Judul</th>
+                            <th>Kategori</th>
                             <th>Foto</th>
                             <th>Pengunjung</th>
                             <th>Action</th>
@@ -124,6 +125,7 @@ $(document).ready(function () {
         columns: [
             { data: 'DT_RowIndex',name: 'DT_RowIndex',orderable: false,searchable: false},
             { data: 'judul', name: 'judul'},
+            { data: 'category', name: 'category' },
             { data: 'foto', name: 'foto', orderable: false, searchable: false },
             { data: 'views', name: 'views'},
             { data: 'options',name: 'options', orderable: false, searchable: false }

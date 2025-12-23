@@ -1,8 +1,8 @@
 @extends('layouts.dashboard')
 @section('title', 'Tambah Pelajaran')
 @section('content')
-<div class="card mb-4">
-    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+<div class="mb-4 card">
+    <div class="flex-row py-3 card-header d-flex align-items-center justify-content-between">
         <h6 class="m-0 font-weight-bold text-primary">Tambah Pelajaran</h6>
     </div>
     <div class="card-body">
@@ -13,7 +13,7 @@
                 <input type="text" class="form-control" name="name" id="name" aria-describedby="pelajaran"
                     placeholder="Masukan Nama pelajaran">
             </div>
-            <div class="form-group mt-2">
+            <div class="mt-2 form-group">
                 <a href="{{ route('dashboard.datasekolah.matapelajaran.index') }}" class="btn btn-sm btn-danger float-lg-start">Kembali</a>
                 <button type="submit" class="btn btn-sm btn-primary float-lg-end">Submit</button>
             </div>

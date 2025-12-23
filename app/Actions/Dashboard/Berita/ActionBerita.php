@@ -34,6 +34,7 @@ class ActionBerita
                 'judul' => $beritaData->judul,
                 'desc' => $beritaData->desc,
                 'foto' => $picture_name,
+                'category' => $beritaData->category,
             ]
         );
 

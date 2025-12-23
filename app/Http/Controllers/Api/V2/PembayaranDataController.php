@@ -17,13 +17,24 @@ class PembayaranDataController extends Controller
 
         $siswa = Siswa::where('nisn', $request->nisn)->first();
 
-        if(!$siswa) {
-            return $this->error('Siswa tidak ditemukan', 404);
-        }
+        if($siswa) {
+            $charges = Charge::with('kategori_pembayaran')
+                ->where('siswa_id', $siswa->id)
+                ->get()
+                ->groupBy('category_payment_id');
 
-        return $this->success([
-            'siswa' => $siswa,
-            'list_payment' => $siswa->charges()->get(),
-        ]);
+            return $this->success([
+                'siswa' => $siswa,
+                'charges' => $charges
+            ], "ok");
+        }
+    }
+
+    public function pay($charge_id)
+    {
+        $charge = Charge::find($charge_id);
+
+
+        // do here for bank payment
     }
 }

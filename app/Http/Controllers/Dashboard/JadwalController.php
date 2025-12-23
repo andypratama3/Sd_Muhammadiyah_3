@@ -8,7 +8,6 @@ use App\Models\Jadwal;
 use App\Models\Pelajaran;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\DataTransferObjects\JadwalData;
 use App\Actions\Dashboard\Jadwal\JadwalAction;
 use App\Actions\Dashboard\Jadwal\JadwalActionDelete;
 
@@ -16,75 +15,123 @@ class JadwalController extends Controller
 {
     public function index()
     {
-        /*
-            ! ada ada saja
-        */
-        $no = 0;
-        $jadwals = Jadwal::with('kelas_jadwal')->select('id', 'tahun_ajaran', 'jadwal', 'kelas_id', 'category_kelas', 'slug')->orderBy('kelas_id', 'desc')->get();
+        $jadwals = Jadwal::with('kelas_jadwal', 'jadwal_details')
+            ->select('id', 'tahun_ajaran', 'jadwal', 'kelas_id', 'category_kelas', 'created_at')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
 
-        return view('dashboard.data.jadwal.index', compact('no', 'jadwals'));
+        return view('dashboard.data.jadwal.index', compact('jadwals'));
     }
 
     public function create()
     {
-        $kelass = Kelas::select('id', 'name', 'category_kelas', 'slug')->orderBy('name')->get();
+        $kelass = Kelas::select('id', 'name', 'category_kelas')->orderBy('name')->get();
         $pelajaran = Pelajaran::orderBy('name', 'asc')->get();
         $guru = Guru::orderBy('name', 'asc')->get();
 
-        return view('dashboard.data.jadwal.create', compact('kelass', 'pelajaran','guru'));
+        return view('dashboard.data.jadwal.create', compact('kelass', 'pelajaran', 'guru'));
     }
 
-    // public function store(Request $request)
-    // {
-    //     dd($request->all());
-
-    // }
-
-
-    public function store(JadwalData $jadwalData, JadwalAction $jadwalAction, Request $request)
+    public function store(Request $request, JadwalAction $jadwalAction)
     {
-        $jadwal = Jadwal::where('kelas_id', $jadwalData->kelas)->where('tahun_ajaran', $jadwalData->tahun_ajaran)->where('category_kelas', $jadwalData->category_kelas)->exists();
-        if ($jadwalData != $jadwal) {
-            $jadwalAction->execute($jadwalData);
-            return redirect()->route('dashboard.datasekolah.jadwal.index')->with('success', 'Berhasil Menambahkan Jadwal');
-        } else {
-            return redirect()->route('dashboard.datasekolah.jadwal.index')->with('error', 'Jadwal Telah Ada');
+        // Validasi input
+        $validated = $request->validate([
+            'kelas' => 'required|exists:kelas,id',
+            'category_kelas' => 'required|string|max:50',
+            'tahun_ajaran' => 'required|string|regex:/^\d{4}\/\d{4}$/',
+            'jadwal_file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:2048',
+            'jadwal' => 'required|array|min:1',
+            'jadwal.*.hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu',
+            'jadwal.*.mulai' => 'required|date_format:H:i:s',
+            'jadwal.*.selesai' => 'required|date_format:H:i:s|after:jadwal.*.mulai',
+            'jadwal.*.pelajaran_id' => 'nullable|exists:pelajarans,id',
+            'jadwal.*.guru_id' => 'nullable|exists:gurus,id',
+            'jadwal.*.color' => 'nullable|string',
+        ]);
+
+        // Cek duplikasi jadwal
+        $exists = Jadwal::where('kelas_id', $validated['kelas'])
+            ->where('tahun_ajaran', $validated['tahun_ajaran'])
+            ->where('category_kelas', $validated['category_kelas'])
+            ->exists();
+
+        if ($exists) {
+            return redirect()->route('dashboard.datasekolah.jadwal.index')
+                ->with('error', 'Jadwal untuk kelas, tahun ajaran, dan kategori ini sudah ada!');
+        }
+
+        try {
+            $jadwalAction->execute($request, false);
+            return redirect()->route('dashboard.datasekolah.jadwal.index')
+                ->with('success', 'Jadwal berhasil ditambahkan!');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
+                ->withInput();
         }
     }
 
     public function show($id)
     {
-        $jadwal = Jadwal::where('id', $id)->firstOrFail();
-        $kelass = Kelas::all();
-        $pelajaran = Pelajaran::orderBy('name','asc')->get();
-        $guru = Guru::orderBy('name' ,'asc')->get();
+        $jadwal = Jadwal::with('jadwal_details.pelajarans', 'jadwal_details.guru', 'kelas_jadwal')
+            ->findOrFail($id);
 
-        return view('dashboard.data.jadwal.show', compact('jadwal', 'kelass','pelajaran','guru'));
+        return view('dashboard.data.jadwal.show', compact('jadwal'));
     }
 
     public function edit($id)
     {
-        $jadwal = Jadwal::where('id', $id)->firstOrFail();
-        $kelass = Kelas::all();
-        $pelajaran = Pelajaran::orderBy('name','asc')->get();
-        $guru = Guru::orderBy('name' ,'asc')->get();
+        $jadwal = Jadwal::with('jadwal_details')->findOrFail($id);
+        $kelass = Kelas::select('id', 'name', 'category_kelas')->orderBy('name')->get();
+        $pelajaran = Pelajaran::orderBy('name', 'asc')->get();
+        $guru = Guru::orderBy('name', 'asc')->get();
 
-        return view('dashboard.data.jadwal.edit', compact('jadwal', 'kelass','pelajaran','guru'));
+        return view('dashboard.data.jadwal.edit', compact('jadwal', 'kelass', 'pelajaran', 'guru'));
     }
 
-    public function update(JadwalData $jadwalData, JadwalAction $jadwalAction)
+    public function update(Request $request, $id, JadwalAction $jadwalAction)
     {
-        $jadwalAction->execute($jadwalData);
+        $jadwal = Jadwal::findOrFail($id);
 
-        return redirect()->route('dashboard.datasekolah.jadwal.index')->with('success', 'Berhasil Update Jadwal');
+        // Validasi input
+        $validated = $request->validate([
+            'kelas' => 'required|exists:kelas,id',
+            'category_kelas' => 'required|string|max:50',
+            'tahun_ajaran' => 'required|string|regex:/^\d{4}\/\d{4}$/',
+            'jadwal_file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:2048',
+            'jadwal' => 'required|array|min:1',
+            'jadwal.*.hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu',
+            'jadwal.*.mulai' => 'required|date_format:H:i:s',
+            'jadwal.*.selesai' => 'required|date_format:H:i:s|after:jadwal.*.mulai',
+            'jadwal.*.pelajaran_id' => 'nullable|exists:pelajarans,id',
+            'jadwal.*.guru_id' => 'nullable|exists:gurus,id',
+            'jadwal.*.color' => 'nullable|string',
+        ]);
 
+        try {
+            $jadwalAction->execute($request, true, $id);
+            return redirect()->route('dashboard.datasekolah.jadwal.index')
+                ->with('success', 'Jadwal berhasil diperbarui!');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
+                ->withInput();
+        }
     }
 
-    public function destroy(JadwalActionDelete $jadwalActionDelete, $slug)
+    public function destroy($id)
     {
-        $jadwalActionDelete->execute($slug);
+        try {
+            $jadwal = Jadwal::findOrFail($id);
+            $jadwal->jadwal_details()->delete();
+            $jadwal->delete();
 
-        return redirect()->route('dashboard.datasekolah.jadwal.index')->with('success', 'Data Jadwal Berhasil Di Hapus');
+            return redirect()->route('dashboard.datasekolah.jadwal.index')
+                ->with('success', 'Jadwal berhasil dihapus!');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 
     public function getCategoryKelas(Request $request)
@@ -99,31 +146,13 @@ class JadwalController extends Controller
         if ($kelas->name === 'Lulus') {
             $currentYear = date('Y');
             $years = range(2019, $currentYear);
-            $categoryKelas = array_map(fn($year) => $year, $years);
-
+            $categoryKelas = array_map(fn($year) => (string)$year, $years);
             return response()->json($categoryKelas);
         }
 
-        $categoryKelas = json_decode($kelas->category_kelas, true);
+        $categoryKelas = json_decode($kelas->category_kelas, true) ?? [];
         sort($categoryKelas);
 
         return response()->json($categoryKelas);
-    }
-
-
-    public function getSmester(Request $request)
-    {
-        $kelas = $request->kelas;
-        $category_kelas = $request->category_kelas;
-
-        $existingGenap = Jadwal::where('kelas', $kelas)->where('category_kelas', $category_kelas)->where('tahun_ajaran')->exists();
-        $existingGanjil = Jadwal::where('kelas', $kelas)->where('category_kelas', $category_kelas)->where('smester', 'ganjil')->exists();
-
-        $response = [
-            'genap' => $existingGenap,
-            'ganjil' => $existingGanjil,
-        ];
-
-        return response()->json($response);
     }
 }

@@ -29,6 +29,11 @@ class BeritaRequest extends FormRequest
         return $this->foto;
     }
 
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
     public function getSlug()
     {
         return $this->slug;

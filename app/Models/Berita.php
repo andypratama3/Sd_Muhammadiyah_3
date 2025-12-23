@@ -24,6 +24,7 @@ class Berita extends Model
         'desc',
         'views',
         'slug',
+        'category',
         'foto',
     ];
 

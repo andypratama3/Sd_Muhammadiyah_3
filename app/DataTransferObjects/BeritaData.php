@@ -12,6 +12,7 @@ class BeritaData extends Data
         public readonly string $judul,
         public readonly string $desc,
         public readonly ?UploadedFile $foto,
+        public readonly string $category,
         public readonly ?string $slug,
 
     ) {
@@ -24,6 +25,7 @@ class BeritaData extends Data
             $request->getJudul(),
             $request->getDesc(),
             $request->getFoto(),
+            $request->getCategory(),
             $request->getSlug(),
         ]);
     }
@@ -34,6 +36,7 @@ class BeritaData extends Data
             'judul.required' => 'Kolom Judul tidak boleh kosong!',
             'desc.required' => 'Kolom Deskripsi tidak boleh kosong!',
             'foto.required' => 'Kolom Foto tidak boleh kosong!',
+            'category.required' => 'Kolom Kategori tidak boleh kosong!',
         ];
     }
 }

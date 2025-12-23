@@ -4,19 +4,31 @@
         <link href="https://cdn.bootcdn.net/ajax/libs/quill/1.3.7/quill.snow.min.css" rel="stylesheet" />
 @endpush
 @section('content')
-<div class="card mb-4">
+<div class="mb-4 card">
     @include('layouts.flashmessage')
     <div class="card-body">
         <form action="{{ route('dashboard.news.berita.update',$berita->slug) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <input type="hidden" name="slug" value="{{ $berita->slug }}">
-            <div class="form-group mt-2">
+            <div class="mt-2 form-group">
                 <label for="judul">Judul</label>
                 <input type="text" class="form-control" name="judul" id="judul" value="{{ $berita->judul }}" placeholder="Masukan Judul">
             </div>
 
-            <div class="form-group mt-2 ">
+             <div class="mt-2 form-group">
+                <label for="category">Kategori</label>
+                <select name="category" id="category" class="form-control">
+                    <option value="">Pilih Kategori</option>
+                    <option value="pengumuman" {{ old('category', $berita->category) == 'pengumuman' ? 'selected' : '' }}>Pengumuman</option>
+                    <option value="akademik" {{ old('category', $berita->category) == 'akademik' ? 'selected' : '' }}>Akademi</option>
+                    <option value="prestasi" {{ old('category', $berita->category) == 'prestasi' ? 'selected' : '' }}>Prestasi</option>
+                    <option value="kegiatan" {{ old('category', $berita->category) == 'kegiatan' ? 'selected' : '' }}>Kegiatan</option>
+                </select>
+            </div>
+
+
+            <div class="mt-2 form-group ">
                 <label for="">Foto</label>
                 <div class="custom-file">
                     <input type="file" class="form-control" id="foto" name="foto" accept="image/*" value="{{ $berita->foto }}" onchange="loadPreview(this)">
@@ -26,7 +38,7 @@
                     <img src="{{ asset('storage/img/berita/'.$berita->foto) }}" id="output" class="img-fluid" alt="" style="border-radius: 10px;">
                 </div>
             </div>
-            <div class="form-group mt-2 mb-2">
+            <div class="mt-2 mb-2 form-group">
                 <label for="">Deskripsi</label>
                 <div id="editor"></div>
                 <textarea name="desc" id="content-editor" style="display: none;">{{ $berita->desc }}</textarea>

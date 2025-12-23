@@ -72,6 +72,8 @@ Route::post('/whatsapp/callback', [SendOrderIDWhatsAppApi::class, 'webhook'])->n
 
 Route::group(['prefix' => 'v2'], function () {
 
+    Route::get('berita/{slug}', [BeritaDataController::class, 'show']);
+
     Route::prefix('auth')->group(function () {
         Route::post('/token', [AuthController::class, 'generateToken']);
         Route::post('/refresh', [AuthController::class, 'refresh']);
@@ -84,21 +86,24 @@ Route::group(['prefix' => 'v2'], function () {
 
         Route::get('count-landing',[LandingController::class, 'count']);
         Route::get('gallery-landing',[LandingController::class, 'gallery_activity']);
+        Route::get('dukungan-kerja-sama', [LandingController::class, 'dukungan']);
         Route::get('/views', [ViewsDataController::class, 'viewData']);
         // Pembayaran
-        Route::get('/siswa',[PembayaranDataController::class, 'search']);
-
+        Route::get('/siswa/search',[PembayaranDataController::class, 'search']);
         // Jadwal
         Route::get('jadwal/tahun-ajaran',[JadwalDataController::class, 'tahunAjaran']);
         Route::get('jadwal/kelas',[JadwalDataController::class, 'kelas']);
         Route::get('jadwal/category-kelas',[JadwalDataController::class, 'categoryKelas']);
         Route::get('jadwal/list-jadwal',[JadwalDataController::class, 'list_jadwal']);
 
-
         // Data Core
+        Route::get('berita-count-data', [BeritaDataController::class, 'countData']);
+        Route::get('berita-popular', [BeritaDataController::class, 'beritaPopuler']);
         Route::get('berita', [BeritaDataController::class, 'list']);
         Route::get('fasilitas', [FasilitasDataController::class, 'fasilitasData']);
         Route::get('gallery', [GalleryDataController::class, 'galleryData']);
     });
+
+
 
 });

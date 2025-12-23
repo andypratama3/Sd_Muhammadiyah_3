@@ -4,21 +4,36 @@
         <link href="https://cdn.bootcdn.net/ajax/libs/quill/1.3.7/quill.snow.min.css" rel="stylesheet" />
 @endpush
 @section('content')
-<div class="card mb-4">
+<div class="mb-4 card">
     <div class="row">
         @include('layouts.flashmessage')
     </div>
-    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+    <div class="flex-row py-3 card-header d-flex align-items-center justify-content-between">
         <h6 class="m-0 font-weight-bold text-primary">Tambah Berita</h6>
     </div>
     <div class="card-body">
         <form action="{{ route('dashboard.news.berita.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            <div class="form-group mt-2">
+            <div class="mt-2 form-group">
                 <label for="judul">Judul</label>
                 <input type="text" class="form-control" name="judul" id="judul" value="{{ old('judul') }}" placeholder="Masukan Judul">
             </div>
-            <div class="form-group mt-2 ">
+
+
+            <div class="mt-2 form-group">
+                <label for="category">Kategori</label>
+                <select name="category" id="category" class="form-control">
+                    <option value="">Pilih Kategori</option>
+                    <option value="pengumuman" {{ old('category') == 'pengumuman' ? 'selected' : '' }}>Pengumuman</option>
+                    <option value="akademik" {{ old('category') == 'akademik' ? 'selected' : '' }}>Akademi</option>
+                    <option value="prestasi" {{ old('category') == 'prestasi' ? 'selected' : '' }}>Prestasi</option>
+                    <option value="kegiatan" {{ old('category') == 'kegiatan' ? 'selected' : '' }}>Kegiatan</option>
+                </select>
+            </div>
+
+
+
+            <div class="mt-2 form-group ">
                 <label for="">Foto</label>
                 <div class="custom-file">
                     <input type="file" class="form-control" id="foto" name="foto" accept="image/jpeg,image/png,application/pdf,image" value="{{ old('foto') }}" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])">
@@ -29,7 +44,7 @@
                 </div>
             </div>
 
-            <div class="form-group mt-2 mb-2">
+            <div class="mt-2 mb-2 form-group">
                 <label for="">Deskripsi</label>
                 <div id="editor"></div>
                 <textarea name="desc" id="content-editor" style="display: none;"></textarea>
