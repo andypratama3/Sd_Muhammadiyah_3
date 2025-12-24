@@ -72,7 +72,6 @@ Route::post('/whatsapp/callback', [SendOrderIDWhatsAppApi::class, 'webhook'])->n
 
 Route::group(['prefix' => 'v2'], function () {
 
-    Route::get('berita/{slug}', [BeritaDataController::class, 'show']);
 
     Route::prefix('auth')->group(function () {
         Route::post('/token', [AuthController::class, 'generateToken']);
@@ -100,6 +99,8 @@ Route::group(['prefix' => 'v2'], function () {
         Route::get('berita-count-data', [BeritaDataController::class, 'countData']);
         Route::get('berita-popular', [BeritaDataController::class, 'beritaPopuler']);
         Route::get('berita', [BeritaDataController::class, 'list']);
+        Route::get('berita/{slug}', [BeritaDataController::class, 'show']);
+
         Route::get('fasilitas', [FasilitasDataController::class, 'fasilitasData']);
         Route::get('gallery', [GalleryDataController::class, 'galleryData']);
     });

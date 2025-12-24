@@ -13,11 +13,11 @@ class FasilitasDataController extends Controller
         $fasilitas = Fasilitas::with('kelengkapan')->orderBy('created_at', 'asc')->get();
 
         if($fasilitas){
-            return response()->json([
-                'status' => 'success',
-                'data' => $fasilitas,
-            ], 200);
+            return $this->success($fasilitas, 'ok');
         }
+
+        $this->error('Data Tidak Di Temukan');
+
     }
 
     public function show($id)
@@ -25,10 +25,9 @@ class FasilitasDataController extends Controller
         $fasilitas = Fasilitas::find($id);
 
         if($fasilitas){
-            return response()->json([
-                'status' => 'success',
-                'data' => $fasilitas,
-            ], 200);
+            return $this->success($fasilitas, 'ok');
         }
+
+        $this->error('Data Tidak Di Temukan');
     }
 }
