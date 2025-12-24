@@ -10,7 +10,7 @@ class FasilitasDataController extends Controller
 {
     public function fasilitasData()
     {
-        $fasilitas = Fasilitas::orderBy('created_at', 'asc')->get();
+        $fasilitas = Fasilitas::with('kelengkapan')->orderBy('created_at', 'asc')->get();
 
         if($fasilitas){
             return response()->json([

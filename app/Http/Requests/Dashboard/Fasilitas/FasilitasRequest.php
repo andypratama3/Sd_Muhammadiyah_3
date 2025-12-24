@@ -34,6 +34,21 @@ class FasilitasRequest extends FormRequest
         return $this->foto;
     }
 
+    public function getUkuran(): string
+    {
+        return $this->ukuran;
+    }
+
+    public function getKapasitas(): string
+    {
+        return $this->kapasitas;
+    }
+
+    public function getKelengkapan(): array
+    {
+        return $this->kelengkapan;
+    }
+
     public function getSlug(): string
     {
         return $this->slug;

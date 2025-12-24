@@ -5,28 +5,42 @@ namespace App\Actions\Dashboard\Prestasi;
 use App\Models\Prestasi;
 use Illuminate\Support\Str;
 
-class PrestasiAction {
-
-    public function execute($PrestasiData)
+class PrestasiAction
+{
+    public function execute($request)
     {
-        if($PrestasiData->foto){
-            $file = $PrestasiData->foto;
+        // ambil data lama
+        $prestasi = Prestasi::where('slug', $request->slug)->firstOrFail();
+
+        $oldFoto = $prestasi->foto;
+        $oldDesc = $prestasi->description;
+
+        // ===== FOTO =====
+        if ($request->foto) {
+            $file = $request->foto;
             $ext = $file->getClientOriginalExtension();
 
-            //upload foto to folder
-            $upload_path = public_path('storage/img/prestasi/');
-            $picture_name = 'Prestasi_'.Str::slug($PrestasiData->name).'_'.date('YmdHis').".$ext";
-            $file->move($upload_path, $picture_name);
-        }
-        $prestasi = Prestasi::updateOrCreate(
-            ['slug' => $PrestasiData->slug],
-            [
-                'name' => $PrestasiData->name,
-                'description' => $PrestasiData->description,
-                'foto' => $picture_name,
-                'status' => $PrestasiData->status,
-            ]
-        );
-    }
+            $picture_name = 'Prestasi_' .
+                Str::slug($request->name) . '_' .
+                date('YmdHis') . '.' . $ext;
 
+            $upload_path = public_path('storage/img/prestasi/');
+            $file->move($upload_path, $picture_name);
+        } else {
+            $picture_name = $oldFoto;
+        }
+
+        // ===== UPDATE DATA =====
+        $prestasi->update([
+            'name'        => $request->name,
+            'description' => $request->description ?? $oldDesc,
+            'foto'        => $picture_name,
+            'status'      => $request->status,
+        ]);
+
+        // ===== SYNC KATEGORI (WAJIB) =====
+        if ($request->prestasi_kategori) {
+            $prestasi->prestasi_kategori()->sync($request->prestasi_kategori);
+        }
+    }
 }

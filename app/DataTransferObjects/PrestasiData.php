@@ -10,9 +10,10 @@ class PrestasiData extends Data
 {
     public function __construct(
         public readonly string $name,
-        public readonly string $description,
+        public readonly ?string $description,
         public readonly string $status,
-        public readonly UploadedFile $foto,
+        public readonly array $prestasi_kategori,
+        public readonly ?UploadedFile $foto,
         public readonly ?string $slug,
 
     ) {
@@ -26,6 +27,7 @@ class PrestasiData extends Data
             $request->getFoto(),
             $request->getDesc(),
             $request->getStatus(),
+            $request->getPrestasiKategori(),
             $request->getSlug(),
         ]);
     }
@@ -35,7 +37,6 @@ class PrestasiData extends Data
         return [
             'name.required' => 'Kolom Nama Prestasi tidak boleh kosong!',
             'description.required' => 'Kolom Deskripsi Prestasi tidak boleh kosong!',
-            'foto.required' => 'Kolom Foto tidak boleh kosong!',
             'status.required' => 'Kolom Status Prestasi tidak boleh kosong!',
         ];
     }

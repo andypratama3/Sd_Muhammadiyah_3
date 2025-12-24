@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Str;
 use App\Http\Traits\UsesUuid;
 use App\Http\Traits\NameHasSlug;
+use App\Models\KelengkapanFasilitas;
 use Illuminate\Database\Eloquent\Model;
 use App\Http\Traits\HasPermissionsTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -25,6 +26,9 @@ class Fasilitas extends Model
     protected $fillable = [
         'nama_fasilitas',
         'desc',
+        'slug',
+        'ukuran',
+        'kapasitas',
         'foto',
     ];
 
@@ -36,5 +40,10 @@ class Fasilitas extends Model
     {
         $this->attributes['nama_fasilitas'] = $value;
         $this->attributes['slug'] = Str::slug($value).'-'.Str::random(4);
+    }
+
+    public function kelengkapan()
+    {
+        return $this->hasMany(KelengkapanFasilitas::class);
     }
 }

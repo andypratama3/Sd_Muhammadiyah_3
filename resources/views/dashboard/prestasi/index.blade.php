@@ -70,17 +70,17 @@
 </style>
 @endpush
 @section('content')
-<div class="col-lg-12 mb-4">
+<div class="mb-4 col-lg-12">
     <!-- Simple Tables -->
     <div class="card">
         @include('layouts.flashmessage')
-        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-            <h4 class="m-0 font-weight-bold text-center">Prestasi</h4>
-            <a href="{{ route('dashboard.datasekolah.prestasi.create') }}" class="btn btn-success float-right btn-sm">Tambah <i
+        <div class="flex-row py-3 card-header d-flex align-items-center justify-content-between">
+            <h4 class="m-0 text-center font-weight-bold">Prestasi</h4>
+            <a href="{{ route('dashboard.datasekolah.prestasi.create') }}" class="float-right btn btn-success btn-sm">Tambah <i
                     class="fas fa-plus"></i></a>
         </div>
         <div class="table-responsive">
-            <table class="table align-items-center table-flush text-center">
+            <table class="table text-center align-items-center table-flush">
                 <thead class="thead-light">
                     <tr>
                         <th>No</th>
@@ -114,11 +114,11 @@
                 </tbody>
             </table>
         </div>
-        <div class="card-footer clearfix">
-            <ul class="m-0 float-left">
+        <div class="clearfix card-footer">
+            <ul class="float-left m-0">
                 <span class="badge badge-primary">Total : {{ $count }} Data</span>
             </ul>
-            <ul class="pagination m-0 float-right">
+            <ul class="float-right m-0 pagination">
                 {{ $prestasis->onEachSide(1)->links() }}
             </ul>
         </div>

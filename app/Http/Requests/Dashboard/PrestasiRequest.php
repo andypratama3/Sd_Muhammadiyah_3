@@ -35,6 +35,10 @@ class PrestasiRequest extends FormRequest
         $this->slug;
     }
 
+    public function getPrestasiKategori()
+    {
+        $this->prestasi_kategori;
+    }
 
     /**
      * Get the validation rules that apply to the request.

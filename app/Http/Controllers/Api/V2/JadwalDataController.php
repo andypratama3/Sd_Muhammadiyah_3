@@ -70,7 +70,6 @@ class JadwalDataController extends Controller
             'category_kelas' => 'required|string',
         ]);
 
-        // make lowercase
         $request->merge([
             'category_kelas' => strtolower($request->category_kelas)
         ]);
@@ -103,7 +102,7 @@ class JadwalDataController extends Controller
                     ];
                 });
 
-        if($jadwal->isNotEmpty()){
+        if($jadwal){
             return $this->success($jadwal, 'ok');
         }
 

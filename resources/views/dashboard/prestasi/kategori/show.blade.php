@@ -6,9 +6,9 @@
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 @endpush
 @section('content')
-<div class="mb-4 card">
+<div class="card mb-4">
     @include('layouts.flashmessage')
-    <div class="flex-row py-3 card-header d-flex align-items-center justify-content-between">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
         <h6 class="m-0 font-weight-bold text-primary">Edit Prestasi</h6>
     </div>
     <div class="card-body">
@@ -16,12 +16,21 @@
             @csrf
             @method('PUT')
             <input type="hidden" name="slug" value="{{ $prestasi->slug }}">
-            <div class="mt-2 form-group">
+            <div class="form-group mt-2">
                 <label for="name">Nama</label>
                 <input type="text" class="form-control" name="name" id="name" aria-describedby="name"
                     placeholder="Masukan Prestasi" value="{{ $prestasi->name }}">
             </div>
-            <div class="mt-2 form-group">
+            <div class="form-group mt-2">
+                <label for="">Foto</label>
+                <img src="{{ asset('storage/file/prestasi/'. $prestasi->foto) }}" alt="" srcset="" style="width: 100%; margin-top: 2rem;" >
+            </div>
+            <div class="form-group mt-2">
+                <label for="">Deskripsi</label>
+                 <div id="editor">{!! $prestasi->description !!}</div>
+                <textarea name="description" id="content-editor" style="display: none;"></textarea>
+            </div>
+            <div class="form-group mt-2">
                 <label for="">Status</label>
                 <select name="status" id="" class="form-control">
                     <option selected value="{{ $prestasi->status }}">{{ ($prestasi->status == 1 ) ? 'Prestasi Siswa' : 'Prestasi Sekolah'  }}</option>
@@ -29,31 +38,7 @@
                     <option value="2">Prestasi Sekolah</option>
                 </select>
             </div>
-             <div class="mt-2 form-group">
-                <label for="prestasi_kategori" class="form-label">Kategori Prestasi</label>
-                <select name="prestasi_kategori[]" class="form-control select2" multiple>
-                    @foreach ($kategoriPrestasi as $item)
-                        <option value="{{ $item->id }}"
-                            {{ $prestasi->prestasi_kategori->contains('id', $item->id) ? 'selected' : '' }}>
-                            {{ $item->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="mt-2 form-group">
-                <label for="">Foto</label>
-                <div class="custom-file">
-                    <input type="file" class="form-control" id="foto" name="foto" value="{{ $prestasi->foto }}">
-                </div>
-                <img src="{{ asset('storage/img/prestasi/'. $prestasi->foto) }}" alt="" srcset="" style="width: 100%; margin-top: 2rem;">
-            </div>
-            <div class="mt-2 form-group">
-                <label for="">Deskripsi</label>
-                 <div id="editor">{!! $prestasi->description !!}</div>
-                <textarea name="description" id="content-editor" style="display: none;"></textarea>
-            </div>
-
-            <div class="mt-2 mb-2 form-group">
+            <div class="form-group mt-2 mb-2">
                 <a href="{{ route('dashboard.datasekolah.prestasi.index') }}" class="btn btn-danger btn-sm float-lg-start">Kembali</a>
                 <button type="submit" class="btn btn-primary btn-sm float-lg-end">Submit</button>
             </div>

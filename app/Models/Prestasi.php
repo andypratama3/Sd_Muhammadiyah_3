@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Http\Traits\UsesUuid;
 use App\Http\Traits\NameHasSlug;
+use App\Models\KategoriPrestasi;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -21,4 +22,9 @@ class Prestasi extends Model
         'status',
         'slug',
     ];
+
+    public function prestasi_kategori()
+    {
+        return $this->belongsToMany(KategoriPrestasi::class, 'prestasi_kategori', 'prestasi_id', 'kategori_prestasi_id');
+    }
 }

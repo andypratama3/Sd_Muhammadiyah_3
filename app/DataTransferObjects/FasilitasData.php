@@ -11,7 +11,10 @@ class FasilitasData extends Data
     public function __construct(
         public readonly string $nama_fasilitas,
         public readonly string $desc,
-        public readonly array $foto,
+        public readonly ?string $ukuran,
+        public readonly ?string $kapasitas,
+        public readonly ?array $foto,
+        public readonly array $kelengkapan,
         public readonly ?string $slug,
 
     ) {
@@ -24,6 +27,9 @@ class FasilitasData extends Data
             $request->getNama_fasilitas(),
             $request->getDesc(),
             $request->getFoto(),
+            $request->getUkuran(),
+            $request->getKapasitas(),
+            $request->getKelengkapan(),
             $request->getSlug(),
         ]);
     }
@@ -32,7 +38,6 @@ class FasilitasData extends Data
         return [
             'nama_fasilitas.required' => 'Kolom Nama Fasilitas Tidak Boleh Kosong!',
             'desc.required' => 'Kolom Deskripsi Tidak Boleh Kosong!',
-            'foto.required' => 'Kolom Foto Tidak Boleh Kosong!',
         ];
     }
 }

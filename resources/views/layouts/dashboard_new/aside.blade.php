@@ -108,6 +108,12 @@
                          <div data-i18n="Jadwal">Jadwal</div>
                      </a>
                  </li>
+                 <li class="menu-item {{ Request::routeIs('dashboard.datasekolah.kategori.prestasi.*') ? 'active' : '' }}">
+                     <a href="{{ route('dashboard.datasekolah.kategori.prestasi.index') }}" class="menu-link">
+                         <i class="menu-icon tf-icons bx bx-cog"></i>
+                         <div data-i18n="Prestasi">Kategori Prestasi</div>
+                     </a>
+                 </li>
                  <li class="menu-item {{ Request::routeIs('dashboard.datasekolah.prestasi.*') ? 'active' : '' }}">
                      <a href="{{ route('dashboard.datasekolah.prestasi.index') }}" class="menu-link">
                          <i class="menu-icon tf-icons bx bxs-trophy"></i>

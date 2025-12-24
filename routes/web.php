@@ -67,6 +67,7 @@ use App\Http\Controllers\Dashboard\FasilitasController as DashboardFasilitasCont
 use App\Http\Controllers\Dashboard\NilaiSiswaController as DashboardNilaiSiswaController;
 use App\Http\Controllers\Dashboard\PembayaranController as DashboardPembayaranController;
 use App\Http\Controllers\Dashboard\KritikSaranController as DashboardKritiSaranController;
+use App\Http\Controllers\Dashboard\KategoriPrestasiController as DashboardKategoriPrestasi;
 use App\Http\Controllers\Dashboard\MataPelajaranController as DashboardMataPelajaranController;
 use App\Http\Controllers\Dashboard\EkstrakulikulerController as DashboardEsktrakurikulerController;
 use App\Http\Controllers\Dashboard\GalleryActivityController as DashboardGalleryActivityController;
@@ -222,6 +223,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::resource('tenagapendidikan', DashboardTenagaPendidikanController::class, ['names' => 'dashboard.datasekolah.tenagapendidikan']);
         Route::resource('ekstrakurikuler', DashboardEsktrakurikulerController::class, ['names' => 'dashboard.datasekolah.ekstrakurikuler']);
         Route::resource('matapelajaran', DashboardMataPelajaranController::class, ['names' => 'dashboard.datasekolah.matapelajaran']);
+        Route::resource('kategori-prestasi', DashboardKategoriPrestasi::class, ['names' => 'dashboard.datasekolah.kategori.prestasi']);
         Route::resource('prestasi', DashboardPrestasiController::class, ['names' => 'dashboard.datasekolah.prestasi']);
         Route::resource('kelas', KelasController::class, ['names' => 'dashboard.datasekolah.kelas']);
         Route::resource('jadwal',  DashboardJadwalController::class, ['names' => 'dashboard.datasekolah.jadwal']);

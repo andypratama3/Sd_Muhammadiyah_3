@@ -1,38 +1,72 @@
 <?php
+
 namespace App\Actions\Dashboard\Fasilitas;
 
 use App\Models\Fasilitas;
 use Illuminate\Support\Str;
 use App\Helpers\ImageHelper;
-use Illuminate\Http\Request;
+use App\Models\KelengkapanFasilitas;
 
 class FasilitasAction
 {
     public function execute($FasilitasData)
     {
-        if ($FasilitasData->foto) {
-            $fotorFiles = $FasilitasData->foto;
-            $fasilitas_name = [];
+        // ambil fasilitas (WAJIB ADA)
+        $fasilitas = Fasilitas::where('slug', $FasilitasData->slug)->firstOrFail();
 
-            foreach ($fotorFiles as $fotorFile) {
-                $ext = $fotorFile->getClientOriginalExtension();
-                $uniqueIdentifier = Str::random(8);
-                $file_name = 'Fasilitas_' . Str::slug($FasilitasData->nama_fasilitas) . '_' . $uniqueIdentifier . '_' . date('YmdHis') . ".$ext";
-                $upload_path = public_path('storage/img/fasilitas/');
-                // $fotorFile->move($upload_path, $file_name);
-                ImageHelper::resizeAndSave($fotorFile, $upload_path, $file_name);
-                $fasilitas_name[] = $file_name;
+        // foto lama
+        $fotoLama = $fasilitas->foto;
+
+        // upload foto baru (jika ada)
+        if ($FasilitasData->foto) {
+            $fotoBaru = [];
+
+            foreach ($FasilitasData->foto as $file) {
+                $ext = $file->getClientOriginalExtension();
+                $fileName = 'Fasilitas_' .
+                    Str::slug($FasilitasData->nama_fasilitas) . '_' .
+                    Str::random(6) . '_' .
+                    now()->format('YmdHis') . '.' . $ext;
+
+                $path = public_path('storage/img/fasilitas/');
+                ImageHelper::resizeAndSave($file, $path, $fileName);
+
+                $fotoBaru[] = $fileName;
+            }
+
+            // gabungkan foto lama + baru (opsional)
+            $fotoFinal = $fotoLama
+                ? $fotoLama . ',' . implode(',', $fotoBaru)
+                : implode(',', $fotoBaru);
+        } else {
+            $fotoFinal = $fotoLama;
+        }
+
+        // update fasilitas
+        $fasilitas->update([
+            'nama_fasilitas' => $FasilitasData->nama_fasilitas,
+            'desc'           => $FasilitasData->desc,
+            'ukuran'         => $FasilitasData->ukuran,
+            'kapasitas'      => $FasilitasData->kapasitas,
+            'foto'           => $fotoFinal,
+        ]);
+
+        // update kelengkapan
+        if ($FasilitasData->kelengkapan) {
+            // hapus lama
+            KelengkapanFasilitas::where('fasilitas_id', $fasilitas->id)->delete();
+
+            // simpan baru
+            foreach ($FasilitasData->kelengkapan as $item) {
+                if ($item) {
+                    KelengkapanFasilitas::create([
+                        'fasilitas_id' => $fasilitas->id,
+                        'nama'         => $item,
+                    ]);
+                }
             }
         }
 
-
-        $fasilitas = Fasilitas::updateOrCreate(
-            ['slug' => $FasilitasData->slug],
-            [
-                'nama_fasilitas' => $FasilitasData->nama_fasilitas,
-                'desc' => $FasilitasData->desc,
-                'foto' => implode(',', $fasilitas_name),
-            ]
-        );
+        return $fasilitas;
     }
 }

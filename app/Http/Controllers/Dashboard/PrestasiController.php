@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Models\Prestasi;
+use App\Models\KategoriPrestasi;
+use App\Http\Controllers\Controller;
+use App\DataTransferObjects\PrestasiData;
 use App\Actions\Dashboard\Prestasi\PrestasiAction;
 use App\Actions\Dashboard\Prestasi\PrestasiActionDelete;
-use App\DataTransferObjects\PrestasiData;
-use App\Http\Controllers\Controller;
-use App\Models\Prestasi;
 
 class PrestasiController extends Controller
 {
@@ -27,7 +28,9 @@ class PrestasiController extends Controller
 
     public function create()
     {
-        return view('dashboard.prestasi.create');
+        $kategoriPrestasi = KategoriPrestasi::orderBy('name', 'asc')->get();
+
+        return view('dashboard.prestasi.create', compact('kategoriPrestasi'));
     }
 
     public function store(PrestasiData $prestasiData, PrestasiAction $prestasiAction)
@@ -44,7 +47,8 @@ class PrestasiController extends Controller
 
     public function edit(Prestasi $prestasi)
     {
-        return view('dashboard.prestasi.edit', compact('prestasi'));
+        $kategoriPrestasi = KategoriPrestasi::orderBy('name', 'asc')->get();
+        return view('dashboard.prestasi.edit', compact('prestasi', 'kategoriPrestasi'));
     }
 
     public function update(PrestasiData $prestasiData, PrestasiAction $prestasiAction)
