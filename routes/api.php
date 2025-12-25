@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\V2\LandingController;
 use App\Http\Controllers\Api\V2\ViewsDataController;
 use App\Http\Controllers\Api\V2\BeritaDataController;
 use App\Http\Controllers\Api\V2\JadwalDataController;
+use App\Http\Controllers\Api\V2\GalleryDataController;
 use App\Http\Controllers\Api\V2\FasilitasDataController;
 use App\Http\Controllers\Api\V2\PembayaranDataController;
 use App\Http\Controllers\Api\V1\MidtransPaymentController;
@@ -72,6 +73,10 @@ Route::post('/whatsapp/callback', [SendOrderIDWhatsAppApi::class, 'webhook'])->n
 
 Route::group(['prefix' => 'v2'], function () {
 
+    // For Site Map
+    Route::get('list/berita', [BeritaDataController::class, 'list_berita']);
+    Route::get('list/gallery', [GalleryDataController::class, 'list_gallery']);
+    // End For Site Map
 
     Route::prefix('auth')->group(function () {
         Route::post('/token', [AuthController::class, 'generateToken']);
@@ -80,9 +85,10 @@ Route::group(['prefix' => 'v2'], function () {
         Route::post('/validate', [AuthController::class, 'validateToken']);
     });
 
+    // Fetch Front End
     Route::group(['middleware' => 'jwt'], function () {
 
-
+        Route::post('visitor/store', [ViewsDataController::class, 'store']);
         Route::get('count-landing',[LandingController::class, 'count']);
         Route::get('gallery-landing',[LandingController::class, 'gallery_activity']);
         Route::get('dukungan-kerja-sama', [LandingController::class, 'dukungan']);
@@ -102,8 +108,12 @@ Route::group(['prefix' => 'v2'], function () {
         Route::get('berita/{slug}', [BeritaDataController::class, 'show']);
 
         Route::get('fasilitas', [FasilitasDataController::class, 'fasilitasData']);
-        Route::get('gallery', [GalleryDataController::class, 'galleryData']);
+        Route::get('gallery', [GalleryDataController::class, 'listGallery']);
+        Route::get('gallery/{slug}', [GalleryDataController::class, 'show']);
+        Route::get('kategori-gallery', [GalleryDataController::class, 'kategori']);
     });
+
+    // END Fetch
 
 
 

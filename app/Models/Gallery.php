@@ -20,4 +20,9 @@ class Gallery extends Model
         'link',
         'slug',
     ];
+
+    public function gallery_kategori()
+    {
+        return $this->belongsToMany(KategoriGallery::class, 'gallery_kategori');
+    }
 }

@@ -72,6 +72,13 @@ class GalleryAction
             ]
         );
 
+        if(empty($galleryData->slug))
+        {
+            $gallery->gallery_kategori()->attach($galleryData->gallery_kategori);
+        }else{
+            $gallery->gallery_kategori()->sync($galleryData->gallery_kategori);
+        }
+
         return $gallery;
     }
 }

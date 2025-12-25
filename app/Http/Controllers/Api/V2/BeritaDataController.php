@@ -9,6 +9,27 @@ use App\Http\Controllers\Controller;
 
 class BeritaDataController extends Controller
 {
+    public function list_berita(Request $request)
+    {
+        $limit = (int) $request->get('limit', 500);
+
+        // Safety limit (jangan unlimited)
+        if ($limit > 1000) {
+            $limit = 1000;
+        }
+
+        $data = Berita::query()
+            ->whereNull('deleted_at')
+            ->select('judul', 'desc', 'foto', 'slug', 'category', 'updated_at')
+            ->orderByDesc('created_at')
+            ->limit($limit)
+            ->get();
+
+        return $this->success($data, "OK");
+    }
+
+
+
     /**
      * Get count of berita grouped by category
      * Endpoint: GET /api/v2/berita-count-data
@@ -172,6 +193,6 @@ class BeritaDataController extends Controller
 
     public function relatedNews()
     {
-        
+
     }
 }

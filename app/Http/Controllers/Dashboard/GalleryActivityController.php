@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Actions\Dashboard\Gallery\GalleryAction;
-use App\DataTransferObjects\GalleryData;
-use App\Http\Controllers\Controller;
 use App\Models\Gallery;
+use App\Models\KategoriGallery;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use App\DataTransferObjects\GalleryData;
 use Yajra\DataTables\Facades\DataTables;
+use App\Actions\Dashboard\Gallery\GalleryAction;
 
 class GalleryActivityController extends Controller
 {
@@ -31,8 +32,8 @@ class GalleryActivityController extends Controller
             })
             ->addColumn('options', function ($row) {
                 return '
-                        <a href="'.route('dashboard.datasekolah.gallery.show', $row->slug).'" class="btn btn-sm m-1 btn-warning"><i class="fa fa-eye"></i></a>
-                        <a href="'.route('dashboard.datasekolah.gallery.edit', $row->slug).'" class="btn btn-sm m-1 btn-info"><i class="fa fa-edit"></i></a>
+                        <a href="'.route('dashboard.datasekolah.gallery.show', $row->slug).'" class="m-1 btn btn-sm btn-warning"><i class="fa fa-eye"></i></a>
+                        <a href="'.route('dashboard.datasekolah.gallery.edit', $row->slug).'" class="m-1 btn btn-sm btn-info"><i class="fa fa-edit"></i></a>
                         <button data-id="'.$row['slug'].'" class="btn btn-sm btn-danger me-1" id="btn-delete"><i class="fa fa-trash"></i></button>
                     ';
             })
@@ -47,7 +48,8 @@ class GalleryActivityController extends Controller
 
     public function create()
     {
-        return view('dashboard.data.gallery.create');
+        $kategoriGallery = KategoriGallery::all();
+        return view('dashboard.data.gallery.create', compact('kategoriGallery'));
     }
 
     public function store(GalleryData $galleryData, GalleryAction $galleryAction)
@@ -59,7 +61,8 @@ class GalleryActivityController extends Controller
 
     public function edit(Gallery $gallery)
     {
-        return view('dashboard.data.gallery.edit', compact('gallery'));
+        $kategoriGallery = KategoriGallery::all();
+        return view('dashboard.data.gallery.edit', compact('gallery','kategoriGallery'));
     }
 
     public function update(GalleryData $galleryData, GalleryAction $galleryAction)
@@ -79,6 +82,9 @@ class GalleryActivityController extends Controller
                 Storage::delete($filePath);
             }
         }
+
+        $gallery->gallery_kategori()->detach();
+
         $action = $gallery->delete();
 
         if ($action) {

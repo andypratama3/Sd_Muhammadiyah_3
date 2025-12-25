@@ -33,6 +33,17 @@ class GalleryRequest extends FormRequest
     {
         return $this->slug;
     }
+
+    public function getLink()
+    {
+        return $this->link;
+    }
+
+    public function getGalleryKategori()
+    {
+        return $this->gallery_kategori;
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *

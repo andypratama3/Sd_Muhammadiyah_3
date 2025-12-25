@@ -120,6 +120,12 @@
                          <div data-i18n="Prestasi">Prestasi</div>
                      </a>
                  </li>
+                 <li class="menu-item {{ Request::routeIs('dashboard.datasekolah.kategori.gallery.*') ? 'active' : '' }}">
+                     <a href="{{ route('dashboard.datasekolah.kategori.gallery.index') }}" class="menu-link">
+                         <i class="menu-icon tf-icons bx bxs-image"></i>
+                         <div data-i18n="Gallery">Kategori Gallery</div>
+                     </a>
+                 </li>
                  <li class="menu-item {{ Request::routeIs('dashboard.datasekolah.gallery.*') ? 'active' : '' }}">
                      <a href="{{ route('dashboard.datasekolah.gallery.index') }}" class="menu-link">
                          <i class="menu-icon tf-icons bx bxs-image"></i>
@@ -162,13 +168,20 @@
          <li class="menu-item {{ Request::routeIs('dashboard.datamaster.*') ? 'open' : '' }}">
              <a href="javascript:void(0);" class="menu-link menu-toggle">
                  <i class="menu-icon tf-icons bx bx-detail"></i>
-                 <div data-i18n="Form Elements"> Siswa & Pembayaran</div>
+                 <div data-i18n="Form Elements"> Siswa</div>
              </a>
              <ul class="menu-sub">
                  <li class="menu-item {{ Request::routeIs('dashboard.datamaster.siswa.*') ? 'active' : ''  }}">
                      <a class="menu-link" href="{{ route('dashboard.datamaster.siswa.index') }}">
                          <i class="menu-icon tf-icons fas fa-solid fa-users"> </i>
                          <div class="mx-3" data-i18n="siswa"> Siswa</div>
+                     </a>
+                 </li>
+                 <li class="menu-item {{ Request::routeIs('dashboard.datamaster.rapot.*') ? 'active' : ''  }}">
+                     <a class="menu-link"
+                         href="{{ route('dashboard.datamaster.rapot.index') }}">
+                         <i class="menu-icon tf-icons fas fa-solid fa-user"></i>
+                         <div class="mx-3" data-i18n="rapot Siswa">Rapot Siswa</div>
                      </a>
                  </li>
                  <li class="menu-item {{ Request::routeIs('dashboard.datamaster.nilai.*') ? 'active' : ''  }}">

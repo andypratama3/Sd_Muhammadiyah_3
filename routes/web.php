@@ -38,9 +38,10 @@ use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\CategoryArtikel;
 use App\Http\Controllers\Dashboard\ChartController;
 use App\Http\Controllers\Dashboard\KelasController;
+use App\Http\Controllers\Dashboard\RapotController;
 use App\Http\Controllers\EkstrakurikulerController;
-use App\Http\Controllers\PrestasiSekolahController;
 
+use App\Http\Controllers\PrestasiSekolahController;
 use App\Http\Controllers\TenagaPendidikanController;
 use App\Http\Controllers\PengisianOrangTuaController;
 use App\Http\Controllers\Dashboard\ActivityController;
@@ -53,6 +54,7 @@ use App\Http\Controllers\Dashboard\AttendancesController;
 use App\Http\Controllers\Dashboard\CooperationController;
 use App\Http\Controllers\Dashboard\NotificationController;
 use App\Http\Controllers\Dashboard\KelasCategoryController;
+use App\Http\Controllers\Dashboard\KategoriGalleryController;
 use App\Http\Controllers\Dashboard\SpmbController as DashboardSpmController;
 use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
 use App\Http\Controllers\Dashboard\HeroController as DashboardHeroController;
@@ -231,6 +233,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::post('getSmester',[ DashboardJadwalController::class, 'getSmester'])->name('dashboard.datasekolah.jadwal.getSmester');
 
         Route::resource('gallery', DashboardGalleryActivityController::class, ['names' => 'dashboard.datasekolah.gallery']);
+        Route::resource('kategori-gallery', KategoriGalleryController::class, ['names' => 'dashboard.datasekolah.kategori.gallery']);
         Route::get('gallerys/data', [DashboardGalleryActivityController::class,'data_table'])->name('dashboard.datasekolah.gallery.data');
 
         Route::resource('cooperation', CooperationController::class, ['names' => 'dashboard.datasekolah.cooperation']);
@@ -262,6 +265,9 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::post('siswa/nisn', [DashboardSiswaController::class,'checknisn'])->name('siswa.check.nisn');
         Route::get('siswas/records', [DashboardSiswaController::class,'data_table'])->name('siswa.get.records');
         Route::post('siswas/import', [DashboardSiswaController::class,'import'])->name('siswa.import');
+        Route::resource('siswas/rapot', RapotController::class, ['names' => 'dashboard.datamaster.rapot']);
+        Route::post('rapot/get-categories', [RapotController::class, 'getCategories'])->name('dashboard.datamaster.rapot.get_categories');
+        Route::post('rapot/get-siswa', [RapotController::class,'getSiswa'])->name('dashboard.datamaster.rapot.get_siswa');
         Route::get('nilai', [DashboardNilaiSiswaController::class, 'index'])->name('dashboard.datamaster.nilai.index');
         Route::get('nilai/{name}', [DashboardNilaiSiswaController::class, 'matapelajaran'])->name('nilai.matapelajaran');
         Route::get('nilai/kelas/{kelas}', [DashboardNilaiSiswaController::class, 'kelas'])->name('nilai.matapelajaran.kelas');

@@ -38,7 +38,6 @@ class PrestasiAction
             'status'      => $request->status,
         ]);
 
-        // ===== SYNC KATEGORI (WAJIB) =====
         if ($request->prestasi_kategori) {
             $prestasi->prestasi_kategori()->sync($request->prestasi_kategori);
         }

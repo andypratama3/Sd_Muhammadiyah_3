@@ -1,8 +1,12 @@
 @extends('layouts.dashboard')
 @section('title', 'Edit Gallery')
+@push('css')
+<link href="{{ asset('asset_dashboard/vendor/select2/dist/css/select2.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ asset('asset_dashboard/vendor/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}" rel="stylesheet" type="text/css">
+@endpush
 @section('content')
-    <div class="card mb-4">
-        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+    <div class="mb-4 card">
+        <div class="flex-row py-3 card-header d-flex align-items-center justify-content-between">
             <h6 class="m-0 font-weight-bold text-primary">Edit Aktivitas Gallery</h6>
         </div>
         <div class="card-body">
@@ -10,7 +14,7 @@
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="slug" value="{{ $gallery->slug }}">
-                <div class="form-group mt-2">
+                <div class="mt-2 form-group">
                     <label for="name">Nama</label>
                     <input type="text" class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" name="name" id="name" placeholder="Masukan Nama" value="{{ old('name', $gallery->name) }}">
                     @if ($errors->has('name'))
@@ -20,8 +24,19 @@
                     @endif
                 </div>
 
+                <div class="mt-2 form-group">
+                    <label for="gallery_kategori" class="form-label">Kategori Gallery</label>
+                    <select name="gallery_kategori[]" class="form-control select2" multiple>
+                        @foreach ($kategoriGallery as $item)
+                            <option value="{{ $item->id }}"
+                                {{ $gallery->gallery_kategori->contains('id', $item->id) ? 'selected' : '' }}>
+                                {{ $item->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
 
-                <div class="form-group mt-2">
+                <div class="mt-2 form-group">
                     <label for="">Cover Gallery</label>
                     <div class="custom-file">
                         <input type="file" class="form-control" id="cover" name="cover" accept="image/jpeg,image/png,image" value="{{ old('cover', $gallery->cover) }}" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])">
@@ -32,7 +47,7 @@
                     </div>
                 </div>
 
-                 <div class="form-group mt-2">
+                 <div class="mt-2 form-group">
                     <label for="link">Link</label>
                     <input type="url" class="form-control {{ $errors->has('link') ? 'is-invalid' : '' }}" name="link" id="link" placeholder="Masukan Link" value="{{ old('link', $gallery->link) }}">
                     @if ($errors->has('link'))
@@ -42,7 +57,7 @@
                     @endif
                 </div>
 
-                <div class="form-group mt-2">
+                <div class="mt-2 form-group">
                     <label for="foto">Foto</label>
                     <input type="file" class="form-control {{ $errors->has('foto') ? 'is-invalid' : '' }}" id="foto" name="foto[]" multiple onchange="previewImage(event)">
                     @if ($errors->has('foto'))
@@ -53,7 +68,7 @@
                 </div>
 
 
-                <div class="row mt-4" id="preview">
+                <div class="mt-4 row" id="preview">
                     <h4 class="text-center">Preview</h4>
                     <div id="old_foto" class="row">
                         @php
@@ -61,13 +76,13 @@
                         @endphp
                         @foreach ($filenames as $filename)
                             <div class="col-md-3">
-                                <img src="{{ asset('storage/img/gallery/' . trim($filename)) }}" class="img-thumbnail mb-2" style="width: 100%; height: 300px;">
+                                <img src="{{ asset('storage/img/gallery/' . trim($filename)) }}" class="mb-2 img-thumbnail" style="width: 100%; height: 300px;">
                             </div>
                         @endforeach
                     </div>
                 </div>
 
-                <div class="form-group mt-2">
+                <div class="mt-2 form-group">
                     <a href="{{ route('dashboard.datasekolah.gallery.index') }}" class="btn btn-danger float-start">Kembali</a>
                     <button type="submit" class="btn btn-primary float-end">Submit</button>
                 </div>
@@ -76,8 +91,15 @@
     </div>
 @endsection
 
+
 @push('js')
+    <script src="{{ asset('asset_dashboard/vendor/select2/dist/js/select2.js') }}"></script>
     <script>
+        $(document).ready(function () {
+            $('.select2').select2({
+                theme: 'bootstrap4'
+            });
+        });
         function previewImage(event) {
             const input = event.target;
             const preview = document.getElementById('preview');

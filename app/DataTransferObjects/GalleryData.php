@@ -14,6 +14,7 @@ class GalleryData extends Data
         public readonly string $name,
         public readonly ?array $foto,
         public readonly ?UploadedFile $cover,
+        public readonly array $gallery_kategori,
         public readonly ?string $link,
         public readonly ?string $slug,
 
@@ -29,6 +30,7 @@ class GalleryData extends Data
             $request->getFoto(),
             $request->getCover(),
             $request->getLink(),
+            $request->getGalleryKategori(),
             $request->getSlug(),
         ]);
     }
