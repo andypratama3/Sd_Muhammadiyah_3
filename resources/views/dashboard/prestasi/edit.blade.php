@@ -17,12 +17,12 @@
             @method('PUT')
             <input type="hidden" name="slug" value="{{ $prestasi->slug }}">
             <div class="mt-2 form-group">
-                <label for="name">Nama</label>
+                <label class="form-label" for="name">Nama</label>
                 <input type="text" class="form-control" name="name" id="name" aria-describedby="name"
                     placeholder="Masukan Prestasi" value="{{ $prestasi->name }}">
             </div>
             <div class="mt-2 form-group">
-                <label for="">Status</label>
+                <label class="form-label" for="">Status</label>
                 <select name="status" id="" class="form-control">
                     <option selected value="{{ $prestasi->status }}">{{ ($prestasi->status == 1 ) ? 'Prestasi Siswa' : 'Prestasi Sekolah'  }}</option>
                     <option value="1">Prestasi Siswa</option>
@@ -30,7 +30,7 @@
                 </select>
             </div>
              <div class="mt-2 form-group">
-                <label for="prestasi_kategori" class="form-label">Kategori Prestasi</label>
+                <label class="form-label" for="prestasi_kategori" class="form-label">Kategori Prestasi</label>
                 <select name="prestasi_kategori[]" class="form-control select2" multiple>
                     @foreach ($kategoriPrestasi as $item)
                         <option value="{{ $item->id }}"
@@ -41,14 +41,14 @@
                 </select>
             </div>
             <div class="mt-2 form-group">
-                <label for="">Foto</label>
+                <label class="form-label" for="">Foto</label>
                 <div class="custom-file">
                     <input type="file" class="form-control" id="foto" name="foto" value="{{ $prestasi->foto }}">
                 </div>
                 <img src="{{ asset('storage/img/prestasi/'. $prestasi->foto) }}" alt="" srcset="" style="width: 100%; margin-top: 2rem;">
             </div>
             <div class="mt-2 form-group">
-                <label for="">Deskripsi</label>
+                <label class="form-label" for="">Deskripsi</label>
                  <div id="editor">{!! $prestasi->description !!}</div>
                 <textarea name="description" id="content-editor" style="display: none;"></textarea>
             </div>

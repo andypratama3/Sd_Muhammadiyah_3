@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\V2\ViewsDataController;
 use App\Http\Controllers\Api\V2\BeritaDataController;
 use App\Http\Controllers\Api\V2\JadwalDataController;
 use App\Http\Controllers\Api\V2\GalleryDataController;
+use App\Http\Controllers\Api\V2\PrestasiDataController;
 use App\Http\Controllers\Api\V2\FasilitasDataController;
 use App\Http\Controllers\Api\V2\PembayaranDataController;
 use App\Http\Controllers\Api\V1\MidtransPaymentController;
@@ -111,6 +112,31 @@ Route::group(['prefix' => 'v2'], function () {
         Route::get('gallery', [GalleryDataController::class, 'listGallery']);
         Route::get('gallery/{slug}', [GalleryDataController::class, 'show']);
         Route::get('kategori-gallery', [GalleryDataController::class, 'kategori']);
+
+        Route::group(['prefix' => 'prestasi'], function () {
+            Route::get('/categories', [PrestasiDataController::class, 'categories']);
+            Route::get('/categories/siswa', [PrestasiDataController::class, 'categoriesSiswa']);
+            Route::get('/categories/sekolah', [PrestasiDataController::class, 'categoriesSekolah']);
+
+
+            // Prestasi Siswa endpoints
+            Route::prefix('siswa')->group(function () {
+                Route::get('/', [PrestasiDataController::class, 'prestasi_siswa']);
+                Route::get('/count-by-tingkat', [PrestasiDataController::class, 'countSiswaByTingkat']);
+                Route::get('/count-by-category', [PrestasiDataController::class, 'countSiswaByCategory']);
+                Route::get('/popular', [PrestasiDataController::class, 'prestasiSiswaPopular']);
+                Route::get('/{slug}', [PrestasiDataController::class, 'prestasi_siswa_detail']);
+            });
+
+            // Prestasi Sekolah endpoints
+            Route::prefix('sekolah')->group(function () {
+                Route::get('/', [PrestasiDataController::class, 'prestasi_sekolah']);
+                Route::get('/{slug}', [PrestasiDataController::class, 'prestasi_sekolah_detail']);
+            });
+        });
+
+        // Statistics endpoint
+        Route::get('/statistics', [PrestasiDataController::class, 'statistics']);
     });
 
     // END Fetch

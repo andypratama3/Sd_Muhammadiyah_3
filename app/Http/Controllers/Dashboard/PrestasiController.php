@@ -30,7 +30,7 @@ class PrestasiController extends Controller
     {
         $kategoriPrestasi = KategoriPrestasi::orderBy('name', 'asc')->get();
 
-        return view('dashboard.prestasi.create', compact('kategoriPrestasi'));
+        return view('dashboard.prestasi.form', compact('kategoriPrestasi'));
     }
 
     public function store(PrestasiData $prestasiData, PrestasiAction $prestasiAction)
@@ -48,7 +48,7 @@ class PrestasiController extends Controller
     public function edit(Prestasi $prestasi)
     {
         $kategoriPrestasi = KategoriPrestasi::orderBy('name', 'asc')->get();
-        return view('dashboard.prestasi.edit', compact('prestasi', 'kategoriPrestasi'));
+        return view('dashboard.prestasi.form', compact('prestasi', 'kategoriPrestasi'));
     }
 
     public function update(PrestasiData $prestasiData, PrestasiAction $prestasiAction)

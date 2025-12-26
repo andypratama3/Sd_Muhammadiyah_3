@@ -35,6 +35,23 @@ class PrestasiRequest extends FormRequest
         $this->slug;
     }
 
+    public function getTingkat()
+    {
+        $this->tingkat;
+    }
+    public function getPenyelenggara()
+    {
+        $this->penyelenggara;
+    }
+    public function getTanggal()
+    {
+        $this->tanggal;
+    }
+    public function getJuara()
+    {
+        $this->juara;
+    }
+
     public function getPrestasiKategori()
     {
         $this->prestasi_kategori;

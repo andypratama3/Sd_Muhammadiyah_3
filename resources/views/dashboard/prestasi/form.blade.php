@@ -17,9 +17,8 @@
             @csrf
             @if(isset($prestasi))
                 @method('PUT')
-                <!-- Hidden ID untuk Prestasi Siswa -->
-                @if($prestasi->prestasi_siswa_id)
-                    <input type="hidden" name="prestasi_siswa_id" value="{{ $prestasi->prestasi_siswa_id }}">
+                @if($prestasi->slug)
+                    <input type="hidden" name="slug" value="{{ $prestasi->slug }}">
                 @endif
             @endif
 
@@ -76,16 +75,6 @@
                     @enderror
                 </div>
 
-                <!-- Peyelenggara -->
-                <div class="mt-2 form-group">
-                    <label class="form-label" for="peyelenggara">Peyelenggara</label>
-                    <input type="text" class="form-control @error('peyelenggara') is-invalid @enderror"
-                           name="peyelenggara" id="peyelenggara" value="{{ old('peyelenggara', $prestasi->peyelenggara ?? '') }}">
-                    @error('peyelenggara')
-                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                    @enderror
-                </div>
-
                 <!-- Juara -->
                 <div class="mt-2 form-group">
                     <label class="form-label" for="juara">Juara</label>
@@ -95,6 +84,16 @@
                         <div class="invalid-feedback d-block">{{ $message }}</div>
                     @enderror
                 </div>
+            </div>
+
+            <!-- penyelenggara -->
+            <div class="mt-2 form-group">
+                <label class="form-label" for="penyelenggara">Penyelenggara</label>
+                <input type="text" class="form-control @error('penyelenggara') is-invalid @enderror"
+                    name="penyelenggara" id="penyelenggara" value="{{ old('penyelenggara', $prestasi->penyelenggara ?? '') }}">
+                @error('peyelenggara')
+                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                @enderror
             </div>
 
             <!-- Kategori Prestasi -->

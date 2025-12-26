@@ -19,6 +19,6 @@ class KategoriPrestasi extends Model
 
     public function prestasi_kategori()
     {
-        return $this->belongsToMany(Prestasi::class, 'prestasi_kategori', 'prestasi_id', 'kategori_prestasi_id');
+        return $this->belongsToMany(Prestasi::class, 'prestasi_kategori','kategori_prestasi_id','prestasi_id');
     }
 }

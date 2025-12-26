@@ -14,6 +14,10 @@ class PrestasiData extends Data
         public readonly string $status,
         public readonly array $prestasi_kategori,
         public readonly ?UploadedFile $foto,
+        public readonly ?string $tingkat,
+        public readonly ?string $penyelenggara,
+        public readonly ?string $tanggal,
+        public readonly ?string $juara,
         public readonly ?string $slug,
 
     ) {
@@ -28,6 +32,10 @@ class PrestasiData extends Data
             $request->getDesc(),
             $request->getStatus(),
             $request->getPrestasiKategori(),
+            $request->getTingkat(),
+            $request->getPenyelenggara(),
+            $request->getTanggal(),
+            $request->getJuara(),
             $request->getSlug(),
         ]);
     }
