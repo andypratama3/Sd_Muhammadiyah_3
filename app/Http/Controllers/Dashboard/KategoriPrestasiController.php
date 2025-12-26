@@ -90,11 +90,7 @@ class KategoriPrestasiController extends Controller
         $kategoriPrestasi = KategoriPrestasi::find($id);
         $action = $kategoriPrestasi->delete();
 
-        if($action){
-            return response()->json(['status' => 'success', 'message' => 'Berhasil Menghapus Kategori Prestasi']);
-        } else {
-            return response()->json(['status' => 'error', 'message' => 'Gagal Menghapus Kategori Prestasi']);
-        }
+        return redirect()->route('dashboard.datasekolah.kategori.prestasi.index')->with('success','Berhasil Menghapus Kategori Prestasi');
 
     }
 }
