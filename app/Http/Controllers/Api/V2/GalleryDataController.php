@@ -9,45 +9,87 @@ use App\Http\Controllers\Controller;
 
 class GalleryDataController extends Controller
 {
+    /**
+     * Ambil semua kategori gallery
+     *
+     * GET /api/v2/gallery/categories
+     */
     public function kategori()
     {
-        $kategoriGallery = KategoriGallery::all();
+        try {
+            $kategoriGallery = KategoriGallery::all();
 
-        if($kategoriGallery) {
-            return $this->success($kategoriGallery, 'Berhasil Menerima Data');
+            if ($kategoriGallery && $kategoriGallery->count() > 0) {
+                return $this->success($kategoriGallery, 'Berhasil Menerima Data');
+            }
+
+            return $this->error('Data tidak ditemukan');
+        } catch (\Exception $e) {
+            return $this->serverError('Gagal mengambil kategori gallery: ' . $e->getMessage());
         }
     }
 
+    /**
+     * Ambil list gallery (ringkas)
+     *
+     * GET /api/v2/gallery/list
+     */
     public function list_gallery()
     {
-        $galleryData = Gallery::select(['name', 'slug','updated_at'])->get();
+        try {
+            $galleryData = Gallery::select(['name', 'slug', 'updated_at'])->get();
 
-        if($galleryData) {
-            return $this->success($galleryData, 'Berhasil Menerima Data');
+            if ($galleryData && $galleryData->count() > 0) {
+                return $this->success($galleryData, 'Berhasil Menerima Data');
+            }
+
+            return $this->error('Data tidak ditemukan');
+        } catch (\Exception $e) {
+            return $this->serverError('Gagal mengambil list gallery: ' . $e->getMessage());
         }
-
-        return $this->error('Data tidak ditemukan');
     }
 
+    /**
+     * Ambil semua gallery dengan kategori
+     *
+     * GET /api/v2/gallery
+     */
     public function listGallery()
     {
-        $gallery = Gallery::with('gallery_kategori')->orderBy('created_at', 'desc')->get();
+        try {
+            $gallery = Gallery::with('gallery_kategori')
+                ->orderBy('created_at', 'desc')
+                ->get();
 
-        if($gallery) {
-            return $this->success($gallery, 'Berhasil Menerima Data');
+            if ($gallery && $gallery->count() > 0) {
+                return $this->success($gallery, 'Berhasil Menerima Data');
+            }
+
+            return $this->error('Data tidak ditemukan');
+        } catch (\Exception $e) {
+            return $this->serverError('Gagal mengambil data gallery: ' . $e->getMessage());
         }
-
-        return $this->error('Data tidak ditemukan');
     }
 
+    /**
+     * Ambil detail gallery berdasarkan slug
+     *
+     * GET /api/v2/gallery/{slug}
+     */
     public function show($slug)
     {
-        $gallery = Gallery::with('gallery_kategori')->where('slug', $slug)->first();
+        try {
+            $gallery = Gallery::with('gallery_kategori')
+                ->where('slug', $slug)
+                ->first();
 
-        if($gallery) {
-            return $this->success($gallery, 'Berhasil Menerima Data');
+            if ($gallery) {
+                return $this->success($gallery, 'Berhasil Menerima Data');
+            }
+
+            return $this->notFound('Gallery tidak ditemukan');
+        } catch (\Exception $e) {
+            return $this->serverError('Gagal mengambil detail gallery: ' . $e->getMessage());
         }
-
-        return $this->error('Data tidak ditemukan');
     }
 }

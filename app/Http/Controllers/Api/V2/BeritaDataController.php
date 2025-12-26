@@ -9,190 +9,179 @@ use App\Http\Controllers\Controller;
 
 class BeritaDataController extends Controller
 {
+    /**
+     * Ambil daftar berita (limit)
+     *
+     * GET /api/v2/berita/list
+     */
     public function list_berita(Request $request)
     {
-        $limit = (int) $request->get('limit', 500);
+        try {
+            $limit = (int) $request->get('limit', 500);
 
-        // Safety limit (jangan unlimited)
-        if ($limit > 1000) {
-            $limit = 1000;
+            // Safety limit
+            if ($limit > 1000) {
+                $limit = 1000;
+            }
+
+            $data = Berita::query()
+                ->whereNull('deleted_at')
+                ->select('judul', 'desc', 'foto', 'slug', 'category', 'updated_at')
+                ->orderByDesc('created_at')
+                ->limit($limit)
+                ->get();
+
+            return $this->success($data, 'OK');
+        } catch (\Exception $e) {
+            return $this->serverError('Gagal mengambil list berita: ' . $e->getMessage());
         }
-
-        $data = Berita::query()
-            ->whereNull('deleted_at')
-            ->select('judul', 'desc', 'foto', 'slug', 'category', 'updated_at')
-            ->orderByDesc('created_at')
-            ->limit($limit)
-            ->get();
-
-        return $this->success($data, "OK");
     }
 
-
-
     /**
-     * Get count of berita grouped by category
-     * Endpoint: GET /api/v2/berita-count-data
+     * Hitung jumlah berita berdasarkan kategori
+     *
+     * GET /api/v2/berita/count-by-category
      */
     public function countData()
     {
         try {
-            $berita = Berita::where('deleted_at', null)
+            $data = Berita::whereNull('deleted_at')
                 ->groupBy('category')
                 ->select('category', DB::raw('count(*) as total'))
-                ->orderBy('total', 'desc')
+                ->orderByDesc('total')
                 ->get();
 
-            if($berita && count($berita) > 0){
-                return $this->success($berita, "OK");
+            if ($data->count() > 0) {
+                return $this->success($data, 'OK');
             }
 
             return $this->error('Data tidak ditemukan');
         } catch (\Exception $e) {
-            return $this->error('Error: ' . $e->getMessage());
+            return $this->serverError('Gagal mengambil count berita: ' . $e->getMessage());
         }
     }
 
     /**
-     * Get popular berita ordered by views
-     * Endpoint: GET /api/v2/berita-popular
+     * Ambil berita populer berdasarkan views
+     *
+     * GET /api/v2/berita/popular
      */
     public function beritaPopuler()
     {
         try {
-            $berita = Berita::where('deleted_at', null)
-                ->orderBy('views', 'desc')
+            $data = Berita::whereNull('deleted_at')
+                ->orderByDesc('views')
                 ->take(10)
                 ->get();
 
-            if($berita && count($berita) > 0){
-                return $this->success($berita, "OK");
+            if ($data->count() > 0) {
+                return $this->success($data, 'OK');
             }
 
             return $this->error('Data tidak ditemukan');
         } catch (\Exception $e) {
-            return $this->error('Error: ' . $e->getMessage());
+            return $this->serverError('Gagal mengambil berita populer: ' . $e->getMessage());
         }
     }
 
     /**
-     * Get list of berita dengan filter kategori, search, dan pagination
-     * Endpoint: GET /api/v2/berita?page=1&category=pengumuman&search=kolam
+     * Ambil semua berita dengan filter + pagination
+     *
+     * GET /api/v2/berita
+     * Query params:
+     * - search
+     * - category
+     * - per_page
+     * - page
      */
     public function list(Request $request)
     {
         try {
-            $search = $request->input('search', null);
-            $category = $request->input('category', null);
-            $page = $request->input('page', 1);
-            $perPage = $request->input('per_page', 10);
+            $search   = $request->input('search');
+            $category = $request->input('category');
+            $perPage  = $request->input('per_page', 10);
 
-            // Start building query
-            $query = Berita::where('deleted_at', null);
+            $query = Berita::whereNull('deleted_at');
 
-            // Apply search filter
-            if ($search && !empty(trim($search))) {
-                $searchTerm = trim($search);
-                $query->where(function($q) use ($searchTerm) {
-                    $q->where('judul', 'LIKE', "%{$searchTerm}%")
-                      ->orWhere('desc', 'LIKE', "%{$searchTerm}%");
+            // Search
+            if ($search && trim($search) !== '') {
+                $query->where(function ($q) use ($search) {
+                    $q->where('judul', 'LIKE', "%{$search}%")
+                      ->orWhere('desc', 'LIKE', "%{$search}%");
                 });
             }
 
-            // Apply category filter
-            // PENTING: hanya filter jika category ada dan bukan 'semua'
-            if ($category && !empty(trim($category)) && $category !== 'semua') {
-                $categoryTerm = strtolower(trim($category));
-                $query->where('category', $categoryTerm);
+            // Category filter (ignore semua/all)
+            if ($category && !in_array(strtolower($category), ['semua', 'all'])) {
+                $query->where('category', strtolower($category));
             }
 
-            // Order by created_at descending
-            $query->orderBy('created_at', 'desc');
+            $query->orderByDesc('created_at');
 
-            // Get paginated data
             $data = $query->paginate($perPage);
 
-            // Return response dengan format yang benar
-            return $this->paginated($data, "OK");
+            return $this->paginated($data, 'OK');
         } catch (\Exception $e) {
-            return $this->error('Error: ' . $e->getMessage());
+            return $this->serverError('Gagal mengambil berita: ' . $e->getMessage());
         }
     }
 
     /**
-     * Get single berita by slug and increment views
-     * Endpoint: GET /api/v2/berita/{slug}
+     * Ambil detail berita + increment views
+     *
+     * GET /api/v2/berita/{slug}
      */
     public function show($slug)
     {
         try {
-            $data = Berita::where('slug', $slug)
-                ->where('deleted_at', null)
+            $berita = Berita::where('slug', $slug)
+                ->whereNull('deleted_at')
                 ->firstOrFail();
 
-            // Increment views count
-            $data->increment('views');
+            // Increment views
+            $berita->increment('views');
 
-            return $this->success([
-                "data" => [
-                    'id' => $data->id,
-                    'judul' => $data->judul,
-                    'desc' => $data->desc,
-                    'views' => $data->views,
-                    'slug' => $data->slug,
-                    'category' => $data->category,
-                    'foto' => $data->foto,
-                    'created_at' => $data->created_at,
-                    'updated_at' => $data->updated_at,
-                ]
-            ], "OK");
+            $data = [
+                'id' => $berita->id,
+                'judul' => $berita->judul,
+                'desc' => $berita->desc,
+                'slug' => $berita->slug,
+                'category' => $berita->category,
+                'foto' => $berita->foto,
+                'views' => $berita->views ?? 0,
+                'created_at' => $berita->created_at,
+                'updated_at' => $berita->updated_at,
+            ];
+
+            return $this->success(['data' => $data], 'OK');
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return $this->error('Berita tidak ditemukan', 404);
+            return $this->notFound('Berita tidak ditemukan');
         } catch (\Exception $e) {
-            return $this->error('Error: ' . $e->getMessage());
+            return $this->serverError('Gagal mengambil detail berita: ' . $e->getMessage());
         }
     }
 
     /**
-     * Search berita (deprecated - gunakan list dengan parameter search)
-     * Endpoint: GET /api/v2/berita/search?search=kolam&category=pengumuman
+     * Statistik berita
+     *
+     * GET /api/v2/berita/statistics
      */
-    public function search(Request $request)
+    public function statistics()
     {
         try {
-            $search = $request->input('search');
-            $category = $request->input('category', null);
-            $perPage = $request->input('per_page', 10);
+            $statistics = [
+                'total_berita' => Berita::whereNull('deleted_at')->count(),
+                'total_views' => Berita::whereNull('deleted_at')->sum('views'),
+                'by_category' => Berita::whereNull('deleted_at')
+                    ->groupBy('category')
+                    ->select('category', DB::raw('count(*) as total'))
+                    ->orderByDesc('total')
+                    ->get(),
+            ];
 
-            if (!$search || empty(trim($search))) {
-                return $this->error('Search query tidak boleh kosong');
-            }
-
-            $query = Berita::where('deleted_at', null)
-                ->where(function($q) use ($search) {
-                    $q->where('judul', 'LIKE', "%{$search}%")
-                      ->orWhere('desc', 'LIKE', "%{$search}%");
-                });
-
-            // Filter category jika ada
-            if ($category && !empty(trim($category)) && $category !== 'semua') {
-                $query->where('category', strtolower(trim($category)));
-            }
-
-            $data = $query->orderBy('created_at', 'desc')->paginate($perPage);
-
-            if($data && count($data) > 0){
-                return $this->paginated($data, "OK");
-            }
-
-            return $this->error('Data tidak ditemukan');
+            return $this->success($statistics, 'Statistik berita berhasil diambil');
         } catch (\Exception $e) {
-            return $this->error('Error: ' . $e->getMessage());
+            return $this->serverError('Gagal mengambil statistik berita: ' . $e->getMessage());
         }
-    }
-
-    public function relatedNews()
-    {
-
     }
 }

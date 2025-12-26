@@ -8,26 +8,45 @@ use App\Http\Controllers\Controller;
 
 class FasilitasDataController extends Controller
 {
+    /**
+     * Ambil semua data fasilitas beserta kelengkapan
+     *
+     * GET /api/v2/fasilitas
+     */
     public function fasilitasData()
     {
-        $fasilitas = Fasilitas::with('kelengkapan')->orderBy('created_at', 'asc')->get();
+        try {
+            $fasilitas = Fasilitas::with('kelengkapan')
+                ->orderBy('created_at', 'asc')
+                ->get();
 
-        if($fasilitas){
-            return $this->success($fasilitas, 'ok');
+            if ($fasilitas && $fasilitas->count() > 0) {
+                return $this->success($fasilitas, 'OK');
+            }
+
+            return $this->error('Data tidak ditemukan');
+        } catch (\Exception $e) {
+            return $this->serverError('Gagal mengambil data fasilitas: ' . $e->getMessage());
         }
-
-        $this->error('Data Tidak Di Temukan');
-
     }
 
+    /**
+     * Ambil detail fasilitas berdasarkan ID
+     *
+     * GET /api/v2/fasilitas/{id}
+     */
     public function show($id)
     {
-        $fasilitas = Fasilitas::find($id);
+        try {
+            $fasilitas = Fasilitas::with('kelengkapan')->find($id);
 
-        if($fasilitas){
-            return $this->success($fasilitas, 'ok');
+            if ($fasilitas) {
+                return $this->success($fasilitas, 'OK');
+            }
+
+            return $this->notFound('Fasilitas tidak ditemukan');
+        } catch (\Exception $e) {
+            return $this->serverError('Gagal mengambil detail fasilitas: ' . $e->getMessage());
         }
-
-        $this->error('Data Tidak Di Temukan');
     }
 }
