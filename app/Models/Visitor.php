@@ -31,7 +31,8 @@ class Visitor extends Model
      */
     public static function logOncePerDay()
     {
-        $ip = request()->ip();
+       $ip = request()->header('CF-Connecting-IP')?? request()->ip();
+
         $userAgent = request()->userAgent();
         $today = now()->toDateString();
 
