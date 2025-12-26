@@ -12,27 +12,22 @@ class JadwalDataController extends Controller
 {
     /**
      * Ambil daftar tahun ajaran
-     *
      * GET /api/v2/jadwal/tahun-ajaran
      */
     public function tahunAjaran()
     {
         try {
-            $jadwal = Jadwal::groupBy('tahun_ajaran')->pluck('tahun_ajaran');
+            $jadwal = Jadwal::groupBy('tahun_ajaran')
+                ->pluck('tahun_ajaran');
 
-            if ($jadwal && $jadwal->count() > 0) {
-                return $this->success($jadwal, 'OK');
-            }
-
-            return $this->error('Data tidak ditemukan');
+            return $this->success($jadwal ?? [], 'OK');
         } catch (\Exception $e) {
-            return $this->serverError('Gagal mengambil tahun ajaran: ' . $e->getMessage());
+            return $this->serverError('Gagal mengambil tahun ajaran');
         }
     }
 
     /**
      * Ambil daftar kelas (kecuali Lulus)
-     *
      * GET /api/v2/jadwal/kelas
      */
     public function kelas()
@@ -42,19 +37,14 @@ class JadwalDataController extends Controller
                 ->orderBy('name', 'asc')
                 ->get();
 
-            if ($kelas && $kelas->count() > 0) {
-                return $this->success($kelas, 'OK');
-            }
-
-            return $this->error('Data tidak ditemukan');
+            return $this->success($kelas ?? [], 'OK');
         } catch (\Exception $e) {
-            return $this->serverError('Gagal mengambil data kelas: ' . $e->getMessage());
+            return $this->serverError('Gagal mengambil data kelas');
         }
     }
 
     /**
      * Ambil kategori kelas berdasarkan kelas_id
-     *
      * GET /api/v2/jadwal/category-kelas
      */
     public function categoryKelas(Request $request)
@@ -68,37 +58,29 @@ class JadwalDataController extends Controller
                 return $this->notFound('Kelas tidak ditemukan');
             }
 
-            $raw = $kelas->category_kelas;
-
-            if (! $raw) {
+            if (! $kelas->category_kelas) {
                 return $this->success([], 'OK');
             }
 
-            $decoded = json_decode($raw, true);
+            $decoded = json_decode($kelas->category_kelas, true);
 
             if (! is_array($decoded)) {
                 return $this->success([], 'OK');
             }
 
             $categories = collect($decoded)
-                ->values()
                 ->filter(fn ($v) => trim($v) !== '')
                 ->values();
 
             return $this->success($categories, 'OK');
         } catch (\Exception $e) {
-            return $this->serverError('Gagal mengambil kategori kelas: ' . $e->getMessage());
+            return $this->serverError('Gagal mengambil kategori kelas');
         }
     }
 
     /**
      * Ambil jadwal berdasarkan filter
-     *
-     * GET /api/v2/jadwal
-     * Query params:
-     * - tahun_ajaran
-     * - kelas_id
-     * - category_kelas
+     * GET /api/v2/jadwal/list-jadwal
      */
     public function list_jadwal(Request $request)
     {
@@ -109,14 +91,12 @@ class JadwalDataController extends Controller
                 'category_kelas' => 'required|string',
             ]);
 
-            $request->merge([
-                'category_kelas' => strtolower($request->category_kelas)
-            ]);
+            $category = strtolower($request->category_kelas);
 
             $jadwal = Jadwal::with(['jadwal_details', 'kelas'])
                 ->where('tahun_ajaran', $request->tahun_ajaran)
                 ->where('kelas_id', $request->kelas_id)
-                ->where('category_kelas', $request->category_kelas)
+                ->where('category_kelas', $category)
                 ->get()
                 ->map(function ($item) {
                     return [
@@ -145,15 +125,12 @@ class JadwalDataController extends Controller
                     ];
                 });
 
-            if ($jadwal && $jadwal->count() > 0) {
-                return $this->success($jadwal, 'OK');
-            }
-
-            return $this->error('Data tidak ditemukan');
+            // DATA KOSONG = BUKAN ERROR
+            return $this->success($jadwal ?? [], 'OK');
         } catch (ValidationException $e) {
             return $this->validationError('Validasi gagal', $e->errors());
         } catch (\Exception $e) {
-            return $this->serverError('Gagal mengambil jadwal: ' . $e->getMessage());
+            return $this->serverError('Gagal mengambil jadwal');
         }
     }
 }
