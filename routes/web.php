@@ -52,6 +52,7 @@ use App\Http\Controllers\Dashboard\AchivementController;
 use App\Http\Controllers\Dashboard\UrlVisitorController;
 use App\Http\Controllers\Dashboard\AttendancesController;
 use App\Http\Controllers\Dashboard\CooperationController;
+use App\Http\Controllers\Dashboard\FotoSekolahController;
 use App\Http\Controllers\Dashboard\NotificationController;
 use App\Http\Controllers\Dashboard\KelasCategoryController;
 use App\Http\Controllers\Dashboard\KategoriGalleryController;
@@ -231,6 +232,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::resource('jadwal',  DashboardJadwalController::class, ['names' => 'dashboard.datasekolah.jadwal']);
         Route::post('kelas_category',[ DashboardJadwalController::class, 'getCategoryKelas'])->name('dashboard.datasekolah.jadwal.kelas_category');
         Route::post('getSmester',[ DashboardJadwalController::class, 'getSmester'])->name('dashboard.datasekolah.jadwal.getSmester');
+
+        Route::resource('foto-sekolah', FotoSekolahController::class, ['names' => 'dashboard.datasekolah.foto_sekolah']);
 
         Route::resource('gallery', DashboardGalleryActivityController::class, ['names' => 'dashboard.datasekolah.gallery']);
         Route::resource('kategori-gallery', KategoriGalleryController::class, ['names' => 'dashboard.datasekolah.kategori.gallery']);

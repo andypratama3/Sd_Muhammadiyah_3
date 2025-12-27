@@ -66,6 +66,12 @@
                  <div data-i18n="Data Sekolah">Data Sekolah</div>
              </a>
              <ul class="menu-sub">
+                 <li class="menu-item {{ Request::routeIs('dashboard.datasekolah.foto_sekolah.*') ? 'active' : '' }}">
+                     <a href="{{ route('dashboard.datasekolah.foto_sekolah.index') }}" class="menu-link">
+                         <i class="menu-icon tf-icons bx bxs-home"></i>
+                         <div data-i18n="Sarana &  Prasarana">Foto Sekolah</div>
+                     </a>
+                 </li>
                  <li class="menu-item {{ Request::routeIs('dashboard.datasekolah.fasilitas.*') ? 'active' : '' }}">
                      <a href="{{ route('dashboard.datasekolah.fasilitas.index') }}" class="menu-link">
                          <i class="menu-icon tf-icons bx bxs-home"></i>
