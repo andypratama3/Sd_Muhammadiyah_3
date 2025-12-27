@@ -43,6 +43,28 @@ class LandingController extends Controller
     }
 
     /**
+     * Ambil prestasi untuk landing page
+     *
+     * GET /api/v2/landing/prestasi
+     */
+    public function prestasi_landing()
+    {
+        try {
+            $prestasi = Prestasi::siswa()->orderBy('created_at', 'asc')
+                ->take(8)
+                ->get();
+
+            if ($prestasi && $prestasi->count() > 0) {
+                return $this->success($prestasi, 'Berhasil Menerima Data');
+            }
+
+            return $this->error('Data tidak ditemukan');
+        } catch (\Exception $e) {
+            return $this->serverError('Gagal mengambil prestasi: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * Ambil gallery activity untuk landing page
      *
      * GET /api/v2/landing/gallery-activity

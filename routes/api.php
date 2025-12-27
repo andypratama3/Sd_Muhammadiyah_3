@@ -92,6 +92,7 @@ Route::group(['prefix' => 'v2'], function () {
         Route::post('visitor/store', [ViewsDataController::class, 'store']);
         Route::get('count-landing',[LandingController::class, 'count']);
         Route::get('gallery-landing',[LandingController::class, 'gallery_activity']);
+        Route::get('prestasi-landing',[LandingController::class, 'prestasi_landing']);
         Route::get('dukungan-kerja-sama', [LandingController::class, 'dukungan']);
         Route::get('/views', [ViewsDataController::class, 'viewData']);
         // Pembayaran
