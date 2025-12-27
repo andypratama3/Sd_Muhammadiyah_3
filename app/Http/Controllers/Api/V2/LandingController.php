@@ -36,7 +36,7 @@ class LandingController extends Controller
                 'fasilitas' => $fasilitas,
                 'prestasis_siswa' => $prestasis_siswa,
                 'prestasis_sekolah' => $prestasis_sekolah,
-            ], 'OK');
+            ] ?? [], 'OK');
         } catch (\Exception $e) {
             return $this->serverError('Gagal mengambil data count landing: ' . $e->getMessage());
         }

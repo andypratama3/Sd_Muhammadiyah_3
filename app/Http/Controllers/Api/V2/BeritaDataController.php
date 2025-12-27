@@ -31,7 +31,7 @@ class BeritaDataController extends Controller
                 ->limit($limit)
                 ->get();
 
-            return $this->success($data, 'OK');
+            return $this->success($data ?? [], 'OK');
         } catch (\Exception $e) {
             return $this->serverError('Gagal mengambil list berita: ' . $e->getMessage());
         }
@@ -155,7 +155,7 @@ class BeritaDataController extends Controller
 
             return $this->success(['data' => $data], 'OK');
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return $this->notFound('Berita tidak ditemukan');
+            return $this->success([], 'Data Tidak Di Temukan');
         } catch (\Exception $e) {
             return $this->serverError('Gagal mengambil detail berita: ' . $e->getMessage());
         }

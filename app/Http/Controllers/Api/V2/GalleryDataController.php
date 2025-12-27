@@ -43,7 +43,7 @@ class GalleryDataController extends Controller
                 return $this->success($galleryData, 'Berhasil Menerima Data');
             }
 
-            return $this->error('Data tidak ditemukan');
+            return $this->success([], 'Data Tidak Di Temukan');
         } catch (\Exception $e) {
             return $this->serverError('Gagal mengambil list gallery: ' . $e->getMessage());
         }

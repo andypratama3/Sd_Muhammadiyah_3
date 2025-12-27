@@ -44,7 +44,7 @@ class FasilitasDataController extends Controller
                 return $this->success($fasilitas, 'OK');
             }
 
-            return $this->notFound('Fasilitas tidak ditemukan');
+            return $this->success([], 'Data Tidak Di Temukan');
         } catch (\Exception $e) {
             return $this->serverError('Gagal mengambil detail fasilitas: ' . $e->getMessage());
         }

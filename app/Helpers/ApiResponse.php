@@ -86,7 +86,7 @@ trait ApiResponse
      */
     protected function badRequest(string $message = 'Bad request', $errors = null): JsonResponse
     {
-        return $this->error($message, $errors, 400);
+        return $this->error($message, 400, $errors);
     }
 
     /**
@@ -94,7 +94,7 @@ trait ApiResponse
      */
     protected function unauthorized(string $message = 'Unauthorized'): JsonResponse
     {
-        return $this->error($message, null, 401);
+        return $this->error($message, 401, null);
     }
 
     /**
@@ -102,7 +102,7 @@ trait ApiResponse
      */
     protected function forbidden(string $message = 'Forbidden'): JsonResponse
     {
-        return $this->error($message, null, 403);
+        return $this->error($message, 403, null);
     }
 
     /**
@@ -110,7 +110,7 @@ trait ApiResponse
      */
     protected function notFound(string $message = 'Resource not found'): JsonResponse
     {
-        return $this->error($message, null, 404);
+        return $this->error($message, 404, null);
     }
 
     /**
@@ -118,7 +118,7 @@ trait ApiResponse
      */
     protected function conflict(string $message = 'Conflict occurred'): JsonResponse
     {
-        return $this->error($message, null, 409);
+        return $this->error($message, 409, null);
     }
 
     /**
@@ -126,7 +126,7 @@ trait ApiResponse
      */
     protected function validationError(string $message = 'Validation failed', $errors = null): JsonResponse
     {
-        return $this->error($message, $errors, 422);
+        return $this->error($message, 422, $errors);
     }
 
     /**
@@ -134,7 +134,7 @@ trait ApiResponse
      */
     protected function tooManyRequests(string $message = 'Too many requests'): JsonResponse
     {
-        return $this->error($message, null, 429);
+        return $this->error($message, 429, null);
     }
 
     /**
@@ -142,6 +142,6 @@ trait ApiResponse
      */
     protected function serverError(string $message = 'Internal server error'): JsonResponse
     {
-        return $this->error($message, null, 500);
+        return $this->error($message, 500, null);
     }
 }

@@ -8,10 +8,12 @@ use App\Http\Controllers\Api\V2\DataController;
 use App\Http\Controllers\Api\Dashboard\SiswaApi;
 use App\Http\Controllers\Api\Dashboard\WilayahApi;
 use App\Http\Controllers\Api\V2\LandingController;
+use App\Http\Controllers\Api\V2\GuruDataController;
 use App\Http\Controllers\Api\V2\ViewsDataController;
 use App\Http\Controllers\Api\V2\BeritaDataController;
 use App\Http\Controllers\Api\V2\JadwalDataController;
 use App\Http\Controllers\Api\V2\GalleryDataController;
+use App\Http\Controllers\Api\V2\TentangDataController;
 use App\Http\Controllers\Api\V2\PrestasiDataController;
 use App\Http\Controllers\Api\V2\FasilitasDataController;
 use App\Http\Controllers\Api\V2\PembayaranDataController;
@@ -93,8 +95,10 @@ Route::group(['prefix' => 'v2'], function () {
         Route::get('count-landing',[LandingController::class, 'count']);
         Route::get('gallery-landing',[LandingController::class, 'gallery_activity']);
         Route::get('prestasi-landing',[LandingController::class, 'prestasi_landing']);
+
         Route::get('dukungan-kerja-sama', [LandingController::class, 'dukungan']);
         Route::get('/views', [ViewsDataController::class, 'viewData']);
+        Route::get('/tentang/foto-sekolah', [TentangDataController::class, 'fotoSekolah']);
         // Pembayaran
         Route::get('/siswa/search',[PembayaranDataController::class, 'search']);
         // Jadwal
@@ -113,6 +117,16 @@ Route::group(['prefix' => 'v2'], function () {
         Route::get('gallery', [GalleryDataController::class, 'listGallery']);
         Route::get('gallery/{slug}', [GalleryDataController::class, 'show']);
         Route::get('kategori-gallery', [GalleryDataController::class, 'kategori']);
+
+        Route::prefix('guru')->group(function () {
+            Route::get('/pelajaran', [GuruDataController::class, 'pelajaran']);
+            Route::get('/count-by-pelajaran', [GuruDataController::class, 'countByPelajaran']);
+            Route::get('/statistics', [GuruDataController::class, 'statistics']);
+            Route::get('/', [GuruDataController::class, 'listGuru']);
+            Route::get('/{slug}', [GuruDataController::class, 'show']);
+        });
+
+
 
         Route::group(['prefix' => 'prestasi'], function () {
             Route::get('/categories', [PrestasiDataController::class, 'categories']);
@@ -145,3 +159,4 @@ Route::group(['prefix' => 'v2'], function () {
 
 
 });
+

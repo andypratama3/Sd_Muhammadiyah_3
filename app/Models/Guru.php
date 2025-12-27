@@ -4,15 +4,17 @@ namespace App\Models;
 
 use Illuminate\Support\Str;
 use App\Http\Traits\UsesUuid;
-
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Guru extends Model
 {
     use UsesUuid;
     use HasFactory;
+
     protected $table = 'gurus';
 
     protected $guarded = ['id'];
@@ -26,11 +28,11 @@ class Guru extends Model
         'slug'
     ];
 
-    protected $dates = ['deleted_at'];
-
-    public function karyawan(): hasOne
+    // FIX: Seharusnya BelongsTo, bukan HasOne
+    // Karena guru belongs to karyawan
+    public function karyawan(): BelongsTo
     {
-        return $this->hasOne(Karyawan::class, 'id', 'karyawan_id');
+        return $this->belongsTo(Karyawan::class, 'karyawan_id', 'id');
     }
 
     public function setNameAttribute($value)
@@ -38,11 +40,14 @@ class Guru extends Model
         $this->attributes['name'] = $value;
         $this->attributes['slug'] = Str::slug($value).'-'.Str::random(4);
     }
-    public function pelajarans()
+
+    // Tambahkan type hint untuk clarity
+    public function pelajarans(): BelongsToMany
     {
-        return $this->belongsToMany(Pelajaran::class, 'guru_matapelajaran');
+        return $this->belongsToMany(Pelajaran::class, 'guru_matapelajaran', 'guru_id', 'pelajaran_id');
     }
-    //take value slug in model
+
+    // Take value slug in model for route binding
     public function getRouteKeyName()
     {
         return 'slug';
