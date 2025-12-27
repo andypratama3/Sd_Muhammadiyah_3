@@ -26,6 +26,11 @@ class RouteServiceProvider extends ServiceProvider
     {
 
         RateLimiter::for('api', function (Request $request) {
+            // exclude when from https://landing.sdmuhammadiyah3smd.com/
+            if (str_contains($request->url(), 'https://landing.sdmuhammadiyah3smd.com/')) {
+                return Limit::none();
+            }
+
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
