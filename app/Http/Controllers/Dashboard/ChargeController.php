@@ -280,78 +280,135 @@ class ChargeController extends Controller
 
     public function export_excel(Request $request)
     {
-        $tahun = $request->input('tahun');
+        try {
+            // Set memory dan execution time untuk data besar
+            ini_set('memory_limit', '512M');
+            ini_set('max_execution_time', 300);
 
-        if (!$tahun) {
-            return back()->with('error', 'Tahun harus dipilih untuk melakukan export.');
-        }
+            $tahun = $request->input('tahun');
 
-        // Ambil siswa non-lulus beserta kelas dan charges-nya
-        $siswas = Siswa::with(['kelas', 'charges' => function ($query) use ($tahun) {
-            $query->whereYear('created_at', $tahun)->with('kategori_pembayaran');
-        }])
-        ->whereHas('kelas', function ($query) {
-            $query->where('name', '!=', 'Lulus');
-        })
-        ->get();
-
-        // Bulan dari Januari sampai Desember
-        $bulan = [];
-        for ($i = 1; $i <= 12; $i++) {
-            $bulan[] = Carbon::createFromDate($tahun, $i, 1)->translatedFormat('F');
-        }
-
-        $rekapitulasi = [];
-
-        foreach ($siswas as $siswa) {
-            if (!$siswa->kelas || $siswa->kelas->isEmpty()) continue;
-
-            $kelasObj = $siswa->kelas->first(); // ambil kelas utama
-            $namaKelas = $kelasObj->name . ' - ' . ($kelasObj->pivot->category_kelas ?? 'Tidak Ada Kategori');
-            $namaSiswa = $siswa->name ?? 'Tidak Ada Nama';
-
-            if (!isset($rekapitulasi[$namaKelas][$namaSiswa])) {
-                $rekapitulasi[$namaKelas][$namaSiswa] = [
-                    'nama' => $namaSiswa,
-                    'pembayaran' => array_fill_keys($bulan, '❌'),
-                    'dpp_1' => '',
-                    'dpp_2' => '',
-                ];
+            // Validasi tahun
+            if (!$tahun) {
+                return back()->with('error', 'Tahun harus dipilih untuk melakukan export.');
             }
 
-            foreach ($siswa->charges as $charge) {
-                $kategori = strtolower($charge->kategori_pembayaran->name ?? '');
-                $bulanTransaksi = Carbon::parse($charge->created_at)->translatedFormat('F');
+            \Log::info('Export dimulai untuk tahun: ' . $tahun);
 
-                if ($kategori === 'spp' && in_array($charge->transaction_status, ['pay_offline', 'settlement', 'free'])) {
-                    $rekapitulasi[$namaKelas][$namaSiswa]['pembayaran'][$bulanTransaksi] = '✅';
+            // Ambil siswa dengan optimasi query
+            $siswas = Siswa::with([
+                'kelas:id,name',
+                'charges' => function ($query) use ($tahun) {
+                    $query->select('id', 'siswa_id', 'category_payment_id', 'transaction_status', 'created_at')
+                        ->whereYear('created_at', $tahun)
+                        ->whereIn('transaction_status', ['pay_offline', 'settlement', 'free'])
+                        ->with('kategori_pembayaran:id,name');
+                }
+            ])
+            ->whereHas('kelas', function ($query) {
+                $query->where('name', '!=', 'Lulus');
+            })
+            ->select('id', 'name')
+            ->get();
+
+            \Log::info('Jumlah siswa ditemukan: ' . $siswas->count());
+
+            // Cek apakah ada data
+            if ($siswas->isEmpty()) {
+                return back()->with('warning', 'Tidak ada data siswa untuk tahun ' . $tahun);
+            }
+
+            // Generate bulan
+            $bulan = [];
+            for ($i = 1; $i <= 12; $i++) {
+                $bulan[] = Carbon::createFromDate($tahun, $i, 1)->translatedFormat('F');
+            }
+
+            $rekapitulasi = [];
+
+            // Proses data siswa
+            foreach ($siswas as $siswa) {
+                // Skip jika tidak ada kelas
+                if (!$siswa->kelas || $siswa->kelas->isEmpty()) {
+                    \Log::warning('Siswa tanpa kelas: ' . $siswa->name);
+                    continue;
                 }
 
-                if ($kategori === 'dpp') {
-                    if ($rekapitulasi[$namaKelas][$namaSiswa]['dpp_1'] === '') {
-                        $rekapitulasi[$namaKelas][$namaSiswa]['dpp_1'] = '✅';
-                    } else {
-                        $rekapitulasi[$namaKelas][$namaSiswa]['dpp_2'] = '✅';
+                $kelasObj = $siswa->kelas->first();
+
+                // Ambil kategori kelas dari pivot atau set default
+                $kategoriKelas = 'Tidak Ada Kategori';
+                if ($kelasObj->pivot && isset($kelasObj->pivot->category_kelas)) {
+                    $kategoriKelas = $kelasObj->pivot->category_kelas;
+                }
+
+                $namaKelas = $kelasObj->name . ' - ' . $kategoriKelas;
+                $namaSiswa = $siswa->name ?? 'Tidak Ada Nama';
+
+                // Inisialisasi data siswa jika belum ada
+                if (!isset($rekapitulasi[$namaKelas][$namaSiswa])) {
+                    $rekapitulasi[$namaKelas][$namaSiswa] = [
+                        'nama' => $namaSiswa,
+                        'pembayaran' => array_fill_keys($bulan, '❌'),
+                        'dpp_1' => '❌',
+                        'dpp_2' => '❌',
+                    ];
+                }
+
+                // Proses charges
+                $dppCount = 0;
+                foreach ($siswa->charges as $charge) {
+                    if (!$charge->kategori_pembayaran) continue;
+
+                    $kategori = strtolower(trim($charge->kategori_pembayaran->name ?? ''));
+                    $bulanTransaksi = Carbon::parse($charge->created_at)->translatedFormat('F');
+
+                    // Cek SPP
+                    if ($kategori === 'spp') {
+                        if (in_array($charge->transaction_status, ['pay_offline', 'settlement', 'free'])) {
+                            $rekapitulasi[$namaKelas][$namaSiswa]['pembayaran'][$bulanTransaksi] = '✅';
+                        }
+                    }
+
+                    // Cek DPP
+                    if ($kategori === 'dpp') {
+                        if (in_array($charge->transaction_status, ['pay_offline', 'settlement', 'free'])) {
+                            $dppCount++;
+                            if ($dppCount === 1) {
+                                $rekapitulasi[$namaKelas][$namaSiswa]['dpp_1'] = '✅';
+                            } elseif ($dppCount === 2) {
+                                $rekapitulasi[$namaKelas][$namaSiswa]['dpp_2'] = '✅';
+                            }
+                        }
                     }
                 }
             }
+
+            // Validasi apakah ada data rekapitulasi
+            if (empty($rekapitulasi)) {
+                return back()->with('warning', 'Tidak ada data pembayaran untuk tahun ' . $tahun);
+            }
+
+            // Urutkan berdasarkan angka kelas
+            $rekapitulasi = collect($rekapitulasi)->sortBy(function ($item, $kelasName) {
+                preg_match('/Kelas\s+(\d+)/', $kelasName, $matches);
+                return isset($matches[1]) ? (int)$matches[1] : 999;
+            })->toArray();
+
+            \Log::info('Jumlah kelas dalam rekapitulasi: ' . count($rekapitulasi));
+
+            $tahunAjaran = $tahun . '_' . ($tahun + 1);
+
+            return Excel::download(
+                new RekapitulasiExport($rekapitulasi, $bulan),
+                "rekapitulasi_spp_dpp_{$tahunAjaran}.xlsx"
+            );
+
+        } catch (\Exception $e) {
+            \Log::error('Export gagal: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+
+            return back()->with('error', 'Terjadi kesalahan saat export: ' . $e->getMessage());
         }
-
-        // ✅ Urutkan berdasarkan angka kelas
-        $rekapitulasi = collect($rekapitulasi)->sortBy(function ($item, $kelasName) {
-            preg_match('/Kelas\s(\d+)/', $kelasName, $matches);
-            return isset($matches[1]) ? (int)$matches[1] : 99; // "Lulus" atau lain-lain taruh di akhir
-        })->toArray();
-
-
-        $tahunAjaran = $tahun . '_' . ($tahun + 1);
-
-        return Excel::download(
-            new RekapitulasiExport($rekapitulasi, $bulan),
-            "rekapitulasi_spp_dpp_{$tahunAjaran}.xlsx"
-        );
-
-        // return view('dashboard.data.charge.export_excel', compact('tahun','bulan', 'rekapitulasi'));
     }
 
 
