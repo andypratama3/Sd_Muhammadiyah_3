@@ -99,8 +99,13 @@ Route::group(['prefix' => 'v2'], function () {
         Route::get('dukungan-kerja-sama', [LandingController::class, 'dukungan']);
         Route::get('/views', [ViewsDataController::class, 'viewData']);
         Route::get('/tentang/foto-sekolah', [TentangDataController::class, 'fotoSekolah']);
+
         // Pembayaran
-        Route::get('/siswa/search',[PembayaranDataController::class, 'search']);
+        Route::prefix('pembayaran')->group(function () {
+            Route::get('/search', [PembayaranDataController::class, 'search']);
+            Route::get('/{siswa_id}/statistics', [PembayaranDataController::class, 'statistics']);
+        });
+        
         // Jadwal
         Route::get('jadwal/tahun-ajaran',[JadwalDataController::class, 'tahunAjaran']);
         Route::get('jadwal/kelas',[JadwalDataController::class, 'kelas']);

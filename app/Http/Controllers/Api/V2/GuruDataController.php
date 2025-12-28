@@ -23,8 +23,8 @@ class GuruDataController extends Controller
             if ($pelajaran->count() > 0) {
                 return $this->success($pelajaran, 'OK');
             }
-
-            return $this->error('Data tidak ditemukan', 404);
+        } catch(\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return $this->success([],'Data Tidak Di Temukan');
         } catch (\Exception $e) {
             return $this->serverError('Gagal mengambil data pelajaran: ' . $e->getMessage(), 500);
         }
