@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\V1\MidtransPaymentController;
 use App\Http\Controllers\Dashboard\Api\FacebookController;
 use App\Http\Controllers\Api\Dashboard\SendOrderIDWhatsAppApi;
 use App\Http\Controllers\Api\V2\EkstrakurikulerDataController;
+use App\Http\Controllers\Api\V2\TenagaKependidikanDataController;
 
 /*
 |--------------------------------------------------------------------------
@@ -121,6 +122,9 @@ Route::group(['prefix' => 'v2'], function () {
 
         // Ekstrakurikuler
         Route::get('ekstrakurikuler', [EkstrakurikulerDataController::class, 'list']);
+
+        // Tenaga Kependidikan
+        Route::get('tenaga-kependidikan', [TenagaKependidikanDataController::class, 'list']);
 
         Route::get('fasilitas', [FasilitasDataController::class, 'fasilitasData']);
         Route::get('gallery', [GalleryDataController::class, 'listGallery']);
