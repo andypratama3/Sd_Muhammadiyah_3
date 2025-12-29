@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\V2\PembayaranDataController;
 use App\Http\Controllers\Api\V1\MidtransPaymentController;
 use App\Http\Controllers\Dashboard\Api\FacebookController;
 use App\Http\Controllers\Api\Dashboard\SendOrderIDWhatsAppApi;
+use App\Http\Controllers\Api\V2\EkstrakurikulerDataController;
 
 /*
 |--------------------------------------------------------------------------
@@ -105,7 +106,7 @@ Route::group(['prefix' => 'v2'], function () {
             Route::get('/search', [PembayaranDataController::class, 'search']);
             Route::get('/{siswa_id}/statistics', [PembayaranDataController::class, 'statistics']);
         });
-        
+
         // Jadwal
         Route::get('jadwal/tahun-ajaran',[JadwalDataController::class, 'tahunAjaran']);
         Route::get('jadwal/kelas',[JadwalDataController::class, 'kelas']);
@@ -117,6 +118,9 @@ Route::group(['prefix' => 'v2'], function () {
         Route::get('berita-popular', [BeritaDataController::class, 'beritaPopuler']);
         Route::get('berita', [BeritaDataController::class, 'list']);
         Route::get('berita/{slug}', [BeritaDataController::class, 'show']);
+
+        // Ekstrakurikuler
+        Route::get('ekstrakurikuler', [EkstrakurikulerDataController::class, 'list']);
 
         Route::get('fasilitas', [FasilitasDataController::class, 'fasilitasData']);
         Route::get('gallery', [GalleryDataController::class, 'listGallery']);
