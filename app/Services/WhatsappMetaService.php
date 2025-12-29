@@ -52,7 +52,6 @@ class WhatsappMetaService
 
             $body = [
                 'messaging_product' => 'whatsapp',
-                'recipient_type' => 'individual',
                 'to' => $phone,
                 'type' => 'template',
                 'template' => [
