@@ -42,13 +42,12 @@ Route::match(['GET', 'POST'], 'midtrans/callback', [MidtransPaymentController::c
 // Route::post('midtrans/callback', [MidtransPaymentController::class, 'callback']);
 Route::post('midtrans/handling/unfinish', [MidtransPaymentController::class, 'callback_unfinish']);
 Route::post('midtrans/handling/error', [MidtransPaymentController::class, 'callback_error']);
+
 Route::prefix('v1')->group(function () {
     // WhatsApp Webhook
     Route::post('/whatsapp/test', [App\Http\Controllers\Api\V1\WhatsAppWebhookController::class, 'test']);
-    Route::post('/whatsapp/test/foonte', [App\Http\Controllers\Api\V1\WhatsAppWebhookController::class, 'testMessage']);
-    Route::post('/whatsapp/test/foonte/image', [App\Http\Controllers\Api\V1\WhatsAppWebhookController::class, 'testImage']);
     Route::get('/whatsapp/template', [App\Http\Controllers\Api\V1\WhatsAppWebhookController::class, 'getTemplate']);
-    // Route::get('/whatsapp/config', [App\Http\Controllers\Api\V1\WhatsAppWebhookController::class, 'debugConfig']);
+    Route::get('/whatsapp/config', [App\Http\Controllers\Api\V1\WhatsAppWebhookController::class, 'debugConfig']);
 
     Route::get('/webhook/whatsapp', [App\Http\Controllers\Api\V1\WhatsAppWebhookController::class, 'verify']);
     Route::post('/webhook/whatsapp', [App\Http\Controllers\Api\V1\WhatsAppWebhookController::class, 'handle']);

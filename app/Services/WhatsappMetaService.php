@@ -17,7 +17,7 @@ class WhatsappMetaService
     public function __construct()
     {
         $this->client = new Client();
-        $this->apiUrl = 'https://graph.facebook.com/v22.0';
+        $this->apiUrl = 'https://graph.facebook.com/v24.0';
         $this->phoneId = config('services.whatsapp.phone_id');
         $this->bisnisId = config('services.whatsapp.business_id');
         $this->accessToken = config('services.whatsapp.access_token');
@@ -52,6 +52,7 @@ class WhatsappMetaService
 
             $body = [
                 'messaging_product' => 'whatsapp',
+                'recipient_type' => 'individual',
                 'to' => $phone,
                 'type' => 'template',
                 'template' => [
