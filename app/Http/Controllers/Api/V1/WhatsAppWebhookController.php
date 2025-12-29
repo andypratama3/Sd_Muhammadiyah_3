@@ -538,24 +538,26 @@ class WhatsAppWebhookController extends Controller
     /**
      * Test endpoint
      */
-    public function test(Request $request)
+     public function test(Request $request)
     {
-        $whatsapp = new WhatsappMetaService();
+        $whatsApp = new WhatsappMetaService();
 
-        $phone = $request->input('phone', '6282217160075');
+        $phone = $request->phone;
 
-        $result = $whatsapp->sendTemplate(
+        $result = $whatsApp->sendTemplate(
             $phone,
-            'general_payment_reminder',
+            'spp_reminder',
             [
-                'Andy Pratama',
-                'Kelas 2 Madinah',
-                'SPP Januari 2025',
-                '250.000'
-            ]
+                'User Test',
+                'Kelas 2',
+                'Januari',
+                '20.000'
+            ],
+            "https://ansor.sdmuhammadiyah3smd.com//storage/1/qr_code_1.png"
         );
 
-        return response()->json($result);
+        // Return response lengkap untuk debugging
+        return response()->json($result, $result['success'] ? 200 : 400);
     }
 
     /**
