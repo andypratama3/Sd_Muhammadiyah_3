@@ -13,7 +13,7 @@ class EkstrakulikulerController extends Controller
     public function index()
     {
         $limit = 15;
-        $ekstrakurikuler = Esktrakurikuler::select(['id', 'name', 'desc', 'foto', 'slug'])->orderBy('created_at', 'asc')->paginate($limit);
+        $ekstrakurikuler = Esktrakurikuler::select(['id', 'name', 'desc','kategori','foto', 'slug'])->orderBy('created_at', 'asc')->paginate($limit);
         $count = Esktrakurikuler::count();
         $no = $limit * ($ekstrakurikuler->currentPage() - 1);
 

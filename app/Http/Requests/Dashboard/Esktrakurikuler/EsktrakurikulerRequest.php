@@ -27,6 +27,25 @@ class EsktrakurikulerRequest extends FormRequest
     public function getSlug(){
         $this->slug;
     }
+
+    public function getKategori()
+    {
+        $this->kategori;
+    }
+
+    public function getJam()
+    {
+        $this->jam;
+    }
+    public function getGuru()
+    {
+        $this->guru;
+    }
+    public function getKelas()
+    {
+        $this->kelas;
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *

@@ -23,6 +23,11 @@ class Esktrakurikuler extends Model
         'name',
         'desc',
         'foto',
+        'kategori',
+        'hari',
+        'jam',
+        'guru',
+        'kelas',
     ];
 
 }

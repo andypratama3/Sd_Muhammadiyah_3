@@ -3,7 +3,7 @@
 namespace App\Actions\Dashboard\Esktrakurikuler;
 
 use Illuminate\Support\Str;
-
+use Illuminate\Support\Facades\File;
 use App\Helpers\ImageHelper;
 use App\Models\Esktrakurikuler;
 
@@ -11,30 +11,47 @@ class ActionEkstrakurikuler
 {
     public function execute($ekstrakurikulerData)
     {
+        $ekstrakurikulerOld = Esktrakurikuler::where('slug', $ekstrakurikulerData->slug)->first();
+
+        // Ambil foto lama (jika ada)
+        $images = $ekstrakurikulerOld?->foto
+            ? explode(',', $ekstrakurikulerOld->foto)
+            : [];
+
+        // Jika upload foto baru
         if ($ekstrakurikulerData->foto) {
-            $images_ekstrakurikuler = $ekstrakurikulerData->foto;
             $images = [];
 
-            foreach ($images_ekstrakurikuler as $img) {
+            $upload_path = public_path('storage/img/ekstrakurikuler/');
+
+            // Pastikan folder ada
+            if (!File::exists($upload_path)) {
+                File::makeDirectory($upload_path, 0755, true);
+            }
+
+            foreach ($ekstrakurikulerData->foto as $img) {
                 $ext = $img->getClientOriginalExtension();
-                $upload_path = public_path('storage/img/ekstrakurikuler/');
-                $uniqueIdentifier = Str::random(8);
-                $file_name = 'E_kurikuler' . Str::slug($ekstrakurikulerData->name) . '_' . $uniqueIdentifier . '_' . date('YmdHis') . ".$ext";
+                $file_name = 'E_kurikuler_' .
+                    Str::slug($ekstrakurikulerData->name) . '_' .
+                    Str::random(8) . '_' .
+                    now()->format('YmdHis') . '.' . $ext;
+
                 ImageHelper::resizeAndSave($img, $upload_path, $file_name);
                 $images[] = $file_name;
             }
         }
 
-
-        $ekstrakurikuler = Esktrakurikuler::updateOrCreate(
+        return Esktrakurikuler::updateOrCreate(
             ['slug' => $ekstrakurikulerData->slug],
             [
-                'name' => $ekstrakurikulerData->name,
-                'desc' => $ekstrakurikulerData->desc,
-                'foto' => implode(',', $images),
+                'name'     => $ekstrakurikulerData->name,
+                'desc'     => $ekstrakurikulerData->desc,
+                'kategori' => $ekstrakurikulerData->kategori,
+                'jam'      => $ekstrakurikulerData->jam,
+                'guru'     => $ekstrakurikulerData->guru,
+                'kelas'    => $ekstrakurikulerData->kelas,
+                'foto'     => !empty($images) ? implode(',', $images) : $ekstrakurikulerOld?->foto,
             ]
         );
-        return $ekstrakurikuler;
     }
-
 }
