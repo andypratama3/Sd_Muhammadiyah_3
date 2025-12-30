@@ -82,7 +82,8 @@ Route::group(['prefix' => 'v2'], function () {
     Route::get('list/gallery', [GalleryDataController::class, 'list_gallery']);
     // End For Site Map
 
-    Route::prefix('auth')->group(function () {
+    Route::group(['prefix' => 'auth', 'middleware' => ['verify.signature']], function () {
+
         Route::post('/token', [AuthController::class, 'generateToken']);
         Route::post('/refresh', [AuthController::class, 'refresh']);
         Route::post('/revoke', [AuthController::class, 'revoke']);
@@ -167,6 +168,10 @@ Route::group(['prefix' => 'v2'], function () {
     });
 
     // END Fetch
+
+    Route::get('/health', function () {
+        return response()->json(['status' => 'ok']);
+    });
 
 
 
