@@ -22,15 +22,36 @@ class AuthController extends Controller
     public function generateToken(Request $request): JsonResponse
     {
         try {
-            // Validasi IP atau domain frontend (opsional untuk keamanan)
-            $allowedOrigins = config('cors.allowed_origins');
-            $origin = $request->header('Origin');
+            $origin = null;
 
-            if (!in_array($origin, $allowedOrigins) && !in_array('*', $allowedOrigins)) {
-                return $this->forbidden('Origin not allowed');
+            // ===============================
+            // 1️⃣ INTERNAL REQUEST (Next.js, Server)
+            // ===============================
+            if ($request->hasHeader('X-SIGNATURE')) {
+                // Gunakan host sebagai identitas
+                $origin =
+                    $request->header('x-forwarded-host') ??
+                    $request->header('host');
+            }
+            // ===============================
+            // 2️⃣ BROWSER REQUEST
+            // ===============================
+            else {
+                $origin = $request->header('origin');
+
+                $allowedOrigins = config('cors.allowed_origins');
+
+                if (
+                    !$origin ||
+                    (!in_array($origin, $allowedOrigins) && !in_array('*', $allowedOrigins))
+                ) {
+                    return $this->forbidden('Origin not allowed');
+                }
             }
 
-            // Generate tokens
+            // ===============================
+            // 3️⃣ GENERATE TOKEN
+            // ===============================
             $tokens = $this->jwtService->generateTokens([
                 'client_type' => 'frontend',
                 'origin' => $origin,
@@ -39,9 +60,12 @@ class AuthController extends Controller
             return $this->success($tokens, 'Token generated successfully');
 
         } catch (\Exception $e) {
-            return $this->serverError('Failed to generate token: ' . $e->getMessage());
+            return $this->serverError(
+                'Failed to generate token: ' . $e->getMessage()
+            );
         }
     }
+
 
     /**
      * Refresh access token menggunakan refresh token
