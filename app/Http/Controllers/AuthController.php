@@ -20,86 +20,51 @@ class AuthController extends Controller
      * Endpoint ini untuk mendapatkan token awal
      */
     public function generateToken(Request $request): JsonResponse
-{
-    try {
-        $origin = null;
+    {
+        try {
+            $origin = null;
 
-        // ===============================
-        // 1️⃣ INTERNAL REQUEST (Next.js / Server)
-        // ===============================
-        if ($request->hasHeader('X-SIGNATURE')) {
-            $origin =
-                $request->header('x-forwarded-host') ??
-                $request->header('host');
-        }
-        // ===============================
-        // 2️⃣ BROWSER REQUEST
-        // ===============================
-        else {
-            $origin = $request->header('origin');
-
-            $allowedOrigins = config('cors.allowed_origins');
-
-            if (
-                !$origin ||
-                (!in_array($origin, $allowedOrigins) && !in_array('*', $allowedOrigins))
-            ) {
-                return $this->forbidden('Origin not allowed');
+            // ===============================
+            // 1️⃣ INTERNAL REQUEST (Next.js, Server)
+            // ===============================
+            if ($request->hasHeader('X-SIGNATURE')) {
+                // Gunakan host sebagai identitas
+                $origin =
+                    $request->header('x-forwarded-host') ??
+                    $request->header('host');
             }
+            // ===============================
+            // 2️⃣ BROWSER REQUEST
+            // ===============================
+            else {
+                $origin = $request->header('origin');
+
+                $allowedOrigins = config('cors.allowed_origins');
+
+                if (
+                    !$origin ||
+                    (!in_array($origin, $allowedOrigins) && !in_array('*', $allowedOrigins))
+                ) {
+                    return $this->forbidden('Origin not allowed');
+                }
+            }
+
+            // ===============================
+            // 3️⃣ GENERATE TOKEN
+            // ===============================
+            $tokens = $this->jwtService->generateTokens([
+                'client_type' => 'frontend',
+                'origin' => $origin,
+            ]);
+
+            return $this->success($tokens, 'Token generated successfully');
+
+        } catch (\Exception $e) {
+            return $this->serverError(
+                'Failed to generate token: ' . $e->getMessage()
+            );
         }
-
-        // ===============================
-        // 3️⃣ GENERATE TOKENS
-        // ===============================
-        $tokens = $this->jwtService->generateTokens([
-            'client_type' => 'frontend',
-            'origin' => $origin,
-        ]);
-
-        // ===============================
-        // 4️⃣ SET TOKENS DI HTTP-ONLY COOKIE
-        // ===============================
-        $response = response()->json([
-            'success' => true,
-            'message' => 'Token generated successfully',
-            // Jangan kirim access_token / refresh_token di JSON
-        ]);
-
-        // Access token cookie
-        $response->cookie(
-            'access_token',
-            $tokens['access_token'],
-            $tokens['expires_in'] / 60, // expiration dalam menit
-            '/', // path
-            null, // domain, default
-            true, // secure (HTTPS)
-            true, // httpOnly
-            false, // raw
-            'Strict' // sameSite
-        );
-
-        // Refresh token cookie
-        $response->cookie(
-            'refresh_token',
-            $tokens['refresh_token'],
-            $tokens['refresh_expires_in'] / 60,
-            '/',
-            null,
-            true,
-            true,
-            false,
-            'Strict'
-        );
-
-        return $response;
-
-    } catch (\Exception $e) {
-        return $this->serverError(
-            'Failed to generate token: ' . $e->getMessage()
-        );
     }
-}
-
 
 
     /**
