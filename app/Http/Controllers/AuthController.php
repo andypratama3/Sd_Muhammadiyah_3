@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Services\JwtService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Cookie;
 
 class AuthController extends Controller
 {
@@ -17,129 +16,158 @@ class AuthController extends Controller
     }
 
     /**
-     * Generate token (initial login-less token)
+     * Generate token untuk frontend (tanpa login)
+     * Endpoint ini untuk mendapatkan token awal
      */
     public function generateToken(Request $request): JsonResponse
     {
         try {
-            $origin = $request->header('Origin');
-            $allowedOrigins = config('cors.allowed_origins', []);
+            $origin = null;
 
-            if (!$origin || (!in_array($origin, $allowedOrigins) && !in_array('*', $allowedOrigins))) {
-                return response()->json(['success' => false, 'message' => 'Origin not allowed'], 403);
+            // ===============================
+            // 1️⃣ INTERNAL REQUEST (Next.js / Server)
+            // ===============================
+            if ($request->hasHeader('X-SIGNATURE')) {
+                $origin =
+                    $request->header('x-forwarded-host') ??
+                    $request->header('host');
+            }
+            // ===============================
+            // 2️⃣ BROWSER REQUEST
+            // ===============================
+            else {
+                $origin = $request->header('origin');
+
+                $allowedOrigins = config('cors.allowed_origins');
+
+                if (
+                    !$origin ||
+                    (!in_array($origin, $allowedOrigins) && !in_array('*', $allowedOrigins))
+                ) {
+                    return $this->forbidden('Origin not allowed');
+                }
             }
 
+            // ===============================
+            // 3️⃣ GENERATE TOKENS
+            // ===============================
             $tokens = $this->jwtService->generateTokens([
                 'client_type' => 'frontend',
                 'origin' => $origin,
             ]);
 
-            // Set HTTP-only cookies
-            $cookieAccess = Cookie::make(
+            // ===============================
+            // 4️⃣ SET TOKENS DI HTTP-ONLY COOKIE
+            // ===============================
+            $response = response()->json([
+                'success' => true,
+                'message' => 'Token generated successfully',
+                // Jangan kirim access_token / refresh_token di JSON
+            ]);
+
+            // Access token cookie
+            $response->cookie(
                 'access_token',
                 $tokens['access_token'],
-                $tokens['expires_in'] / 60, // menit
-                '/',
-                null,
-                config('app.env') === 'production', // secure
+                $tokens['expires_in'] / 60, // expiration dalam menit
+                '/', // path
+                null, // domain, default
+                true, // secure (HTTPS)
                 true, // httpOnly
-                false,
-                'Strict'
+                false, // raw
+                'Strict' // sameSite
             );
 
-            $cookieRefresh = Cookie::make(
+            // Refresh token cookie
+            $response->cookie(
                 'refresh_token',
                 $tokens['refresh_token'],
-                ($tokens['refresh_expires_in'] ?? 604800) / 60, // menit
+                $tokens['refresh_expires_in'] / 60,
                 '/',
                 null,
-                config('app.env') === 'production',
+                true,
                 true,
                 false,
                 'Strict'
             );
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Token generated successfully',
-            ])->withCookie($cookieAccess)
-              ->withCookie($cookieRefresh);
+            return $response;
 
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to generate token: '.$e->getMessage(),
-            ], 500);
+            return $this->serverError(
+                'Failed to generate token: ' . $e->getMessage()
+            );
         }
     }
 
+
+
     /**
-     * Refresh token
+     * Refresh access token menggunakan refresh token
      */
     public function refresh(Request $request): JsonResponse
     {
-        $refreshToken = $request->cookie('refresh_token');
+        $refreshToken = $request->input('refresh_token');
 
         if (!$refreshToken) {
-            return response()->json(['success' => false, 'message' => 'Refresh token required'], 400);
+            return $this->badRequest('Refresh token is required');
         }
 
         try {
             $tokens = $this->jwtService->refreshAccessToken($refreshToken);
 
             if (!$tokens) {
-                return response()->json(['success' => false, 'message' => 'Invalid refresh token'], 401);
+                return $this->unauthorized('Invalid or expired refresh token');
             }
 
-            // Update cookies
-            $cookieAccess = Cookie::make(
-                'access_token',
-                $tokens['access_token'],
-                $tokens['expires_in'] / 60,
-                '/',
-                null,
-                config('app.env') === 'production',
-                true,
-                false,
-                'Strict'
-            );
-
-            return response()->json(['success' => true, 'message' => 'Token refreshed successfully'])
-                ->withCookie($cookieAccess);
+            return $this->success($tokens, 'Token refreshed successfully');
 
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to refresh token: '.$e->getMessage(),
-            ], 500);
+            return $this->serverError('Failed to refresh token: ' . $e->getMessage());
         }
     }
 
     /**
-     * Revoke tokens
+     * Revoke refresh token (logout)
      */
     public function revoke(Request $request): JsonResponse
     {
-        $refreshToken = $request->cookie('refresh_token');
+        $refreshToken = $request->input('refresh_token');
+
+        if (!$refreshToken) {
+            return $this->badRequest('Refresh token is required');
+        }
 
         try {
-            if ($refreshToken) {
-                $this->jwtService->revokeRefreshToken($refreshToken);
-            }
-
-            // Delete cookies
-            $cookieAccess = Cookie::forget('access_token');
-            $cookieRefresh = Cookie::forget('refresh_token');
-
-            return response()->json(['success' => true, 'message' => 'Tokens revoked'])
-                ->withCookie($cookieAccess)
-                ->withCookie($cookieRefresh);
+            $this->jwtService->revokeRefreshToken($refreshToken);
+            return $this->success(null, 'Token revoked successfully');
 
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to revoke tokens: '.$e->getMessage(),
-            ], 500);
+            return $this->serverError('Failed to revoke token: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Validate token
+     */
+    public function validateToken(Request $request): JsonResponse
+    {
+        $token = $request->bearerToken();
+
+        if (!$token) {
+            return $this->badRequest('Token is required');
+        }
+
+        $isValid = $this->jwtService->validateAccessToken($token);
+
+        if ($isValid) {
+            $payload = $this->jwtService->getPayload($token);
+            return $this->success([
+                'valid' => true,
+                'payload' => $payload,
+            ]);
+        }
+
+        return $this->unauthorized('Invalid token');
     }
 }
