@@ -14,7 +14,10 @@ class VerifyApiSignature
         /* =====================================================
          * 0️⃣ Secret validation
          * ===================================================== */
-        $secret = env('API_SECRET_KEY');
+        $secret = config('services.api.secret');
+        \Log::info('SECRET CHECK', [
+            'secret' => config('services.api.secret')
+        ]);
 
 
         if (!$secret) {
@@ -24,14 +27,13 @@ class VerifyApiSignature
         }
 
         /* =====================================================
-         * 1️⃣ Required security headers
+         * 1️⃣ Required headers
          * ===================================================== */
         $timestamp = $request->header('X-TIMESTAMP');
         $nonce     = $request->header('X-NONCE');
         $signature = $request->header('X-SIGNATURE');
-        $clientIp  = $request->header('X-CLIENT-IP');
 
-        if (!$timestamp || !$nonce || !$signature || !$clientIp) {
+        if (!$timestamp || !$nonce || !$signature) {
             return response()->json([
                 'message' => 'Missing security headers'
             ], 401);
@@ -47,22 +49,21 @@ class VerifyApiSignature
         }
 
         /* =====================================================
-         * 3️⃣ Resolve REAL client IP (Cloudflare / Proxy safe)
+         * 3️⃣ Resolve REAL client IP (Proxy safe)
          * ===================================================== */
-        $realIp =
+        $clientIp =
             $request->header('cf-connecting-ip') ??
             $request->header('x-forwarded-for') ??
             $request->ip();
 
-        $realIp = trim(explode(',', $realIp)[0]);
-
+        $clientIp = trim(explode(',', $clientIp)[0]);
 
         /* =====================================================
          * 4️⃣ Signature validation (HMAC SHA256)
-         * SIGN STRING FORMAT MUST MATCH FRONTEND
+         * STRING FORMAT HARUS IDENTIK DENGAN FRONTEND
          * ===================================================== */
-        $stringToSign = "{$timestamp}.{$nonce}.{$clientIp}";
-        $expected     = hash_hmac('sha256', $stringToSign, $secret);
+        $stringToSign = "{$timestamp}.{$nonce}";
+        $expected = hash_hmac('sha256', $stringToSign, $secret);
 
         if (!hash_equals($expected, $signature)) {
             return response()->json([
@@ -88,13 +89,13 @@ class VerifyApiSignature
             ], 401);
         }
 
-        Cache::put($nonceKey, true, 120); // 2 minutes TTL
+        Cache::put($nonceKey, true, 120);
 
         /* =====================================================
-         * 6️⃣ Rate limiting (Atomic, race-safe)
+         * 6️⃣ Rate limiting (Atomic & race-safe)
          * ===================================================== */
         $rateKey = "rate:{$clientIp}";
-        $limit   = 60; // requests per minute
+        $limit   = 60;
 
         $count = Cache::increment($rateKey);
 

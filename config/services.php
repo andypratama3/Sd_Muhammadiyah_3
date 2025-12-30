@@ -43,4 +43,7 @@ return [
         'access_token' => env('WHATSAPP_ACCESS_TOKEN'),
         'webhook_verify_token' => env('WHATSAPP_WEBHOOK_TOKEN'),
     ],
+    'api' => [
+        'secret' => env('API_SECRET_KEY'),
+    ],
 ];
