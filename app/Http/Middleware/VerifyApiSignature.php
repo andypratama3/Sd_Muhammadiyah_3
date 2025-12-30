@@ -14,13 +14,13 @@ class VerifyApiSignature
         /* =====================================================
          * 0️⃣ Secret validation
          * ===================================================== */
-        $secret = config('services.api.secret');
+        $secretHex = config('services.api.secret');
         \Log::info('SECRET CHECK', [
             'secret' => config('services.api.secret')
         ]);
 
 
-        if (!$secret) {
+        if (!$secretHex) {
             return response()->json([
                 'message' => 'Server misconfiguration'
             ], 500);
@@ -63,7 +63,13 @@ class VerifyApiSignature
          * STRING FORMAT HARUS IDENTIK DENGAN FRONTEND
          * ===================================================== */
         $stringToSign = "{$timestamp}.{$nonce}";
-        $expected = hash_hmac('sha256', $stringToSign, $secret);
+        $secret = hex2bin($secretHex);
+
+        $expected = hash_hmac(
+            'sha256',
+            $stringToSign,
+            $secret
+        );
 
         if (!hash_equals($expected, $signature)) {
             return response()->json([
