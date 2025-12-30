@@ -15,7 +15,7 @@ class VerifyApiSignature
          * 0️⃣ Secret validation
          * ===================================================== */
         $secret = env('API_SECRET_KEY');
-        
+
 
         if (!$secret) {
             return response()->json([
@@ -56,11 +56,6 @@ class VerifyApiSignature
 
         $realIp = trim(explode(',', $realIp)[0]);
 
-        if ($realIp !== $clientIp) {
-            return response()->json([
-                'message' => 'IP mismatch'
-            ], 401);
-        }
 
         /* =====================================================
          * 4️⃣ Signature validation (HMAC SHA256)
