@@ -20,7 +20,19 @@ class JwtMiddleware
 
     public function handle(Request $request, Closure $next): mixed
     {
-        $token = $request->bearerToken();
+        $token = $request->bearerToken() ?? $request->cookie('access_token');
+
+            \Log::info('JWT DEBUG', [
+                'has_bearer' => (bool)$request->bearerToken(),
+                'has_cookie' => (bool)$request->cookie('access_token'),
+                'all_cookies' => $request->cookies->all(),
+                'token' => $token,
+            ]);
+
+        // 2️⃣ Fallback ke Cookie (PENTING)
+        if (!$token) {
+            $token = $request->cookie('access_token');
+        }
 
         if (!$token) {
             return $this->unauthorized('Token not provided');
@@ -36,11 +48,11 @@ class JwtMiddleware
             return $this->unauthorized('Invalid token payload');
         }
 
-        // Simpan payload agar bisa dipakai controller
         $request->merge([
             'token_payload' => $payload
         ]);
 
         return $next($request);
     }
+
 }

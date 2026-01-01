@@ -31,6 +31,10 @@ class RouteServiceProvider extends ServiceProvider
                 return Limit::none();
             }
 
+            if($request->is('api/*')) {
+                return Limit::none();
+            }
+
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 

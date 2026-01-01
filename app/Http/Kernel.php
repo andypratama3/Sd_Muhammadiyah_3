@@ -26,6 +26,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\HSTS::class,
         \App\Http\Middleware\FrameGuard::class,
         \App\Http\Middleware\SecureHeadersMiddleware::class,
+        
 
     ];
 

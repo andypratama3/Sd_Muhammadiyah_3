@@ -57,7 +57,35 @@ class AuthController extends Controller
                 'origin' => $origin,
             ]);
 
-            return $this->success($tokens, 'Token generated successfully');
+            // return cookie
+           return response()
+                ->json([
+                    'success' => true,
+                    'message' => 'Authenticated',
+                ])
+                ->cookie(
+                    'access_token',
+                    $tokens['access_token'],
+                    60,        // menit
+                    '/',
+                    null,
+                    true,      // Secure (WAJIB untuk SameSite=None)
+                    true,      // HttpOnly
+                    false,
+                    'None'     // 🔥 WAJIB
+                )
+                ->cookie(
+                    'refresh_token',
+                    $tokens['refresh_token'],
+                    43200,
+                    '/',
+                    null,
+                    true,
+                    true,
+                    false,
+                    'None'
+                );
+
 
         } catch (\Exception $e) {
             return $this->serverError(

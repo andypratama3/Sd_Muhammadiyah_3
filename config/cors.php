@@ -21,6 +21,7 @@ return [
 
      'allowed_origins' => [
         env('FRONTEND_URL'),
+        'https://localhost:3000',
         'https://landing.sdmuhammadiyah3smd.com',
         'https://sdmuhammadiyah3smd.com'
     ],
@@ -29,7 +30,9 @@ return [
 
     'allowed_headers' => ['*'],
 
-    'exposed_headers' => [],
+    'exposed_headers' => [
+        'X-Access-Token'
+    ],
 
     'max_age' => 0,
 
