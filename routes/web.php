@@ -251,6 +251,10 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
     Route::get('/monitoring/whatsapp', [WhatsappController::class, 'index'])->name('dashboard.monitoring.whatsapp');
     Route::get('/monitoring/whatsapp/{id}', [WhatsappController::class, 'show'])->name('dashboard.monitoring.whatsapp.show');
 
+    Route::get('/monitoring/whatsapp-error/', [WhatsappController::class, 'error_index'])->name('dashboard.monitoring.whatsapp-error');
+    Route::get('/monitoring/whatsapp-error/{id}', [WhatsappController::class, 'error_show'])->name('dashboard.monitoring.whatsapp-error.show');
+    Route::get('/monitoring/whatsapp-errors', [WhatsappController::class, 'data_table_error'])->name('dashboard.monitoring.whatsapp-error.data');
+
     Route::get('/monitoring/whatsapps/create', [WhatsappController::class, 'create'])->name('dashboard.monitoring.whatsapp.create');
     Route::get('/broadcast/status/{siswa_id}', [BroadcastMessageController::class, 'status']);
     Route::get('/monitoring/whatsapps/datas', [WhatsappController::class, 'data_table'])->name('dashboard.monitoring.whatsapp.data');

@@ -240,6 +240,12 @@
                 <div data-i18n="Halaman Pengunjung">WhatsApp Webhook</div>
             </a>
         </li>
+         <li class="menu-item {{ Request::routeIs('dashboard.monitoring.whatsapp-error.*') ? 'active' : '' }}">
+            <a class="menu-link" href="{{ route('dashboard.monitoring.whatsapp-error') }}">
+                <i class="menu-icon tf-icons bx bx-desktop-alt"></i>
+                <div data-i18n="Halaman Pengunjung">WhatsApp Error</div>
+            </a>
+        </li>
 
          <li class="menu-header small text-uppercase"><span class="menu-header-text">Kritik</span></li>
 

@@ -48,4 +48,50 @@ class WhatsappController extends Controller
         return response()->json(['status' => 'success', 'data' => $message]);
 
     }
+
+    public function error_index()
+    {
+        return view('dashboard.whatsaap.error');
+    }
+
+    public function data_table_error(Request $request)
+    {
+        if ($request->ajax()) {
+
+            $data = DB::table('whatsapp_message_statuses')->orderBy('created_at', 'asc')->get();
+
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('status', function ($row) {
+                    $statusColors = [
+                        'sent' => 'primary',
+                        'delivered' => 'info',
+                        'read' => 'success',
+                        'failed' => 'danger',
+                        'pending' => 'warning',
+                    ];
+                    $color = $statusColors[$row->status] ?? 'secondary';
+                    return '<span class="badge badge-' . $color . '">' . ucfirst($row->status) . '</span>';
+                })
+                ->addColumn('timestamp', function ($row) {
+                    return $row->timestamp ? $row->timestamp->format('d M Y H:i:s') : '-';
+                })
+                ->addColumn('has_errors', function ($row) {
+                    if ($row->errors) {
+                        return '<span class="badge badge-danger"><i class="fa-solid fa-exclamation-triangle"></i> Yes</span>';
+                    }
+                    return '<span class="badge badge-success"><i class="fa-solid fa-check"></i> No</span>';
+                })
+                ->addColumn('action', function ($row) {
+                    $showUrl = route('dashboard.monitoring.whatsapp-error.show', $row->id);
+                    return '
+                        <button class="btn btn-info btn-sm btn-show-data" data-url="' . $showUrl . '" title="Lihat Detail">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    ';
+                })
+                ->rawColumns(['status', 'has_errors', 'action'])
+                ->make(true);
+        }
+    }
 }
