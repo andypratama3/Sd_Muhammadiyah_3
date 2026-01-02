@@ -71,16 +71,16 @@ class WhatsappController extends Controller
                         'pending' => 'warning',
                     ];
                     $color = $statusColors[$row->status] ?? 'secondary';
-                    return '<span class="badge badge-' . $color . '">' . ucfirst($row->status) . '</span>';
+                    return '<span class="badge bg-' . $color . '">' . ucfirst($row->status) . '</span>';
                 })
                 ->addColumn('timestamp', function ($row) {
                     return $row->timestamp ?? '-';
                 })
                 ->addColumn('has_errors', function ($row) {
                     if ($row->errors) {
-                        return '<span class="badge badge-danger"><i class="fa-solid fa-exclamation-triangle"></i> Yes</span>';
+                        return '<span class="badge bg-danger"><i class="fa-solid fa-exclamation-triangle"></i> Yes</span>';
                     }
-                    return '<span class="badge badge-success"><i class="fa-solid fa-check"></i> No</span>';
+                    return '<span class="badge bg-success"><i class="fa-solid fa-check"></i> No</span>';
                 })
                 ->addColumn('action', function ($row) {
                     $showUrl = route('dashboard.monitoring.whatsapp-error.show', $row->id);
