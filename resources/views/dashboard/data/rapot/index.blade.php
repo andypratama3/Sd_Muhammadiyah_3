@@ -204,11 +204,11 @@
                     </div>
                     <div>
                         <label class="mb-2 form-label small fw-bold">Kategori</label>
-                        <select name="category" class="form-control form-control-sm">
+                        <select name="kategori" class="form-control form-control-sm">
                             <option value="">-- Semua Kategori --</option>
-                            <option value="ganjil" {{ request('category') == 'ganjil' ? 'selected' : '' }}>Ganjil</option>
-                            <option value="genap" {{ request('category') == 'genap' ? 'selected' : '' }}>Genap</option>
-                            <option value="tengah" {{ request('category') == 'tengah' ? 'selected' : '' }}>Tengah</option>
+                            <option value="ganjil" {{ request('kategori') == 'ganjil' ? 'selected' : '' }}>Ganjil</option>
+                            <option value="genap" {{ request('kategori') == 'genap' ? 'selected' : '' }}>Genap</option>
+                            <option value="tengah" {{ request('kategori') == 'tengah' ? 'selected' : '' }}>Tengah</option>
                         </select>
                     </div>
                 </div>
@@ -263,7 +263,7 @@
                                 <th width="10%">NISN</th>
                                 <th width="12%">Kelas</th>
                                 <th width="8%">Tahun</th>
-                                <th width="15%">Catatan</th>
+                                <th width="15%">Kategori</th>
                                 <th width="12%">Status File</th>
                                 <th width="18%">Action</th>
                             </tr>
@@ -290,11 +290,9 @@
                                 </td>
 
                                 <td class="text-left">
-                                    @if($rapot->catatan)
-                                        <small>{{ Str::limit($rapot->catatan, 50) }}</small>
-                                    @else
-                                        <span class="text-muted">-</span>
-                                    @endif
+                                    <span class="badge bg-{{ $rapot->kategori === 'Ganjil' ? 'primary' : ($rapot->kategori === 'Genap' ? 'success' : 'warning') }}">
+                                        {{ $rapot->kategori }}
+                                    </span>
                                 </td>
 
                                 <td>
@@ -394,7 +392,8 @@ $(document).ready(function () {
             confirmButtonColor: '#dc3545',
             cancelButtonColor: '#6c757d',
             confirmButtonText: 'Ya, Hapus',
-            cancelButtonText: 'Batal'
+            cancelButtonText: 'Batal',
+            revserseButton: true,
         }).then((result) => {
             if (result.isConfirmed) {
                 $(`#delete-form-${id}`).submit();

@@ -316,6 +316,7 @@ class RapotController extends Controller
         $updateData = [
             'catatan' => $request->input('catatan'),
             'kategori' => $request->input('kategori'),
+            'file_rapot' => $rapot->file_rapot
         ];
 
         // Handle delete file
@@ -356,9 +357,12 @@ class RapotController extends Controller
             $updateData['file_rapot'] = $path;
         }
 
+
         // Minimal validation: harus ada catatan atau file
         $hasCatatan = !empty($updateData['catatan']);
         $hasFile = !empty($updateData['file_rapot']);
+
+
         $hasExistingFile = !empty($rapot->file_rapot) && $updateData['file_rapot'] !== null;
 
         // Jika ada file lama dan tidak dihapus, atau ada file baru, atau ada catatan

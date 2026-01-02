@@ -375,6 +375,18 @@
                         <div class="invalid-feedback d-block">{{ $message }}</div>
                     @enderror
                 </div>
+
+                <div class="mb-3">
+                    <label for="">Kategori</label>
+                    <select name="kategori" class="form-control @error('kategori') is-invalid @enderror">
+                        <option value="ganjil" {{ $rapot->kategori === 'Ganjil' ? 'selected' : '' }}>Ganjil</option>
+                        <option value="genap" {{ $rapot->kategori === 'Genap' ? 'selected' : '' }}>Genap</option>
+                        <option value="tengah" {{ $rapot->kategori === 'Tengah' ? 'selected' : '' }}>Tengah</option>
+                    </select>
+                    @error('kategori')
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
 
             {{-- FILE SECTION --}}
