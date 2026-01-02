@@ -74,7 +74,7 @@ class WhatsappController extends Controller
                     return '<span class="badge badge-' . $color . '">' . ucfirst($row->status) . '</span>';
                 })
                 ->addColumn('timestamp', function ($row) {
-                    return $row->timestamp ? $row->timestamp->format('d M Y H:i:s') : '-';
+                    return $row->timestamp ?? '-';
                 })
                 ->addColumn('has_errors', function ($row) {
                     if ($row->errors) {
