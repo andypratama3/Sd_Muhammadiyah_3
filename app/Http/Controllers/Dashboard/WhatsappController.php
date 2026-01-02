@@ -54,6 +54,15 @@ class WhatsappController extends Controller
         return view('dashboard.whatsaap.error');
     }
 
+     public function error_show($id)
+    {
+        $status = DB::table('whatsapp_message_statuses')->where('id', $id)->first();
+        return response()->json([
+            'success' => true,
+            'data' => $status
+        ]);
+    }
+
     public function data_table_error(Request $request)
     {
         if ($request->ajax()) {
