@@ -546,19 +546,29 @@ class WhatsAppWebhookController extends Controller
 
         $result = $whatsApp->sendTemplate(
             $phone,
-            'spp_reminder',
+            'general_payment_reminder',
             [
                 'User Test',
                 'Kelas 2',
                 'Januari',
                 '20.000'
-            ],
-            "https://ansor.sdmuhammadiyah3smd.com//storage/1/qr_code_1.png"
+            ]
         );
 
         // Return response lengkap untuk debugging
         return response()->json($result, $result['success'] ? 200 : 400);
     }
+
+   public function getMessagesHistory(Request $request)
+    {
+        $limit = $request->input('limit', 50);
+
+        $whatsapp = new WhatsappMetaService();
+        $result = $whatsapp->getMessagesHistory($limit);
+
+        return response()->json($result);
+    }
+
 
     /**
      * Get templates

@@ -180,17 +180,7 @@
                             value="{{ request('search') }}">
                     </div>
 
-                    <div>
-                        <label class="mb-2 form-label small fw-bold">Kelas</label>
-                        <select name="kelas" class="form-control form-control-sm select2">
-                            <option value="">-- Semua Kelas --</option>
-                            @foreach ($kelass as $kelas)
-                                <option value="{{ $kelas->id }}" {{ request('kelas') == $kelas->id ? 'selected' : '' }}>
-                                    {{ $kelas->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+
 
                     <div>
                         <label class="mb-2 form-label small fw-bold">Tahun Ajaran</label>
@@ -212,9 +202,31 @@
                             <option value="without-file" {{ request('status') == 'without-file' ? 'selected' : '' }}>Tanpa File</option>
                         </select>
                     </div>
+                    <div>
+                        <label class="mb-2 form-label small fw-bold">Kategori</label>
+                        <select name="category" class="form-control form-control-sm">
+                            <option value="">-- Semua Kategori --</option>
+                            <option value="ganjil" {{ request('category') == 'ganjil' ? 'selected' : '' }}>Ganjil</option>
+                            <option value="genap" {{ request('category') == 'genap' ? 'selected' : '' }}>Genap</option>
+                            <option value="tengah" {{ request('category') == 'tengah' ? 'selected' : '' }}>Tengah</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div class="search-group" style="margin-top: 15px;">
+
+
+                <div>
+                    <label class="mb-2 form-label small fw-bold">Kelas</label>
+                    <select name="kelas" class="form-control form-control-sm select2">
+                        <option value="">-- Semua Kelas --</option>
+                        @foreach ($kelass as $kelas)
+                            <option value="{{ $kelas->id }}" {{ request('kelas') == $kelas->id ? 'selected' : '' }}>
+                                {{ $kelas->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                 <div class="search-group" style="margin-top: 15px;">
                     <button type="submit" class="btn btn-primary btn-sm">
                         <i class="fas fa-search"></i> Cari
                     </button>

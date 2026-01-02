@@ -46,7 +46,7 @@ class GuruDataController extends Controller
 
             $query = Guru::query()
                 ->with(['karyawan', 'pelajarans'])
-                ->select('id','name', 'karyawan_id', 'description', 'foto', 'slug', 'lulusan', 'updated_at');
+                ->select('name', 'karyawan_id', 'description', 'foto', 'slug', 'lulusan', 'updated_at');
 
             // Search berdasarkan nama atau deskripsi
             if ($search && trim($search) !== '') {
@@ -83,7 +83,7 @@ class GuruDataController extends Controller
         try {
             $guru = Guru::where('slug', $slug)
                 ->with(['karyawan', 'pelajarans'])
-                ->select('id','name', 'description', 'slug', 'lulusan', 'foto', 'karyawan_id', 'created_at', 'updated_at')
+                ->select('name', 'description', 'slug', 'lulusan', 'foto', 'karyawan_id', 'created_at', 'updated_at')
                 ->firstOrFail();
 
             $data = [

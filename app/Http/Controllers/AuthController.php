@@ -57,6 +57,8 @@ class AuthController extends Controller
                 'origin' => $origin,
             ]);
 
+            
+
             // return cookie
            return response()
                 ->json([

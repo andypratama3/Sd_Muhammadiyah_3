@@ -15,9 +15,9 @@ class VerifyApiSignature
          * 0️⃣ Secret validation
          * ===================================================== */
         $secretHex = config('services.api.secret');
-        \Log::info('SECRET CHECK', [
-            'secret' => config('services.api.secret')
-        ]);
+        // \Log::info('SECRET CHECK', [
+        //     'secret' => config('services.api.secret')
+        // ]);
 
 
         if (!$secretHex) {

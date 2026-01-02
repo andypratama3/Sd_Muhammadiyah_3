@@ -330,6 +330,18 @@
                         @enderror
                     </div>
                 </div>
+                <div>
+                    <label class="form-label required">Kategori</label>
+                    <select name="kategori" id="kategori" class="form-control @error('kategori') is-invalid @enderror" required>
+                        <option value="" selected disabled>Pilih kategori</option>
+                        <option value="ganjil">Ganjil</option>
+                        <option value="genap">Genap</option>
+                        <option value="tengah">Tengah</option>
+                    </select>
+                    @error('kategori')
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
 
             {{-- LOADING SPINNER --}}

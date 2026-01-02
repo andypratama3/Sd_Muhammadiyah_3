@@ -22,12 +22,12 @@ class JwtMiddleware
     {
         $token = $request->bearerToken() ?? $request->cookie('access_token');
 
-        // \Log::info('JWT DEBUG', [
-        //     'has_bearer' => (bool)$request->bearerToken(),
-        //     'has_cookie' => (bool)$request->cookie('access_token'),
-        //     'all_cookies' => $request->cookies->all(),
-        //     'token' => $token,
-        // ]);
+            // \Log::info('JWT DEBUG', [
+            //     'has_bearer' => (bool)$request->bearerToken(),
+            //     'has_cookie' => (bool)$request->cookie('access_token'),
+            //     'all_cookies' => $request->cookies->all(),
+            //     'token' => $token,
+            // ]);
 
         // 2️⃣ Fallback ke Cookie (PENTING)
         if (!$token) {

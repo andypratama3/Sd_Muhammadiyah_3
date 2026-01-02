@@ -46,6 +46,10 @@ class RapotController extends Controller
             }
         }
 
+        if($request->kategori) {
+            $rapots->where('kategori', $request->kategori);
+        }
+
         $rapots = $rapots->orderBy('created_at', 'desc')->paginate(15);
         $kelass = Kelas::orderBy('name', 'asc')->get();
 
@@ -125,6 +129,7 @@ class RapotController extends Controller
                 'kelas' => 'required|exists:kelas,id',
                 'tahun' => 'required|numeric|min:2000|max:' . (date('Y') + 1),
                 'rapot' => 'required|array|min:1',
+                'kategori' => 'required|string'
             ]);
 
             // Validate each rapot entry
@@ -185,6 +190,7 @@ class RapotController extends Controller
                         'kelas_id' => $kelasId,
                         'tahun' => $tahun,
                         'angkatan' => $tahun,
+                        'kategori' => $request->input('kategori'),
                         'catatan' => $data['catatan'] ?? null,
                     ];
 
@@ -303,11 +309,13 @@ class RapotController extends Controller
         $request->validate([
             'catatan' => 'nullable|string',
             'file_rapot' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120',
-            'delete_file' => 'nullable|in:1'
+            'delete_file' => 'nullable|in:1',
+            'kategori' => 'required|string',
         ]);
 
         $updateData = [
             'catatan' => $request->input('catatan'),
+            'kategori' => $request->input('kategori'),
         ];
 
         // Handle delete file

@@ -19,6 +19,7 @@ class Rapot extends Model
         'tahun',
         'catatan',
         'file_rapot',
+        'kategori',
     ];
 
 

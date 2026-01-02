@@ -389,6 +389,16 @@
                         </div>
 
                         <div class="info-item">
+                            <span class="info-label">Kategori</span>
+                            <span class="info-value">
+                                <span class="status-badge status-with-file">
+                                    <i class="fas fa-check-circle"></i> {{ $rapot->kategori }}
+                                </span>
+                            </span>
+                        </div>
+
+
+                        <div class="info-item">
                             <span class="info-label">Terakhir Diubah</span>
                             <span class="info-value">
                                 {{ $rapot->updated_at->format('d-m-Y H:i') }}

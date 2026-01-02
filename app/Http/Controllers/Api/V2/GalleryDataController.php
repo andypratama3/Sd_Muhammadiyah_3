@@ -58,6 +58,7 @@ class GalleryDataController extends Controller
     {
         try {
             $gallery = Gallery::with('gallery_kategori')
+                ->select(['name', 'slug', 'cover', 'created_at'])
                 ->orderBy('created_at', 'desc')
                 ->get();
 
