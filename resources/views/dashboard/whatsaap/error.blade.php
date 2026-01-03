@@ -168,7 +168,7 @@
                         $('#detailId').text(data.id || '-');
                         $('#detailMessageId').text(data.message_id || '-');
                         $('#detailRecipient').text(data.recipient || '-');
-                        $('#detailStatus').html('<span class="badge badge-primary">' + (data.status || '-') + '</span>');
+                        $('#detailStatus').html('<span class="badge bg-' + (data.status === 'success' ? 'success' : 'danger') + '">' + (data.status || '-') + '</span>');
                         $('#detailTimestamp').text(data.timestamp || '-');
                         $('#detailCreatedAt').text(data.created_at || '-');
 

@@ -15,13 +15,13 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    'paths' => ['api/*','storage/*', 'sanctum/csrf-cookie'],
 
     'allowed_methods' => ['*'],
 
      'allowed_origins' => [
         env('FRONTEND_URL'),
-        'https://localhost:3000',
+        'http://localhost:3000',
         'https://landing.sdmuhammadiyah3smd.com',
         'https://sdmuhammadiyah3smd.com'
     ],
@@ -31,7 +31,9 @@ return [
     'allowed_headers' => ['*'],
 
     'exposed_headers' => [
-        'X-Access-Token'
+        'X-Access-Token',
+        'Content-Disposition',
+        'Content-Length'
     ],
 
     'max_age' => 0,

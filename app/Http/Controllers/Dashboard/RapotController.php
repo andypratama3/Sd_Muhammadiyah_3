@@ -225,6 +225,7 @@ class RapotController extends Controller
                     // Check if rapot already exists
                     $existingRapot = Rapot::where('siswa_id', $data['siswa_id'])
                         ->where('kelas_id', $kelasId)
+                        ->where('kategori', $request->input('kategori'))
                         ->where('tahun', $tahun)
                         ->first();
 

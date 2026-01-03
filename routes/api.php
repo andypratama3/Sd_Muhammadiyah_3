@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Dashboard\SiswaApi;
 use App\Http\Controllers\Api\Dashboard\WilayahApi;
 use App\Http\Controllers\Api\V2\LandingController;
 use App\Http\Controllers\Api\V2\GuruDataController;
+use App\Http\Controllers\Api\V2\RapotDataController;
 use App\Http\Controllers\Api\V2\ViewsDataController;
 use App\Http\Controllers\Api\V2\BeritaDataController;
 use App\Http\Controllers\Api\V2\JadwalDataController;
@@ -161,6 +162,18 @@ Route::group(['prefix' => 'v2'], function () {
                 Route::get('/', [PrestasiDataController::class, 'prestasi_sekolah']);
                 Route::get('/{slug}', [PrestasiDataController::class, 'prestasi_sekolah_detail']);
             });
+        });
+
+        Route::group(['prefix' => 'rapot'], function () {
+            Route::get('/tahun', [RapotDataController::class, 'getTahunAjaran']);
+            Route::get('/siswa', [RapotDataController::class, 'getSiswaByTahun']);
+            Route::get('/detail/{siswaId}', [RapotDataController::class, 'getDetailRapotSiswa']);
+
+            // FIXED: Download endpoint dengan proper streaming
+            Route::get('/download/{siswaId}/{rapotId}', [RapotDataController::class, 'downloadRapot']);
+
+            // Alternative: Get temporary signed URL
+            Route::get('/url/{siswaId}/{rapotId}', [RapotDataController::class, 'getDownloadUrl']);
         });
 
         // Statistics endpoint

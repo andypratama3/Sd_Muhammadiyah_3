@@ -10,7 +10,7 @@
     <div class="card">
         <div class="flex-row py-3 card-header d-flex align-items-center justify-content-between">
             <h4 class="card-title">Webhook WhatsApp</h4>
-            <a href="{{ route('dashboard.monitoring.whatsapp.create') }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-bullhorn"></i> Buat Pemberitahuan</a>
+            <a href="{{ route('dashboard.monitoring.whatsapp.brodcast') }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-bullhorn"></i> Buat Pemberitahuan</a>
         </div>
         <div class="card-body">
 

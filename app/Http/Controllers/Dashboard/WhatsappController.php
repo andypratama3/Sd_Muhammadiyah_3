@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Models\Kelas;
 use Illuminate\Http\Request;
+use App\Models\JudulPembayaran;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Yajra\DataTables\Facades\DataTables;
@@ -48,6 +49,19 @@ class WhatsappController extends Controller
         return response()->json(['status' => 'success', 'data' => $message]);
 
     }
+
+    public function brodcast()
+    {
+        $kelas = Kelas::where('name', '!=', 'Lulus')->get();
+        $kategoriPembayaran = JudulPembayaran::all();
+        return view('dashboard.whatsaap.brodcast', compact('kelas','kategoriPembayaran'));
+    }
+
+    public function store(Request $request)
+    {
+
+    }
+
 
     public function error_index()
     {

@@ -6,8 +6,8 @@
 <link href="{{ asset('asset_dashboard/vendor/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}" rel="stylesheet"
     type="text/css">
 @endpush
-<div class="card mb-4">
-    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+<div class="mb-4 card">
+    <div class="flex-row py-3 card-header d-flex align-items-center justify-content-between">
         <h6 class="m-0 font-weight-bold text-primary">Buat Charge Pembayaran</h6>
     </div>
     <hr>
@@ -17,7 +17,7 @@
         <form action="{{ route('dashboard.datamaster.charge.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="row">
-                <div class="col-md-12 mt-2">
+                <div class="mt-2 col-md-12">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="category_payment_id">Kategori Pembayaran</label>
                         <div class="col-sm-9">
@@ -30,7 +30,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12 mt-2">
+                <div class="mt-2 col-md-12">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="tgl_lahir">Kelas</label>
                         <div class="col-sm-9">
@@ -43,7 +43,17 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12 mt-2">
+
+                <div class="mt-2 mb-2 col-md-12 d-none" id="category_lainnya">
+                    <div class="form-group row">
+                        <label class="col-sm-3 text-dark" for="category">Nama Pembayaran</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" name="category" id="category">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-2 col-md-12">
                     <div class="form-group row">
                         <label class="col-sm-3 text-dark" for="gross_amount">Nominal</label>
                         <div class="col-sm-9">
@@ -52,7 +62,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-12 mt-4">
+                <div class="mt-4 col-md-12">
                         <a href="{{ route('dashboard.datamaster.charge.index') }}" class="btn btn-danger float-lg-start btn-sm">Kembali</a>
                         <button type="submit" class="btn btn-primary btn-sm float-lg-end">Submit</button>
                     </div>
@@ -65,6 +75,15 @@
 <script src="{{ asset('asset_dashboard/vendor/select2/dist/js/select2.js') }}"></script>
 <script>
     $(document).ready(function () {
+         $('#category_payment_id').on('change', function () {
+            if ($(this).find('option:selected').text() == 'Lainnya' || $(this).find('option:selected').text() == 'lainnya') {
+                $('#category_lainnya').removeClass('d-none');
+            } else {
+                $('#category_lainnya').addClass('d-none');
+            }
+        });
+
+
         $('.select2').select2({
             theme: 'bootstrap4'
         });
