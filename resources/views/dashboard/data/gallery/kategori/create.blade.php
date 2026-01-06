@@ -12,7 +12,7 @@
             <div class="mt-2 form-group">
                 <label class="form-label" for="name">Nama</label>
                 <input type="text" class="form-control" name="name" id="name" aria-describedby="name"
-                    placeholder="Masukan Prestasi">
+                    placeholder="Masukan Nama">
             </div>
             <div class="mt-2 mb-2 form-group">
                 <a href="{{ route('dashboard.datasekolah.kategori.gallery.index') }}" class="btn btn-danger btn-sm float-lg-start">Kembali</a>
