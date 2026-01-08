@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class GuruData extends Data
 {
     public function __construct(
+        public readonly string $name,
         public readonly string $description,
         public readonly string $lulusan,
         public readonly ?string $karyawan_id,
@@ -25,6 +26,7 @@ class GuruData extends Data
     public static function fromRequest(StoreGuruRequest $request): self
     {
         return self::from([
+            $request->getName(),
             $request->getFoto(),
             $request->getLulusan(),
             $request->getPelajarans(),
@@ -38,6 +40,7 @@ class GuruData extends Data
     public static function messages()
     {
         return [
+            'name.required' => 'Kolom Nama tidak boleh kosong!',
             'pelajarans.required' => 'Kolom Pelajaran tidak boleh kosong!',
             'lulusan.required' => 'Kolom Lulusan tidak boleh kosong!',
             'foto.required' => 'Kolom File Foto tidak boleh kosong!',

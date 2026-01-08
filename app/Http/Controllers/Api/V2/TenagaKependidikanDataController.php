@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 
 class TenagaKependidikanDataController extends Controller
 {
+
     public function list()
     {
         try {

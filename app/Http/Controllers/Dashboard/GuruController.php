@@ -48,15 +48,16 @@ class GuruController extends Controller
         /*
             todo check karyawan at database with karyawan_id
         */
-        $karyawan = Guru::where('karyawan_id', $GuruData->karyawan_id)->first();
 
-        if (! $karyawan) {
-            $guruAction->execute($GuruData);
+        return redirect()->route('dashboard.datasekolah.guru.index')->with('success', 'Berhasil Menambahkan Guru!');
+        // $karyawan = Guru::where('karyawan_id', $GuruData->karyawan_id)->first();
 
-            return redirect()->route('dashboard.datasekolah.guru.index')->with('success', 'Berhasil Menambahkan Guru!');
-        } else {
-            return redirect()->route('dashboard.datasekolah.guru.index')->with('error', 'Gagal Guru Telah Ada!');
-        }
+        // if (! $karyawan) {
+        //     $guruAction->execute($GuruData);
+
+        // } else {
+        //     return redirect()->route('dashboard.datasekolah.guru.index')->with('error', 'Gagal Guru Telah Ada!');
+        // }
     }
 
     public function show(Guru $guru)

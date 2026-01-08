@@ -34,7 +34,7 @@ class GuruAction
         $guru = Guru::updateOrCreate(
             ['slug' => $guruData->slug],
             [
-                'name' => $karyawan->name,
+                'name' => $karyawan->name ?? $guruData->name,
                 'description' => $guruData->description,
                 'lulusan' => $guruData->lulusan,
                 'karyawan_id' => $guruData->karyawan_id,

@@ -15,55 +15,78 @@
             @csrf
             @method('PUT')
             <input type="hidden" name="slug" value="{{ $guru->slug }}">
+
             <div class="mt-2 form-group">
-                <label for="judul">Guru</label>
-                <input type="hidden" name="name" value="{{ $guru->karyawan->name }}">
-                <select name="karyawan_id" id="" class="form-control select2">
+                <label for="karyawan_id">Guru</label>
+                <select name="karyawan_id" id="karyawan_id" class="form-control select2 @error('karyawan_id') is-invalid @enderror">
                     @if ($guru->karyawan)
-                     <option selected value="{{ $guru->karyawan_id }}">{{ $guru->karyawan->name }}</option>
+                        <option selected value="{{ $guru->karyawan_id }}">{{ $guru->karyawan->name }}</option>
                     @else
-                        <option value="" selected >Pilih Guru</option>
+                        <option value="" selected>Pilih Guru</option>
                     @endif
                     @foreach ($karyawans as $karyawanOption)
-                        <option value="{{ $karyawanOption->id }}">{{ $karyawanOption->name }} <input type="hidden" name="name" value="{{ $karyawanOption->name }}"></option>
+                        @if ($guru->karyawan_id !== $karyawanOption->id)
+                            <option value="{{ $karyawanOption->id }}">{{ $karyawanOption->name }}</option>
+                        @endif
                     @endforeach
                 </select>
+                @error('karyawan_id')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="mt-2 form-group">
-                <label for="">Deskripsi</label>
-                <input type="text" class="form-control" id="" name="description" placeholder="Deskripsi" value="{{ $guru->description }}">
+                <label for="description">Deskripsi</label>
+                <input type="text" class="form-control @error('description') is-invalid @enderror" id="description" name="description" placeholder="Deskripsi" value="{{ old('description', $guru->description) }}">
+                @error('description')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
+
             <div class="mt-2 form-group">
-                <label for="">Lulusan</label>
-                <input type="text" class="form-control" id="" name="lulusan" placeholder="lulusan" value="{{ $guru->lulusan }}">
+                <label for="lulusan">Lulusan</label>
+                <input type="text" class="form-control @error('lulusan') is-invalid @enderror" id="lulusan" name="lulusan" placeholder="lulusan" value="{{ old('lulusan', $guru->lulusan) }}">
+                @error('lulusan')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
+
             <div class="mt-2 form-group">
-                <label for="">Pelajaran</label>
-                <select name="pelajarans[]" id="" multiple class="form-control select2">
-                    @foreach ($guru->pelajarans as $item)
-                    <option value="{{ $item->id }}" selected>{{ $item->name }}</option>
-                    @endforeach
+                <label for="pelajarans">Pelajaran</label>
+                <select name="pelajarans[]" id="pelajarans" multiple class="form-control select2 @error('pelajarans') is-invalid @enderror">
+                    @php
+                        $selectedPelajaranIds = $guru->pelajarans->pluck('id')->toArray();
+                        $oldPelajaranIds = old('pelajarans', $selectedPelajaranIds);
+                    @endphp
                     @foreach ($pelajarans as $pelajaran)
-                    <option value="{{ $pelajaran->id }}">{{ $pelajaran->name }}</option>
+                        <option value="{{ $pelajaran->id }}" {{ in_array($pelajaran->id, $oldPelajaranIds) ? 'selected' : '' }}>{{ $pelajaran->name }}</option>
                     @endforeach
                 </select>
+                @error('pelajarans')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
+
             <div class="mt-2 mb-2 form-group">
-                <label for="">Foto</label>
+                <label for="foto">Foto</label>
                 <div class="custom-file">
-                    <input type="file" class="form-control" id="foto" name="foto" accept="image/*" onchange="loadPreview(this)">
+                    <input type="file" class="form-control @error('foto') is-invalid @enderror" id="foto" name="foto" accept="image/*">
                 </div>
+                @error('foto')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
                 <div class="mt-3 text-center">
-                    <h6 class="">Poto yang di pilih</h6>
-                    <img src="{{ asset('storage/img/guru/'.$guru->foto) }}" id="output" alt="" style="width: 200px; height: 50%;">
+                    <h6 class="">Foto yang dipilih</h6>
+                    <img src="{{ asset('storage/img/guru/'.$guru->foto) }}" id="output" alt="{{ $guru->name }}" style="width: 200px; height: 50%;">
                 </div>
             </div>
+
             <a href="{{ route('dashboard.datasekolah.guru.index') }}" class="btn btn-danger btn-sm float-lg-start">Kembali</a>
             <button type="submit" class="btn btn-primary btn-sm float-lg-end">Simpan</button>
         </form>
         </div>
     </div>
+
 @push('js')
 <script src="{{ asset('asset_dashboard/vendor/select2/dist/js/select2.js') }}"></script>
 <script type="text/javascript">
@@ -71,6 +94,7 @@
         $('.select2').select2({
             theme: 'bootstrap4'
         });
+
         $('#foto').change(function () {
             let reader = new FileReader();
             reader.onload = (e) => {
