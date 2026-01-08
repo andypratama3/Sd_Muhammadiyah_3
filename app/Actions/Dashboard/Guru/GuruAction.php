@@ -5,41 +5,61 @@ namespace App\Actions\Dashboard\Guru;
 use App\Models\Guru;
 use App\Models\Karyawan;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use App\DataTransferObjects\GuruData;
 
 class GuruAction
 {
     public function execute(GuruData $guruData)
     {
-
         $picture_name = null;
+        $karyawan = null;
+
         // search karyawan_id
-        $karyawan = Karyawan::where('id', $guruData->karyawan_id)->firstOrFail();
-        //request foto
+        if($guruData->karyawan_id) {
+            $karyawan = Karyawan::where('id', $guruData->karyawan_id)->first();
+        }
+
+        // request foto
         if($guruData->foto)
         {
             $foto = $guruData->foto;
             $ext = $foto->getClientOriginalExtension();
+            $nameSlug = $karyawan ? Str::slug($karyawan->name) : Str::slug($guruData->name);
 
-            //upload foto to folder
+            // Delete old foto jika update
+            if(!empty($guruData->slug)) {
+                $oldGuru = Guru::where('slug', $guruData->slug)->first();
+                if($oldGuru && $oldGuru->foto) {
+                    Storage::disk('public')->delete('img/guru/' . $oldGuru->foto);
+                }
+            }
+
+            // upload foto to folder
             $upload_path = public_path('storage/img/guru/');
-            $picture_name = 'Guru_'.Str::slug($karyawan->name).'_'.date('YmdHis').".$ext";
+            $picture_name = 'Guru_'.$nameSlug.'_'.date('YmdHis').".$ext";
             $foto->move($upload_path, $picture_name);
 
-        }  else {
-            $picture_name = $guruData->foto;
+        } else {
+            // Jika tidak ada foto baru, gunakan foto lama saat update
+            if(!empty($guruData->slug)) {
+                $oldGuru = Guru::where('slug', $guruData->slug)->first();
+                $picture_name = $oldGuru ? $oldGuru->foto : null;
+            }
         }
 
+        $slug = !empty($guruData->slug) ? $guruData->slug : Str::slug($guruData->name);
 
         $guru = Guru::updateOrCreate(
-            ['slug' => $guruData->slug],
+            ['slug' => $slug],
             [
                 'name' => $karyawan->name ?? $guruData->name,
                 'description' => $guruData->description,
                 'lulusan' => $guruData->lulusan,
                 'karyawan_id' => $guruData->karyawan_id,
                 'foto' => $picture_name,
-            ]);
+            ]
+        );
 
         if(empty($guruData->slug))
         {
@@ -47,6 +67,7 @@ class GuruAction
         }else{
             $guru->pelajarans()->sync($guruData->pelajarans);
         }
+
         return $guru;
     }
 }

@@ -10,8 +10,8 @@ class GuruData extends Data
 {
     public function __construct(
         public readonly string $name,
-        public readonly string $description,
-        public readonly string $lulusan,
+        public readonly ?string $description,
+        public readonly ?string $lulusan,
         public readonly ?string $karyawan_id,
         public readonly array $pelajarans,
         public readonly UploadedFile $foto,
@@ -42,7 +42,6 @@ class GuruData extends Data
         return [
             'name.required' => 'Kolom Nama tidak boleh kosong!',
             'pelajarans.required' => 'Kolom Pelajaran tidak boleh kosong!',
-            'lulusan.required' => 'Kolom Lulusan tidak boleh kosong!',
             'foto.required' => 'Kolom File Foto tidak boleh kosong!',
             'foto.image' => 'Kolom File Foto harus berupa gambar!',
         ];

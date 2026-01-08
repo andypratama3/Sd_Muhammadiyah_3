@@ -49,6 +49,7 @@ class GuruController extends Controller
             todo check karyawan at database with karyawan_id
         */
 
+        $guruAction->execute($GuruData);
         return redirect()->route('dashboard.datasekolah.guru.index')->with('success', 'Berhasil Menambahkan Guru!');
         // $karyawan = Guru::where('karyawan_id', $GuruData->karyawan_id)->first();
 
