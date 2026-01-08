@@ -49,9 +49,10 @@ class TenagaPendidikanController extends Controller
         return redirect()->route('dashboard.datasekolah.tenagapendidikan.index')->with('success', 'Berhasil Update Tenaga Pendidikan');
     }
 
-    public function destroy(TenagaPendidikanActionDelete $tenagaPendidikanActionDelete, TenagaPendidikan $tenagaPendidikan)
+    public function destroy(TenagaPendidikanActionDelete $tenagaPendidikanActionDelete, $id)
     {
-        $tenagaPendidikanActionDelete->execute($tenagaPendidikan);
+
+        $tenagaPendidikanActionDelete->execute($id);
 
         return redirect()->route('dashboard.datasekolah.tenagapendidikan.index')->with('success', 'Berhasil Menghapus Tenaga Pendidikan');
     }

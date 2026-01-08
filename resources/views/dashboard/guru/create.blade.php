@@ -15,7 +15,7 @@
         <form action="{{ route('dashboard.datasekolah.guru.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="mt-2 form-group">
-                <label class="form-label" for="judul">Guru</label>
+                <label class="form-label" for="judul">Guru (opsional)</label>
                 <select name="karyawan_id" id="" class="form-control select2">
                     <option selected disabled>Pilih Guru</option>
                     @foreach ($karyawans as $karyawan)

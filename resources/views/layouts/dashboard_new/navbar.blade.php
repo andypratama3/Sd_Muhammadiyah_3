@@ -1,36 +1,48 @@
+@push('css')
 
-    <style>
-        .icon-circle {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
+<style>
+    .icon-circle {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+
+    .bg-success {
+        background-color: #28a745 !important;
+    }
+
+    .bg-primary {
+        background-color: #007bff !important;
+    }
+
+    .bg-danger {
+        background-color: #dc3545 !important;
+    }
+
+    .bg-warning {
+        background-color: #ffc107 !important;
+    }
+
+    @media (min-width: 1200px) {
+        .navbar-expand-xl .navbar-nav .dropdown-menu {
+            margin-top: 350px !important;
         }
+    }
 
-        .bg-success { background-color: #28a745 !important; }
-        .bg-primary { background-color: #007bff !important; }
-        .bg-danger { background-color: #dc3545 !important; }
-        .bg-warning { background-color: #ffc107 !important; }
-
-        @media (min-width: 1200px) {
-           .navbar-expand-xl .navbar-nav .dropdown-menu {
-               margin-top: 350px !important;
-           }
+    @media (min-width: 992px) {
+        .navbar-expand-lg .navbar-nav .dropdown-menu #activity_items>* {
+            /* max word wrap max 10*/
+            word-break: break-word;
+            hyphens: auto;
+            max-width: 10em;
         }
+    }
+</style>
 
-        @media (min-width: 992px) {
-            .navbar-expand-lg .navbar-nav .dropdown-menu #activity_items > *{
-                /* max word wrap max 10*/
-                word-break: break-word;
-                hyphens: auto;
-                max-width: 10em;
-            }
-        }
-
-
-    </style>
+@endpush
 <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
     id="layout-navbar">
     <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
@@ -50,16 +62,20 @@
 
         <!-- /Search -->
         <ul class="flex-row navbar-nav align-items-center ms-auto ">
-            <li class="mx-1 mr-2 nav-item dropdown no-arrow float-end " style="list-style: none !important; background-color: transparent !important;">
-                <a class="nav-link dropdown-toggle" style="z-index: 9999 !important;" href="#" id="alertsDropdown" role="button"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <li class="mx-1 mr-2 nav-item dropdown no-arrow float-end "
+                style="list-style: none !important; background-color: transparent !important;">
+                <a class="nav-link dropdown-toggle" style="z-index: 9999 !important;" href="#" id="alertsDropdown"
+                    role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-bell fa-fw"></i>
-                    <span class="badge badge-danger badge-counter" style="color: red !important;" id="activity_count"></span>
+                    <span class="badge badge-danger badge-counter" style="color: red !important;"
+                        id="activity_count"></span>
                 </a>
-                <div class="shadow dropdown-list dropdown-menu animated--grow-in" spellcheck="" aria-labelledby="alertsDropdown" id="activity_list">
+                <div class="shadow dropdown-list dropdown-menu animated--grow-in" spellcheck=""
+                    aria-labelledby="alertsDropdown" id="activity_list">
                     <h6 class="dropdown-header">Activity</h6>
                     <div id="activity_items"></div>
-                    <a class="text-center dropdown-item small text-black-500" href="{{ route('dashboard.notifikasi.index') }}">Show All Activity</a>
+                    <a class="text-center dropdown-item small text-black-500"
+                        href="{{ route('dashboard.notifikasi.index') }}">Show All Activity</a>
                 </div>
             </li>
 
@@ -76,7 +92,6 @@
                         <img src="{{ asset('storage/img/profile/'. Auth::user()->avatar) }}"
                             class="h-auto w-px-40 rounded-circle" alt="Profile" id="profile">
                         @endif
-
                     </div>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
@@ -149,6 +164,8 @@
     </div>
 </nav>
 
+@push('js')
+
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function () {
         const dropdownToggle = document.getElementById("alertsDropdown");
@@ -166,5 +183,5 @@
             }
         });
     });
-    </script>
-
+</script>
+@endpush

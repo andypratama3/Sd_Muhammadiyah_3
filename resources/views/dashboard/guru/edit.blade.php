@@ -5,9 +5,9 @@
 <link href="{{ asset('asset_dashboard/vendor/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}" rel="stylesheet" type="text/css">
 @endpush
 @section('content')
-    <div class="card mb-4">
+    <div class="mb-4 card">
         @include('layouts.flashmessage')
-        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <div class="flex-row py-3 card-header d-flex align-items-center justify-content-between">
             <h6 class="m-0 font-weight-bold text-primary">Edit guru {{ $guru->name }}</h6>
         </div>
         <div class="card-body">
@@ -15,12 +15,14 @@
             @csrf
             @method('PUT')
             <input type="hidden" name="slug" value="{{ $guru->slug }}">
-            <div class="form-group mt-2">
+            <div class="mt-2 form-group">
                 <label for="judul">Guru</label>
                 <input type="hidden" name="name" value="{{ $guru->karyawan->name }}">
                 <select name="karyawan_id" id="" class="form-control select2">
                     @if ($guru->karyawan)
                      <option selected value="{{ $guru->karyawan_id }}">{{ $guru->karyawan->name }}</option>
+                    @else
+                        <option value="" selected >Pilih Guru</option>
                     @endif
                     @foreach ($karyawans as $karyawanOption)
                         <option value="{{ $karyawanOption->id }}">{{ $karyawanOption->name }} <input type="hidden" name="name" value="{{ $karyawanOption->name }}"></option>
@@ -28,15 +30,15 @@
                 </select>
             </div>
 
-            <div class="form-group mt-2">
+            <div class="mt-2 form-group">
                 <label for="">Deskripsi</label>
                 <input type="text" class="form-control" id="" name="description" placeholder="Deskripsi" value="{{ $guru->description }}">
             </div>
-            <div class="form-group mt-2">
+            <div class="mt-2 form-group">
                 <label for="">Lulusan</label>
                 <input type="text" class="form-control" id="" name="lulusan" placeholder="lulusan" value="{{ $guru->lulusan }}">
             </div>
-            <div class="form-group mt-2">
+            <div class="mt-2 form-group">
                 <label for="">Pelajaran</label>
                 <select name="pelajarans[]" id="" multiple class="form-control select2">
                     @foreach ($guru->pelajarans as $item)
@@ -47,7 +49,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="form-group mt-2 mb-2">
+            <div class="mt-2 mb-2 form-group">
                 <label for="">Foto</label>
                 <div class="custom-file">
                     <input type="file" class="form-control" id="foto" name="foto" accept="image/*" onchange="loadPreview(this)">

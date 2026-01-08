@@ -95,40 +95,38 @@
                 height: 120px;
             }
         }
-
-
-
     </style>
 @endpush
+
 @section('content')
 <section class="section profile">
     <div class="row">
         <div class="col-xl-4">
             <div class="card">
-                <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+                <div class="pt-4 card-body profile-card d-flex flex-column align-items-center">
                     @if (Auth::user()->avatar === 'default.jpg')
-                        <img src="{{ asset('asset_dashboard_new/img/avatars/1.png') }}"
-                                alt="Profile" id="" class="w-25 img-profile rounded-circle">
+                    <img src="{{ asset('asset_dashboard_new/img/avatars/1.png') }}" alt="Profile" id=""
+                        class="w-25 img-profile rounded-circle">
                     @else
-                    <a href="{{ asset('storage/img/profile/' . Auth::user()->avatar) }}">
+                    <a href="{{ asset('storage/img/profile/' . Auth::user()->avatar) }}" class="text-underline-none">
                         <img src="{{ asset('storage/img/profile/' . Auth::user()->avatar) }}"
                             class="img-profile rounded-circle" alt="Profile" id="profile">
                     </a>
                     @endif
                     <h2>{{ Auth::user()->name }}</h2>
                     @if (empty(Auth::user()->roles->first()->name))
-                        <h3>User</h3>
+                    <h3>User</h3>
                     @else
-                        <h3>{{ Auth::user()->roles->first()->name }}</h3>
+                    <h3>{{ Auth::user()->roles->first()->name }}</h3>
                     @endif
                 </div>
             </div>
         </div>
         <div class="col-xl-8">
             <div class="card">
-                <div class="card-body pt-3">
+                <div class="pt-3 card-body">
                     {{-- tab option --}}
-                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                    <ul class="mb-3 nav nav-pills" id="pills-tab" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#profile-overview"
                                 role="tab" aria-controls="profile-overview" aria-selected="true">Overview</a>
@@ -148,10 +146,10 @@
                         </li>
                     </ul>
                     {{-- custstom --}}
-                    <div class="tab-content pt-2">
-                        <div class="tab-pane fade show active profile-overview mt-3" id="profile-overview">
+                    <div class="pt-2 tab-content">
+                        <div class="mt-3 tab-pane fade show active profile-overview" id="profile-overview">
                             <h5 class="card-title">Profile Details</h5>
-                            <div class="row mt-2">
+                            <div class="mt-2 row">
                                 <div class="col-md-4 col-lg-3 col-form-label">Nama</div>
                                 <div class="col-lg-9 col-md-8">: {{ Auth::user()->name }}</div>
                             </div>
@@ -184,18 +182,18 @@
                             </div>
                         </div>
 
-                        <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
+                        <div class="pt-3 tab-pane fade profile-edit" id="profile-edit">
                             <!-- Profile Edit Form -->
                             @if ($karyawan && Auth::id() == $karyawan->user_id)
-                                <button class="btn btn-primary float-right" id="button_edit_profile">
+                                <button class="float-right btn btn-primary" id="button_edit_profile">
                                     <i class="fas fa-gear"></i> Edit Data
                                 </button>
                             @else
-                                <button class="btn btn-primary float-right" id="button_edit_profile_user">
+                                <button class="float-right btn btn-primary" id="button_edit_profile_user">
                                     <i class="fas fa-gear"></i> Edit Data
                                 </button>
                             @endif
-                            <div class="row mb-3">
+                            <div class="mb-3 row">
                                 <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile
                                     Image</label>
                                 <div class="col-md-8 col-lg-9">
@@ -226,14 +224,14 @@
                                     method="POST" enctype="multipart/form-data">
                                     @csrf
                                     @method('PUT')
-                                    <div class="row mb-3">
+                                    <div class="mb-3 row">
                                         <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Nama</label>
                                         <div class="col-md-8 col-lg-9">
                                             <input name="name" type="text" class="form-control" id="fullName"
                                                 value="{{ $karyawan->name }}" readonly>
                                         </div>
                                     </div>
-                                    <div class="row mb-3">
+                                    <div class="mb-3 row">
                                         <label for="sex" class="col-md-4 col-lg-3 col-form-label">Jenis
                                             Kelamin</label>
                                         <div class="col-md-8 col-lg-9">
@@ -250,7 +248,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="row mb-3">
+                                    <div class="mb-3 row">
                                         <label for="company" class="col-md-4 col-lg-3 col-form-label">phone</label>
                                         <div class="col-md-8 col-lg-9">
                                             <input name="phone" type="text" class="form-control" id="phone"
@@ -258,7 +256,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="row mb-3">
+                                    <div class="mb-3 row">
                                         <label for="email" class="col-md-4 col-lg-3 col-form-label">Email</label>
                                         <div class="col-md-8 col-lg-9">
                                             <input name="email" type="text" class="form-control" id="email"
@@ -275,7 +273,7 @@
                                     method="POST" enctype="multipart/form-data">
                                     @csrf
                                     @method('PUT')
-                                    <div class="row mb-3">
+                                    <div class="mb-3 row">
                                         <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Nama</label>
                                         <div class="col-md-8 col-lg-9">
                                             <input name="name" type="text" class="form-control" id="fullName"
@@ -283,7 +281,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="row mb-3">
+                                    <div class="mb-3 row">
                                         <label for="email" class="col-md-4 col-lg-3 col-form-label">Email</label>
                                         <div class="col-md-8 col-lg-9">
                                             <input name="email" type="text" class="form-control"
@@ -298,10 +296,10 @@
                             @endif
 
                         </div>
-                        <div class="tab-pane fade pt-3" id="profile-settings">
+                        <div class="pt-3 tab-pane fade" id="profile-settings">
                             <!-- Settings Form -->
                             <form>
-                                <div class="row mb-3">
+                                <div class="mb-3 row">
                                     <div class="form-group">
 
                                     </div>
@@ -316,12 +314,12 @@
                                 </div>
                             </form><!-- End settings Form -->
                         </div>
-                        <div class="tab-pane fade pt-3" id="profile-change-password">
+                        <div class="pt-3 tab-pane fade" id="profile-change-password">
                             <!-- Change Password Form -->
                             <form method="POST" action="{{ route('user-password.update') }}">
                                 @method('PUT')
                                 @csrf
-                                <div class="row mb-3">
+                                <div class="mb-3 row">
                                     <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Current
                                         Password</label>
                                     <div class="col-md-8 col-lg-9">
@@ -330,7 +328,7 @@
                                     </div>
                                 </div>
 
-                                <div class="row mb-3">
+                                <div class="mb-3 row">
                                     <label for="newPassword" class="col-md-4 col-lg-3 col-form-label">New
                                         Password</label>
                                     <div class="col-md-8 col-lg-9">
@@ -339,7 +337,7 @@
                                     </div>
                                 </div>
 
-                                <div class="row mb-3">
+                                <div class="mb-3 row">
                                     <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">Re-enter New
                                         Password</label>
                                     <div class="col-md-8 col-lg-9">
@@ -368,7 +366,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body mx-3">
+                    <div class="mx-3 modal-body">
                         <div class="img-container">
                             <div class="row">
                                 <img class="img" id="image-crop"
@@ -388,6 +386,8 @@
         </div>
     </div>
 </section>
+@endsection
+
 @push('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous">
@@ -581,4 +581,3 @@
         });
     </script>
 @endpush
-@endsection

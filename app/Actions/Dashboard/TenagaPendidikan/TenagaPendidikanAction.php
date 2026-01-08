@@ -7,7 +7,7 @@ use App\Models\TenagaPendidikan;
 
 class TenagaPendidikanAction
 {
-    public function execute($tenagaPendidikanData): TenagaPendidikan
+    public function execute($tenagaPendidikanData)
     {
         /*
             !handle Foto

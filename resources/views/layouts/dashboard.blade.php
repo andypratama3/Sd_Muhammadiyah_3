@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-<html lang="en" class="light-style" dir="ltr" data-theme="theme-default" data-assets-path="{{ asset('asset_dashboard_new/data-template="vertical-menu-template-free') }}">
+<html lang="en" class="light-style" dir="ltr" data-theme="theme-default"
+    data-assets-path="{{ asset('asset_dashboard_new/data-template="vertical-menu-template-free') }}">
 
 @include('layouts.dashboard_new.head')
+
 <body>
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
             <!-- Menu -->
 
-           @include('layouts.dashboard_new.aside')
+            @include('layouts.dashboard_new.aside')
             <!-- / Menu -->
 
             <!-- Layout container -->
