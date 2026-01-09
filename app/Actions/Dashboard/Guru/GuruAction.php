@@ -38,7 +38,7 @@ class GuruAction
             // upload foto to folder
             $upload_path = public_path('storage/img/guru/');
             $picture_name = 'Guru_'.$nameSlug.'_'.date('YmdHis').".$ext";
-            $foto->move($upload_path, $picture_name);
+            ImageHelper::resizeAndSave($foto, $upload_path, $picture_name);
 
         } else {
             // Jika tidak ada foto baru, gunakan foto lama saat update
