@@ -26,6 +26,12 @@ class TenagaPendidikanRequest extends FormRequest
     {
         $this->foto;
     }
+
+    public function getStrukturTenagaPendidikan()
+    {
+        $this->struktur_tenaga_pendidikan_id;
+    }
+
     public function getSlug()
     {
         $this->slug;

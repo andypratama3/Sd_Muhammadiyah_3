@@ -90,6 +90,12 @@
                          <div data-i18n="Guru">Guru</div>
                      </a>
                  </li>
+                 <li class="menu-item {{ Request::routeIs('dashboard.datasekolah.struktur.tenaga.pendidikan.*') ? 'active' : '' }}">
+                     <a href="{{ route('dashboard.datasekolah.struktur.tenaga.pendidikan.index') }}" class="menu-link">
+                         <i class="menu-icon tf-icons bx bxs-user-account"></i>
+                         <div data-i18n="Tenaga Pendidikan">Struktur Tenaga Pendidikan</div>
+                     </a>
+                 </li>
                  <li class="menu-item {{ Request::routeIs('dashboard.datasekolah.tenagapendidikan.*') ? 'active' : '' }}">
                      <a href="{{ route('dashboard.datasekolah.tenagapendidikan.index') }}" class="menu-link">
                          <i class="menu-icon tf-icons bx bxs-user-account"></i>

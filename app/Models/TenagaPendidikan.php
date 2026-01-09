@@ -19,5 +19,11 @@ class TenagaPendidikan extends Model
         'jabatan',
         'foto',
         'slug',
+        'struktur_tenaga_pendidikan_id',
     ];
+
+    public function struktur_tenaga_pendidikan()
+    {
+        return $this->belongsTo(StrukturTenagaPendidikan::class, 'struktur_tenaga_pendidikan_id','id');
+    }
 }

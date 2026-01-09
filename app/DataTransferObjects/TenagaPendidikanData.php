@@ -13,6 +13,7 @@ class TenagaPendidikanData extends Data
         public readonly string $name,
         public readonly string $jabatan,
         public readonly UploadedFile $foto,
+        public readonly string $struktur_tenaga_pendidikan_id,
         public readonly ?string $slug,
 
     ) {
@@ -25,6 +26,7 @@ class TenagaPendidikanData extends Data
             $request->getName(),
             $request->getJabatan(),
             $request->getFoto(),
+            $request->getStrukturTenagaPendidikan(),
             $request->getSlug(),
         ]);
     }
@@ -33,8 +35,9 @@ class TenagaPendidikanData extends Data
     {
         return [
             'name.required' => 'Kolom Nama tidak boleh kosong!',
+            'struktur_tenaga_pendidikan_id.required' => 'Kolom Struktur Tenaga Pendidikan tidak boleh kosong!',
             'jabatan.required' => 'Kolom Jabatan tidak boleh kosong!',
-            'foto.required' => 'Kolom Foto tidak boleh kosong!',
+            // 'foto.required' => 'Kolom Foto tidak boleh kosong!',
         ];
     }
 }

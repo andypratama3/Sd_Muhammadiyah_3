@@ -27,6 +27,7 @@ class TenagaPendidikanAction
             [
                 'name' => $tenagaPendidikanData->name,
                 'jabatan' => $tenagaPendidikanData->jabatan,
+                'struktur_tenaga_pendidikan_id' => $tenagaPendidikanData->struktur_tenaga_pendidikan_id,
                 'foto' => $picture_name,
             ],
         );

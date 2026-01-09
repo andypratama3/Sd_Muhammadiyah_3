@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Models\TenagaPendidikan;
+use App\Http\Controllers\Controller;
+use App\Models\StrukturTenagaPendidikan;
+use App\DataTransferObjects\TenagaPendidikanData;
 use App\Actions\Dashboard\TenagaPendidikan\TenagaPendidikanAction;
 use App\Actions\Dashboard\TenagaPendidikan\TenagaPendidikanActionDelete;
-use App\DataTransferObjects\TenagaPendidikanData;
-use App\Http\Controllers\Controller;
-use App\Models\TenagaPendidikan;
 
 class TenagaPendidikanController extends Controller
 {
@@ -22,7 +23,8 @@ class TenagaPendidikanController extends Controller
 
     public function create()
     {
-        return view('dashboard.tenagapendidikan.create');
+        $strukturTenagaPendidikan = StrukturTenagaPendidikan::orderBy('name', 'asc')->get();
+        return view('dashboard.tenagapendidikan.create', compact('strukturTenagaPendidikan'));
     }
 
     public function store(TenagaPendidikanData $tenagaPendidikanData, TenagaPendidikanAction $tenagaPendidikanAction)
@@ -39,7 +41,8 @@ class TenagaPendidikanController extends Controller
 
     public function edit(TenagaPendidikan $tenagapendidikan)
     {
-        return view('dashboard.tenagapendidikan.edit', compact('tenagapendidikan'));
+        $strukturTenagaPendidikan = StrukturTenagaPendidikan::orderBy('name', 'asc')->get();
+        return view('dashboard.tenagapendidikan.edit', compact('tenagapendidikan','strukturTenagaPendidikan'));
     }
 
     public function update(TenagaPendidikanData $tenagaPendidikanData, TenagaPendidikanAction $tenagaPendidikanAction)

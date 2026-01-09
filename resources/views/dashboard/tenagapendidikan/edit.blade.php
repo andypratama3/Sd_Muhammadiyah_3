@@ -24,6 +24,15 @@
                 <label for="">Jabatan</label>
                 <input type="text" class="form-control" id="jabatan" name="jabatan" value="{{ $tenagapendidikan->jabatan }}">
             </div>
+            <div class="mt-2 form-group">
+                <label for="">Struktur Tenaga Pendidikan</label>
+                <select name="struktur_tenaga_pendidikan_id" id="struktur_tenaga_pendidikan_id" class="form-control select2">
+                    <option value="" selected>Pilih Struktur</option>
+                    @foreach ($strukturTenagaPendidikan as $item)
+                        <option value="{{ $item->id }}" {{ $tenagapendidikan->struktur_tenaga_pendidikan_id == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
+                    @endforeach
+                </select>
+            </div>
             <div class="mt-2 mb-2 form-group">
                 <label for="">Foto</label>
                 <div class="custom-file">

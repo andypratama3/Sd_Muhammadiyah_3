@@ -56,6 +56,7 @@ use App\Http\Controllers\Dashboard\FotoSekolahController;
 use App\Http\Controllers\Dashboard\NotificationController;
 use App\Http\Controllers\Dashboard\KelasCategoryController;
 use App\Http\Controllers\Dashboard\KategoriGalleryController;
+use App\Http\Controllers\Dashboard\StrukturTenagaPendidikanController;
 use App\Http\Controllers\Dashboard\SpmbController as DashboardSpmController;
 use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
 use App\Http\Controllers\Dashboard\HeroController as DashboardHeroController;
@@ -224,6 +225,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::resource('fasilitas', DashboardFasilitasController::class, ['names' => 'dashboard.datasekolah.fasilitas']);
         Route::resource('guru', DashboardGuruController::class, ['names' => 'dashboard.datasekolah.guru']);
         Route::resource('tenagapendidikan', DashboardTenagaPendidikanController::class, ['names' => 'dashboard.datasekolah.tenagapendidikan']);
+        Route::resource('struktur-tenaga-pendidikan', StrukturTenagaPendidikanController::class, ['names' => 'dashboard.datasekolah.struktur.tenaga.pendidikan']);
         Route::resource('ekstrakurikuler', DashboardEsktrakurikulerController::class, ['names' => 'dashboard.datasekolah.ekstrakurikuler']);
         Route::resource('matapelajaran', DashboardMataPelajaranController::class, ['names' => 'dashboard.datasekolah.matapelajaran']);
         Route::resource('kategori-prestasi', DashboardKategoriPrestasi::class, ['names' => 'dashboard.datasekolah.kategori.prestasi']);
