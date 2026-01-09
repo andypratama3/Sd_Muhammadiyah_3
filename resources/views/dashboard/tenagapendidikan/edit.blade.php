@@ -5,9 +5,9 @@
 <link href="{{ asset('asset_dashboard/vendor/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}" rel="stylesheet" type="text/css">
 @endpush
 @section('content')
-    <div class="card mb-4">
+    <div class="mb-4 card">
         @include('layouts.flashmessage')
-        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <div class="flex-row py-3 card-header d-flex align-items-center justify-content-between">
             <h6 class="m-0 font-weight-bold text-primary">Edit tenagapendidikan {{ $tenagapendidikan->name }}</h6>
         </div>
         <div class="card-body">
@@ -15,16 +15,16 @@
             @csrf
             @method('PUT')
             <input type="hidden" name="slug" value="{{ $tenagapendidikan->slug }}">
-            <div class="form-group mt-2">
+            <div class="mt-2 form-group">
                 <label for="judul">Nama</label>
                 <input type="text" class="form-control" name="name" id="name"  value="{{ $tenagapendidikan->name }}"
                     placeholder="Masukan nama">
             </div>
-            <div class="form-group mt-2">
+            <div class="mt-2 form-group">
                 <label for="">Jabatan</label>
                 <input type="text" class="form-control" id="jabatan" name="jabatan" value="{{ $tenagapendidikan->jabatan }}">
             </div>
-            <div class="form-group mt-2 mb-2">
+            <div class="mt-2 mb-2 form-group">
                 <label for="">Foto</label>
                 <div class="custom-file">
                     <input type="file" class="form-control" id="foto" name="foto" accept="image/*" onchange="loadPreview(this)">
@@ -34,7 +34,7 @@
                     <img src="{{ asset('storage/img/tenagapendidikan/'.$tenagapendidikan->foto) }}" id="output" alt="" style="width: 200px; height: 50%;">
                 </div>
             </div>
-            <a href="{{ route('dashboard.datasekolah.tenagapendidikan.index') }}" class="btn btn-danger float-lg-start">Kembali</a>
+            <a href="{{ route('dashboard.datasekolah.tenagapendidikan.index') }}" class="btn btn-danger float-lg-start btn-sm">Kembali</a>
             <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
         </form>
         </div>
