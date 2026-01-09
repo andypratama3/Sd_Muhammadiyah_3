@@ -103,4 +103,5 @@ class Visitor extends Model
     {
         return $query->whereYear('date', now()->year);
     }
+
 }

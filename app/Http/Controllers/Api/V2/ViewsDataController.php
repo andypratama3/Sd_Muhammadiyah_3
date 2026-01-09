@@ -22,11 +22,13 @@ class ViewsDataController extends Controller
             $visitor_by_day = Visitor::today()->count();
             $visitor_by_month = Visitor::thisMonth()->count();
             $visitor_by_year = Visitor::thisYear()->count();
+            $visitor_all_year = Visitor::count();
 
             return $this->success([
                 'visitor_by_day' => $visitor_by_day,
                 'visitor_by_month' => $visitor_by_month,
                 'visitor_by_year' => $visitor_by_year,
+                'visitor_all_year' => $visitor_all_year,
                 'last_updated' => now()->toIso8601String(),
             ], 'Visitor statistics retrieved successfully');
         } catch (\Exception $e) {
