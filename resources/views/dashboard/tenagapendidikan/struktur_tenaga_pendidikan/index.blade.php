@@ -23,7 +23,7 @@
                     <tr>
                         <td>{{ ++$no }}</td>
                         <td>{{ $struktur->name }}</td>
-                        <td>{{ $struktur->struktur_tenaga_pendidikan->name ?? '-' }}</td>
+                        <td>{{ $struktur->tenaga_pendidikan->name ?? '-' }}</td>
                         <td>
                             <a href="{{ route('dashboard.datasekolah.struktur.tenaga.pendidikan.edit', $struktur->slug) }}"
                                 class="btn btn-primary btn-sm">
@@ -48,7 +48,7 @@
                 {{-- <span class="badge badge-primary">Total : {{ $count }} Data</span> --}}
             </ul>
             <ul class="float-right m-0 pagination">
-                {{ $strukturTenagaPendidikan    ->onEachSide(1)->links() }}
+                {{ $strukturTenagaPendidikan->onEachSide(1)->links() }}
             </ul>
         </div>
         <div class="card-footer"></div>

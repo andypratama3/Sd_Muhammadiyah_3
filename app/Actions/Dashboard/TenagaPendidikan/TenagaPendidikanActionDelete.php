@@ -6,9 +6,9 @@ use App\Models\TenagaPendidikan;
 
 class TenagaPendidikanActionDelete
 {
-    public function execute($id)
+    public function execute($slug)
     {
-        $tenagaPendidikan = TenagaPendidikan::where('slug', $id)->firstOrFail();
+        $tenagaPendidikan = TenagaPendidikan::where('slug', $slug)->firstOrFail();
         $tenagaPendidikan->delete();
 
         return $tenagaPendidikan;
