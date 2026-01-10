@@ -15,7 +15,7 @@ class StrukturTenagaPendidikanController extends Controller
     {
         $limit = 15;
 
-        $strukturTenagaPendidikan = StrukturTenagaPendidikan::with('tenaga_pendidikan')->orderBy('name', 'asc')->paginate($limit);
+        $strukturTenagaPendidikan = StrukturTenagaPendidikan::with('parent')->orderBy('name', 'asc')->paginate($limit);
         $no = $limit * ($strukturTenagaPendidikan->currentPage() - 1);
         return view('dashboard.tenagapendidikan.struktur_tenaga_pendidikan.index', compact('no','strukturTenagaPendidikan'));
     }

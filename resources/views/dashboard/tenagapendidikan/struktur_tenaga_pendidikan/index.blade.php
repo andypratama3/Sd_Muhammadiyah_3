@@ -23,7 +23,7 @@
                     <tr>
                         <td>{{ ++$no }}</td>
                         <td>{{ $struktur->name }}</td>
-                        <td>{{ $struktur->tenaga_pendidikan->name ?? '-' }}</td>
+                        <td>{{ $struktur->parent->name ?? '-' }}</td>
                         <td>
                             <a href="{{ route('dashboard.datasekolah.struktur.tenaga.pendidikan.edit', $struktur->slug) }}"
                                 class="btn btn-primary btn-sm">
