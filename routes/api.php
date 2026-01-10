@@ -92,7 +92,7 @@ Route::group(['prefix' => 'v2'], function () {
     });
 
     // Fetch Front End
-    // Route::group(['middleware' => 'jwt'], function () {
+    Route::group(['middleware' => 'jwt'], function () {
 
         Route::post('visitor/store', [ViewsDataController::class, 'store']);
         Route::get('count-landing',[LandingController::class, 'count']);
@@ -178,7 +178,7 @@ Route::group(['prefix' => 'v2'], function () {
 
         // Statistics endpoint
         Route::get('/statistics', [PrestasiDataController::class, 'statistics']);
-    // });
+    });
 
     // END Fetch
 
