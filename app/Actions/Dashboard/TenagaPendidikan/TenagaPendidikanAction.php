@@ -20,6 +20,9 @@ class TenagaPendidikanAction
             $upload_path = public_path('storage/img/tenagapendidikan/');
             $picture_name = 'T_Pendidikan_'.Str::slug($tenagaPendidikanData->name).'_'.date('YmdHis').".$ext";
             ImageHelper::resizeAndSave($tanagaPendidikan_picture, $upload_path, $picture_name);
+        } else {
+            $tenagaPendidikan = TenagaPendidikan::where('slug', $tenagaPendidikanData->slug)->first();
+            $picture_name = $tenagaPendidikan->foto;
         }
 
         $tenagaPendidikan = TenagaPendidikan::updateOrCreate(

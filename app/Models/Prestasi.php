@@ -14,6 +14,7 @@ class Prestasi extends Model
     use UsesUuid;
     use NameHasSlug;
 
+    protected $primaryKey = 'id';
     protected $table = 'prestasis';
 
     protected $fillable = [
@@ -78,6 +79,12 @@ class Prestasi extends Model
     public function scopeSekolahWithCategories($query)
     {
         return $query->sekolah()->withCategories();
+    }
+
+    public function incrementClickCount()
+    {
+        $this->views++;
+        $this->save();
     }
 
     // ===== METHODS =====

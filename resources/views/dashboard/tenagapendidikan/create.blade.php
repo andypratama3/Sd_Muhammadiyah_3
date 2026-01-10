@@ -30,7 +30,7 @@
             <div class="mt-2 form-group">
                 <label for="">Foto</label>
                 <div class="custom-file">
-                    <input type="file" class="form-control" id="foto" name="foto" accept="image/*" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])">
+                    <input type="file" class="form-control" id="foto" name="foto" accept="image/*" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])" required>
                 </div>
                 <div class="mt-3 text-center">
                     <h6 class="">Poto yang di pilih</h6>

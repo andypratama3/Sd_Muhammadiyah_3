@@ -12,7 +12,7 @@ class TenagaPendidikanData extends Data
     public function __construct(
         public readonly string $name,
         public readonly string $jabatan,
-        public readonly UploadedFile $foto,
+        public readonly ?UploadedFile $foto,
         public readonly string $struktur_tenaga_pendidikan_id,
         public readonly ?string $slug,
 

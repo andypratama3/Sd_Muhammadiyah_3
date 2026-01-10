@@ -331,10 +331,7 @@ class PrestasiDataController extends Controller
                 ->with('prestasi_kategori')
                 ->firstOrFail();
 
-
-            // Increment views if column exists
-            $prestasi->increment('views');
-
+            $prestasi->incrementClickCount('views');
 
             $data = [
                 'id' => $prestasi->id,
@@ -378,7 +375,7 @@ class PrestasiDataController extends Controller
                 ->firstOrFail();
 
             // Increment views if column exists
-            $prestasi->increment('views');
+            $prestasi->incrementClickCount('views');
 
             $data = [
                 'id' => $prestasi->id,
