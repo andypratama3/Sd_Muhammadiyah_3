@@ -85,5 +85,7 @@ class StrukturTenagaPendidikanController extends Controller
         $strukturTenagaPendidikan = StrukturTenagaPendidikan::where('slug', $slug)->first();
 
         $strukturTenagaPendidikan->delete();
+
+        return redirect()->route('dashboard.datasekolah.struktur.tenaga.pendidikan.index')->with('success','Berhasil Menghapus Struktur Tenaga Pendidikan');
     }
 }

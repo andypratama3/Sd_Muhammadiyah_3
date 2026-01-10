@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Http\Traits\UsesUuid;
 use App\Http\Traits\NameHasSlug;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\StrukturTenagaPendidikan;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class TenagaPendidikan extends Model
@@ -22,8 +23,8 @@ class TenagaPendidikan extends Model
         'struktur_tenaga_pendidikan_id',
     ];
 
-    public function struktur_tenaga_pendidikan()
+    public function struktur_tenaga_pendidikan(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(StrukturTenagaPendidikan::class, 'struktur_tenaga_pendidikan_id','id');
+        return $this->belongsTo(StrukturTenagaPendidikan::class, 'struktur_tenaga_pendidikan_id', 'id');
     }
 }

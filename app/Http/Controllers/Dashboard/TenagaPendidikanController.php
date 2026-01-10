@@ -14,7 +14,7 @@ class TenagaPendidikanController extends Controller
     public function index()
     {
         $limit = 15;
-        $datas = TenagaPendidikan::select(['name', 'jabatan', 'foto', 'slug'])->orderBy('created_at', 'asc')->paginate($limit);
+        $datas = TenagaPendidikan::with('struktur_tenaga_pendidikan')->select(['name', 'jabatan', 'foto', 'slug','struktur_tenaga_pendidikan_id'])->orderBy('created_at', 'asc')->paginate($limit);
         $count = $datas->count();
         $no = $limit * ($datas->currentPage() - 1);
 

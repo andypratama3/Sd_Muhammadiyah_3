@@ -12,7 +12,6 @@ class TenagaKependidikanDataController extends Controller
     public function list()
     {
         try {
-            // Ambil semua struktur tenaga pendidikan dengan relasi children
             $strukturTenagaPendidikan = StrukturTenagaPendidikan::with('children')
                 ->whereNull('struktur_tenaga_pendidikan_id')
                 ->orderBy('name', 'asc')
