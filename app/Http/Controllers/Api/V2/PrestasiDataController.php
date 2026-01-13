@@ -441,4 +441,51 @@ class PrestasiDataController extends Controller
             return $this->serverError('Gagal mengambil statistik prestasi: ' . $e->getMessage());
         }
     }
+
+    // sitemap Data
+    public function list_prestasi_siswa(Request $request)
+    {
+        try {
+            $limit = (int) $request->get('limit', 500);
+
+            // Safety limit
+            if ($limit > 1000) {
+                $limit = 1000;
+            }
+
+            $data = Prestasi::query()
+                ->select('name','description','foto','status','tingkat','penyelenggara','tanggal','views','juara','slug')
+                ->where('status', 1)
+                ->orderByDesc('created_at')
+                ->limit($limit)
+                ->get();
+
+            return $this->success($data ?? [], 'OK');
+        } catch (\Exception $e) {
+            return $this->serverError('Gagal mengambil list prestasi: ' . $e->getMessage());
+        }
+    }
+
+    public function list_prestasi_sekolah(Request $request)
+    {
+        try {
+            $limit = (int) $request->get('limit', 500);
+
+            // Safety limit
+            if ($limit > 1000) {
+                $limit = 1000;
+            }
+
+            $data = Prestasi::query()
+                ->select('name','description','foto','status','tingkat','penyelenggara','tanggal','views','juara','slug')
+                ->where('status', 2)
+                ->orderByDesc('created_at')
+                ->limit($limit)
+                ->get();
+
+            return $this->success($data ?? [], 'OK');
+        } catch (\Exception $e) {
+            return $this->serverError('Gagal mengambil list prestasi: ' . $e->getMessage());
+        }
+    }
 }

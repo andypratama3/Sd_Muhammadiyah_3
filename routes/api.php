@@ -81,6 +81,8 @@ Route::group(['prefix' => 'v2'], function () {
     // For Site Map
     Route::get('list/berita', [BeritaDataController::class, 'list_berita']);
     Route::get('list/gallery', [GalleryDataController::class, 'list_gallery']);
+    Route::get('list/prestasi-siswa', [PrestasiDataController::class, 'list_prestasi_siswa']);
+    Route::get('list/prestasi-sekolah', [PrestasiDataController::class, 'list_prestasi_sekolah']);
     // End For Site Map
 
     Route::group(['prefix' => 'auth', 'middleware' => ['verify.signature']], function () {
