@@ -160,12 +160,12 @@
          </li>
 
 
-         <li class="menu-item {{ Request::routeIs('dashboard.attendances.*') ? 'active' : '' }}">
+         {{-- <li class="menu-item {{ Request::routeIs('dashboard.attendances.*') ? 'active' : '' }}">
              <a href="{{ route('dashboard.attendances.index') }}" class="menu-link">
                  <i class="menu-icon tf-icons bx bx-crown"></i>
                  <div data-i18n="Boxicons">Absensi Siswa</div>
              </a>
-         </li>
+         </li> --}}
          <li class="menu-item {{ Request::routeIs('dashboard.spmb.*') ? 'active' : '' }}">
              <a href="{{ route('dashboard.spmb.index') }}" class="menu-link">
                  <i class="menu-icon tf-icons bx bx-crown"></i>
