@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Actions\Dashboard\Profile\ProfileAction;
-use App\Actions\Dashboard\Profile\ProfileActionCrop;
+use App\Actions\Dashboard\Profile\ProfileActionUpload;
 use App\DataTransferObjects\ProfileData;
 use App\Http\Controllers\Controller;
 use App\Models\Karyawan;
@@ -33,9 +33,9 @@ class ProfileController extends Controller
         return redirect()->route('dashboard.pengaturan.profile.index')->with('success', 'Profile Berhasil Di Update');
     }
 
-    public function crop_image(Request $request, ProfileActionCrop $profileActionCrop)
+    public function upload_image(Request $request, ProfileActionUpload $profileActionUpload)
     {
-        $profileActionCrop->execute($request);
+        $profileActionUpload->execute($request);
 
         return response()->json(['success' => 'Berhasil mengganti foto profil']);
     }
@@ -43,7 +43,10 @@ class ProfileController extends Controller
     public function removeAvatar(Request $request)
     {
         $user = auth()->user();
-        Storage::delete('storage/img/profile/'.$user->avatar);
+
+        if ($user->avatar !== 'default.jpg') {
+            Storage::delete('public/img/profile/' . $user->avatar);
+        }
 
         $user->avatar = 'default.jpg';
         $user->save();

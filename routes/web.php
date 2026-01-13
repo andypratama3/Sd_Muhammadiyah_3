@@ -297,10 +297,11 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::get('get/activitys', [ActivityController::class, 'activitys'])->name('dashboard.datamaster.get.activitys');
 
     });
+
     Route::group(['prefix' => 'pengaturan'], function () {
         // user settings
         Route::resource('profile', DashboardProfileController::class, ['names' => 'dashboard.pengaturan.profile']);
-        Route::post('profiles/crop/image', [DashboardProfileController::class, 'crop_image'])->name('dashboard.pangaturan.profile.crop_image');
+        Route::post('profiles/upload/image', [DashboardProfileController::class, 'upload_image'])->name('dashboard.pangaturan.profile.upload_image');
         Route::post('profiles/remove/image', [DashboardProfileController::class, 'removeAvatar'])->name('dashboard.pangaturan.profile.removAvatar');
 
         // akses

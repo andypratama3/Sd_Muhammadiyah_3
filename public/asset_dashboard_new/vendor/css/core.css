@@ -3613,9 +3613,9 @@ textarea.form-control-lg {
     flex-direction: row;
   }
   .navbar-expand-xl .navbar-nav .dropdown-menu {
-    /* position: absolute; */
-    margin-top: 130px;
-    /* padding-top: 120px; */
+    position: absolute;
+    /* margin-top: 130px; */
+    /* padding-top: 10px; */
   }
   .navbar-expand-xl .navbar-nav .nav-link {
     padding-right: 0.5rem;
