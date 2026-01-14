@@ -305,7 +305,6 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::post('profiles/remove/image', [DashboardProfileController::class, 'removeAvatar'])->name('dashboard.pangaturan.profile.removAvatar');
 
         // akses
-        Route::resource('task', TaskController::class, ['names' => 'dashboard.pengaturan.task']);
         Route::resource('role', RoleController::class, ['names' => 'dashboard.pengaturan.role']);
         Route::resource('user', UserController::class, ['names' => 'dashboard.pengaturan.user']);
         Route::resource('karyawan', KaryawanController::class, ['names' => 'dashboard.pengaturan.karyawan']);

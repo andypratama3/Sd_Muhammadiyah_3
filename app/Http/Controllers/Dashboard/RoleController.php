@@ -2,27 +2,31 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Actions\Dashboard\Role\DeleteRoleAction;
-use App\Actions\Dashboard\Role\RoleAction;
-use App\DataTransferObjects\RoleData;
-use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\Task;
+use App\Models\Permission;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class RoleController extends Controller
 {
-    public function __contstruct()
+    public function __construct()
     {
         $this->middleware('permission:view-pengaturan', ['only' => ['index']]);
-        $this->middleware('permission:create-pengaturan', ['only' => ['create', 'store']]);
-        $this->middleware('permission:edit-pengaturan', ['only' => ['edit', 'update']]);
-        $this->middleware('permission:delete-pengaturan', ['only' => ['delete']]);
+        $this->middleware('permission:manage-pengaturan', ['only' => ['create', 'store', 'edit', 'update', 'destroy']]);
     }
 
     public function index()
     {
+
         $limit = 15;
-        $roles = Role::select(['name', 'slug'])->where('slug', '!=', 'superadmin')->orderBy('name')->paginate($limit);
+        $roles = Role::select(['id', 'name'])
+            ->orderBy('name')
+            ->paginate($limit);
+
         $count = $roles->count();
         $no = $limit * ($roles->currentPage() - 1);
 
@@ -33,41 +37,116 @@ class RoleController extends Controller
         ));
     }
 
-    // public function data_table()
-
     public function create()
     {
-        $tasks = Task::orderBy('slug')->get();
+        $permissions = Permission::orderBy('name')->get();
 
-        return view('dashboard.pengaturan.role.create', compact('tasks'));
+        return view('dashboard.pengaturan.role.create', compact('permissions'));
     }
 
-    public function store(RoleAction $roleAction, RoleData $RoleData)
+    public function store(Request $request)
     {
-        $roleAction->execute($RoleData);
+        $validated = $request->validate([
+            'name' => 'required|string|unique:roles,name',
+            'permissions' => 'required|array|min:1',
+            'permissions.*' => 'exists:permissions,id',
+        ], [
+            'name.required' => 'Nama role harus diisi',
+            'name.unique' => 'Nama role sudah digunakan',
+            'permissions.required' => 'Pilih minimal satu permission',
+            'permissions.min' => 'Pilih minimal satu permission',
+        ]);
 
-        return redirect()->route('dashboard.pengaturan.role.index')->with('success', 'Role Berhasil Di Tambahkan');
+        $role = Role::create([
+            'name' => $validated['name'],
+            'guard_name' => 'web',
+        ]);
+
+        // Attach permissions using id
+        foreach ($validated['permissions'] as $permissionid) {
+            DB::table('role_has_permissions')->insert([
+                'permission_id' => $permissionid,
+                'role_id' => $role->id,
+            ]);
+        }
+
+        return redirect()->route('dashboard.pengaturan.role.index')
+            ->with('success', 'Role berhasil ditambahkan');
     }
 
-    public function edit(Role $role)
+    public function edit($id)
     {
-        $tasks = Task::orderBy('slug')->get();
-        $permissions = $role->permissions->pluck('name')->toArray();
+        $role = Role::find($id);
 
-        return view('dashboard.pengaturan.role.show', compact('role', 'tasks', 'permissions'));
+        // Prevent editing superadmin role
+        if ($role->name === 'superadmin') {
+            abort(403, 'Tidak dapat mengedit role superadmin');
+        }
+
+        $permissions = Permission::orderBy('name')->get();
+        $rolePermissionIds = $role->permissions->pluck('id')->toArray();
+
+
+        return view('dashboard.pengaturan.role.edit', [
+            'role' => $role,
+            'permissions' => Permission::all(),
+            'rolePermissions' => $role->permissions->pluck('id')->toArray(),
+        ]);
+
     }
 
-    public function update(RoleAction $roleAction, RoleData $RoleData)
+    public function update(Request $request,$id)
     {
-        $roleAction->execute($RoleData);
+        $role = Role::find($id);
 
-        return redirect()->route('dashboard.pengaturan.role.index')->with('success', 'Role Berhasil Di Update');
+        // Prevent updating superadmin role
+        if ($role->name === 'superadmin') {
+            abort(403, 'Tidak dapat mengubah role superadmin');
+        }
+
+        $validated = $request->validate([
+            'name' => 'required|string|unique:roles,name,' . $role->id . ',id',
+            'permissions' => 'required|array|min:1',
+            'permissions.*' => 'exists:permissions,id',
+        ], [
+            'name.required' => 'Nama role harus diisi',
+            'name.unique' => 'Nama role sudah digunakan',
+            'permissions.required' => 'Pilih minimal satu permission',
+            'permissions.min' => 'Pilih minimal satu permission',
+        ]);
+
+
+        $role->update([
+            'name' => $validated['name'],
+        ]);
+
+        $role->permissions()->sync($validated['permissions']);
+
+        return redirect()->route('dashboard.pengaturan.role.index')
+            ->with('success', 'Role berhasil diperbarui');
     }
 
-    public function destroy(DeleteRoleAction $deleteRoleAction, Role $role)
+    public function destroy(Role $role)
     {
-        $deleteRoleAction->execute($role);
+        // Prevent deleting superadmin role
+        if ($role->name === 'superadmin') {
+            abort(403, 'Tidak dapat menghapus role superadmin');
+        }
 
-        return redirect()->route('dashboard.pengaturan.role.index')->with('success', 'Role Berhasil Di Hapus');
+        // Delete role permissions first
+        DB::table('role_has_permissions')
+            ->where('role_id', $role->id)
+            ->delete();
+
+        // Delete model has roles (user assignments)
+        DB::table('model_has_roles')
+            ->where('role_id', $role->id)
+            ->delete();
+
+        // Delete the role
+        $role->delete();
+
+        return redirect()->route('dashboard.pengaturan.role.index')
+            ->with('success', 'Role berhasil dihapus');
     }
 }

@@ -5,10 +5,10 @@
 <div class="row">
     <div class="col-lg-12">
         <!-- Form Basic -->
-        <div class="card mb-4">
+        <div class="mb-4 card">
 
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary text-center">Tambah Karyawan</h6>
+            <div class="flex-row py-3 card-header d-flex align-items-center justify-content-between">
+                <h6 class="m-0 text-center font-weight-bold text-primary">Tambah Karyawan</h6>
             </div>
             <div class="card-body">
                 <form action="{{ route('dashboard.pengaturan.karyawan.update', $karyawan->slug) }}" method="POST"
@@ -18,16 +18,16 @@
                     <input type="hidden" name="slug" value="{{ $karyawan->slug }}">
                     <input type="hidden" name="user_id" value="{{ $karyawan->user_id }}">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="mt-2 col-md-6">
                             <div class="form-group">
-                                <label>Nama Karyawan <code>*</code></label>
+                                <label class="form-label">Nama Karyawan <code>*</code></label>
                                 <input type="text" class="form-control" id="name" name="name"
                                     placeholder="Masukkan Nama Karyawan" value="{{ $karyawan->name }}">
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="mt-2 col-md-6">
                             <div class="form-group">
-                                <label>Jenis Kelamin<code>*</code></label>
+                                <label class="form-label">Jenis Kelamin<code>*</code></label>
                                 <select name="sex" id="" class="form-control">
                                     <option value="{{ $karyawan->sex }}">{{ $karyawan->sex }}</option>
                                     <option value="Laki-Laki">Laki Laki</option>
@@ -37,22 +37,22 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="mt-2 col-md-6">
                             <div class="form-group">
-                                <label>Email Karyawan <code>*</code></label>
+                                <label class="form-label">Email Karyawan <code>*</code></label>
                                 <input type="text" class="form-control" name="email" placeholder="Email Karyawan" value="{{ $karyawan->user->email }}">
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="mt-2 col-md-6">
                             <div class="form-group">
-                                <label>Nomor Hp <code>*</code></label>
+                                <label class="form-label">Nomor Hp <code>*</code></label>
                                 <input type="text" class="form-control" id="phone" name="phone"
                                     placeholder="Masukkan Email Karyawan" value="{{ $karyawan->phone }}">
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="mt-2 col-md-6">
                             <div class="form-group">
-                                <label>Role Karyawan <code>*</code></label>
+                                <label class="form-label">Role Karyawan <code>*</code></label>
                                 <select class="form-control  {{ $errors->has('role_id') ? 'is-invalid' : '' }} select2bs4" id="role_id" name="role_id" style="width: 100%;">
                                     @foreach ($roles as $role)
                                         <option value="{{ $role->id }}" @foreach ($karyawan->user->roles as $role_id) @if ($role->id == $role_id->id) selected @endif @endforeach >{{ $role->name }}</option>
@@ -67,7 +67,7 @@
             </div>
             <div class="card-footer">
                 <button onclick="window.location.href='{{ route('dashboard.pengaturan.karyawan.index') }}'" type="button" class="btn btn-sm btn-danger" aria-hidden="true">Cancel</button>
-                <button type="submit" class="btn btn-sm btn-primary  float-lg-right">Submit</button>
+                <button type="submit" class="btn btn-sm btn-primary float-lg-right">Submit</button>
             </div>
             </form>
         </div>

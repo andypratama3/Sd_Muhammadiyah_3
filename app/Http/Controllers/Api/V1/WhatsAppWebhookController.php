@@ -187,6 +187,9 @@ class WhatsAppWebhookController extends Controller
                 'timestamp' => date('Y-m-d H:i:s', $timestamp),
             ]);
 
+            // UPDATE STATUS HP SISWA KETIKA ADA BALASAN PESAN
+            $this->updateSiswaPhoneStatus($from);
+
             // Handle different message types
             match ($type) {
                 'text' => $this->handleTextMessage($message, $from, $profileName),
@@ -208,6 +211,54 @@ class WhatsAppWebhookController extends Controller
     }
 
     /**
+     * Update status HP siswa ketika ada balasan pesan
+     * Mencari nomor HP di database siswa dan update status_hp menjadi 1 (true)
+     */
+    private function updateSiswaPhoneStatus($phoneNumber)
+    {
+        try {
+            // Format nomor HP: hapus karakter khusus, pastikan hanya angka
+            $formattedPhone = preg_replace('/[^0-9]/', '', $phoneNumber);
+
+            // Jika dimulai dengan 62, ubah menjadi 0
+            if (strpos($formattedPhone, '62') === 0) {
+                $formattedPhone = '0' . substr($formattedPhone, 2);
+            }
+
+            Log::channel('whatsapp')->info('🔍 Searching siswa phone', [
+                'original' => $phoneNumber,
+                'formatted' => $formattedPhone,
+            ]);
+
+            // Update siswa dengan nomor HP yang sesuai
+            $updated = DB::table('siswas')
+                ->where('no_hp', $formattedPhone)
+                ->update([
+                    'status_hp' => 1,
+                    'status_hp_verified_at' => now(),
+                    'updated_at' => now(),
+                ]);
+
+            if ($updated > 0) {
+                Log::channel('whatsapp')->info('✅ Siswa phone status updated', [
+                    'phone' => $formattedPhone,
+                    'updated_rows' => $updated,
+                ]);
+            } else {
+                Log::channel('whatsapp')->warning('⚠️ Siswa not found with phone', [
+                    'phone' => $formattedPhone,
+                ]);
+            }
+
+        } catch (\Exception $e) {
+            Log::channel('whatsapp')->error('❌ Update siswa phone status error', [
+                'error' => $e->getMessage(),
+                'phone' => $phoneNumber,
+            ]);
+        }
+    }
+
+    /**
      * Handle text message
      */
     private function handleTextMessage($message, $from, $profileName)
@@ -220,18 +271,18 @@ class WhatsAppWebhookController extends Controller
             'text' => mb_substr($text, 0, 100),
         ]);
 
-        // Check for opt-out
-        $upperText = strtoupper(trim($text));
-        if (in_array($upperText, ['STOP', 'BERHENTI', 'UNSUBSCRIBE'])) {
-            $this->handleOptOut($from);
-            return;
-        }
+        // // Check for opt-out
+        // $upperText = strtoupper(trim($text));
+        // if (in_array($upperText, ['STOP', 'BERHENTI', 'UNSUBSCRIBE'])) {
+        //     $this->handleOptOut($from);
+        //     return;
+        // }
 
-        // Check for opt-in
-        if (in_array($upperText, ['START', 'MULAI', 'SUBSCRIBE'])) {
-            $this->handleOptIn($from);
-            return;
-        }
+        // // Check for opt-in
+        // if (in_array($upperText, ['START', 'MULAI', 'SUBSCRIBE'])) {
+        //     $this->handleOptIn($from);
+        //     return;
+        // }
 
         // Auto-reply (optional - uncomment if needed)
         // $this->sendAutoReply($from, $profileName);
@@ -477,68 +528,68 @@ class WhatsAppWebhookController extends Controller
     /**
      * Handle user opt-out
      */
-    private function handleOptOut($phone)
-    {
-        try {
-            DB::table('whatsapp_opt_outs')->updateOrInsert(
-                ['phone' => $phone],
-                [
-                    'opted_out' => true,
-                    'opted_out_at' => now(),
-                    'updated_at' => now(),
-                ]
-            );
+    // private function handleOptOut($phone)
+    // {
+    //     try {
+    //         DB::table('whatsapp_opt_outs')->updateOrInsert(
+    //             ['phone' => $phone],
+    //             [
+    //                 'opted_out' => true,
+    //                 'opted_out_at' => now(),
+    //                 'updated_at' => now(),
+    //             ]
+    //         );
 
-            Log::channel('whatsapp')->info('🚫 User opted out', ['phone' => $phone]);
+    //         Log::channel('whatsapp')->info('🚫 User opted out', ['phone' => $phone]);
 
-            // Send confirmation (optional)
-            $whatsapp = new WhatsappMetaService();
-            $whatsapp->sendMessage(
-                $phone,
-                "Anda telah berhenti menerima pesan dari SD Muhammadiyah 3 Samarinda.\n\nBalas START untuk berlangganan kembali."
-            );
+    //         // // Send confirmation (optional)
+    //         // $whatsapp = new WhatsappMetaService();
+    //         // $whatsapp->sendMessage(
+    //         //     $phone,
+    //         //     "Anda telah berhenti menerima pesan dari SD Muhammadiyah 3 Samarinda.\n\nBalas START untuk berlangganan kembali."
+    //         // );
 
-        } catch (\Exception $e) {
-            Log::channel('whatsapp')->error('❌ Opt-out error', [
-                'error' => $e->getMessage(),
-            ]);
-        }
-    }
+    //     } catch (\Exception $e) {
+    //         Log::channel('whatsapp')->error('❌ Opt-out error', [
+    //             'error' => $e->getMessage(),
+    //         ]);
+    //     }
+    // }
 
     /**
      * Handle user opt-in
      */
-    private function handleOptIn($phone)
-    {
-        try {
-            DB::table('whatsapp_opt_outs')->updateOrInsert(
-                ['phone' => $phone],
-                [
-                    'opted_out' => false,
-                    'opted_in_at' => now(),
-                    'updated_at' => now(),
-                ]
-            );
+    // private function handleOptIn($phone)
+    // {
+    //     try {
+    //         DB::table('whatsapp_opt_outs')->updateOrInsert(
+    //             ['phone' => $phone],
+    //             [
+    //                 'opted_out' => false,
+    //                 'opted_in_at' => now(),
+    //                 'updated_at' => now(),
+    //             ]
+    //         );
 
-            Log::channel('whatsapp')->info('✅ User opted in', ['phone' => $phone]);
+    //         Log::channel('whatsapp')->info('✅ User opted in', ['phone' => $phone]);
 
-            $whatsapp = new WhatsappMetaService();
-            $whatsapp->sendMessage(
-                $phone,
-                "Terima kasih! Anda akan menerima update dari SD Muhammadiyah 3 Samarinda.\n\nBalas STOP untuk berhenti."
-            );
+    //         $whatsapp = new WhatsappMetaService();
+    //         $whatsapp->sendMessage(
+    //             $phone,
+    //             "Terima kasih! Anda akan menerima update dari SD Muhammadiyah 3 Samarinda.\n\nBalas STOP untuk berhenti."
+    //         );
 
-        } catch (\Exception $e) {
-            Log::channel('whatsapp')->error('❌ Opt-in error', [
-                'error' => $e->getMessage(),
-            ]);
-        }
-    }
+    //     } catch (\Exception $e) {
+    //         Log::channel('whatsapp')->error('❌ Opt-in error', [
+    //             'error' => $e->getMessage(),
+    //         ]);
+    //     }
+    // }
 
     /**
      * Test endpoint
      */
-     public function test(Request $request)
+    public function test(Request $request)
     {
         $whatsApp = new WhatsappMetaService();
 
@@ -559,7 +610,10 @@ class WhatsAppWebhookController extends Controller
         return response()->json($result, $result['success'] ? 200 : 400);
     }
 
-   public function getMessagesHistory(Request $request)
+    /**
+     * Get messages history
+     */
+    public function getMessagesHistory(Request $request)
     {
         $limit = $request->input('limit', 50);
 
@@ -568,7 +622,6 @@ class WhatsAppWebhookController extends Controller
 
         return response()->json($result);
     }
-
 
     /**
      * Get templates

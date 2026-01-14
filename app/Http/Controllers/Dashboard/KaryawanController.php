@@ -27,7 +27,7 @@ class KaryawanController extends Controller
         $karyawans = Karyawan::select(['id', 'name', 'sex', 'phone', 'slug', 'user_id'])->where('slug', '!=', 'superadmin-xxxx')->with('user:id,email')->orderBy('name')->paginate($limit);
         $count = $karyawans->count();
         $no = $limit * ($karyawans->currentPage() - 1);
-        $roles = Role::where('slug', '!=', 'superadmin')->get();
+        $roles = Role::where('name', '!=', 'superadmin')->get();
 
         return view('dashboard.pengaturan.karyawan.index', compact(
             'karyawans',
@@ -39,7 +39,7 @@ class KaryawanController extends Controller
 
     public function create()
     {
-        $roles = Role::where('slug', '!=', 'superadmin')->orderBy('name')->get();
+        $roles = Role::where('name', '!=', 'superadmin')->orderBy('name')->get();
         $users = User::all();
 
         return view('dashboard.pengaturan.karyawan.create', compact('roles', 'users'));
@@ -59,7 +59,7 @@ class KaryawanController extends Controller
 
     public function edit(Karyawan $karyawan)
     {
-        $roles = Role::where('slug', '!=', 'superadmin')->get();
+        $roles = Role::where('name', '!=', 'superadmin')->get();
 
         return view('dashboard.pengaturan.karyawan.edit', compact('karyawan', 'roles'));
     }

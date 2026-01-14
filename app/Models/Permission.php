@@ -1,41 +1,18 @@
 <?php
-
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Str;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Permission\Models\Permission as SpatiePermission;
 
-class Permission extends Model
+class Permission extends SpatiePermission
 {
-    use \App\Http\Traits\UsesUuid;
-    use SoftDeletes;
+    use HasFactory;
+    protected $primaryKey = 'id';
 
-    protected $table = 'permissions';
-
-    protected $guarded = ['id'];
-
-    protected $fillable = [
-        'name',
-        'slug',
-        'task_id',
-    ];
-
-    protected $dates = ['deleted_at'];
-
-    public function setNameAttribute($value)
+    public function roles(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        $this->attributes['name'] = $value;
-        $this->attributes['slug'] = Str::slug($value);
+        return $this->belongsToMany(Role::class, 'role_has_permissions');
     }
 
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class, 'roles_permissions');
-    }
-
-    public function users()
-    {
-        return $this->belongsToMany(User::class, 'users_permissions');
-    }
 }

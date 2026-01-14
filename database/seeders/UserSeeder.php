@@ -3,12 +3,11 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Task;
+use Illuminate\Support\Facades\DB;
 use App\Models\Role;
 use App\Models\Permission;
 use App\Models\User;
-use App\Models\Karyawan;
-use Str;
+use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder
 {
@@ -19,143 +18,78 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        // Role
+        // Disable foreign key checks
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
+        // Truncate tables
+        DB::table('model_has_permissions')->truncate();
+        DB::table('model_has_roles')->truncate();
+        DB::table('role_has_permissions')->truncate();
+        DB::table('users')->truncate();
+        DB::table('roles')->truncate();
+        DB::table('permissions')->truncate();
+
+        // Enable foreign key checks
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        // List Permissions
+        $listPermissions = [
+            'view-pengaturan',
+            'manage-pengaturan',
+            'webhook',
+            'view-siswa',
+            'manage-siswa',
+            'view-data-sekolah',
+            'manage-data-sekolah',
+            'view-pembayaran',
+            'manage-pembayaran',
+        ];
+
+        // List Roles
         $listRoles = [
             'superadmin',
-            'User',
+            'user',
+            'media'
         ];
 
-        foreach ($listRoles as $key => $value) {
-            $roleName = $value;
-
-            $role[$key] = Role::whereSlug(Str::slug($roleName))->first();
-
-            if (!$role[$key]) {
-                $role[$key] = new Role();
-                $role[$key]->id = Str::uuid();
-                $role[$key]->name = $roleName;
-                $role[$key]->save();
-            }
+        foreach ($listPermissions as $permission) {
+            Permission::create([
+                'name' => $permission,
+                'guard_name' => 'web',
+            ]);
         }
 
-        // Task
-        $listTasks = [
-            [
-                'name' => 'data-sekolah',
-                'description' => 'Manajemen Data Sekolah',
-            ],
-            [
-                'name' => 'data-positingan',
-                'description' => 'Manajemen Data Positingan',
-            ],
-            [
-                'name' => 'data-siswa',
-                'description' => 'Manajemen Data Siswa',
-            ],
-            [
-                'name' => 'data-pembayaran',
-                'description' => 'Manajemen Data Pembayaran',
-            ],
-            [
-                'name' => 'pengaturan',
-                'description' => 'Manajemen Pengaturan',
-            ],
-        ];
-
-        foreach ($listTasks as $key => $value) {
-            $name = $value['name'];
-            $description = $value['description'];
-
-            $task[$key] = Task::whereSlug(Str::slug($name))->first();
-
-            if (!$task[$key]) {
-                $task[$key] = new Task();
-                $task[$key]->id = Str::uuid();
-                $task[$key]->name = $name;
-                $task[$key]->description = $description;
-                $task[$key]->save();
-            }
-        }
-
-        $listTasks = Task::all();
-        $roleSuperAdmin = Role::where('name', 'superadmin')->first();
-
-        // Permission
-        foreach ($listTasks as $task) {
-            $name = $task->name;
-            $listPermissions = array(
-                [
-                    'id' => Str::uuid(),
-                    'name' => 'View ' . $name,
-                    'task_id' => $task->id
-                ],
-                [
-                    'id' => Str::uuid(),
-                    'name' => 'Create ' . $name,
-                    'task_id' => $task->id
-                ],
-                [
-                    'id' => Str::uuid(),
-                    'name' => 'Edit ' . $name,
-                    'task_id' => $task->id
-                ],
-                [
-                    'id' => Str::uuid(),
-                    'name' => 'Delete ' . $name,
-                    'task_id' => $task->id
-                ],
-            );
-
-            foreach ($listPermissions as $listPermission) {
-                $createPermissions = Permission::Create($listPermission);
-                $roleSuperAdmin->permissions()->attach($createPermissions);
-            }
-
-
+        foreach ($listRoles as $role) {
+            $roleName = Role::create([
+                'name' => $role,
+                'guard_name' => 'web',
+            ]);
         }
 
 
-        // User
+        $superadmin = User::create([
+            'id' => Str::uuid(),
+            'name' => 'Super Admin',
+            'email' => 'superadmin@superadmin.com',
+            'password' => bcrypt('Superadmin1211'),
+            'avatar' => 'profile.jpg',
+            'email_verified_at' => now(),
+            'remember_token' => Str::random(10),
+        ]);
 
-        // Call more role_id here
 
-        // List User
-        $listUsers = [
-            [
-                'name' => 'Superadmin',
-                'email' => 'superadmin@superadmin.com',
-                'nip' => '0000',
-                'sex' => 'laki-laki',
-                'password' => bcrypt('superadmin'),
-                'role_id' => $roleSuperAdmin->id,
-            ],
-            // Add another user here
-        ];
 
-        foreach ($listUsers as $key => $value) {
-            $name = $value['name'];
-            $email = $value['email'];
-            $nip = $value['nip'];
-            $avatar = "profile.jpg";
-            $sex = $value['sex'];
-            $password = $value['password'];
-            $role_id = $value['role_id'];
+        $roleSuperadmin = Role::where('name', 'superadmin')->first();
 
-            // User
-            $user[$key] = User::whereEmail($email)->first();
-
-            if (!$user[$key]) {
-                // User
-                $user[$key] = new User();
-                $user[$key]->id = Str::uuid();
-                $user[$key]->name = $name;
-                $user[$key]->email = $email;
-                $user[$key]->password = $password;
-                $user[$key]->avatar = $avatar;
-                $user[$key]->slug = Str::slug('superadmin');
-                $user[$key]->save();
-                $user[$key]->roles()->attach($role_id);
-            }
+        if($roleSuperadmin) {
+            $superadmin->syncPermissions(Permission::all());
         }
+
+
+
+        $superadmin->assignRole($roleSuperadmin);
+
+
+        $this->command->info('User seeder completed successfully!');
     }
 }

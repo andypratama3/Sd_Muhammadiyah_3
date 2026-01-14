@@ -41,14 +41,11 @@ class ActionKaryawan
             ]
         );
 
-        $roles = Role::findOrFail($karyawanData->role_id);
-        $permissionsData = $roles->permissions->pluck('id');
+
         if(empty($karyawanData->slug)){
-            $user->roles()->attach($roles);
-            $user->permissions()->attach($permissionsData->toArray());
+            $user->roles()->attach($karyawanData->role_id);
         }else{
-            $user->roles()->sync([$roles->id]);
-            $user->permissions()->sync($permissionsData->toArray());
+            $user->roles()->sync($karyawanData->role_id);
         }
 
     }

@@ -10,95 +10,83 @@
 <div class="row">
     <div class="col-lg-12">
         <!-- Form Basic -->
-        <div class="card mb-4">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary text-center">Tambah Role</h6>
+        @include('layouts.flashmessage')
+        <div class="mb-4 card">
+            <div class="flex-row py-3 card-header d-flex align-items-center justify-content-between">
+                <h6 class="m-0 text-center font-weight-bold text-primary">Tambah Role</h6>
             </div>
             <div class="card-body">
-                <form action="{{ route('dashboard.pengaturan.role.store') }}" method="POST"
-                    enctype="multipart/form-data">
+                <form action="{{ route('dashboard.pengaturan.role.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
+
                     <div class="form-group">
                         <label for="name">Nama Role</label>
-                        <input type="text" class="form-control" id="name" aria-describedby="role" name="name"
-                            placeholder="Masukan Nama Role">
+                        <input type="text" class="form-control @error('name') is-invalid @enderror"
+                            id="name" name="name" placeholder="Masukan Nama Role" value="{{ old('name') }}">
+                        @error('name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
+
                     <div class="row">
                         <div class="col-12">
                             <label>Pilih Hak Akses <code>*</code></label>
-                            @if ($errors->has('permissions'))
-                            <div class="row">
-                                <div class="text-danger">{{ $errors->first('permissions') }}</div>
-                            </div>
-                            @endif
-                            <table class="table table-bordered table-striped mb-5">
-                                <thead>
-                                    <tr>
-                                        <th scope="col" class="text-center" style="vertical-align:middle">Tugas</th>
-                                        <th scope="col" colspan="5" class="text-center">Hak Akses</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($tasks as $task)
-                                    <tr>
-                                        <td scope="row">{{ $task->description }}</td>
-                                        <th scope="col" class="text-center">
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input {{ $errors->has('permissions') ? 'is-invalid' : '' }} checkAll checkAll{{ $task->slug }}" id="checkAllCustom{{ $task->slug }}" name="izin" value="{{ $task->slug }}">
-                                                <label for="checkAllCustom{{ $task->slug }}" class="form-check-label custom-control-label">Pilih Semua</label>
-                                            </div>
-                                        </th>
-                                        @foreach ($task->permissions as $permission)
-                                        <td class="{{ $task->slug }}">
-                                            <div class=" hak{{ $task->slug }}">
+                            @error('permissions')
+                                <div class="mt-2 alert alert-danger">{{ $message }}</div>
+                            @enderror
+
+                            <div class="table-responsive">
+                                <table class="table mb-5 table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" class="text-center">Permission</th>
+                                            <th scope="col" class="text-center" style="width: 100px;">Pilih</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($permissions as $permission)
+                                        <tr>
+                                            <td>
+                                                <strong>{{ $permission->name }}</strong>
+                                                <br>
+                                                <small class="text-muted">Guard: {{ $permission->guard_name }}</small>
+                                            </td>
+                                            <td class="text-center">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input {{ $errors->has('permissions') ? 'is-invalid' : '' }} check{{ $task->slug }} hakakses" id="{{ $permission->name }}" name="permissions[]" value="{{ $permission->id }}">
-                                                    <label for="{{ $permission->name }}" class="form-check-label custom-control-label">{{ explode(' ', $permission->name)[0] }}</label>
+                                                    <input type="checkbox"
+                                                        class="custom-control-input permission-checkbox"
+                                                        id="permission{{ $permission->id }}"
+                                                        name="permissions[]"
+                                                        value="{{ $permission->id }}"
+                                                        @if(in_array($permission->id, old('permissions', []))) checked @endif>
+                                                    <label for="permission{{ $permission->id }}" class="custom-control-label"></label>
                                                 </div>
-                                            </div>
-                                        </td>
-                                        @endforeach
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                            </td>
+                                        </tr>
+                                        @empty
+                                        <tr>
+                                            <td colspan="2" class="text-center">Tidak ada permission</td>
+                                        </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary float-lg-end btn-sm">Submit</button>
+
+                    <button type="submit" class="btn btn-primary float-end btn-sm">Submit</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
 @endsection
+
 @push('js')
-<!-- Select2 -->
 <script>
     $(document).ready(function () {
-        $("#nama").keypress(function () {
-            $("#nama").removeClass("is-invalid");
-            $("#textNama").html("");
-        });
-        // Select2 Multiple
-        $('.checkAll').on('change', function (){
-            if($(this).is(':checked')) {
-                $(".check" + this.value).prop('checked', true);
-            } else {
-                $(".check" + this.value).prop('checked', false);
-            }
-        });
-        $(".hakakses").on('click', function () {
-            var header = $(this).attr('class');
-            var classParent = header.replace(" hakakses", "");
-            var countChecked = $('.' + classParent + ':checked').length;
-            var parentClass = $(this).closest('td').attr('class');
-            if (countChecked == 4) {
-                $(".checkAll" + parentClass).prop('checked', true);
-            } else {
-                $(".checkAll" + parentClass).prop('checked', false);
-            }
-        });
-
+        // No complex select all logic needed with simplified table
     });
 </script>
 @endpush

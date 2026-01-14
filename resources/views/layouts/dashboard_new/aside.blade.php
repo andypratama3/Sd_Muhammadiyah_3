@@ -196,6 +196,7 @@
                          <div class="mx-3" data-i18n="rapot Siswa">Rapot Siswa</div>
                      </a>
                  </li>
+
                  <li class="menu-item {{ Request::routeIs('dashboard.datamaster.nilai.*') ? 'active' : ''  }}">
                      <a class="menu-link"
                          href="{{ route('dashboard.datamaster.nilai.index') }}">
@@ -224,8 +225,6 @@
                          <div class="mx-3" data-i18n="Invoice">Notifikasi</div>
                      </a>
                  </li>
-
-
              </ul>
          </li>
 
@@ -270,12 +269,6 @@
                 <div data-i18n="Pengaturan">Pengaturan Akses</div>
             </a>
             <ul class="menu-sub">
-                <li class="menu-item {{ Request::routeIs('dashboard.pengaturan.task.*') ? 'active' : ''  }}">
-                    <a href="{{ route('dashboard.pengaturan.task.index') }}" class="menu-link">
-                        <i class="menu-icon tf-icons bx bx-task"></i>
-                        <div class="mx-3" data-i18n="Task">Task</div>
-                    </a>
-                </li>
                 <li class="menu-item {{ Request::routeIs('dashboard.pengaturan.role.*') ? 'active' : ''  }}">
                     <a href="{{ route('dashboard.pengaturan.role.index') }}" class="menu-link">
                         <i class="menu-icon tf-icons bx bx-user"></i>

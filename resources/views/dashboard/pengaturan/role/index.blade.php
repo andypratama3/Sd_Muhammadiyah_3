@@ -7,10 +7,10 @@
         <div class="col-md-12">
             <div class="card card-orange">
                 @include('layouts.flashmessage')
-                <div class="card-header border-0">
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <div class="border-0 card-header">
+                    <div class="flex-row py-3 card-header d-flex align-items-center justify-content-between">
                         <div class="form-group">
-                            <form class="form-inline ml-1" action="{{ route('dashboard.pengaturan.role.index') }}" method="GET">
+                            <form class="ml-1 form-inline" action="{{ route('dashboard.pengaturan.role.index') }}" method="GET">
                                 <div class="input-group input-group-sm">
                                     <input class="form-control form-control-navbar" type="text" id="search" name="search" placeholder="Nama role" aria-label="Nama role">
                                     <div class="input-group-append">
@@ -26,7 +26,7 @@
 
                 </div>
                 <div class="card-body">
-                    <div class="card-body table-responsive p-0">
+                    <div class="p-0 card-body table-responsive">
                         {{-- @include('layouts.flash-message') --}}
                         <table class="table table-hover" id="tabel">
                             <thead>
@@ -42,12 +42,12 @@
                                     <td>{{ ++$no }}</td>
                                     <td>{{ $role->name }}</td>
                                     <td>
-                                        @can('edit-pengaturan')
-                                        <a href="{{ route('dashboard.pengaturan.role.edit', $role->slug) }}" class="btn btn-primary btn-sm" title="Ubah"><i class="fa fa-edit"></i></a>
+                                        @can('manage-pengaturan')
+                                        <a href="{{ route('dashboard.pengaturan.role.edit', $role->id) }}" class="btn btn-primary btn-sm" title="Ubah"><i class="fa fa-edit"></i></a>
                                         @endcan
-                                        @can('delete-pengaturan')
-                                        <a href="#" data-id="{{ $role->slug }}" class="btn btn-danger btn-sm swal-delete" title="Hapus">
-                                            <form action="{{ route('dashboard.pengaturan.role.destroy', $role->slug) }}" id="delete-{{ $role->slug }}" method="POST" enctype="multipart/form-data">
+                                        @can('manage-pengaturan')
+                                        <a href="#" data-id="{{ $role->id }}" class="btn btn-danger btn-sm swal-delete" title="Hapus">
+                                            <form action="{{ route('dashboard.pengaturan.role.destroy', $role->id) }}" id="delete-{{ $role->id }}" method="POST" enctype="multipart/form-data">
                                                 @csrf
                                                 @method('delete')
                                             </form>
@@ -65,11 +65,11 @@
                         </table>
                     </div>
                 </div>
-                <div class="card-footer clearfix">
-                    <ul class="m-0 float-left">
+                <div class="clearfix card-footer">
+                    <ul class="float-left m-0">
                         Jumlah Data: {{ $count }}
                     </ul>
-                    <ul class="pagination pagination-sm m-0 float-right">
+                    <ul class="float-right m-0 pagination pagination-sm">
                         {{ $roles->onEachSide(1)->links() }}
                     </ul>
                 </div>

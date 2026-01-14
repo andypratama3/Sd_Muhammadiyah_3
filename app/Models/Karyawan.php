@@ -31,7 +31,8 @@ class Karyawan extends Model
         $this->attributes['name'] = $value;
         $this->attributes['slug'] = Str::slug($value).'-'.Str::random(4);
     }
-    public function user()
+    
+    public function user(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }

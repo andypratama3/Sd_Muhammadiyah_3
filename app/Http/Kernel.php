@@ -26,7 +26,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\HSTS::class,
         \App\Http\Middleware\FrameGuard::class,
         \App\Http\Middleware\SecureHeadersMiddleware::class,
-        
+
 
     ];
 
@@ -79,8 +79,9 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'role' => \App\Http\Middleware\RoleMiddleware::class,
-        'permission' => \App\Http\Middleware\PermissionMiddleware::class,
+        'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+        'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+        'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         'jwt' => \App\Http\Middleware\JwtMiddleware::class,
         'verify.signature' => \App\Http\Middleware\VerifyApiSignature::class,
 

@@ -2,24 +2,23 @@
 @section('title','Karyawan')
 @section('content')
 <div class="row">
-    <div class="col-lg-12 mb-4">
+    <div class="mb-4 col-lg-12">
         <!-- Simple Tables -->
         <div class="card">
             @include('layouts.flashmessage')
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h4 class="m-0 font-weight-bold text-primary text-center">Karyawan</h4>
+            <div class="flex-row py-3 card-header d-flex align-items-center justify-content-between">
+                <h4 class="m-0 text-center font-weight-bold text-primary">Karyawan</h4>
                 <a href="{{ route('dashboard.pengaturan.karyawan.create') }}"
-                class="btn btn-success float-right">Tambah <i class="fas fa-plus"></i></a>
+                class="float-right btn btn-success">Tambah <i class="fas fa-plus"></i></a>
             </div>
             <div class="table-responsive">
-                <table class="table align-items-center table-flush text-center">
+                <table class="table text-center align-items-center table-flush">
                     <thead class="thead-light">
                         <tr>
                             <th>No</th>
                             <th>Nama karyawan</th>
                             <th>Jenis Kelamin</th>
                             <th>No Hp</th>
-                            <th>Role</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -30,9 +29,7 @@
                             <td>{{ $karyawan->name }}</td>
                             <td>{{ $karyawan->sex }}</td>
                             <td>{{ $karyawan->phone }}</td>
-                                @foreach ($karyawan->user->roles as $role)
-                                        <td>{{ $role->name }}</td>
-                                @endforeach
+
                             <td>
                                 <a href="{{ route('dashboard.pengaturan.karyawan.show', $karyawan->slug) }}"
                                     class="btn btn-dark btn-sm"><i class="fas fa-eye"></i></a>
