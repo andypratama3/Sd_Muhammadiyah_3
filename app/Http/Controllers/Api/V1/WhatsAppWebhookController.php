@@ -389,6 +389,8 @@ class WhatsAppWebhookController extends Controller
                 'errors' => isset($status['errors']) ? json_encode($status['errors']) : null,
             ]);
 
+            
+
             // Log specific statuses
             match ($statusType) {
                 'sent' => Log::channel('whatsapp')->info('✉️ Sent'),

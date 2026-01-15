@@ -26,7 +26,7 @@ class JadwalController extends Controller
     public function create()
     {
         $kelass = Kelas::select('id', 'name', 'category_kelas')->orderBy('name')->get();
-        $pelajaran = Pelajaran::orderBy('name', 'asc')->get();
+        $pelajaran = Pelajaran::where('name', '<>', 'Guru Kelas *')->orderBy('name', 'asc')->get();
         $guru = Guru::orderBy('name', 'asc')->get();
 
         return view('dashboard.data.jadwal.create', compact('kelass', 'pelajaran', 'guru'));

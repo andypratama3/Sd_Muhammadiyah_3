@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\IpaymuPaymentApi;
 use App\Http\Controllers\Api\V2\DataController;
+use App\Http\Controllers\Api\V2\SPMBController;
 use App\Http\Controllers\Api\Dashboard\SiswaApi;
 use App\Http\Controllers\Api\Dashboard\WilayahApi;
 use App\Http\Controllers\Api\V2\LandingController;
@@ -95,6 +96,8 @@ Route::group(['prefix' => 'v2'], function () {
 
     // Fetch Front End
     Route::group(['middleware' => 'jwt'], function () {
+
+        // Route::post('/spmb/store', [SPMBController::class, 'store']);
 
         Route::post('visitor/store', [ViewsDataController::class, 'store']);
         Route::get('count-landing',[LandingController::class, 'count']);
