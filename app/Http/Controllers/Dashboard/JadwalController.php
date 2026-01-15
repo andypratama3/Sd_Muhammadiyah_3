@@ -26,7 +26,18 @@ class JadwalController extends Controller
     public function create()
     {
         $kelass = Kelas::select('id', 'name', 'category_kelas')->orderBy('name')->get();
-        $pelajaran = Pelajaran::where('name', '<>', 'Guru Kelas *')->orderBy('name', 'asc')->get();
+        $pelajaran = Pelajaran::where(function ($q) {
+            $q->where('name', 'NOT LIKE', 'Guru Kelas%')
+            ->where('name', 'NOT LIKE', 'Shadow%');
+        })
+        ->orderBy('name')
+        ->get();
+
+
+
+        // filter when name Guru Kelas * not show in select
+
+
         $guru = Guru::orderBy('name', 'asc')->get();
 
         return view('dashboard.data.jadwal.create', compact('kelass', 'pelajaran', 'guru'));
