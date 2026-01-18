@@ -43,6 +43,8 @@ class UserSeeder extends Seeder
             'manage-data-sekolah',
             'view-pembayaran',
             'manage-pembayaran',
+            'nilai-view',
+            'nilai-manage',
         ];
 
         // List Roles

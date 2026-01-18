@@ -28,7 +28,7 @@ class PembayaranDataController extends Controller
 
             // Return 404 if student not found
             if (!$siswa) {
-                return $this->notFound('NISN tidak ditemukan');
+                return $this->success([], 'Data Tidak Di Temukan');
             }
 
             // Get all charges for student

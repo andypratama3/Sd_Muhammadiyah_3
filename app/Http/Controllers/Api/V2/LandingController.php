@@ -58,7 +58,7 @@ class LandingController extends Controller
                 return $this->success($prestasi, 'Berhasil Menerima Data');
             }
 
-            return $this->error('Data tidak ditemukan');
+            return $this->success([],'Data tidak ditemukan');
         } catch (\Exception $e) {
             return $this->serverError('Gagal mengambil prestasi: ' . $e->getMessage());
         }
@@ -80,7 +80,7 @@ class LandingController extends Controller
                 return $this->success($gallery, 'Berhasil Menerima Data');
             }
 
-            return $this->error('Data tidak ditemukan');
+            return $this->success([],'Data tidak ditemukan');
         } catch (\Exception $e) {
             return $this->serverError('Gagal mengambil gallery activity: ' . $e->getMessage());
         }
@@ -100,7 +100,7 @@ class LandingController extends Controller
                 return $this->success($cooperation, 'Berhasil Menerima Data');
             }
 
-            return $this->error('Data tidak ditemukan');
+            return $this->success([],'Data tidak ditemukan');
         } catch (\Exception $e) {
             return $this->serverError('Gagal mengambil data dukungan: ' . $e->getMessage());
         }

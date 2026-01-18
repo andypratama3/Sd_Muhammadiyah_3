@@ -15,18 +15,7 @@ class MataPelajaranSeeder extends Seeder
     {
         $mapel = [
             'Bahasa Indonesia',
-            'Bahasa Inggris',
-            'Matematika',
-            'Ilmu Pengetahuan Alam',
-            'Ilmu Pengetahuan Sosial',
-            'Pendidikan Pancasila dan Kewarganegaraan',
-            'Pendidikan Agama Islam',
-            'Seni Budaya',
-            'Pendidikan Jasmani, Olahraga dan Kesehatan',
-            'Prakarya',
-            'Bahasa Daerah',
-            'Informatika',
-            'Bimbingan Konseling',
+            'Sholat Duha',
         ];
 
         $datas = collect($mapel)->map(function ($item) {

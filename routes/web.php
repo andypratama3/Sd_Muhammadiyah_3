@@ -92,22 +92,18 @@ use App\Http\Controllers\Dashboard\TenagaPendidikanController as DashboardTenaga
 //     return view('layouts.user.loading-data');
 // });
 
-Route::get('/asset/{any}', function () {
-    $origin = request()->header('origin') ?? request()->header('referer');
-    if ($origin && str_contains($origin, 'sdmuhammadiyah3smd.com')) {
-        abort(404);
-    }
-    abort(404);
-})->where('any', '.*');
 
-// Block storage access from sdmuhammadiyah3smd.com origin
-Route::get('/storage/{any}', function () {
-    $origin = request()->header('origin') ?? request()->header('referer');
-    if ($origin && str_contains($origin, 'sdmuhammadiyah3smd.com')) {
-        abort(404);
-    }
-    abort(404);
-})->where('any', '.*');
+Route::middleware('block.origin')->group(function () {
+    Route::get('/storage/{any}', function ($path) {
+        $filePath = storage_path('app/public/' . $path);
+
+        if (!file_exists($filePath)) {
+            abort(404);
+        }
+
+        return response()->file($filePath);
+    })->where('any', '.*');
+});
 
 
 // Route::group(['prefix' => '/',], function () {

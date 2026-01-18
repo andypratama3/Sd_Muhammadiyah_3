@@ -32,7 +32,7 @@
                             <td> {{ $jadwal->kelas_jadwal->name ?? '-' }} </td>
                             <td> {{ $jadwal->category_kelas }} </td>
                             <td>
-                            
+
                                 <a href="{{ route('dashboard.datasekolah.jadwal.edit', $jadwal->id) }}" class="btn btn-primary btn-sm"><i
                                         class="fa fa-pen"></i></a>
                                 <a href="#" data-id="{{ $jadwal->slug }}" class="btn btn-danger btn-sm delete" title="Hapus">
@@ -47,6 +47,9 @@
                         @endforeach
                     </tbody>
                 </table>
+            </div>
+            <div class="card-footer">
+                {{ $jadwals->links() }}
             </div>
         </div>
     </div>

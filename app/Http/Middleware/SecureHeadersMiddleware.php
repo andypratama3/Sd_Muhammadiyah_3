@@ -19,6 +19,19 @@ class SecureHeadersMiddleware
 
         // Proceed with the request
         $response = $next($request);
+        $origin = $request->headers->get('Origin');
+
+        $allowedOrigins = [
+            env('FRONTEND_URL'),
+            'https://sdmuhammadiyah3smd.com',
+        ];
+
+        if (in_array($origin, $allowedOrigins)) {
+            $response->headers->set('Access-Control-Allow-Origin', $origin);
+            $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, X-CSRF-Token');
+            $response->headers->set('Access-Control-Allow-Credentials', 'true');
+        }
 
         // Set additional secure headers
         $response->headers->set('Referrer-Policy', 'no-referrer-when-downgrade');

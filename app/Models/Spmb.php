@@ -38,13 +38,14 @@ class Spmb extends Model
         'alamat_wali',
         'file_sttb',
         'akta_kelahiran',
-        'kk',
+        'kartu_keluarga',
         'pas_foto',
-        'phone',
+        'no_hp',
         'nomor_urut',
         'status_pembayaran',
         'order_id',
         'status',
+        'terms',
     ];
 
 }

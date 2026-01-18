@@ -69,7 +69,10 @@ class ChargePaymentJob implements ShouldQueue
             }
 
             // kirim ke Midtrans
-            $this->sendPaymentToMidtrans($this->siswa, $vaNumber, $gross_amount, $order_id, $category_Spp);
+            // $this->sendPaymentToMidtrans($this->siswa, $vaNumber, $gross_amount, $order_id, $category_Spp);
+            // kirim ke Bank Kaltimtara
+
+            $this->sendPaymentToBankKaltimtara($this->siswa, $vaNumber, $gross_amount, $order_id, $category_Spp);
 
             DB::commit();
 
@@ -94,6 +97,13 @@ class ChargePaymentJob implements ShouldQueue
             DB::rollBack();
             logger()->error("Gagal memproses pembayaran {$this->siswa->name}: " . $e->getMessage());
         }
+    }
+
+    public function sendPaymentToBankKaltimtara($order_id, $vaNumber, $gross_amount, $category_Spp)
+    {
+        // Implementasi integrasi dengan Bank Kaltimtara
+        // Sesuaikan dengan dokumentasi API Bank Kaltimtara
+        // 
     }
 
     private function sendPaymentToMidtrans($siswa, $vaNumber, $gross_amount, $order_id, $category_Spp)

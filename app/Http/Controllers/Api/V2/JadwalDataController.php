@@ -93,7 +93,7 @@ class JadwalDataController extends Controller
 
             $category = strtolower($request->category_kelas);
 
-            $jadwal = Jadwal::with(['jadwal_details', 'kelas'])
+            $jadwal = Jadwal::with(['jadwal_details', 'kelas_jadwal'])
                 ->where('tahun_ajaran', $request->tahun_ajaran)
                 ->where('kelas_id', $request->kelas_id)
                 ->where('category_kelas', $category)

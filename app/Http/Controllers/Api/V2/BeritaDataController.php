@@ -96,6 +96,13 @@ class BeritaDataController extends Controller
      */
     public function list(Request $request)
     {
+        $request->validate([
+            'search' => 'nullable|string',
+            'category' => 'nullable|string',
+            'per_page' => 'nullable|integer',
+        ]);
+
+        
         try {
             $search   = $request->input('search');
             $category = $request->input('category');

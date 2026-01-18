@@ -129,7 +129,7 @@ class GuruDataController extends Controller
                 return $this->success($data, 'OK');
             }
 
-            return $this->error('Data tidak ditemukan', 404);
+            return $this->success([], 'OK');
         } catch (\Exception $e) {
             return $this->serverError('Gagal mengambil count guru: ' . $e->getMessage(), 500);
         }

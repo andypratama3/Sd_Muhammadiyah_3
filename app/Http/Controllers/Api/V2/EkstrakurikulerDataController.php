@@ -17,6 +17,8 @@ class EkstrakurikulerDataController extends Controller
                 return $this->success($ekstrakurikuler, 'OK');
             }
 
+            return $this->success([], 'Data Tidak Di Temukan');
+
         } catch(\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return $this->success([],'Data Tidak Di Temukan');
         } catch (\Exception $e) {
