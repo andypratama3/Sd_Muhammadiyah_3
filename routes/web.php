@@ -93,6 +93,19 @@ use App\Http\Controllers\Dashboard\TenagaPendidikanController as DashboardTenaga
 // });
 
 Route::get('/asset/{any}', function () {
+    $origin = request()->header('origin') ?? request()->header('referer');
+    if ($origin && str_contains($origin, 'sdmuhammadiyah3smd.com')) {
+        abort(404);
+    }
+    abort(404);
+})->where('any', '.*');
+
+// Block storage access from sdmuhammadiyah3smd.com origin
+Route::get('/storage/{any}', function () {
+    $origin = request()->header('origin') ?? request()->header('referer');
+    if ($origin && str_contains($origin, 'sdmuhammadiyah3smd.com')) {
+        abort(404);
+    }
     abort(404);
 })->where('any', '.*');
 
@@ -190,6 +203,7 @@ Route::get('/asset/{any}', function () {
 Route::get('/', function (){
     return redirect()->route('login');
 });
+
 
 Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], function () {
     Route::get('/', DashboardController::class)->name('dashboard');
