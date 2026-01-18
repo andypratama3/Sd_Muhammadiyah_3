@@ -92,18 +92,9 @@ use App\Http\Controllers\Dashboard\TenagaPendidikanController as DashboardTenaga
 //     return view('layouts.user.loading-data');
 // });
 
-
-Route::middleware('block.origin')->group(function () {
-    Route::get('/storage/{any}', function ($path) {
-        $filePath = storage_path('app/public/' . $path);
-
-        if (!file_exists($filePath)) {
-            abort(404);
-        }
-
-        return response()->file($filePath);
-    })->where('any', '.*');
-});
+Route::get('/asset/{any}', function () {
+    abort(404);
+})->where('any', '.*');
 
 
 // Route::group(['prefix' => '/',], function () {
@@ -199,7 +190,6 @@ Route::middleware('block.origin')->group(function () {
 Route::get('/', function (){
     return redirect()->route('login');
 });
-
 
 Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], function () {
     Route::get('/', DashboardController::class)->name('dashboard');

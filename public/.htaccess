@@ -5,15 +5,6 @@
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    # Disable Directory Listing
-    Options -Indexes
-
-    # Block access to storage from specific origin/referer
-    RewriteCond %{HTTP_REFERER} sdmuhammadiyah3smd\.com [NC,OR]
-    RewriteCond %{HTTP:ORIGIN} sdmuhammadiyah3smd\.com [NC]
-    RewriteCond %{REQUEST_URI} ^/storage/ [NC]
-    RewriteRule .* - [F,L]
-
     # Pastikan sitemap.xml bisa diakses
     RewriteRule ^sitemap\.xml$ - [L]
 
@@ -48,17 +39,7 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^ index.php [QSA,L]
 </IfModule>
-
 <IfModule mod_headers.c>
     Header set Permissions-Policy "geolocation=self"
     Header set Referrer-Policy "no-referrer-when-downgrade"
-
-    # Block specific origin via CORS
-    SetEnvIf Origin "^https?://(.*\.)?sdmuhammadiyah3smd\.com$" block_origin
-    Header set Access-Control-Allow-Origin "*" env=!block_origin
-</IfModule>
-
-<IfModule mod_autoindex.c>
-    # Disable directory listing (backup method)
-    Options -Indexes
 </IfModule>
