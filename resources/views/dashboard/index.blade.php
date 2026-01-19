@@ -217,7 +217,7 @@
         </div>
 
     </div>
-
+    @can('view-pembayaran')
     <div class="col-xl-12 col-lg-7">
         <div class="mb-4 card">
             <div class="flex-row py-3 card-header d-flex align-items-center justify-content-between">
@@ -253,6 +253,7 @@
             </div>
         </div>
     </div>
+    @endcan
     <div class="col-md-12 ">
         <div class="mb-4 card">
             <div class="flex-row py-3 card-header d-flex align-items-center justify-content-between">
