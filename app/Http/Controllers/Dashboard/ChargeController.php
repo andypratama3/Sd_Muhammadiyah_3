@@ -25,6 +25,8 @@ class ChargeController extends Controller
     public function __construct(MidtransPaymentController $midtrans)
     {
         $this->midtrans = $midtrans;
+        $this->middleware(['permission:view-pembayaran'])->only(['index', 'data_table', 'show', 'export_excel', 'exportExcel']);
+        $this->middleware(['permission:manage-pembayaran'])->only(['create','store','edit','update','destroy']);
     }
 
     public function index()

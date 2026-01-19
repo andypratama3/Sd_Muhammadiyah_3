@@ -48,7 +48,7 @@
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, log out!',
-                cancelButtonText: 'No, cancel!',
+                cancelButtonText: 'No, cancel',
                 reverseButtons: true,
             }).then((result) => {
                 if (result.isConfirmed) {
