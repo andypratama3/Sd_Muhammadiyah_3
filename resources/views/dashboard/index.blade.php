@@ -111,6 +111,7 @@
         </div>
     </div>
 
+    @can('view-pembayaran')
     <!-- Area Chart -->
     <div class="mb-2 col-md-12 d-flex justify-content-center align-items-center">
         <div class="card flex-fill w-100">
@@ -143,6 +144,7 @@
             </div>
         </div>
     </div>
+    @endcan
 
     <div class="col-xl-12 col-lg-7">
        <div class="mb-4 card">

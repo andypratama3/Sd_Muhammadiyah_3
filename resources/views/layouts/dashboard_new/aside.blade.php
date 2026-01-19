@@ -172,7 +172,6 @@
                  <div data-i18n="Boxicons">SPMB</div>
              </a>
          </li>
-
          <!-- Forms & Tables -->
          <li class="menu-header small text-uppercase"><span class="menu-header-text">Siswa &amp;
                  Pembayaran</span></li>
@@ -211,6 +210,7 @@
                          <div class="mx-3" data-i18n="Judul Pembayaran"> Kategori Pembayaran</div>
                      </a>
                  </li>
+                 @can('view-pembayaran')
                  <li class="menu-item {{ Request::routeIs('dashboard.datamaster.charge.*') ? 'active' : ''  }}">
                      <a class="menu-link"
                          href="{{ route('dashboard.datamaster.charge.index') }}">
@@ -218,6 +218,7 @@
                          <div class="mx-3" data-i18n="Invoice">Charge</div>
                      </a>
                  </li>
+                 @endcan
                  <li class="menu-item {{ Request::routeIs('dashboard.notifikasi.*') ? 'active' : ''  }}">
                      <a class="menu-link"
                          href="{{ route('dashboard.notifikasi.index') }}">
