@@ -55,7 +55,12 @@ use App\Http\Controllers\Dashboard\CooperationController;
 use App\Http\Controllers\Dashboard\FotoSekolahController;
 use App\Http\Controllers\Dashboard\NotificationController;
 use App\Http\Controllers\Dashboard\KelasCategoryController;
+use App\Http\Controllers\Dashboard\Absensi\AbsensiController;
 use App\Http\Controllers\Dashboard\KategoriGalleryController;
+use App\Http\Controllers\Dashboard\Absensi\JamAbsenController;
+use App\Http\Controllers\Dashboard\Absensi\LokasiAbsenController;
+use App\Http\Controllers\Dashboard\Absensi\RekapAbsensiController;
+use App\Http\Controllers\Dashboard\Absensi\PengajuanCutiController;
 use App\Http\Controllers\Dashboard\StrukturTenagaPendidikanController;
 use App\Http\Controllers\Dashboard\SpmbController as DashboardSpmController;
 use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
@@ -213,6 +218,30 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::get('artikels/status/{slug}', [DashboardArtikelController::class, 'status'])->name('dashboard.news.artikel.status');
 
     });
+
+
+    Route::group(['prefix'=> 'pengaturan-absen'], function () {
+        Route::resource('lokasi-absen', LokasiAbsenController::class, ['names' => 'dashboard.lokasi.absen']);
+        Route::resource('jam-absen', JamAbsenController::class, ['names' => 'dashboard.jam.absen']);
+    });
+
+    Route::group(['prefix' => 'absensis'], function () {
+        Route::get('/', [AbsensiController::class, 'index'])->name('dashboard.absensis.index');
+        Route::post('/masuk', [AbsensiController::class, 'absenMasuk'])->name('absensi.masuk');
+        Route::post('/pulang', [AbsensiController::class, 'absenPulang'])->name('absensi.pulang');
+        Route::get('/riwayat', [AbsensiController::class, 'riwayat'])->name('absensi.riwayat');
+    });
+
+    Route::group(['prefix' => 'cuti'], function () {
+       Route::resource('pengajuan-cuti', PengajuanCutiController::class, ['names' => 'dashboard.pengajuan_cuti']);
+    });
+
+    Route::prefix('rekap-absensi')->name('dashboard.rekap.absensi.')->group(function () {
+        Route::get('/', [RekapAbsensiController::class, 'index'])->name('index');
+        Route::get('/export-pdf', [RekapAbsensiController::class, 'exportPdf'])->name('export.pdf');
+        Route::get('/export-excel', [RekapAbsensiController::class, 'exportExcel'])->name('export.excel');
+    });
+
 
     Route::resource('absensi', AttendancesController::class, ['names'=> 'dashboard.attendances']);
     Route::get('absensis/export', [AttendancesController::class, 'export'])->name('dashboard.attendances.export');

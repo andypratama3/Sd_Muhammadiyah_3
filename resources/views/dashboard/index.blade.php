@@ -28,6 +28,10 @@
 @section('content')
 @if(Auth::user()->hasRole ('user'))
 @include('dashboard.user.index')
+@elseif(Auth::user()->hasRole (['tenaga-pendidikan', 'guru']))
+
+@include('dashboard.statistik_absensi')
+
 @else
 <div class="mb-3 row">
     <!-- Siswa -->
@@ -317,6 +321,8 @@
     </div>
 
 </div>
+
+@include('dashboard.statistik_absensi')
 @endif
 <!--Row-->
 @push('js')

@@ -26,6 +26,16 @@ class NilaiSiswaController extends Controller
     public function data_table(Request $request)
     {
         $nilai = Nilai::all();
+
+        return DataTable::of($nilai)
+            ->addColumn('action', function ($data) {
+                return '<a href="' . route('dashboard.nilai.show', $data->id) . '" class="btn btn-sm btn-info">Show</a>
+                        <a href="' . route('dashboard.nilai.edit', $data->id) . '" class="btn btn-sm btn-warning">Edit</a>
+                        <button class="btn btn-sm btn-danger" onclick="deleteNilai(' . $data->id . ')">Delete</button>';
+            })
+            ->rawColumns(['action'])
+            ->addIndexColumn()
+            ->make(true);
     }
 
     public function matapelajaran($name)
@@ -105,7 +115,7 @@ class NilaiSiswaController extends Controller
     public function exporExcel()
     {
         // Implementasi ekspor ke Excel
-        
+
         return response()->json(['status' => 'success', 'message' => 'Ekspor Excel berhasil.']);
     }
 

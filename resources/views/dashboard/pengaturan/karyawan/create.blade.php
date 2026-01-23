@@ -28,6 +28,15 @@
                         </div>
                         <div class="mt-2 col-md-6">
                             <div class="form-group">
+                                <label class="form-label">NIP Karyawan <code>*</code></label>
+                                <input type="text" class="form-control" id="nip" name="nip"
+                                    placeholder="Masukkan NIP Karyawan" value="{{ old('nip') }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                         <div class="mt-2 col-md-6">
+                            <div class="form-group">
                                 <label class="form-label">Jenis Kelamin<code>*</code></label>
                                 <select name="sex" id="" class="form-control">
                                     <option disabled selected>Pilih Jenis Kelamin</option>
@@ -36,8 +45,6 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="mt-2 col-md-6">
                             <div class="form-group">
                                 <label class="form-label">Email Karyawan <code>*</code></label>

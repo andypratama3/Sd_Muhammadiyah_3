@@ -16,6 +16,7 @@ class ActionKaryawan
         $userData = [
             'name' => $karyawanData->name,
             'email' => $karyawanData->email,
+            'nip' => $karyawanData->nip,
             'password' => bcrypt('sdmuhammadiyah3samarinda.com'),
             'avatar' => 'profile.jpg',
 
@@ -37,10 +38,12 @@ class ActionKaryawan
                 'name' => $karyawanData->name,
                 'sex' => $karyawanData->sex,
                 'phone' => $karyawanData->phone,
+                'email'=> $karyawanData->email,
+                'nip' => $karyawanData->nip,
+                'phone' => $karyawanData->phone,
                 'user_id' => $user->id,
             ]
         );
-
 
         if(empty($karyawanData->slug)){
             $user->roles()->attach($karyawanData->role_id);

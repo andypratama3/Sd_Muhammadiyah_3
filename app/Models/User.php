@@ -74,4 +74,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(Activity::class, 'causer_id', 'id');
     }
+
+    public function karyawan()
+    {
+        return $this->hasOne(Karyawan::class);
+    }
+
+
 }

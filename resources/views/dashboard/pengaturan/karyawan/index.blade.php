@@ -17,6 +17,7 @@
                         <tr>
                             <th>No</th>
                             <th>Nama karyawan</th>
+                            <th>NIP</th>
                             <th>Jenis Kelamin</th>
                             <th>No Hp</th>
                             <th>Action</th>
@@ -27,6 +28,7 @@
                         <tr>
                             <td>{{ ++$no }}</td>
                             <td>{{ $karyawan->name }}</td>
+                            <td>{{ $karyawan->nip }}</td>
                             <td>{{ $karyawan->sex }}</td>
                             <td>{{ $karyawan->phone }}</td>
 

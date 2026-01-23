@@ -42,9 +42,14 @@
                                         <a href="{{ route('dashboard.datasekolah.foto_sekolah.edit', $item->id) }}" class="btn btn-warning btn-sm">
                                             <i class="fas fa-edit"></i> Edit
                                         </a>
-                                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal{{ $item->id }}">
-                                            <i class="fas fa-trash"></i> Hapus
-                                        </button>
+                                        <a href="#" data-id="{{ $item->slug }}" class="btn btn-danger btn-sm delete" title="Hapus">
+                                            <form action="{{ route('dashboard.datasekolah.kelas.destroy', $item->slug) }}"
+                                                id="delete-{{ $item->slug }}" method="POST" enctype="multipart/form-data">
+                                                @csrf
+                                                @method('delete')
+                                            </form>
+                                            <i class="fas fa-trash"></i>
+                                        </a>
                                     </td>
                                 </tr>
 

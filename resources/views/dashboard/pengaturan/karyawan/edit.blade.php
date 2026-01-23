@@ -25,6 +25,13 @@
                                     placeholder="Masukkan Nama Karyawan" value="{{ $karyawan->name }}">
                             </div>
                         </div>
+                         <div class="mt-2 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">NIP Karyawan <code>*</code></label>
+                                <input type="text" class="form-control" id="nip" name="nip"
+                                    placeholder="Masukkan NIP Karyawan" value="{{ old('nip', $karyawan->nip) }}">
+                            </div>
+                        </div>
                         <div class="mt-2 col-md-6">
                             <div class="form-group">
                                 <label class="form-label">Jenis Kelamin<code>*</code></label>

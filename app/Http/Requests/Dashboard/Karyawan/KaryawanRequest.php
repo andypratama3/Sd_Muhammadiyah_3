@@ -36,7 +36,12 @@ class KaryawanRequest extends FormRequest
     {
         $this->role_id;
     }
-    //get 
+
+
+    public function getNip()
+    {
+        $this->nip;
+    }
 
     public function rules(): array
     {

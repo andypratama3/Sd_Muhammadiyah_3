@@ -6,14 +6,17 @@ use App\Models\Guru;
 use App\Models\Kelas;
 use App\Models\Siswa;
 use App\Models\Rating;
+use App\Models\Absensi;
 use App\Models\Artikel;
 use App\Models\Visitor;
+use App\Models\Karyawan;
 use App\Models\Prestasi;
 use App\Charts\SiswaChart;
 use App\Models\Pembayaran;
 use App\Charts\ChargeChart;
 use App\Models\KritikSaran;
 use Illuminate\Http\Request;
+use App\Models\PengajuanCuti;
 use Illuminate\Support\Carbon;
 use App\Models\JudulPembayaran;
 use App\Charts\ChargeCountMount;
@@ -99,6 +102,51 @@ class DashboardController extends Controller
         // });
         // dd($chagreChart)
 
+        // Absensi
+        $today = Carbon::today();
+
+        // Query dasar absensi hari ini
+        $absensiHariIni = Absensi::whereDate('tanggal', $today);
+
+        // 🔐 user biasa hanya data sendiri
+        if (!Auth::user()->hasAnyRole(['admin','superadmin'])) {
+            $absensiHariIni->where(
+                'karyawan_id',
+                Auth::user()->karyawan->id
+            );
+        }
+
+        $totalKaryawan = Karyawan::count();
+
+        $hadirHariIni = (clone $absensiHariIni)
+            ->where('status_kehadiran', 'hadir')
+            ->count();
+
+        $terlambatHariIni = (clone $absensiHariIni)
+            ->where('status_masuk', 'terlambat')
+            ->count();
+
+        $tidakHadirHariIni = $totalKaryawan - $hadirHariIni;
+
+        $cutiAktif = PengajuanCuti::where('status', 'disetujui')
+            ->whereDate('tanggal_mulai', '<=', $today)
+            ->whereDate('tanggal_selesai', '>=', $today)
+            ->count();
+
+        // 📈 grafik 7 hari terakhir
+        $grafik = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $tanggal = Carbon::today()->subDays($i);
+
+            $grafik[] = [
+                'tanggal' => $tanggal->format('d M'),
+                'hadir' => Absensi::whereDate('tanggal', $tanggal)
+                    ->where('status_kehadiran', 'hadir')
+                    ->count()
+            ];
+        }
+
+
         return view('dashboard.index', compact(
             'siswas',
             'guru',
@@ -117,7 +165,13 @@ class DashboardController extends Controller
             // 'chargeCountMount',
             'averageRating',
             'totalVotes',
-            'latestRatings'
+            'latestRatings',
+            'totalKaryawan',
+            'hadirHariIni',
+            'terlambatHariIni',
+            'tidakHadirHariIni',
+            'cutiAktif',
+            'grafik'
         ));
     }
 }

@@ -29,6 +29,51 @@
             </a>
         </li>
         @endif
+        <li class="menu-header small text-uppercase">
+             <span class="menu-header-text">Absensi</span>
+        </li>
+        <li class="menu-item {{ Request::routeIs('dashboard.absensis.*') ? 'active' : '' }}">
+             <a href="{{ route('dashboard.absensis.index') }}" class="menu-link">
+                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                 <div data-i18n="Dashboard">Absensi</div>
+             </a>
+        </li>
+        <li class="menu-item {{ Request::routeIs('dashboard.pengajuan_cuti.*') ? 'active' : '' }}">
+             <a href="{{ route('dashboard.pengajuan_cuti.index') }}" class="menu-link">
+                 <i class="menu-icon tf-icons bx bx-envelope"></i>
+                 <div data-i18n="Dashboard">Pengajuan Cuti</div>
+             </a>
+         </li>
+        @can('role: admin')
+        <li class="menu-item {{ Request::routeIs('dashboard.rekap.absensi.*') ? 'active' : '' }}">
+            <a href="{{ route('dashboard.rekap.absensi.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-calendar-check"></i>
+                <div>Rekap Absensi</div>
+            </a>
+        </li>
+        <li class="menu-header small text-uppercase"><span class="menu-header-text">Pengaturan Absensi</span></li>
+         <!-- Pengaturan -->
+         <li class="menu-item {{ Request::routeIs('dashboard.pengaturan-absen.*') ? 'open' : '' }}">
+            <a href="javascript:void(0)" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-cog"></i>
+                <div data-i18n="Pengaturan">Pengaturan Absensi</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item {{ Request::routeIs('dashboard.pengaturan.role.*') ? 'active' : ''  }}">
+                    <a href="{{ route('dashboard.lokasi.absen.index') }}" class="menu-link">
+                        <i class="menu-icon tf-icons bx bx-user"></i>
+                        <div class="mx-3" data-i18n="Role">Lokasi Absen</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ Request::routeIs('dashboard.jam.absen.*') ? 'active' : ''  }}">
+                    <a href="{{ route('dashboard.jam.absen.index') }}" class="menu-link">
+                        <i class="menu-icon tf-icons bx bx-group"></i>
+                        <div class="mx-3" data-i18n="Karyawan">Jam Absen</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
          <li class="menu-header small text-uppercase">
              <span class="menu-header-text">News</span>
          </li>
@@ -56,6 +101,7 @@
                  <div data-i18n="Artikel">Artikel</div>
              </a>
          </li>
+
          <!-- Components -->
          <li class="menu-header small text-uppercase"><span class="menu-header-text">Data Sekolah</span></li>
 
@@ -172,6 +218,9 @@
                  <div data-i18n="Boxicons">SPMB</div>
              </a>
          </li>
+        @endcan
+
+        @canany('')
          <!-- Forms & Tables -->
          <li class="menu-header small text-uppercase"><span class="menu-header-text">Siswa &amp;
                  Pembayaran</span></li>
@@ -228,7 +277,8 @@
                  </li>
              </ul>
          </li>
-
+         @endcanany
+         @can('role: admin')
          <li class="menu-header small text-uppercase"><span class="menu-header-text">Pengunjung</span></li>
 
          <li class="menu-item {{ Request::routeIs('dashboard.url.visitor.*') ? 'active' : '' }}">
@@ -292,6 +342,6 @@
                 @endcan
             </ul>
         </li>
-
+        @endcan
      </ul>
  </aside>

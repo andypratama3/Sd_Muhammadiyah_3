@@ -24,7 +24,7 @@ class KaryawanController extends Controller
     public function index()
     {
         $limit = 15;
-        $karyawans = Karyawan::select(['id', 'name', 'sex', 'phone', 'slug', 'user_id'])->where('slug', '!=', 'superadmin-xxxx')->with('user:id,email')->orderBy('name')->paginate($limit);
+        $karyawans = Karyawan::select(['id', 'name', 'sex','nip','phone', 'slug', 'user_id'])->where('slug', '!=', 'superadmin-xxxx')->with('user:id,email')->orderBy('name')->paginate($limit);
         $count = $karyawans->count();
         $no = $limit * ($karyawans->currentPage() - 1);
         $roles = Role::where('name', '!=', 'superadmin')->get();

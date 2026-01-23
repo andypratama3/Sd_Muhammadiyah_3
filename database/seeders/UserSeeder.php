@@ -18,6 +18,8 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+
         // Disable foreign key checks
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
@@ -45,13 +47,17 @@ class UserSeeder extends Seeder
             'manage-pembayaran',
             'nilai-view',
             'nilai-manage',
+            'absensi-view',
+            'absensi-manage',
         ];
 
         // List Roles
         $listRoles = [
             'superadmin',
             'user',
-            'media'
+            'media',
+            'tenaga-pendidikan',
+            'guru',
         ];
 
         foreach ($listPermissions as $permission) {

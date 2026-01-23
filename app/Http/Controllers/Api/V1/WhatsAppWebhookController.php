@@ -389,7 +389,7 @@ class WhatsAppWebhookController extends Controller
                 'errors' => isset($status['errors']) ? json_encode($status['errors']) : null,
             ]);
 
-            
+
 
             // Log specific statuses
             match ($statusType) {
@@ -597,16 +597,19 @@ class WhatsAppWebhookController extends Controller
 
         $phone = $request->phone;
 
-        $result = $whatsApp->sendTemplate(
-            $phone,
-            'general_payment_reminder',
-            [
-                'User Test',
-                'Kelas 2',
-                'Januari',
-                '20.000'
-            ]
-        );
+        // $image = "https://dashboard.sdmuhammadiyah3smd.com/storage/img/waqr/spp/qr-siswa-spp-juli-abdillah-abqari-agam.png";
+
+        // $result = $whatsApp->sendTemplate(
+        //     $phone,
+        //     'spp_reminder',
+        //     [
+        //         'User Test',
+        //         'Kelas 2',
+        //         'Januari',
+        //         '20.000'
+        //     ],
+        //     $image,
+        // );
 
         // Return response lengkap untuk debugging
         return response()->json($result, $result['success'] ? 200 : 400);

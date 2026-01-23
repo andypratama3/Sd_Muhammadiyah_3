@@ -71,7 +71,7 @@
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 confirmButtonText: 'Hapus !',
-                cancelButtonText: 'Batal !',
+                cancelButtonText: 'Batal',
                 reverseButtons: true,
             }).then((result) => {
                 if (result.isConfirmed) {

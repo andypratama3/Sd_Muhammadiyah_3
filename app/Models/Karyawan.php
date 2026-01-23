@@ -21,7 +21,9 @@ class Karyawan extends Model
         'sex',
         'phone',
         'slug',
+        'nip',
         'user_id',
+        'jenis_pegawai',
     ];
 
     protected $dates = ['deleted_at'];
@@ -31,11 +33,58 @@ class Karyawan extends Model
         $this->attributes['name'] = $value;
         $this->attributes['slug'] = Str::slug($value).'-'.Str::random(4);
     }
-    
+
+    /**
+     * Relasi ke User
+     */
     public function user(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
+
+    /**
+     * Relasi ke PengajuanCuti
+     */
+    public function pengajuanCuti()
+    {
+        return $this->hasMany(PengajuanCuti::class, 'karyawan_id', 'id');
+    }
+
+    /**
+     * Relasi ke Absensi
+     */
+    public function absensi()
+    {
+        return $this->hasMany(Absensi::class, 'karyawan_id', 'id');
+    }
+
+    /**
+     * Get jenis pegawai dari user role
+     */
+    public function getJenisPegawaiFromRoleAttribute()
+    {
+        $role = $this->user?->roles?->first();
+
+        if ($role) {
+            $roleMap = [
+                'guru' => 'guru',
+                'tenaga-kependidikan' => 'tenaga_kependidikan',
+            ];
+
+            return $roleMap[$role->name] ?? 'umum';
+        }
+
+        return $this->jenis_pegawai ?? 'umum';
+    }
+
+    /**
+     * Get jabatan dari user role
+     */
+    public function getJabatanFromRoleAttribute()
+    {
+        return $this->user?->roles?->first()?->name ?? $this->jabatan ?? '-';
+    }
+
     public function getRouteKeyName()
     {
         return 'slug';
