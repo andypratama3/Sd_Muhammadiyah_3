@@ -366,9 +366,9 @@ function getDeviceId() {
     if (!deviceId) {
         deviceId = generateUniqueId();
         localStorage.setItem('device_id', deviceId);
-        console.log('🆕 Device ID baru dibuat:', deviceId);
+        // console.log('🆕 Device ID baru dibuat:', deviceId);
     } else {
-        console.log('✅ Device ID ditemukan:', deviceId);
+        // console.log('✅ Device ID ditemukan:', deviceId);
     }
 
     return deviceId;
@@ -412,9 +412,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const notify = new ToastNotification();
 
     // Log Device Info untuk debugging
-    console.log('🔒 Device Fingerprint:', getDeviceId());
-    console.log('📱 Browser:', getBrowserName());
-    console.log('💻 Platform:', navigator.platform);
+    // console.log('🔒 Device Fingerprint:', getDeviceId());
+    // console.log('📱 Browser:', getBrowserName());
+    // console.log('💻 Platform:', navigator.platform);
 
     // Update waktu real-time
     function updateWaktu() {
@@ -456,7 +456,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             navigator.geolocation.getCurrentPosition(
                 pos => {
-                    console.log('📍 Lokasi ditemukan:', pos.coords.latitude, pos.coords.longitude);
+                    // console.log('📍 Lokasi ditemukan:', pos.coords.latitude, pos.coords.longitude);
                     resolve({
                         latitude: pos.coords.latitude,
                         longitude: pos.coords.longitude
@@ -564,7 +564,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 ? "{{ route('absensi.masuk') }}"
                 : "{{ route('absensi.pulang') }}";
 
-            console.log('📤 Mengirim request absensi:', {
+            // console.log('📤 Mengirim request absensi:', {
                 nip,
                 latitude: location.latitude,
                 longitude: location.longitude,
@@ -592,7 +592,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const result = await response.json();
-            console.log('📥 Response dari server:', result);
+            // console.log('📥 Response dari server:', result);
 
             if (result.success) {
                 const tipeName = tipe === 'masuk' ? 'Masuk' : 'Pulang';
@@ -601,7 +601,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Notifikasi khusus jika device baru
                 if (result.data?.is_new_device) {
                     message += ' (Device baru berhasil didaftarkan)';
-                    console.log('🆕 Device baru terdaftar');
+                    // console.log('🆕 Device baru terdaftar');
                 }
 
                 notify.success(message, `Absen ${tipeName} Berhasil`);
