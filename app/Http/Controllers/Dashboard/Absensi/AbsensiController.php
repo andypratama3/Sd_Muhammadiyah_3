@@ -7,6 +7,8 @@ use App\Models\Absensi;
 use App\Models\Karyawan;
 use Illuminate\Http\Request;
 use App\Models\DeviceAbsensi;
+use App\Services\KmlService;
+
 use App\Models\LokasiAbsensi;
 use App\Services\AbsensiService;
 use App\Http\Controllers\Controller;
@@ -15,9 +17,11 @@ class AbsensiController extends Controller
 {
     protected $absensiService;
 
-    public function __construct(AbsensiService $absensiService)
+    public function __construct(AbsensiService $absensiService, KmlService $kmlService)
     {
         $this->absensiService = $absensiService;
+        $this->kmlService = $kmlService;
+
     }
 
     /**
@@ -71,6 +75,32 @@ class AbsensiController extends Controller
             'jenisPegawai',
             'jamKerja',
         ));
+    }
+
+    public function getKmlData()
+    {
+        try {
+            $result = $this->kmlService->loadKmlFile();
+
+            if (!$result['success']) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $result['message']
+                ]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'polygons' => $result['polygons'],
+                'count' => $result['count']
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memuat data KML: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     /**

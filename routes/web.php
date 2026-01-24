@@ -230,6 +230,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::post('/masuk', [AbsensiController::class, 'absenMasuk'])->name('absensi.masuk');
         Route::post('/pulang', [AbsensiController::class, 'absenPulang'])->name('absensi.pulang');
         Route::get('/riwayat', [AbsensiController::class, 'riwayat'])->name('absensi.riwayat');
+        Route::get('/kml/data', [AbsensiController::class, 'getKmlData'])->name('absensi.kml.data');
+
     });
 
     Route::group(['prefix' => 'cuti'], function () {
@@ -360,3 +362,4 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
 
 
 });
+Route::get('/kml/data', [AbsensiController::class, 'getKmlData'])->name('absensi.kml.data');

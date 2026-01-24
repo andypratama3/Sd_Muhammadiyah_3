@@ -3,291 +3,7 @@
 @section('title', 'Absensi Online')
 
 @push('css')
-<style>
-    :root {
-        --primary-color: #667eea;
-        --success-color: #48bb78;
-        --danger-color: #f56565;
-        --warning-color: #ed8936;
-        --info-color: #4299e1;
-    }
-
-    .time-display {
-        background: var(--bs-primary);
-        border-radius: 15px;
-        padding: 20px;
-        color: white;
-        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
-    }
-
-    .btn-absensi {
-        padding: 15px;
-        font-size: 16px;
-        font-weight: 600;
-        border-radius: 10px;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .btn-absensi:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    .btn-absensi i {
-        font-size: 20px;
-    }
-
-    .status-badge {
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-    }
-
-    .riwayat-card {
-        border-left: 4px solid #667eea;
-        transition: all 0.3s ease;
-    }
-
-    .riwayat-card:hover {
-        transform: translateX(5px);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .info-card {
-        border-radius: 15px;
-        border: none;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-    }
-
-    /* Notification Toast Styles */
-    .notification-container {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 9999;
-        max-width: 400px;
-        pointer-events: none;
-    }
-
-    .notification-toast {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-        margin-bottom: 15px;
-        overflow: hidden;
-        pointer-events: all;
-        animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    @keyframes slideInRight {
-        from {
-            opacity: 0;
-            transform: translateX(400px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-
-    @keyframes slideOutRight {
-        from {
-            opacity: 1;
-            transform: translateX(0);
-        }
-        to {
-            opacity: 0;
-            transform: translateX(400px);
-        }
-    }
-
-    .notification-toast.removing {
-        animation: slideOutRight 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .notification-toast.success {
-        border-left: 5px solid var(--success-color);
-    }
-
-    .notification-toast.error {
-        border-left: 5px solid var(--danger-color);
-    }
-
-    .notification-toast.warning {
-        border-left: 5px solid var(--warning-color);
-    }
-
-    .notification-toast.info {
-        border-left: 5px solid var(--info-color);
-    }
-
-    .notification-content {
-        padding: 16px 20px;
-        display: flex;
-        align-items: flex-start;
-        gap: 12px;
-    }
-
-    .notification-icon {
-        flex-shrink: 0;
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        font-size: 14px;
-        margin-top: 2px;
-    }
-
-    .notification-toast.success .notification-icon {
-        background-color: rgba(72, 187, 120, 0.1);
-        color: var(--success-color);
-    }
-
-    .notification-toast.error .notification-icon {
-        background-color: rgba(245, 101, 101, 0.1);
-        color: var(--danger-color);
-    }
-
-    .notification-toast.warning .notification-icon {
-        background-color: rgba(237, 137, 54, 0.1);
-        color: var(--warning-color);
-    }
-
-    .notification-toast.info .notification-icon {
-        background-color: rgba(66, 153, 225, 0.1);
-        color: var(--info-color);
-    }
-
-    .notification-text {
-        flex: 1;
-    }
-
-    .notification-title {
-        font-weight: 600;
-        font-size: 14px;
-        margin: 0;
-        color: #2d3748;
-    }
-
-    .notification-message {
-        font-size: 13px;
-        color: #718096;
-        margin: 4px 0 0 0;
-        line-height: 1.4;
-    }
-
-    .notification-close {
-        flex-shrink: 0;
-        background: none;
-        border: none;
-        color: #cbd5e0;
-        cursor: pointer;
-        font-size: 18px;
-        padding: 0;
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: color 0.2s;
-        margin-top: 2px;
-    }
-
-    .notification-close:hover {
-        color: #2d3748;
-    }
-
-    /* Progress bar untuk auto-close */
-    .notification-progress {
-        height: 3px;
-        background: currentColor;
-        animation: progress linear var(--duration, 5s) forwards;
-        opacity: 0.3;
-    }
-
-    @keyframes progress {
-        from {
-            width: 100%;
-        }
-        to {
-            width: 0%;
-        }
-    }
-
-    .notification-toast.error .notification-progress {
-        background-color: var(--danger-color);
-    }
-
-    .notification-toast.success .notification-progress {
-        background-color: var(--success-color);
-    }
-
-    /* Responsive */
-    @media (max-width: 576px) {
-        .notification-container {
-            left: 10px;
-            right: 10px;
-            max-width: none;
-        }
-
-        .notification-toast {
-            margin-bottom: 10px;
-        }
-    }
-
-    /* Loading Spinner */
-    .loading-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.3);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 9998;
-        backdrop-filter: blur(2px);
-        animation: fadeIn 0.2s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
-        to {
-            opacity: 1;
-        }
-    }
-
-    .loading-content {
-        text-align: center;
-        background: white;
-        padding: 30px;
-        border-radius: 12px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-    }
-
-    .spinner-border-lg {
-        width: 3rem;
-        height: 3rem;
-    }
-
-    .loading-text {
-        margin-top: 15px;
-        font-weight: 600;
-        color: var(--primary-color);
-    }
-
-    .d-none {
-        display: none !important;
-    }
-</style>
+<link rel="stylesheet" href="{{ asset('kml/style.css') }}">
 @endpush
 
 @section('content')
@@ -480,6 +196,34 @@
             </div>
         </div>
     </div>
+
+     <div class="mt-4 row">
+        <div class="col-12">
+            <div class="card info-card">
+                <div class="py-3 bg-white card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-map-marked-alt"></i> Area Absensi - SD Muhammadiyah 3 Samarinda
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div id="map-container" style="height: 500px; border-radius: 15px;"></div>
+
+                    <div class="mt-3 map-legend">
+                        <h6 class="mb-3 fw-bold">
+                            <i class="fas fa-info-circle"></i> Legenda Peta
+                        </h6>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: rgba(66, 153, 225, 0.3); border-color: #4299e1;"></div>
+                            <span>Area absensi yang diizinkan</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #48bb78;"></div>
+                            <span>Lokasi Anda saat ini</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 </div>
 
 <!-- Notification Container -->
@@ -498,8 +242,9 @@
 @endsection
 
 @push('js')
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="{{ asset('kml/init-map.js') }}" ></script>
 <script>
-// Toast Notification System
 // Toast Notification System
 class ToastNotification {
     constructor() {
@@ -1033,6 +778,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (btnMasuk) btnMasuk.addEventListener('click', () => prosesAbsensi('masuk'));
     if (btnPulang) btnPulang.addEventListener('click', () => prosesAbsensi('pulang'));
     if (btnRiwayat) btnRiwayat.addEventListener('click', tampilkanRiwayat);
+    initializeMap();
 
     // Auto format NIP - only numbers
     const nipInput = document.getElementById('nip');
