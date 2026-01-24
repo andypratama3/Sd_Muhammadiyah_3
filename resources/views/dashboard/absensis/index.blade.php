@@ -456,7 +456,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             navigator.geolocation.getCurrentPosition(
                 pos => {
-                    // console.log('📍 Lokasi ditemukan:', pos.coords.latitude, pos.coords.longitude);
+                    console.log('📍 Lokasi ditemukan:', pos.coords.latitude, pos.coords.longitude);
                     resolve({
                         latitude: pos.coords.latitude,
                         longitude: pos.coords.longitude
@@ -565,11 +565,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 : "{{ route('absensi.pulang') }}";
 
             // console.log('📤 Mengirim request absensi:', {
-                nip,
-                latitude: location.latitude,
-                longitude: location.longitude,
-                device_id: deviceInfo.device_id
-            });
+            //     nip,
+            //     latitude: location.latitude,
+            //     longitude: location.longitude,
+            //     device_id: deviceInfo.device_id
+            // });
 
             const response = await fetch(endpoint, {
                 method: 'POST',
