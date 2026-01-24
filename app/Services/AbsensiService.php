@@ -10,7 +10,6 @@ use App\Models\PengajuanCuti;
 use App\Models\DeviceAbsensi;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
 
 class AbsensiService
 {
@@ -90,55 +89,65 @@ class AbsensiService
     {
         $fingerprint = $this->generateDeviceFingerprint($userAgent, $deviceId);
 
-        // Cari device yang sudah terdaftar
         $device = DeviceAbsensi::where('karyawan_id', $karyawanId)
             ->where('device_fingerprint', $fingerprint)
             ->first();
 
-        // Device belum terdaftar
         if (!$device) {
-            // Cek jumlah device yang sudah terdaftar
-            $existingDevices = DeviceAbsensi::where('karyawan_id', $karyawanId)
-                ->where('is_active', true)
-                ->count();
+            return $this->registerNewDevice($karyawanId, $fingerprint, $ipAddress, $userAgent, $deviceId);
+        }
 
-            // Batasi maksimal 3 device
-            if ($existingDevices >= 3) {
-                return [
-                    'valid' => false,
-                    'message' => 'Anda sudah mendaftarkan maksimal 3 device. Silahkan hubungi admin untuk menghapus device lama.',
-                    'device' => null
-                ];
-            }
+        return $this->validateExistingDevice($device, $ipAddress);
+    }
 
-            // Auto-register device baru
-            $device = DeviceAbsensi::create([
-                'karyawan_id' => $karyawanId,
-                'device_fingerprint' => $fingerprint,
-                'device_name' => $this->parseDeviceName($userAgent),
-                'ip_address' => $ipAddress,
-                'user_agent' => $userAgent,
-                'device_id' => $deviceId,
-                'is_active' => true,
-                'last_used_at' => now(),
-                'registered_at' => now()
-            ]);
+    /**
+     * Register device baru
+     */
+    private function registerNewDevice($karyawanId, $fingerprint, $ipAddress, $userAgent, $deviceId)
+    {
+        $existingDevices = DeviceAbsensi::where('karyawan_id', $karyawanId)
+            ->where('is_active', true)
+            ->count();
 
-            Log::info('Device baru terdaftar', [
-                'karyawan_id' => $karyawanId,
-                'device_name' => $device->device_name,
-                'ip' => $ipAddress
-            ]);
-
+        if ($existingDevices >= 3) {
             return [
-                'valid' => true,
-                'message' => 'Device baru berhasil didaftarkan',
-                'device' => $device,
-                'is_new_device' => true
+                'valid' => false,
+                'message' => 'Anda sudah mendaftarkan maksimal 3 device. Silahkan hubungi admin untuk menghapus device lama.',
+                'device' => null
             ];
         }
 
-        // Device sudah terdaftar - validasi status
+        $device = DeviceAbsensi::create([
+            'karyawan_id' => $karyawanId,
+            'device_fingerprint' => $fingerprint,
+            'device_name' => $this->parseDeviceName($userAgent),
+            'ip_address' => $ipAddress,
+            'user_agent' => $userAgent,
+            'device_id' => $deviceId,
+            'is_active' => true,
+            'last_used_at' => now(),
+            'registered_at' => now()
+        ]);
+
+        Log::info('Device baru terdaftar', [
+            'karyawan_id' => $karyawanId,
+            'device_name' => $device->device_name,
+            'ip' => $ipAddress
+        ]);
+
+        return [
+            'valid' => true,
+            'message' => 'Device baru berhasil didaftarkan',
+            'device' => $device,
+            'is_new_device' => true
+        ];
+    }
+
+    /**
+     * Validate existing device
+     */
+    private function validateExistingDevice(DeviceAbsensi $device, $ipAddress)
+    {
         if (!$device->is_active) {
             return [
                 'valid' => false,
@@ -147,7 +156,6 @@ class AbsensiService
             ];
         }
 
-        // Validasi IP address (warning jika berbeda, tapi tetap allow)
         $ipChanged = false;
         if ($device->ip_address !== $ipAddress) {
             $ipChanged = true;
@@ -158,7 +166,7 @@ class AbsensiService
             ]);
 
             Log::warning('IP Address berubah', [
-                'karyawan_id' => $karyawanId,
+                'karyawan_id' => $device->karyawan_id,
                 'old_ip' => $device->ip_address,
                 'new_ip' => $ipAddress
             ]);
@@ -182,20 +190,20 @@ class AbsensiService
     {
         $now = Carbon::now('Asia/Makassar');
 
-        // 1. Cek absensi ganda dalam 5 menit
-        $recentAbsensi = Absensi::where('karyawan_id', $karyawanId)
-            ->where('tanggal', $now->toDateString())
-            ->where('created_at', '>', $now->copy()->subMinutes(5))
-            ->count();
+        // // Cek absensi ganda dalam 5 menit
+        // $recentAbsensi = Absensi::where('karyawan_id', $karyawanId)
+        //     ->where('tanggal', $now->toDateString())
+        //     ->where('created_at', '>', $now->copy()->subMinutes(5))
+        //     ->count();
 
-        if ($recentAbsensi > 0) {
-            return [
-                'suspicious' => true,
-                'reason' => 'Terdeteksi percobaan absensi berulang dalam waktu singkat'
-            ];
-        }
+        // if ($recentAbsensi > 0) {
+        //     return [
+        //         'suspicious' => true,
+        //         'reason' => 'Terdeteksi percobaan absensi berulang dalam waktu singkat'
+        //     ];
+        // }
 
-        // 2. Cek IP sharing (1 IP dipakai banyak user)
+        // Cek IP sharing
         $sameIpCount = Absensi::where('ip_address', $ipAddress)
             ->where('tanggal', $now->toDateString())
             ->distinct('karyawan_id')
@@ -221,12 +229,12 @@ class AbsensiService
     }
 
     /**
-     * Get jam kerja
+     * Get jam kerja berdasarkan jenis pegawai dan tanggal
      */
-    public function getJamKerja($jenisPegawai)
+    public function getJamKerja($jenisPegawai, Carbon $tanggal = null)
     {
-        $now = Carbon::now('Asia/Makassar');
-        $hari = strtolower($now->locale('id')->dayName);
+        $tanggal = $tanggal ?? Carbon::now('Asia/Makassar');
+        $hari = strtolower($tanggal->locale('id')->dayName);
 
         $jamKerja = JamKerja::where('jenis_pegawai', $jenisPegawai)
             ->where('hari', $hari)
@@ -280,14 +288,21 @@ class AbsensiService
     }
 
     /**
-     * ABSEN MASUK
+     * Get karyawan by NIP
      */
-    public function absenMasuk($nip, $latitude, $longitude, $lokasiId = 1, $ipAddress = null, $userAgent = null, $deviceId = null)
+    private function getKaryawanByNip($nip)
     {
-        // 1. VALIDASI KARYAWAN
-        $karyawan = Karyawan::whereHas('user', function($query) use ($nip) {
+        return Karyawan::whereHas('user', function($query) use ($nip) {
             $query->where('nip', $nip);
         })->first();
+    }
+
+    /**
+     * Validasi common checks untuk absensi
+     */
+    private function validateCommonChecks($nip, $ipAddress, $userAgent, $deviceId)
+    {
+        $karyawan = $this->getKaryawanByNip($nip);
 
         if (!$karyawan) {
             return [
@@ -299,14 +314,9 @@ class AbsensiService
         $now = Carbon::now('Asia/Makassar');
         $tanggalHariIni = $now->toDateString();
 
-        // 2. VALIDASI DEVICE & IP
+        // Validasi device & IP
         if ($ipAddress && $userAgent) {
-            $deviceValidation = $this->validasiDevice(
-                $karyawan->id,
-                $ipAddress,
-                $userAgent,
-                $deviceId
-            );
+            $deviceValidation = $this->validasiDevice($karyawan->id, $ipAddress, $userAgent, $deviceId);
 
             if (!$deviceValidation['valid']) {
                 return [
@@ -330,9 +340,11 @@ class AbsensiService
                     'message' => 'Aktivitas mencurigakan: ' . $abuseCheck['reason']
                 ];
             }
+        } else {
+            $deviceValidation = null;
         }
 
-        // 3. CEK CUTI
+        // Cek cuti
         $cutiAktif = $this->cekStatusCuti($karyawan->id, $tanggalHariIni);
         if ($cutiAktif) {
             return [
@@ -341,7 +353,20 @@ class AbsensiService
             ];
         }
 
-        // 4. VALIDASI LOKASI
+        return [
+            'success' => true,
+            'karyawan' => $karyawan,
+            'now' => $now,
+            'tanggalHariIni' => $tanggalHariIni,
+            'deviceValidation' => $deviceValidation
+        ];
+    }
+
+    /**
+     * Validasi lokasi absensi
+     */
+    private function validateLokasiAbsensi($lokasiId, $latitude, $longitude)
+    {
         $lokasi = LokasiAbsensi::where('id', $lokasiId)
             ->where('status', 'aktif')
             ->first();
@@ -363,10 +388,39 @@ class AbsensiService
             ];
         }
 
-        // 5. AMBIL JAM KERJA
+        return [
+            'success' => true,
+            'lokasi' => $lokasi,
+            'validasiLokasi' => $validasiLokasi
+        ];
+    }
+
+    /**
+     * ABSEN MASUK
+     */
+    public function absenMasuk($nip, $latitude, $longitude, $lokasiId = 1, $ipAddress = null, $userAgent = null, $deviceId = null)
+    {
+        // Common validation
+        $validation = $this->validateCommonChecks($nip, $ipAddress, $userAgent, $deviceId);
+        if (!$validation['success']) {
+            return $validation;
+        }
+
+        extract($validation); // $karyawan, $now, $tanggalHariIni, $deviceValidation
+
+        // Validasi lokasi
+        $lokasiValidation = $this->validateLokasiAbsensi($lokasiId, $latitude, $longitude);
+        if (!$lokasiValidation['success']) {
+            return $lokasiValidation;
+        }
+
+        $lokasi = $lokasiValidation['lokasi'];
+        $validasiLokasi = $lokasiValidation['validasiLokasi'];
+
+        // Ambil jam kerja
         try {
             $jenisPegawai = $this->getJenisPegawaiFromRole($karyawan);
-            $jamKerja = $this->getJamKerja($jenisPegawai);
+            $jamKerja = $this->getJamKerja($jenisPegawai, $now);
 
             if (is_null($jamKerja->jam_masuk)) {
                 return [
@@ -381,7 +435,7 @@ class AbsensiService
             ];
         }
 
-        // 6. VALIDASI WAKTU
+        // Validasi waktu
         $batasMasuk = Carbon::parse($jamKerja->batas_masuk, 'Asia/Makassar');
         $jamMasukNormal = Carbon::parse($jamKerja->jam_masuk, 'Asia/Makassar');
 
@@ -393,7 +447,7 @@ class AbsensiService
             ];
         }
 
-        // 7. CEK DUPLIKASI
+        // Cek duplikasi
         $absensiHariIni = Absensi::where('karyawan_id', $karyawan->id)
             ->where('tanggal', $tanggalHariIni)
             ->first();
@@ -406,12 +460,10 @@ class AbsensiService
             ];
         }
 
-        // 8. TENTUKAN STATUS
-        $statusMasuk = $now->lessThanOrEqualTo($jamMasukNormal)
-            ? 'tepat_waktu'
-            : 'terlambat';
+        // Tentukan status
+        $statusMasuk = $now->lessThanOrEqualTo($jamMasukNormal) ? 'tepat_waktu' : 'terlambat';
 
-        // 9. SIMPAN ABSENSI
+        // Simpan absensi
         try {
             $absensi = Absensi::updateOrCreate(
                 [
@@ -478,69 +530,23 @@ class AbsensiService
      */
     public function absenPulang($nip, $latitude, $longitude, $lokasiId = 1, $ipAddress = null, $userAgent = null, $deviceId = null)
     {
-        // 1. VALIDASI KARYAWAN
-        $karyawan = Karyawan::whereHas('user', function($query) use ($nip) {
-            $query->where('nip', $nip);
-        })->first();
-
-        if (!$karyawan) {
-            return [
-                'success' => false,
-                'message' => 'NIP tidak ditemukan'
-            ];
+        // Common validation
+        $validation = $this->validateCommonChecks($nip, $ipAddress, $userAgent, $deviceId);
+        if (!$validation['success']) {
+            return $validation;
         }
 
-        $now = Carbon::now('Asia/Makassar');
-        $tanggalHariIni = $now->toDateString();
+        extract($validation); // $karyawan, $now, $tanggalHariIni, $deviceValidation
 
-        // 2. VALIDASI DEVICE
-        if ($ipAddress && $userAgent) {
-            $deviceValidation = $this->validasiDevice(
-                $karyawan->id,
-                $ipAddress,
-                $userAgent,
-                $deviceId
-            );
-
-            if (!$deviceValidation['valid']) {
-                return [
-                    'success' => false,
-                    'message' => $deviceValidation['message']
-                ];
-            }
+        // Validasi lokasi
+        $lokasiValidation = $this->validateLokasiAbsensi($lokasiId, $latitude, $longitude);
+        if (!$lokasiValidation['success']) {
+            return $lokasiValidation;
         }
 
-        // 3. CEK CUTI
-        $cutiAktif = $this->cekStatusCuti($karyawan->id, $tanggalHariIni);
-        if ($cutiAktif) {
-            return [
-                'success' => false,
-                'message' => "Anda sedang {$cutiAktif->jenis} pada tanggal ini."
-            ];
-        }
+        $validasiLokasi = $lokasiValidation['validasiLokasi'];
 
-        // 4. VALIDASI LOKASI
-        $lokasi = LokasiAbsensi::where('id', $lokasiId)
-            ->where('status', 'aktif')
-            ->first();
-
-        if (!$lokasi) {
-            return [
-                'success' => false,
-                'message' => 'Lokasi tidak ditemukan'
-            ];
-        }
-
-        $validasiLokasi = $this->validasiLokasi($latitude, $longitude, $lokasi);
-
-        if (!$validasiLokasi['valid']) {
-            return [
-                'success' => false,
-                'message' => "Anda berada {$validasiLokasi['jarak']} meter dari lokasi. Radius maksimal {$lokasi->radius} meter."
-            ];
-        }
-
-        // 5. CEK ABSENSI MASUK
+        // Cek absensi masuk
         $absensi = Absensi::where('karyawan_id', $karyawan->id)
             ->where('tanggal', $tanggalHariIni)
             ->first();
@@ -560,12 +566,11 @@ class AbsensiService
             ];
         }
 
-        // 6. VALIDASI WAKTU PULANG
+        // Validasi waktu pulang
         $batasPulang = Carbon::parse($absensi->jamKerja->batas_pulang, 'Asia/Makassar');
-
         $statusPulang = $now->lessThan($batasPulang) ? 'pulang_cepat' : 'tepat_waktu';
 
-        // 7. SIMPAN PULANG
+        // Simpan pulang
         try {
             $absensi->update([
                 'jam_pulang' => $now->toTimeString(),
@@ -624,7 +629,6 @@ class AbsensiService
         try {
             $masuk = Carbon::parse($jamMasuk, 'Asia/Makassar');
             $pulang = Carbon::parse($jamPulang, 'Asia/Makassar');
-
             $diff = $masuk->diff($pulang);
 
             return "{$diff->h} jam {$diff->i} menit";
@@ -638,9 +642,7 @@ class AbsensiService
      */
     public function getRiwayatAbsensi($nip, $bulan = null, $tahun = null)
     {
-        $karyawan = Karyawan::whereHas('user', function($query) use ($nip) {
-            $query->where('nip', $nip);
-        })->first();
+        $karyawan = $this->getKaryawanByNip($nip);
 
         if (!$karyawan) {
             return [

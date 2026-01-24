@@ -31,7 +31,12 @@
                 @foreach($rekapAbsensi as $row)
                 <tr>
                     <td>{{ $row->karyawan->name ?? '-' }}</td>
-                    <td>{{ \Carbon\Carbon::parse($row->tanggal)->formatLocalized('%A, %d %B %Y', null, 'id_ID') }}</td>
+                    <td>
+                        {{ \Carbon\Carbon::parse($row->tanggal)
+                            ->locale('id')
+                            ->translatedFormat('l, d F Y') }}
+                    </td>
+
                     <td>{{ ucfirst($row->status_kehadiran) }}</td>
                     <td>{{ $row->jam_masuk }}</td>
                     <td>{{ $row->jam_pulang }}</td>
