@@ -197,7 +197,7 @@
         </div>
     </div>
 
-     <div class="mt-4 row">
+     {{-- <div class="mt-4 row">
         <div class="col-12">
             <div class="card info-card">
                 <div class="py-3 bg-white card-header">
@@ -224,6 +224,7 @@
                 </div>
             </div>
         </div>
+     </div> --}}
 </div>
 
 <!-- Notification Container -->
@@ -243,7 +244,7 @@
 
 @push('js')
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="{{ asset('kml/init-map.js') }}" ></script>
+{{-- <script src="{{ asset('kml/init-map.js') }}" ></script> --}}
 <script>
 // Toast Notification System
 class ToastNotification {
@@ -778,7 +779,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (btnMasuk) btnMasuk.addEventListener('click', () => prosesAbsensi('masuk'));
     if (btnPulang) btnPulang.addEventListener('click', () => prosesAbsensi('pulang'));
     if (btnRiwayat) btnRiwayat.addEventListener('click', tampilkanRiwayat);
-    initializeMap();
 
     // Auto format NIP - only numbers
     const nipInput = document.getElementById('nip');

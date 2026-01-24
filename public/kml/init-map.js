@@ -19,14 +19,16 @@ function initializeMap() {
         center: [-0.5093246, 117.1298813],
         zoom: 17,
         zoomControl: true,
-        attributionControl: true
+        attributionControl: true,
+        preferCanvas: false
     });
 
-    // Add OpenStreetMap tiles
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors',
+    // Add OpenStreetMap tiles - using direct tile.openstreetmap.org
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         maxZoom: 19,
-        minZoom: 10
+        minZoom: 10,
+        crossOrigin: true
     }).addTo(map);
 
     // Add scale control
@@ -34,6 +36,20 @@ function initializeMap() {
         imperial: false,
         metric: true
     }).addTo(map);
+
+    // FIX: Force map to recalculate size after DOM is ready
+    setTimeout(() => {
+        if (map) {
+            map.invalidateSize();
+            console.log('🔄 Map size invalidated');
+        }
+    }, 100);
+
+    // Additional fix for tiles not loading
+    map.on('load', () => {
+        console.log('✅ Map loaded successfully');
+        setTimeout(() => map.invalidateSize(), 200);
+    });
 
     // Load KML polygon
     loadKmlPolygon();
