@@ -13,6 +13,13 @@ use Illuminate\Support\Facades\Log;
 
 class AbsensiService
 {
+    protected $kmlService;
+
+    public function __construct(KmlService $kmlService)
+    {
+        $this->kmlService = $kmlService;
+    }
+
     /**
      * Hitung jarak menggunakan Haversine Formula
      */
@@ -35,9 +42,53 @@ class AbsensiService
     }
 
     /**
-     * Validasi lokasi
+     * Validasi lokasi - Support KML dan Radius
      */
-    public function validasiLokasi($latitude, $longitude, LokasiAbsensi $lokasi)
+    public function validasiLokasi($latitude, $longitude, LokasiAbsensi $lokasi = null)
+    {
+        // Jika ada config KML, prioritaskan KML
+        if (config('absensi.use_kml', false)) {
+            return $this->validasiLokasiKml($latitude, $longitude);
+        }
+
+        // Fallback ke validasi radius jika ada lokasi
+        if ($lokasi) {
+            return $this->validasiLokasiRadius($latitude, $longitude, $lokasi);
+        }
+
+        return [
+            'valid' => false,
+            'message' => 'Tidak ada metode validasi lokasi yang dikonfigurasi'
+        ];
+    }
+
+    /**
+     * Validasi lokasi menggunakan KML
+     */
+    private function validasiLokasiKml($latitude, $longitude)
+    {
+        $result = $this->kmlService->validateLocation($latitude, $longitude);
+
+        if (!$result['valid']) {
+            return [
+                'valid' => false,
+                'message' => $result['message'],
+                'jarak' => null
+            ];
+        }
+
+        return [
+            'valid' => true,
+            'message' => $result['message'],
+            'area_name' => $result['area_name'] ?? 'Area Valid',
+            'jarak' => null
+        ];
+    }
+
+    /**
+     * Validasi lokasi menggunakan radius
+     */
+    private function validasiLokasiRadius($latitude, $longitude, LokasiAbsensi $lokasi)
     {
         $jarak = $this->hitungJarak(
             $latitude,
@@ -48,7 +99,10 @@ class AbsensiService
 
         return [
             'valid' => $jarak <= $lokasi->radius,
-            'jarak' => round($jarak, 2)
+            'jarak' => round($jarak, 2),
+            'message' => $jarak <= $lokasi->radius
+                ? 'Lokasi valid'
+                : "Anda berada {$jarak} meter dari lokasi. Radius maksimal {$lokasi->radius} meter."
         ];
     }
 
@@ -190,7 +244,7 @@ class AbsensiService
     {
         $now = Carbon::now('Asia/Makassar');
 
-        // // Cek absensi ganda dalam 5 menit
+        // Cek absensi ganda dalam 5 menit
         $recentAbsensi = Absensi::where('karyawan_id', $karyawanId)
             ->where('tanggal', $now->toDateString())
             ->where('created_at', '>', $now->copy()->subMinutes(5))
@@ -209,7 +263,7 @@ class AbsensiService
             ->distinct('karyawan_id')
             ->count('karyawan_id');
 
-        if ($sameIpCount > 1) {
+        if ($sameIpCount > 5) {
             Log::warning('IP Sharing Detected', [
                 'ip' => $ipAddress,
                 'total_users' => $sameIpCount,
@@ -229,7 +283,7 @@ class AbsensiService
     }
 
     /**
-     * Get jam kerja berdasarkan jenis pegawai dan tanggal
+     * Get jam kerja
      */
     public function getJamKerja($jenisPegawai, Carbon $tanggal = null)
     {
@@ -298,7 +352,7 @@ class AbsensiService
     }
 
     /**
-     * Validasi common checks untuk absensi
+     * Validasi common checks
      */
     private function validateCommonChecks($nip, $ipAddress, $userAgent, $deviceId)
     {
@@ -367,6 +421,25 @@ class AbsensiService
      */
     private function validateLokasiAbsensi($lokasiId, $latitude, $longitude)
     {
+        // Jika menggunakan KML, skip validasi lokasi_absensi
+        if (config('absensi.use_kml', false)) {
+            $validasiLokasi = $this->validasiLokasiKml($latitude, $longitude);
+
+            if (!$validasiLokasi['valid']) {
+                return [
+                    'success' => false,
+                    'message' => $validasiLokasi['message']
+                ];
+            }
+
+            return [
+                'success' => true,
+                'lokasi' => null,
+                'validasiLokasi' => $validasiLokasi
+            ];
+        }
+
+        // Validasi dengan radius (fallback)
         $lokasi = LokasiAbsensi::where('id', $lokasiId)
             ->where('status', 'aktif')
             ->first();
@@ -378,12 +451,12 @@ class AbsensiService
             ];
         }
 
-        $validasiLokasi = $this->validasiLokasi($latitude, $longitude, $lokasi);
+        $validasiLokasi = $this->validasiLokasiRadius($latitude, $longitude, $lokasi);
 
         if (!$validasiLokasi['valid']) {
             return [
                 'success' => false,
-                'message' => "Anda berada {$validasiLokasi['jarak']} meter dari lokasi. Radius maksimal {$lokasi->radius} meter.",
+                'message' => $validasiLokasi['message'],
                 'jarak' => $validasiLokasi['jarak']
             ];
         }
@@ -406,7 +479,7 @@ class AbsensiService
             return $validation;
         }
 
-        extract($validation); // $karyawan, $now, $tanggalHariIni, $deviceValidation
+        extract($validation);
 
         // Validasi lokasi
         $lokasiValidation = $this->validateLokasiAbsensi($lokasiId, $latitude, $longitude);
@@ -443,7 +516,7 @@ class AbsensiService
             return [
                 'success' => false,
                 'message' => 'Anda terlambat melewati batas jam masuk (' .
-                            $batasMasuk->format('H:i') . ' WITA). Silahkan Untuk Pulang.'
+                            $batasMasuk->format('H:i') . ' WITA). Silahkan hubungi admin.'
             ];
         }
 
@@ -465,24 +538,30 @@ class AbsensiService
 
         // Simpan absensi
         try {
+            $dataAbsensi = [
+                'jam_kerja_id' => $jamKerja->id,
+                'status_kehadiran' => 'hadir',
+                'jam_masuk' => $now->toTimeString(),
+                'latitude_masuk' => $latitude,
+                'longitude_masuk' => $longitude,
+                'status_masuk' => $statusMasuk,
+                'ip_address' => $ipAddress,
+                'user_agent' => $userAgent,
+                'device_id' => $deviceId
+            ];
+
+            // Tambah lokasi_absensi_id jika tidak pakai KML
+            if (!config('absensi.use_kml', false) && $lokasi) {
+                $dataAbsensi['lokasi_absensi_id'] = $lokasi->id;
+                $dataAbsensi['jarak_masuk'] = $validasiLokasi['jarak'];
+            }
+
             $absensi = Absensi::updateOrCreate(
                 [
                     'karyawan_id' => $karyawan->id,
                     'tanggal' => $tanggalHariIni
                 ],
-                [
-                    'lokasi_absensi_id' => $lokasi->id,
-                    'jam_kerja_id' => $jamKerja->id,
-                    'status_kehadiran' => 'hadir',
-                    'jam_masuk' => $now->toTimeString(),
-                    'latitude_masuk' => $latitude,
-                    'longitude_masuk' => $longitude,
-                    'jarak_masuk' => $validasiLokasi['jarak'],
-                    'status_masuk' => $statusMasuk,
-                    'ip_address' => $ipAddress,
-                    'user_agent' => $userAgent,
-                    'device_id' => $deviceId
-                ]
+                $dataAbsensi
             );
 
             Log::info('Absensi Masuk', [
@@ -490,27 +569,35 @@ class AbsensiService
                 'nama' => $karyawan->name,
                 'waktu' => $now->toDateTimeString(),
                 'status' => $statusMasuk,
-                'jarak' => $validasiLokasi['jarak'],
+                'method' => config('absensi.use_kml') ? 'KML' : 'Radius',
                 'ip' => $ipAddress,
                 'device' => $deviceValidation['device']->device_name ?? 'Unknown'
             ]);
+
+            $responseData = [
+                'nama' => $karyawan->name,
+                'nip' => $nip,
+                'jam_masuk' => $now->format('H:i:s'),
+                'jam_kerja' => $jamMasukNormal->format('H:i'),
+                'status' => $statusMasuk,
+                'device' => $deviceValidation['device']->device_name ?? null,
+                'is_new_device' => $deviceValidation['is_new_device'] ?? false
+            ];
+
+            // Tambah info lokasi sesuai metode
+            if (config('absensi.use_kml', false)) {
+                $responseData['area'] = $validasiLokasi['area_name'] ?? 'Area Valid';
+            } else {
+                $responseData['lokasi'] = $lokasi->nama_lokasi ?? '-';
+                $responseData['jarak'] = ($validasiLokasi['jarak'] ?? 0) . ' meter';
+            }
 
             return [
                 'success' => true,
                 'message' => $statusMasuk === 'tepat_waktu'
                     ? 'Absensi masuk berhasil! Anda tepat waktu.'
                     : 'Absensi masuk berhasil! Namun Anda terlambat.',
-                'data' => [
-                    'nama' => $karyawan->name,
-                    'nip' => $nip,
-                    'jam_masuk' => $now->format('H:i:s'),
-                    'jam_kerja' => $jamMasukNormal->format('H:i'),
-                    'lokasi' => $lokasi->nama_lokasi,
-                    'status' => $statusMasuk,
-                    'jarak' => $validasiLokasi['jarak'] . ' meter',
-                    'device' => $deviceValidation['device']->device_name ?? null,
-                    'is_new_device' => $deviceValidation['is_new_device'] ?? false
-                ]
+                'data' => $responseData
             ];
         } catch (\Exception $e) {
             Log::error('Error simpan absensi masuk', [
@@ -536,7 +623,7 @@ class AbsensiService
             return $validation;
         }
 
-        extract($validation); // $karyawan, $now, $tanggalHariIni, $deviceValidation
+        extract($validation);
 
         // Validasi lokasi
         $lokasiValidation = $this->validateLokasiAbsensi($lokasiId, $latitude, $longitude);
@@ -572,15 +659,21 @@ class AbsensiService
 
         // Simpan pulang
         try {
-            $absensi->update([
+            $dataUpdate = [
                 'jam_pulang' => $now->toTimeString(),
                 'latitude_pulang' => $latitude,
                 'longitude_pulang' => $longitude,
-                'jarak_pulang' => $validasiLokasi['jarak'],
                 'status_pulang' => $statusPulang,
                 'ip_address_pulang' => $ipAddress,
                 'user_agent_pulang' => $userAgent
-            ]);
+            ];
+
+            // Tambah jarak_pulang jika tidak pakai KML
+            if (!config('absensi.use_kml', false)) {
+                $dataUpdate['jarak_pulang'] = $validasiLokasi['jarak'] ?? 0;
+            }
+
+            $absensi->update($dataUpdate);
 
             Log::info('Absensi Pulang', [
                 'nip' => $nip,
@@ -590,23 +683,29 @@ class AbsensiService
                 'ip' => $ipAddress
             ]);
 
+            $responseData = [
+                'nama' => $karyawan->name,
+                'nip' => $nip,
+                'jam_masuk' => Carbon::parse($absensi->jam_masuk)->format('H:i:s'),
+                'jam_pulang' => $now->format('H:i:s'),
+                'status' => $statusPulang,
+                'durasi_kerja' => $this->hitungDurasiKerja(
+                    $absensi->jam_masuk,
+                    $now->toTimeString()
+                )
+            ];
+
+            // Tambah jarak jika pakai radius
+            if (!config('absensi.use_kml', false)) {
+                $responseData['jarak'] = ($validasiLokasi['jarak'] ?? 0) . ' meter';
+            }
+
             return [
                 'success' => true,
                 'message' => $statusPulang === 'tepat_waktu'
                     ? 'Absensi pulang berhasil! Terima kasih atas kerja keras Anda.'
                     : 'Absensi pulang berhasil! Namun Anda pulang lebih awal.',
-                'data' => [
-                    'nama' => $karyawan->name,
-                    'nip' => $nip,
-                    'jam_masuk' => Carbon::parse($absensi->jam_masuk)->format('H:i:s'),
-                    'jam_pulang' => $now->format('H:i:s'),
-                    'status' => $statusPulang,
-                    'jarak' => $validasiLokasi['jarak'] . ' meter',
-                    'durasi_kerja' => $this->hitungDurasiKerja(
-                        $absensi->jam_masuk,
-                        $now->toTimeString()
-                    )
-                ]
+                'data' => $responseData
             ];
         } catch (\Exception $e) {
             Log::error('Error simpan pulang', [

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6fbfbdcb24f4078db53b9ed6c836609e",
+    "content-hash": "c113cf22d6155b7f721b1a8e5c9dff96",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2715,6 +2715,58 @@
                 }
             ],
             "time": "2023-10-12T05:21:21+00:00"
+        },
+        {
+            "name": "geokit/geokit",
+            "version": "v1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jsor/geokit.git",
+                "reference": "844c215eb4061a3ef4d9beaedf04b623ddddb08b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jsor/geokit/zipball/844c215eb4061a3ef4d9beaedf04b623ddddb08b",
+                "reference": "844c215eb4061a3ef4d9beaedf04b623ddddb08b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Geokit\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jan Sorgalla",
+                    "email": "jsorgalla@gmail.com",
+                    "homepage": "http://sorgalla.com"
+                }
+            ],
+            "description": "Geo-Toolkit for PHP",
+            "homepage": "https://github.com/jsor/geokit",
+            "keywords": [
+                "geo",
+                "geography",
+                "geometry"
+            ],
+            "support": {
+                "issues": "https://github.com/jsor/geokit/issues",
+                "source": "https://github.com/jsor/geokit/tree/v1.3.0"
+            },
+            "time": "2016-07-11T12:26:49+00:00"
         },
         {
             "name": "graham-campbell/result-type",

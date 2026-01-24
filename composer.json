@@ -9,6 +9,7 @@
         "arielmejiadev/larapex-charts": "^6.0",
         "barryvdh/laravel-dompdf": "^2.0",
         "diglactic/laravel-breadcrumbs": "^8.1",
+        "geokit/geokit": "^1.3",
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "^0.6.8",
         "intervention/image": "^2",
