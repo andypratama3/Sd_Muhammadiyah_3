@@ -355,7 +355,7 @@
                                     id="nip"
                                     name="nip"
                                     maxlength="18"
-                                    value="{{ old('nip', 12345678) }}"
+                                    value="{{ old('nip') }}"
                                     class="form-control"
                                     placeholder="Masukkan 18 digit NIP Anda"
                                     required
