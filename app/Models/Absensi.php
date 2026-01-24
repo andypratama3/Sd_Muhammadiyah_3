@@ -24,33 +24,98 @@ class Absensi extends Model
         'longitude_pulang',
         'jarak_pulang',
         'status_pulang',
-        'keterangan'
+        'keterangan',
+        // ✅ TAMBAHAN UNTUK DEVICE TRACKING
+        'ip_address',
+        'user_agent',
+        'device_id',
+        'ip_address_pulang',
+        'user_agent_pulang'
     ];
 
-    protected $casts = [
-        'tanggal' => 'date',
-        'jam_masuk' => 'datetime:H:i',
-        'jam_pulang' => 'datetime:H:i',
-        'latitude_masuk' => 'decimal:8',
-        'longitude_masuk' => 'decimal:8',
-        'latitude_pulang' => 'decimal:8',
-        'longitude_pulang' => 'decimal:8',
-        'jarak_masuk' => 'decimal:2',
-        'jarak_pulang' => 'decimal:2',
-    ];
 
+    /**
+     * Relasi ke Karyawan
+     */
     public function karyawan()
     {
         return $this->belongsTo(Karyawan::class, 'karyawan_id', 'id');
     }
 
+    /**
+     * Relasi ke Lokasi Absensi
+     */
     public function lokasiAbsensi()
     {
         return $this->belongsTo(LokasiAbsensi::class);
     }
 
+    /**
+     * Relasi ke Jam Kerja
+     */
     public function jamKerja()
     {
         return $this->belongsTo(JamKerja::class);
+    }
+
+    /**
+     * Scope untuk filter by date range
+     */
+    public function scopeByDateRange($query, $startDate, $endDate)
+    {
+        return $query->whereBetween('tanggal', [$startDate, $endDate]);
+    }
+
+    /**
+     * Scope untuk filter by bulan dan tahun
+     */
+    public function scopeByMonthYear($query, $month, $year)
+    {
+        return $query->whereMonth('tanggal', $month)
+                     ->whereYear('tanggal', $year);
+    }
+
+    /**
+     * Scope untuk absensi hari ini
+     */
+    public function scopeToday($query)
+    {
+        return $query->whereDate('tanggal', today());
+    }
+
+    /**
+     * Get status badge color
+     */
+    public function getStatusBadgeAttribute()
+    {
+        if ($this->status_masuk === 'terlambat') {
+            return 'danger';
+        } elseif ($this->status_pulang === 'pulang_cepat') {
+            return 'warning';
+        }
+        return 'success';
+    }
+
+    /**
+     * Check if absensi is complete (masuk dan pulang)
+     */
+    public function isComplete()
+    {
+        return !is_null($this->jam_masuk) && !is_null($this->jam_pulang);
+    }
+
+    /**
+     * Get durasi kerja in minutes
+     */
+    public function getDurasiKerjaMinutesAttribute()
+    {
+        if (!$this->jam_masuk || !$this->jam_pulang) {
+            return 0;
+        }
+
+        $masuk = \Carbon\Carbon::parse($this->jam_masuk);
+        $pulang = \Carbon\Carbon::parse($this->jam_pulang);
+
+        return $masuk->diffInMinutes($pulang);
     }
 }

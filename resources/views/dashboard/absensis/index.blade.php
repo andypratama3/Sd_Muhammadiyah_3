@@ -297,8 +297,8 @@
         <h1 class="mb-0 text-gray-800 h3">
             <i class="fas fa-calendar-check text-primary"></i> Absensi Online
         </h1>
-        <span class="px-3 py-2 text-white badge bg-info">
-            <i class="fas fa-map-marker-alt"></i> Kota Samarinda
+        <span id="lokasi-label" class="badge bg-secondary">
+            <i class="fas fa-map-marker-alt"></i> Mendeteksi lokasi...
         </span>
     </div>
 
@@ -406,12 +406,24 @@
                     </h6>
                 </div>
                 <div class="card-body">
-                    <div class="mt-3 mb-3">
+                   <div class="mt-3 mb-3">
                         <i class="fas fa-clock text-success"></i>
                         <strong>Jam Kerja:</strong><br>
-                        <small>Senin - Jumat: 08:00 - 16:00 WITA</small>
-                    </div>
 
+                        @isset($jamKerja)
+                            <small>
+                                {{ ucfirst($jamKerja->hari) }} :
+                                {{ \Carbon\Carbon::parse($jamKerja->jam_masuk)->format('H:i') }}
+                                -
+                                {{ \Carbon\Carbon::parse($jamKerja->jam_pulang)->format('H:i') }}
+                                WITA
+                            </small>
+                        @else
+                            <small class="text-muted">
+                                Jam kerja belum dikonfigurasi
+                            </small>
+                        @endisset
+                    </div>
                     <h6 class="mb-3 fw-bold">
                         <i class="fas fa-check-circle text-success"></i> Persyaratan:
                     </h6>
@@ -484,6 +496,7 @@
 @push('js')
 <script>
 // Toast Notification System
+// Toast Notification System
 class ToastNotification {
     constructor() {
         this.container = document.getElementById('notification-container');
@@ -526,12 +539,10 @@ class ToastNotification {
 
         this.container.appendChild(toast);
 
-        // Close button handler
         toast.addEventListener('close-toast', () => {
             this.remove(id);
         });
 
-        // Auto remove
         if (duration > 0) {
             setTimeout(() => this.remove(id), duration);
         }
@@ -595,9 +606,65 @@ function escapeHtml(text) {
     return String(text).replace(/[&<>"']/g, m => map[m]);
 }
 
+// ============================================
+// DEVICE FINGERPRINTING FUNCTIONS
+// ============================================
+
+function getDeviceId() {
+    let deviceId = localStorage.getItem('device_id');
+
+    if (!deviceId) {
+        deviceId = generateUniqueId();
+        localStorage.setItem('device_id', deviceId);
+        console.log('🆕 Device ID baru dibuat:', deviceId);
+    } else {
+        console.log('✅ Device ID ditemukan:', deviceId);
+    }
+
+    return deviceId;
+}
+
+function generateUniqueId() {
+    const timestamp = Date.now();
+    const random = Math.random().toString(36).substring(2, 15);
+    const screen = `${window.screen.width}x${window.screen.height}`;
+    const tz = new Date().getTimezoneOffset();
+
+    const data = `${timestamp}-${random}-${screen}-${tz}`;
+    return btoa(data).substring(0, 32);
+}
+
+function getDeviceInfo() {
+    return {
+        device_id: getDeviceId(),
+        screen_resolution: `${window.screen.width}x${window.screen.height}`,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        platform: navigator.platform,
+        language: navigator.language
+    };
+}
+
+function getBrowserName() {
+    const ua = navigator.userAgent;
+    if (ua.indexOf('Firefox') > -1) return 'Firefox';
+    if (ua.indexOf('Chrome') > -1) return 'Chrome';
+    if (ua.indexOf('Safari') > -1) return 'Safari';
+    if (ua.indexOf('Edge') > -1) return 'Edge';
+    return 'Unknown Browser';
+}
+
+// ============================================
+// MAIN SCRIPT
+// ============================================
+
 document.addEventListener('DOMContentLoaded', function() {
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
     const notify = new ToastNotification();
+
+    // Log Device Info untuk debugging
+    console.log('🔒 Device Fingerprint:', getDeviceId());
+    console.log('📱 Browser:', getBrowserName());
+    console.log('💻 Platform:', navigator.platform);
 
     // Update waktu real-time
     function updateWaktu() {
@@ -638,10 +705,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             navigator.geolocation.getCurrentPosition(
-                pos => resolve({
-                    latitude: pos.coords.latitude,
-                    longitude: pos.coords.longitude
-                }),
+                pos => {
+                    console.log('📍 Lokasi ditemukan:', pos.coords.latitude, pos.coords.longitude);
+                    resolve({
+                        latitude: pos.coords.latitude,
+                        longitude: pos.coords.longitude
+                    });
+                },
                 err => {
                     let msg = 'Gagal mendapatkan lokasi. ';
                     switch(err.code) {
@@ -657,6 +727,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         default:
                             msg += 'Terjadi kesalahan tidak dikenal.';
                     }
+                    console.error('❌ Error lokasi:', err);
                     reject(new Error(msg));
                 },
                 {
@@ -668,7 +739,52 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Proses Absensi
+    async function getNamaKota(lat, lon) {
+        try {
+            const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10&addressdetails=1`;
+
+            const response = await fetch(url, {
+                headers: {
+                    'User-Agent': 'AbsensiApp/1.0'
+                }
+            });
+
+            const data = await response.json();
+
+            return data.address.city
+                || data.address.town
+                || data.address.village
+                || data.address.county
+                || 'Tidak diketahui';
+        } catch (error) {
+            console.error('Error mendapatkan nama kota:', error);
+            return 'Tidak diketahui';
+        }
+    }
+
+    async function tampilkanKotaUser() {
+        try {
+            const lokasi = await getLocation();
+            const kota = await getNamaKota(lokasi.latitude, lokasi.longitude);
+
+            document.getElementById('lokasi-label').innerHTML =
+                `<i class="fas fa-map-marker-alt"></i> ${kota}`;
+            document.getElementById('lokasi-label').className = 'badge bg-success';
+
+        } catch (error) {
+            console.error('Error tampilkan kota:', error);
+            document.getElementById('lokasi-label').innerHTML =
+                '<i class="fas fa-map-marker-alt"></i> Lokasi tidak tersedia';
+            document.getElementById('lokasi-label').className = 'badge bg-warning';
+        }
+    }
+
+    tampilkanKotaUser();
+
+    // ============================================
+    // PROSES ABSENSI (WITH DEVICE TRACKING)
+    // ============================================
+
     async function prosesAbsensi(tipe) {
         const nipInput = document.getElementById('nip');
         const nip = nipInput ? nipInput.value.trim() : '';
@@ -692,40 +808,60 @@ document.addEventListener('DOMContentLoaded', function() {
 
         try {
             const location = await getLocation();
+            const deviceInfo = getDeviceInfo(); // ← DEVICE INFO
+
             const endpoint = tipe === 'masuk'
                 ? "{{ route('absensi.masuk') }}"
                 : "{{ route('absensi.pulang') }}";
+
+            console.log('📤 Mengirim request absensi:', {
+                nip,
+                latitude: location.latitude,
+                longitude: location.longitude,
+                device_id: deviceInfo.device_id
+            });
 
             const response = await fetch(endpoint, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken
+                    'X-CSRF-TOKEN': csrfToken,
                 },
                 body: JSON.stringify({
                     nip: nip,
                     latitude: location.latitude,
                     longitude: location.longitude,
-                    lokasi_id: 1
+                    lokasi_id: 1,
+                    device_id: deviceInfo.device_id // ← DEVICE ID DIKIRIM
                 })
             });
+
 
             if (!response.ok) {
                 throw new Error(`HTTP Error: ${response.status}`);
             }
 
             const result = await response.json();
+            console.log('📥 Response dari server:', result);
 
             if (result.success) {
                 const tipeName = tipe === 'masuk' ? 'Masuk' : 'Pulang';
-                notify.success(result.message, `Absen ${tipeName} Berhasil`);
+                let message = result.message;
+
+                // Notifikasi khusus jika device baru
+                if (result.data?.is_new_device) {
+                    message += ' (Device baru berhasil didaftarkan)';
+                    console.log('🆕 Device baru terdaftar');
+                }
+
+                notify.success(message, `Absen ${tipeName} Berhasil`);
             } else {
                 const errorMsg = result.message || 'Terjadi kesalahan saat memproses absensi';
                 notify.error(errorMsg, 'Gagal Absensi');
             }
         } catch (err) {
             notify.error(err.message || 'Terjadi kesalahan yang tidak diketahui', 'Terjadi Kesalahan');
-            console.error('Error:', err);
+            console.error('❌ Error absensi:', err);
         } finally {
             hideLoading();
 
@@ -736,7 +872,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Tampilkan Riwayat
+    // ============================================
+    // TAMPILKAN RIWAYAT
+    // ============================================
+
     async function tampilkanRiwayat() {
         const nipInput = document.getElementById('nip');
         const nip = nipInput ? nipInput.value.trim() : '';
@@ -753,9 +892,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const now = new Date();
             const bulan = now.getMonth() + 1;
             const tahun = now.getFullYear();
-            const url = "{{ route('absensi.riwayat') }}?nip=" + encodeURIComponent(nip) + "&bulan=" + bulan + "&tahun=" + tahun;
-
-
+            const url = "{{ route('absensi.riwayat') }}?nip=" + encodeURIComponent(nip) +
+                        "&bulan=" + bulan + "&tahun=" + tahun;
 
             const response = await fetch(url, {
                 headers: { 'X-CSRF-TOKEN': csrfToken }
@@ -767,45 +905,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const result = await response.json();
 
-
             if (!result.success) {
                 notify.error(result.message || 'Gagal memuat riwayat', 'Gagal Memuat Riwayat');
                 return;
             }
 
-            // Scroll ke riwayat section
             const container = document.getElementById('riwayat-container');
             if (!container) {
                 throw new Error('Element riwayat-container tidak ditemukan di halaman');
             }
 
-            // Remove d-none class untuk menampilkan container
             container.classList.remove('d-none');
 
-            // Get pegawai dan riwayat data
             const pegawai = result.data?.pegawai;
             const riwayat = result.data?.riwayat || [];
 
-
-
-
-            // Get element dan pastikan ada sebelum set innerHTML
             const infoPegawai = document.getElementById('info-pegawai');
             const riwayatList = document.getElementById('riwayat-list');
 
-            if (!infoPegawai) {
-                console.error('Element info-pegawai tidak ditemukan');
-                throw new Error('Element info-pegawai tidak ditemukan di halaman');
+            if (!infoPegawai || !riwayatList) {
+                throw new Error('Element tidak ditemukan di halaman');
             }
 
-            if (!riwayatList) {
-                console.error('Element riwayat-list tidak ditemukan');
-                throw new Error('Element riwayat-list tidak ditemukan di halaman');
-            }
-
-            // Set pegawai info - JANGAN HILANGKAN
+            // Set pegawai info
             if (pegawai) {
-                const infoPegawaiHtml = `
+                infoPegawai.innerHTML = `
                     <div class="d-flex align-items-center">
                         <div class="flex-shrink-0">
                             <i class="fas fa-user-circle fa-3x text-primary"></i>
@@ -817,9 +941,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     </div>
                 `;
-
-
-                infoPegawai.innerHTML = infoPegawaiHtml;
             }
 
             // Set riwayat list
@@ -874,7 +995,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 `).join('');
 
-
                 riwayatList.innerHTML = riwayatHtml;
             } else {
                 riwayatList.innerHTML = `
@@ -885,7 +1005,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
             }
 
-            // Scroll ke container
             setTimeout(() => {
                 container.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 100);
@@ -899,7 +1018,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Event Listeners
+    // ============================================
+    // EVENT LISTENERS
+    // ============================================
+
     const btnMasuk = document.getElementById('btn-absen-masuk');
     const btnPulang = document.getElementById('btn-absen-pulang');
     const btnRiwayat = document.getElementById('btn-riwayat');
