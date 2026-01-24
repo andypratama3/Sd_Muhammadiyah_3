@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+	<name>SD Muhammadiyah 3 Samarinda</name>
+	<gx:CascadingStyle kml:id="__managed_style_2545DB981C3D25EEACA3">
+		<styleUrl>https://earth.google.com/balloon_components/base/1.1.0.0/card_template.kml#main</styleUrl>
+		<Style>
+			<IconStyle>
+				<scale>1.2</scale>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2f2fd3</color>
+				<width>9</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<gx:CascadingStyle kml:id="__managed_style_1E4A7F3DEA3D25EEACA3">
+		<styleUrl>https://earth.google.com/balloon_components/base/1.1.0.0/card_template.kml#main</styleUrl>
+		<Style>
+			<IconStyle>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2f2fd3</color>
+				<width>6</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<StyleMap id="__managed_style_0F0DDA7E203D25EEACA3">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#__managed_style_1E4A7F3DEA3D25EEACA3</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#__managed_style_2545DB981C3D25EEACA3</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Placemark id="0AC5F165713D25EE33B3">
+		<name>SD Muhammadiyah 3 Samarinda</name>
+		<description><![CDATA[<div>Luas Sekolah SD Muhammadiyah 3 Samarinda</div>]]></description>
+		<LookAt>
+			<longitude>117.130316402604</longitude>
+			<latitude>-0.5093397238111006</latitude>
+			<altitude>4.240864259401665</altitude>
+			<heading>5.916013914349828e-09</heading>
+			<tilt>7.467528008484643</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>213.9938612376864</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_0F0DDA7E203D25EEACA3</styleUrl>
+		<Polygon>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						117.1298813165913,-0.5093246252532212,0 117.1300404181354,-0.5096043955164477,0 117.130245473349,-0.509490651481485,0 117.1303267634471,-0.509555381007589,0 117.1304287624091,-0.5096189259331643,0 117.1304797138709,-0.5095577544593569,0 117.1305635718556,-0.5095244210614217,0 117.1306098879855,-0.5096087596966291,0 117.1307081905879,-0.5095720915777757,0 117.130570798184,-0.5092457828716644,0 117.130469248257,-0.509259973541328,0 117.1304601385884,-0.5092833026186538,0 117.1304595958883,-0.5093011486280163,0 117.1303428196641,-0.5093366640452509,0 117.1302996913129,-0.5092103004356712,0 117.1302166666119,-0.50910562834762,0 117.1300966982046,-0.5091888330836581,0 117.1300452611264,-0.5090828838175511,0 117.1298869794778,-0.5091282400198425,0 117.1297751356822,-0.5091934793026058,0 117.1298813165913,-0.5093246252532212,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+</Document>
+</kml>
