@@ -368,6 +368,7 @@
 
                         <!-- Action Buttons -->
                         <div class="mb-3 row g-3">
+
                             <div class="col-md-6">
                                 <button
                                     type="button"
@@ -376,14 +377,16 @@
                                     <i class="fas fa-sign-in-alt"></i> Absen Masuk
                                 </button>
                             </div>
+
                             <div class="col-md-6">
                                 <button
                                     type="button"
                                     id="btn-absen-pulang"
-                                    class="btn btn-primary btn-absensi w-100">
+                                    class="btn btn-danger btn-absensi w-100">
                                     <i class="fas fa-sign-out-alt"></i> Absen Pulang
                                 </button>
                             </div>
+
                         </div>
 
                         <button
@@ -449,7 +452,8 @@
                     <div class="mt-3 mb-0">
                         <i class="fas fa-exclamation-triangle"></i>
                         <strong>Perhatian!</strong><br>
-                        <small>Absensi hanya dapat dilakukan di lokasi kantor yang telah ditentukan</small>
+                        <small>Absensi hanya dapat dilakukan di lokasi kantor yang telah ditentukan</small><br>
+                        <small>Absensi hanya dapat dilakukan untuk 1 Smartphone untuk 1 akun</small>
                     </div>
                 </div>
             </div>

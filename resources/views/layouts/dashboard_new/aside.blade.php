@@ -44,13 +44,14 @@
                  <div data-i18n="Dashboard">Pengajuan Cuti</div>
              </a>
          </li>
-        @can('role: admin')
         <li class="menu-item {{ Request::routeIs('dashboard.rekap.absensi.*') ? 'active' : '' }}">
             <a href="{{ route('dashboard.rekap.absensi.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-calendar-check"></i>
                 <div>Rekap Absensi</div>
             </a>
         </li>
+        @can('role: admin')
+
         <li class="menu-header small text-uppercase"><span class="menu-header-text">Pengaturan Absensi</span></li>
          <!-- Pengaturan -->
          <li class="menu-item {{ Request::routeIs('dashboard.pengaturan-absen.*') ? 'open' : '' }}">

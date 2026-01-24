@@ -246,6 +246,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
     Route::resource('absensi', AttendancesController::class, ['names'=> 'dashboard.attendances']);
     Route::get('absensis/export', [AttendancesController::class, 'export'])->name('dashboard.attendances.export');
 
+
     Route::resource('spmb', DashboardSpmController::class, ['names' => 'dashboard.spmb']);
     Route::get('spmbs/datas', [DashboardSpmController::class, 'data_table'])->name('dashboard.spmb.data_table');
     Route::get('spmbs/export-excel', [DashboardSpmController::class, 'export'])->name('dashboard.spmb.export_excel');

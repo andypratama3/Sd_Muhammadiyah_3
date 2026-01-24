@@ -191,17 +191,17 @@ class AbsensiService
         $now = Carbon::now('Asia/Makassar');
 
         // // Cek absensi ganda dalam 5 menit
-        // $recentAbsensi = Absensi::where('karyawan_id', $karyawanId)
-        //     ->where('tanggal', $now->toDateString())
-        //     ->where('created_at', '>', $now->copy()->subMinutes(5))
-        //     ->count();
+        $recentAbsensi = Absensi::where('karyawan_id', $karyawanId)
+            ->where('tanggal', $now->toDateString())
+            ->where('created_at', '>', $now->copy()->subMinutes(5))
+            ->count();
 
-        // if ($recentAbsensi > 0) {
-        //     return [
-        //         'suspicious' => true,
-        //         'reason' => 'Terdeteksi percobaan absensi berulang dalam waktu singkat'
-        //     ];
-        // }
+        if ($recentAbsensi > 0) {
+            return [
+                'suspicious' => true,
+                'reason' => 'Terdeteksi percobaan absensi berulang dalam waktu singkat'
+            ];
+        }
 
         // Cek IP sharing
         $sameIpCount = Absensi::where('ip_address', $ipAddress)
@@ -209,7 +209,7 @@ class AbsensiService
             ->distinct('karyawan_id')
             ->count('karyawan_id');
 
-        if ($sameIpCount > 5) {
+        if ($sameIpCount > 1) {
             Log::warning('IP Sharing Detected', [
                 'ip' => $ipAddress,
                 'total_users' => $sameIpCount,

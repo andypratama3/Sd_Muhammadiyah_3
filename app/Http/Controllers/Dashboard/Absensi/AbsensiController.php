@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Dashboard\Absensi;
 
+use Carbon\Carbon;
+use App\Models\Absensi;
 use App\Models\Karyawan;
 use Illuminate\Http\Request;
+use App\Models\DeviceAbsensi;
 use App\Models\LokasiAbsensi;
 use App\Services\AbsensiService;
 use App\Http\Controllers\Controller;
-use App\Models\DeviceAbsensi;
 
 class AbsensiController extends Controller
 {
@@ -54,6 +56,8 @@ class AbsensiController extends Controller
             $jenisPegawai = $this->absensiService
                 ->getJenisPegawaiFromRole($karyawan);
 
+
+
             // jamKerja: object JamKerja
             $jamKerja = $this->absensiService
                 ->getJamKerja($jenisPegawai);
@@ -65,7 +69,7 @@ class AbsensiController extends Controller
             'lokasi',
             'karyawan',
             'jenisPegawai',
-            'jamKerja'
+            'jamKerja',
         ));
     }
 
