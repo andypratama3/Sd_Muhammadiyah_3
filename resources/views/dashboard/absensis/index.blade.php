@@ -276,39 +276,39 @@
 //         console.log('═'.repeat(60));
 //     }
 // }, 1000);
-// fuction test 
+// fuction test
 
 // Simulasi jalan keluar area
-let step = 0;
-const baseX = -0.509317;
-const baseY = 117.130073;
+// let step = 0;
+// const baseX = -0.509317;
+// const baseY = 117.130073;
 
-const walkOut = setInterval(() => {
-    step++;
+// const walkOut = setInterval(() => {
+//     step++;
 
-    // Bergerak 12m per step (past 10m threshold)
-    const newLat = baseX + (step * 0.00012);
-    const newLon = baseY + (step * 0.00012);
+//     // Bergerak 12m per step (past 10m threshold)
+//     const newLat = baseX + (step * 0.00012);
+//     const newLon = baseY + (step * 0.00012);
 
-    console.log(`🚶 Step ${step}: ${newLat.toFixed(6)}, ${newLon.toFixed(6)}`);
+//     console.log(`🚶 Step ${step}: ${newLat.toFixed(6)}, ${newLon.toFixed(6)}`);
 
-    window.realtimeTracker?.processLocationUpdate({
-        coords: {
-            latitude: newLat,
-            longitude: newLon,
-            accuracy: 25,
-            altitude: null,
-            altitudeAccuracy: null,
-            heading: 45,
-            speed: 1.2
-        },
-        timestamp: Date.now()
-    });
+//     window.realtimeTracker?.processLocationUpdate({
+//         coords: {
+//             latitude: newLat,
+//             longitude: newLon,
+//             accuracy: 25,
+//             altitude: null,
+//             altitudeAccuracy: null,
+//             heading: 45,
+//             speed: 1.2
+//         },
+//         timestamp: Date.now()
+//     });
 
-    if (step >= 15) {
-        clearInterval(walkOut);
-        console.log('✅ Simulation complete - check if you exited geofence!');
-    }
-}, 3000);
+//     if (step >= 15) {
+//         clearInterval(walkOut);
+//         console.log('✅ Simulation complete - check if you exited geofence!');
+//     }
+// }, 3000);
 </script>
 @endpush
