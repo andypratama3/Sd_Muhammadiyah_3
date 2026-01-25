@@ -108,30 +108,50 @@ class AbsensiController extends Controller
      */
     public function absenMasuk(Request $request)
     {
-        $request->validate([
-            'nip' => 'required|string',
-            'latitude' => 'required|numeric|between:-90,90',
-            'longitude' => 'required|numeric|between:-180,180',
-            'lokasi_id' => 'nullable|exists:lokasi_absensi,id',
-            'device_id' => 'nullable|string|max:64'
-        ]);
+        try {
+            $request->validate([
+                'nip' => 'required|string',
+                'latitude' => 'required|numeric|between:-90,90',
+                'longitude' => 'required|numeric|between:-180,180',
+                'lokasi_id' => 'nullable|exists:lokasi_absensi,id',
+                'device_id' => 'nullable|string|max:64'
+            ]);
 
-        // Ambil IP Address dan User Agent
-        $ipAddress = $request->ip();
-        $userAgent = $request->userAgent();
-        $deviceId = $request->device_id;
+            // Ambil IP Address dan User Agent
+            $ipAddress = $request->ip();
+            $userAgent = $request->userAgent();
+            $deviceId = $request->device_id;
 
-        $result = $this->absensiService->absenMasuk(
-            $request->nip,
-            $request->latitude,
-            $request->longitude,
-            $request->lokasi_id ?? 1,
-            $ipAddress,
-            $userAgent,
-            $deviceId
-        );
+            $result = $this->absensiService->absenMasuk(
+                $request->nip,
+                $request->latitude,
+                $request->longitude,
+                $request->lokasi_id ?? 1,
+                $ipAddress,
+                $userAgent,
+                $deviceId
+            );
 
-        return response()->json($result);
+            return response()->json($result);
+
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal',
+                'errors' => $e->errors()
+            ], 422);
+
+        } catch (\Throwable $e) {
+            \Log::error('Absen Masuk Error', [
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan server'
+            ], 500);
+        }
+
     }
 
     /**
@@ -139,30 +159,45 @@ class AbsensiController extends Controller
      */
     public function absenPulang(Request $request)
     {
-        $request->validate([
-            'nip' => 'required|string',
-            'latitude' => 'required|numeric|between:-90,90',
-            'longitude' => 'required|numeric|between:-180,180',
-            'lokasi_id' => 'nullable|exists:lokasi_absensi,id',
-            'device_id' => 'nullable|string|max:64'
-        ]);
+        try {
 
-        // Ambil IP Address dan User Agent
-        $ipAddress = $request->ip();
-        $userAgent = $request->userAgent();
-        $deviceId = $request->device_id;
+            $request->validate([
+                'nip' => 'required|string',
+                'latitude' => 'required|numeric|between:-90,90',
+                'longitude' => 'required|numeric|between:-180,180',
+                'lokasi_id' => 'nullable|exists:lokasi_absensi,id',
+                'device_id' => 'nullable|string|max:64'
+            ]);
 
-        $result = $this->absensiService->absenPulang(
-            $request->nip,
-            $request->latitude,
-            $request->longitude,
-            $request->lokasi_id ?? 1,
-            $ipAddress,      // ← Tambahan IP
-            $userAgent,      // ← Tambahan User Agent
-            $deviceId        // ← Tambahan Device ID
-        );
+            // Ambil IP Address dan User Agent
+            $ipAddress = $request->ip();
+            $userAgent = $request->userAgent();
+            $deviceId = $request->device_id;
 
-        return response()->json($result);
+            $result = $this->absensiService->absenPulang(
+                $request->nip,
+                $request->latitude,
+                $request->longitude,
+                $request->lokasi_id ?? 1,
+                $ipAddress,      // ← Tambahan IP
+                $userAgent,      // ← Tambahan User Agent
+                $deviceId        // ← Tambahan Device ID
+            );
+
+            return response()->json($result);
+
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal',
+                'errors' => $e->errors()
+            ], 422);
+
+        } catch (\Throwable $e) {
+            \Log::error('Absen Pulang Error', [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
