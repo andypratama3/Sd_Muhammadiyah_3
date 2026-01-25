@@ -1,6 +1,11 @@
 /**
- * Map & Location Management
+ * Map & Location Management - FIXED VERSION v2
  * File: public/js/absensi-map.js
+ *
+ * CHANGES:
+ * - Added map ready flag
+ * - Emit custom event when map fully loaded
+ * - Better initialization sequence
  */
 
 // ============================================
@@ -11,7 +16,7 @@ let map = null;
 let userMarker = null;
 let accuracyCircle = null;
 let polygonLayers = [];
-let watchId = null;
+let mapReady = false;
 
 // ============================================
 // MAP INITIALIZATION
@@ -21,6 +26,8 @@ let watchId = null;
  * Initialize Leaflet map
  */
 function initializeMap() {
+    console.log('🗺️ Initializing map...');
+
     // Create map centered on SD Muhammadiyah 3 Samarinda
     map = L.map('map-container', {
         center: [-0.5093246, 117.1298813],
@@ -51,13 +58,24 @@ function initializeMap() {
         }
     }, 100);
 
-    // Load KML polygon
-    loadKmlPolygon();
+    // Load KML polygon then mark as ready
+    loadKmlPolygon().then(() => {
+        mapReady = true;
 
-    // Get and show user location
-    getUserLocationForMap();
+        // Export globals
+        window.map = map;
+        window.userMarker = userMarker;
+        window.accuracyCircle = accuracyCircle;
+        window.polygonLayers = polygonLayers;
+        window.mapReady = mapReady;
 
-    console.log('🗺️ Map initialized');
+        console.log('✅ Map fully loaded and ready');
+
+        // Dispatch custom event
+        window.dispatchEvent(new CustomEvent('mapReady', {
+            detail: { map, polygonLayers }
+        }));
+    });
 }
 
 // ============================================
@@ -69,6 +87,8 @@ function initializeMap() {
  */
 async function loadKmlPolygon() {
     try {
+        console.log('📥 Loading KML polygons...');
+
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
 
         const response = await fetch('/kml/data', {
@@ -148,71 +168,26 @@ async function loadKmlPolygon() {
 }
 
 // ============================================
-// USER LOCATION TRACKING
+// INITIAL USER LOCATION (ONE TIME ONLY)
 // ============================================
 
 /**
- * Get user location and watch for changes
+ * Create initial user marker (called once from realtime tracker)
  */
-function getUserLocationForMap() {
-    if (!navigator.geolocation) {
-        notify.warning('Geolocation tidak didukung');
+function createInitialUserMarker(latitude, longitude, accuracy) {
+    if (!map) {
+        console.warn('⚠️ Map not ready for marker creation');
         return;
     }
 
-    // Get current position dengan timeout lebih panjang
-    navigator.geolocation.getCurrentPosition(
-        position => updateUserLocation(position),
-        error => {
-            handleLocationError(error);
-            // Retry dengan accuracy lebih rendah
-            setTimeout(() => {
-                navigator.geolocation.getCurrentPosition(
-                    position => updateUserLocation(position),
-                    error => console.warn('Retry juga gagal:', error),
-                    {
-                        enableHighAccuracy: false,
-                        timeout: 15000,
-                        maximumAge: 0
-                    }
-                );
-            }, 2000);
-        },
-        {
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 0
-        }
-    );
+    console.log('📍 Creating initial user marker...');
 
-    // Watch position dengan tolerance lebih tinggi
-    watchId = navigator.geolocation.watchPosition(
-        position => updateUserLocation(position),
-        error => console.warn('Watch error:', error),
-        {
-            enableHighAccuracy: false, // Ubah ke false
-            timeout: 15000, // Lebih panjang
-            maximumAge: 5000 // Cache 5 detik
-        }
-    );
-}
-
-/**
- * Update user location on map
- */
-function updateUserLocation(position) {
-    const lat = position.coords.latitude;
-    const lon = position.coords.longitude;
-    const accuracy = position.coords.accuracy;
-
-    console.log(`📍 User location: ${lat.toFixed(6)}, ${lon.toFixed(6)} (±${accuracy.toFixed(0)}m)`);
-
-    // Remove old markers
+    // Remove old markers if exist
     if (userMarker) map.removeLayer(userMarker);
     if (accuracyCircle) map.removeLayer(accuracyCircle);
 
     // Create user marker
-    userMarker = L.marker([lat, lon], {
+    userMarker = L.marker([latitude, longitude], {
         icon: L.icon({
             iconUrl: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%228%22 fill=%22%2348bb78%22/%3E%3C/svg%3E',
             iconSize: [24, 24],
@@ -222,7 +197,7 @@ function updateUserLocation(position) {
     }).addTo(map);
 
     // Add accuracy circle
-    accuracyCircle = L.circle([lat, lon], {
+    accuracyCircle = L.circle([latitude, longitude], {
         radius: accuracy,
         color: '#4299e1',
         fillColor: '#4299e1',
@@ -231,72 +206,27 @@ function updateUserLocation(position) {
         dashArray: '5, 5'
     }).addTo(map);
 
-    // Check if inside polygon
-    const isInside = checkIfInsidePolygon(lat, lon);
-    const timestamp = new Date(position.timestamp).toLocaleTimeString('id-ID');
+    // Export to global
+    window.userMarker = userMarker;
+    window.accuracyCircle = accuracyCircle;
 
-    // Create popup
-    userMarker.bindPopup(`
-        <div style="text-align: center; padding: 5px;">
-            <strong><i class="fas fa-map-marker-alt" style="color: #48bb78;"></i> Lokasi Anda</strong><br>
-            <hr style="margin: 5px 0;">
-            <small><strong>Koordinat:</strong></small><br>
-            <small>Lat: ${lat.toFixed(6)}</small><br>
-            <small>Lon: ${lon.toFixed(6)}</small><br>
-            <small class="text-muted">Akurasi: ±${accuracy.toFixed(0)} meter</small><br>
-            <small class="text-muted">Update: ${timestamp}</small><br>
-            ${isInside ?
-                '<span style="color: #48bb78;"><i class="fas fa-check-circle"></i> Dalam area</span>' :
-                '<span style="color: #f56565;"><i class="fas fa-times-circle"></i> Di luar area</span>'
-            }
-        </div>
-    `, { maxWidth: 200, autoPan: false }).openPopup();
+    // Center map to user location
+    map.setView([latitude, longitude], 18, {
+        animate: true,
+        duration: 1
+    });
 
-    // Update status badge
-    updateMapStatusBadge(isInside);
+    window.mapCenteredToUser = true;
 
-    // Center map to user location on first load
-    if (!window.mapCenteredToUser) {
-        map.setView([lat, lon], 18);
-        window.mapCenteredToUser = true;
-
-        setTimeout(() => {
-            if (userMarker) {
-                userMarker.openPopup();
-            }
-        }, 500);
-    }
-
-    // make realtime poisition from user
-
+    console.log('✅ Initial user marker created');
 }
 
-/**
- * Handle location errors
- */
-function handleLocationError(error) {
-    let message = 'Tidak dapat mendeteksi lokasi Anda. ';
-
-    switch(error.code) {
-        case error.PERMISSION_DENIED:
-            message += 'Akses lokasi ditolak. Mohon izinkan akses lokasi.';
-            break;
-        case error.POSITION_UNAVAILABLE:
-            message += 'Informasi lokasi tidak tersedia.';
-            break;
-        case error.TIMEOUT:
-            message += 'Waktu permintaan lokasi habis.';
-            break;
-        default:
-            message += 'Terjadi kesalahan tidak dikenal.';
-    }
-
-    console.error('Geolocation error:', error);
-    notify.warning(message, 'Info Lokasi');
-}
+// ============================================
+// UPDATE MAP STATUS BADGE
+// ============================================
 
 /**
- * Update map status badge
+ * Update map status badge (called from realtime tracker)
  */
 function updateMapStatusBadge(isInside) {
     const statusBadge = document.getElementById('map-status');
@@ -367,15 +297,13 @@ function isPointInPolygon(point, polygon) {
  * Cleanup map resources
  */
 function cleanupMap() {
-    if (watchId !== null) {
-        navigator.geolocation.clearWatch(watchId);
-        watchId = null;
-    }
-
     if (map) {
         map.remove();
         map = null;
+        mapReady = false;
+        window.mapReady = false;
     }
+    console.log('🧹 Map cleaned up');
 }
 
 // ============================================
@@ -385,23 +313,20 @@ function cleanupMap() {
 document.addEventListener('DOMContentLoaded', function() {
     const mapContainer = document.getElementById('map-container');
     if (!mapContainer) {
-        console.warn('Map container not found');
+        console.warn('❌ Map container not found');
         return;
     }
 
+    // Initialize map
     initializeMap();
-
-    setTimeout(() => {
-        window.realtimeTracker = window.initializeRealtimeTracker({
-            updateInterval: 5000,
-            minAccuracy: 50,
-            distanceThreshold: 10
-        });
-        window.realtimeTracker.startTracking();
-    }, 1000);
 
     console.log('✅ Absensi map script loaded');
 });
 
 // Cleanup on page unload
 window.addEventListener('beforeunload', cleanupMap);
+
+// Export functions untuk digunakan realtime tracker
+window.checkIfInsidePolygon = checkIfInsidePolygon;
+window.updateMapStatusBadge = updateMapStatusBadge;
+window.createInitialUserMarker = createInitialUserMarker;

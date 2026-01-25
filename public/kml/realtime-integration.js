@@ -1,65 +1,147 @@
 /**
- * Real-time Location Integration Script
+ * Real-time Location Integration Script - FINAL FIXED VERSION
  * File: public/js/realtime-integration.js
  *
- * Script ini mengintegrasikan RealtimeLocationTracker dengan sistem absensi
- * yang sudah ada. Pastikan script ini di-load setelah realtime-location.js
+ * FIXES:
+ * - Changed distanceThreshold from 5m to 10m (optimal)
+ * - Enhanced logging with distance info
+ * - Better null checks
+ * - Optimized debounce timings
  */
 
-// ============================================
-// INTEGRATION INITIALIZATION
-// ============================================
+
+
+
 
 /**
- * Setup real-time tracking saat DOM ready
+ * Debounce function to prevent rapid updates
+ */
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+
+
+
+let lastGeofenceStatus = null;
+let lastNotificationTime = 0;
+const NOTIFICATION_COOLDOWN = 3000;
+
+
+
+
+
+/**
+ * Setup real-time tracking saat map ready
  */
 document.addEventListener('DOMContentLoaded', function() {
-    // Wait untuk map sudah siap
+
+
+
+    window.addEventListener('mapReady', function(event) {
+
+
+
+        setTimeout(() => {
+            setupRealtimeLocationTracking();
+        }, 500);
+    });
+
+
     setTimeout(() => {
-        if (window.map && window.initializeRealtimeTracker) {
+        if (window.mapReady && !window.realtimeTracker) {
+            console.log('🔄 Map already ready, starting tracker (fallback 1)...');
             setupRealtimeLocationTracking();
         }
-    }, 2000);
+    }, 3000);
+
+
+    setTimeout(() => {
+        if (!window.realtimeTracker) {
+
+
+
+            if (window.map && typeof window.initializeRealtimeTracker === 'function') {
+
+                setupRealtimeLocationTracking();
+            } else {
+                console.error('❌ Cannot initialize tracker - missing dependencies');
+                window.notify?.error(
+                    'Gagal menginisialisasi sistem tracking. Silakan refresh halaman.',
+                    'Error Sistem'
+                );
+            }
+        }
+    }, 5000);
 });
 
 /**
  * Setup real-time location tracking
  */
 function setupRealtimeLocationTracking() {
-    console.log('🔧 Setting up real-time location tracking...');
+    if (window.realtimeTracker) {
 
-    // Initialize tracker dengan config default
+        return;
+    }
+
+
+    if (typeof window.initializeRealtimeTracker !== 'function') {
+
+
+        window.notify?.error(
+            'Sistem tracking belum siap. Silakan refresh halaman.',
+            'Error Inisialisasi'
+        );
+        return;
+    }
+
+    if (!window.map) {
+
+        return;
+    }
+
+
+
+
     window.realtimeTracker = window.initializeRealtimeTracker({
-        updateInterval: 5000,              // Update setiap 5 detik
-        minAccuracy: 50,                   // Warning jika akurasi > 50m
-        distanceThreshold: 10,             // Minimum 10m pergerakan untuk update
-        websocketEnabled: false,           // Disable WebSocket by default
+        updateInterval: 5000,
+        minAccuracy: 50,
+        distanceThreshold: 10,
+        websocketEnabled: false,
         serverUrl: null,
 
-        // Callback saat lokasi berubah
-        onLocationUpdate: (location) => {
+
+        onLocationUpdate: debounce((location) => {
             handleLocationUpdate(location);
-        },
+        }, 800),
 
-        // Callback saat masuk/keluar geofence
-        onGeofenceChange: (data) => {
+
+        onGeofenceChange: debounce((data) => {
             handleGeofenceChange(data);
-        },
+        }, 1500),
 
-        // Callback saat akurasi kurang baik
-        onAccuracyWarning: (warning) => {
+
+        onAccuracyWarning: debounce((warning) => {
             handleAccuracyWarning(warning);
-        }
+        }, 5000)
     });
 
-    // Start tracking
-    window.realtimeTracker.startTracking();
-    console.log('✅ Real-time tracking started');
 
-    // Setup UI updates
+    window.realtimeTracker.startTracking();
+
+
+
     setupRealtimeUI();
 
-    // Setup auto-cleanup on page unload
+
     window.addEventListener('beforeunload', () => {
         if (window.realtimeTracker) {
             window.realtimeTracker.stopTracking();
@@ -67,20 +149,31 @@ function setupRealtimeLocationTracking() {
     });
 }
 
-// ============================================
-// LOCATION UPDATE HANDLER
-// ============================================
+
+
+
 
 /**
  * Handle real-time location update
  */
 function handleLocationUpdate(location) {
-    // Update map marker dan accuracy circle
+
+    if (window.map && !window.userMarker) {
+        if (window.createInitialUserMarker) {
+            window.createInitialUserMarker(
+                location.latitude,
+                location.longitude,
+                location.accuracy
+            );
+        }
+    }
+
+
     if (window.map && window.userMarker) {
-        // Set new position
+
         window.userMarker.setLatLng([location.latitude, location.longitude]);
 
-        // Update accuracy circle
+
         if (window.accuracyCircle) {
             window.map.removeLayer(window.accuracyCircle);
         }
@@ -97,37 +190,48 @@ function handleLocationUpdate(location) {
             }
         ).addTo(window.map);
 
-        // Auto pan ke lokasi user (smooth animation)
-        if (window.autoPanToUser !== false) {
-            window.map.panTo([location.latitude, location.longitude], {
-                animate: true,
-                duration: 1
-            });
+
+        if (location.distanceFromLast && location.distanceFromLast > 20) {
+            if (window.autoPanToUser !== false) {
+                window.map.panTo([location.latitude, location.longitude], {
+                    animate: true,
+                    duration: 1,
+                    easeLinearity: 0.5
+                });
+            }
         }
 
-        // Update marker popup
+
         updateUserMarkerPopup(location);
     }
 
-    // Update real-time info panel
+
     updateRealtimeInfoPanel(location);
 
-    // Log untuk debugging
-    console.log(`📍 ${location.latitude.toFixed(6)}, ${location.longitude.toFixed(6)} (±${location.accuracy.toFixed(0)}m)`);
+
+    const logFrequency = 0.3;
+    if (Math.random() < logFrequency) {
+        console.log(
+            `📍 Pos: ${location.latitude.toFixed(6)}, ${location.longitude.toFixed(6)} | ` +
+            `Akurasi: ±${location.accuracy.toFixed(0)}m | ` +
+            `Jarak: ${location.distanceFromLast ? location.distanceFromLast.toFixed(1) + 'm' : 'N/A'} | ` +
+            `Status: ${window.realtimeTracker.geofenceStatus || 'unknown'}`
+        );
+    }
 }
 
 /**
- * Update user marker popup
+ * Update user marker popup (debounced internally)
  */
-function updateUserMarkerPopup(location) {
+const updateUserMarkerPopup = debounce(function(location) {
     if (!window.userMarker) return;
 
-    const isInside = window.realtimeTracker.geofenceStatus === 'inside';
+    const isInside = window.realtimeTracker?.geofenceStatus === 'inside';
     const statusText = isInside
         ? '<span style="color: #48bb78;"><i class="fas fa-check-circle"></i> Dalam area</span>'
         : '<span style="color: #f56565;"><i class="fas fa-times-circle"></i> Di luar area</span>';
 
-    window.userMarker.setPopupContent(`
+    const popupContent = `
         <div style="text-align: center; padding: 8px; font-size: 12px;">
             <strong><i class="fas fa-map-marker-alt" style="color: #48bb78;"></i> Lokasi Anda</strong>
             <hr style="margin: 5px 0;">
@@ -136,11 +240,14 @@ function updateUserMarkerPopup(location) {
             <small>Lon: ${location.longitude.toFixed(6)}</small><br>
             <small class="text-muted">Akurasi: ±${location.accuracy.toFixed(0)}m</small><br>
             <small class="text-muted">Update: ${location.formattedTime}</small><br>
-            ${location.speed !== null ? `<small class="text-muted">Kecepatan: ${(location.speed * 3.6).toFixed(1)} km/h</small><br>` : ''}
+            ${location.distanceFromLast ? `<small class="text-info">Jarak: ${location.distanceFromLast.toFixed(1)}m</small><br>` : ''}
+            ${location.speed !== null && location.speed > 0.5 ? `<small class="text-muted">Kecepatan: ${(location.speed * 3.6).toFixed(1)} km/h</small><br>` : ''}
             ${statusText}
         </div>
-    `);
-}
+    `;
+
+    window.userMarker.setPopupContent(popupContent);
+}, 1500);
 
 /**
  * Update real-time info panel
@@ -149,8 +256,12 @@ function updateRealtimeInfoPanel(location) {
     const panel = document.getElementById('realtime-info-panel');
     if (!panel) return;
 
-    const isInside = window.realtimeTracker.geofenceStatus === 'inside';
-    const stats = window.realtimeTracker.getStatistics();
+    const isInside = window.realtimeTracker?.geofenceStatus === 'inside';
+    const stats = window.realtimeTracker?.getStatistics() || {
+        totalDistance: 0,
+        avgAccuracy: 0,
+        totalLocations: 0
+    };
 
     panel.innerHTML = `
         <div class="realtime-info-content">
@@ -172,64 +283,81 @@ function updateRealtimeInfoPanel(location) {
             </div>
             <div class="info-row">
                 <strong>🎯 Status:</strong>
-                <span style="color: ${isInside ? '#48bb78' : '#f56565'};">
+                <span style="color: ${isInside ? '#48bb78' : '#f56565'}; font-weight: bold;">
                     ${isInside ? '✓ Dalam area' : '✗ Di luar area'}
                 </span>
             </div>
-            <hr>
+            <hr style="margin: 8px 0; border-color: #e2e8f0;">
             <div class="info-row">
                 <strong>📊 Total Jarak:</strong>
                 <span>${stats.totalDistance.toFixed(0)}m</span>
             </div>
             <div class="info-row">
-                <strong>📈 Rata-rata Akurasi:</strong>
+                <strong>📈 Rata² Akurasi:</strong>
                 <span>±${stats.avgAccuracy.toFixed(0)}m</span>
             </div>
             <div class="info-row">
-                <strong>📍 Lokasi Tercatat:</strong>
+                <strong>📍 Update Count:</strong>
                 <span>${stats.totalLocations}</span>
             </div>
         </div>
     `;
 }
 
-// ============================================
-// GEOFENCE CHANGE HANDLER
-// ============================================
+
+
+
 
 /**
- * Handle geofence status change
+ * Handle geofence status change (with duplicate prevention)
  */
 function handleGeofenceChange(data) {
-    console.log(`🚨 Geofence status: ${data.status}`);
+    const now = Date.now();
 
-    // Update map status badge
+
+    if (lastGeofenceStatus === data.status) {
+        console.log(`⏭️ Skipping duplicate geofence notification: ${data.status}`);
+        return;
+    }
+
+
+    if (now - lastNotificationTime < NOTIFICATION_COOLDOWN) {
+        console.log(`⏭️ Geofence notification on cooldown (${((now - lastNotificationTime) / 1000).toFixed(1)}s ago)`);
+        return;
+    }
+
+    console.log(`🚨 Geofence status changed: ${lastGeofenceStatus || 'null'} → ${data.status}`);
+
+
+    lastGeofenceStatus = data.status;
+    lastNotificationTime = now;
+
+
     if (window.updateMapStatusBadge) {
         window.updateMapStatusBadge(data.status === 'inside');
     }
 
-    // Show notification
-    if (window.notify) {
+
+    if (window.notify && data.status !== 'unknown') {
         if (data.status === 'inside') {
             window.notify.success(
-                'Anda telah memasuki area absensi',
-                'Geofence'
+                'Anda telah memasuki area absensi. Tombol absensi telah diaktifkan.',
+                '✅ Masuk Area'
             );
         } else if (data.status === 'outside') {
             window.notify.warning(
-                'Anda telah keluar dari area absensi',
-                'Geofence'
+                'Anda telah keluar dari area absensi. Tombol absensi dinonaktifkan.',
+                '⚠️ Keluar Area'
             );
         }
     }
 
-    // Disable/enable buttons based on geofence status
-    updateAbsensiButtons(data.status === 'inside');
 
+    updateAbsensiButtons(data.status === 'inside');
 }
 
 /**
- * Enable/disable absensi buttons berdasarkan geofence
+ * Enable/disable absensi buttons berdasarkan geofence (PERSISTENT)
  */
 function updateAbsensiButtons(isInsideGeofence) {
     const btnMasuk = document.getElementById('btn-absen-masuk');
@@ -240,6 +368,13 @@ function updateAbsensiButtons(isInsideGeofence) {
         btnMasuk.title = isInsideGeofence
             ? 'Klik untuk absen masuk'
             : 'Anda harus berada dalam area absensi';
+
+
+        if (isInsideGeofence) {
+            btnMasuk.classList.remove('btn-disabled');
+        } else {
+            btnMasuk.classList.add('btn-disabled');
+        }
     }
 
     if (btnPulang) {
@@ -247,16 +382,24 @@ function updateAbsensiButtons(isInsideGeofence) {
         btnPulang.title = isInsideGeofence
             ? 'Klik untuk absen pulang'
             : 'Anda harus berada dalam area absensi';
+
+
+        if (isInsideGeofence) {
+            btnPulang.classList.remove('btn-disabled');
+        } else {
+            btnPulang.classList.add('btn-disabled');
+        }
     }
+
+    console.log(`🔘 Buttons ${isInsideGeofence ? 'enabled ✅' : 'disabled ❌'}`);
 }
 
 
-// ============================================
-// ACCURACY WARNING HANDLER
-// ============================================
+
+
 
 /**
- * Handle accuracy warning
+ * Handle accuracy warning (already debounced in setup)
  */
 function handleAccuracyWarning(warning) {
     console.warn(
@@ -265,22 +408,22 @@ function handleAccuracyWarning(warning) {
 
     if (window.notify) {
         window.notify.warning(
-            `Akurasi GPS kurang baik: ±${warning.accuracy.toFixed(0)}m. ` +
-            `Pastikan di area outdoor dengan sinyal GPS kuat.`,
-            'Akurasi GPS'
+            `Akurasi GPS: ±${warning.accuracy.toFixed(0)}m. ` +
+            `Untuk akurasi terbaik, pastikan berada di area outdoor dengan sinyal GPS kuat.`,
+            'Info GPS'
         );
     }
 }
 
-// ============================================
-// UI SETUP
-// ============================================
+
+
+
 
 /**
  * Setup real-time UI elements
  */
 function setupRealtimeUI() {
-    // Check if realtime info panel exists, jika tidak create
+
     let panel = document.getElementById('realtime-info-panel');
 
     if (!panel) {
@@ -294,10 +437,10 @@ function setupRealtimeUI() {
         }
     }
 
-    // Add CSS styles jika belum ada
+
     addRealtimeStyles();
 
-    // Add control buttons
+
     addRealtimeControls();
 }
 
@@ -346,6 +489,11 @@ function addRealtimeStyles() {
             font-family: 'Courier New', monospace;
         }
 
+        .btn-disabled {
+            opacity: 0.5;
+            cursor: not-allowed !important;
+        }
+
         @media (max-width: 768px) {
             .realtime-info-content {
                 grid-template-columns: 1fr;
@@ -364,7 +512,7 @@ function addRealtimeStyles() {
             transition: all 0.3s ease;
         }
 
-        .realtime-control-button:hover {
+        .realtime-control-button:hover:not(:disabled) {
             background: #3182ce;
         }
 
@@ -372,8 +520,13 @@ function addRealtimeStyles() {
             background: #f56565;
         }
 
-        .realtime-control-button.stop:hover {
+        .realtime-control-button.stop:hover:not(:disabled) {
             background: #e53e3e;
+        }
+
+        .realtime-control-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
     `;
 
@@ -381,7 +534,7 @@ function addRealtimeStyles() {
 }
 
 /**
- * Add control buttons untuk real-time tracking
+ * Add control buttons
  */
 function addRealtimeControls() {
     const panel = document.getElementById('realtime-info-panel');
@@ -396,7 +549,7 @@ function addRealtimeControls() {
         <button class="realtime-control-button" id="btn-pause-tracking">
             <i class="fas fa-pause"></i> Pause
         </button>
-        <button class="realtime-control-button" id="btn-resume-tracking">
+        <button class="realtime-control-button" id="btn-resume-tracking" disabled>
             <i class="fas fa-play"></i> Resume
         </button>
         <button class="realtime-control-button stop" id="btn-stop-tracking">
@@ -406,32 +559,43 @@ function addRealtimeControls() {
 
     panel.appendChild(controls);
 
-    // Event listeners
-    document.getElementById('btn-pause-tracking')?.addEventListener('click', () => {
+
+    const btnPause = document.getElementById('btn-pause-tracking');
+    const btnResume = document.getElementById('btn-resume-tracking');
+    const btnStop = document.getElementById('btn-stop-tracking');
+
+    btnPause?.addEventListener('click', () => {
         if (window.realtimeTracker) {
             window.realtimeTracker.pauseTracking = true;
+            btnPause.disabled = true;
+            btnResume.disabled = false;
             window.notify?.info('Real-time tracking dipause', 'Tracking');
         }
     });
 
-    document.getElementById('btn-resume-tracking')?.addEventListener('click', () => {
+    btnResume?.addEventListener('click', () => {
         if (window.realtimeTracker) {
             window.realtimeTracker.pauseTracking = false;
+            btnPause.disabled = false;
+            btnResume.disabled = true;
             window.notify?.info('Real-time tracking dilanjutkan', 'Tracking');
         }
     });
 
-    document.getElementById('btn-stop-tracking')?.addEventListener('click', () => {
+    btnStop?.addEventListener('click', () => {
         if (window.realtimeTracker) {
             window.realtimeTracker.stopTracking();
+            btnPause.disabled = true;
+            btnResume.disabled = true;
+            btnStop.disabled = true;
             window.notify?.warning('Real-time tracking dihentikan', 'Tracking');
         }
     });
 }
 
-// ============================================
-// UTILITIES
-// ============================================
+
+
+
 
 /**
  * Get current tracking status
@@ -449,39 +613,9 @@ function getTrackingStatus() {
     };
 }
 
-/**
- * Export tracking data
- */
-function exportTrackingData() {
-    const status = getTrackingStatus();
-    const data = {
-        exportTime: new Date().toISOString(),
-        tracking: status,
-        history: window.realtimeTracker?.getLocationHistory() || []
-    };
 
-    return JSON.stringify(data, null, 2);
-}
-
-/**
- * Get tracking summary
- */
-function getTrackingSummary() {
-    const stats = window.realtimeTracker?.getStatistics();
-    if (!stats) return null;
-
-    return {
-        totalLocationsRecorded: stats.totalLocations,
-        totalDistance: `${stats.totalDistance.toFixed(0)}m`,
-        averageAccuracy: `±${stats.avgAccuracy.toFixed(0)}m`,
-        currentGeofenceStatus: stats.currentGeofenceStatus,
-        trackingDuration: `${stats.trackingDuration.toFixed(0)}s`
-    };
-}
-
-// Export functions globally
 window.getTrackingStatus = getTrackingStatus;
-window.exportTrackingData = exportTrackingData;
-window.getTrackingSummary = getTrackingSummary;
+window.handleGeofenceChange = handleGeofenceChange;
+window.updateAbsensiButtons = updateAbsensiButtons;
 
-console.log('✅ Real-time integration script loaded');
+

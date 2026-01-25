@@ -247,12 +247,68 @@
 </div>
 
 @endsection
-
 @push('js')
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="{{ asset('kml/absensi-notification.js') }}"></script>
-<script src="{{ asset('kml/absensi-map.js') }}"></script>
-<script src="{{ asset('kml/absensi-main.js') }}"></script>
 <script src="{{ asset('kml/realtime-location.js') }}"></script>
+<script src="{{ asset('kml/absensi-map.js') }}"></script>
 <script src="{{ asset('kml/realtime-integration.js') }}"></script>
+<script src="{{ asset('kml/absensi-main.js') }}"></script>
+<script>
+   // Real-time dashboard
+// setInterval(() => {
+//     const loc = window.realtimeTracker?.getCurrentLocation();
+//     const stats = window.realtimeTracker?.getStatistics();
+
+//     if (loc) {
+//         console.clear();
+//         console.log('═'.repeat(60));
+//         console.log('🎯 REAL-TIME TRACKING DASHBOARD');
+//         console.log('═'.repeat(60));
+//         console.log(`📍 Position: ${loc.latitude.toFixed(6)}, ${loc.longitude.toFixed(6)}`);
+//         console.log(`📡 Accuracy: ±${loc.accuracy.toFixed(0)}m`);
+//         console.log(`🎯 Geofence: ${window.realtimeTracker.geofenceStatus?.toUpperCase()}`);
+//         console.log(`🚶 Distance from last: ${loc.distanceFromLast ? loc.distanceFromLast.toFixed(1) + 'm' : 'First position'}`);
+//         console.log(`📊 Total distance: ${stats.totalDistance.toFixed(0)}m`);
+//         console.log(`📈 Avg accuracy: ±${stats.avgAccuracy.toFixed(0)}m`);
+//         console.log(`📍 Updates: ${stats.totalLocations}`);
+//         console.log(`⏱️ Last update: ${loc.formattedTime}`);
+//         console.log('═'.repeat(60));
+//     }
+// }, 1000);
+// fuction test 
+
+// Simulasi jalan keluar area
+let step = 0;
+const baseX = -0.509317;
+const baseY = 117.130073;
+
+const walkOut = setInterval(() => {
+    step++;
+
+    // Bergerak 12m per step (past 10m threshold)
+    const newLat = baseX + (step * 0.00012);
+    const newLon = baseY + (step * 0.00012);
+
+    console.log(`🚶 Step ${step}: ${newLat.toFixed(6)}, ${newLon.toFixed(6)}`);
+
+    window.realtimeTracker?.processLocationUpdate({
+        coords: {
+            latitude: newLat,
+            longitude: newLon,
+            accuracy: 25,
+            altitude: null,
+            altitudeAccuracy: null,
+            heading: 45,
+            speed: 1.2
+        },
+        timestamp: Date.now()
+    });
+
+    if (step >= 15) {
+        clearInterval(walkOut);
+        console.log('✅ Simulation complete - check if you exited geofence!');
+    }
+}, 3000);
+</script>
 @endpush
