@@ -592,7 +592,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const result = await response.json();
-            // console.log('📥 Response dari server:', result);
+            console.log('📥 Response dari server:', result);
 
             if (result.success) {
                 const tipeName = tipe === 'masuk' ? 'Masuk' : 'Pulang';
