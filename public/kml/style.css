@@ -69,24 +69,31 @@
     #map-container {
         height: 500px;
         border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-        border: 3px solid #667eea;
-        position: relative;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
     }
+
+    .leaflet-container {
+        border-radius: 15px;
+        background: #f5f5f5;
+    }
+
+    /* ============================================
+    MAP LEGEND
+    ============================================ */
 
     .map-legend {
         background: white;
         padding: 15px;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        margin-top: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
     .legend-item {
         display: flex;
         align-items: center;
-        margin-bottom: 8px;
+        gap: 10px;
+        margin-bottom: 10px;
     }
 
     .legend-item:last-child {
@@ -94,13 +101,52 @@
     }
 
     .legend-color {
-        width: 20px;
-        height: 20px;
+        width: 30px;
+        height: 30px;
         border-radius: 4px;
-        margin-right: 10px;
-        border: 2px solid rgba(0, 0, 0, 0.2);
         flex-shrink: 0;
     }
+
+    .legend-item span {
+        font-size: 13px;
+        color: #333;
+        line-height: 1.4;
+    }
+
+    /* ============================================
+    MAP STATUS BADGE
+    ============================================ */
+
+    .map-status-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: white;
+        padding: 10px 18px;
+        border-radius: 25px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        font-size: 12px;
+        font-weight: 600;
+        z-index: 400;
+        border-left: 4px solid #ccc;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+    }
+
+    .map-status-badge.in-area {
+        color: #48bb78;
+        border-left-color: #48bb78;
+        background: rgba(72, 187, 120, 0.05);
+    }
+
+    .map-status-badge.out-area {
+        color: #f56565;
+        border-left-color: #f56565;
+        background: rgba(245, 101, 101, 0.05);
+    }
+
 
 
     .notification-toast {
@@ -321,3 +367,16 @@
     .d-none {
         display: none !important;
     }
+
+    @media print {
+    .notification-container,
+    .loading-overlay,
+    #map-status {
+        display: none !important;
+    }
+
+    #map-container {
+        height: 600px;
+        page-break-inside: avoid;
+    }
+}

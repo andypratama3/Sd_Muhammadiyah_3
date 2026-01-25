@@ -3,6 +3,7 @@
 @section('title', 'Absensi Online')
 
 @push('css')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="stylesheet" href="{{ asset('kml/style.css') }}">
 @endpush
 
@@ -25,7 +26,7 @@
                 <div class="row align-items-center">
                     <div class="mb-3 text-center col-md-6 text-md-start mb-md-0">
                         <div class="d-flex align-items-center justify-content-center justify-content-md-start">
-                            <i class="fas fa-clock fa-3x me-3 location-icon"></i>
+                            <i class="fas fa-clock fa-3x me-3"></i>
                             <div>
                                 <h2 class="mb-0 text-black fw-bold" id="waktu-sekarang">00:00:00</h2>
                                 <p class="mb-0 opacity-75">WITA (Waktu Indonesia Tengah)</p>
@@ -37,7 +38,7 @@
                             <i class="fas fa-calendar-alt fa-2x me-3"></i>
                             <div>
                                 <h5 class="mb-0 text-black fw-bold" id="tanggal-sekarang">Loading...</h5>
-                                <p class="mb-0 opacity-75 text">Tanggal Hari Ini</p>
+                                <p class="mb-0 opacity-75">Tanggal Hari Ini</p>
                             </div>
                         </div>
                     </div>
@@ -46,6 +47,7 @@
         </div>
     </div>
 
+    <!-- Main Content Row -->
     <div class="row">
         <!-- Form Absensi Card -->
         <div class="mb-4 col-lg-8">
@@ -84,7 +86,6 @@
 
                         <!-- Action Buttons -->
                         <div class="mb-3 row g-3">
-
                             <div class="col-md-6">
                                 <button
                                     type="button"
@@ -93,7 +94,6 @@
                                     <i class="fas fa-sign-in-alt"></i> Absen Masuk
                                 </button>
                             </div>
-
                             <div class="col-md-6">
                                 <button
                                     type="button"
@@ -102,7 +102,6 @@
                                     <i class="fas fa-sign-out-alt"></i> Absen Pulang
                                 </button>
                             </div>
-
                         </div>
 
                         <button
@@ -125,10 +124,9 @@
                     </h6>
                 </div>
                 <div class="card-body">
-                   <div class="mt-3 mb-3">
+                    <div class="mt-3 mb-3">
                         <i class="fas fa-clock text-success"></i>
                         <strong>Jam Kerja:</strong><br>
-
                         @isset($jamKerja)
                             <small>
                                 {{ ucfirst($jamKerja->hari) }} :
@@ -138,11 +136,10 @@
                                 WITA
                             </small>
                         @else
-                            <small class="text-muted">
-                                Jam kerja belum dikonfigurasi
-                            </small>
+                            <small class="text-muted">Jam kerja belum dikonfigurasi</small>
                         @endisset
                     </div>
+
                     <h6 class="mb-3 fw-bold">
                         <i class="fas fa-check-circle text-success"></i> Persyaratan:
                     </h6>
@@ -157,7 +154,7 @@
                         </li>
                         <li class="mb-2">
                             <i class="fas fa-draw-polygon text-primary"></i>
-                            Berada dalam radius area Sekolah
+                            Berada dalam area yang ditampilkan di peta
                         </li>
                         <li class="mb-2">
                             <i class="fas fa-clock text-info"></i>
@@ -168,63 +165,70 @@
                     <div class="mt-3 mb-0">
                         <i class="fas fa-exclamation-triangle"></i>
                         <strong>Perhatian!</strong><br>
-                        <small>Absensi hanya dapat dilakukan di lokasi kantor yang telah ditentukan</small><br>
-                        <small>Absensi hanya dapat dilakukan untuk 1 Smartphone untuk 1 akun</small>
+                        <small>Absensi hanya dapat dilakukan di lokasi yang telah ditentukan</small>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-
-    <div id="riwayat-container" class="row d-none">
-        <div class="col-12">
-            <div class="card info-card">
-                <!-- Card Header -->
-                <div class="py-3 bg-white card-header">
-                    <h6 class="m-0 font-weight-bold text-primary">
-                        <i class="fas fa-list-alt"></i> Riwayat Absensi
-                    </h6>
-                </div>
-
-                <div class="card-body">
-                    <div id="info-pegawai" class="mb-4 border-left-primary">
-                    </div>
-                    <div id="riwayat-list">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-     {{-- <div class="mt-4 row">
+    <!-- MAP SECTION -->
+    <div class="mt-4 row">
         <div class="col-12">
             <div class="card info-card">
                 <div class="py-3 bg-white card-header">
                     <h6 class="m-0 font-weight-bold text-primary">
-                        <i class="fas fa-map-marked-alt"></i> Area Absensi - SD Muhammadiyah 3 Samarinda
+                        <i class="fas fa-map-marked-alt"></i> Area Absensi - Peta Lokasi
                     </h6>
                 </div>
-                <div class="card-body">
-                    <div id="map-container" style="height: 500px; border-radius: 15px;"></div>
+                <div class="card-body position-relative">
+                    <!-- Status Badge -->
+                    <div id="map-status" class="map-status-badge">
+                        <i class="fas fa-spinner fa-spin"></i> Memuat lokasi...
+                    </div>
 
+                    <!-- Map Container -->
+                    <div id="map-container"></div>
+
+                    <!-- Legend -->
                     <div class="mt-3 map-legend">
                         <h6 class="mb-3 fw-bold">
                             <i class="fas fa-info-circle"></i> Legenda Peta
                         </h6>
                         <div class="legend-item">
-                            <div class="legend-color" style="background-color: rgba(66, 153, 225, 0.3); border-color: #4299e1;"></div>
-                            <span>Area absensi yang diizinkan</span>
+                            <div class="legend-color" style="background-color: rgba(66, 153, 225, 0.3); border: 2px solid #4299e1;"></div>
+                            <span><strong>Area Absensi</strong> - Wilayah yang diizinkan untuk absensi</span>
                         </div>
                         <div class="legend-item">
-                            <div class="legend-color" style="background-color: #48bb78;"></div>
-                            <span>Lokasi Anda saat ini</span>
+                            <div class="legend-color" style="background-color: #48bb78; border-radius: 50%;"></div>
+                            <span><strong>Lokasi Anda</strong> - Posisi GPS real-time</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: rgba(66, 153, 225, 0.1); border: 2px dashed #4299e1;"></div>
+                            <span><strong>Area Akurasi GPS</strong> - Radius akurasi GPS Anda</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-     </div> --}}
+    </div>
+
+    <!-- Riwayat Absensi -->
+    <div id="riwayat-container" class="mt-4 row d-none">
+        <div class="col-12">
+            <div class="card info-card">
+                <div class="py-3 bg-white card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-list-alt"></i> Riwayat Absensi
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div id="info-pegawai" class="mb-4"></div>
+                    <div id="riwayat-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Notification Container -->
@@ -244,551 +248,7 @@
 
 @push('js')
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-{{-- <script src="{{ asset('kml/init-map.js') }}" ></script> --}}
-<script>
-// Toast Notification System
-class ToastNotification {
-    constructor() {
-        this.container = document.getElementById('notification-container');
-    }
-
-    show(message, type = 'info', duration = 5000, title = '') {
-        const id = Date.now();
-        const iconMap = {
-            success: 'fas fa-check-circle',
-            error: 'fas fa-exclamation-circle',
-            warning: 'fas fa-exclamation-triangle',
-            info: 'fas fa-info-circle'
-        };
-
-        const titleMap = {
-            success: 'Berhasil',
-            error: 'Gagal',
-            warning: 'Peringatan',
-            info: 'Informasi'
-        };
-
-        const toast = document.createElement('div');
-        toast.className = `notification-toast ${type}`;
-        toast.id = `toast-${id}`;
-        toast.innerHTML = `
-            <div class="notification-content">
-                <div class="notification-icon">
-                    <i class="${iconMap[type]}"></i>
-                </div>
-                <div class="notification-text">
-                    <p class="notification-title">${title || titleMap[type]}</p>
-                    <p class="notification-message">${message}</p>
-                </div>
-                <button class="notification-close" onclick="this.closest('.notification-toast').dispatchEvent(new Event('close-toast'))">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            ${duration > 0 ? `<div class="notification-progress" style="--duration: ${duration}ms"></div>` : ''}
-        `;
-
-        this.container.appendChild(toast);
-
-        toast.addEventListener('close-toast', () => {
-            this.remove(id);
-        });
-
-        if (duration > 0) {
-            setTimeout(() => this.remove(id), duration);
-        }
-
-        return id;
-    }
-
-    remove(id) {
-        const toast = document.getElementById(`toast-${id}`);
-        if (toast) {
-            toast.classList.add('removing');
-            setTimeout(() => {
-                if (toast && toast.parentNode) {
-                    toast.remove();
-                }
-            }, 300);
-        }
-    }
-
-    success(message, title = '') {
-        return this.show(message, 'success', 5000, title);
-    }
-
-    error(message, title = '') {
-        return this.show(message, 'error', 6000, title);
-    }
-
-    warning(message, title = '') {
-        return this.show(message, 'warning', 5000, title);
-    }
-
-    info(message, title = '') {
-        return this.show(message, 'info', 4000, title);
-    }
-}
-
-// Loading Overlay Control
-function showLoading() {
-    const overlay = document.getElementById('loading-overlay');
-    if (overlay) {
-        overlay.classList.remove('d-none');
-    }
-}
-
-function hideLoading() {
-    const overlay = document.getElementById('loading-overlay');
-    if (overlay) {
-        overlay.classList.add('d-none');
-    }
-}
-
-// Helper function to escape HTML
-function escapeHtml(text) {
-    const map = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-    };
-    return String(text).replace(/[&<>"']/g, m => map[m]);
-}
-
-// ============================================
-// DEVICE FINGERPRINTING FUNCTIONS
-// ============================================
-
-function getDeviceId() {
-    let deviceId = localStorage.getItem('device_id');
-
-    if (!deviceId) {
-        deviceId = generateUniqueId();
-        localStorage.setItem('device_id', deviceId);
-        // console.log('🆕 Device ID baru dibuat:', deviceId);
-    } else {
-        // console.log('✅ Device ID ditemukan:', deviceId);
-    }
-
-    return deviceId;
-}
-
-function generateUniqueId() {
-    const timestamp = Date.now();
-    const random = Math.random().toString(36).substring(2, 15);
-    const screen = `${window.screen.width}x${window.screen.height}`;
-    const tz = new Date().getTimezoneOffset();
-
-    const data = `${timestamp}-${random}-${screen}-${tz}`;
-    return btoa(data).substring(0, 32);
-}
-
-function getDeviceInfo() {
-    return {
-        device_id: getDeviceId(),
-        screen_resolution: `${window.screen.width}x${window.screen.height}`,
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        platform: navigator.platform,
-        language: navigator.language
-    };
-}
-
-function getBrowserName() {
-    const ua = navigator.userAgent;
-    if (ua.indexOf('Firefox') > -1) return 'Firefox';
-    if (ua.indexOf('Chrome') > -1) return 'Chrome';
-    if (ua.indexOf('Safari') > -1) return 'Safari';
-    if (ua.indexOf('Edge') > -1) return 'Edge';
-    return 'Unknown Browser';
-}
-
-// ============================================
-// MAIN SCRIPT
-// ============================================
-
-document.addEventListener('DOMContentLoaded', function() {
-    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
-    const notify = new ToastNotification();
-
-    // Log Device Info untuk debugging
-    // console.log('🔒 Device Fingerprint:', getDeviceId());
-    // console.log('📱 Browser:', getBrowserName());
-    // console.log('💻 Platform:', navigator.platform);
-
-    // Update waktu real-time
-    function updateWaktu() {
-        const now = new Date();
-        const options = {
-            timeZone: 'Asia/Makassar',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: false
-        };
-        const waktu = now.toLocaleTimeString('id-ID', options);
-
-        const optionsTanggal = {
-            timeZone: 'Asia/Makassar',
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        };
-        const tanggal = now.toLocaleDateString('id-ID', optionsTanggal);
-
-        const waktuEl = document.getElementById('waktu-sekarang');
-        const tanggalEl = document.getElementById('tanggal-sekarang');
-
-        if (waktuEl) waktuEl.textContent = waktu;
-        if (tanggalEl) tanggalEl.textContent = tanggal;
-    }
-
-    updateWaktu();
-    setInterval(updateWaktu, 1000);
-
-    // Get User Location
-    function getLocation() {
-        return new Promise((resolve, reject) => {
-            if (!navigator.geolocation) {
-                return reject(new Error('Geolocation tidak didukung oleh browser Anda'));
-            }
-
-            navigator.geolocation.getCurrentPosition(
-                pos => {
-                    console.log('📍 Lokasi ditemukan:', pos.coords.latitude, pos.coords.longitude);
-                    resolve({
-                        latitude: pos.coords.latitude,
-                        longitude: pos.coords.longitude
-                    });
-                },
-                err => {
-                    let msg = 'Gagal mendapatkan lokasi. ';
-                    switch(err.code) {
-                        case err.PERMISSION_DENIED:
-                            msg += 'Akses lokasi ditolak. Mohon izinkan akses lokasi di pengaturan browser.';
-                            break;
-                        case err.POSITION_UNAVAILABLE:
-                            msg += 'Informasi lokasi tidak tersedia.';
-                            break;
-                        case err.TIMEOUT:
-                            msg += 'Waktu permintaan lokasi habis. Coba lagi.';
-                            break;
-                        default:
-                            msg += 'Terjadi kesalahan tidak dikenal.';
-                    }
-                    console.error('❌ Error lokasi:', err);
-                    reject(new Error(msg));
-                },
-                {
-                    enableHighAccuracy: true,
-                    timeout: 10000,
-                    maximumAge: 0
-                }
-            );
-        });
-    }
-
-    async function getNamaKota(lat, lon) {
-        try {
-            const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10&addressdetails=1`;
-
-            const response = await fetch(url, {
-                headers: {
-                    'User-Agent': 'AbsensiApp/1.0'
-                }
-            });
-
-            const data = await response.json();
-
-            return data.address.city
-                || data.address.town
-                || data.address.village
-                || data.address.county
-                || 'Tidak diketahui';
-        } catch (error) {
-            console.error('Error mendapatkan nama kota:', error);
-            return 'Tidak diketahui';
-        }
-    }
-
-    async function tampilkanKotaUser() {
-        try {
-            const lokasi = await getLocation();
-            const kota = await getNamaKota(lokasi.latitude, lokasi.longitude);
-
-            document.getElementById('lokasi-label').innerHTML =
-                `<i class="fas fa-map-marker-alt"></i> ${kota}`;
-            document.getElementById('lokasi-label').className = 'badge bg-success';
-
-        } catch (error) {
-            console.error('Error tampilkan kota:', error);
-            document.getElementById('lokasi-label').innerHTML =
-                '<i class="fas fa-map-marker-alt"></i> Lokasi tidak tersedia';
-            document.getElementById('lokasi-label').className = 'badge bg-warning';
-        }
-    }
-
-    tampilkanKotaUser();
-
-    // ============================================
-    // PROSES ABSENSI (WITH DEVICE TRACKING)
-    // ============================================
-
-    async function prosesAbsensi(tipe) {
-        const nipInput = document.getElementById('nip');
-        const nip = nipInput ? nipInput.value.trim() : '';
-
-        if (!nip) {
-            notify.warning('Mohon masukkan NIP terlebih dahulu');
-            if (nipInput) nipInput.focus();
-            return;
-        }
-
-        const btnMasuk = document.getElementById('btn-absen-masuk');
-        const btnPulang = document.getElementById('btn-absen-pulang');
-        const btnRiwayat = document.getElementById('btn-riwayat');
-
-        showLoading();
-
-        // Disable buttons
-        if (btnMasuk) btnMasuk.disabled = true;
-        if (btnPulang) btnPulang.disabled = true;
-        if (btnRiwayat) btnRiwayat.disabled = true;
-
-        try {
-            const location = await getLocation();
-            const deviceInfo = getDeviceInfo(); // ← DEVICE INFO
-
-            const endpoint = tipe === 'masuk'
-                ? "{{ route('absensi.masuk') }}"
-                : "{{ route('absensi.pulang') }}";
-
-            console.log('📤 Mengirim request absensi:', {
-                nip,
-                latitude: location.latitude,
-                longitude: location.longitude,
-                device_id: deviceInfo.device_id
-            });
-
-            const response = await fetch(endpoint, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken,
-                },
-                body: JSON.stringify({
-                    nip: nip,
-                    latitude: location.latitude,
-                    longitude: location.longitude,
-                    lokasi_id: 1,
-                    device_id: deviceInfo.device_id // ← DEVICE ID DIKIRIM
-                })
-            });
-
-
-            if (!response.ok) {
-                throw new Error(`HTTP Error: ${response.status}`);
-            }
-
-            const result = await response.json();
-            console.log('📥 Response dari server:', result);
-
-            if (result.success) {
-                const tipeName = tipe === 'masuk' ? 'Masuk' : 'Pulang';
-                let message = result.message;
-
-                // Notifikasi khusus jika device baru
-                if (result.data?.is_new_device) {
-                    message += ' (Device baru berhasil didaftarkan)';
-                    console.log('🆕 Device baru terdaftar');
-                }
-
-                notify.success(message, `Absen ${tipeName} Berhasil`);
-            } else {
-                const errorMsg = result.message || 'Terjadi kesalahan saat memproses absensi';
-                notify.error(errorMsg, 'Gagal Absensi');
-            }
-        } catch (err) {
-            notify.error(err.message || 'Terjadi kesalahan yang tidak diketahui', 'Terjadi Kesalahan');
-            console.error('❌ Error absensi:', err);
-        } finally {
-            hideLoading();
-
-            // Enable buttons
-            if (btnMasuk) btnMasuk.disabled = false;
-            if (btnPulang) btnPulang.disabled = false;
-            if (btnRiwayat) btnRiwayat.disabled = false;
-        }
-    }
-
-    // ============================================
-    // TAMPILKAN RIWAYAT
-    // ============================================
-
-    async function tampilkanRiwayat() {
-        const nipInput = document.getElementById('nip');
-        const nip = nipInput ? nipInput.value.trim() : '';
-
-        if (!nip) {
-            notify.warning('Mohon masukkan NIP terlebih dahulu');
-            if (nipInput) nipInput.focus();
-            return;
-        }
-
-        showLoading();
-
-        try {
-            const now = new Date();
-            const bulan = now.getMonth() + 1;
-            const tahun = now.getFullYear();
-            const url = "{{ route('absensi.riwayat') }}?nip=" + encodeURIComponent(nip) +
-                        "&bulan=" + bulan + "&tahun=" + tahun;
-
-            const response = await fetch(url, {
-                headers: { 'X-CSRF-TOKEN': csrfToken }
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP Error: ${response.status}`);
-            }
-
-            const result = await response.json();
-
-            if (!result.success) {
-                notify.error(result.message || 'Gagal memuat riwayat', 'Gagal Memuat Riwayat');
-                return;
-            }
-
-            const container = document.getElementById('riwayat-container');
-            if (!container) {
-                throw new Error('Element riwayat-container tidak ditemukan di halaman');
-            }
-
-            container.classList.remove('d-none');
-
-            const pegawai = result.data?.pegawai;
-            const riwayat = result.data?.riwayat || [];
-
-            const infoPegawai = document.getElementById('info-pegawai');
-            const riwayatList = document.getElementById('riwayat-list');
-
-            if (!infoPegawai || !riwayatList) {
-                throw new Error('Element tidak ditemukan di halaman');
-            }
-
-            // Set pegawai info
-            if (pegawai) {
-                infoPegawai.innerHTML = `
-                    <div class="d-flex align-items-center">
-                        <div class="flex-shrink-0">
-                            <i class="fas fa-user-circle fa-3x text-primary"></i>
-                        </div>
-                        <div class="flex-grow-1 ms-3">
-                            <h5 class="mb-1 fw-bold">${escapeHtml(pegawai.nama || '-')}</h5>
-                            <p class="mb-0"><i class="fas fa-id-badge"></i> NIP: ${escapeHtml(pegawai.nip || '-')}</p>
-                            <p class="mb-0"><i class="fas fa-briefcase"></i> ${escapeHtml(pegawai.jabatan || '-')}</p>
-                        </div>
-                    </div>
-                `;
-            }
-
-            // Set riwayat list
-            if (riwayat.length > 0) {
-                const riwayatHtml = riwayat.map(item => `
-                    <div class="mb-3 card riwayat-card">
-                        <div class="card-body">
-                            <div class="mb-3 d-flex justify-content-between align-items-center">
-                                <h6 class="mb-0 fw-bold">
-                                    <i class="fas fa-calendar-day text-primary"></i>
-                                    ${new Date(item.tanggal).toLocaleDateString('id-ID', {
-                                        weekday: 'long',
-                                        year: 'numeric',
-                                        month: 'long',
-                                        day: 'numeric'
-                                    })}
-                                </h6>
-                                ${item.status_masuk === 'terlambat'
-                                    ? '<span class="text-white status-badge bg-danger"><i class="fas fa-clock"></i> Terlambat</span>'
-                                    : item.status_masuk === 'tepat_waktu'
-                                        ? '<span class="text-white status-badge bg-success"><i class="fas fa-check"></i> Tepat Waktu</span>'
-                                        : ''
-                                }
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-2 d-flex align-items-start">
-                                        <i class="mt-1 fas fa-sign-in-alt text-success me-2"></i>
-                                        <div>
-                                            <small class="text-muted d-block">Jam Masuk</small>
-                                            <strong class="text-success">${item.jam_masuk || '-'}</strong>
-                                            <small class="d-block text-muted">
-                                                <i class="fas fa-map-marker-alt"></i> Jarak: ${item.jarak_masuk || '-'} m
-                                            </small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="d-flex align-items-start">
-                                        <i class="mt-1 fas fa-sign-out-alt text-primary me-2"></i>
-                                        <div>
-                                            <small class="text-muted d-block">Jam Pulang</small>
-                                            <strong class="text-primary">${item.jam_pulang || '-'}</strong>
-                                            <small class="d-block text-muted">
-                                                <i class="fas fa-map-marker-alt"></i> Jarak: ${item.jarak_pulang || '-'} m
-                                            </small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-
-                riwayatList.innerHTML = riwayatHtml;
-            } else {
-                riwayatList.innerHTML = `
-                    <div class="py-5 text-center">
-                        <i class="mb-3 fas fa-inbox fa-3x text-muted"></i>
-                        <p class="text-muted">Belum ada riwayat absensi untuk bulan ini</p>
-                    </div>
-                `;
-            }
-
-            setTimeout(() => {
-                container.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 100);
-
-            notify.success('Riwayat absensi berhasil dimuat', 'Berhasil');
-        } catch (err) {
-            console.error('Error detail:', err);
-            notify.error(err.message || 'Gagal memuat riwayat absensi', 'Error');
-        } finally {
-            hideLoading();
-        }
-    }
-
-    // ============================================
-    // EVENT LISTENERS
-    // ============================================
-
-    const btnMasuk = document.getElementById('btn-absen-masuk');
-    const btnPulang = document.getElementById('btn-absen-pulang');
-    const btnRiwayat = document.getElementById('btn-riwayat');
-
-    if (btnMasuk) btnMasuk.addEventListener('click', () => prosesAbsensi('masuk'));
-    if (btnPulang) btnPulang.addEventListener('click', () => prosesAbsensi('pulang'));
-    if (btnRiwayat) btnRiwayat.addEventListener('click', tampilkanRiwayat);
-
-    // Auto format NIP - only numbers
-    const nipInput = document.getElementById('nip');
-    if (nipInput) {
-        nipInput.addEventListener('input', function() {
-            this.value = this.value.replace(/\D/g, '');
-        });
-        nipInput.focus();
-    }
-});
-</script>
+<script src="{{ asset('kml/absensi-notification.js') }}"></script>
+<script src="{{ asset('kml/absensi-map.js') }}"></script>
+<script src="{{ asset('kml/absensi-main.js') }}"></script>
 @endpush
