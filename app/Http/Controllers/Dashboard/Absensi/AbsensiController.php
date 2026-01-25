@@ -113,7 +113,7 @@ class AbsensiController extends Controller
                 'nip' => 'required|string',
                 'latitude' => 'required|numeric|between:-90,90',
                 'longitude' => 'required|numeric|between:-180,180',
-                'lokasi_id' => 'nullable|exists:lokasi_absensi,id',
+                'lokasi_id' => 'nullable',
                 'device_id' => 'nullable|string|max:64'
             ]);
 
@@ -165,7 +165,7 @@ class AbsensiController extends Controller
                 'nip' => 'required|string',
                 'latitude' => 'required|numeric|between:-90,90',
                 'longitude' => 'required|numeric|between:-180,180',
-                'lokasi_id' => 'nullable|exists:lokasi_absensi,id',
+                'lokasi_id' => 'nullable',
                 'device_id' => 'nullable|string|max:64'
             ]);
 
