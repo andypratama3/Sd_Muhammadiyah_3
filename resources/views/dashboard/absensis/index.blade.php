@@ -5,6 +5,8 @@
 @push('css')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="stylesheet" href="{{ asset('kml/style.css') }}">
+<link rel="stylesheet" href="{{ asset('kml/smooth-zoom.css') }}">
+
 @endpush
 
 @section('content')
@@ -251,4 +253,6 @@
 <script src="{{ asset('kml/absensi-notification.js') }}"></script>
 <script src="{{ asset('kml/absensi-map.js') }}"></script>
 <script src="{{ asset('kml/absensi-main.js') }}"></script>
+<script src="{{ asset('kml/realtime-location.js') }}"></script>
+<script src="{{ asset('kml/realtime-integration.js') }}"></script>
 @endpush

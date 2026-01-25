@@ -266,6 +266,9 @@ function updateUserLocation(position) {
             }
         }, 500);
     }
+
+    // make realtime poisition from user
+
 }
 
 /**
@@ -387,6 +390,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     initializeMap();
+
+    setTimeout(() => {
+        window.realtimeTracker = window.initializeRealtimeTracker({
+            updateInterval: 5000,
+            minAccuracy: 50,
+            distanceThreshold: 10
+        });
+        window.realtimeTracker.startTracking();
+    }, 1000);
+
     console.log('✅ Absensi map script loaded');
 });
 

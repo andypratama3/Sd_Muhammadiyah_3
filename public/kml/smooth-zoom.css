@@ -1,0 +1,378 @@
+/**
+ * Smooth Zoom Map Styles
+ * File: public/css/smooth-zoom.css
+ */
+
+/* ============================================
+   CUSTOM ZOOM CONTROLS
+   ============================================ */
+
+.custom-zoom-control {
+    position: relative;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.custom-zoom-control button {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2d3748;
+    font-size: 18px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    outline: none;
+    position: relative;
+}
+
+.custom-zoom-control button:not(:last-child) {
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.custom-zoom-control button:hover {
+    background: #f7fafc;
+}
+
+.custom-zoom-control button:nth-child(1):hover {
+    color: #667eea;
+}
+
+.custom-zoom-control button:nth-child(2):hover {
+    color: #f56565;
+}
+
+.custom-zoom-control button:nth-child(3):hover {
+    color: #48bb78;
+}
+
+.custom-zoom-control button:active {
+    transform: scale(0.95);
+}
+
+/* Ripple effect on click */
+.custom-zoom-control button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(102, 126, 234, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.custom-zoom-control button:active::before {
+    width: 60px;
+    height: 60px;
+}
+
+/* ============================================
+   MAP ZOOM ANIMATIONS
+   ============================================ */
+
+.leaflet-container {
+    /* Smooth transitions untuk map panning */
+    transition: all 0.1s ease-out;
+}
+
+/* Smooth zoom indicator */
+.zoom-level-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+}
+
+.zoom-level-indicator.active {
+    opacity: 1;
+}
+
+/* ============================================
+   FOCUS TO LOCATION BUTTON
+   ============================================ */
+
+.focus-location-button {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 45px;
+    height: 45px;
+    border: none;
+    border-radius: 50%;
+    background: white;
+    color: #667eea;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 300;
+}
+
+.focus-location-button:hover {
+    transform: scale(1.1);
+    background: #f7fafc;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.focus-location-button:active {
+    transform: scale(0.95);
+}
+
+/* Pulsing animation ketika user location updated */
+.focus-location-button.pulse {
+    animation: locationPulse 2s infinite;
+}
+
+@keyframes locationPulse {
+    0%, 100% {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    50% {
+        box-shadow: 0 2px 20px rgba(72, 187, 120, 0.4);
+    }
+}
+
+/* ============================================
+   MAP ZOOM TRANSITIONS
+   ============================================ */
+
+/* Smooth zoom out effect */
+@keyframes zoomOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0.7;
+        transform: scale(1.05);
+    }
+}
+
+/* Smooth zoom in effect */
+@keyframes zoomIn {
+    from {
+        opacity: 0.7;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.map-zoom-in {
+    animation: zoomIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.map-zoom-out {
+    animation: zoomOut 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   ZOOM LEVEL BADGE
+   ============================================ */
+
+.map-zoom-badge {
+    position: absolute;
+    top: 60px;
+    left: 10px;
+    background: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2d3748;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 300;
+    min-width: 120px;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.map-zoom-badge strong {
+    display: block;
+    color: #667eea;
+    font-size: 16px;
+    margin-top: 4px;
+}
+
+/* ============================================
+   MAP CONTAINER ENHANCEMENTS
+   ============================================ */
+
+#map-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+}
+
+#map-container.zoom-active {
+    /* Subtle glow when zooming */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1),
+                inset 0 0 20px rgba(102, 126, 234, 0.05);
+}
+
+/* Smooth tiles loading */
+.leaflet-tile {
+    transition: opacity 0.3s ease;
+}
+
+.leaflet-tile-loaded {
+    opacity: 1;
+}
+
+/* ============================================
+   RESPONSIVE ZOOM CONTROLS
+   ============================================ */
+
+@media (max-width: 768px) {
+    .custom-zoom-control button {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+    }
+
+    .focus-location-button {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+        bottom: 15px;
+        right: 15px;
+    }
+
+    #map-container {
+        height: 400px;
+    }
+}
+
+@media (max-width: 576px) {
+    .custom-zoom-control button {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+
+    .focus-location-button {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+
+    .map-zoom-badge {
+        top: 50px;
+        left: 5px;
+        font-size: 11px;
+        padding: 6px 10px;
+    }
+
+    #map-container {
+        height: 350px;
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+.custom-zoom-control button:focus,
+.focus-location-button:focus {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: more) {
+    .custom-zoom-control button {
+        border: 1px solid #ccc;
+    }
+
+    .custom-zoom-control button:hover {
+        background: #e8e8e8;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .custom-zoom-control button,
+    .focus-location-button,
+    .map-zoom-badge {
+        transition: none;
+    }
+
+    .focus-location-button.pulse {
+        animation: none;
+    }
+
+    .map-zoom-in,
+    .map-zoom-out {
+        animation: none;
+    }
+}
+
+/* ============================================
+   DARK MODE SUPPORT (optional)
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+    .custom-zoom-control,
+    .custom-zoom-control button,
+    .focus-location-button,
+    .map-zoom-badge {
+        background: #2d3748;
+        color: #e2e8f0;
+    }
+
+    .custom-zoom-control button:not(:last-child) {
+        border-bottom-color: #4a5568;
+    }
+
+    .custom-zoom-control button:hover {
+        background: #4a5568;
+    }
+
+    .focus-location-button:hover {
+        background: #4a5568;
+    }
+
+    .map-zoom-badge {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+    .custom-zoom-control,
+    .focus-location-button,
+    .map-zoom-badge {
+        display: none !important;
+    }
+
+    #map-container {
+        height: 600px;
+        page-break-inside: avoid;
+    }
+}
