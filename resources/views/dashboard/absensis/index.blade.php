@@ -564,12 +564,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 ? "{{ route('absensi.masuk') }}"
                 : "{{ route('absensi.pulang') }}";
 
-            // console.log('📤 Mengirim request absensi:', {
-            //     nip,
-            //     latitude: location.latitude,
-            //     longitude: location.longitude,
-            //     device_id: deviceInfo.device_id
-            // });
+            console.log('📤 Mengirim request absensi:', {
+                nip,
+                latitude: location.latitude,
+                longitude: location.longitude,
+                device_id: deviceInfo.device_id
+            });
 
             const response = await fetch(endpoint, {
                 method: 'POST',
@@ -601,7 +601,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Notifikasi khusus jika device baru
                 if (result.data?.is_new_device) {
                     message += ' (Device baru berhasil didaftarkan)';
-                    // console.log('🆕 Device baru terdaftar');
+                    console.log('🆕 Device baru terdaftar');
                 }
 
                 notify.success(message, `Absen ${tipeName} Berhasil`);

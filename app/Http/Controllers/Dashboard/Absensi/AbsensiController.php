@@ -188,118 +188,118 @@ class AbsensiController extends Controller
     /**
      * Tampilkan daftar device milik user yang sedang login
      */
-    public function myDevices()
-    {
-        $user = auth()->user();
-        $karyawan = Karyawan::where('user_id', $user->id)->first();
+    // public function myDevices()
+    // {
+    //     $user = auth()->user();
+    //     $karyawan = Karyawan::where('user_id', $user->id)->first();
 
-        if (!$karyawan) {
-            abort(403, 'Data karyawan tidak ditemukan');
-        }
+    //     if (!$karyawan) {
+    //         abort(403, 'Data karyawan tidak ditemukan');
+    //     }
 
-        $devices = DeviceAbsensi::where('karyawan_id', $karyawan->id)
-            ->orderBy('last_used_at', 'desc')
-            ->get();
+    //     $devices = DeviceAbsensi::where('karyawan_id', $karyawan->id)
+    //         ->orderBy('last_used_at', 'desc')
+    //         ->get();
 
-        return view('dashboard.absensis.my-devices', compact('devices', 'karyawan'));
-    }
+    //     return view('dashboard.absensis.my-devices', compact('devices', 'karyawan'));
+    // }
 
-    /**
-     * Nonaktifkan device
-     * User bisa nonaktifkan device miliknya sendiri
-     * Admin bisa nonaktifkan device siapa saja
-     */
-    public function deactivateDevice(Request $request, $deviceId)
-    {
-        $device = DeviceAbsensi::findOrFail($deviceId);
-        $user = auth()->user();
+    // /**
+    //  * Nonaktifkan device
+    //  * User bisa nonaktifkan device miliknya sendiri
+    //  * Admin bisa nonaktifkan device siapa saja
+    //  */
+    // public function deactivateDevice(Request $request, $deviceId)
+    // {
+    //     $device = DeviceAbsensi::findOrFail($deviceId);
+    //     $user = auth()->user();
 
-        // Cek authorization
-        if (!$user->hasAnyRole(['superadmin', 'admin'])) {
-            // User biasa hanya bisa nonaktifkan device miliknya sendiri
-            $karyawan = Karyawan::where('user_id', $user->id)->first();
+    //     // Cek authorization
+    //     if (!$user->hasAnyRole(['superadmin', 'admin'])) {
+    //         // User biasa hanya bisa nonaktifkan device miliknya sendiri
+    //         $karyawan = Karyawan::where('user_id', $user->id)->first();
 
-            if (!$karyawan || $device->karyawan_id !== $karyawan->id) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Anda tidak memiliki akses untuk menonaktifkan device ini'
-                ], 403);
-            }
-        }
+    //         if (!$karyawan || $device->karyawan_id !== $karyawan->id) {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'Anda tidak memiliki akses untuk menonaktifkan device ini'
+    //             ], 403);
+    //         }
+    //     }
 
-        $device->update(['is_active' => false]);
+    //     $device->update(['is_active' => false]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Device "' . $device->device_name . '" berhasil dinonaktifkan'
-        ]);
-    }
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Device "' . $device->device_name . '" berhasil dinonaktifkan'
+    //     ]);
+    // }
 
-    /**
-     * Aktifkan kembali device yang sudah dinonaktifkan
-     * Hanya admin yang bisa
-     */
-    public function activateDevice(Request $request, $deviceId)
-    {
-        $user = auth()->user();
+    // /**
+    //  * Aktifkan kembali device yang sudah dinonaktifkan
+    //  * Hanya admin yang bisa
+    //  */
+    // public function activateDevice(Request $request, $deviceId)
+    // {
+    //     $user = auth()->user();
 
-        if (!$user->hasAnyRole(['superadmin', 'admin'])) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Hanya admin yang dapat mengaktifkan device'
-            ], 403);
-        }
+    //     if (!$user->hasAnyRole(['superadmin', 'admin'])) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Hanya admin yang dapat mengaktifkan device'
+    //         ], 403);
+    //     }
 
-        $device = DeviceAbsensi::findOrFail($deviceId);
-        $device->update(['is_active' => true]);
+    //     $device = DeviceAbsensi::findOrFail($deviceId);
+    //     $device->update(['is_active' => true]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Device "' . $device->device_name . '" berhasil diaktifkan kembali'
-        ]);
-    }
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Device "' . $device->device_name . '" berhasil diaktifkan kembali'
+    //     ]);
+    // }
 
-    /**
-     * Hapus device (Admin only)
-     */
-    public function deleteDevice(Request $request, $deviceId)
-    {
-        $user = auth()->user();
+    // /**
+    //  * Hapus device (Admin only)
+    //  */
+    // public function deleteDevice(Request $request, $deviceId)
+    // {
+    //     $user = auth()->user();
 
-        if (!$user->hasAnyRole(['superadmin', 'admin'])) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Hanya admin yang dapat menghapus device'
-            ], 403);
-        }
+    //     if (!$user->hasAnyRole(['superadmin', 'admin'])) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Hanya admin yang dapat menghapus device'
+    //         ], 403);
+    //     }
 
-        $device = DeviceAbsensi::findOrFail($deviceId);
-        $deviceName = $device->device_name;
-        $device->delete();
+    //     $device = DeviceAbsensi::findOrFail($deviceId);
+    //     $deviceName = $device->device_name;
+    //     $device->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Device "' . $deviceName . '" berhasil dihapus'
-        ]);
-    }
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Device "' . $deviceName . '" berhasil dihapus'
+    //     ]);
+    // }
 
-    /**
-     * Kelola semua device (Admin only)
-     */
-    public function manageDevices()
-    {
-        $user = auth()->user();
+    // /**
+    //  * Kelola semua device (Admin only)
+    //  */
+    // public function manageDevices()
+    // {
+    //     $user = auth()->user();
 
-        if (!$user->hasAnyRole(['superadmin', 'admin'])) {
-            abort(403, 'Unauthorized');
-        }
+    //     if (!$user->hasAnyRole(['superadmin', 'admin'])) {
+    //         abort(403, 'Unauthorized');
+    //     }
 
-        $devices = DeviceAbsensi::with('karyawan.user')
-            ->orderBy('last_used_at', 'desc')
-            ->paginate(20);
+    //     $devices = DeviceAbsensi::with('karyawan.user')
+    //         ->orderBy('last_used_at', 'desc')
+    //         ->paginate(20);
 
-        return view('dashboard.absensis.manage-devices', compact('devices'));
-    }
+    //     return view('dashboard.absensis.manage-devices', compact('devices'));
+    // }
 
     /**
      * API: Get device info untuk debugging
