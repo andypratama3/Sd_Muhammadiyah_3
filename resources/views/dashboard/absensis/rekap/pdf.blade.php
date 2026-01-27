@@ -142,14 +142,14 @@
                             -
                         @endif
                     </td>
-                    <td class="text-right">
+                    <td class="text-center">
                         @if($row->rp_masuk)
                             Rp. {{ number_format(floatval($row->rp_masuk), 0, ',', '.') }}
                         @else
                             -
                         @endif
                     </td>
-                    <td class="text-right">
+                    <td class="text-center">
                         @if($row->rp_pulang)
                             Rp. {{ number_format(floatval($row->rp_pulang), 0, ',', '.') }}
                         @else
