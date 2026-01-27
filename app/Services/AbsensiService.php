@@ -547,7 +547,8 @@ class AbsensiService
                 'status_masuk' => $statusMasuk,
                 'ip_address' => $ipAddress,
                 'user_agent' => $userAgent,
-                'device_id' => $deviceId
+                'device_id' => $deviceId,
+                'rp_masuk' => 4000
             ];
 
             // Tambah lokasi_absensi_id jika tidak pakai KML
@@ -657,6 +658,12 @@ class AbsensiService
         $batasPulang = Carbon::parse($absensi->jamKerja->batas_pulang, 'Asia/Makassar');
         $statusPulang = $now->lessThan($batasPulang) ? 'pulang_cepat' : 'tepat_waktu';
 
+        $rp_pulang = 0;
+
+        if($statusPulang != 'pulang_cepat') {
+            $rp_pulang = 4000;
+        }
+
         // Simpan pulang
         try {
             $dataUpdate = [
@@ -665,7 +672,8 @@ class AbsensiService
                 'longitude_pulang' => $longitude,
                 'status_pulang' => $statusPulang,
                 'ip_address_pulang' => $ipAddress,
-                'user_agent_pulang' => $userAgent
+                'user_agent_pulang' => $userAgent,
+                'rp_pulang' => $rp_pulang,
             ];
 
             // Tambah jarak_pulang jika tidak pakai KML

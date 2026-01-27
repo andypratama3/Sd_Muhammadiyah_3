@@ -242,6 +242,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::get('/', [RekapAbsensiController::class, 'index'])->name('index');
         Route::get('/export-pdf', [RekapAbsensiController::class, 'exportPdf'])->name('export.pdf');
         Route::get('/export-excel', [RekapAbsensiController::class, 'exportExcel'])->name('export.excel');
+        Route::get('/{id}', [RekapAbsensiController::class, 'show'])->name('show');
+        Route::put('/{id}', [RekapAbsensiController::class, 'update'])->name('update');
     });
 
 

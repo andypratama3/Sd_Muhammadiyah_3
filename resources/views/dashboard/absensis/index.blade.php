@@ -75,11 +75,12 @@
                                     id="nip"
                                     name="nip"
                                     maxlength="18"
-                                    value="{{ old('nip') }}"
+                                    value="{{ old('nip', $karyawan->nip ?? '') }}"
                                     class="form-control"
                                     placeholder="Masukkan 18 digit NIP Anda"
                                     required
-                                    autocomplete="off">
+                                    autocomplete="off"
+                                    />
                             </div>
                             <small class="mt-2 form-text text-muted">
                                 <i class="fas fa-info-circle"></i> Contoh: 198501012010011001
@@ -254,28 +255,28 @@
 <script src="{{ asset('kml/absensi-map.js') }}"></script>
 <script src="{{ asset('kml/realtime-integration.js') }}"></script>
 <script src="{{ asset('kml/absensi-main.js') }}"></script>
+<script src="{{ asset('kml/focus-location-button.js') }}"></script>
 <script>
-   // Real-time dashboard
-// setInterval(() => {
-//     const loc = window.realtimeTracker?.getCurrentLocation();
-//     const stats = window.realtimeTracker?.getStatistics();
+setInterval(() => {
+    const loc = window.realtimeTracker?.getCurrentLocation();
+    const stats = window.realtimeTracker?.getStatistics();
 
-//     if (loc) {
-//         console.clear();
-//         console.log('═'.repeat(60));
-//         console.log('🎯 REAL-TIME TRACKING DASHBOARD');
-//         console.log('═'.repeat(60));
-//         console.log(`📍 Position: ${loc.latitude.toFixed(6)}, ${loc.longitude.toFixed(6)}`);
-//         console.log(`📡 Accuracy: ±${loc.accuracy.toFixed(0)}m`);
-//         console.log(`🎯 Geofence: ${window.realtimeTracker.geofenceStatus?.toUpperCase()}`);
-//         console.log(`🚶 Distance from last: ${loc.distanceFromLast ? loc.distanceFromLast.toFixed(1) + 'm' : 'First position'}`);
-//         console.log(`📊 Total distance: ${stats.totalDistance.toFixed(0)}m`);
-//         console.log(`📈 Avg accuracy: ±${stats.avgAccuracy.toFixed(0)}m`);
-//         console.log(`📍 Updates: ${stats.totalLocations}`);
-//         console.log(`⏱️ Last update: ${loc.formattedTime}`);
-//         console.log('═'.repeat(60));
-//     }
-// }, 1000);
+    // if (loc) {
+    //     console.clear();
+    //     console.log('═'.repeat(60));
+    //     console.log('🎯 REAL-TIME TRACKING DASHBOARD');
+    //     console.log('═'.repeat(60));
+    //     console.log(`📍 Position: ${loc.latitude.toFixed(6)}, ${loc.longitude.toFixed(6)}`);
+    //     console.log(`📡 Accuracy: ±${loc.accuracy.toFixed(0)}m`);
+    //     console.log(`🎯 Geofence: ${window.realtimeTracker.geofenceStatus?.toUpperCase()}`);
+    //     console.log(`🚶 Distance from last: ${loc.distanceFromLast ? loc.distanceFromLast.toFixed(1) + 'm' : 'First position'}`);
+    //     console.log(`📊 Total distance: ${stats.totalDistance.toFixed(0)}m`);
+    //     console.log(`📈 Avg accuracy: ±${stats.avgAccuracy.toFixed(0)}m`);
+    //     console.log(`📍 Updates: ${stats.totalLocations}`);
+    //     console.log(`⏱️ Last update: ${loc.formattedTime}`);
+    //     console.log('═'.repeat(60));
+    // }
+}, 1000);
 // fuction test
 
 // Simulasi jalan keluar area

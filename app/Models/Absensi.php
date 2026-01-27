@@ -29,6 +29,8 @@ class Absensi extends Model
         'ip_address',
         'user_agent',
         'device_id',
+        'rp_masuk',
+        'rp_pulang',
         'ip_address_pulang',
         'user_agent_pulang'
     ];

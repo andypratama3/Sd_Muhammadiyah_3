@@ -221,7 +221,7 @@
          </li>
         @endcan
 
-        @canany('')
+        @canany('role: admin')
          <!-- Forms & Tables -->
          <li class="menu-header small text-uppercase"><span class="menu-header-text">Siswa &amp;
                  Pembayaran</span></li>

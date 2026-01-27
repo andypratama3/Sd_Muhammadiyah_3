@@ -50,6 +50,8 @@ function initializeMap() {
         metric: true
     }).addTo(map);
 
+    // FocusLocationButton.initialize();
+
     // Force map to recalculate size
     setTimeout(() => {
         if (map) {
