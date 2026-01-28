@@ -95,7 +95,7 @@ Route::group(['prefix' => 'v2'], function () {
     });
 
     // Fetch Front End
-    // Route::group(['middleware' => 'jwt'], function () {
+    Route::group(['middleware' => 'jwt'], function () {
 
         // Route::post('/spmb/store', [SPMBController::class, 'store']);
 
@@ -183,7 +183,7 @@ Route::group(['prefix' => 'v2'], function () {
 
         // Statistics endpoint
         Route::get('/statistics', [PrestasiDataController::class, 'statistics']);
-    // });
+    });
 
     // END Fetch
 
