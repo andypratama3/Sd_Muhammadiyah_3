@@ -19,7 +19,7 @@ class PrestasiController extends Controller
     public function index()
     {
         $limit = 15;
-        $prestasis = Prestasi::select(['name', 'description', 'status', 'slug'])->paginate($limit);
+        $prestasis = Prestasi::with('prestasi_kategori')->select(['name', 'description', 'status', 'slug'])->paginate($limit);
         $count = $prestasis->count();
         $no = $limit * ($prestasis->currentPage() - 1);
 

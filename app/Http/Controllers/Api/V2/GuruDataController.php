@@ -67,6 +67,24 @@ class GuruDataController extends Controller
 
             $data = $query->orderBy('name', 'asc')->get();
 
+
+            return $data->map(function ($item) {
+                return [
+                    "name" => $item->name,
+                    "karyawan_id" => $item->karyawan_id,
+                    "description" => $item->description,
+                    "foto" => $item->foto,
+                    "slug" => $item->slug,
+                    "lulusan" => $item->lulusan,
+                    "updated_at" => $item->updated_at,
+                    "karyawan" => $item->karyawan,
+                    "pelajarans" => $item->pelajarans->map(fn($p) => [
+                        'slug' => $p->slug,
+                        'name' => $p->name,
+                    ])->toArray(),
+                ];
+            });
+
             return $this->success($data ?? [], 'OK');
         } catch (\Exception $e) {
             return $this->serverError('Gagal mengambil guru: ' . $e->getMessage(), 500);
