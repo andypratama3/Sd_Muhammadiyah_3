@@ -84,7 +84,7 @@ class BeritaDataController extends Controller
         try {
             $data = Berita::whereNull('deleted_at')
                 ->orderByDesc('views')
-                ->select(['judul', 'desc', 'foto', 'slug', 'category','created_at', 'updated_at'])
+                ->select(['judul', 'desc', 'foto', 'slug','views','category','created_at', 'updated_at'])
                 ->take(10)
                 ->get();
 
@@ -124,7 +124,7 @@ class BeritaDataController extends Controller
             $perPage  = $request->input('per_page', 10);
 
             $query = Berita::whereNull('deleted_at')
-            ->select(['judul', 'desc', 'foto', 'slug', 'category','created_at', 'updated_at']);
+            ->select(['judul', 'desc', 'foto', 'slug','views','category','created_at', 'updated_at']);
 
             // Search
             if ($search && trim($search) !== '') {
