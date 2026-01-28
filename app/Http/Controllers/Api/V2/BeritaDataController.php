@@ -31,6 +31,18 @@ class BeritaDataController extends Controller
                 ->limit($limit)
                 ->get();
 
+            $data = $data->map(function ($item) {
+                return [
+                    'judul' => $item->judul,
+                    'desc' => $item->desc,
+                    'foto' => $item->foto,
+                    'slug' => $item->slug,
+                    'category' => $item->category,
+                    'updated_at' => $item->updated_at,
+                ];
+            })->toArray();
+
+
             return $this->success($data ?? [], 'OK');
         } catch (\Exception $e) {
             return $this->serverError('Gagal mengambil list berita: ' . $e->getMessage());
@@ -71,12 +83,14 @@ class BeritaDataController extends Controller
         try {
             $data = Berita::whereNull('deleted_at')
                 ->orderByDesc('views')
+                ->select(['judul', 'desc', 'foto', 'slug', 'category'])
                 ->take(10)
                 ->get();
 
             if ($data->count() > 0) {
                 return $this->success($data, 'OK');
             }
+
 
             return $this->error('Data tidak ditemukan');
         } catch (\Exception $e) {
@@ -102,13 +116,14 @@ class BeritaDataController extends Controller
             'per_page' => 'nullable|integer',
         ]);
 
-        
+
         try {
             $search   = $request->input('search');
             $category = $request->input('category');
             $perPage  = $request->input('per_page', 10);
 
-            $query = Berita::whereNull('deleted_at');
+            $query = Berita::whereNull('deleted_at')
+            ->select(['judul', 'desc', 'foto', 'slug', 'category']);
 
             // Search
             if ($search && trim($search) !== '') {
@@ -126,6 +141,7 @@ class BeritaDataController extends Controller
             $query->orderByDesc('created_at');
 
             $data = $query->paginate($perPage);
+
 
             return $this->paginated($data, 'OK');
         } catch (\Exception $e) {
@@ -149,7 +165,6 @@ class BeritaDataController extends Controller
             $berita->increment('views');
 
             $data = [
-                'id' => $berita->id,
                 'judul' => $berita->judul,
                 'desc' => $berita->desc,
                 'slug' => $berita->slug,
