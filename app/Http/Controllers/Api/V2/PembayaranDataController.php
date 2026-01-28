@@ -58,7 +58,7 @@ class PembayaranDataController extends Controller
             // Return success response
             return $this->success([
                 'siswa' => [
-                    'id' => $siswa->id,
+                    // 'id' => $siswa->id,
                     'name' => $siswa->name,
                     'nisn' => $siswa->nisn,
                     'foto' => $siswa->foto,
