@@ -21,6 +21,13 @@ class PrestasiDataController extends Controller
         try {
             $categories = KategoriPrestasi::all();
 
+            $categories = $categories->map(function ($category) {
+                return [
+                    'name' => $category->name,
+                    'slug' => $category->slug
+                ];
+            })->toArray();
+
             return $this->success($categories, 'Kategori prestasi berhasil diambil');
         } catch (\Exception $e) {
             return $this->serverError('Gagal mengambil kategori prestasi: ' . $e->getMessage());
@@ -37,6 +44,13 @@ class PrestasiDataController extends Controller
         try {
             $categories = Prestasi::getSiswaCategories();
 
+            $categories = $categories->map(function ($category) {
+                return [
+                    'name' => $category->name,
+                    'slug' => $category->slug
+                ];
+            })->toArray();
+
             return $this->success($categories, 'Kategori prestasi siswa berhasil diambil');
         } catch (\Exception $e) {
             return $this->serverError('Gagal mengambil kategori prestasi siswa: ' . $e->getMessage());
@@ -52,6 +66,13 @@ class PrestasiDataController extends Controller
     {
         try {
             $categories = Prestasi::getSekolahCategories();
+
+            $categories = $categories->map(function ($category) {
+                return [
+                    'name' => $category->name,
+                    'slug' => $category->slug
+                ];
+            })->toArray();
 
             return $this->success($categories, 'Kategori prestasi sekolah berhasil diambil');
         } catch (\Exception $e) {
@@ -131,7 +152,7 @@ class PrestasiDataController extends Controller
         try {
             $search = $request->input('search', null);
             $tingkat = $request->input('tingkat', null);
-            $kategoriId = $request->input('kategori_id', null);
+            $kategoriSlug = $request->input('kategori_slug', null);
             $tahun = $request->input('tahun', null);
             $perPage = $request->input('per_page', 12);
             $page = $request->input('page', 1);
@@ -154,7 +175,8 @@ class PrestasiDataController extends Controller
             }
 
             // Filter berdasarkan kategori (jangan filter jika 'all' atau 'semua')
-            if ($kategoriId && !empty(trim($kategoriId)) && !in_array(strtolower($kategoriId), ['all', 'semua'])) {
+            if ($kategoriSlug && !empty(trim($kategoriSlug)) && !in_array(strtolower($kategoriSlug), ['all', 'semua'])) {
+                $kategoriId = KategoriPrestasi::where('slug', $kategoriSlug)->first()->id;
                 $query->whereHas('prestasi_kategori', function ($q) use ($kategoriId) {
                     $q->where('kategori_prestasi_id', $kategoriId);
                 });
@@ -174,7 +196,6 @@ class PrestasiDataController extends Controller
             // Transform response dengan kategori
             $data = $prestasi->getCollection()->map(function ($item) {
                 return [
-                    'id' => $item->id,
                     'slug' => $item->slug,
                     'name' => $item->name,
                     'description' => $item->description,
@@ -185,8 +206,8 @@ class PrestasiDataController extends Controller
                     'tanggal' => $item->tanggal,
                     'juara' => $item->juara,
                     'kategori' => $item->prestasi_kategori->map(fn($cat) => [
-                        'id' => $cat->id,
                         'name' => $cat->name,
+                        'slug' => $cat->slug
                     ])->toArray(),
                     'created_at' => $item->created_at,
                     'updated_at' => $item->updated_at,
@@ -215,7 +236,6 @@ class PrestasiDataController extends Controller
 
             $data = $prestasi->map(function ($item) {
                 return [
-                    'id' => $item->id,
                     'slug' => $item->slug,
                     'name' => $item->name,
                     'description' => $item->description,
@@ -226,8 +246,8 @@ class PrestasiDataController extends Controller
                     'tanggal' => $item->tanggal,
                     'juara' => $item->juara,
                     'kategori' => $item->prestasi_kategori->map(fn($cat) => [
-                        'id' => $cat->id,
                         'name' => $cat->name,
+                        'slug' => $cat->slug
                     ])->toArray(),
                 ];
             });
@@ -257,7 +277,7 @@ class PrestasiDataController extends Controller
     {
         try {
             $search = $request->input('search', null);
-            $kategoriId = $request->input('kategori_id', null);
+            $kategoriSlug = $request->input('kategori_slug', null);
             $tahun = $request->input('tahun', null);
             $perPage = $request->input('per_page', 12);
             $page = $request->input('page', 1);
@@ -274,7 +294,8 @@ class PrestasiDataController extends Controller
             }
 
             // Filter berdasarkan kategori (jangan filter jika 'all' atau 'semua')
-            if ($kategoriId && !empty(trim($kategoriId)) && !in_array(strtolower($kategoriId), ['all', 'semua'])) {
+            if ($kategoriSlug && !empty(trim($kategoriSlug)) && !in_array(strtolower($kategoriSlug), ['all', 'semua'])) {
+                $kategoriId = KategoriPrestasi::where('slug', $kategoriSlug)->first()->id;
                 $query->whereHas('prestasi_kategori', function ($q) use ($kategoriId) {
                     $q->where('kategori_prestasi_id', $kategoriId);
                 });
@@ -294,7 +315,6 @@ class PrestasiDataController extends Controller
             // Transform response dengan kategori
             $data = $prestasi->getCollection()->map(function ($item) {
                 return [
-                    'id' => $item->id,
                     'slug' => $item->slug,
                     'name' => $item->name,
                     'description' => $item->description,
@@ -302,8 +322,8 @@ class PrestasiDataController extends Controller
                     'status' => $item->status,
                     'tanggal' => $item->tanggal,
                     'kategori' => $item->prestasi_kategori->map(fn($cat) => [
-                        'id' => $cat->id,
                         'name' => $cat->name,
+                        'slug' => $cat->slug,
                     ])->toArray(),
                     'created_at' => $item->created_at,
                     'updated_at' => $item->updated_at,
@@ -334,7 +354,6 @@ class PrestasiDataController extends Controller
             $prestasi->incrementClickCount('views');
 
             $data = [
-                'id' => $prestasi->id,
                 'slug' => $prestasi->slug,
                 'name' => $prestasi->name,
                 'description' => $prestasi->description,
@@ -346,8 +365,8 @@ class PrestasiDataController extends Controller
                 'juara' => $prestasi->juara,
                 'views' => $prestasi->views ?? 0,
                 'kategori' => $prestasi->prestasi_kategori->map(fn($cat) => [
-                    'id' => $cat->id,
                     'name' => $cat->name,
+                    'slug' => $cat->slug
                 ])->toArray(),
                 'created_at' => $prestasi->created_at,
                 'updated_at' => $prestasi->updated_at,
@@ -378,7 +397,6 @@ class PrestasiDataController extends Controller
             $prestasi->incrementClickCount('views');
 
             $data = [
-                'id' => $prestasi->id,
                 'slug' => $prestasi->slug,
                 'name' => $prestasi->name,
                 'description' => $prestasi->description,
@@ -387,8 +405,8 @@ class PrestasiDataController extends Controller
                 'tanggal' => $prestasi->tanggal,
                 'views' => $prestasi->views ?? 0,
                 'kategori' => $prestasi->prestasi_kategori->map(fn($cat) => [
-                    'id' => $cat->id,
                     'name' => $cat->name,
+                    'slug' => $cat->slug
                 ])->toArray(),
                 'created_at' => $prestasi->created_at,
                 'updated_at' => $prestasi->updated_at,

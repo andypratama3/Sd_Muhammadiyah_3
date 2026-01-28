@@ -37,5 +37,4 @@ class Kelas extends Model
         return $this->hasMany(Pembayaran::class, 'kelas', 'id');
     }
 
-
 }

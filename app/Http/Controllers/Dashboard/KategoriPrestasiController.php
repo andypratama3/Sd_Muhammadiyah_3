@@ -44,7 +44,7 @@ class KategoriPrestasiController extends Controller
         ]);
 
         $kategoriPrestasi = KategoriPrestasi::create([
-            'name' => $request->name
+            'name' => $request->name,
         ]);
 
         return redirect()->route('dashboard.datasekolah.kategori.prestasi.index')->with('success','Berhasil Menambahkan Kategori Prestasi');
