@@ -40,7 +40,7 @@ class TenagaKependidikanDataController extends Controller
 
         foreach ($strukturList as $struktur) {
             $node = [
-                'id' => $struktur->id,
+                // 'id' => $struktur->id,
                 'name' => $struktur->name,
                 'slug' => $struktur->slug,
                 'staff' => [],
@@ -51,7 +51,7 @@ class TenagaKependidikanDataController extends Controller
             foreach ($tenagaPendidikan as $staff) {
                 if ($staff->struktur_tenaga_pendidikan_id === $struktur->id) {
                     $node['staff'][] = [
-                        'id' => $staff->id,
+                        // 'id' => $staff->id,
                         'name' => $staff->name,
                         'jabatan' => $staff->jabatan,
                         'foto' => $staff->foto,
