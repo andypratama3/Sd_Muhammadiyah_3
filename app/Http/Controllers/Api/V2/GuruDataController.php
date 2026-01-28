@@ -44,52 +44,77 @@ class GuruDataController extends Controller
             $search    = $request->input('search');
             $pelajaran = $request->input('pelajaran');
 
-            $query = Guru::query()
-                ->with(['karyawan', 'pelajarans'])
-                ->select('id', 'name', 'karyawan_id', 'description', 'foto', 'slug', 'lulusan', 'updated_at');
+            $query = Guru::with([
+                    'karyawan',
+                    'pelajarans'
+                ])
+                ->select(
+                    'id', // WAJIB ada
+                    'name',
+                    'karyawan_id',
+                    'description',
+                    'foto',
+                    'slug',
+                    'lulusan',
+                    'updated_at'
+                );
 
-            // Search berdasarkan nama atau deskripsi
-            if ($search && trim($search) !== '') {
+            // Search
+            if ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'LIKE', "%{$search}%")
-                      ->orWhere('description', 'LIKE', "%{$search}%")
-                      ->orWhere('lulusan', 'LIKE', "%{$search}%");
+                    ->orWhere('description', 'LIKE', "%{$search}%")
+                    ->orWhere('lulusan', 'LIKE', "%{$search}%");
                 });
             }
 
-            // Filter berdasarkan pelajaran
-            if ($pelajaran && trim($pelajaran) !== '') {
-                $query->whereHas('pelajarans', function ($q) use ($pelajaran) {
+            // Filter pelajaran
+            if ($pelajaran) {
+                $query->whereHas('pelajarans', fn ($q) =>
                     $q->where('pelajarans.slug', $pelajaran)
-                      ->orWhere('pelajarans.name', 'LIKE', "%{$pelajaran}%");
-                });
+                );
             }
 
-            $data = $query->orderBy('name', 'asc')->get();
+            $data = $query
+                ->orderBy('name', 'asc')
+                ->get()
+                ->each(function ($guru) {
 
+                    // ❌ hide id guru
+                    $guru->makeHidden(['id', 'karyawan_id']);
 
-            return $data->map(function ($item) {
-                return [
-                    "name" => $item->name,
-                    "karyawan_id" => $item->karyawan_id,
-                    "description" => $item->description,
-                    "foto" => $item->foto,
-                    "slug" => $item->slug,
-                    "lulusan" => $item->lulusan,
-                    "updated_at" => $item->updated_at,
-                    "karyawan" => $item->karyawan,
-                    "pelajarans" => $item->pelajarans->map(fn($p) => [
-                        'slug' => $p->slug,
-                        'name' => $p->name,
-                    ])->toArray(),
-                ];
-            });
+                    // ❌ hide id karyawan
+                    if ($guru->karyawan) {
+                        $guru->karyawan->makeHidden([
+                            'id',
+                            'user_id',
+                            'created_at',
+                            'updated_at',
+                            'deleted_at'
+                        ]);
+                    }
 
-            return $this->success($data ?? [], 'OK');
+                    // ❌ hide id pelajarans + pivot
+                    $guru->pelajarans->each(function ($pelajaran) {
+                        $pelajaran->makeHidden([
+                            'id',
+                            'created_at',
+                            'updated_at',
+                            'pivot'
+                        ]);
+                    });
+                });
+
+            return $this->success($data, 'OK');
+
         } catch (\Exception $e) {
-            return $this->serverError('Gagal mengambil guru: ' . $e->getMessage(), 500);
+            return $this->serverError(
+                'Gagal mengambil guru: ' . $e->getMessage(),
+                500
+            );
         }
     }
+
 
     /**
      * Ambil detail guru berdasarkan slug

@@ -95,7 +95,7 @@ Route::group(['prefix' => 'v2'], function () {
     });
 
     // Fetch Front End
-    Route::group(['middleware' => 'jwt'], function () {
+    // Route::group(['middleware' => 'jwt'], function () {
 
         // Route::post('/spmb/store', [SPMBController::class, 'store']);
 
@@ -167,7 +167,7 @@ Route::group(['prefix' => 'v2'], function () {
                 Route::get('/', [PrestasiDataController::class, 'prestasi_sekolah']);
                 Route::get('/{slug}', [PrestasiDataController::class, 'prestasi_sekolah_detail']);
             });
-        });
+        // });
 
         Route::group(['prefix' => 'rapot'], function () {
             Route::get('/tahun', [RapotDataController::class, 'getTahunAjaran']);
