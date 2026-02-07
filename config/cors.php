@@ -22,6 +22,7 @@ return [
      'allowed_origins' => [
         env('FRONTEND_URL'),
         'https://landing.sdmuhammadiyah3smd.com',
+        'https://www.sdmuhammadiyah3smd.com',
         'https://sdmuhammadiyah3smd.com'
     ],
     

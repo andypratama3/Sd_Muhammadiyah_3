@@ -20,10 +20,14 @@ use App\Http\Controllers\Api\V2\PrestasiDataController;
 use App\Http\Controllers\Api\V2\FasilitasDataController;
 use App\Http\Controllers\Api\V2\PembayaranDataController;
 use App\Http\Controllers\Api\V1\MidtransPaymentController;
+use App\Http\Controllers\Api\V2\Absensi\AbsensiController;
 use App\Http\Controllers\Dashboard\Api\FacebookController;
 use App\Http\Controllers\Api\Dashboard\SendOrderIDWhatsAppApi;
 use App\Http\Controllers\Api\V2\EkstrakurikulerDataController;
 use App\Http\Controllers\Api\V2\TenagaKependidikanDataController;
+
+use App\Http\Controllers\Api\V2\Auth\AuthController as AuthControllerMobile;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -78,6 +82,23 @@ Route::post('/whatsapp/callback', [SendOrderIDWhatsAppApi::class, 'webhook'])->n
 
 
 Route::group(['prefix' => 'v2'], function () {
+    Route::post('/auth/login', [AuthControllerMobile::class, 'login'])->name('auth.login');
+
+    Route::middleware('auth:api')->group(function () {
+        Route::prefix('auth')->group(function () {
+            Route::get('/me', [AuthControllerMobile::class, 'me'])->name('auth.me');
+            Route::post('/refresh-token', [AuthControllerMobile::class, 'refreshToken'])->name('auth.refresh');
+            Route::post('/logout', [AuthControllerMobile::class, 'logout'])->name('auth.logout');
+        });
+
+        Route::prefix('attendance')->group(function () {
+            Route::post('/check-in', [AbsensiController::class, 'checkIn'])->name('attendance.check-in');
+            Route::post('/check-out', [AbsensiController::class, 'checkOut'])->name('attendance.check-out');
+            Route::get('/today', [AbsensiController::class, 'getToday'])->name('attendance.today');
+            Route::get('/history', [AbsensiController::class, 'getHistory'])->name('attendance.history');
+            Route::get('/{id}', [AbsensiController::class, 'show'])->name('attendance.show');
+        });
+    });
 
     // For Site Map
     Route::get('list/berita', [BeritaDataController::class, 'list_berita']);
