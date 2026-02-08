@@ -13,7 +13,7 @@ class KaryawanData extends Data
         public readonly string $sex,
         public readonly string $phone,
         public readonly string $role_id,
-        public readonly string $nip,
+        public readonly ?string $nip,
         public readonly ?string $user_id,
         public readonly ?string $slug,
     ) {
@@ -40,7 +40,6 @@ class KaryawanData extends Data
             'sex.required' => 'Kolom Jenis Kelamin tidak boleh kosong!',
             'email.required' => 'Kolom email tidak boleh kosong!',
             'email.email' => 'Format email salah!',
-            'nip.required' => 'Kolom NIP tidak boleh kosong!',
             'email.unique' => 'Email yang Anda masukkan sudah terdaftar!',
             'role.required' => 'Pilih role!',
         ];

@@ -1,6 +1,11 @@
 /**
- * Main Absensi Form Logic - FIXED VERSION (No Timeout)
+ * Main Absensi Form Logic - NO NIP INPUT VERSION
  * File: public/js/absensi-main.js
+ * 
+ * Changes:
+ * ✅ Hapus semua input NIP
+ * ✅ User ID diambil dari auth (backend)
+ * ✅ Simplify form validation
  */
 
 // ============================================
@@ -42,12 +47,11 @@ function getDeviceInfo() {
 }
 
 // ============================================
-// LOCATION RETRIEVAL - FIXED VERSION
+// LOCATION RETRIEVAL
 // ============================================
 
 /**
  * Get user current location dengan automatic fallback & retry
- * FIXED: Handles timeout dengan graceful fallback
  */
 function getLocation() {
     return new Promise((resolve, reject) => {
@@ -198,15 +202,6 @@ function updateWaktu() {
 // ============================================
 
 async function prosesAbsensi(tipe) {
-    const nipInput = document.getElementById('nip');
-    const nip = nipInput ? nipInput.value.trim() : '';
-
-    if (!nip) {
-        notify.warning('Mohon masukkan NIP terlebih dahulu');
-        if (nipInput) nipInput.focus();
-        return;
-    }
-
     const btnMasuk = document.getElementById('btn-absen-masuk');
     const btnPulang = document.getElementById('btn-absen-pulang');
     const btnRiwayat = document.getElementById('btn-riwayat');
@@ -219,7 +214,7 @@ async function prosesAbsensi(tipe) {
     if (btnRiwayat) btnRiwayat.disabled = true;
 
     try {
-        // Get location dengan fallback
+        // Get location
         const location = await getLocation();
         const deviceInfo = getDeviceInfo();
 
@@ -228,11 +223,11 @@ async function prosesAbsensi(tipe) {
             : "/dashboard/absensis/pulang";
 
         console.log('📤 Mengirim request absensi:', {
-            nip,
             latitude: location.latitude,
             longitude: location.longitude,
             accuracy: location.accuracy,
-            device_id: deviceInfo.device_id
+            device_id: deviceInfo.device_id,
+            tipe: tipe
         });
 
         const response = await fetch(endpoint, {
@@ -243,7 +238,6 @@ async function prosesAbsensi(tipe) {
                 'X-CSRF-TOKEN': csrfToken,
             },
             body: JSON.stringify({
-                nip: nip,
                 latitude: location.latitude,
                 longitude: location.longitude,
                 device_id: deviceInfo.device_id
@@ -288,15 +282,7 @@ async function prosesAbsensi(tipe) {
 // ============================================
 
 async function tampilkanRiwayat() {
-    const nipInput = document.getElementById('nip');
-    const nip = nipInput ? nipInput.value.trim() : '';
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
-
-    if (!nip) {
-        notify.warning('Mohon masukkan NIP terlebih dahulu');
-        if (nipInput) nipInput.focus();
-        return;
-    }
 
     showLoading();
 
@@ -304,8 +290,9 @@ async function tampilkanRiwayat() {
         const now = new Date();
         const bulan = now.getMonth() + 1;
         const tahun = now.getFullYear();
-        const url = "/dashboard/absensis/riwayat?nip=" + encodeURIComponent(nip) +
-                    "&bulan=" + bulan + "&tahun=" + tahun;
+        
+        // Tidak perlu NIP, user_id diambil dari auth di server
+        const url = "/dashboard/absensis/riwayat?bulan=" + bulan + "&tahun=" + tahun;
 
         const response = await fetch(url, {
             headers: { 'X-CSRF-TOKEN': csrfToken }
@@ -347,8 +334,8 @@ async function tampilkanRiwayat() {
                     </div>
                     <div class="flex-grow-1 ms-3">
                         <h5 class="mb-1 fw-bold">${escapeHtml(pegawai.nama || '-')}</h5>
-                        <p class="mb-0"><i class="fas fa-id-badge"></i> NIP: ${escapeHtml(pegawai.nip || '-')}</p>
                         <p class="mb-0"><i class="fas fa-briefcase"></i> ${escapeHtml(pegawai.jabatan || '-')}</p>
+                        <p class="mb-0"><i class="fas fa-tag"></i> Jenis: ${escapeHtml(pegawai.jenis_pegawai || '-')}</p>
                     </div>
                 </div>
             `;
@@ -401,6 +388,13 @@ async function tampilkanRiwayat() {
                                 </div>
                             </div>
                         </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <small class="text-muted d-block">
+                                    <i class="fas fa-hourglass-half"></i> Durasi: ${item.durasi_kerja || '-'}
+                                </small>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `).join('');
@@ -428,6 +422,23 @@ async function tampilkanRiwayat() {
     }
 }
 
+/**
+ * Escape HTML untuk prevent XSS
+ */
+function escapeHtml(text) {
+    if (!text) return '';
+    
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    
+    return String(text).replace(/[&<>"']/g, m => map[m]);
+}
+
 // ============================================
 // EVENT LISTENERS & INITIALIZATION
 // ============================================
@@ -446,13 +457,5 @@ document.addEventListener('DOMContentLoaded', function() {
     if (btnPulang) btnPulang.addEventListener('click', () => prosesAbsensi('pulang'));
     if (btnRiwayat) btnRiwayat.addEventListener('click', tampilkanRiwayat);
 
-    const nipInput = document.getElementById('nip');
-    if (nipInput) {
-        nipInput.addEventListener('input', function() {
-            this.value = this.value.replace(/\D/g, '');
-        });
-        nipInput.focus();
-    }
-
-    console.log('✅ Absensi main script loaded (FIXED VERSION)');
+    console.log('✅ Absensi main script loaded (NO NIP INPUT VERSION)');
 });

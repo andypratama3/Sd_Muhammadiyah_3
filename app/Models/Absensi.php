@@ -25,7 +25,6 @@ class Absensi extends Model
         'jarak_pulang',
         'status_pulang',
         'keterangan',
-        // ✅ TAMBAHAN UNTUK DEVICE TRACKING
         'ip_address',
         'user_agent',
         'device_id',

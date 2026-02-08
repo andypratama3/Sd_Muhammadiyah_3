@@ -244,19 +244,6 @@ class AbsensiService
     {
         $now = Carbon::now('Asia/Makassar');
 
-        // Cek absensi ganda dalam 5 menit
-        // $recentAbsensi = Absensi::where('karyawan_id', $karyawanId)
-        //     ->where('tanggal', $now->toDateString())
-        //     ->where('created_at', '>', $now->copy()->subMinutes(5))
-        //     ->count();
-
-        // if ($recentAbsensi > 0) {
-        //     return [
-        //         'suspicious' => true,
-        //         'reason' => 'Terdeteksi percobaan absensi berulang dalam waktu singkat'
-        //     ];
-        // }
-
         // Cek IP sharing
         $sameIpCount = Absensi::where('ip_address', $ipAddress)
             ->where('tanggal', $now->toDateString())
@@ -342,26 +329,24 @@ class AbsensiService
     }
 
     /**
-     * Get karyawan by NIP
+     * Get karyawan by user ID
      */
-    private function getKaryawanByNip($nip)
+    private function getKaryawanByUserId($userId)
     {
-        return Karyawan::whereHas('user', function($query) use ($nip) {
-            $query->where('nip', $nip);
-        })->first();
+        return Karyawan::where('user_id', $userId)->first();
     }
 
     /**
      * Validasi common checks
      */
-    private function validateCommonChecks($nip, $ipAddress, $userAgent, $deviceId)
+    private function validateCommonChecks($userId, $ipAddress, $userAgent, $deviceId)
     {
-        $karyawan = $this->getKaryawanByNip($nip);
+        $karyawan = $this->getKaryawanByUserId($userId);
 
         if (!$karyawan) {
             return [
                 'success' => false,
-                'message' => 'NIP tidak ditemukan atau karyawan tidak aktif'
+                'message' => 'Data karyawan tidak ditemukan'
             ];
         }
 
@@ -384,7 +369,7 @@ class AbsensiService
             if ($abuseCheck['suspicious']) {
                 Log::warning('Suspicious Activity', [
                     'karyawan_id' => $karyawan->id,
-                    'nip' => $nip,
+                    'user_id' => $userId,
                     'ip' => $ipAddress,
                     'reason' => $abuseCheck['reason']
                 ]);
@@ -471,10 +456,10 @@ class AbsensiService
     /**
      * ABSEN MASUK
      */
-    public function absenMasuk($nip, $latitude, $longitude, $lokasiId = 1, $ipAddress = null, $userAgent = null, $deviceId = null)
+    public function absenMasuk($userId, $latitude, $longitude, $lokasiId = 1, $ipAddress = null, $userAgent = null, $deviceId = null)
     {
         // Common validation
-        $validation = $this->validateCommonChecks($nip, $ipAddress, $userAgent, $deviceId);
+        $validation = $this->validateCommonChecks($userId, $ipAddress, $userAgent, $deviceId);
         if (!$validation['success']) {
             return $validation;
         }
@@ -519,7 +504,6 @@ class AbsensiService
                             $batasMasuk->format('H:i') . ' WITA). Silahkan hubungi admin.'
             ];
         }
-
 
         // Cek duplikasi
         $absensiHariIni = Absensi::where('karyawan_id', $karyawan->id)
@@ -570,7 +554,7 @@ class AbsensiService
             );
 
             Log::info('Absensi Masuk', [
-                'nip' => $nip,
+                'user_id' => $userId,
                 'nama' => $karyawan->name,
                 'waktu' => $now->toDateTimeString(),
                 'status' => $statusMasuk,
@@ -581,7 +565,6 @@ class AbsensiService
 
             $responseData = [
                 'nama' => $karyawan->name,
-                'nip' => $nip,
                 'jam_masuk' => $now->format('H:i:s'),
                 'jam_kerja' => $jamMasukNormal->format('H:i'),
                 'status' => $statusMasuk,
@@ -606,7 +589,7 @@ class AbsensiService
             ];
         } catch (\Exception $e) {
             Log::error('Error simpan absensi masuk', [
-                'nip' => $nip,
+                'user_id' => $userId,
                 'error' => $e->getMessage()
             ]);
 
@@ -620,10 +603,10 @@ class AbsensiService
     /**
      * ABSEN PULANG
      */
-    public function absenPulang($nip, $latitude, $longitude, $lokasiId = 1, $ipAddress = null, $userAgent = null, $deviceId = null)
+    public function absenPulang($userId, $latitude, $longitude, $lokasiId = 1, $ipAddress = null, $userAgent = null, $deviceId = null)
     {
         // Common validation
-        $validation = $this->validateCommonChecks($nip, $ipAddress, $userAgent, $deviceId);
+        $validation = $this->validateCommonChecks($userId, $ipAddress, $userAgent, $deviceId);
         if (!$validation['success']) {
             return $validation;
         }
@@ -662,7 +645,7 @@ class AbsensiService
         $batasPulang = Carbon::parse($absensi->jamKerja->batas_pulang, 'Asia/Makassar');
         $statusPulang = $now->lessThan($batasPulang) ? 'pulang_cepat' : 'tepat_waktu';
 
-        // kalau lebih dari jam pulang tidak dapat rp_pulang
+        // kalau kurang dari jam pulang tidak dapat rp_pulang
         $rp_pulang = $statusPulang === 'pulang_cepat' ? 0 : 4000;
 
         // Simpan pulang
@@ -685,7 +668,7 @@ class AbsensiService
             $absensi->update($dataUpdate);
 
             Log::info('Absensi Pulang', [
-                'nip' => $nip,
+                'user_id' => $userId,
                 'nama' => $karyawan->name,
                 'waktu' => $now->toDateTimeString(),
                 'status' => $statusPulang,
@@ -694,7 +677,6 @@ class AbsensiService
 
             $responseData = [
                 'nama' => $karyawan->name,
-                'nip' => $nip,
                 'jam_masuk' => Carbon::parse($absensi->jam_masuk)->format('H:i:s'),
                 'jam_pulang' => $now->format('H:i:s'),
                 'status' => $statusPulang,
@@ -718,7 +700,7 @@ class AbsensiService
             ];
         } catch (\Exception $e) {
             Log::error('Error simpan pulang', [
-                'nip' => $nip,
+                'user_id' => $userId,
                 'error' => $e->getMessage()
             ]);
 
@@ -748,14 +730,14 @@ class AbsensiService
     /**
      * GET RIWAYAT ABSENSI
      */
-    public function getRiwayatAbsensi($nip, $bulan = null, $tahun = null)
+    public function getRiwayatAbsensi($userId, $bulan = null, $tahun = null)
     {
-        $karyawan = $this->getKaryawanByNip($nip);
+        $karyawan = $this->getKaryawanByUserId($userId);
 
         if (!$karyawan) {
             return [
                 'success' => false,
-                'message' => 'NIP tidak ditemukan'
+                'message' => 'Data karyawan tidak ditemukan'
             ];
         }
 
@@ -798,7 +780,6 @@ class AbsensiService
             'data' => [
                 'pegawai' => [
                     'nama' => $karyawan->name,
-                    'nip' => $nip,
                     'jabatan' => $karyawan->user?->roles?->first()?->name ?? '-',
                     'jenis_pegawai' => $jenisPegawai
                 ],

@@ -8,10 +8,10 @@ use App\Models\Karyawan;
 use Illuminate\Http\Request;
 use App\Models\DeviceAbsensi;
 use App\Services\KmlService;
-
 use App\Models\LokasiAbsensi;
 use App\Services\AbsensiService;
 use App\Http\Controllers\Controller;
+use Illuminate\Validation\ValidationException;
 
 class AbsensiController extends Controller
 {
@@ -21,7 +21,6 @@ class AbsensiController extends Controller
     {
         $this->absensiService = $absensiService;
         $this->kmlService = $kmlService;
-
     }
 
     /**
@@ -59,8 +58,6 @@ class AbsensiController extends Controller
             // jenisPegawai: string → guru / tenaga-pendidikan
             $jenisPegawai = $this->absensiService
                 ->getJenisPegawaiFromRole($karyawan);
-
-
 
             // jamKerja: object JamKerja
             $jamKerja = $this->absensiService
@@ -110,12 +107,21 @@ class AbsensiController extends Controller
     {
         try {
             $request->validate([
-                'nip' => 'required|string',
                 'latitude' => 'required|numeric|between:-90,90',
                 'longitude' => 'required|numeric|between:-180,180',
-                'lokasi_id' => 'nullable',
+                'lokasi_id' => 'nullable|integer',
                 'device_id' => 'nullable|string|max:64'
             ]);
+
+            // Ambil user ID dari auth
+            $userId = auth()->id();
+
+            if (!$userId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Anda harus login terlebih dahulu'
+                ], 401);
+            }
 
             // Ambil IP Address dan User Agent
             $ipAddress = $request->ip();
@@ -123,7 +129,7 @@ class AbsensiController extends Controller
             $deviceId = $request->device_id;
 
             $result = $this->absensiService->absenMasuk(
-                $request->nip,
+                $userId,
                 $request->latitude,
                 $request->longitude,
                 $request->lokasi_id ?? 1,
@@ -144,6 +150,7 @@ class AbsensiController extends Controller
         } catch (\Throwable $e) {
             \Log::error('Absen Masuk Error', [
                 'error' => $e->getMessage(),
+                'user_id' => auth()->id()
             ]);
 
             return response()->json([
@@ -151,7 +158,6 @@ class AbsensiController extends Controller
                 'message' => 'Terjadi kesalahan server'
             ], 500);
         }
-
     }
 
     /**
@@ -160,14 +166,22 @@ class AbsensiController extends Controller
     public function absenPulang(Request $request)
     {
         try {
-
             $request->validate([
-                'nip' => 'required|string',
                 'latitude' => 'required|numeric|between:-90,90',
                 'longitude' => 'required|numeric|between:-180,180',
-                'lokasi_id' => 'nullable',
+                'lokasi_id' => 'nullable|integer',
                 'device_id' => 'nullable|string|max:64'
             ]);
+
+            // Ambil user ID dari auth
+            $userId = auth()->id();
+
+            if (!$userId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Anda harus login terlebih dahulu'
+                ], 401);
+            }
 
             // Ambil IP Address dan User Agent
             $ipAddress = $request->ip();
@@ -175,13 +189,13 @@ class AbsensiController extends Controller
             $deviceId = $request->device_id;
 
             $result = $this->absensiService->absenPulang(
-                $request->nip,
+                $userId,
                 $request->latitude,
                 $request->longitude,
                 $request->lokasi_id ?? 1,
-                $ipAddress,      // ← Tambahan IP
-                $userAgent,      // ← Tambahan User Agent
-                $deviceId        // ← Tambahan Device ID
+                $ipAddress,
+                $userAgent,
+                $deviceId
             );
 
             return response()->json($result);
@@ -196,7 +210,13 @@ class AbsensiController extends Controller
         } catch (\Throwable $e) {
             \Log::error('Absen Pulang Error', [
                 'error' => $e->getMessage(),
+                'user_id' => auth()->id()
             ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan server'
+            ], 500);
         }
     }
 
@@ -206,135 +226,20 @@ class AbsensiController extends Controller
     public function riwayat(Request $request)
     {
         $request->validate([
-            'nip' => 'required|string',
             'bulan' => 'nullable|integer|min:1|max:12',
             'tahun' => 'nullable|integer|min:2020|max:' . (date('Y') + 1)
         ]);
 
+        $userId = auth()->id();
+
         $result = $this->absensiService->getRiwayatAbsensi(
-            $request->nip,
+            $userId,
             $request->bulan,
             $request->tahun
         );
 
         return response()->json($result);
     }
-
-    /**
-     * Tampilkan daftar device milik user yang sedang login
-     */
-    // public function myDevices()
-    // {
-    //     $user = auth()->user();
-    //     $karyawan = Karyawan::where('user_id', $user->id)->first();
-
-    //     if (!$karyawan) {
-    //         abort(403, 'Data karyawan tidak ditemukan');
-    //     }
-
-    //     $devices = DeviceAbsensi::where('karyawan_id', $karyawan->id)
-    //         ->orderBy('last_used_at', 'desc')
-    //         ->get();
-
-    //     return view('dashboard.absensis.my-devices', compact('devices', 'karyawan'));
-    // }
-
-    // /**
-    //  * Nonaktifkan device
-    //  * User bisa nonaktifkan device miliknya sendiri
-    //  * Admin bisa nonaktifkan device siapa saja
-    //  */
-    // public function deactivateDevice(Request $request, $deviceId)
-    // {
-    //     $device = DeviceAbsensi::findOrFail($deviceId);
-    //     $user = auth()->user();
-
-    //     // Cek authorization
-    //     if (!$user->hasAnyRole(['superadmin', 'admin'])) {
-    //         // User biasa hanya bisa nonaktifkan device miliknya sendiri
-    //         $karyawan = Karyawan::where('user_id', $user->id)->first();
-
-    //         if (!$karyawan || $device->karyawan_id !== $karyawan->id) {
-    //             return response()->json([
-    //                 'success' => false,
-    //                 'message' => 'Anda tidak memiliki akses untuk menonaktifkan device ini'
-    //             ], 403);
-    //         }
-    //     }
-
-    //     $device->update(['is_active' => false]);
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Device "' . $device->device_name . '" berhasil dinonaktifkan'
-    //     ]);
-    // }
-
-    // /**
-    //  * Aktifkan kembali device yang sudah dinonaktifkan
-    //  * Hanya admin yang bisa
-    //  */
-    // public function activateDevice(Request $request, $deviceId)
-    // {
-    //     $user = auth()->user();
-
-    //     if (!$user->hasAnyRole(['superadmin', 'admin'])) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Hanya admin yang dapat mengaktifkan device'
-    //         ], 403);
-    //     }
-
-    //     $device = DeviceAbsensi::findOrFail($deviceId);
-    //     $device->update(['is_active' => true]);
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Device "' . $device->device_name . '" berhasil diaktifkan kembali'
-    //     ]);
-    // }
-
-    // /**
-    //  * Hapus device (Admin only)
-    //  */
-    // public function deleteDevice(Request $request, $deviceId)
-    // {
-    //     $user = auth()->user();
-
-    //     if (!$user->hasAnyRole(['superadmin', 'admin'])) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Hanya admin yang dapat menghapus device'
-    //         ], 403);
-    //     }
-
-    //     $device = DeviceAbsensi::findOrFail($deviceId);
-    //     $deviceName = $device->device_name;
-    //     $device->delete();
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Device "' . $deviceName . '" berhasil dihapus'
-    //     ]);
-    // }
-
-    // /**
-    //  * Kelola semua device (Admin only)
-    //  */
-    // public function manageDevices()
-    // {
-    //     $user = auth()->user();
-
-    //     if (!$user->hasAnyRole(['superadmin', 'admin'])) {
-    //         abort(403, 'Unauthorized');
-    //     }
-
-    //     $devices = DeviceAbsensi::with('karyawan.user')
-    //         ->orderBy('last_used_at', 'desc')
-    //         ->paginate(20);
-
-    //     return view('dashboard.absensis.manage-devices', compact('devices'));
-    // }
 
     /**
      * API: Get device info untuk debugging

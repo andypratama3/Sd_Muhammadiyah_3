@@ -61,30 +61,16 @@
                 </div>
                 <div class="card-body">
                     <form id="form-absensi">
-                        <!-- NIP Input -->
+                        <!-- Info Pegawai -->
                         <div class="mb-4">
-                            <label for="nip" class="form-label fw-bold">
-                                <i class="fas fa-id-card text-primary"></i> Nomor Induk Pegawai (NIP)
-                            </label>
-                            <div class="input-group input-group-lg">
-                                <span class="input-group-text bg-light">
-                                    <i class="fas fa-hashtag"></i>
-                                </span>
-                                <input
-                                    type="text"
-                                    id="nip"
-                                    name="nip"
-                                    maxlength="18"
-                                    value="{{ old('nip', $karyawan->nip ?? '') }}"
-                                    class="form-control"
-                                    placeholder="Masukkan 18 digit NIP Anda"
-                                    required
-                                    autocomplete="off"
-                                    />
-                            </div>
-                            <small class="mt-2 form-text text-muted">
-                                <i class="fas fa-info-circle"></i> Contoh: 198501012010011001
-                            </small>
+                            <span class="text-black">{{ auth()->user()->name }}</span>
+                            @isset($jenisPegawai)
+                                <small class="ms-2">
+                                    <span class="badge bg-primary">
+                                        {{ $jenisPegawai }}
+                                    </span>
+                                </small>
+                            @endisset
                         </div>
 
                         <!-- Action Buttons -->
@@ -256,60 +242,4 @@
 <script src="{{ asset('kml/realtime-integration.js') }}"></script>
 <script src="{{ asset('kml/absensi-main.js') }}"></script>
 <script src="{{ asset('kml/focus-location-button.js') }}"></script>
-<script>
-setInterval(() => {
-    const loc = window.realtimeTracker?.getCurrentLocation();
-    const stats = window.realtimeTracker?.getStatistics();
-
-    // if (loc) {
-    //     console.clear();
-    //     console.log('═'.repeat(60));
-    //     console.log('🎯 REAL-TIME TRACKING DASHBOARD');
-    //     console.log('═'.repeat(60));
-    //     console.log(`📍 Position: ${loc.latitude.toFixed(6)}, ${loc.longitude.toFixed(6)}`);
-    //     console.log(`📡 Accuracy: ±${loc.accuracy.toFixed(0)}m`);
-    //     console.log(`🎯 Geofence: ${window.realtimeTracker.geofenceStatus?.toUpperCase()}`);
-    //     console.log(`🚶 Distance from last: ${loc.distanceFromLast ? loc.distanceFromLast.toFixed(1) + 'm' : 'First position'}`);
-    //     console.log(`📊 Total distance: ${stats.totalDistance.toFixed(0)}m`);
-    //     console.log(`📈 Avg accuracy: ±${stats.avgAccuracy.toFixed(0)}m`);
-    //     console.log(`📍 Updates: ${stats.totalLocations}`);
-    //     console.log(`⏱️ Last update: ${loc.formattedTime}`);
-    //     console.log('═'.repeat(60));
-    // }
-}, 1000);
-// fuction test
-
-// Simulasi jalan keluar area
-// let step = 0;
-// const baseX = -0.509317;
-// const baseY = 117.130073;
-
-// const walkOut = setInterval(() => {
-//     step++;
-
-//     // Bergerak 12m per step (past 10m threshold)
-//     const newLat = baseX + (step * 0.00012);
-//     const newLon = baseY + (step * 0.00012);
-
-//     console.log(`🚶 Step ${step}: ${newLat.toFixed(6)}, ${newLon.toFixed(6)}`);
-
-//     window.realtimeTracker?.processLocationUpdate({
-//         coords: {
-//             latitude: newLat,
-//             longitude: newLon,
-//             accuracy: 25,
-//             altitude: null,
-//             altitudeAccuracy: null,
-//             heading: 45,
-//             speed: 1.2
-//         },
-//         timestamp: Date.now()
-//     });
-
-//     if (step >= 15) {
-//         clearInterval(walkOut);
-//         console.log('✅ Simulation complete - check if you exited geofence!');
-//     }
-// }, 3000);
-</script>
 @endpush

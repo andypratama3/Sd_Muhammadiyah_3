@@ -28,7 +28,7 @@
                         </div>
                         <div class="mt-2 col-md-6">
                             <div class="form-group">
-                                <label class="form-label">NIP Karyawan <code>*</code></label>
+                                <label class="form-label">NIP Karyawan </label>
                                 <input type="text" class="form-control" id="nip" name="nip"
                                     placeholder="Masukkan NIP Karyawan" value="{{ old('nip') }}">
                             </div>
