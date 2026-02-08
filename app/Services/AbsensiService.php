@@ -520,6 +520,7 @@ class AbsensiService
             ];
         }
 
+
         // Cek duplikasi
         $absensiHariIni = Absensi::where('karyawan_id', $karyawan->id)
             ->where('tanggal', $tanggalHariIni)
@@ -536,6 +537,9 @@ class AbsensiService
         // Tentukan status
         $statusMasuk = $now->lessThanOrEqualTo($jamMasukNormal) ? 'tepat_waktu' : 'terlambat';
 
+        // kalau lebih dari jam masuk tidak dapat rp_masuk
+        $rp_masuk = $statusMasuk === 'tepat_waktu' ? 4000 : 0;
+
         // Simpan absensi
         try {
             $dataAbsensi = [
@@ -548,7 +552,7 @@ class AbsensiService
                 'ip_address' => $ipAddress,
                 'user_agent' => $userAgent,
                 'device_id' => $deviceId,
-                'rp_masuk' => 4000
+                'rp_masuk' => $rp_masuk
             ];
 
             // Tambah lokasi_absensi_id jika tidak pakai KML
@@ -658,11 +662,8 @@ class AbsensiService
         $batasPulang = Carbon::parse($absensi->jamKerja->batas_pulang, 'Asia/Makassar');
         $statusPulang = $now->lessThan($batasPulang) ? 'pulang_cepat' : 'tepat_waktu';
 
-        $rp_pulang = 0;
-
-        if($statusPulang != 'pulang_cepat') {
-            $rp_pulang = 4000;
-        }
+        // kalau lebih dari jam pulang tidak dapat rp_pulang
+        $rp_pulang = $statusPulang === 'pulang_cepat' ? 0 : 4000;
 
         // Simpan pulang
         try {

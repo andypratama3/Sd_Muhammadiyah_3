@@ -39,8 +39,8 @@
                         <div class="d-flex align-items-center justify-content-center justify-content-md-end">
                             <i class="fas fa-calendar-alt fa-2x me-3"></i>
                             <div>
-                                <h5 class="mb-0 text-black fw-bold" id="tanggal-sekarang">Loading...</h5>
                                 <p class="mb-0 opacity-75">Tanggal Hari Ini</p>
+                                <h5 class="mb-0 text-black fw-bold" id="tanggal-sekarang">Loading...</h5>
                             </div>
                         </div>
                     </div>
