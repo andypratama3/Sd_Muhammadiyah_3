@@ -27,6 +27,8 @@ use App\Http\Controllers\Api\V2\EkstrakurikulerDataController;
 use App\Http\Controllers\Api\V2\TenagaKependidikanDataController;
 
 use App\Http\Controllers\Api\V2\Auth\AuthController as AuthControllerMobile;
+use App\Http\Controllers\Api\V2\Mobile\DashboardController as MobileDashboardController;
+use App\Http\Controllers\Api\V2\Mobile\PembayaranController as MobilePembayaranController;
 
 
 /*
@@ -82,15 +84,35 @@ Route::post('/whatsapp/callback', [SendOrderIDWhatsAppApi::class, 'webhook'])->n
 
 
 Route::group(['prefix' => 'v2'], function () {
+    // ============================================================================
+    // MOBILE API ROUTES (for KMP/Kotlin Multiplatform App)
+    // ============================================================================
+    
+    // Mobile Auth Routes (No authentication required)
     Route::post('/auth/login', [AuthControllerMobile::class, 'login'])->name('auth.login');
 
+    // Mobile Protected Routes (Requires authentication)
     Route::middleware('auth:api')->group(function () {
+        
+        // Auth Management
         Route::prefix('auth')->group(function () {
             Route::get('/me', [AuthControllerMobile::class, 'me'])->name('auth.me');
             Route::post('/refresh-token', [AuthControllerMobile::class, 'refreshToken'])->name('auth.refresh');
             Route::post('/logout', [AuthControllerMobile::class, 'logout'])->name('auth.logout');
         });
 
+        // Mobile Dashboard (for both Guru and Orang Tua)
+        Route::prefix('mobile')->group(function () {
+            Route::get('/dashboard', [MobileDashboardController::class, 'index'])->name('mobile.dashboard');
+            
+            // Pembayaran (for Orang Tua)
+            Route::prefix('pembayaran')->group(function () {
+                Route::get('/', [MobilePembayaranController::class, 'index'])->name('mobile.pembayaran.index');
+                Route::get('/{id}', [MobilePembayaranController::class, 'show'])->name('mobile.pembayaran.show');
+            });
+        });
+
+        // Attendance/Absensi (for Guru)
         Route::prefix('attendance')->group(function () {
             Route::post('/check-in', [AbsensiController::class, 'checkIn'])->name('attendance.check-in');
             Route::post('/check-out', [AbsensiController::class, 'checkOut'])->name('attendance.check-out');
@@ -99,6 +121,10 @@ Route::group(['prefix' => 'v2'], function () {
             Route::get('/{id}', [AbsensiController::class, 'show'])->name('attendance.show');
         });
     });
+
+    // ============================================================================
+    // WEBSITE API ROUTES (for Next.js Frontend)
+    // ============================================================================
 
     // For Site Map
     Route::get('list/berita', [BeritaDataController::class, 'list_berita']);
