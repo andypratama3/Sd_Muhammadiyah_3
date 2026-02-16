@@ -91,9 +91,8 @@ class AuthController extends Controller
         if (!$user) {
             return $this->unauthorized('Harus login terlebih dahulu');
         }
-        
+
         $role = $user->roles->first()->name;
-        // make 1 role for user
         $user->role = $role;
 
         // mapping to Guru Or Siswa 
@@ -106,7 +105,6 @@ class AuthController extends Controller
         return $this->success(
             [
                 'user' => $user,
-                'role' => $role
             ],
             'Data user'
         );
