@@ -43,21 +43,22 @@ class SecureHeadersMiddleware
             'geolocation=(self), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()'
         );
 
-        // ✅ FIXED CSP - includes all required domains
+        // ✅ FIXED CSP - includes FontAwesome CDN correctly
         $response->headers->set('Content-Security-Policy',
             "default-src 'self'; " .
             "script-src 'self' 'unsafe-inline' 'unsafe-eval' " .
                 "cdn.jsdelivr.net cdnjs.cloudflare.com code.jquery.com ajax.googleapis.com cdn.bootcdn.net " .
-                "kit.fontawesome.com buttons.github.io cdn.datatables.net " .
+                "kit.fontawesome.com ka-f.fontawesome.com buttons.github.io cdn.datatables.net " .
                 "cdn.quilljs.com unpkg.com https://www.googletagmanager.com https://www.google-analytics.com; " .
             "style-src 'self' 'unsafe-inline' " .
                 "cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com unpkg.com " .
-                "cdn.datatables.net cdn.quilljs.com kit.fontawesome.com; " .
-            "font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com kit.fontawesome.com; " .
-            "img-src 'self' data: blob: https: *.fontawesome.com; " .
+                "cdn.datatables.net cdn.quilljs.com kit.fontawesome.com ka-f.fontawesome.com; " .
+            "font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com kit.fontawesome.com ka-f.fontawesome.com; " .
+            "img-src 'self' data: blob: https: *.fontawesome.com *.ka-f.fontawesome.com; " .
             "frame-src 'self' https://www.youtube.com https://app.midtrans.com https://app.sandbox.midtrans.com; " .
             "connect-src 'self' https://app.midtrans.com https://app.sandbox.midtrans.com " .
-                "https://www.googletagmanager.com https://www.google-analytics.com https://kit.fontawesome.com; " .
+                "https://www.googletagmanager.com https://www.google-analytics.com " .
+                "https://kit.fontawesome.com https://ka-f.fontawesome.com; " .
             "object-src 'none'; " .
             "base-uri 'self'; " .
             "form-action 'self';"
