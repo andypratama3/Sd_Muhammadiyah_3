@@ -17,7 +17,7 @@ class ChargeSeeder extends Seeder
         $fraudStatuses = ['accept', 'deny', 'challenge'];
         $transactionStatuses = ['pending', 'settlement', 'capture', 'expire', 'cancel'];
 
-        $siswa = Siswa::where('name', 'Andy')->first();
+        $siswa = Siswa::first();
 
         foreach (range(2020, 2025) as $year) {
             for ($i = 0; $i < 10; $i++) {

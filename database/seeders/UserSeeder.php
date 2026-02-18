@@ -58,6 +58,7 @@ class UserSeeder extends Seeder
             'media',
             'tenaga-pendidikan',
             'guru',
+            'siswa',
         ];
 
         foreach ($listPermissions as $permission) {
@@ -86,6 +87,15 @@ class UserSeeder extends Seeder
         ]);
 
 
+        $siswa = User::create([
+            'id' => Str::uuid(),
+            'name' => 'Siswa',
+            'email' => 'siswa@gmail.com',
+            'password' => bcrypt('Siswa1211'),
+            'avatar' => 'profile.jpg',
+            'email_verified_at' => now(),
+            'remember_token' => Str::random(10),
+        ]);
 
         $roleSuperadmin = Role::where('name', 'superadmin')->first();
 
