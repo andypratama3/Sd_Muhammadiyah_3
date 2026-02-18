@@ -84,7 +84,6 @@ class Kernel extends HttpKernel
         'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         'jwt' => \App\Http\Middleware\JwtMiddleware::class,
         'verify.signature' => \App\Http\Middleware\VerifyApiSignature::class,
-        'verify.mtls' => \App\Http\Middleware\VerifyMTLS::class, 
 
 
     ];
