@@ -38,21 +38,29 @@ class SecureHeadersMiddleware
         $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
         $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
 
-        // ✅ Permissions-Policy (required for A+)
+        // ✅ Permissions-Policy
         $response->headers->set('Permissions-Policy', 
             'geolocation=(self), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()'
         );
 
-        // ✅ CSP - single combined header (not multiple sets!)
+        // ✅ FIXED CSP - includes all required domains
         $response->headers->set('Content-Security-Policy',
             "default-src 'self'; " .
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' cdn.jsdelivr.net cdnjs.cloudflare.com code.jquery.com ajax.googleapis.com cdn.bootcdn.net; " .
-            "style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com unpkg.com cdn.datatables.net cdn.quilljs.com; " .
-            "font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; " .
-            "img-src 'self' data: blob: https:; " .
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' " .
+                "cdn.jsdelivr.net cdnjs.cloudflare.com code.jquery.com ajax.googleapis.com cdn.bootcdn.net " .
+                "kit.fontawesome.com buttons.github.io cdn.datatables.net " .
+                "cdn.quilljs.com unpkg.com https://www.googletagmanager.com https://www.google-analytics.com; " .
+            "style-src 'self' 'unsafe-inline' " .
+                "cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com unpkg.com " .
+                "cdn.datatables.net cdn.quilljs.com kit.fontawesome.com; " .
+            "font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com kit.fontawesome.com; " .
+            "img-src 'self' data: blob: https: *.fontawesome.com; " .
             "frame-src 'self' https://www.youtube.com https://app.midtrans.com https://app.sandbox.midtrans.com; " .
-            "connect-src 'self' https://app.midtrans.com https://app.sandbox.midtrans.com; " .
-            "object-src 'none';"
+            "connect-src 'self' https://app.midtrans.com https://app.sandbox.midtrans.com " .
+                "https://www.googletagmanager.com https://www.google-analytics.com https://kit.fontawesome.com; " .
+            "object-src 'none'; " .
+            "base-uri 'self'; " .
+            "form-action 'self';"
         );
 
         return $response;
