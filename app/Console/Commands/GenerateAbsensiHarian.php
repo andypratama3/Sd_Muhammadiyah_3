@@ -26,25 +26,21 @@ class GenerateAbsensiHarian extends Command
     {
         $this->info('🚀 Memulai generate absensi harian...');
 
-        // Ambil tanggal dari parameter atau gunakan kemarin
         $tanggalString = $this->option('date') ?? Carbon::now()->format('Y-m-d');
         $tanggal = Carbon::createFromFormat('Y-m-d', $tanggalString);
 
-
-        // Cek apakah hari kerja
         if (!$this->isHariKerja($tanggal)) {
             $this->warn("⚠️  {$tanggal->format('l')} bukan hari kerja. Skip generate absensi.");
             return 0;
         }
 
-        // Ambil semua karyawan aktif
         $karyawans = Karyawan::with(['user.roles'])->get();
         $this->info("👥 Total karyawan aktif: {$karyawans->count()}");
 
         $stats = [
             'hadir' => 0,
-            'cuti' => 0,
-            'izin' => 0,
+            'cuti'  => 0,
+            'izin'  => 0,
             'sakit' => 0,
             'alpha' => 0,
             'error' => 0
@@ -61,8 +57,8 @@ class GenerateAbsensiHarian extends Command
                 $this->error("\n❌ Error untuk {$karyawan->name}: {$e->getMessage()}");
                 Log::error('Generate Absensi Error', [
                     'karyawan_id' => $karyawan->id,
-                    'tanggal' => $tanggal->toDateString(),
-                    'error' => $e->getMessage()
+                    'tanggal'     => $tanggal->toDateString(),
+                    'error'       => $e->getMessage()
                 ]);
                 $stats['error']++;
             }
@@ -73,7 +69,6 @@ class GenerateAbsensiHarian extends Command
         $progressBar->finish();
         $this->newLine(2);
 
-        // Tampilkan statistik
         $this->displayStats($stats);
         $this->info('✅ Selesai!');
 
@@ -98,17 +93,37 @@ class GenerateAbsensiHarian extends Command
     {
         $tanggalString = $tanggal->toDateString();
 
-
         // 1. Cek apakah sudah ada absensi
         $existingAbsensi = Absensi::where('karyawan_id', $karyawan->id)
             ->where('tanggal', $tanggalString)
             ->first();
 
-
-        // Jika sudah ada record absensi dengan status apapun (hadir/cuti/izin/sakit), skip
         if ($existingAbsensi) {
             // Jika sudah absen masuk
             if ($existingAbsensi->jam_masuk) {
+
+                // ✅ Jika lupa absen pulang, set otomatis sesuai jam pulang dari JamKerja
+                if (!$existingAbsensi->jam_pulang) {
+                    $jamKerja = $this->getJamKerjaModel($karyawan, $tanggal);
+
+                    if ($jamKerja && $jamKerja->jam_pulang) {
+                        $existingAbsensi->update([
+                            'jam_pulang'    => $tanggalString . ' ' . $jamKerja->jam_pulang,
+                            'status_pulang' => 'auto-generated',
+                            'keterangan'    => ($existingAbsensi->keterangan
+                                                ? $existingAbsensi->keterangan . ' | '
+                                                : '')
+                                                . 'Jam pulang auto-generated dari jadwal kerja'
+                        ]);
+
+                        Log::info('Auto-set jam pulang', [
+                            'karyawan_id' => $karyawan->id,
+                            'tanggal'     => $tanggalString,
+                            'jam_pulang'  => $jamKerja->jam_pulang,
+                        ]);
+                    }
+                }
+
                 return 'hadir';
             }
 
@@ -125,11 +140,11 @@ class GenerateAbsensiHarian extends Command
             Absensi::updateOrCreate(
                 [
                     'karyawan_id' => $karyawan->id,
-                    'tanggal' => $tanggalString
+                    'tanggal'     => $tanggalString
                 ],
                 [
                     'status_kehadiran' => $pengajuanCuti->jenis,
-                    'keterangan' => 'Auto-generated: ' . ucfirst($pengajuanCuti->jenis) . ' - ' . $pengajuanCuti->alasan
+                    'keterangan'       => 'Auto-generated: ' . ucfirst($pengajuanCuti->jenis) . ' - ' . $pengajuanCuti->alasan
                 ]
             );
 
@@ -137,23 +152,39 @@ class GenerateAbsensiHarian extends Command
         }
 
         // 3. Tidak ada absensi dan tidak ada izin = alpha
-        // Hanya create jika belum ada record sama sekali
         if (!$existingAbsensi) {
             $jamKerjaId = $this->getJamKerjaId($karyawan, $tanggal);
 
             Absensi::create([
-                'karyawan_id' => $karyawan->id,
-                'tanggal' => $tanggalString,
-                'jam_kerja_id' => $jamKerjaId,
-                'status_kehadiran' => 'alpha',
-                'jam_masuk' => null,
-                'jam_pulang' => null,
+                'karyawan_id'       => $karyawan->id,
+                'tanggal'           => $tanggalString,
+                'jam_kerja_id'      => $jamKerjaId,
+                'status_kehadiran'  => 'alpha',
+                'jam_masuk'         => null, // ✅ Kosong, bukan 00:00
+                'jam_pulang'        => null, // ✅ Kosong, bukan 00:00
                 'lokasi_absensi_id' => null,
-                'keterangan' => 'Auto-generated: Tidak hadir tanpa keterangan'
+                'keterangan'        => 'Auto-generated: Tidak hadir tanpa keterangan'
             ]);
         }
 
         return 'alpha';
+    }
+
+    /**
+     * Get JamKerja model untuk karyawan (untuk ambil jam_pulang)
+     */
+    private function getJamKerjaModel(Karyawan $karyawan, Carbon $tanggal)
+    {
+        try {
+            $jenisPegawai = $this->absensiService->getJenisPegawaiFromRole($karyawan);
+            return $this->absensiService->getJamKerja($jenisPegawai, $tanggal);
+        } catch (\Exception $e) {
+            Log::warning('Jam kerja tidak ditemukan untuk auto-set jam pulang', [
+                'karyawan_id' => $karyawan->id,
+                'error'       => $e->getMessage()
+            ]);
+            return null;
+        }
     }
 
     /**
@@ -169,9 +200,8 @@ class GenerateAbsensiHarian extends Command
         } catch (\Exception $e) {
             Log::warning('Jam kerja tidak ditemukan', [
                 'karyawan_id' => $karyawan->id,
-                'error' => $e->getMessage()
+                'error'       => $e->getMessage()
             ]);
-
             return null;
         }
     }
@@ -185,12 +215,12 @@ class GenerateAbsensiHarian extends Command
         $this->table(
             ['Status', 'Jumlah'],
             [
-                ['✅ Hadir (sudah absen)', $stats['hadir']],
-                ['🏖️  Cuti', $stats['cuti']],
-                ['📝 Izin', $stats['izin']],
-                ['🤒 Sakit', $stats['sakit']],
-                ['❌ Alpha', $stats['alpha']],
-                ['⚠️  Error', $stats['error']],
+                ['✅ Hadir (sudah absen)',        $stats['hadir']],
+                ['🏖️  Cuti',                      $stats['cuti']],
+                ['📝 Izin',                       $stats['izin']],
+                ['🤒 Sakit',                      $stats['sakit']],
+                ['❌ Alpha',                      $stats['alpha']],
+                ['⚠️  Error',                     $stats['error']],
             ]
         );
     }
