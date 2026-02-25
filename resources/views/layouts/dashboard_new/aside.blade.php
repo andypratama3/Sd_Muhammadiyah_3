@@ -50,7 +50,7 @@
                 <div>Rekap Absensi</div>
             </a>
         </li>
-        @role('admin')
+        @role('admin|superadmin')
         <li class="menu-header small text-uppercase"><span class="menu-header-text">Pengaturan Absensi</span></li>
          <!-- Pengaturan -->
          <li class="menu-item {{ Request::routeIs('dashboard.pengaturan-absen.*') ? 'open' : '' }}">
@@ -220,7 +220,7 @@
          </li>
         @endrole
 
-        @canany('role:admin')
+        @canany('role:admin|superadmin')
          <!-- Forms & Tables -->
          <li class="menu-header small text-uppercase"><span class="menu-header-text">Siswa &amp;
                  Pembayaran</span></li>
@@ -278,7 +278,7 @@
              </ul>
          </li>
          @endcanany
-         @can('role: admin')
+         @canany('role: admin|superadmin')
          <li class="menu-header small text-uppercase"><span class="menu-header-text">Pengunjung</span></li>
 
          <li class="menu-item {{ Request::routeIs('dashboard.url.visitor.*') ? 'active' : '' }}">
