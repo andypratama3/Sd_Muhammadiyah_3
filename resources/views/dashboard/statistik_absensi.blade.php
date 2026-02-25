@@ -149,7 +149,7 @@
         <canvas id="absensiChart"></canvas>
     </div>
 </div>
-
+{{-- 
 @push('js')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
@@ -168,5 +168,5 @@ new Chart(ctx, {
     }
 });
 </script>
-@endpush
+@endpush --}}
 
