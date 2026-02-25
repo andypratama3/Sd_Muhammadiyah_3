@@ -160,8 +160,8 @@ class GenerateAbsensiHarian extends Command
                 'tanggal'           => $tanggalString,
                 'jam_kerja_id'      => $jamKerjaId,
                 'status_kehadiran'  => 'alpha',
-                'jam_masuk'         => null, // ✅ Kosong, bukan 00:00
-                'jam_pulang'        => null, // ✅ Kosong, bukan 00:00
+                'jam_masuk'         => $tanggalString . ' 00:00:00',
+                'jam_pulang'        => $tanggalString . ' 00:00:00',
                 'lokasi_absensi_id' => null,
                 'keterangan'        => 'Auto-generated: Tidak hadir tanpa keterangan'
             ]);
