@@ -90,7 +90,7 @@
                     <i class="fas fa-redo"></i> Reset
                 </button>
 
-                @can('role: admin')
+                @role('admin')
                     <button type="button" id="btn_export_pdf" class="btn btn-danger" title="Download laporan dalam format PDF">
                         <i class="fas fa-file-pdf"></i> PDF
                     </button>
@@ -98,7 +98,7 @@
                     <button type="button" id="btn_export_excel" class="btn btn-success" title="Download laporan dalam format Excel">
                         <i class="fas fa-file-excel"></i> Excel
                     </button>
-                @endcan
+                @endrole
             </div>
         </div>
     </div>
