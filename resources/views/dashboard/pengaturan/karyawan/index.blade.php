@@ -51,7 +51,9 @@
                     </tbody>
                 </table>
             </div>
-            <div class="card-footer"></div>
+            <div class="card-footer">
+                {{ $karyawans->links() }}
+            </div>
         </div>
     </div>
 </div>
