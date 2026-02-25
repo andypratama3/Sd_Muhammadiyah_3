@@ -43,7 +43,7 @@ class SecureHeadersMiddleware
             'geolocation=(self), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()'
         );
 
-        // ✅ FIXED CSP - includes FontAwesome CDN correctly + Nominatim + unpkg connect-src
+        // ✅ FIXED CSP
         $response->headers->set('Content-Security-Policy',
             "default-src 'self'; " .
             "script-src 'self' 'unsafe-inline' 'unsafe-eval' " .
@@ -59,7 +59,8 @@ class SecureHeadersMiddleware
             "connect-src 'self' https://app.midtrans.com https://app.sandbox.midtrans.com " .
                 "https://www.googletagmanager.com https://www.google-analytics.com " .
                 "https://kit.fontawesome.com https://ka-f.fontawesome.com " .
-                "https://nominatim.openstreetmap.org https://unpkg.com; " .
+                "https://nominatim.openstreetmap.org https://unpkg.com " .
+                "https://cdn.jsdelivr.net; " .  // ✅ Added for Chart.js sourcemaps
             "object-src 'none'; " .
             "base-uri 'self'; " .
             "form-action 'self';"
