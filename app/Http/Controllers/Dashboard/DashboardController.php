@@ -141,7 +141,7 @@ class DashboardController extends Controller
             $grafik[] = [
                 'tanggal' => $tanggal->format('d M'),
                 'hadir' => Absensi::whereDate('tanggal', $tanggal)
-                    ->where('status_kehadiran', 'hadir')
+                    ->where('status_masuk', ['tepat_waktu','terlambat'])
                     ->count()
             ];
         }
