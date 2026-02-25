@@ -119,7 +119,7 @@ class DashboardController extends Controller
         $totalKaryawan = Karyawan::count();
 
         $hadirHariIni = (clone $absensiHariIni)
-            ->where('status_kehadiran', 'hadir')
+            ->where('status_masuk', 'tepat_waktu')
             ->count();
 
         $terlambatHariIni = (clone $absensiHariIni)
