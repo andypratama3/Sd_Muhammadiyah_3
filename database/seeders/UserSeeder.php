@@ -99,9 +99,9 @@ class UserSeeder extends Seeder
 
         $roleSuperadmin = Role::where('name', 'superadmin')->first();
 
-        if($roleSuperadmin) {
-            $superadmin->syncPermissions(Permission::all());
-        }
+        // if($roleSuperadmin) {
+        //     $superadmin->syncPermissions(Permission::all());
+        // }
 
         $superadmin->assignRole($roleSuperadmin);
 

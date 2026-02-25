@@ -90,7 +90,7 @@
                     <i class="fas fa-redo"></i> Reset
                 </button>
 
-                @role('admin')
+                @role('admin|superadmin')
                     <button type="button" id="btn_export_pdf" class="btn btn-danger" title="Download laporan dalam format PDF">
                         <i class="fas fa-file-pdf"></i> PDF
                     </button>
