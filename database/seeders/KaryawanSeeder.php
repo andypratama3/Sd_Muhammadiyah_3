@@ -137,7 +137,7 @@ class KaryawanSeeder extends Seeder
                 'password' => Hash::make('sdmuhammadiyah3smd.com'),
             ]);
 
-            $user->assignRole('tenaga-kependidikan');
+            $user->assignRole('tenaga-pendidikan');
 
             Karyawan::create([
                 'name'          => $data['name'],
