@@ -50,7 +50,7 @@
                 <div>Rekap Absensi</div>
             </a>
         </li>
-        @can('role:admin')
+        @role('admin')
         <li class="menu-header small text-uppercase"><span class="menu-header-text">Pengaturan Absensi</span></li>
          <!-- Pengaturan -->
          <li class="menu-item {{ Request::routeIs('dashboard.pengaturan-absen.*') ? 'open' : '' }}">
@@ -73,7 +73,7 @@
                 </li>
             </ul>
         </li>
-
+        
          <li class="menu-header small text-uppercase">
              <span class="menu-header-text">News</span>
          </li>
@@ -218,7 +218,7 @@
                  <div data-i18n="Boxicons">SPMB</div>
              </a>
          </li>
-        @endcan
+        @endrole
 
         @canany('role:admin')
          <!-- Forms & Tables -->
