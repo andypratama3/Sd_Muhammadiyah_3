@@ -477,8 +477,7 @@ class AbsensiService
 
         $statusMasuk = 'tepat_waktu';
 
-        if ($this->isRoleTerbatas($jenisPegawai) && $jamKerja) {
-            // Role terbatas: lewat batas_masuk → ditolak
+       if ($this->isRoleTerbatas($jenisPegawai) && $jamKerja) {
             $batasMasuk     = Carbon::parse($jamKerja->batas_masuk, 'Asia/Makassar');
             $jamMasukNormal = Carbon::parse($jamKerja->jam_masuk, 'Asia/Makassar');
 
@@ -486,15 +485,23 @@ class AbsensiService
                 return [
                     'success' => false,
                     'message' => 'Anda terlambat melewati batas jam masuk (' .
-                                 $batasMasuk->format('H:i') . ' WITA). Silahkan hubungi admin.'
+                                $batasMasuk->format('H:i') . ' WITA). Silahkan hubungi admin.'
                 ];
             }
 
-            $statusMasuk = $now->lessThanOrEqualTo($jamMasukNormal) ? 'tepat_waktu' : 'terlambat';
+            // ✅ 06:45:00 s/d 06:45:59 semua dapat Rp, 06:46:00 tidak
+            $nowHM    = (int) $now->format('Hi');
+            $jadwalHM = (int) $jamMasukNormal->format('Hi');
+            $statusMasuk = $nowHM <= $jadwalHM ? 'tepat_waktu' : 'terlambat';
+
+        // Role umum
         } elseif ($jamKerja && $jamKerja->jam_masuk) {
-            // Role umum: tidak ada penolakan, status dicatat saja
             $jamMasukNormal = Carbon::parse($jamKerja->jam_masuk, 'Asia/Makassar');
-            $statusMasuk    = $now->lessThanOrEqualTo($jamMasukNormal) ? 'tepat_waktu' : 'terlambat';
+
+            // ✅ Sama
+            $nowHM    = (int) $now->format('Hi');
+            $jadwalHM = (int) $jamMasukNormal->format('Hi');
+            $statusMasuk = $nowHM <= $jadwalHM ? 'tepat_waktu' : 'terlambat';
         }
 
         // Poin hanya untuk role terbatas yang tepat waktu
