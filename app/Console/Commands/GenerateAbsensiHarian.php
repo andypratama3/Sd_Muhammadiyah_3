@@ -146,7 +146,7 @@ class GenerateAbsensiHarian extends Command
                 'tanggal' => $tanggalString,
                 'jam_kerja_id' => $jamKerjaId,
                 'status_kehadiran' => 'alpha',
-                'lokasi_absensi_id' => 1,
+                // 'lokasi_absensi_id' => 1,
                 'keterangan' => 'Auto-generated: Tidak hadir tanpa keterangan'
             ]);
         }

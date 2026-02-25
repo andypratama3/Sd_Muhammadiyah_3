@@ -528,8 +528,8 @@ class AbsensiService
             ];
 
             if (!config('absensi.use_kml', false) && $lokasi) {
-                $dataAbsensi['lokasi_absensi_id'] = $lokasi->id;
-                $dataAbsensi['jarak_masuk']       = $validasiLokasi['jarak'];
+                $dataAbsensi['lokasi_absensi_id'] = $lokasi->id ?? null;
+                $dataAbsensi['jarak_masuk']       = $validasiLokasi['jarak'] ?? null;
             }
 
             Absensi::updateOrCreate(
