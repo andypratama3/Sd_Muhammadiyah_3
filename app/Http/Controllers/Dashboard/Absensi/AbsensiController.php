@@ -63,7 +63,7 @@ class AbsensiController extends Controller
             $jamKerja = $this->absensiService
                 ->getJamKerja($jenisPegawai);
         } catch (\Exception $e) {
-            abort(403, $e->getMessage());
+            // tidak melakukan apa-apa
         }
 
         return view('dashboard.absensis.index', compact(
