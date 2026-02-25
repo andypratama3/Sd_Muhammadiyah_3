@@ -20,11 +20,6 @@ class AbsensiMasterSeeder extends Seeder
         |--------------------------------------------------------------------------
         | JAM KERJA GURU (SENIN - JUMAT)
         |--------------------------------------------------------------------------
-        | - jam_masuk: Jam masuk ideal
-        | - batas_masuk: Batas maksimal masuk (lewat ini = terlambat)
-        | - jam_pulang: Jam pulang normal
-        | - batas_pulang: Jam minimal boleh pulang (sebelum ini = pulang cepat)
-        |--------------------------------------------------------------------------
         */
         foreach ($hariKerja as $hari) {
             DB::table('jam_kerja')->insert([
@@ -32,9 +27,9 @@ class AbsensiMasterSeeder extends Seeder
                 'jenis_pegawai' => 'guru',
                 'hari'          => $hari,
                 'jam_masuk'     => '06:45:00',
-                'batas_masuk'   => '07:00:00',  // Lewat jam ini = terlambat
-                'jam_pulang'    => '14:15:00',
-                'batas_pulang'  => '14:15:00',  // Boleh pulang mulai jam ini
+                'batas_masuk'   => '07:15:00',
+                'jam_pulang'    => '13:15:00',
+                'batas_pulang'  => '13:15:00',
                 'is_default'    => false,
                 'created_at'    => now(),
                 'updated_at'    => now(),
@@ -43,7 +38,7 @@ class AbsensiMasterSeeder extends Seeder
 
         /*
         |--------------------------------------------------------------------------
-        | HARI LIBUR GURU (SABTU - MINGGU)
+        | HARI LIBUR GURU
         |--------------------------------------------------------------------------
         */
         foreach ($hariLibur as $hari) {
@@ -63,7 +58,7 @@ class AbsensiMasterSeeder extends Seeder
 
         /*
         |--------------------------------------------------------------------------
-        | JAM KERJA TENAGA PENDIDIKAN (SENIN - JUMAT)
+        | JAM KERJA TENAGA PENDIDIKAN
         |--------------------------------------------------------------------------
         */
         foreach ($hariKerja as $hari) {
@@ -72,9 +67,9 @@ class AbsensiMasterSeeder extends Seeder
                 'jenis_pegawai' => 'tenaga-pendidikan',
                 'hari'          => $hari,
                 'jam_masuk'     => '06:45:00',
-                'batas_masuk'   => '07:00:00',  // Lewat jam ini = terlambat
-                'jam_pulang'    => '14:15:00',
-                'batas_pulang'  => '14:15:00', 
+                'batas_masuk'   => '07:15:00',
+                'jam_pulang'    => '13:15:00',
+                'batas_pulang'  => '13:15:00',
                 'is_default'    => false,
                 'created_at'    => now(),
                 'updated_at'    => now(),
@@ -83,7 +78,7 @@ class AbsensiMasterSeeder extends Seeder
 
         /*
         |--------------------------------------------------------------------------
-        | HARI LIBUR TENAGA PENDIDIKAN (SABTU - MINGGU)
+        | HARI LIBUR TENAGA PENDIDIKAN
         |--------------------------------------------------------------------------
         */
         foreach ($hariLibur as $hari) {
@@ -103,38 +98,88 @@ class AbsensiMasterSeeder extends Seeder
 
         /*
         |--------------------------------------------------------------------------
-        | JAM KERJA DEFAULT (FALLBACK) - Hanya untuk hari tidak terdefinisi
+        | JAM KERJA SHADOW TEACHER (SENIN - JUMAT)
+        |--------------------------------------------------------------------------
+        */
+        foreach ($hariKerja as $hari) {
+            DB::table('jam_kerja')->insert([
+                'nama_shift'    => 'Shadow Teacher',
+                'jenis_pegawai' => 'shadow-teacher',
+                'hari'          => $hari,
+                'jam_masuk'     => '06:45:00',
+                'batas_masuk'   => '07:15:00',
+                'jam_pulang'    => '13:15:00',
+                'batas_pulang'  => '13:15:00',
+                'is_default'    => false,
+                'created_at'    => now(),
+                'updated_at'    => now(),
+            ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | HARI LIBUR SHADOW TEACHER
+        |--------------------------------------------------------------------------
+        */
+        foreach ($hariLibur as $hari) {
+            DB::table('jam_kerja')->insert([
+                'nama_shift'    => 'Libur Shadow Teacher',
+                'jenis_pegawai' => 'shadow-teacher',
+                'hari'          => $hari,
+                'jam_masuk'     => '00:00:00',
+                'batas_masuk'   => '00:00:00',
+                'jam_pulang'    => '00:00:00',
+                'batas_pulang'  => '00:00:00',
+                'is_default'    => false,
+                'created_at'    => now(),
+                'updated_at'    => now(),
+            ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | JAM KERJA DEFAULT (FALLBACK)
         |--------------------------------------------------------------------------
         */
         DB::table('jam_kerja')->insert([
-            // DEFAULT GURU
             [
                 'nama_shift'    => 'Default Guru',
                 'jenis_pegawai' => 'guru',
                 'hari'          => null,
                 'jam_masuk'     => '06:45:00',
-                'batas_masuk'   => '07:00:00',  
-                'jam_pulang'    => '14:15:00',
-                'batas_pulang'  => '14:15:00',  
+                'batas_masuk'   => '07:15:00',
+                'jam_pulang'    => '13:15:00',
+                'batas_pulang'  => '13:15:00',
                 'is_default'    => true,
                 'created_at'    => now(),
                 'updated_at'    => now(),
             ],
-            // DEFAULT TENAGA PENDIDIKAN
             [
                 'nama_shift'    => 'Default Tendik',
                 'jenis_pegawai' => 'tenaga-pendidikan',
                 'hari'          => null,
                 'jam_masuk'     => '06:45:00',
-                'batas_masuk'   => '07:00:00',  
-                'jam_pulang'    => '14:15:00',
-                'batas_pulang'  => '14:15:00',  
+                'batas_masuk'   => '07:15:00',
+                'jam_pulang'    => '13:15:00',
+                'batas_pulang'  => '13:15:00',
+                'is_default'    => true,
+                'created_at'    => now(),
+                'updated_at'    => now(),
+            ],
+            [
+                'nama_shift'    => 'Default Shadow Teacher',
+                'jenis_pegawai' => 'shadow-teacher',
+                'hari'          => null,
+                'jam_masuk'     => '06:45:00',
+                'batas_masuk'   => '07:15:00',
+                'jam_pulang'    => '13:15:00',
+                'batas_pulang'  => '13:15:00',
                 'is_default'    => true,
                 'created_at'    => now(),
                 'updated_at'    => now(),
             ],
         ]);
 
-        $this->command->info('✅ Seeder Jam Kerja berhasil! (Senin-Jumat: kerja, Sabtu-Minggu: libur)');
+        $this->command->info('✅ Seeder Jam Kerja berhasil! (Guru, Tendik, Shadow Teacher)');
     }
 }
