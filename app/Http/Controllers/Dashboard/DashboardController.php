@@ -126,7 +126,9 @@ class DashboardController extends Controller
             ->where('status_masuk', 'terlambat')
             ->count();
 
-        $tidakHadirHariIni = $totalKaryawan - $hadirHariIni;
+        $totalHadir = $hadirHariIni + $terlambatHariIni;            
+
+        $tidakHadirHariIni = $totalKaryawan - $totalHadir;
 
         $cutiAktif = PengajuanCuti::where('status', 'disetujui')
             ->whereDate('tanggal_mulai', '<=', $today)

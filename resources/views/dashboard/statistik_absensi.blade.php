@@ -95,7 +95,7 @@
             <div class="card-body d-flex justify-content-between align-items-center">
                 <div>
                     <div class="stat-label">Hadir Hari Ini</div>
-                    <div class="stat-value">{{ $hadirHariIni + $terlambatHariIni }}</div>
+                    <div class="stat-value">{{ $totalHadir }}</div>
                 </div>
                 <i class="fas fa-user-check stat-icon text-success"></i>
             </div>
