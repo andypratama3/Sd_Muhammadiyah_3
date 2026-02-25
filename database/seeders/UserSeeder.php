@@ -18,62 +18,62 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+        // app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // Disable foreign key checks
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        // // Disable foreign key checks
+        // DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-        // Truncate tables
-        DB::table('model_has_permissions')->truncate();
-        DB::table('model_has_roles')->truncate();
-        DB::table('role_has_permissions')->truncate();
-        DB::table('users')->truncate();
-        DB::table('roles')->truncate();
-        DB::table('permissions')->truncate();
+        // // Truncate tables
+        // DB::table('model_has_permissions')->truncate();
+        // DB::table('model_has_roles')->truncate();
+        // DB::table('role_has_permissions')->truncate();
+        // DB::table('users')->truncate();
+        // DB::table('roles')->truncate();
+        // DB::table('permissions')->truncate();
 
-        // Enable foreign key checks
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        // // Enable foreign key checks
+        // DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
-        // List Permissions
-        $listPermissions = [
-            'view-pengaturan',
-            'manage-pengaturan',
-            'webhook',
-            'view-siswa',
-            'manage-siswa',
-            'view-data-sekolah',
-            'manage-data-sekolah',
-            'view-pembayaran',
-            'manage-pembayaran',
-            'nilai-view',
-            'nilai-manage',
-            'absensi-view',
-            'absensi-manage',
-        ];
+        // // List Permissions
+        // $listPermissions = [
+        //     'view-pengaturan',
+        //     'manage-pengaturan',
+        //     'webhook',
+        //     'view-siswa',
+        //     'manage-siswa',
+        //     'view-data-sekolah',
+        //     'manage-data-sekolah',
+        //     'view-pembayaran',
+        //     'manage-pembayaran',
+        //     'nilai-view',
+        //     'nilai-manage',
+        //     'absensi-view',
+        //     'absensi-manage',
+        // ];
 
-        // List Roles
-        $listRoles = [
-            'superadmin',
-            'user',
-            'media',
-            'tenaga-pendidikan',
-            'guru',
-            'siswa',
-        ];
+        // // List Roles
+        // $listRoles = [
+        //     'superadmin',
+        //     'user',
+        //     'media',
+        //     'tenaga-pendidikan',
+        //     'guru',
+        //     'siswa',
+        // ];
 
-        foreach ($listPermissions as $permission) {
-            Permission::create([
-                'name' => $permission,
-                'guard_name' => 'web',
-            ]);
-        }
+        // foreach ($listPermissions as $permission) {
+        //     Permission::create([
+        //         'name' => $permission,
+        //         'guard_name' => 'web',
+        //     ]);
+        // }
 
-        foreach ($listRoles as $role) {
-            $roleName = Role::create([
-                'name' => $role,
-                'guard_name' => 'web',
-            ]);
-        }
+        // foreach ($listRoles as $role) {
+        //     $roleName = Role::create([
+        //         'name' => $role,
+        //         'guard_name' => 'web',
+        //     ]);
+        // }
 
 
         $superadmin = User::create([
@@ -87,23 +87,21 @@ class UserSeeder extends Seeder
         ]);
 
 
-        $siswa = User::create([
-            'id' => Str::uuid(),
-            'name' => 'Siswa',
-            'email' => 'siswa@gmail.com',
-            'password' => bcrypt('Siswa1211'),
-            'avatar' => 'profile.jpg',
-            'email_verified_at' => now(),
-            'remember_token' => Str::random(10),
-        ]);
+        // $siswa = User::create([
+        //     'id' => Str::uuid(),
+        //     'name' => 'Siswa',
+        //     'email' => 'siswa@gmail.com',
+        //     'password' => bcrypt('Siswa1211'),
+        //     'avatar' => 'profile.jpg',
+        //     'email_verified_at' => now(),
+        //     'remember_token' => Str::random(10),
+        // ]);
 
         $roleSuperadmin = Role::where('name', 'superadmin')->first();
 
         if($roleSuperadmin) {
             $superadmin->syncPermissions(Permission::all());
         }
-
-
 
         $superadmin->assignRole($roleSuperadmin);
 
