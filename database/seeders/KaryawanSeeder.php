@@ -93,7 +93,7 @@ class KaryawanSeeder extends Seeder
             ]);
         }
 
-        // Karyawan 
+        // Karyawan Umum
         $karyawan = [
             ['name' => 'Nahdiah, S.H., M.E.', 'sex' => 'Perempuan', 'phone' => '089510837651'],
             ['name' => 'M. Rifqie Abrar', 'sex' => 'Laki-Laki', 'phone' => ''],           

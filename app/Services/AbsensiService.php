@@ -468,12 +468,8 @@ class AbsensiService
                     return ['success' => false, 'message' => 'Hari ini adalah hari libur. Absensi tidak diperlukan.'];
                 }
             } else {
-                // Role umum: jam kerja opsional, tidak memblokir apapun
-                try {
-                    $jamKerja = $this->getJamKerja($jenisPegawai, $now);
-                } catch (\Exception $e) {
-                    $jamKerja = null;
-                }
+                // Role umum: tidak butuh jam kerja sama sekali, langsung null
+                $jamKerja = null;
             }
         } catch (\Exception $e) {
             return ['success' => false, 'message' => $e->getMessage()];
