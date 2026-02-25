@@ -61,10 +61,10 @@ class RekapAbsensiController extends Controller
                     }
                 })
                 ->addColumn('jam_masuk', function ($row) {
-                    return \Carbon\Carbon::parse($row->jam_masuk ?? '')->format('H:i');
+                    return \Carbon\Carbon::parse($row->jam_masuk ?? '00:00')->format('H:i');
                 })
                 ->addColumn('jam_pulang', function ($row) {
-                    return \Carbon\Carbon::parse($row->jam_pulang ?? '')->format('H:i');
+                    return \Carbon\Carbon::parse($row->jam_pulang ?? '00:00')->format('H:i');
                 })
                 ->addColumn('keterangan', function ($row) {
                     return $row->keterangan ?? '-';
