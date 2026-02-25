@@ -15,21 +15,11 @@
         <div class="text-white shadow card bg-success">
             <div class="card-body">
                 <h6>Hadir Hari Ini</h6>
-                <h3>{{ $hadirHariIni }}</h3>
+                <h3>{{ $hadirHariIni + $terlambatHariIni }}</h3>
             </div>
         </div>
     </div>
-
-    {{-- Terlambat --}}
-    <div class="col-md-3">
-        <div class="shadow card bg-warning">
-            <div class="card-body">
-                <h6>Terlambat</h6>
-                <h3>{{ $terlambatHariIni }}</h3>
-            </div>
-        </div>
-    </div>
-
+ 
     {{-- Tidak Hadir --}}
     <div class="col-md-3">
         <div class="text-white shadow card bg-danger">
