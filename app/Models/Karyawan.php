@@ -85,6 +85,7 @@ class Karyawan extends Model
             $roleMap = [
                 'guru' => 'guru',
                 'tenaga-kependidikan' => 'tenaga_kependidikan',
+                'shadow-teacher' => 'shadow_teacher',
             ];
 
             return $roleMap[$role->name] ?? 'umum';

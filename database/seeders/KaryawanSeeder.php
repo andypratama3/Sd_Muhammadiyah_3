@@ -72,22 +72,6 @@ class KaryawanSeeder extends Seeder
             ['name' => 'Yuliani Kirana, S.Ag', 'sex' => 'Perempuan', 'phone' => '081350702229'],
             ['name' => 'Inayah', 'sex' => 'Perempuan', 'phone' => ''],
             ['name' => 'Musdhalifah Zulhaifa, S.Pd., Gr', 'sex' => 'Perempuan', 'phone' => '081256048332'],
-            ['name' => 'Nahdiah, S.H., M.E.', 'sex' => 'Perempuan', 'phone' => '089510837651'],
-            ['name' => 'M. Rifqie Abrar', 'sex' => 'Laki-Laki', 'phone' => ''],
-            ['name' => 'Meylisa Hidayah', 'sex' => 'Perempuan', 'phone' => '082350347543'],
-            ['name' => 'Ismi Parihah', 'sex' => 'Perempuan', 'phone' => '085845113245'],
-            ['name' => 'Indra Amaliyah Syahrani Amd. Keb', 'sex' => 'Perempuan', 'phone' => ''],
-            ['name' => 'Halimah Lutfi', 'sex' => 'Perempuan', 'phone' => '083116664601'],
-            ['name' => 'Wanda Fadilah', 'sex' => 'Perempuan', 'phone' => ''],
-            ['name' => 'Siti Khadijah, S.H', 'sex' => 'Perempuan', 'phone' => ''],
-            ['name' => 'Norwana, S.Pd', 'sex' => 'Perempuan', 'phone' => ''],
-            ['name' => 'Ramadhania Iksan, S.Pd', 'sex' => 'Perempuan', 'phone' => '085654907906'],
-            ['name' => 'Maysaroh', 'sex' => 'Perempuan', 'phone' => ''],
-            ['name' => 'Arieza Maghfirah', 'sex' => 'Perempuan', 'phone' => ''],
-            ['name' => 'Maulida Rahmah, S.Sos', 'sex' => 'Perempuan', 'phone' => ''],
-            ['name' => 'Amalia Putri', 'sex' => 'Perempuan', 'phone' => '0895337408009'],
-            ['name' => 'Sakinah Adilah Bakri, S.Psi', 'sex' => 'Perempuan', 'phone' => ''],
-            ['name' => 'Nur Isma Mardhatillah, S.Pd', 'sex' => 'Perempuan', 'phone' => ''],
         ];
 
         foreach ($guru as $data) {
@@ -100,6 +84,31 @@ class KaryawanSeeder extends Seeder
             ]);
 
             $user->assignRole('guru');
+
+            Karyawan::create([
+                'name'          => $data['name'],
+                'sex'           => $data['sex'],
+                'user_id'       => $user->id,
+                'phone'         => $data['phone'],
+            ]);
+        }
+
+        // Karyawan 
+        $karyawan = [
+            ['name' => 'Nahdiah, S.H., M.E.', 'sex' => 'Perempuan', 'phone' => '089510837651'],
+            ['name' => 'M. Rifqie Abrar', 'sex' => 'Laki-Laki', 'phone' => ''],           
+        ];
+
+        foreach ($karyawan as $data) {
+            $email = $this->generateEmail($data['name']);
+
+            $user = User::create([
+                'name'     => $data['name'],
+                'email'    => $email,
+                'password' => Hash::make('sdmuhammadiyah3smd.com'),
+            ]);
+
+            $user->assignRole('umum');
 
             Karyawan::create([
                 'name'          => $data['name'],
@@ -126,6 +135,8 @@ class KaryawanSeeder extends Seeder
             ['name' => 'Abdul Sahid', 'sex' => 'Laki-Laki', 'phone' => ''],
             ['name' => 'Renaldi', 'sex' => 'Laki-Laki', 'phone' => ''],
             ['name' => 'Farhan Ajran Y.', 'sex' => 'Laki-Laki', 'phone' => ''],
+            ['name' => 'Agusti Fajrin', 'sex' => 'Laki-Laki', 'phone' => ''],
+            ['name' => 'Muhammad Indra Ashari', 'sex' => 'Laki-Laki', 'phone' => ''],
         ];
 
         foreach ($tendik as $data) {
@@ -138,6 +149,48 @@ class KaryawanSeeder extends Seeder
             ]);
 
             $user->assignRole('tenaga-pendidikan');
+
+            Karyawan::create([
+                'name'          => $data['name'],
+                'sex'           => $data['sex'],
+                'user_id'       => $user->id,
+                'phone'         => $data['phone'],
+            ]);
+        }
+
+        /**
+         * ======================
+         * SHADOW TEACHER
+         * ======================
+         */
+        $shadowTeacher = [
+            ['name' => 'Dwi Lestari', 'sex' => 'Perempuan', 'phone' => ''],
+            ['name' => 'Nurul Aini', 'sex' => 'Perempuan', 'phone' => ''],
+            ['name' => 'Ismi Parihah', 'sex' => 'Perempuan', 'phone' => '085845113245'],
+            ['name' => 'Indra Amaliyah Syahrani Amd. Keb', 'sex' => 'Perempuan', 'phone' => ''],
+            ['name' => 'Meylisa Hidayah', 'sex' => 'Perempuan', 'phone' => '082350347543'],
+            ['name' => 'Halimah Lutfi', 'sex' => 'Perempuan', 'phone' => '083116664601'],
+            ['name' => 'Wanda Fadilah', 'sex' => 'Perempuan', 'phone' => ''],
+            ['name' => 'Siti Khadijah, S.H', 'sex' => 'Perempuan', 'phone' => ''],
+            ['name' => 'Norwana, S.Pd', 'sex' => 'Perempuan', 'phone' => ''],
+            ['name' => 'Ramadhania Iksan, S.Pd', 'sex' => 'Perempuan', 'phone' => '085654907906'],
+            ['name' => 'Maysaroh', 'sex' => 'Perempuan', 'phone' => ''],
+            ['name' => 'Arieza Maghfirah', 'sex' => 'Perempuan', 'phone' => ''],
+            ['name' => 'Maulida Rahmah, S.Sos', 'sex' => 'Perempuan', 'phone' => ''],
+            ['name' => 'Amalia Putri', 'sex' => 'Perempuan', 'phone' => '0895337408009'],
+            ['name' => 'Sakinah Adilah Bakri, S.Psi', 'sex' => 'Perempuan', 'phone' => ''],
+        ];
+
+        foreach ($shadowTeacher as $data) {
+            $email = $this->generateEmail($data['name']);
+
+            $user = User::create([
+                'name'     => $data['name'],
+                'email'    => $email,
+                'password' => Hash::make('sdmuhammadiyah3smd.com'),
+            ]);
+
+            $user->assignRole('shadow_teacher');
 
             Karyawan::create([
                 'name'          => $data['name'],

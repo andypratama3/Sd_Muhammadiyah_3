@@ -17,7 +17,7 @@ class ActionKaryawan
             'name' => $karyawanData->name,
             'email' => $karyawanData->email,
             'nip' => $karyawanData->nip,
-            'password' => bcrypt('sdmuhammadiyah3samarinda.com'),
+            'password' => bcrypt('sdmuhammadiyah3smd.com'),
             'avatar' => 'profile.jpg',
 
         ];

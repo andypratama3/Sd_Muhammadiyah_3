@@ -521,8 +521,11 @@ class AbsensiService
         // Tentukan status
         $statusMasuk = $now->lessThanOrEqualTo($jamMasukNormal) ? 'tepat_waktu' : 'terlambat';
 
-        // kalau lebih dari jam masuk tidak dapat rp_masuk
-        $rp_masuk = $statusMasuk === 'tepat_waktu' ? 4000 : 0;
+        $rp_masuk = 0;
+        if($jenisPegawai != 'shadow-teacher') {
+            // kalau lebih dari jam masuk tidak dapat rp_masuk
+            $rp_masuk = $statusMasuk === 'tepat_waktu' ? 4000 : 0;
+        }
 
         // Simpan absensi
         try {
@@ -646,7 +649,11 @@ class AbsensiService
         $statusPulang = $now->lessThan($batasPulang) ? 'pulang_cepat' : 'tepat_waktu';
 
         // kalau kurang dari jam pulang tidak dapat rp_pulang
-        $rp_pulang = $statusPulang === 'pulang_cepat' ? 0 : 4000;
+        $rp_pulang = 0;
+        if($jenisPegawai != 'shadow-teacher') {
+            // kalau lebih dari jam masuk tidak dapat rp_masuk
+            $rp_pulang = $statusPulang === 'pulang_cepat' ? 4000 : 0;
+        }
 
         // Simpan pulang
         try {
