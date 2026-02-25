@@ -173,7 +173,8 @@ class DashboardController extends Controller
             'terlambatHariIni',
             'tidakHadirHariIni',
             'cutiAktif',
-            'grafik'
+            'grafik',
+            'totalHadir'
         ));
     }
 }
