@@ -321,7 +321,7 @@ class AbsensiService
             return 'guru';
         }
 
-        if ($role->name === 'tenaga-pendidikan') {
+        if ($role->name === 'tenaga-pendidikan' || $role->name === 'admin') {
             return 'tenaga-pendidikan';
         }
 
