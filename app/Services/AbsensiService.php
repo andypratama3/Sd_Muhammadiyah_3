@@ -378,20 +378,20 @@ class AbsensiService
                 return ['success' => false, 'message' => $deviceValidation['message']];
             }
 
-            $abuseCheck = $this->deteksiAbuse($karyawan->id, $ipAddress);
-            if ($abuseCheck['suspicious']) {
-                Log::warning('Suspicious Activity', [
-                    'karyawan_id' => $karyawan->id,
-                    'user_id'     => $userId,
-                    'ip'          => $ipAddress,
-                    'reason'      => $abuseCheck['reason']
-                ]);
+            // $abuseCheck = $this->deteksiAbuse($karyawan->id, $ipAddress);
+            // if ($abuseCheck['suspicious']) {
+            //     Log::warning('Suspicious Activity', [
+            //         'karyawan_id' => $karyawan->id,
+            //         'user_id'     => $userId,
+            //         'ip'          => $ipAddress,
+            //         'reason'      => $abuseCheck['reason']
+            //     ]);
 
-                return [
-                    'success' => false,
-                    'message' => 'Aktivitas mencurigakan: ' . $abuseCheck['reason']
-                ];
-            }
+            //     return [
+            //         'success' => false,
+            //         'message' => 'Aktivitas mencurigakan: ' . $abuseCheck['reason']
+            //     ];
+            // }
         } else {
             $deviceValidation = null;
         }
