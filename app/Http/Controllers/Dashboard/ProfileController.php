@@ -44,13 +44,21 @@ class ProfileController extends Controller
     {
         $user = auth()->user();
 
-        if ($user->avatar !== 'default.jpg') {
-            Storage::delete('public/img/profile/' . $user->avatar);
+        // Pastikan avatar bukan default & tidak kosong
+        if (
+            $user->avatar &&
+            $user->avatar !== 'default.jpg' &&
+            Storage::disk('public')->exists('img/profile/' . $user->avatar)
+        ) {
+            Storage::disk('public')->delete('img/profile/' . $user->avatar);
         }
 
         $user->avatar = 'default.jpg';
         $user->save();
 
-        return response()->json(['message' => 'Profile image deleted successfully']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Foto profil berhasil dihapus'
+        ]);
     }
 }
