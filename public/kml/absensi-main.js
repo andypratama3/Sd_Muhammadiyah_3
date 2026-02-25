@@ -356,7 +356,7 @@ async function tampilkanRiwayat() {
                                 })}
                             </h6>
                             ${item.status_masuk === 'terlambat'
-                                ? '<span class="text-white status-badge bg-danger"><i class="fas fa-clock"></i> Terlambat</span>'
+                                ? '<span class="text-white status-badge bg-success"><i class="fas fa-clock"></i> Hadir</span>'
                                 : item.status_masuk === 'tepat_waktu'
                                     ? '<span class="text-white status-badge bg-success"><i class="fas fa-check"></i> Tepat Waktu</span>'
                                     : ''
