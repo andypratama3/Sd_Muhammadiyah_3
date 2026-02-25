@@ -346,7 +346,7 @@ class AbsensiService
      */
     private function isRoleDapatPoin(string $jenisPegawai): bool
     {
-        return in_array($jenisPegawai, ['guru', 'tenaga-pendidikan']);
+        return in_array($jenisPegawai, ['guru', 'tenaga-pendidikan','shadow-teacher']);
     }
 
     /**
@@ -505,7 +505,7 @@ class AbsensiService
         }
 
         // Poin hanya untuk role terbatas yang tepat waktu
-        $rp_masuk = ($this->isRoleDapatPoin($jenisPegawai) && $statusMasuk === 'tepat_waktu') ? 4000 : 0;
+        $rp_masuk = ($this->isRoleDapatPoin($jenisPegawai) && $statusMasuk === 'tepat_waktu') ? 4000 : 4000;
 
         // Cek duplikasi
         $absensiHariIni = Absensi::where('karyawan_id', $karyawan->id)
@@ -624,7 +624,7 @@ class AbsensiService
             // Role terbatas: pulang cepat tidak dapat poin
             $batasPulang  = Carbon::parse($absensi->jamKerja->batas_pulang, 'Asia/Makassar');
             $statusPulang = $now->lessThan($batasPulang) ? 'pulang_cepat' : 'tepat_waktu';
-            $rp_pulang    = ($this->isRoleDapatPoin($jenisPegawai) && $statusPulang === 'tepat_waktu') ? 4000 : 0;
+            $rp_pulang    = ($this->isRoleDapatPoin($jenisPegawai) && $statusPulang === 'tepat_waktu') ? 4000 : 4000;
         } elseif ($absensi->jamKerja && $absensi->jamKerja->batas_pulang) {
             // Role umum: status dicatat tapi tidak ada poin & tidak ada pemblokiran
             $batasPulang  = Carbon::parse($absensi->jamKerja->batas_pulang, 'Asia/Makassar');
