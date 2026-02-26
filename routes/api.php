@@ -131,7 +131,7 @@ Route::group(['prefix' => 'v2'], function () {
     Route::get('list/gallery', [GalleryDataController::class, 'list_gallery']);
     Route::get('list/prestasi-siswa', [PrestasiDataController::class, 'list_prestasi_siswa']);
     Route::get('list/prestasi-sekolah', [PrestasiDataController::class, 'list_prestasi_sekolah']);
-    // End For Site Map
+    // End For Site Mapv
 
     Route::group(['prefix' => 'auth', 'middleware' => ['verify.signature']], function () {
 
@@ -141,12 +141,13 @@ Route::group(['prefix' => 'v2'], function () {
         Route::post('/validate', [AuthController::class, 'validateToken']);
     });
 
+    Route::post('visitor/store', [ViewsDataController::class, 'store']);
+
     // Fetch Front End
     Route::group(['middleware' => 'jwt'], function () {
 
         // Route::post('/spmb/store', [SPMBController::class, 'store']);
 
-        Route::post('visitor/store', [ViewsDataController::class, 'store']);
         Route::get('count-landing',[LandingController::class, 'count']);
         Route::get('gallery-landing',[LandingController::class, 'gallery_activity']);
         Route::get('prestasi-landing',[LandingController::class, 'prestasi_landing']);

@@ -29,29 +29,47 @@ class Visitor extends Model
      * Auto save visitor log once per day per IP
      * Dipanggil dari ViewsDataController@store
      */
-    public static function logOncePerDay()
-    {
-       $ip = request()->header('CF-Connecting-IP')?? request()->ip();
+    // public static function logOncePerDay()
+    // {
+    //    $ip = request()->header('CF-Connecting-IP')?? request()->ip();
 
-        $userAgent = request()->userAgent();
+    //     $userAgent = request()->userAgent();
+    //     $today = now()->toDateString();
+
+    //     // Cek apakah IP ini sudah tercatat hari ini
+    //     $exists = self::where('ip_address', $ip)
+    //         ->whereDate('date', $today)
+    //         ->exists();
+
+    //     if (!$exists) {
+    //         self::create([
+    //             'ip_address' => $ip,
+    //             'date' => $today,
+    //             'user_agent' => $userAgent,
+    //         ]);
+
+    //         return true; // Berhasil log visitor baru
+    //     }
+
+    //     return false; // IP sudah tercatat hari ini
+    // }
+    public static function logOncePerDay(): bool
+    {
+        $ip = request()->header('CF-Connecting-IP') ?? request()->ip();
+
         $today = now()->toDateString();
 
-        // Cek apakah IP ini sudah tercatat hari ini
-        $exists = self::where('ip_address', $ip)
-            ->whereDate('date', $today)
-            ->exists();
+        // insertOrIgnore = ATOMIC (AMAN 1000+ REQUEST)
+        $inserted = self::insertOrIgnore([
+            'id'         => \Str::uuid(),
+            'ip_address' => $ip,
+            'user_agent' => substr(request()->userAgent(), 0, 255),
+            'date'       => $today,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
-        if (!$exists) {
-            self::create([
-                'ip_address' => $ip,
-                'date' => $today,
-                'user_agent' => $userAgent,
-            ]);
-
-            return true; // Berhasil log visitor baru
-        }
-
-        return false; // IP sudah tercatat hari ini
+        return $inserted > 0;
     }
 
     /**

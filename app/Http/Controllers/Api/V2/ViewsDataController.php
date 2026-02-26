@@ -44,29 +44,34 @@ class ViewsDataController extends Controller
      *
      * POST /api/v2/views
      */
-    public function store(Request $request)
+   public function store(Request $request)
     {
-        try {
-            $isNewVisitor = Visitor::logOncePerDay();
+        Visitor::logOncePerDay();
 
-            $stats = [
-                'visitor_by_day' => Visitor::today()->count(),
-                'is_new_visitor' => $isNewVisitor,
-            ];
+        // Beacon best practice: no content
+        return response()->noContent(); // HTTP 204
 
-            return $this->success(
-                $stats,
-                $isNewVisitor
-                    ? 'Visitor logged successfully'
-                    : 'Visitor already logged today'
-            );
-        } catch (\Exception $e) {
-            \Log::error('Failed to log visitor: ' . $e->getMessage());
+        // try {
+        //     $isNewVisitor = Visitor::logOncePerDay();
 
-            return $this->serverError(
-                'Failed to log visitor: ' . $e->getMessage()
-            );
-        }
+        //     $stats = [
+        //         'visitor_by_day' => Visitor::today()->count(),
+        //         'is_new_visitor' => $isNewVisitor,
+        //     ];
+
+        //     return $this->success(
+        //         $stats,
+        //         $isNewVisitor
+        //             ? 'Visitor logged successfully'
+        //             : 'Visitor already logged today'
+        //     );
+        // } catch (\Exception $e) {
+        //     \Log::error('Failed to log visitor: ' . $e->getMessage());
+
+        //     return $this->serverError(
+        //         'Failed to log visitor: ' . $e->getMessage()
+        //     );
+        // }
     }
 
     /**
