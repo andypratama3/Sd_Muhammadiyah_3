@@ -41,7 +41,7 @@
         <li class="menu-item {{ Request::routeIs('dashboard.pengajuan_cuti.*') ? 'active' : '' }}">
              <a href="{{ route('dashboard.pengajuan_cuti.index') }}" class="menu-link">
                  <i class="menu-icon tf-icons bx bx-envelope"></i>
-                 <div data-i18n="Dashboard">Pengajuan Cuti</div>
+                 <div data-i18n="Dashboard">Pengajuan Ketidakhadiran</div>
              </a>
          </li>
         <li class="menu-item {{ Request::routeIs('dashboard.rekap.absensi.*') ? 'active' : '' }}">
