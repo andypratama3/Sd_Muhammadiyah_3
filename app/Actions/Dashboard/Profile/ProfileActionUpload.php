@@ -28,7 +28,7 @@ class ProfileActionUpload
 
         $img->encode('jpg', 90);
 
-        if ($user->avatar !== 'default.jpg') {
+        if ($user->avatar !== 'default.jpg' && $user->avatar !== '') {
             Storage::delete('public/img/profile/' . $user->avatar);
         }
 
