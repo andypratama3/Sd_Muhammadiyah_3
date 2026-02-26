@@ -99,7 +99,7 @@
 
         <!-- TITLE -->
         <div class="navbar-nav align-items-center">
-            <h4 class="pt-3 mb-0">SD MUHAMMADIYAH 3 SAMARINDA</h4>
+            <h6 class="pt-3 mb-0">SD MUHAMMADIYAH 3 SAMARINDA</h4>
         </div>
 
         <ul class="navbar-nav align-items-center ms-auto">

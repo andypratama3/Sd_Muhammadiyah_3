@@ -35,6 +35,10 @@ class RekapAbsensiController extends Controller
                 }
             }
 
+            if($request->status_kehadiran){
+                $query->where('status_kehadiran', $request->status_kehadiran);
+            }
+
             return DataTables::of($query)
                 ->addColumn('karyawan', function ($row) {
                     return $row->karyawan->name ?? '-';

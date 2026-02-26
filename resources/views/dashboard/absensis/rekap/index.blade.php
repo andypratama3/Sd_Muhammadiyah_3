@@ -100,6 +100,20 @@
                     </button>
                 @endrole
             </div>
+
+            <div class="col-md-12">
+                <label for="status_kehadiran" class="mb-2">
+                    <i class="fas fa-check-circle"></i> Status Kehadiran
+                </label>
+                <select name="status_kehadiran" id="status_kehadiran" class="form-control">
+                    <option value="">Semua</option>
+                    <option value="hadir">Hadir</option>
+                    <option value="cuti">Cuti</option>
+                    <option value="izin">Izin</option>
+                    <option value="sakit">Sakit</option>
+                    <option value="alpha">Alpha</option>
+                </select>
+            </div>
         </div>
     </div>
         <div class="table-responsive">
@@ -258,6 +272,7 @@
                     url: "{{ route('dashboard.rekap.absensi.index') }}",
                     data: function(d) {
                         d.date = $('#date_range').val();
+                        d.status_kehadiran = $('#status_kehadiran').val();
                     }
                 },
                 autoWidth: false,
@@ -289,6 +304,10 @@
             // Reset button
             $('#btn_reset').click(function() {
                 $('#date_range').val('');
+                table.ajax.reload();
+            });
+
+            $('#status_kehadiran').change(function() {
                 table.ajax.reload();
             });
 
