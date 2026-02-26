@@ -109,12 +109,12 @@ class DashboardController extends Controller
         $absensiHariIni = Absensi::whereDate('tanggal', $today);
 
         // 🔐 user biasa hanya data sendiri
-        if (!Auth::user()->hasAnyRole(['admin','superadmin'])) {
-            $absensiHariIni->where(
-                'karyawan_id',
-                Auth::user()->karyawan->id
-            );
-        }
+        // if (!Auth::user()->hasAnyRole(['admin','superadmin'])) {
+        //     $absensiHariIni->where(
+        //         'karyawan_id',
+        //         Auth::user()->karyawan->id
+        //     );
+        // }
 
         $totalKaryawan = Karyawan::count();
 
