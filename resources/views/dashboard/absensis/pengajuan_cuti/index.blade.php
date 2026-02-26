@@ -50,10 +50,19 @@
                             <td>
                                 <a href="{{ route('dashboard.pengajuan_cuti.edit', $item->id) }}"
                                    class="btn btn-sm btn-warning">
-                                    Edit
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="#" data-id="{{ $item->id }}" class="btn btn-danger btn-sm delete" title="Hapus">
+                                    <form action="{{ route('dashboard.pengajuan_cuti.destroy', $item->id) }}"
+                                        id="delete-{{ $item->id }}" method="POST" enctype="multipart/form-data">
+                                        @csrf
+                                        @method('delete')
+                                    </form>
+                                    <i class="fas fa-trash"></i>
                                 </a>
                             </td>
                             @endif
+
                         </tr>
                     @empty
                         <tr>

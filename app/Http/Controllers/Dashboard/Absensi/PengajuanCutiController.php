@@ -129,4 +129,17 @@ class PengajuanCutiController extends Controller
             ->route('dashboard.pengajuan_cuti.index')
             ->with('success', 'Pengajuan cuti berhasil diperbarui');
     }
+    
+    public function destroy(PengajuanCuti $pengajuanCuti)
+    {
+        if ($pengajuanCuti->file_pendukung) {
+            Storage::disk('public')->delete($pengajuanCuti->file_pendukung);
+        }
+
+        $pengajuanCuti->delete();
+
+        return redirect()
+            ->route('dashboard.pengajuan_cuti.index')
+            ->with('success', 'Pengajuan cuti berhasil dihapus');
+    }   
 }

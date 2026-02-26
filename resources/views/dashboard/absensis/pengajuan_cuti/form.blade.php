@@ -72,6 +72,14 @@
         @endif
     @endisset
 </div>
+<div class="mt-2 form-group">
+    <label>Catatan Admin (Opsional)</label>
+    <textarea name="catatan_admin"
+              rows="3"
+              class="form-control @error('catatan_admin') is-invalid @enderror">{{ old('catatan_admin', $pengajuanCuti->catatan_admin ?? '') }}</textarea>
+    @error('catatan_admin') <div class="invalid-feedback">{{ $message }}</div> @enderror
+</div>
+
 
 @role('admin|superadmin')
 <div class="mt-2 form-group">
@@ -93,13 +101,5 @@
         </option>
     </select>
     @error('status') <div class="invalid-feedback">{{ $message }}</div> @enderror
-</div>
-
-<div class="mt-2 form-group">
-    <label>Catatan Admin (Opsional)</label>
-    <textarea name="catatan_admin"
-              rows="3"
-              class="form-control @error('catatan_admin') is-invalid @enderror">{{ old('catatan_admin', $pengajuanCuti->catatan_admin ?? '') }}</textarea>
-    @error('catatan_admin') <div class="invalid-feedback">{{ $message }}</div> @enderror
 </div>
 @endrole
