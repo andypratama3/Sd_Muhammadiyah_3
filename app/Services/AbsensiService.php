@@ -445,8 +445,8 @@ class AbsensiService
      */
     public function absenMasuk($userId, $latitude, $longitude, $lokasiId = 1, $ipAddress = null, $userAgent = null, $deviceId = null)
     {
-        $validation = $this->validateCommonChecks($userId, $ipAddress, $userAgent, $deviceId);
-        if (!$validation['success']) return $validation;
+        // $validation = $this->validateCommonChecks($userId, $ipAddress, $userAgent, $deviceId);
+        // if (!$validation['success']) return $validation;
 
         extract($validation);
 
@@ -590,8 +590,8 @@ class AbsensiService
      */
     public function absenPulang($userId, $latitude, $longitude, $lokasiId = 1, $ipAddress = null, $userAgent = null, $deviceId = null)
     {
-        $validation = $this->validateCommonChecks($userId, $ipAddress, $userAgent, $deviceId);
-        if (!$validation['success']) return $validation;
+        // $validation = $this->validateCommonChecks($userId, $ipAddress, $userAgent, $deviceId);
+        // if (!$validation['success']) return $validation;
 
         extract($validation);
 
