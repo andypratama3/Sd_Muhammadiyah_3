@@ -15,16 +15,16 @@ class ToastNotification {
         const id = Date.now();
         const iconMap = {
             success: 'fas fa-check-circle',
-            error: 'fas fa-exclamation-circle',
+            error:   'fas fa-exclamation-circle',
             warning: 'fas fa-exclamation-triangle',
-            info: 'fas fa-info-circle'
+            info:    'fas fa-info-circle'
         };
 
         const titleMap = {
             success: 'Berhasil',
-            error: 'Gagal',
+            error:   'Gagal',
             warning: 'Peringatan',
-            info: 'Informasi'
+            info:    'Informasi'
         };
 
         const toast = document.createElement('div');
@@ -76,76 +76,38 @@ class ToastNotification {
         }
     }
 
-    /**
-     * Show success notification
-     */
-    success(message, title = '') {
-        return this.show(message, 'success', 5000, title);
-    }
-
-    /**
-     * Show error notification
-     */
-    error(message, title = '') {
-        return this.show(message, 'error', 6000, title);
-    }
-
-    /**
-     * Show warning notification
-     */
-    warning(message, title = '') {
-        return this.show(message, 'warning', 5000, title);
-    }
-
-    /**
-     * Show info notification
-     */
-    info(message, title = '') {
-        return this.show(message, 'info', 4000, title);
-    }
+    success(message, title = '') { return this.show(message, 'success', 5000, title); }
+    error(message, title = '')   { return this.show(message, 'error',   6000, title); }
+    warning(message, title = '') { return this.show(message, 'warning', 5000, title); }
+    info(message, title = '')    { return this.show(message, 'info',    4000, title); }
 }
 
 // Initialize global notify instance
 const notify = new ToastNotification();
 
 // ============================================
-// LOADING OVERLAY FUNCTIONS
+// LOADING OVERLAY
 // ============================================
 
-/**
- * Show loading overlay
- */
 function showLoading() {
     const overlay = document.getElementById('loading-overlay');
-    if (overlay) {
-        overlay.classList.remove('d-none');
-    }
+    if (overlay) overlay.classList.remove('d-none');
 }
 
-/**
- * Hide loading overlay
- */
 function hideLoading() {
     const overlay = document.getElementById('loading-overlay');
-    if (overlay) {
-        overlay.classList.add('d-none');
-    }
+    if (overlay) overlay.classList.add('d-none');
 }
 
 // ============================================
-// UTILITY FUNCTIONS
+// UTILITY
 // ============================================
 
 /**
- * Escape HTML special characters
+ * Escape HTML untuk prevent XSS
  */
 function escapeHtml(text) {
-    const map = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-    };
+    if (!text) return '';
+    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
     return String(text).replace(/[&<>"']/g, m => map[m]);
 }

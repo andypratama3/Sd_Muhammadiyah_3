@@ -22,6 +22,10 @@
             {{ old('jenis_pegawai', $jamKerja->jenis_pegawai ?? '') == 'tenaga-pendidikan' ? 'selected' : '' }}>
             Tenaga Pendidikan
         </option>
+        <option value="shadow-teacher"
+            {{ old('jenis_pegawai', $jamKerja->jenis_pegawai ?? '') == 'shadow-teacher' ? 'selected' : '' }}>
+            Shadow Teacher
+        </option>
     </select>
     @error('jenis_pegawai') <div class="invalid-feedback">{{ $message }}</div> @enderror
 </div>
@@ -44,42 +48,60 @@
 <div class="row">
     <div class="mt-2 col-md-6">
         <label>Jam Masuk</label>
-        <input type="time" name="jam_masuk"
-               class="form-control"
-               value="{{ old('jam_masuk', $jamKerja->jam_masuk ?? '') }}" required>
+        <input type="time"
+               name="jam_masuk"
+               class="form-control @error('jam_masuk') is-invalid @enderror"
+               value="{{ old('jam_masuk', $jamKerja->jam_masuk ?? '') }}"
+               step="1"
+               required>
+        @error('jam_masuk') <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
 
     <div class="mt-2 col-md-6">
         <label>Batas Masuk</label>
-        <input type="time" name="batas_masuk"
-               class="form-control"
-               value="{{ old('batas_masuk', $jamKerja->batas_masuk ?? '') }}" required>
+        <input type="time"
+               name="batas_masuk"
+               class="form-control @error('batas_masuk') is-invalid @enderror"
+               value="{{ old('batas_masuk', $jamKerja->batas_masuk ?? '') }}"
+               step="1"
+               required>
+        @error('batas_masuk') <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
 </div>
 
 <div class="row">
     <div class="mt-2 col-md-6">
         <label>Jam Pulang</label>
-        <input type="time" name="jam_pulang"
-               class="form-control"
-               value="{{ old('jam_pulang', $jamKerja->jam_pulang ?? '') }}" required>
+        <input type="time"
+               name="jam_pulang"
+               class="form-control @error('jam_pulang') is-invalid @enderror"
+               value="{{ old('jam_pulang', $jamKerja->jam_pulang ?? '') }}"
+               step="1"
+               required>
+        @error('jam_pulang') <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
 
     <div class="mt-2 col-md-6">
         <label>Batas Pulang</label>
-        <input type="time" name="batas_pulang"
-               class="form-control"
-               value="{{ old('batas_pulang', $jamKerja->batas_pulang ?? '') }}" required>
+        <input type="time"
+               name="batas_pulang"
+               class="form-control @error('batas_pulang') is-invalid @enderror"
+               value="{{ old('batas_pulang', $jamKerja->batas_pulang ?? '') }}"
+               step="1"
+               required>
+        @error('batas_pulang') <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
 </div>
 
 <div class="mt-3 form-group">
     <div class="form-check">
+        {{-- ✅ @checked() directive Laravel 9+
+             Menangani: int(1), bool(true), string("1"), dan old() setelah validasi gagal --}}
         <input class="form-check-input"
                type="checkbox"
                name="is_default"
                value="1"
-               {{ old('is_default', $jamKerja->is_default ?? false) ? 'checked' : '' }}>
+               @checked(old('is_default', $jamKerja->is_default ?? false))>
         <label class="form-check-label">
             Jadikan Jam Kerja Default
         </label>

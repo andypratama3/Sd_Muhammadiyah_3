@@ -29,8 +29,8 @@ class AbsensiService
 
         $latFrom = deg2rad($lat1);
         $lonFrom = deg2rad($lon1);
-        $latTo = deg2rad($lat2);
-        $lonTo = deg2rad($lon2);
+        $latTo   = deg2rad($lat2);
+        $lonTo   = deg2rad($lon2);
 
         $latDelta = $latTo - $latFrom;
         $lonDelta = $lonTo - $lonFrom;
@@ -55,7 +55,7 @@ class AbsensiService
         }
 
         return [
-            'valid' => false,
+            'valid'   => false,
             'message' => 'Tidak ada metode validasi lokasi yang dikonfigurasi'
         ];
     }
@@ -69,17 +69,17 @@ class AbsensiService
 
         if (!$result['valid']) {
             return [
-                'valid' => false,
+                'valid'   => false,
                 'message' => $result['message'],
-                'jarak' => null
+                'jarak'   => null
             ];
         }
 
         return [
-            'valid' => true,
-            'message' => $result['message'],
+            'valid'     => true,
+            'message'   => $result['message'],
             'area_name' => $result['area_name'] ?? 'Area Valid',
-            'jarak' => null
+            'jarak'     => null
         ];
     }
 
@@ -96,21 +96,47 @@ class AbsensiService
         );
 
         return [
-            'valid' => $jarak <= $lokasi->radius,
-            'jarak' => round($jarak, 2),
+            'valid'   => $jarak <= $lokasi->radius,
+            'jarak'   => round($jarak, 2),
             'message' => $jarak <= $lokasi->radius
                 ? 'Lokasi valid'
                 : "Anda berada {$jarak} meter dari lokasi. Radius maksimal {$lokasi->radius} meter."
         ];
     }
 
+    // =========================================================================
+    // DEVICE MANAGEMENT — PERBAIKAN UTAMA
+    // =========================================================================
+
     /**
-     * Generate device fingerprint
+     * Generate device fingerprint yang STABIL.
+     *
+     * MASALAH LAMA:
+     *   hash('sha256', $userAgent . $deviceId)
+     *   → User Agent berubah otomatis setiap update browser/OS
+     *   → 1 HP fisik menghasilkan banyak fingerprint berbeda
+     *   → Limit 3 device cepat penuh, user diblokir
+     *
+     * SOLUSI BARU:
+     *   1. Prioritaskan device_id (dikirim dari frontend, stabil/permanen).
+     *   2. Fallback: strip angka versi dari User Agent agar lebih stabil.
+     *
+     * Catatan frontend:
+     *   - Android : gunakan Settings.Secure.ANDROID_ID
+     *   - iOS     : gunakan identifierForVendor (UIDevice)
+     *   - Web     : generate UUID sekali, simpan di localStorage
      */
     public function generateDeviceFingerprint($userAgent, $deviceId = null)
     {
-        $data = $userAgent . ($deviceId ?? '');
-        return hash('sha256', $data);
+        // ✅ Jika device_id tersedia dari frontend, gunakan ini saja
+        if (!empty($deviceId)) {
+            return hash('sha256', $deviceId);
+        }
+
+        // ✅ Fallback: hapus angka versi agar UA lebih stabil antar update
+        // Contoh: "Chrome/145.0.0" → "Chrome/."
+        $stableUA = preg_replace('/[\d]+/', '', $userAgent);
+        return hash('sha256', $stableUA);
     }
 
     /**
@@ -131,25 +157,57 @@ class AbsensiService
         } elseif (preg_match('/Linux/', $userAgent)) {
             return 'Linux PC';
         }
+
         return 'Unknown Device';
     }
 
     /**
      * Validasi device dan IP address
+     *
+     * Urutan pencarian device (prioritas tertinggi ke terendah):
+     *   1. Cocokkan via device_id  (paling stabil, dari hardware)
+     *   2. Cocokkan via fingerprint (fallback jika device_id kosong)
      */
     public function validasiDevice($karyawanId, $ipAddress, $userAgent, $deviceId = null)
     {
-        $fingerprint = $this->generateDeviceFingerprint($userAgent, $deviceId);
+        // ── 1. Cari berdasarkan device_id (stabil, tidak berubah) ──────────
+        if (!empty($deviceId)) {
+            $device = DeviceAbsensi::where('karyawan_id', $karyawanId)
+                ->where('device_id', $deviceId)
+                ->first();
 
-        $device = DeviceAbsensi::where('karyawan_id', $karyawanId)
+            if ($device) {
+                // Update fingerprint jika berubah (misal setelah update browser)
+                $newFingerprint = $this->generateDeviceFingerprint($userAgent, $deviceId);
+                if ($device->device_fingerprint !== $newFingerprint) {
+                    $device->update(['device_fingerprint' => $newFingerprint]);
+                    Log::info('Fingerprint diperbarui (device_id match)', [
+                        'karyawan_id' => $karyawanId,
+                        'device_id'   => $deviceId,
+                    ]);
+                }
+
+                return $this->validateExistingDevice($device, $ipAddress);
+            }
+        }
+
+        // ── 2. Fallback: cari berdasarkan fingerprint ──────────────────────
+        $fingerprint = $this->generateDeviceFingerprint($userAgent, $deviceId);
+        $device      = DeviceAbsensi::where('karyawan_id', $karyawanId)
             ->where('device_fingerprint', $fingerprint)
             ->first();
 
-        if (!$device) {
-            return $this->registerNewDevice($karyawanId, $fingerprint, $ipAddress, $userAgent, $deviceId);
+        if ($device) {
+            // Simpan device_id jika sebelumnya kosong
+            if (!empty($deviceId) && empty($device->device_id)) {
+                $device->update(['device_id' => $deviceId]);
+            }
+
+            return $this->validateExistingDevice($device, $ipAddress);
         }
 
-        return $this->validateExistingDevice($device, $ipAddress);
+        // ── 3. Device benar-benar baru ─────────────────────────────────────
+        return $this->registerNewDevice($karyawanId, $fingerprint, $ipAddress, $userAgent, $deviceId);
     }
 
     /**
@@ -163,9 +221,9 @@ class AbsensiService
 
         if ($existingDevices >= 3) {
             return [
-                'valid' => false,
+                'valid'   => false,
                 'message' => 'Anda sudah mendaftarkan maksimal 3 device. Silahkan hubungi admin untuk menghapus device lama.',
-                'device' => null
+                'device'  => null
             ];
         }
 
@@ -217,7 +275,7 @@ class AbsensiService
                 'last_used_at' => now()
             ]);
 
-            Log::warning('IP Address berubah', [
+            Log::info('IP Address berubah (normal — ISP dinamis)', [
                 'karyawan_id' => $device->karyawan_id,
                 'old_ip'      => $device->ip_address,
                 'new_ip'      => $ipAddress
@@ -228,7 +286,9 @@ class AbsensiService
 
         return [
             'valid'         => true,
-            'message'       => $ipChanged ? 'Perhatian: IP Address Anda berbeda dari terakhir kali' : 'Device terverifikasi',
+            'message'       => $ipChanged
+                ? 'Perhatian: IP Address Anda berbeda dari terakhir kali'
+                : 'Device terverifikasi',
             'device'        => $device,
             'is_new_device' => false,
             'ip_changed'    => $ipChanged
@@ -268,8 +328,8 @@ class AbsensiService
      */
     public function getJamKerja($jenisPegawai, Carbon $tanggal = null)
     {
-        $tanggal = $tanggal ?? Carbon::now('Asia/Makassar');
-        $hari    = strtolower($tanggal->locale('id')->dayName);
+        $tanggal  = $tanggal ?? Carbon::now('Asia/Makassar');
+        $hari     = strtolower($tanggal->locale('id')->dayName);
 
         $jamKerja = JamKerja::where('jenis_pegawai', $jenisPegawai)
             ->where('hari', $hari)
@@ -316,7 +376,7 @@ class AbsensiService
             'guru'              => 'guru',
             'tenaga-pendidikan' => 'tenaga-pendidikan',
             'admin'             => 'tenaga-pendidikan',
-            'shadow-teacher'    => 'shadow-teacher',  // ← underscore, sesuai KaryawanSeeder
+            'shadow-teacher'    => 'shadow-teacher',
         ];
 
         return $roleMap[$role->name] ?? 'umum';
@@ -324,13 +384,6 @@ class AbsensiService
 
     /**
      * Cek apakah role mendapat batasan jam masuk & poin rp.
-     *
-     * HANYA 'umum' yang bebas absen kapan saja tanpa konsekuensi.
-     * Semua role lain (guru, tenaga-pendidikan, shadow-teacher, dst.)
-     * terkena batasan batas_masuk dan aturan poin.
-     *
-     * Dengan pendekatan ini, role baru apapun yang ditambahkan di masa depan
-     * otomatis terbatas tanpa perlu mengubah method ini.
      */
     private function isRoleTerbatas(string $jenisPegawai): bool
     {
@@ -339,14 +392,10 @@ class AbsensiService
 
     /**
      * Cek apakah role mendapat poin rp_masuk / rp_pulang.
-     *
-     * Hanya guru dan tenaga-pendidikan yang mendapat poin.
-     * shadow-teacher terbatas jam tapi TIDAK dapat poin.
-     * umum bebas jam dan TIDAK dapat poin.
      */
     private function isRoleDapatPoin(string $jenisPegawai): bool
     {
-        return in_array($jenisPegawai, ['guru', 'tenaga-pendidikan','shadow-teacher']);
+        return in_array($jenisPegawai, ['guru', 'tenaga-pendidikan']);
     }
 
     /**
@@ -359,6 +408,20 @@ class AbsensiService
 
     /**
      * Validasi common checks
+     *
+     * ⚠️  Cara memanggil dari Controller:
+     *
+     *   $service->absenMasuk(
+     *       auth()->id(),
+     *       $request->latitude,
+     *       $request->longitude,
+     *       $request->lokasi_id ?? 1,
+     *       $request->ip(),          // ← dari HTTP header (bukan body JS)
+     *       $request->userAgent(),   // ← dari HTTP header (bukan body JS)
+     *       $request->device_id      // ← dari body JSON yang dikirim JS
+     *   );
+     *
+     * JS hanya perlu mengirim: latitude, longitude, device_id.
      */
     private function validateCommonChecks($userId, $ipAddress, $userAgent, $deviceId)
     {
@@ -377,21 +440,6 @@ class AbsensiService
             if (!$deviceValidation['valid']) {
                 return ['success' => false, 'message' => $deviceValidation['message']];
             }
-
-            // $abuseCheck = $this->deteksiAbuse($karyawan->id, $ipAddress);
-            // if ($abuseCheck['suspicious']) {
-            //     Log::warning('Suspicious Activity', [
-            //         'karyawan_id' => $karyawan->id,
-            //         'user_id'     => $userId,
-            //         'ip'          => $ipAddress,
-            //         'reason'      => $abuseCheck['reason']
-            //     ]);
-
-            //     return [
-            //         'success' => false,
-            //         'message' => 'Aktivitas mencurigakan: ' . $abuseCheck['reason']
-            //     ];
-            // }
         } else {
             $deviceValidation = null;
         }
@@ -434,7 +482,11 @@ class AbsensiService
         $validasiLokasi = $this->validasiLokasiRadius($latitude, $longitude, $lokasi);
 
         if (!$validasiLokasi['valid']) {
-            return ['success' => false, 'message' => $validasiLokasi['message'], 'jarak' => $validasiLokasi['jarak']];
+            return [
+                'success' => false,
+                'message' => $validasiLokasi['message'],
+                'jarak'   => $validasiLokasi['jarak']
+            ];
         }
 
         return ['success' => true, 'lokasi' => $lokasi, 'validasiLokasi' => $validasiLokasi];
@@ -443,12 +495,19 @@ class AbsensiService
     /**
      * ABSEN MASUK
      */
-    public function absenMasuk($userId, $latitude, $longitude, $lokasiId = 1, $ipAddress = null, $userAgent = null, $deviceId = null)
-    {
-        // $validation = $this->validateCommonChecks($userId, $ipAddress, $userAgent, $deviceId);
-        // if (!$validation['success']) return $validation;
+    public function absenMasuk(
+        $userId,
+        $latitude,
+        $longitude,
+        $lokasiId    = 1,
+        $ipAddress   = null,
+        $userAgent   = null,
+        $deviceId    = null
+    ) {
+        $validation = $this->validateCommonChecks($userId, $ipAddress, $userAgent, $deviceId);
+        if (!$validation['success']) return $validation;
 
-        // extract($validation);
+        extract($validation);
 
         $lokasiValidation = $this->validateLokasiAbsensi($lokasiId, $latitude, $longitude);
         if (!$lokasiValidation['success']) return $lokasiValidation;
@@ -461,15 +520,11 @@ class AbsensiService
             $jamKerja     = null;
 
             if ($this->isRoleTerbatas($jenisPegawai)) {
-                // Role terbatas: wajib punya jam kerja, hari libur ditolak
                 $jamKerja = $this->getJamKerja($jenisPegawai, $now);
 
                 if (is_null($jamKerja->jam_masuk)) {
                     return ['success' => false, 'message' => 'Hari ini adalah hari libur. Absensi tidak diperlukan.'];
                 }
-            } else {
-                // Role umum: tidak butuh jam kerja sama sekali, langsung null
-                $jamKerja = null;
             }
         } catch (\Exception $e) {
             return ['success' => false, 'message' => $e->getMessage()];
@@ -477,7 +532,7 @@ class AbsensiService
 
         $statusMasuk = 'tepat_waktu';
 
-       if ($this->isRoleTerbatas($jenisPegawai) && $jamKerja) {
+        if ($this->isRoleTerbatas($jenisPegawai) && $jamKerja) {
             $batasMasuk     = Carbon::parse($jamKerja->batas_masuk, 'Asia/Makassar');
             $jamMasukNormal = Carbon::parse($jamKerja->jam_masuk, 'Asia/Makassar');
 
@@ -485,26 +540,21 @@ class AbsensiService
                 return [
                     'success' => false,
                     'message' => 'Anda terlambat melewati batas jam masuk (' .
-                                $batasMasuk->format('H:i') . ' WITA). Silahkan hubungi admin.'
+                                 $batasMasuk->format('H:i') . ' WITA). Silahkan hubungi admin.'
                 ];
             }
 
-            // ✅ 06:45:00 s/d 06:45:59 semua dapat Rp, 06:46:00 tidak
-            $nowHM    = (int) $now->format('Hi');
-            $jadwalHM = (int) $jamMasukNormal->format('Hi');
+            $nowHM       = (int) $now->format('Hi');
+            $jadwalHM    = (int) $jamMasukNormal->format('Hi');
             $statusMasuk = $nowHM <= $jadwalHM ? 'tepat_waktu' : 'terlambat';
 
-        // Role umum
         } elseif ($jamKerja && $jamKerja->jam_masuk) {
             $jamMasukNormal = Carbon::parse($jamKerja->jam_masuk, 'Asia/Makassar');
-
-            // ✅ Sama
-            $nowHM    = (int) $now->format('Hi');
-            $jadwalHM = (int) $jamMasukNormal->format('Hi');
-            $statusMasuk = $nowHM <= $jadwalHM ? 'tepat_waktu' : 'terlambat';
+            $nowHM          = (int) $now->format('Hi');
+            $jadwalHM       = (int) $jamMasukNormal->format('Hi');
+            $statusMasuk    = $nowHM <= $jadwalHM ? 'tepat_waktu' : 'terlambat';
         }
 
-        // Poin hanya untuk role terbatas yang tepat waktu
         $rp_masuk = ($this->isRoleDapatPoin($jenisPegawai) && $statusMasuk === 'tepat_waktu') ? 4000 : 4000;
 
         // Cek duplikasi
@@ -522,16 +572,16 @@ class AbsensiService
 
         try {
             $dataAbsensi = [
-                'jam_kerja_id'    => $jamKerja?->id,
+                'jam_kerja_id'     => $jamKerja?->id,
                 'status_kehadiran' => 'hadir',
-                'jam_masuk'       => $now->toTimeString(),
-                'latitude_masuk'  => $latitude,
-                'longitude_masuk' => $longitude,
-                'status_masuk'    => $statusMasuk,
-                'ip_address'      => $ipAddress,
-                'user_agent'      => $userAgent,
-                'device_id'       => $deviceId,
-                'rp_masuk'        => $rp_masuk
+                'jam_masuk'        => $now->toTimeString(),
+                'latitude_masuk'   => $latitude,
+                'longitude_masuk'  => $longitude,
+                'status_masuk'     => $statusMasuk,
+                'ip_address'       => $ipAddress,
+                'user_agent'       => $userAgent,
+                'device_id'        => $deviceId,
+                'rp_masuk'         => $rp_masuk
             ];
 
             if (!config('absensi.use_kml', false) && $lokasi) {
@@ -544,6 +594,10 @@ class AbsensiService
                 $dataAbsensi
             );
 
+            // ✅ Safe access: $deviceValidation bisa null jika IP/UA tidak dikirim
+            $deviceName   = $deviceValidation ? ($deviceValidation['device']->device_name ?? 'Unknown') : 'Unknown';
+            $isNewDevice  = $deviceValidation ? ($deviceValidation['is_new_device'] ?? false) : false;
+
             Log::info('Absensi Masuk', [
                 'user_id' => $userId,
                 'nama'    => $karyawan->name,
@@ -552,7 +606,7 @@ class AbsensiService
                 'role'    => $jenisPegawai,
                 'method'  => config('absensi.use_kml') ? 'KML' : 'Radius',
                 'ip'      => $ipAddress,
-                'device'  => $deviceValidation['device']->device_name ?? 'Unknown'
+                'device'  => $deviceName
             ]);
 
             $responseData = [
@@ -560,8 +614,8 @@ class AbsensiService
                 'jam_masuk'     => $now->format('H:i:s'),
                 'jam_kerja'     => $jamKerja ? Carbon::parse($jamKerja->jam_masuk)->format('H:i') : '-',
                 'status'        => $statusMasuk,
-                'device'        => $deviceValidation['device']->device_name ?? null,
-                'is_new_device' => $deviceValidation['is_new_device'] ?? false
+                'device'        => $deviceName,
+                'is_new_device' => $isNewDevice
             ];
 
             if (config('absensi.use_kml', false)) {
@@ -588,12 +642,19 @@ class AbsensiService
     /**
      * ABSEN PULANG
      */
-    public function absenPulang($userId, $latitude, $longitude, $lokasiId = 1, $ipAddress = null, $userAgent = null, $deviceId = null)
-    {
-        // $validation = $this->validateCommonChecks($userId, $ipAddress, $userAgent, $deviceId);
-        // if (!$validation['success']) return $validation;
+    public function absenPulang(
+        $userId,
+        $latitude,
+        $longitude,
+        $lokasiId    = 1,
+        $ipAddress   = null,
+        $userAgent   = null,
+        $deviceId    = null
+    ) {
+        $validation = $this->validateCommonChecks($userId, $ipAddress, $userAgent, $deviceId);
+        if (!$validation['success']) return $validation;
 
-        // extract($validation);
+        extract($validation);
 
         $lokasiValidation = $this->validateLokasiAbsensi($lokasiId, $latitude, $longitude);
         if (!$lokasiValidation['success']) return $lokasiValidation;
@@ -621,12 +682,11 @@ class AbsensiService
         $rp_pulang    = 0;
 
         if ($this->isRoleTerbatas($jenisPegawai) && $absensi->jamKerja) {
-            // Role terbatas: pulang cepat tidak dapat poin
             $batasPulang  = Carbon::parse($absensi->jamKerja->batas_pulang, 'Asia/Makassar');
             $statusPulang = $now->lessThan($batasPulang) ? 'pulang_cepat' : 'tepat_waktu';
             $rp_pulang    = ($this->isRoleDapatPoin($jenisPegawai) && $statusPulang === 'tepat_waktu') ? 4000 : 4000;
+
         } elseif ($absensi->jamKerja && $absensi->jamKerja->batas_pulang) {
-            // Role umum: status dicatat tapi tidak ada poin & tidak ada pemblokiran
             $batasPulang  = Carbon::parse($absensi->jamKerja->batas_pulang, 'Asia/Makassar');
             $statusPulang = $now->lessThan($batasPulang) ? 'pulang_cepat' : 'tepat_waktu';
         }
@@ -723,11 +783,11 @@ class AbsensiService
             return [
                 'tanggal'       => $item->tanggal,
                 'hari'          => Carbon::parse($item->tanggal)->locale('id')->dayName,
-                'jam_masuk'     => $item->jam_masuk ? Carbon::parse($item->jam_masuk)->format('H:i') : null,
+                'jam_masuk'     => $item->jam_masuk  ? Carbon::parse($item->jam_masuk)->format('H:i')  : null,
                 'jam_pulang'    => $item->jam_pulang ? Carbon::parse($item->jam_pulang)->format('H:i') : null,
                 'status_masuk'  => $item->status_masuk,
                 'status_pulang' => $item->status_pulang,
-                'jarak_masuk'   => $item->jarak_masuk ? round($item->jarak_masuk) : null,
+                'jarak_masuk'   => $item->jarak_masuk  ? round($item->jarak_masuk)  : null,
                 'jarak_pulang'  => $item->jarak_pulang ? round($item->jarak_pulang) : null,
                 'lokasi'        => $item->lokasiAbsensi?->nama_lokasi ?? '-',
                 'durasi_kerja'  => ($item->jam_masuk && $item->jam_pulang)

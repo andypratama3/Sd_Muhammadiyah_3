@@ -213,7 +213,7 @@
             </td>
             <td>
                 Disetujui Oleh<br><br><br>
-                <strong></strong>
+                <strong>Rusmini S.Pd</strong>
             </td>
             <td>
                 Kepala Sekolah<br><br><br>

@@ -19,13 +19,6 @@ class JamKerja extends Model
         'is_default'
     ];
 
-    protected $casts = [
-        'jam_masuk' => 'datetime:H:i',
-        'batas_masuk' => 'datetime:H:i',
-        'jam_pulang' => 'datetime:H:i',
-        'batas_pulang' => 'datetime:H:i',
-        'is_default' => 'boolean',
-    ];
 
     public function absensi()
     {

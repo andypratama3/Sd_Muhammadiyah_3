@@ -40,10 +40,10 @@
                             <td>{{ $item->nama_shift }}</td>
                             <td>{{ ucfirst($item->jenis_pegawai) }}</td>
                             <td>{{ ucfirst($item->hari) }}</td>
-                            <td>{{ \Carbon\Carbon::parse($item->jam_masuk)->format('H:i') }}</td>
-                            <td>{{ \Carbon\Carbon::parse($item->batas_masuk)->format('H:i') }}</td>
-                            <td>{{ \Carbon\Carbon::parse($item->jam_pulang)->format('H:i') }}</td>
-                            <td>{{ \Carbon\Carbon::parse($item->batas_pulang)->format('H:i') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($item->jam_masuk)->format('H:i:s') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($item->batas_masuk)->format('H:i:s') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($item->jam_pulang)->format('H:i:s') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($item->batas_pulang)->format('H:i:s') }}</td>
                             <td class="text-center">
                                 @if ($item->is_default)
                                     <span class="badge bg-success">YA</span>
@@ -75,6 +75,9 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
+        <div class="card-footer">
+            {{ $jamKerja->links() }}    
         </div>
     </div>
 </div>
