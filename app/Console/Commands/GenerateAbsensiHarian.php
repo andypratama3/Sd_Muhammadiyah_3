@@ -163,7 +163,6 @@ class GenerateAbsensiHarian extends Command
                 'status_kehadiran'  => 'alpha',
                 'jam_masuk'         => $tanggalString . ' 00:00:00',
                 'jam_pulang'        => $tanggalString . ' 00:00:00',
-                'rp_pulang'         => 4000,
                 'lokasi_absensi_id' => null,
                 'keterangan'        => 'Auto-generated: Tidak hadir tanpa keterangan'
             ]);
