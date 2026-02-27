@@ -448,7 +448,7 @@ class AbsensiService
         // $validation = $this->validateCommonChecks($userId, $ipAddress, $userAgent, $deviceId);
         // if (!$validation['success']) return $validation;
 
-        extract($validation);
+        // extract($validation);
 
         $lokasiValidation = $this->validateLokasiAbsensi($lokasiId, $latitude, $longitude);
         if (!$lokasiValidation['success']) return $lokasiValidation;
@@ -593,7 +593,7 @@ class AbsensiService
         // $validation = $this->validateCommonChecks($userId, $ipAddress, $userAgent, $deviceId);
         // if (!$validation['success']) return $validation;
 
-        extract($validation);
+        // extract($validation);
 
         $lokasiValidation = $this->validateLokasiAbsensi($lokasiId, $latitude, $longitude);
         if (!$lokasiValidation['success']) return $lokasiValidation;
