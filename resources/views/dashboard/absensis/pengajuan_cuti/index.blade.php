@@ -24,6 +24,7 @@
                         <th>Periode</th>
                         <th>Jumlah Hari</th>
                         <th>Status</th>
+                        <th>Di Setujui Oleh</th>
                         <th width="120">Aksi</th>
                     </tr>
                 </thead>
@@ -46,6 +47,7 @@
                                     <span class="badge bg-danger">Ditolak</span>
                                 @endif
                             </td>
+                            <td>{{ $item->admin->name ?? '-' }}</td>
                             @if($item->status == 'menunggu' || $item->status == 'ditolak')
                             <td>
                                 <a href="{{ route('dashboard.pengajuan_cuti.edit', $item->id) }}"

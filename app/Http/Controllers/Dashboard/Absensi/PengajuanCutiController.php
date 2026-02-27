@@ -37,9 +37,7 @@ class PengajuanCutiController extends Controller
                 ->get();
         }
 
-        return view(
-            'dashboard.absensis.pengajuan_cuti.index',
-            compact('pengajuanCuti')
+        return view('dashboard.absensis.pengajuan_cuti.index',compact('pengajuanCuti')
         );
     }
 
