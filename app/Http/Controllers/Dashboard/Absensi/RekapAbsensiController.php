@@ -304,7 +304,9 @@ class RekapAbsensiController extends Controller
                 'filename' => $filename
             ]);
 
-            return $pdf->stream($filename);
+            return $pdf->download($filename);
+
+            // return $pdf->stream($filename);
         } catch (\Exception $e) {
             \Log::error('RekapAbsensiController - exportPdf Error', [
                 'error' => $e->getMessage(),

@@ -81,7 +81,7 @@ class GenerateAbsensiHarian extends Command
     private function isHariKerja(Carbon $tanggal)
     {
         $namaHari = strtolower($tanggal->locale('id')->dayName);
-        $hariKerja = ['senin', 'selasa', 'rabu', 'kamis', 'jumat'];
+        $hariKerja = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'];
 
         return in_array($namaHari, $hariKerja);
     }
@@ -110,6 +110,7 @@ class GenerateAbsensiHarian extends Command
                         $existingAbsensi->update([
                             'jam_pulang'    => $tanggalString . ' ' . $jamKerja->jam_pulang,
                             'status_pulang' => 'auto-generated',
+                            'rp_pulang'     => 4000,
                             'keterangan'    => ($existingAbsensi->keterangan
                                                 ? $existingAbsensi->keterangan . ' | '
                                                 : '')
