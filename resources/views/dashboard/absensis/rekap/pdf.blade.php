@@ -213,7 +213,7 @@
             </td>
             <td>
                 Disetujui Oleh<br><br><br>
-                <strong>Kepala Departemen</strong>
+                <strong></strong>
             </td>
             <td>
                 Kepala Sekolah<br><br><br>
