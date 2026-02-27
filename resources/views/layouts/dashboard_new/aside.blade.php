@@ -71,9 +71,15 @@
                         <div class="mx-3" data-i18n="Karyawan">Jam Absen</div>
                     </a>
                 </li>
+                <li class="menu-item {{ Request::routeIs('dashboard.device.absensi.*') ? 'active' : ''  }}">
+                    <a href="{{ route('dashboard.device.absensi.index') }}" class="menu-link">
+                        <i class="menu-icon tf-icons bx bx-device"></i>
+                        <div class="mx-3" data-i18n="Device">Device</div>
+                    </a>
+                </li>
             </ul>
         </li>
-        
+
          <li class="menu-header small text-uppercase">
              <span class="menu-header-text">News</span>
          </li>

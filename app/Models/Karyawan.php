@@ -59,19 +59,16 @@ class Karyawan extends Model
     }
 
     /**
-     * Relasi ke device absensi
-     */
-        public function deviceAbsensi()
-    {
-        return $this->hasMany(DeviceAbsensi::class);
-    }
-
-    /**
      * Get active devices
      */
     public function activeDevices()
     {
         return $this->hasMany(DeviceAbsensi::class)->where('is_active', true);
+    }
+
+    public function devices()
+    {
+        return $this->hasMany(DeviceAbsensi::class);
     }
 
     /**

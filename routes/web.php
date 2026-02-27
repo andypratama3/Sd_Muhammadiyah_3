@@ -1,87 +1,82 @@
 <?php
 
-use App\Models\JudulPembayaran;
-//User Access
-use App\Models\TenagaPendidikan;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\GuruController;
-use App\Http\Controllers\SpmbController;
-use App\Http\Controllers\BeritaController;
-use App\Http\Controllers\JadwalController;
-use App\Http\Controllers\KontakController;
-use App\Http\Controllers\RatingController;
-use App\Http\Controllers\ArtikelController;
-use App\Http\Controllers\BerandaController;
-use App\Http\Controllers\GalleryController;
-use App\Http\Controllers\VisitorController;
-use App\Http\Controllers\VisiMisiController;
-use App\Http\Controllers\FasilitasController;
-use App\Http\Controllers\NaikKelasController;
-use App\Http\Controllers\PembayaranController;
-use App\Http\Controllers\SiswaAktifController;
-use App\Http\Controllers\SiswaLulusController;
-use App\Http\Controllers\Auth\GoogleController;
-use App\Http\Controllers\KritikSaranController;
-use App\Http\Controllers\LikeArtikelController;
-use App\Http\Controllers\DetailBeritaController;
-use App\Http\Controllers\PrestasiSiswaController;
-
-//Dashboard Access
-use App\Http\Controllers\ProfilSekolahController;
 use App\Http\Controllers\Api\Dashboard\WilayahApi;
+use App\Http\Controllers\ArtikelController;
+use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\BerandaController;
+use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\CommentArtikelController;
-use App\Http\Controllers\Dashboard\RoleController;
-
-use App\Http\Controllers\Dashboard\TaskController;
-use App\Http\Controllers\Dashboard\UserController;
-
-use App\Http\Controllers\Dashboard\CategoryArtikel;
-use App\Http\Controllers\Dashboard\ChartController;
-use App\Http\Controllers\Dashboard\KelasController;
-use App\Http\Controllers\Dashboard\RapotController;
-use App\Http\Controllers\EkstrakurikulerController;
-
-use App\Http\Controllers\PrestasiSekolahController;
-use App\Http\Controllers\TenagaPendidikanController;
-use App\Http\Controllers\PengisianOrangTuaController;
-use App\Http\Controllers\Dashboard\ActivityController;
-use App\Http\Controllers\Dashboard\KaryawanController;
-use App\Http\Controllers\Dashboard\WhatsappController;
-use App\Http\Controllers\Dashboard\DashboardController;
-use App\Http\Controllers\Dashboard\AchivementController;
-use App\Http\Controllers\Dashboard\UrlVisitorController;
-use App\Http\Controllers\Dashboard\AttendancesController;
-use App\Http\Controllers\Dashboard\CooperationController;
-use App\Http\Controllers\Dashboard\FotoSekolahController;
-use App\Http\Controllers\Dashboard\NotificationController;
-use App\Http\Controllers\Dashboard\KelasCategoryController;
 use App\Http\Controllers\Dashboard\Absensi\AbsensiController;
-use App\Http\Controllers\Dashboard\KategoriGalleryController;
+use App\Http\Controllers\Dashboard\Absensi\DeviceAbsensiController;
 use App\Http\Controllers\Dashboard\Absensi\JamAbsenController;
 use App\Http\Controllers\Dashboard\Absensi\LokasiAbsenController;
-use App\Http\Controllers\Dashboard\Absensi\RekapAbsensiController;
 use App\Http\Controllers\Dashboard\Absensi\PengajuanCutiController;
-use App\Http\Controllers\Dashboard\StrukturTenagaPendidikanController;
-use App\Http\Controllers\Dashboard\SpmbController as DashboardSpmController;
+use App\Http\Controllers\Dashboard\Absensi\RekapAbsensiController;
+use App\Http\Controllers\Dashboard\AchivementController;
+use App\Http\Controllers\Dashboard\ActivityController;
+use App\Http\Controllers\Dashboard\ArtikelController as DashboardArtikelController;
+use App\Http\Controllers\Dashboard\AttendancesController;
+use App\Http\Controllers\Dashboard\BeritaController as DashboardBeritaController;
+use App\Http\Controllers\Dashboard\CategoryArtikel;
+use App\Http\Controllers\Dashboard\ChargeController as DashboardChargeController;
+use App\Http\Controllers\Dashboard\ChartController;
+use App\Http\Controllers\Dashboard\CooperationController;
+use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\EkstrakulikulerController as DashboardEsktrakurikulerController;
+use App\Http\Controllers\Dashboard\FasilitasController as DashboardFasilitasController;
+use App\Http\Controllers\Dashboard\FotoSekolahController;
+use App\Http\Controllers\Dashboard\GalleryActivityController as DashboardGalleryActivityController;
 use App\Http\Controllers\Dashboard\GuruController as DashboardGuruController;
 use App\Http\Controllers\Dashboard\HeroController as DashboardHeroController;
-use App\Http\Controllers\Dashboard\SiswaController as DashboardSiswaController;
-use App\Http\Controllers\Dashboard\BeritaController as DashboardBeritaController;
-use App\Http\Controllers\Dashboard\ChargeController as DashboardChargeController;
 use App\Http\Controllers\Dashboard\JadwalController as DashboardJadwalController;
-use App\Http\Controllers\Dashboard\ArtikelController as DashboardArtikelController;
-use App\Http\Controllers\Dashboard\ProfileController as DashboardProfileController;
-use App\Http\Controllers\Dashboard\PrestasiController as DashboardPrestasiController;
-use App\Http\Controllers\Dashboard\FasilitasController as DashboardFasilitasController;
-use App\Http\Controllers\Dashboard\NilaiSiswaController as DashboardNilaiSiswaController;
-use App\Http\Controllers\Dashboard\PembayaranController as DashboardPembayaranController;
-use App\Http\Controllers\Dashboard\KritikSaranController as DashboardKritiSaranController;
-use App\Http\Controllers\Dashboard\KategoriPrestasiController as DashboardKategoriPrestasi;
-use App\Http\Controllers\Dashboard\MataPelajaranController as DashboardMataPelajaranController;
-use App\Http\Controllers\Dashboard\EkstrakulikulerController as DashboardEsktrakurikulerController;
-use App\Http\Controllers\Dashboard\GalleryActivityController as DashboardGalleryActivityController;
 use App\Http\Controllers\Dashboard\JudulPembayaranController as DashboardJudulPembayaranController;
+use App\Http\Controllers\Dashboard\KaryawanController;
+use App\Http\Controllers\Dashboard\KategoriGalleryController;
+use App\Http\Controllers\Dashboard\KategoriPrestasiController as DashboardKategoriPrestasi;
+use App\Http\Controllers\Dashboard\KelasCategoryController;
+use App\Http\Controllers\Dashboard\KelasController;
+use App\Http\Controllers\Dashboard\KritikSaranController as DashboardKritiSaranController;
+use App\Http\Controllers\Dashboard\MataPelajaranController as DashboardMataPelajaranController;
+use App\Http\Controllers\Dashboard\NilaiSiswaController as DashboardNilaiSiswaController;
+use App\Http\Controllers\Dashboard\NotificationController;
+use App\Http\Controllers\Dashboard\PembayaranController as DashboardPembayaranController;
+use App\Http\Controllers\Dashboard\PrestasiController as DashboardPrestasiController;
+use App\Http\Controllers\Dashboard\ProfileController as DashboardProfileController;
+use App\Http\Controllers\Dashboard\RapotController;
+use App\Http\Controllers\Dashboard\RoleController;
+use App\Http\Controllers\Dashboard\SiswaController as DashboardSiswaController;
+use App\Http\Controllers\Dashboard\SpmbController as DashboardSpmController;
+use App\Http\Controllers\Dashboard\StrukturTenagaPendidikanController;
+use App\Http\Controllers\Dashboard\TaskController;
 use App\Http\Controllers\Dashboard\TenagaPendidikanController as DashboardTenagaPendidikanController;
+use App\Http\Controllers\Dashboard\UrlVisitorController;
+use App\Http\Controllers\Dashboard\UserController;
+use App\Http\Controllers\Dashboard\WhatsappController;
+use App\Http\Controllers\DetailBeritaController;
+use App\Http\Controllers\EkstrakurikulerController;
+use App\Http\Controllers\FasilitasController;
+use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\GuruController;
+use App\Http\Controllers\JadwalController;
+use App\Http\Controllers\KontakController;
+use App\Http\Controllers\KritikSaranController;
+use App\Http\Controllers\LikeArtikelController;
+use App\Http\Controllers\NaikKelasController;
+use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\PengisianOrangTuaController;
+use App\Http\Controllers\PrestasiSekolahController;
+use App\Http\Controllers\PrestasiSiswaController;
+use App\Http\Controllers\ProfilSekolahController;
+use App\Http\Controllers\RatingController;
+use App\Http\Controllers\SiswaAktifController;
+use App\Http\Controllers\SiswaLulusController;
+use App\Http\Controllers\SpmbController;
+use App\Http\Controllers\TenagaPendidikanController;
+use App\Http\Controllers\VisiMisiController;
+use App\Http\Controllers\VisitorController;
+use App\Models\JudulPembayaran;
+use App\Models\TenagaPendidikan;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -232,6 +227,16 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::get('/riwayat', [AbsensiController::class, 'riwayat'])->name('absensi.riwayat');
         // Route::get('/kml/data', [AbsensiController::class, 'getKmlData'])->name('absensi.kml.data');
 
+    });
+
+
+    Route::prefix('device-absensi')->name('dashboard.device.absensi.')->group(function () {
+        Route::get('/',                         [DeviceAbsensiController::class, 'index'])          ->name('index');
+        Route::get('/{karyawan}',               [DeviceAbsensiController::class, 'show'])           ->name('show');
+        Route::post('/{device}/toggle',         [DeviceAbsensiController::class, 'toggle'])         ->name('toggle');
+        Route::delete('/cleanup',               [DeviceAbsensiController::class, 'cleanupStale'])   ->name('cleanup');
+        Route::delete('/{karyawan}/reset',      [DeviceAbsensiController::class, 'resetKaryawan'])  ->name('reset');
+        Route::delete('/{device}',              [DeviceAbsensiController::class, 'destroy'])        ->name('destroy');
     });
 
     Route::group(['prefix' => 'cuti'], function () {
