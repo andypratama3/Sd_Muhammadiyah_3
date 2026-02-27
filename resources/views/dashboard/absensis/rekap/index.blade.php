@@ -66,42 +66,22 @@
             Pengaturan Filter
         </div>
 
-        <div class="filter-controls">
-            <div class="form-group">
-                <label for="date_range" class="mb-2">
-                    <i class="fas fa-calendar-alt"></i> Periode Tanggal
-                </label>
-                <input
-                    type="text"
-                    id="date_range"
-                    name="date"
-                    class="form-control"
-                    placeholder="Pilih rentang tanggal (dd-mm-yyyy : dd-mm-yyyy)"
-                    value="{{ request('date') }}"
-                    autocomplete="off"
-                >
-            </div>
-
-            <div class="btn-group-filter">
-                <button type="button" id="btn_filter" class="btn btn-primary">
-                    <i class="fas fa-search"></i> Cari
-                </button>
-                <button type="button" id="btn_reset" class="btn btn-secondary">
-                    <i class="fas fa-redo"></i> Reset
-                </button>
-
-                @role('admin|superadmin')
-                    <button type="button" id="btn_export_pdf" class="btn btn-danger" title="Download laporan dalam format PDF">
-                        <i class="fas fa-file-pdf"></i> PDF
-                    </button>
-
-                    <button type="button" id="btn_export_excel" class="btn btn-success" title="Download laporan dalam format Excel">
-                        <i class="fas fa-file-excel"></i> Excel
-                    </button>
-                @endrole
-            </div>
-
+        <div class="row">
             <div class="col-md-12">
+                <div class="form-group">
+                    <label for="date_range" class="mb-2">
+                        <i class="fas fa-calendar-alt"></i> Periode Tanggal
+                    </label>
+                    <input
+                        type="text"
+                        id="date_range"
+                        name="date"
+                        class="form-control"
+                        placeholder="Pilih rentang tanggal (dd-mm-yyyy : dd-mm-yyyy)"
+                        value="{{ request('date')  }}"
+                        autocomplete="off"
+                    >
+                </div>
                 <label for="status_kehadiran" class="mb-2">
                     <i class="fas fa-check-circle"></i> Status Kehadiran
                 </label>
@@ -113,9 +93,31 @@
                     <option value="sakit">Sakit</option>
                     <option value="alpha">Alpha</option>
                 </select>
+    
+                <div class="btn-group-filter m-2">
+                    <button type="button" id="btn_filter" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Cari
+                    </button>
+                    <button type="button" id="btn_reset" class="btn btn-secondary">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+    
+                    @role('admin|superadmin')
+                        <button type="button" id="btn_export_pdf" class="btn btn-danger" title="Download laporan dalam format PDF">
+                            <i class="fas fa-file-pdf"></i> PDF
+                        </button>
+    
+                        <button type="button" id="btn_export_excel" class="btn btn-success" title="Download laporan dalam format Excel">
+                            <i class="fas fa-file-excel"></i> Excel
+                        </button>
+                    @endrole
+                </div>
+    
+                <div class="col-md-12 mt-2">
+                 
+                </div>
             </div>
         </div>
-    </div>
         <div class="table-responsive">
             <table class="table table-bordered table-striped" id="table_absensi">
                 <thead class="table-light">
