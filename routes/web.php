@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Dashboard\WilayahApi;
 use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\Auth\GoogleController;
@@ -33,7 +34,6 @@ use App\Http\Controllers\Dashboard\JudulPembayaranController as DashboardJudulPe
 use App\Http\Controllers\Dashboard\KaryawanController;
 use App\Http\Controllers\Dashboard\KategoriGalleryController;
 use App\Http\Controllers\Dashboard\KategoriPrestasiController as DashboardKategoriPrestasi;
-use App\Http\Controllers\Dashboard\KelasCategoryController;
 use App\Http\Controllers\Dashboard\KelasController;
 use App\Http\Controllers\Dashboard\KritikSaranController as DashboardKritiSaranController;
 use App\Http\Controllers\Dashboard\MataPelajaranController as DashboardMataPelajaranController;
@@ -52,31 +52,6 @@ use App\Http\Controllers\Dashboard\TenagaPendidikanController as DashboardTenaga
 use App\Http\Controllers\Dashboard\UrlVisitorController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\WhatsappController;
-use App\Http\Controllers\DetailBeritaController;
-use App\Http\Controllers\EkstrakurikulerController;
-use App\Http\Controllers\FasilitasController;
-use App\Http\Controllers\GalleryController;
-use App\Http\Controllers\GuruController;
-use App\Http\Controllers\JadwalController;
-use App\Http\Controllers\KontakController;
-use App\Http\Controllers\KritikSaranController;
-use App\Http\Controllers\LikeArtikelController;
-use App\Http\Controllers\NaikKelasController;
-use App\Http\Controllers\PembayaranController;
-use App\Http\Controllers\PengisianOrangTuaController;
-use App\Http\Controllers\PrestasiSekolahController;
-use App\Http\Controllers\PrestasiSiswaController;
-use App\Http\Controllers\ProfilSekolahController;
-use App\Http\Controllers\RatingController;
-use App\Http\Controllers\SiswaAktifController;
-use App\Http\Controllers\SiswaLulusController;
-use App\Http\Controllers\SpmbController;
-use App\Http\Controllers\TenagaPendidikanController;
-use App\Http\Controllers\VisiMisiController;
-use App\Http\Controllers\VisitorController;
-use App\Models\JudulPembayaran;
-use App\Models\TenagaPendidikan;
-use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
