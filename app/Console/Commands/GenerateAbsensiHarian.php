@@ -100,33 +100,33 @@ class GenerateAbsensiHarian extends Command
 
         if ($existingAbsensi) {
             // Jika sudah absen masuk
-            if ($existingAbsensi->jam_masuk) {
+            // if ($existingAbsensi->jam_masuk) {
 
-                // ✅ Jika lupa absen pulang, set otomatis sesuai jam pulang dari JamKerja
-                if (!$existingAbsensi->jam_pulang) {
-                    $jamKerja = $this->getJamKerjaModel($karyawan, $tanggal);
+            //     // ✅ Jika lupa absen pulang, set otomatis sesuai jam pulang dari JamKerja
+            //     if (!$existingAbsensi->jam_pulang) {
+            //         $jamKerja = $this->getJamKerjaModel($karyawan, $tanggal);
 
-                    if ($jamKerja && $jamKerja->jam_pulang) {
-                        $existingAbsensi->update([
-                            'jam_pulang'    => $tanggalString . ' ' . $jamKerja->jam_pulang,
-                            'status_pulang' => 'auto-generated',
-                            'rp_pulang'     => 4000,
-                            'keterangan'    => ($existingAbsensi->keterangan
-                                                ? $existingAbsensi->keterangan . ' | '
-                                                : '')
-                                                . 'Jam pulang auto-generated dari jadwal kerja'
-                        ]);
+            //         if ($jamKerja && $jamKerja->jam_pulang) {
+            //             $existingAbsensi->update([
+            //                 'jam_pulang'    => $tanggalString . ' ' . $jamKerja->jam_pulang,
+            //                 'status_pulang' => 'auto-generated',
+            //                 'rp_pulang'     => 4000,
+            //                 'keterangan'    => ($existingAbsensi->keterangan
+            //                                     ? $existingAbsensi->keterangan . ' | '
+            //                                     : '')
+            //                                     . 'Jam pulang auto-generated dari jadwal kerja'
+            //             ]);
 
-                        Log::info('Auto-set jam pulang', [
-                            'karyawan_id' => $karyawan->id,
-                            'tanggal'     => $tanggalString,
-                            'jam_pulang'  => $jamKerja->jam_pulang,
-                        ]);
-                    }
-                }
+            //             Log::info('Auto-set jam pulang', [
+            //                 'karyawan_id' => $karyawan->id,
+            //                 'tanggal'     => $tanggalString,
+            //                 'jam_pulang'  => $jamKerja->jam_pulang,
+            //             ]);
+            //         }
+            //     }
 
-                return 'hadir';
-            }
+            //     return 'hadir';
+            // }
 
             // Jika sudah ada status kehadiran selain hadir (cuti/izin/sakit)
             if (in_array($existingAbsensi->status_kehadiran, ['cuti', 'izin', 'sakit'])) {
