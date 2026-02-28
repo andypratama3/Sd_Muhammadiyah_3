@@ -86,6 +86,9 @@ class RekapAbsensiController extends Controller
                         $buttons .= '<button class="btn btn-sm btn-warning btn-edit" data-id="' . $row->id . '" title="Edit data absensi">
                                         <i class="fas fa-edit"></i> Edit
                                     </button>';
+                        $buttons .= '<button class="btn btn-sm btn-danger btn-delete" data-id="' . $row->id . '" title="Hapus data absensi">
+                                        <i class="fas fa-trash"></i> Hapus
+                                    </button>';
                     }
 
                     $buttons .= '</div>';
@@ -243,6 +246,7 @@ class RekapAbsensiController extends Controller
             // Check authorization
             if (!Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
                 return response()->json([
+                    'status' => 'error',
                     'message' => 'Anda tidak memiliki akses untuk menghapus data ini'
                 ], 403);
             }
@@ -256,6 +260,7 @@ class RekapAbsensiController extends Controller
             ]);
 
             return response()->json([
+                'status' => 'success',
                 'message' => 'Data absensi berhasil dihapus'
             ], 200);
 
@@ -268,6 +273,7 @@ class RekapAbsensiController extends Controller
             ]);
 
             return response()->json([
+                'status' => 'error',
                 'message' => 'Gagal menghapus data absensi'
             ], 500);
         }
@@ -347,6 +353,28 @@ class RekapAbsensiController extends Controller
                 'trace' => $e->getTraceAsString()
             ]);
             return redirect()->back()->with('error', 'Gagal mengekspor Excel: ' . $e->getMessage());
+        }
+    }
+
+    public function destrory($absensi_id)
+    {
+        try {
+            $absensi = Absensi::find($absensi_id);
+            if (!$absensi) {
+
+            }
+
+            $absensi->delete();
+
+            return redirect()->back()->with('success', 'Data absensi berhasil dihapus');
+        } catch (\Exception $e) {
+            \Log::error('RekapAbsensiController - destrory Error', [
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->back()->with('error', 'Gagal menghapus data absensi: ' . $e->getMessage());
         }
     }
 

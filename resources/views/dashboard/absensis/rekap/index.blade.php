@@ -354,6 +354,56 @@
                 loadAbsensiData(id);
             });
 
+          $('#table_absensi').on('click', '.btn-delete', function() {
+                var id = $(this).data('id');
+                var url = "{{ route('dashboard.rekap.absensi.destroy', ':id') }}";
+                url = url.replace(':id', id);
+                Swal.fire({
+                    title: 'Anda yakin?',
+                    text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
+                    icon: 'warning',
+                    buttons: true,
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, Hapus Data',
+                    cancelButtonText: 'Tidak, Batalkan!',
+                    reverseButtons: true
+                }).then((willDelete) => {
+                    if (willDelete.isConfirmed) {
+                        $.ajaxSetup({
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            }
+                        });
+
+                        // Send a DELETE request
+                        $.ajax({
+                            url: url,
+                            type: 'DELETE', // Use the DELETE method
+                            success: function(data) {
+                                if (data.status === 'success') {
+                                    Swal.fire({
+                                        title: 'Berhasil',
+                                        text: data.message,
+                                        icon: 'success',
+                                        buttons: false // This will remove the button
+                                    });
+                                    reloadTable('#table_absensi');
+
+                                } else {
+                                    // Reload the page with an error message
+                                    Swal.fire('Error', data.message, 'error');
+                                    window.location.href =
+                                        "{{ route('dashboard.rekap.absensi.index') }}";
+                                }
+                            },
+                        });
+                    } else {
+                        Swal.fire('Data Batal Dihapus', 'info');
+                    }
+                });
+            });
+
+
             // Load data untuk edit
             function loadAbsensiData(id) {
                 $.ajax({
