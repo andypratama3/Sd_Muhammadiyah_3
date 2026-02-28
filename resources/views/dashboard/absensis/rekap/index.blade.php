@@ -199,9 +199,10 @@
                         <input type="time" class="form-control" id="edit_jam_pulang" name="jam_pulang" step="60"/>
                         <div class="invalid-feedback" id="error_jam_pulang"></div>
                     </div>
+
                     <div class="mb-3 form-group">
                         <label for="edit_rp_masuk" class="form-label">
-                            <i class="fas fa-sign-out-alt"></i> Rp Masuk
+                            <i class="fas fa-money-bill"></i> Rp Masuk
                         </label>
                         <input type="number" class="form-control" id="edit_rp_masuk" name="rp_masuk" step="1000" min="0"/>
                         <div class="invalid-feedback" id="error_rp_masuk"></div>
@@ -209,7 +210,7 @@
 
                     <div class="mb-3 form-group">
                         <label for="edit_rp_pulang" class="form-label">
-                            <i class="fas fa-sign-out-alt"></i> Rp Pulang
+                            <i class="fas fa-money-bill"></i> Rp Pulang
                         </label>
                         <input type="number" class="form-control" id="edit_rp_pulang" name="rp_pulang" step="1000" min="0"/>
                         <div class="invalid-feedback" id="error_rp_pulang"></div>
@@ -243,7 +244,19 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
     <script>
         $(document).ready(function () {
-             $('input[name="date"]').daterangepicker({
+
+            /**
+             * FIX: Strip seconds from time string (HH:MM:SS → HH:MM)
+             * <input type="time"> only accepts HH:MM format,
+             * but the DB stores HH:MM:SS which causes the field to be blank.
+             */
+            function formatTime(time) {
+                if (!time) return '';
+                // Take only first 5 characters: "08:30:00" → "08:30"
+                return String(time).substring(0, 5);
+            }
+
+            $('input[name="date"]').daterangepicker({
                 timePicker: false,
                 autoUpdateInput: false,
                 locale: {
@@ -251,12 +264,10 @@
                 }
             });
 
-            // Listen for the apply event to manually set the input value when a date range is selected
             $('input[name="date"]').on('apply.daterangepicker', function(ev, picker) {
                 $(this).val(picker.startDate.format('DD-MM-YYYY') + ' : ' + picker.endDate.format('DD-MM-YYYY'));
             });
 
-            // Clear the input value on cancel if needed
             $('input[name="date"]').on('cancel.daterangepicker', function(ev, picker) {
                 $(this).val('');
             });
@@ -278,7 +289,6 @@
                     }
                 },
                 autoWidth: false,
-                responsive: true,
                 columns: [
                     { data: 'DT_RowIndex', orderable: false, searchable: false },
                     { data: 'karyawan', name: 'karyawan.name' },
@@ -293,19 +303,17 @@
                 ]
             });
 
-            // Scroll to top when changing DataTable pages
             table.on('page.dt', function() {
                 $('html, body').animate({ scrollTop: 0 }, 'slow');
             });
 
-            // Filter button
             $('#btn_filter').click(function() {
                 table.ajax.reload();
             });
 
-            // Reset button
             $('#btn_reset').click(function() {
                 $('#date_range').val('');
+                $('#status_kehadiran').val('');
                 table.ajax.reload();
             });
 
@@ -313,38 +321,25 @@
                 table.ajax.reload();
             });
 
-            // Export PDF button
             $('#btn_export_pdf').click(function() {
                 const dateRange = $('#date_range').val();
                 let url = "{{ route('dashboard.rekap.absensi.export.pdf') }}";
-
                 if (dateRange) {
                     url += '?date=' + encodeURIComponent(dateRange);
                 }
-
                 window.location.href = url;
             });
 
-            // Export Excel button
             $('#btn_export_excel').click(function() {
                 const dateRange = $('#date_range').val();
                 let url = "{{ route('dashboard.rekap.absensi.export.excel') }}";
-
                 if (dateRange) {
                     url += '?date=' + encodeURIComponent(dateRange);
                 }
-
                 window.location.href = url;
             });
 
-            // Print button
-            $('#btn_print').click(function() {
-                window.print();
-            });
-
-           $('#date_range').on('apply.daterangepicker', function () {
-                let range = $('#date_range').val();
-                $('#date_range').val(range);
+            $('#date_range').on('apply.daterangepicker', function () {
                 table.ajax.reload();
             });
 
@@ -354,55 +349,53 @@
                 loadAbsensiData(id);
             });
 
-          $('#table_absensi').on('click', '.btn-delete', function() {
+            $('#table_absensi').on('click', '.btn-delete', function() {
                 var id = $(this).data('id');
                 var url = "{{ route('dashboard.rekap.absensi.destroy', ':id') }}";
                 url = url.replace(':id', id);
+
                 Swal.fire({
                     title: 'Anda yakin?',
                     text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
                     icon: 'warning',
-                    buttons: true,
                     showCancelButton: true,
                     confirmButtonText: 'Ya, Hapus Data',
                     cancelButtonText: 'Tidak, Batalkan!',
                     reverseButtons: true
-                }).then((willDelete) => {
-                    if (willDelete.isConfirmed) {
+                }).then((result) => {
+                    if (result.isConfirmed) {
                         $.ajaxSetup({
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             }
                         });
 
-                        // Send a DELETE request
                         $.ajax({
                             url: url,
-                            type: 'DELETE', // Use the DELETE method
+                            type: 'DELETE',
                             success: function(data) {
                                 if (data.status === 'success') {
                                     Swal.fire({
                                         title: 'Berhasil',
                                         text: data.message,
                                         icon: 'success',
-                                        buttons: false // This will remove the button
+                                        timer: 2000,
+                                        showConfirmButton: false
                                     });
-                                    reloadTable('#table_absensi');
-
+                                    table.ajax.reload();
                                 } else {
-                                    // Reload the page with an error message
                                     Swal.fire('Error', data.message, 'error');
-                                    window.location.href =
-                                        "{{ route('dashboard.rekap.absensi.index') }}";
                                 }
                             },
+                            error: function(xhr) {
+                                Swal.fire('Error', xhr.responseJSON?.message || 'Terjadi kesalahan', 'error');
+                            }
                         });
                     } else {
-                        Swal.fire('Data Batal Dihapus', 'info');
+                        Swal.fire('Dibatalkan', 'Data tidak jadi dihapus', 'info');
                     }
                 });
             });
-
 
             // Load data untuk edit
             function loadAbsensiData(id) {
@@ -417,15 +410,17 @@
                         $('#edit_nama').val(absensi.karyawan.name);
                         $('#edit_tanggal').val(absensi.tanggal);
                         $('#edit_status').val(absensi.status_kehadiran);
-                        $('#edit_jam_masuk').val(absensi.jam_masuk || '');
-                        $('#edit_jam_pulang').val(absensi.jam_pulang || '');
+
+                        // FIX: Use formatTime() to strip seconds (HH:MM:SS → HH:MM)
+                        // so <input type="time"> correctly displays the value
+                        $('#edit_jam_masuk').val(formatTime(absensi.jam_masuk));
+                        $('#edit_jam_pulang').val(formatTime(absensi.jam_pulang));
+
                         $('#edit_rp_masuk').val(absensi.rp_masuk || '');
                         $('#edit_rp_pulang').val(absensi.rp_pulang || '');
                         $('#edit_keterangan').val(absensi.keterangan || '');
 
-                        // Reset validation
-                        $('#formEditAbsensi')[0].classList.remove('was-validated');
-                        $('#formEditAbsensi')[0].classList.remove('is-invalid');
+                        // Reset validation state
                         clearErrors();
 
                         // Update form action
@@ -451,15 +446,21 @@
                 clearErrors();
 
                 const id = $('#absensi_id').val();
+
+                // FIX: Get the HH:MM value from the input and append ":00" for seconds
+                // so the backend receives a valid H:i:s or H:i format
+                const jamMasukRaw   = $('#edit_jam_masuk').val();
+                const jamPulangRaw  = $('#edit_jam_pulang').val();
+
                 const formData = {
-                    tanggal: $('#edit_tanggal').val(),
-                    status_kehadiran: $('#edit_status').val(),
-                    jam_masuk: $('#edit_jam_masuk').val() || null,
-                    jam_pulang: $('#edit_jam_pulang').val() || null,
-                    rp_masuk: $('#edit_rp_masuk').val() || null,
-                    rp_pulang: $('#edit_rp_pulang').val() || null,
-                    keterangan: $('#edit_keterangan').val() || null,
-                    _token: '{{ csrf_token() }}'
+                    tanggal           : $('#edit_tanggal').val(),
+                    status_kehadiran  : $('#edit_status').val(),
+                    jam_masuk         : jamMasukRaw  ? jamMasukRaw  + ':00' : null,
+                    jam_pulang        : jamPulangRaw ? jamPulangRaw + ':00' : null,
+                    rp_masuk          : $('#edit_rp_masuk').val()  || null,
+                    rp_pulang         : $('#edit_rp_pulang').val() || null,
+                    keterangan        : $('#edit_keterangan').val() || null,
+                    _token            : '{{ csrf_token() }}'
                 };
 
                 $.ajax({
@@ -477,34 +478,30 @@
                             icon: 'success',
                             title: 'Berhasil',
                             text: response.message || 'Data absensi berhasil diperbarui',
-                            timer: 2000
+                            timer: 2000,
+                            showConfirmButton: false
                         });
 
-                        // Close modal
                         bootstrap.Modal.getInstance(document.getElementById('modalEditAbsensi')).hide();
-
-                        // Reload table
                         table.ajax.reload();
                     },
                     error: function(xhr) {
                         $('#btn_save').prop('disabled', false).html('<i class="fas fa-save"></i> Simpan Perubahan');
 
                         if (xhr.status === 422) {
-                            // Validation error
                             const errors = xhr.responseJSON.errors;
                             displayErrors(errors);
                         } else {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error',
-                                text: xhr.responseJSON.message || 'Terjadi kesalahan saat menyimpan data'
+                                text: xhr.responseJSON?.message || 'Terjadi kesalahan saat menyimpan data'
                             });
                         }
                     }
                 });
             });
 
-            // Display validation errors
             function displayErrors(errors) {
                 $.each(errors, function(field, messages) {
                     const errorElement = $('#error_' + field);
@@ -517,7 +514,6 @@
                 });
             }
 
-            // Clear all errors
             function clearErrors() {
                 $('#formEditAbsensi').find('.invalid-feedback').text('');
                 $('#formEditAbsensi').find('input, select, textarea').removeClass('is-invalid');

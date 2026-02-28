@@ -30,12 +30,12 @@ class RekapAbsensiController extends Controller
                 $dates = explode(' : ', $request->date);
                 if (count($dates) === 2) {
                     $startDate = Carbon::createFromFormat('d-m-Y', trim($dates[0]))->format('Y-m-d');
-                    $endDate = Carbon::createFromFormat('d-m-Y', trim($dates[1]))->format('Y-m-d');
-                    $query = $query->whereBetween('tanggal', [$startDate, $endDate]);
+                    $endDate   = Carbon::createFromFormat('d-m-Y', trim($dates[1]))->format('Y-m-d');
+                    $query     = $query->whereBetween('tanggal', [$startDate, $endDate]);
                 }
             }
 
-            if($request->status_kehadiran){
+            if ($request->status_kehadiran) {
                 $query->where('status_kehadiran', $request->status_kehadiran);
             }
 
@@ -113,7 +113,6 @@ class RekapAbsensiController extends Controller
                 ], 404);
             }
 
-            // Check authorization
             if (!Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
                 if ($absensi->karyawan_id !== Auth::user()->karyawan->id) {
                     return response()->json([
@@ -125,11 +124,12 @@ class RekapAbsensiController extends Controller
             return response()->json([
                 'absensi' => $absensi
             ]);
+
         } catch (\Exception $e) {
             \Log::error('RekapAbsensiController - show Error', [
                 'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
+                'file'  => $e->getFile(),
+                'line'  => $e->getLine(),
             ]);
 
             return response()->json([
@@ -152,7 +152,6 @@ class RekapAbsensiController extends Controller
                 ], 404);
             }
 
-            // Check authorization
             if (!Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
                 if ($absensi->karyawan_id !== Auth::user()->karyawan->id) {
                     return response()->json([
@@ -161,43 +160,55 @@ class RekapAbsensiController extends Controller
                 }
             }
 
-            // Validate request
+            // FIX: Accept both H:i (HH:MM) and H:i:s (HH:MM:SS) formats
+            // The frontend sends HH:MM:00 after stripping & re-appending seconds,
+            // so we validate with date_format:H:i:s as primary, H:i as fallback.
             $validated = $request->validate([
-                'tanggal' => 'required|date',
+                'tanggal'          => 'required|date',
                 'status_kehadiran' => 'required|in:hadir,cuti,izin,sakit,alpha',
-                'rp_masuk' => 'nullable|numeric|min:0',
-                'rp_pulang' => 'nullable|numeric|min:0',
-                'jam_masuk' => 'nullable|date_format:H:i',
-                'jam_pulang' => 'nullable|date_format:H:i',
-                'keterangan' => 'nullable|string|max:500',
+                'rp_masuk'         => 'nullable|numeric|min:0',
+                'rp_pulang'        => 'nullable|numeric|min:0',
+                'jam_masuk'        => ['nullable', 'regex:/^\d{2}:\d{2}(:\d{2})?$/'],
+                'jam_pulang'       => ['nullable', 'regex:/^\d{2}:\d{2}(:\d{2})?$/'],
+                'keterangan'       => 'nullable|string|max:500',
             ], [
-                'tanggal.required' => 'Tanggal harus diisi',
-                'tanggal.date' => 'Format tanggal tidak valid',
+                'tanggal.required'          => 'Tanggal harus diisi',
+                'tanggal.date'              => 'Format tanggal tidak valid',
                 'status_kehadiran.required' => 'Status kehadiran harus dipilih',
-                'status_kehadiran.in' => 'Status kehadiran tidak valid',
-                'rp_masuk.numeric' => 'Rp. masuk harus berupa angka',
-                'rp_pulang.numeric' => 'Rp. pulang harus berupa angka',
-                'rp_masuk.min' => 'Rp. masuk tidak boleh negatif',
-                'rp_pulang.min' => 'Rp. pulang tidak boleh negatif',
-                'keterangan.max' => 'Keterangan maksimal 500 karakter',
+                'status_kehadiran.in'       => 'Status kehadiran tidak valid',
+                'rp_masuk.numeric'          => 'Rp. masuk harus berupa angka',
+                'rp_pulang.numeric'         => 'Rp. pulang harus berupa angka',
+                'rp_masuk.min'              => 'Rp. masuk tidak boleh negatif',
+                'rp_pulang.min'             => 'Rp. pulang tidak boleh negatif',
+                'jam_masuk.regex'           => 'Format jam masuk tidak valid (HH:MM atau HH:MM:SS)',
+                'jam_pulang.regex'          => 'Format jam pulang tidak valid (HH:MM atau HH:MM:SS)',
+                'keterangan.max'            => 'Keterangan maksimal 500 karakter',
             ]);
 
-            // Update data - PENTING: Gunakan null coalescing dengan benar
+            // FIX: Normalize time values to H:i:s before saving to the DB.
+            // If front-end sends "08:30" we store "08:30:00".
+            // If front-end sends "08:30:00" we store "08:30:00" as-is.
+            $normalizeTime = function (?string $time): ?string {
+                if (empty($time)) return null;
+                // Already has seconds
+                if (strlen($time) === 8) return $time;
+                // Only HH:MM — append seconds
+                return $time . ':00';
+            };
+
             $updateData = [
-                'tanggal' => $validated['tanggal'],
+                'tanggal'          => $validated['tanggal'],
                 'status_kehadiran' => $validated['status_kehadiran'],
-                'keterangan' => $validated['keterangan'] ?? null,
-                'jam_masuk' => $validated['jam_masuk'] ?? null,
-                'jam_pulang' => $validated['jam_pulang'] ?? null,
-                'updated_by' => Auth::id(),
+                'keterangan'       => $validated['keterangan'] ?? null,
+                'jam_masuk'        => $normalizeTime($validated['jam_masuk'] ?? null),
+                'jam_pulang'       => $normalizeTime($validated['jam_pulang'] ?? null),
+                'updated_by'       => Auth::id(),
             ];
 
-            // Update rp_masuk jika ada di validated
             if (isset($validated['rp_masuk']) && $validated['rp_masuk'] !== null) {
                 $updateData['rp_masuk'] = $validated['rp_masuk'];
             }
 
-            // Update rp_pulang jika ada di validated
             if (isset($validated['rp_pulang']) && $validated['rp_pulang'] !== null) {
                 $updateData['rp_pulang'] = $validated['rp_pulang'];
             }
@@ -205,8 +216,8 @@ class RekapAbsensiController extends Controller
             $absensi->update($updateData);
 
             \Log::info('RekapAbsensiController - Update Success', [
-                'absensi_id' => $id,
-                'user_id' => Auth::id(),
+                'absensi_id'   => $id,
+                'user_id'      => Auth::id(),
                 'updated_data' => $validated
             ]);
 
@@ -219,11 +230,12 @@ class RekapAbsensiController extends Controller
             return response()->json([
                 'errors' => $e->validator->errors()
             ], 422);
+
         } catch (\Exception $e) {
             \Log::error('RekapAbsensiController - Update Error', [
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
+                'error'      => $e->getMessage(),
+                'file'       => $e->getFile(),
+                'line'       => $e->getLine(),
                 'absensi_id' => $id
             ]);
 
@@ -247,37 +259,35 @@ class RekapAbsensiController extends Controller
                 ], 404);
             }
 
-            // Check authorization
             if (!Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
                 return response()->json([
-                    'status' => 'error',
+                    'status'  => 'error',
                     'message' => 'Anda tidak memiliki akses untuk menghapus data ini'
                 ], 403);
             }
 
-            // Delete data
             $absensi->delete();
 
             \Log::info('RekapAbsensiController - Delete Success', [
                 'absensi_id' => $id,
-                'user_id' => Auth::id()
+                'user_id'    => Auth::id()
             ]);
 
             return response()->json([
-                'status' => 'success',
+                'status'  => 'success',
                 'message' => 'Data absensi berhasil dihapus'
             ], 200);
 
         } catch (\Exception $e) {
             \Log::error('RekapAbsensiController - Delete Error', [
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
+                'error'      => $e->getMessage(),
+                'file'       => $e->getFile(),
+                'line'       => $e->getLine(),
                 'absensi_id' => $id
             ]);
 
             return response()->json([
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => 'Gagal menghapus data absensi'
             ], 500);
         }
@@ -291,7 +301,7 @@ class RekapAbsensiController extends Controller
         try {
             \Log::info('RekapAbsensiController - exportPdf Started', [
                 'request_date' => $request->date ?? 'null',
-                'user_id' => Auth::user()->id ?? 'null'
+                'user_id'      => Auth::user()->id ?? 'null'
             ]);
 
             $karyawans = $this->getRekapKaryawan($request);
@@ -310,18 +320,15 @@ class RekapAbsensiController extends Controller
 
             $filename = 'rekap-absensi-' . now()->format('d-m-Y-H-i-s') . '.pdf';
 
-            \Log::info('RekapAbsensiController - Exporting PDF', [
-                'filename' => $filename
-            ]);
+            \Log::info('RekapAbsensiController - Exporting PDF', ['filename' => $filename]);
 
             return $pdf->download($filename);
 
-            // return $pdf->stream($filename);
         } catch (\Exception $e) {
             \Log::error('RekapAbsensiController - exportPdf Error', [
                 'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
+                'file'  => $e->getFile(),
+                'line'  => $e->getLine(),
                 'trace' => $e->getTraceAsString()
             ]);
             return redirect()->back()->with('error', 'Gagal mengekspor PDF: ' . $e->getMessage());
@@ -336,49 +343,23 @@ class RekapAbsensiController extends Controller
         try {
             \Log::info('RekapAbsensiController - exportExcel Started', [
                 'request_date' => $request->date ?? 'null',
-                'user_id' => Auth::user()->id ?? 'null'
+                'user_id'      => Auth::user()->id ?? 'null'
             ]);
 
             $filename = 'rekap-absensi-' . now()->format('d-m-Y-H-i-s') . '.xlsx';
 
-            \Log::info('RekapAbsensiController - Exporting Excel', [
-                'filename' => $filename
-            ]);
+            \Log::info('RekapAbsensiController - Exporting Excel', ['filename' => $filename]);
 
-            return Excel::download(
-                new RekapAbsensiExport($request),
-                $filename
-            );
+            return Excel::download(new RekapAbsensiExport($request), $filename);
+
         } catch (\Exception $e) {
             \Log::error('RekapAbsensiController - exportExcel Error', [
                 'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
+                'file'  => $e->getFile(),
+                'line'  => $e->getLine(),
                 'trace' => $e->getTraceAsString()
             ]);
             return redirect()->back()->with('error', 'Gagal mengekspor Excel: ' . $e->getMessage());
-        }
-    }
-
-    public function destrory($absensi_id)
-    {
-        try {
-            $absensi = Absensi::find($absensi_id);
-            if (!$absensi) {
-
-            }
-
-            $absensi->delete();
-
-            return redirect()->back()->with('success', 'Data absensi berhasil dihapus');
-        } catch (\Exception $e) {
-            \Log::error('RekapAbsensiController - destrory Error', [
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->with('error', 'Gagal menghapus data absensi: ' . $e->getMessage());
         }
     }
 
@@ -387,75 +368,30 @@ class RekapAbsensiController extends Controller
      */
     private function getRekapKaryawan($request)
     {
-        $query = Karyawan::with(['absensi' => function ($q) use ($request) {
+        $applyDateFilter = function ($q) use ($request) {
             if ($request->filled('date')) {
                 $dates = explode(' : ', $request->date);
                 if (count($dates) === 2) {
                     $start = Carbon::createFromFormat('d-m-Y', trim($dates[0]))->startOfDay();
-                    $end = Carbon::createFromFormat('d-m-Y', trim($dates[1]))->endOfDay();
+                    $end   = Carbon::createFromFormat('d-m-Y', trim($dates[1]))->endOfDay();
                     $q->whereBetween('tanggal', [$start, $end]);
                 }
             }
+        };
+
+        $query = Karyawan::with(['absensi' => function ($q) use ($applyDateFilter) {
+            $applyDateFilter($q);
             $q->orderBy('tanggal', 'asc');
         }]);
 
-        $query->withCount([
-            'absensi as hadir_count' => function ($q) use ($request) {
-                $q->where('status_kehadiran', 'hadir');
-                if ($request->filled('date')) {
-                    $dates = explode(' : ', $request->date);
-                    if (count($dates) === 2) {
-                        $start = Carbon::createFromFormat('d-m-Y', trim($dates[0]))->startOfDay();
-                        $end = Carbon::createFromFormat('d-m-Y', trim($dates[1]))->endOfDay();
-                        $q->whereBetween('tanggal', [$start, $end]);
-                    }
+        foreach (['hadir', 'cuti', 'izin', 'sakit', 'alpha'] as $status) {
+            $query->withCount([
+                "absensi as {$status}_count" => function ($q) use ($status, $applyDateFilter) {
+                    $q->where('status_kehadiran', $status);
+                    $applyDateFilter($q);
                 }
-            },
-            'absensi as cuti_count' => function ($q) use ($request) {
-                $q->where('status_kehadiran', 'cuti');
-                if ($request->filled('date')) {
-                    $dates = explode(' : ', $request->date);
-                    if (count($dates) === 2) {
-                        $start = Carbon::createFromFormat('d-m-Y', trim($dates[0]))->startOfDay();
-                        $end = Carbon::createFromFormat('d-m-Y', trim($dates[1]))->endOfDay();
-                        $q->whereBetween('tanggal', [$start, $end]);
-                    }
-                }
-            },
-            'absensi as izin_count' => function ($q) use ($request) {
-                $q->where('status_kehadiran', 'izin');
-                if ($request->filled('date')) {
-                    $dates = explode(' : ', $request->date);
-                    if (count($dates) === 2) {
-                        $start = Carbon::createFromFormat('d-m-Y', trim($dates[0]))->startOfDay();
-                        $end = Carbon::createFromFormat('d-m-Y', trim($dates[1]))->endOfDay();
-                        $q->whereBetween('tanggal', [$start, $end]);
-                    }
-                }
-            },
-            'absensi as sakit_count' => function ($q) use ($request) {
-                $q->where('status_kehadiran', 'sakit');
-                if ($request->filled('date')) {
-                    $dates = explode(' : ', $request->date);
-                    if (count($dates) === 2) {
-                        $start = Carbon::createFromFormat('d-m-Y', trim($dates[0]))->startOfDay();
-                        $end = Carbon::createFromFormat('d-m-Y', trim($dates[1]))->endOfDay();
-                        $q->whereBetween('tanggal', [$start, $end]);
-                    }
-                }
-            },
-            'absensi as alpha_count' => function ($q) use ($request) {
-                $q->where('status_kehadiran', 'alpha');
-                if ($request->filled('date')) {
-                    $dates = explode(' : ', $request->date);
-                    if (count($dates) === 2) {
-                        $start = Carbon::createFromFormat('d-m-Y', trim($dates[0]))->startOfDay();
-                        $end = Carbon::createFromFormat('d-m-Y', trim($dates[1]))->endOfDay();
-                        $q->whereBetween('tanggal', [$start, $end]);
-                    }
-                }
-            }
-        ]);
+            ]);
+        }
 
         if (!Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
             $query->where('id', Auth::user()->karyawan->id);
