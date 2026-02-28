@@ -188,7 +188,7 @@
                         <label for="edit_jam_masuk" class="form-label">
                             <i class="fas fa-sign-in-alt"></i> Jam Masuk
                         </label>
-                        <input type="text" class="form-control" id="edit_jam_masuk" name="jam_masuk" step="60" readonly>
+                        <input type="time" class="form-control" id="edit_jam_masuk" name="jam_masuk" step="60">
                         <div class="invalid-feedback" id="error_jam_masuk"></div>
                     </div>
 
@@ -196,7 +196,7 @@
                         <label for="edit_jam_pulang" class="form-label">
                             <i class="fas fa-sign-out-alt"></i> Jam Pulang
                         </label>
-                        <input type="text" class="form-control" id="edit_jam_pulang" name="jam_pulang" step="60" readonly/>
+                        <input type="time" class="form-control" id="edit_jam_pulang" name="jam_pulang" step="60"/>
                         <div class="invalid-feedback" id="error_jam_pulang"></div>
                     </div>
                     <div class="mb-3 form-group">

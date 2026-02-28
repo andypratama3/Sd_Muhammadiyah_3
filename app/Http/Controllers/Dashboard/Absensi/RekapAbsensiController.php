@@ -167,6 +167,8 @@ class RekapAbsensiController extends Controller
                 'status_kehadiran' => 'required|in:hadir,cuti,izin,sakit,alpha',
                 'rp_masuk' => 'nullable|numeric|min:0',
                 'rp_pulang' => 'nullable|numeric|min:0',
+                'jam_masuk' => 'nullable|date_format:H:i',
+                'jam_pulang' => 'nullable|date_format:H:i',
                 'keterangan' => 'nullable|string|max:500',
             ], [
                 'tanggal.required' => 'Tanggal harus diisi',
@@ -185,6 +187,8 @@ class RekapAbsensiController extends Controller
                 'tanggal' => $validated['tanggal'],
                 'status_kehadiran' => $validated['status_kehadiran'],
                 'keterangan' => $validated['keterangan'] ?? null,
+                'jam_masuk' => $validated['jam_masuk'] ?? null,
+                'jam_pulang' => $validated['jam_pulang'] ?? null,
                 'updated_by' => Auth::id(),
             ];
 
