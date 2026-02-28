@@ -187,9 +187,7 @@ Route::get('/asset/{any}', function () {
 
 // });
 
-Route::get('/', function (){
-    return redirect()->route('login');
-});
+Route::get('/', fn () => view('auth.login'));
 
 Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], function () {
     Route::get('/', DashboardController::class)->name('dashboard');
