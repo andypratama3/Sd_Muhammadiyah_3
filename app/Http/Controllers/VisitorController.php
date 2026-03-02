@@ -10,32 +10,50 @@ class VisitorController extends Controller
 {
     public function getVisitorData(Request $request)
     {
-        $range = $request->input('range', 'month'); // Default to 'month'
-        $date = Carbon::now();
-        $visitors = [];
+        try {
+            $range = $request->input('range', 'month');
+            $date  = Carbon::now();
 
-        if ($range === 'day') {
-            $visitors = Visitor::whereDate('created_at', $date->format('Y-m-d'))->count();
-            // \Log::info('Day data:', ['visitors' => $visitors]);
-        } elseif ($range === 'month') {
-            $visitors = Visitor::selectRaw('DAY(created_at) as day')
-                ->selectRaw('COUNT(*) as total')
-                ->whereYear('created_at', $date->year)
-                ->whereMonth('created_at', $date->month)
-                ->groupBy('day')
-                ->orderBy('day')
-                ->get();
-            // \Log::info('Month data:', $visitors->toArray());
-        } elseif ($range === 'year') {
-            $visitors = Visitor::selectRaw('MONTH(created_at) as month')
-                ->selectRaw('COUNT(*) as total')
-                ->whereYear('created_at', $date->year)
-                ->groupBy('month')
-                ->orderBy('month')
-                ->get();
-            // \Log::info('Year data:', $visitors->toArray());
+            if ($range === 'day') {
+                return response()->json([
+                    'total' => Visitor::whereDate('created_at', $date->toDateString())->count()
+                ]);
+            }
+
+            if ($range === 'month') {
+                return response()->json(
+                    Visitor::selectRaw('DAY(created_at) as day, COUNT(*) as total')
+                        ->whereYear('created_at', $date->year)
+                        ->whereMonth('created_at', $date->month)
+                        ->groupByRaw('DAY(created_at)')
+                        ->orderBy('day')
+                        ->get()
+                );
+            }
+
+            if ($range === 'year') {
+                return response()->json(
+                    Visitor::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+                        ->whereYear('created_at', $date->year)
+                        ->groupByRaw('MONTH(created_at)')
+                        ->orderBy('month')
+                        ->get()
+                );
+            }
+
+            return response()->json([], 200);
+
+        } catch (\Throwable $e) {
+            \Log::error('VisitorController error', [
+                'message' => $e->getMessage(),
+                'file'    => $e->getFile(),
+                'line'    => $e->getLine(),
+            ]);
+
+            return response()->json([
+                'error' => true,
+                'message' => 'Internal Server Error'
+            ], 500);
         }
-
-        return response()->json($visitors);
     }
 }
