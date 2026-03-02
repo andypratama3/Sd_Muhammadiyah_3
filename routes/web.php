@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Dashboard\WilayahApi;
+use App\Http\Controllers\Dashboard\Absensi\AbsensiController;
 use App\Http\Controllers\Dashboard\Absensi\DeviceAbsensiController;
 use App\Http\Controllers\Dashboard\Absensi\JamAbsenController;
 use App\Http\Controllers\Dashboard\Absensi\LokasiAbsenController;
