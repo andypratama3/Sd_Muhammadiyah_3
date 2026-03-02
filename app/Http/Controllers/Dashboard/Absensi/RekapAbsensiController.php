@@ -7,7 +7,6 @@ use App\Models\Absensi;
 use App\Models\Karyawan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use App\Exports\RekapAbsensiExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;

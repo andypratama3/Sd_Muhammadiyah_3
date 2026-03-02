@@ -1,12 +1,6 @@
 <?php
 
 use App\Http\Controllers\Api\Dashboard\WilayahApi;
-use App\Http\Controllers\ArtikelController;
-use App\Http\Controllers\Auth\GoogleController;
-use App\Http\Controllers\BerandaController;
-use App\Http\Controllers\BeritaController;
-use App\Http\Controllers\CommentArtikelController;
-use App\Http\Controllers\Dashboard\Absensi\AbsensiController;
 use App\Http\Controllers\Dashboard\Absensi\DeviceAbsensiController;
 use App\Http\Controllers\Dashboard\Absensi\JamAbsenController;
 use App\Http\Controllers\Dashboard\Absensi\LokasiAbsenController;
