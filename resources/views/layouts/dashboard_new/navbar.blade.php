@@ -107,7 +107,7 @@
             <!-- ======================
                  NOTIFICATION
             ====================== -->
-            {{-- <li class="nav-item dropdown me-2">
+            <li class="nav-item dropdown me-2">
                 <a class="nav-link" href="#" id="alertsDropdown">
                     <i class="fas fa-bell fa-fw"></i>
                     <span class="badge badge-danger badge-counter" id="activity_count"></span>
@@ -120,7 +120,7 @@
                         Show All Activity
                     </a>
                 </div>
-            </li> --}}
+            </li>
 
             <!-- ======================
                  USER DROPDOWN

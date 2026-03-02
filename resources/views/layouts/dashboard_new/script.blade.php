@@ -82,37 +82,37 @@
             });
         });
     });
-    // document.addEventListener("DOMContentLoaded", function () {
-    //     fetch('{{ route('dashboard.datamaster.get.activitys') }}') // Sesuaikan dengan endpoint API kamu
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             if (data.success) {
-    //                 const activityCount = document.getElementById('activity_count');
-    //                 const activityItems = document.getElementById('activity_items');
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch('{{ route('dashboard.datamaster.get.activitys') }}') // Sesuaikan dengan endpoint API kamu
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const activityCount = document.getElementById('activity_count');
+                    const activityItems = document.getElementById('activity_items');
 
-    //                 activityCount.textContent = data.activitys_count > 0 ? data.activitys_count : '';
+                    activityCount.textContent = data.activitys_count > 0 ? data.activitys_count : '';
 
-    //                 activityItems.innerHTML = ''; // Kosongkan sebelum menambahkan data baru
+                    activityItems.innerHTML = ''; // Kosongkan sebelum menambahkan data baru
 
-    //                 data.activitys.forEach(activity => {
-    //                     let activityItem = `
-    //                         <a class="dropdown-item d-flex align-items-center" href="#">
-    //                             <div class="mr-3">
-    //                                 <div class="icon-circle">
-    //                                     <i class="fas fa-file-alt"></i>
-    //                                 </div>
-    //                             </div>
-    //                             <div>
-    //                                 <div class="text-gray-500 small">${new Date(activity.created_at).toLocaleString()}</div>
-    //                                 <span class="font-weight-bold">${activity.description.split(' ').slice(0, 5).join(' ') + (activity.description.split(' ').length > 5 ? '...' : '')}</span>
-    //                             </div>
-    //                         </a>
-    //                     `;
-    //                     activityItems.innerHTML += activityItem;
-    //                 });
-    //             }
-    //         })
-    //         .catch(error => console.error('Error fetching activity:', error));
-    // });
+                    data.activitys.forEach(activity => {
+                        let activityItem = `
+                            <a class="dropdown-item d-flex align-items-center" href="#">
+                                <div class="mr-3">
+                                    <div class="icon-circle">
+                                        <i class="fas fa-file-alt"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-500 small">${new Date(activity.created_at).toLocaleString()}</div>
+                                    <span class="font-weight-bold">${activity.description.split(' ').slice(0, 5).join(' ') + (activity.description.split(' ').length > 5 ? '...' : '')}</span>
+                                </div>
+                            </a>
+                        `;
+                        activityItems.innerHTML += activityItem;
+                    });
+                }
+            })
+            .catch(error => console.error('Error fetching activity:', error));
+    });
 
 </script>
