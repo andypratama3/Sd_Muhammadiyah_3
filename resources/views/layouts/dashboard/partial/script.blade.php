@@ -54,45 +54,45 @@
             });
         });
     });
-    getActivity();
-    function getActivity(){
-        const url = "{{ route('dashboard.datamaster.get.activitys') }}";
-        $.ajax({
-            type: "GET",
-            url: url,
+    // getActivity();
+    // function getActivity(){
+    //     const url = "{{ route('dashboard.datamaster.get.activitys') }}";
+    //     $.ajax({
+    //         type: "GET",
+    //         url: url,
 
-            success: function (response) {
-                const activitys = response.activitys;
-                if(response.activitys_count > 9){
-                    $('#activity_count').text(9 + '+');
-                }else{
-                    $('#activity_count').text(response.activitys_count);
-                }
-                //each data
-                const activity_link = $('#activity_link');
-                const activity_icon = $('#activity_icon');
-                const activity_date = $('#activity_date');
-                const activity_data = $('#activity_data');
-                $.each(activitys, function (indexInArray, valueOfElement) {
-                    if(activitys === 'Menambahkan'){
-                        activity_icon.className = 'fas fa-plus text-white';
-                    }
-                    if(activitys === 'Mengubah'){
-                        activity_icon.className = 'fas fa-edit text-white';
-                    }
-                    if(activitys === 'Menghapus'){
-                        activity_icon.className = 'fas fa-trash text-white';
-                    }
-                    if(activitys === 'Mengaktifkan'){
-                        activity_icon.className = 'fas fa-toggle-on text-white';
-                    }
-                    if(activitys === 'Menonaktifkan'){
-                        activity_icon.className = 'fas fa-toggle-off text-white';
-                    }
+    //         success: function (response) {
+    //             const activitys = response.activitys;
+    //             if(response.activitys_count > 9){
+    //                 $('#activity_count').text(9 + '+');
+    //             }else{
+    //                 $('#activity_count').text(response.activitys_count);
+    //             }
+    //             //each data
+    //             const activity_link = $('#activity_link');
+    //             const activity_icon = $('#activity_icon');
+    //             const activity_date = $('#activity_date');
+    //             const activity_data = $('#activity_data');
+    //             $.each(activitys, function (indexInArray, valueOfElement) {
+    //                 if(activitys === 'Menambahkan'){
+    //                     activity_icon.className = 'fas fa-plus text-white';
+    //                 }
+    //                 if(activitys === 'Mengubah'){
+    //                     activity_icon.className = 'fas fa-edit text-white';
+    //                 }
+    //                 if(activitys === 'Menghapus'){
+    //                     activity_icon.className = 'fas fa-trash text-white';
+    //                 }
+    //                 if(activitys === 'Mengaktifkan'){
+    //                     activity_icon.className = 'fas fa-toggle-on text-white';
+    //                 }
+    //                 if(activitys === 'Menonaktifkan'){
+    //                     activity_icon.className = 'fas fa-toggle-off text-white';
+    //                 }
 
-                });
+    //             });
 
-            }
-        });
-    }
+    //         }
+    //     });
+    // }
 </script>
