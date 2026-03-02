@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Dashboard\WilayahApi;
 use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\Auth\GoogleController;
@@ -52,6 +51,8 @@ use App\Http\Controllers\Dashboard\TenagaPendidikanController as DashboardTenaga
 use App\Http\Controllers\Dashboard\UrlVisitorController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\WhatsappController;
+use App\Http\Controllers\VisitorController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
