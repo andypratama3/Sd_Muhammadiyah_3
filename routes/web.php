@@ -163,7 +163,7 @@ Route::get('/', fn() => redirect()->route('login'));
 Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], function () {
     Route::get('/', DashboardController::class)->name('dashboard');
 
-    Route::get('/visitors/data', [VisitorController::class, 'getVisitorData'])->name('visitors.data');
+    // Route::get('/visitors/data', [VisitorController::class, 'getVisitorData'])->name('visitors.data');
 
     Route::resource('notifikasi', NotificationController::class, ['names' => 'dashboard.notifikasi']);
     Route::get('notifikasis/data', [NotificationController::class, 'data_table'])->name('dashboard.notifikasi.data');
