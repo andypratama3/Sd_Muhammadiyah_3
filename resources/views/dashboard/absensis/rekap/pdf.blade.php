@@ -185,7 +185,7 @@
         <!-- TOTAL -->
         <tfoot>
             <tr class="summary">
-                <td colspan="5" class="text-center">Jumlah Total</td>
+                <td colspan="4" class="text-center">Jumlah Total</td>
                 <td class="text-center">Rp. {{ number_format($totalRpMasuk, 0, ',', '.') }}</td>
                 <td class="text-center">Rp. {{ number_format($totalRpPulang, 0, ',', '.') }}</td>
                 <td></td>
