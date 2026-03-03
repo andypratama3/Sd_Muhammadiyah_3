@@ -27,6 +27,16 @@
 
         th { text-align: center; font-weight: bold; background-color: #f0f0f0; }
 
+        tfoot td {
+            border: 1px solid #000 !important;
+        }
+
+        /* Kolom kosong tetap punya border */
+        tfoot td:empty {
+            border-left: 1px solid #000;
+            border-right: 1px solid #000;
+        }
+
         .header { text-align: center; margin-bottom: 10px; }
 
         .info { margin-bottom: 10px; }
@@ -189,10 +199,12 @@
                 <td class="text-center">Rp. {{ number_format($totalRpMasuk, 0, ',', '.') }}</td>
                 <td class="text-center">Rp. {{ number_format($totalRpPulang, 0, ',', '.') }}</td>
                 <td></td>
+                <td></td>
             </tr>
             <tr class="summary">
-                <td colspan="6" class="text-center">Jumlah yang di terima</td>
-                <td class="text-center">Rp. {{ number_format($totalRpMasuk + $totalRpPulang, 0, ',', '.') }}</td>
+                <td colspan="4" class="text-center">Jumlah yang di terima</td>
+                <td colspan="2" class="text-center">Rp. {{ number_format($totalRpMasuk + $totalRpPulang, 0, ',', '.') }}</td>
+                <td></td>
                 <td></td>
             </tr>
         </tfoot>
