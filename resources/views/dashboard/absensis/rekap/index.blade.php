@@ -5,8 +5,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
     <style>
-        .filter-section {
-            padding: 1.5rem;
+        .filter-section { 
             border-radius: 0.5rem;
             margin-bottom: 2rem;
         }
@@ -82,7 +81,7 @@
                         autocomplete="off"
                     >
                 </div>
-                <label for="status_kehadiran" class="mb-2">
+                <label for="status_kehadiran" class="mb-2 mt-2">
                     <i class="fas fa-check-circle"></i> Status Kehadiran
                 </label>
                 <select name="status_kehadiran" id="status_kehadiran" class="form-control">
@@ -94,7 +93,7 @@
                     <option value="alpha">Alpha</option>
                 </select>
     
-                <div class="btn-group-filter m-2">
+                <div class="btn-group-filter mt-2">
                     <button type="button" id="btn_filter" class="btn btn-primary">
                         <i class="fas fa-search"></i> Cari
                     </button>
@@ -118,7 +117,7 @@
                 </div>
             </div>
         </div>
-        <div class="table-responsive">
+        <div class="table-responsive mt-4">
             <table class="table table-bordered table-striped" id="table_absensi">
                 <thead class="table-light">
                     <tr>
@@ -153,7 +152,7 @@
                 <div class="modal-body">
                     <input type="hidden" id="absensi_id" name="id">
 
-                    <div class="mb-3 form-group">
+                    <div class="mb-3 form-group mt-2">
                         <label for="edit_nama" class="form-label">
                             <i class="fas fa-user"></i> Nama Karyawan
                         </label>
@@ -161,7 +160,7 @@
                         <small class="text-muted">Field ini tidak dapat diubah</small>
                     </div>
 
-                    <div class="mb-3 form-group">
+                    <div class="mb-3 form-group mt-2">
                         <label for="edit_tanggal" class="form-label">
                             <i class="fas fa-calendar"></i> Tanggal
                         </label>
@@ -169,7 +168,7 @@
                         <div class="invalid-feedback" id="error_tanggal"></div>
                     </div>
 
-                    <div class="mb-3 form-group">
+                    <div class="mb-3 form-group mt-2">
                         <label for="edit_status" class="form-label">
                             <i class="fas fa-check-circle"></i> Status Kehadiran
                         </label>
