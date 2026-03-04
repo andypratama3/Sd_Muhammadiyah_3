@@ -445,9 +445,9 @@ class AbsensiService
         }
 
         $cutiAktif = $this->cekStatusCuti($karyawan->id, $tanggalHariIni);
-        if ($cutiAktif) {
-            return ['success' => false, 'message' => "Anda sedang {$cutiAktif->jenis} pada tanggal ini."];
-        }
+        // if ($cutiAktif) {
+        //     return ['success' => false, 'message' => "Anda sedang {$cutiAktif->jenis} pada tanggal ini."];
+        // }
 
         return [
             'success'          => true,

@@ -63,6 +63,13 @@
                                     <i class="fas fa-trash"></i>
                                 </a>
                             </td>
+                            @elseif($item->status == 'disetujui')
+                            <td>
+                                <a href="{{ route('dashboard.pengajuan_cuti.edit', $item->id) }}"
+                                   class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </td>
                             @endif
 
                         </tr>

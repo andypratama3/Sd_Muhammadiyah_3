@@ -30,7 +30,7 @@
         <input type="date"
                name="tanggal_selesai"
                class="form-control @error('tanggal_selesai') is-invalid @enderror"
-               value="{{ old('tanggal_selesai', $pengajuanCuti->tanggal_selesai ?? \Carbon\Carbon::now()->format('Y-m-d')) }}"
+               value="{{ old('tanggal_selesai', \Carbon\Carbon::parse($pengajuanCuti->tanggal_selesai ?? '')->format('Y-m-d')) }}"
                required>
         @error('tanggal_selesai') <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>

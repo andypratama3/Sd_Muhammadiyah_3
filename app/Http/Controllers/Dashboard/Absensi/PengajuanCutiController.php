@@ -82,13 +82,15 @@ class PengajuanCutiController extends Controller
             ->with('success', 'Pengajuan cuti berhasil dikirim');
     }
 
-    public function edit(PengajuanCuti $pengajuanCuti)
+    public function edit($id)
     {
+        $pengajuanCuti = PengajuanCuti::findOrFail($id);
         return view('dashboard.absensis.pengajuan_cuti.edit',compact('pengajuanCuti'));
     }
 
-    public function update(Request $request, PengajuanCuti $pengajuanCuti)
+    public function update(Request $request, $id)
     {
+        $pengajuanCuti = PengajuanCuti::findOrFail($id);
         $rules = [
             'jenis'            => 'required|string',
             'tanggal_mulai'    => 'required|date',
