@@ -129,20 +129,6 @@
     </div>
 
 </div>
-<div class="mt-3 row">
-
-    {{-- Cuti Aktif --}}
-    <div class="col-md-4">
-        <div class="shadow card">
-            <div class="card-body">
-                <h6>Cuti Aktif Hari Ini</h6>
-                <h3>{{ $cutiAktif }}</h3>
-            </div>
-        </div>
-    </div>
-
-</div>
-
 <div class="mt-4 card">
     <div class="card-body">
         <h5>Grafik Kehadiran 7 Hari Terakhir</h5>
