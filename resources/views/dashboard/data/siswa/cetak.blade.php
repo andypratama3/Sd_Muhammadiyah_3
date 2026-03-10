@@ -269,6 +269,7 @@
                 <h6 class="text-end">Kepala Sekolah</h6>
                 <img src="{{ asset('storage/img/siswa/'. $siswa->foto) }}" alt="" style="width: 100px; margin-left: 290px;">
                 <h6 class="text-end" style="text-decoration: underline;">
+                    
                     <strong>Ansar HS, S.Pd M.M</strong></h6>
                 <h6 class="text-end"><strong>NBM </strong> : 1144131</h6>
                 <!-- </div> -->

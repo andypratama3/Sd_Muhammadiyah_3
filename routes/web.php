@@ -12,11 +12,15 @@ use App\Http\Controllers\Dashboard\ActivityController;
 use App\Http\Controllers\Dashboard\ArtikelController as DashboardArtikelController;
 use App\Http\Controllers\Dashboard\AttendancesController;
 use App\Http\Controllers\Dashboard\BeritaController as DashboardBeritaController;
+use App\Http\Controllers\Dashboard\BroadcastMessageController;
 use App\Http\Controllers\Dashboard\CategoryArtikel;
 use App\Http\Controllers\Dashboard\ChargeController as DashboardChargeController;
 use App\Http\Controllers\Dashboard\ChartController;
 use App\Http\Controllers\Dashboard\CooperationController;
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\Document\DocumentCategoryController;
+use App\Http\Controllers\Dashboard\Document\DocumentController;
+use App\Http\Controllers\Dashboard\Document\DocumentTemplateController;
 use App\Http\Controllers\Dashboard\EkstrakulikulerController as DashboardEsktrakurikulerController;
 use App\Http\Controllers\Dashboard\FasilitasController as DashboardFasilitasController;
 use App\Http\Controllers\Dashboard\FotoSekolahController;
@@ -46,6 +50,7 @@ use App\Http\Controllers\Dashboard\TenagaPendidikanController as DashboardTenaga
 use App\Http\Controllers\Dashboard\UrlVisitorController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\WhatsappController;
+use App\Http\Controllers\NaikKelasController;
 use App\Http\Controllers\VisitorController;
 use Illuminate\Support\Facades\Route;
 
@@ -305,6 +310,17 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::resource('activity',  ActivityController::class, ['names' => 'dashboard.datamaster.activity']);
         Route::get('get/activitys', [ActivityController::class, 'activitys'])->name('dashboard.datamaster.get.activitys');
 
+    });
+
+    Route::group(['prefix' => 'surat'], function () {
+        Route::resource('categories', DocumentCategoryController::class)->names('dashboard.documents.categories')->except(['show']);
+        Route::resource('templates', DocumentTemplateController::class)->names('dashboard.documents.templates')->except(['show']);
+        Route::post('templates/preview-variables', [DocumentTemplateController::class, 'previewVariables'])->name('dashboard.documents.preview-variables');
+        Route::get('documents', [DocumentController::class, 'index'])->name('dashboard.documents.index');
+        Route::get('documents/generate/{template}', [DocumentController::class, 'create'])->name('dashboard.documents.create');
+        Route::post('documents/generate/{template}', [DocumentController::class, 'store'])->name('dashboard.documents.store');
+        Route::get('documents/{document}/download', [DocumentController::class, 'download'])->name('dashboard.documents.download');
+        Route::delete('documents/{document}', [DocumentController::class, 'destroy'])->name('dashboard.documents.destroy');
     });
 
     Route::group(['prefix' => 'pengaturan'], function () {

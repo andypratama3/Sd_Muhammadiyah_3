@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Http\Controllers\Controller;
+use App\Jobs\SendBroadcastWhatsappJob;
 use App\Models\Kelas;
 use App\Models\Siswa;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-use App\Jobs\SendBroadcastWhatsappJob;
+use Illuminate\Support\Facades\Log;
 
 class BroadcastMessageController extends Controller
 {

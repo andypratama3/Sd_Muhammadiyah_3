@@ -13,7 +13,6 @@
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "^0.6.8",
         "intervention/image": "^2",
-        "jxlwqq/quill": "^1.0",
         "laravel/framework": "^10.10",
         "laravel/horizon": "*",
         "laravel/jetstream": "^3.2",

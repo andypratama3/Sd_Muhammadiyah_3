@@ -226,6 +226,62 @@
          </li>
         @endrole
 
+         <li class="menu-header small text-uppercase"><span class="menu-header-text">Dokumen &amp;
+                 Template </span></li>
+         <!-- Forms -->
+         <li class="menu-item {{ Request::routeIs('dashboard.datamaster.*') ? 'open' : '' }}">
+             <a href="javascript:void(0);" class="menu-link menu-toggle">
+                 <i class="menu-icon tf-icons bx bx-detail"></i>
+                 <div data-i18n="Form Elements"> Dokumen &amp; Template</div>
+             </a>
+             <ul class="menu-sub">
+                 <li class="menu-item {{ Request::routeIs('dashboard.documents.categories.*') ? 'active' : ''  }}">
+                     <a class="menu-link" href="{{ route('dashboard.documents.categories.index') }}">
+                         <i class="menu-icon tf-icons fas fa-solid fa-users"> </i>
+                         <div class="mx-3" data-i18n="siswa"> Kategori Dokumen</div>
+                     </a>
+                 </li>
+                 <li class="menu-item {{ Request::routeIs('dashboard.documents.templates.*') ? 'active' : ''  }}">
+                     <a class="menu-link"
+                         href="{{ route('dashboard.documents.templates.index') }}">
+                         <i class="menu-icon tf-icons fas fa-solid fa-user"></i>
+                         <div class="mx-3" data-i18n="Template">Template</div>
+                     </a>
+                 </li>
+
+                 <li class="menu-item {{ Request::routeIs('dashboard.datamaster.nilai.*') ? 'active' : ''  }}">
+                     <a class="menu-link"
+                         href="{{ route('dashboard.datamaster.nilai.index') }}">
+                         <i class="menu-icon tf-icons fas fa-solid fa-user"></i>
+                         <div class="mx-3" data-i18n="Nilai Siswa">Nilai Siswa</div>
+                     </a>
+                 </li>
+                 <li class="menu-item {{ Request::routeIs('dashboard.datamaster.judul.pembayaran.*') ? 'active' : ''  }}">
+                     <a class="menu-link"
+                         href="{{ route('dashboard.datamaster.judul.pembayaran.index') }}">
+                         <i class="menu-icon tf-icons fas fa-solid fa-money-check"></i>
+                         <div class="mx-3" data-i18n="Judul Pembayaran"> Kategori Pembayaran</div>
+                     </a>
+                 </li>
+                 @can('view-pembayaran')
+                 <li class="menu-item {{ Request::routeIs('dashboard.datamaster.charge.*') ? 'active' : ''  }}">
+                     <a class="menu-link"
+                         href="{{ route('dashboard.datamaster.charge.index') }}">
+                         <i class="menu-icon tf-icons fas fa-solid fa-file-invoice"></i>
+                         <div class="mx-3" data-i18n="Invoice">Charge</div>
+                     </a>
+                 </li>
+                 @endcan
+                 <li class="menu-item {{ Request::routeIs('dashboard.notifikasi.*') ? 'active' : ''  }}">
+                     <a class="menu-link"
+                         href="{{ route('dashboard.notifikasi.index') }}">
+                         <i class="menu-icon tf-icons fas fa-solid fa-bell"></i>
+                         <div class="mx-3" data-i18n="Invoice">Notifikasi</div>
+                     </a>
+                 </li>
+             </ul>
+         </li>
+
         @canany('role:admin|superadmin')
          <!-- Forms & Tables -->
          <li class="menu-header small text-uppercase"><span class="menu-header-text">Siswa &amp;
