@@ -248,6 +248,13 @@
                          <div class="mx-3" data-i18n="Template">Template</div>
                      </a>
                  </li>
+                 <li class="menu-item {{ Request::routeIs('dashboard.documents.signature.*') ? 'active' : ''  }}">
+                     <a class="menu-link"
+                         href="{{ route('dashboard.documents.signature.index') }}">
+                         <i class="menu-icon tf-icons fas fa-solid fa-check"></i>
+                         <div class="mx-3" data-i18n="Template">Signature</div>
+                     </a>
+                 </li>
              </ul>
          </li>
 

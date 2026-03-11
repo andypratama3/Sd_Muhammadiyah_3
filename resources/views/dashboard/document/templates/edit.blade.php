@@ -37,7 +37,7 @@
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
     #sidebarLeft, #sidebarRight {
-        height: calc(100vh - 120px);
+        height: max-content !important;
         overflow-y: auto;
         scrollbar-width: thin;
     }
@@ -404,7 +404,7 @@
             </div>
 
             {{-- CANVAS WRAPPER --}}
-            <div id="editorContainer" style="overflow:auto; background:#e9ecef; border-radius:4px; position:relative; height:calc(100vh - 180px); display:flex; flex-direction:column; align-items:center;">
+            <div id="editorContainer" style="overflow:auto; background:#e9ecef; border-radius:4px; position:relative; height:calc(100vh - 250px); display:flex; flex-direction:column; align-items:center;">
                 <div id="rulerLayout" style="display:grid; grid-template-columns:20px minmax(794px, 1fr); grid-template-rows:20px 1fr; width:fit-content; margin:0 auto;">
                     {{-- corner --}}
                     <div id="rulerCorner" style="background:#dee2e6;border-right:1px solid #adb5bd;border-bottom:1px solid #adb5bd;z-index:30;position:sticky;top:0;left:0;"></div>

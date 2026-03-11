@@ -8,6 +8,7 @@ use App\Http\Controllers\Dashboard\Absensi\LokasiAbsenController;
 use App\Http\Controllers\Dashboard\Absensi\PengajuanCutiController;
 use App\Http\Controllers\Dashboard\Absensi\RekapAbsensiController;
 use App\Http\Controllers\Dashboard\AchivementController;
+use App\Http\Controllers\Dashboard\SignatureController;
 use App\Http\Controllers\Dashboard\ActivityController;
 use App\Http\Controllers\Dashboard\ArtikelController as DashboardArtikelController;
 use App\Http\Controllers\Dashboard\AttendancesController;
@@ -326,6 +327,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::post('documents/generate/{template}', [DocumentController::class, 'store'])->name('dashboard.documents.store');
         Route::get('documents/{document}/download', [DocumentController::class, 'download'])->name('dashboard.documents.download');
         Route::delete('documents/{document}', [DocumentController::class, 'destroy'])->name('dashboard.documents.destroy');
+
+        Route::get('signature-generate', [SignatureController::class, 'generateSignature'])->name('dashboard.documents.signature.index');
     });
 
     Route::group(['prefix' => 'pengaturan'], function () {

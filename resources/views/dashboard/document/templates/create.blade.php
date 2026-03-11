@@ -37,7 +37,8 @@
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
     #sidebarLeft, #sidebarRight {
-            overflow-y: auto;
+        overflow-y: auto;
+        height: max-content !important;
         scrollbar-width: thin;
     }
     /* Modern Scrollbar */
@@ -60,7 +61,7 @@
     {{-- ====================================================== --}}
     {{-- SIDEBAR KIRI                                           --}}
     {{-- ====================================================== --}}
-    <div class="col-lg-3 pe-2" id="sidebarLeft" style="min-width:240px;max-width:260px;">
+    <div class="col-lg-3 " id="sidebarLeft" style="min-width:240px;max-width:260px;">
 
         {{-- KOMPONEN --}}
         <div class="card mb-2 shadow-sm ">
@@ -153,7 +154,7 @@
                     <button class="btn btn-outline-danger btn-sm px-1 py-0" onclick="removeCurrentPage()" title="Hapus halaman ini"><i class="bi bi-x"></i></button>
                 </div>
             </div>
-            <div class="card-body py-2 px-2" id="pageThumbnails" style="max-height:220px;overflow-y:auto;">
+            <div class="card-body py-2 px-2" id="pageThumbnails" style="height:max-content !important;overflow-y:auto;">
                 {{-- filled by JS --}}
             </div>
         </div>
