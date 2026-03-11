@@ -316,6 +316,11 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::resource('categories', DocumentCategoryController::class)->names('dashboard.documents.categories')->except(['show']);
         Route::resource('templates', DocumentTemplateController::class)->names('dashboard.documents.templates')->except(['show']);
         Route::post('templates/preview-variables', [DocumentTemplateController::class, 'previewVariables'])->name('dashboard.documents.preview-variables');
+        Route::get('templates/api/available-variables', [DocumentTemplateController::class, 'getAvailableVariables'])->name('dashboard.documents.available-variables');
+        Route::get('templates/api/kelas-list', [DocumentTemplateController::class, 'apiKelasList'])->name('dashboard.documents.api.kelas-list');
+        Route::get('templates/api/mapel-list', [DocumentTemplateController::class, 'apiMapelList'])->name('dashboard.documents.api.mapel-list');
+        Route::get('documents/api/search-siswa', [DocumentController::class, 'searchSiswa'])->name('dashboard.documents.search-siswa');
+        Route::get('documents/api/siswa-data/{siswa}', [DocumentController::class, 'getSiswaData'])->name('dashboard.documents.siswa-data');
         Route::get('documents', [DocumentController::class, 'index'])->name('dashboard.documents.index');
         Route::get('documents/generate/{template}', [DocumentController::class, 'create'])->name('dashboard.documents.create');
         Route::post('documents/generate/{template}', [DocumentController::class, 'store'])->name('dashboard.documents.store');

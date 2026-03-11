@@ -229,7 +229,7 @@
          <li class="menu-header small text-uppercase"><span class="menu-header-text">Dokumen &amp;
                  Template </span></li>
          <!-- Forms -->
-         <li class="menu-item {{ Request::routeIs('dashboard.datamaster.*') ? 'open' : '' }}">
+         <li class="menu-item {{ Request::routeIs('dashboard.documents.*') ? 'open' : '' }}">
              <a href="javascript:void(0);" class="menu-link menu-toggle">
                  <i class="menu-icon tf-icons bx bx-detail"></i>
                  <div data-i18n="Form Elements"> Dokumen &amp; Template</div>

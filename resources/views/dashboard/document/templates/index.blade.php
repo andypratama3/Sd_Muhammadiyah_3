@@ -41,7 +41,7 @@
                 @else
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light">
+                        <thead>
                             <tr>
                                 <th class="ps-4">#</th>
                                 <th>Nama Template</th>
@@ -78,16 +78,15 @@
                                     @else
                                         <div class="d-flex flex-wrap gap-1">
                                             @foreach($shown as $var)
-                                                {{-- Bedakan warna: reserved (logo/barcode) vs variabel user --}}
                                                 @php
                                                     $isReserved = in_array($var, ['logo', 'barcode_signature']);
                                                 @endphp
-                                                <code class="badge fw-normal"
+                                                <code class="badge fw-normal text-black"
                                                       style="font-size:11px;"
                                                       title="{{ $var }}"
                                                       @class([
-                                                          'bg-label-warning text-warning' => $isReserved,
-                                                          'bg-label-secondary text-secondary' => !$isReserved,
+                                                          'bg-label-warning bg-' => $isReserved,
+                                                          'bg-label-secondary' => !$isReserved,
                                                       ])>
                                                     {{ $var }}
                                                 </code>

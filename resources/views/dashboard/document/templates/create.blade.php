@@ -1,17 +1,80 @@
 @extends('layouts.dashboard')
 
+@push('css')
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --premium-blue: #0d6efd;
+        --sidebar-bg: rgba(255, 255, 255, 0.8);
+        --glass-border: rgba(255, 255, 255, 0.3);
+        --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+    }
+    #editorRoot {
+        font-family: 'Inter', sans-serif;
+        background: #f8f9fa;
+    }
+    .card.shadow-sm {
+        border: 1px solid var(--glass-border);
+        background: var(--sidebar-bg);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        box-shadow: var(--glass-shadow) !important;
+        border-radius: 12px;
+    }
+    .card-header {
+        background: transparent !important;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        font-family: 'Outfit', sans-serif;
+    }
+    .btn-sm {
+        border-radius: 8px;
+        padding: 0.4rem 0.8rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+    .btn-sm:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    #sidebarLeft, #sidebarRight {
+            overflow-y: auto;
+        scrollbar-width: thin;
+    }
+    /* Modern Scrollbar */
+    #sidebarLeft::-webkit-scrollbar, #sidebarRight::-webkit-scrollbar {
+        width: 4px;
+    }
+    #sidebarLeft::-webkit-scrollbar-thumb, #sidebarRight::-webkit-scrollbar-thumb {
+        background: #dee2e6;
+        border-radius: 10px;
+    }
+</style>
+@endpush
+
 @section('title','Buat Template Surat')
 
 @section('content')
 
-<div class="row">
+<div class="row g-0" id="editorRoot">
 
-    {{-- SIDEBAR KOMPONEN --}}
-    <div class="col-lg-3">
+    {{-- ====================================================== --}}
+    {{-- SIDEBAR KIRI                                           --}}
+    {{-- ====================================================== --}}
+    <div class="col-lg-3 pe-2" id="sidebarLeft" style="min-width:240px;max-width:260px;">
 
-        <div class="card mb-3">
-            <div class="card-header fw-bold">Komponen</div>
-            <div class="card-body d-grid gap-2">
+        {{-- KOMPONEN --}}
+        <div class="card mb-2 shadow-sm ">
+            <div class="card-header fw-bold py-2 d-flex align-items-center gap-2">
+                <i class="bi bi-grid-1x2 text-primary"></i> Komponen
+            </div>
+            <div class="card-body d-grid gap-1 py-2 px-2">
+
+                <button type="button" class="btn btn-primary btn-sm w-100"
+                    data-bs-toggle="modal" data-bs-target="#modalKop">
+                    <i class="bi bi-bank me-1"></i> Kop Surat Sekolah
+                </button>
+
+                <hr class="my-1">
 
                 <button type="button" class="btn btn-outline-primary btn-sm"
                     data-bs-toggle="modal" data-bs-target="#modalVariable">
@@ -19,11 +82,21 @@
                 </button>
 
                 <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addText()">
-                    <i class="bi bi-fonts"></i> Tambah Text
+                    <i class="bi bi-fonts"></i> Tambah Teks
                 </button>
 
+                <button type="button" class="btn btn-outline-success btn-sm"
+                    data-bs-toggle="modal" data-bs-target="#modalTable">
+                    <i class="bi bi-table"></i> Sisipkan Tabel
+                </button>
+
+                <button type="button" class="btn btn-outline-warning btn-sm" onclick="triggerImageUpload()">
+                    <i class="bi bi-image"></i> Upload Gambar
+                </button>
+                <input type="file" id="imageUpload" accept="image/*" style="display:none" onchange="addImage(event)">
+
                 <button type="button" class="btn btn-outline-warning btn-sm" onclick="triggerLogoUpload()">
-                    <i class="bi bi-image"></i> Logo Sekolah
+                    <i class="bi bi-building"></i> Logo Sekolah
                 </button>
                 <input type="file" id="logoUpload" accept="image/*" style="display:none" onchange="addLogoImage(event)">
 
@@ -31,97 +104,189 @@
                     <i class="bi bi-upc-scan"></i> Barcode Signature
                 </button>
 
-                <hr>
-
-                <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeSelected()">
-                    <i class="bi bi-trash"></i> Hapus Element
+                <button type="button" class="btn btn-outline-info btn-sm" onclick="addNewPage()">
+                    <i class="bi bi-file-earmark-plus"></i> Tambah Halaman
                 </button>
 
-                <button type="button" class="btn btn-outline-info btn-sm"
-                    onclick="canvas.discardActiveObject(); canvas.renderAll()">
+                <hr class="my-1">
+
+                <div class="d-flex gap-1">
+                    <button type="button" class="btn btn-outline-secondary btn-sm flex-fill" onclick="bringForward()" title="Pindah ke depan">
+                        <i class="bi bi-layers-fill"></i> Depan
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm flex-fill" onclick="sendBackward()" title="Pindah ke belakang">
+                        <i class="bi bi-layers"></i> Belakang
+                    </button>
+                </div>
+
+                <div class="d-flex gap-1">
+                    <button type="button" class="btn btn-outline-info btn-sm flex-fill" onclick="copySelected()" title="Salin (Ctrl+C)">
+                        <i class="bi bi-copy"></i> Salin
+                    </button>
+                    <button type="button" class="btn btn-outline-info btn-sm flex-fill" onclick="pasteClipboard()" title="Tempel (Ctrl+V)">
+                        <i class="bi bi-clipboard"></i> Tempel
+                    </button>
+                </div>
+
+                <div class="d-flex gap-1">
+                    <button type="button" class="btn btn-outline-secondary btn-sm flex-fill" onclick="toggleLock()">
+                        <i class="bi bi-lock" id="lockIcon"></i> <span id="lockLabel">Kunci</span>
+                    </button>
+                    <button type="button" class="btn btn-outline-danger btn-sm flex-fill" onclick="removeSelected()">
+                        <i class="bi bi-trash"></i> Hapus
+                    </button>
+                </div>
+
+                <button type="button" class="btn btn-outline-info btn-sm" id="btnDeselect">
                     <i class="bi bi-cursor"></i> Deselect
                 </button>
 
             </div>
         </div>
 
-        {{-- FORMATTING TOOLBAR --}}
-        <div class="card mb-3" id="formatToolbar" style="display:none">
-            <div class="card-header fw-bold">Format Teks</div>
-            <div class="card-body">
-
-                <div class="mb-2">
-                    <label class="form-label small mb-1">Font Size</label>
-                    <input type="number" id="fontSize" class="form-control form-control-sm"
-                        value="16" min="8" max="72"
-                        onchange="applyFormat('fontSize', parseInt(this.value))">
+        {{-- PAGE NAVIGATOR --}}
+        <div class="card mb-2 shadow-sm">
+            <div class="card-header fw-bold py-2 d-flex align-items-center justify-content-between">
+                <span><i class="bi bi-files text-warning"></i> Halaman</span>
+                <div class="d-flex gap-1">
+                    <button class="btn btn-outline-secondary btn-sm px-1 py-0" onclick="addNewPage()" title="Tambah halaman"><i class="bi bi-plus"></i></button>
+                    <button class="btn btn-outline-danger btn-sm px-1 py-0" onclick="removeCurrentPage()" title="Hapus halaman ini"><i class="bi bi-x"></i></button>
                 </div>
+            </div>
+            <div class="card-body py-2 px-2" id="pageThumbnails" style="max-height:220px;overflow-y:auto;">
+                {{-- filled by JS --}}
+            </div>
+        </div>
 
-                <div class="mb-2">
-                    <label class="form-label small mb-1">Font Family</label>
-                    <select id="fontFamily" class="form-select form-select-sm"
-                        onchange="applyFormat('fontFamily', this.value)">
-                        <option value="Arial">Arial</option>
-                        <option value="Times New Roman">Times New Roman</option>
-                        <option value="Courier New">Courier New</option>
-                        <option value="Georgia">Georgia</option>
-                        <option value="Verdana">Verdana</option>
-                        <option value="Tahoma">Tahoma</option>
-                    </select>
+        {{-- ALIGNMENT --}}
+        <div class="card mb-2 shadow-sm">
+            <div class="card-header fw-bold py-2 d-flex align-items-center gap-2">
+                <i class="bi bi-align-center text-success"></i> Perataan & Distribusi
+            </div>
+            <div class="card-body py-2 px-2">
+                <div class="mb-1 small text-muted">Sejajarkan ke Halaman</div>
+                <div class="d-flex gap-1 mb-2 flex-wrap">
+                    <button class="btn btn-outline-secondary btn-sm" onclick="alignObj('left')"    title="Kiri"><i class="bi bi-align-start"></i></button>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="alignObj('hcenter')" title="Tengah H"><i class="bi bi-align-center"></i></button>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="alignObj('right')"   title="Kanan"><i class="bi bi-align-end"></i></button>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="alignObj('top')"     title="Atas"><i class="bi bi-align-top"></i></button>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="alignObj('vcenter')" title="Tengah V"><i class="bi bi-align-middle"></i></button>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="alignObj('bottom')"  title="Bawah"><i class="bi bi-align-bottom"></i></button>
                 </div>
-
-                <div class="mb-2">
-                    <label class="form-label small mb-1">Warna Teks</label>
-                    <input type="color" id="fontColor"
-                        class="form-control form-control-color form-control-sm w-100" value="#000000"
-                        onchange="applyFormat('fill', this.value)">
+                <div class="mb-1 small text-muted">Distribusi (multi-select)</div>
+                <div class="d-flex gap-1">
+                    <button class="btn btn-outline-secondary btn-sm flex-fill" onclick="distributeObjects('h')">
+                        <i class="bi bi-distribute-horizontal"></i> H
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm flex-fill" onclick="distributeObjects('v')">
+                        <i class="bi bi-distribute-vertical"></i> V
+                    </button>
                 </div>
+            </div>
+        </div>
 
-                <div class="mb-2">
-                    <label class="form-label small mb-1">Alignment</label>
-                    <div class="btn-group w-100" role="group">
-                        <button class="btn btn-outline-secondary btn-sm"
-                            onclick="applyFormat('textAlign','left')">
-                            <i class="bi bi-text-left"></i>
-                        </button>
-                        <button class="btn btn-outline-secondary btn-sm"
-                            onclick="applyFormat('textAlign','center')">
-                            <i class="bi bi-text-center"></i>
-                        </button>
-                        <button class="btn btn-outline-secondary btn-sm"
-                            onclick="applyFormat('textAlign','right')">
-                            <i class="bi bi-text-right"></i>
-                        </button>
+        {{-- FORMAT TEKS --}}
+        <div class="card mb-2 shadow-sm" id="formatToolbar" style="display:none">
+            <div class="card-header fw-bold py-2 d-flex align-items-center gap-2">
+                <i class="bi bi-type text-primary"></i> Format Teks
+            </div>
+            <div class="card-body py-2 px-2">
+
+                <div class="row g-1 mb-2">
+                    <div class="col-5">
+                        <label class="form-label small mb-0">Ukuran</label>
+                        <input type="number" id="fontSize" class="form-control form-control-sm"
+                            value="16" min="6" max="200"
+                            onchange="applyFormat('fontSize', parseInt(this.value))">
+                    </div>
+                    <div class="col-7">
+                        <label class="form-label small mb-0">Font</label>
+                        <select id="fontFamily" class="form-select form-select-sm"
+                            onchange="applyFormat('fontFamily', this.value)">
+                            <option value="Arial">Arial</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                            <option value="Courier New">Courier New</option>
+                            <option value="Georgia">Georgia</option>
+                            <option value="Verdana">Verdana</option>
+                            <option value="Tahoma">Tahoma</option>
+                        </select>
                     </div>
                 </div>
 
-                <div class="d-flex gap-2 mb-2">
-                    <button class="btn btn-outline-secondary btn-sm flex-fill" onclick="toggleBold()">
-                        <strong>B</strong>
-                    </button>
-                    <button class="btn btn-outline-secondary btn-sm flex-fill" onclick="toggleItalic()">
-                        <em>I</em>
-                    </button>
-                    <button class="btn btn-outline-secondary btn-sm flex-fill" onclick="toggleUnderline()">
-                        <u>U</u>
-                    </button>
+                <div class="mb-2">
+                    <label class="form-label small mb-0">Warna Teks</label>
+                    <input type="color" id="fontColor" class="form-control form-control-color form-control-sm w-100"
+                        value="#000000" onchange="applyFormat('fill', this.value)">
                 </div>
 
-                <hr class="my-2">
+                <div class="mb-2">
+                    <div class="btn-group w-100" role="group">
+                        <button class="btn btn-outline-secondary btn-sm" onclick="applyFormat('textAlign','left')"><i class="bi bi-text-left"></i></button>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="applyFormat('textAlign','center')"><i class="bi bi-text-center"></i></button>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="applyFormat('textAlign','right')"><i class="bi bi-text-right"></i></button>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="applyFormat('textAlign','justify')"><i class="bi bi-justify"></i></button>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-1 mb-2">
+                    <button class="btn btn-outline-secondary btn-sm flex-fill" onclick="toggleBold()"><strong>B</strong></button>
+                    <button class="btn btn-outline-secondary btn-sm flex-fill" onclick="toggleItalic()"><em>I</em></button>
+                    <button class="btn btn-outline-secondary btn-sm flex-fill" onclick="toggleUnderline()"><u>U</u></button>
+                    <button class="btn btn-outline-secondary btn-sm flex-fill" onclick="toggleStrikethrough()"><s>S</s></button>
+                </div>
 
                 <div class="mb-2">
-                    <label class="form-label small mb-1">Lebar (px)</label>
-                    <input type="number" id="objWidth" class="form-control form-control-sm"
-                        value="200" min="50" max="794"
-                        onchange="applyWidth(parseInt(this.value))">
+                    <label class="form-label small mb-0">Line Height: <span id="lineHeightVal">1.4</span></label>
+                    <input type="range" id="lineHeightSlider" class="form-range" min="10" max="30" value="14"
+                        oninput="applyFormat('lineHeight', this.value/10); document.getElementById('lineHeightVal').textContent=(this.value/10).toFixed(1)">
+                </div>
+
+                <hr class="my-1">
+
+                <div class="row g-1 mb-2">
+                    <div class="col-6">
+                        <label class="form-label small mb-0">X (px)</label>
+                        <input type="number" id="objX" class="form-control form-control-sm" value="0"
+                            onchange="applyPosition('x', parseInt(this.value))">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label small mb-0">Y (px)</label>
+                        <input type="number" id="objY" class="form-control form-control-sm" value="0"
+                            onchange="applyPosition('y', parseInt(this.value))">
+                    </div>
+                </div>
+
+                <div class="row g-1 mb-2">
+                    <div class="col-6">
+                        <label class="form-label small mb-0">Lebar (px)</label>
+                        <input type="number" id="objWidth" class="form-control form-control-sm" value="200"
+                            onchange="applyWidth(parseInt(this.value))">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label small mb-0">Tinggi (px)</label>
+                        <input type="number" id="objHeight" class="form-control form-control-sm" value="50"
+                            onchange="applyHeight(parseInt(this.value))">
+                    </div>
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label small mb-0">Opacity: <span id="opacityVal">100</span>%</label>
+                    <input type="range" id="objOpacity" class="form-range" min="10" max="100" value="100"
+                        oninput="document.getElementById('opacityVal').textContent=this.value; applyOpacity(parseInt(this.value))">
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label small mb-0">Rotasi: <span id="rotateVal">0</span>&deg;</label>
+                    <input type="range" id="objRotate" class="form-range" min="-180" max="180" value="0"
+                        oninput="document.getElementById('rotateVal').textContent=this.value; applyRotation(parseInt(this.value))">
                 </div>
 
             </div>
         </div>
 
         {{-- UNDO / REDO --}}
-        <div class="card mb-3">
-            <div class="card-body d-flex gap-2">
+        <div class="card mb-2 shadow-sm">
+            <div class="card-body d-flex gap-2 py-2">
                 <button class="btn btn-outline-secondary btn-sm flex-fill" onclick="undo()">
                     <i class="bi bi-arrow-counterclockwise"></i> Undo
                 </button>
@@ -133,40 +298,102 @@
 
     </div>
 
-    {{-- CANVAS EDITOR --}}
-    <div class="col-lg-9">
+    {{-- ====================================================== --}}
+    {{-- CANVAS AREA                                            --}}
+    {{-- ====================================================== --}}
+    <div class="col" style="min-width:0;">
 
         <form action="{{ route('dashboard.documents.templates.store') }}" method="POST" id="templateForm">
             @csrf
 
             {{-- Info Template --}}
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Kategori</label>
-                            <select name="category_id" class="form-select" required>
+            <div class="card mb-2 shadow-sm">
+                <div class="card-body py-2">
+                    <div class="row g-2 align-items-end">
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold small mb-1">Kategori</label>
+                            <select name="category_id" class="form-select form-select-sm" required>
                                 <option value="">Pilih Kategori</option>
                                 @foreach($categories as $cat)
                                 <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                                 @endforeach
                             </select>
                         </div>
+                        <div class="col-md-5">
+                            <label class="form-label fw-semibold small mb-1">Nama Template</label>
+                            <input type="text" name="name" class="form-control form-control-sm"
+                                value="" placeholder="Contoh: Surat Keterangan Aktif" required>
+                        </div>
+                        <div class="col-md-3 d-flex gap-1">
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <i class="bi bi-save"></i> Simpan Template
+                            </button>
+                            <a href="{{ route('dashboard.documents.templates.index') }}" class="btn btn-outline-secondary btn-sm">Batal</a>
+                        </div>
+                    </div>
+                    <div class="row g-2 mt-1">
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold">Nama Template</label>
-                            <input type="text" name="name" class="form-control"
-                                placeholder="Contoh: Surat Keterangan Aktif" required>
+                            <label class="form-label fw-semibold small mb-1">Kelas <span class="text-muted fw-normal">(opsional, multi-select)</span></label>
+                            <select name="kelas_ids[]" class="form-select form-select-sm" multiple style="min-height:60px">
+                                @foreach($kelasList ?? [] as $kls)
+                                <option value="{{ $kls->id }}">{{ $kls->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold small mb-1">Mata Pelajaran <span class="text-muted fw-normal">(opsional, multi-select)</span></label>
+                            <select name="mapel_ids[]" class="form-select form-select-sm" multiple style="min-height:60px">
+                                @foreach($mapelList ?? [] as $mp)
+                                <option value="{{ $mp->id }}">{{ $mp->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {{-- VARIABEL PANEL (di atas canvas) --}}
-            <div class="card mb-3" id="variablePanel" style="display:none">
-                <div class="card-header d-flex justify-content-between align-items-center py-2">
-                    <span class="fw-semibold small">
-                        <i class="bi bi-braces text-primary me-1"></i>Variabel Tersedia
-                    </span>
+            {{-- CANVAS TOOLBAR --}}
+            <div class="card mb-2 shadow-sm">
+                <div class="card-body py-1 px-2 d-flex align-items-center flex-wrap gap-2">
+                    <div class="d-flex align-items-center gap-1">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="zoomOut()" title="Zoom Out"><i class="bi bi-zoom-out"></i></button>
+                        <span id="zoomLabel" class="small fw-semibold" style="min-width:38px;text-align:center">100%</span>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="zoomIn()" title="Zoom In"><i class="bi bi-zoom-in"></i></button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="zoomReset()" title="Reset Zoom">1:1</button>
+                    </div>
+                    <div class="vr"></div>
+                    <div class="form-check form-switch mb-0">
+                        <input class="form-check-input" type="checkbox" id="toggleGrid" onchange="toggleGrid(this.checked)">
+                        <label class="form-check-label small" for="toggleGrid"><i class="bi bi-grid"></i> Grid</label>
+                    </div>
+                    <div class="form-check form-switch mb-0">
+                        <input class="form-check-input" type="checkbox" id="toggleSnap" checked onchange="snapEnabled=this.checked">
+                        <label class="form-check-label small" for="toggleSnap"><i class="bi bi-magnet"></i> Snap</label>
+                    </div>
+                    <div class="form-check form-switch mb-0">
+                        <input class="form-check-input" type="checkbox" id="toggleMargin" checked onchange="toggleMarginGuides(this.checked)">
+                        <label class="form-check-label small" for="toggleMargin"><i class="bi bi-border-outer"></i> Margin</label>
+                    </div>
+                    <div class="form-check form-switch mb-0">
+                        <input class="form-check-input" type="checkbox" id="toggleRuler" checked onchange="toggleRulerVis(this.checked)">
+                        <label class="form-check-label small" for="toggleRuler"><i class="bi bi-rulers"></i> Penggaris</label>
+                    </div>
+                    <div class="vr"></div>
+                    <small class="text-muted">
+                        Hal: <span id="pageIndicator" class="fw-semibold text-dark">1/1</span>
+                        &nbsp;|&nbsp;
+                        X:<span id="coordX" class="fw-semibold text-dark">-</span>
+                        Y:<span id="coordY" class="fw-semibold text-dark">-</span>
+                        &nbsp;W:<span id="coordW" class="fw-semibold text-dark">-</span>
+                        H:<span id="coordH" class="fw-semibold text-dark">-</span>
+                    </small>
+                </div>
+            </div>
+
+            {{-- VARIABEL PANEL --}}
+            <div class="card mb-2 shadow-sm" id="variablePanel" style="display:none">
+                <div class="card-header d-flex justify-content-between align-items-center py-1">
+                    <span class="fw-semibold small"><i class="bi bi-braces text-primary me-1"></i>Variabel Tersedia</span>
                     <small class="text-muted">Klik chip untuk menaruh ke canvas</small>
                 </div>
                 <div class="card-body py-2 px-3">
@@ -174,30 +401,28 @@
                 </div>
             </div>
 
-            {{-- Canvas --}}
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <span class="fw-bold">Template Editor</span>
-                    <small class="text-muted">Klik elemen untuk memilih & edit</small>
-                </div>
-                <div class="card-body text-center p-2" style="overflow:auto; background:#f8f9fa;">
-                    <div id="canvasWrapper" style="display:inline-block; border:1px solid #ccc; box-shadow:0 2px 8px rgba(0,0,0,0.1); background:white; line-height:0;">
-                        <canvas id="templateCanvas" width="794" height="1123"></canvas>
+            {{-- CANVAS WRAPPER --}}
+            <div id="editorContainer" style="overflow:auto; background:#e9ecef; border-radius:4px; position:relative; height:calc(100vh - 180px); display:flex; flex-direction:column; align-items:center;">
+                <div id="rulerLayout" style="display:grid; grid-template-columns:20px minmax(794px, 1fr); grid-template-rows:20px 1fr; width:fit-content; margin:0 auto;">
+                    {{-- corner --}}
+                    <div id="rulerCorner" style="background:#dee2e6;border-right:1px solid #adb5bd;border-bottom:1px solid #adb5bd;z-index:30;position:sticky;top:0;left:0;"></div>
+                    {{-- horizontal ruler --}}
+                    <div style="position:sticky;top:0;z-index:29;overflow:hidden;height:20px;">
+                        <canvas id="rulerH" height="20" style="display:block;background:#dee2e6;border-bottom:1px solid #adb5bd;"></canvas>
+                    </div>
+                    {{-- vertical ruler --}}
+                    <div style="position:sticky;left:0;z-index:28;overflow:hidden;width:20px;">
+                        <canvas id="rulerV" width="20" style="display:block;background:#dee2e6;border-right:1px solid #adb5bd;"></canvas>
+                    </div>
+                    {{-- canvas pages --}}
+                    <div style="padding:40px; display:flex; flex-direction:column; align-items:center; gap:30px;" id="canvasPagesContainer">
+                        {{-- Pages added dynamically by JS --}}
                     </div>
                 </div>
             </div>
 
             <input type="hidden" name="html_template" id="html_template">
             <input type="hidden" name="canvas_json" id="canvas_json">
-
-            <div class="mt-3 d-flex gap-2">
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-save"></i> Simpan Template
-                </button>
-                <a href="{{ route('dashboard.documents.templates.index') }}" class="btn btn-outline-secondary">
-                    Batal
-                </a>
-            </div>
 
         </form>
 
@@ -206,71 +431,404 @@
 </div>
 
 {{-- ========================= --}}
-{{--   MODAL TAMBAH VARIABEL   --}}
+{{--   MODAL KOP SURAT         --}}
 {{-- ========================= --}}
-<div class="modal fade" id="modalVariable" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+<div class="modal fade" id="modalKop" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-
             <div class="modal-header">
-                <h5 class="modal-title">
-                    <i class="bi bi-braces text-primary me-2"></i>Tambah Variabel
-                </h5>
+                <h5 class="modal-title"><i class="bi bi-bank text-primary me-2"></i>Buat Kop Surat</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-
             <div class="modal-body">
+                <div class="row g-3">
+                    <div class="col-md-8">
+                        <label class="form-label fw-semibold">Logo Sekolah</label>
+                        <input type="file" id="kopLogoFile" class="form-control form-control-sm" accept="image/*">
+                        <div class="form-text">Kosongkan &rarr; pakai placeholder <code>@{{logo}}</code></div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Ukuran Logo (px)</label>
+                        <input type="number" id="kopLogoSize" class="form-control form-control-sm" value="90" min="40" max="200">
+                    </div>
+                    <div class="col-12"><label class="form-label fw-semibold">Nama Yayasan / Majelis</label>
+                        <input type="text" id="kopLine1" class="form-control form-control-sm" value="MAJELIS DIKDASMEN MUHAMMADIYAH SAMARINDA"></div>
+                    <div class="col-12"><label class="form-label fw-semibold">Nama Sekolah (Besar)</label>
+                        <input type="text" id="kopLine2" class="form-control form-control-sm" value="Sekolah Kreatif"></div>
+                    <div class="col-12"><label class="form-label fw-semibold">Sub-nama / Jenjang</label>
+                        <input type="text" id="kopLine3" class="form-control form-control-sm" value="SD MUHAMMADIYAH 3 SAMARINDA SEBERANG"></div>
+                    <div class="col-12"><label class="form-label fw-semibold">Alamat</label>
+                        <input type="text" id="kopLine4" class="form-control form-control-sm" value="Jalan Dato Iba Telp. (0541) 260066 Kel. Sungai Keledang - Samarinda Seberang 75131"></div>
+                    <div class="col-md-6"><label class="form-label fw-semibold">Email / Website</label>
+                        <input type="text" id="kopLine5" class="form-control form-control-sm" value="E-mail : sdmuhammadiyahtiga@ymail.com"></div>
+                    <div class="col-md-6"><label class="form-label fw-semibold">NPSN / Akreditasi</label>
+                        <input type="text" id="kopLine6" class="form-control form-control-sm" value="NPSN : 30404112"></div>
+                    <div class="col-12"><label class="form-label fw-semibold">Garis Bawah Kop</label>
+                        <select id="kopBorderStyle" class="form-select form-select-sm">
+                            <option value="double">Garis Double (tebal + tipis)</option>
+                            <option value="single">Garis Single</option>
+                            <option value="none">Tanpa Garis</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-primary" id="btnAddKop"><i class="bi bi-plus-circle me-1"></i>Tambahkan ke Canvas</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+{{-- ========================= --}}
+{{--   MODAL TAMBAH VARIABEL   --}}
+{{-- ========================= --}}
+<div class="modal fade" id="modalVariable" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-braces text-primary me-2"></i>Tambah Variabel</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Nama Variabel</label>
                     <div class="input-group">
                         <span class="input-group-text text-primary fw-bold">@{{</span>
-                        <input type="text" id="varNameInput" class="form-control"
-                            placeholder="contoh: nama_siswa">
+                        <input type="text" id="varNameInput" class="form-control" placeholder="contoh: nama_siswa">
                         <span class="input-group-text text-primary fw-bold">@}}</span>
                     </div>
-                    <div class="form-text">Gunakan huruf kecil dan underscore, tanpa spasi.</div>
                 </div>
-
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">
-                        Label Tampilan
-                        <span class="text-muted fw-normal">(opsional)</span>
-                    </label>
-                    <input type="text" id="varLabelInput" class="form-control"
-                        placeholder="contoh: Nama Siswa">
-                    <div class="form-text">Label untuk chip variabel di panel atas canvas.</div>
+                    <label class="form-label fw-semibold">Label <span class="text-muted fw-normal">(opsional)</span></label>
+                    <input type="text" id="varLabelInput" class="form-control" placeholder="contoh: Nama Siswa">
                 </div>
-
-                {{-- Preset variabel umum --}}
                 <div class="mb-3">
                     <label class="form-label fw-semibold small d-block mb-2">Variabel Umum (klik untuk pilih)</label>
                     <div class="d-flex flex-wrap gap-2" id="presetButtons">
                         <button type="button" class="btn btn-outline-secondary btn-sm" data-name="nama_siswa" data-label="Nama Siswa">nama_siswa</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-name="nisn" data-label="NISN">nisn</button>
                         <button type="button" class="btn btn-outline-secondary btn-sm" data-name="nis" data-label="NIS">nis</button>
                         <button type="button" class="btn btn-outline-secondary btn-sm" data-name="kelas" data-label="Kelas">kelas</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-name="fase" data-label="Fase">fase</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-name="semester" data-label="Semester">semester</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-name="tahun_ajaran" data-label="Tahun Pelajaran">tahun_ajaran</button>
                         <button type="button" class="btn btn-outline-secondary btn-sm" data-name="tanggal" data-label="Tanggal">tanggal</button>
-                        <button type="button" class="btn btn-outline-secondary btn-sm" data-name="nama_sekolah" data-label="Nama Sekolah">nama_sekolah</button>
-                        <button type="button" class="btn btn-outline-secondary btn-sm" data-name="kepala_sekolah" data-label="Kepala Sekolah">kepala_sekolah</button>
-                        <button type="button" class="btn btn-outline-secondary btn-sm" data-name="nip" data-label="NIP">nip</button>
-                        <button type="button" class="btn btn-outline-secondary btn-sm" data-name="tahun_ajaran" data-label="Tahun Ajaran">tahun_ajaran</button>
                         <button type="button" class="btn btn-outline-secondary btn-sm" data-name="nomor_surat" data-label="Nomor Surat">nomor_surat</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-name="nama_sekolah" data-label="Nama Sekolah">nama_sekolah</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-name="alamat_siswa" data-label="Alamat Siswa">alamat_siswa</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-name="kepala_sekolah" data-label="Kepala Sekolah">kepala_sekolah</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-name="nip" data-label="NIP/NBM">nip</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-name="wali_kelas" data-label="Wali Kelas">wali_kelas</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-name="nbm_wali" data-label="NBM Wali Kelas">nbm_wali</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-name="nilai_rata" data-label="Nilai Rata-rata">nilai_rata</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-name="peringkat" data-label="Peringkat">peringkat</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-name="naik_kelas" data-label="Naik Kelas">naik_kelas</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-name="nama_kelas" data-label="Nama Kelas">nama_kelas</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-name="mata_pelajaran" data-label="Mata Pelajaran">mata_pelajaran</button>
                     </div>
                 </div>
-
-                <div class="p-2 bg-light rounded small text-muted border" id="varPreview">
+                <div class="p-2 bg-light rounded small text-muted border">
                     Preview: <code id="varPreviewCode">@{{ nama_variabel }}</code>
                 </div>
-
             </div>
-
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                 <button type="button" class="btn btn-primary" id="btnConfirmVariable">
                     <i class="bi bi-plus-circle me-1"></i>Tambah ke Canvas
                 </button>
             </div>
+        </div>
+    </div>
+</div>
 
+{{-- ========================= --}}
+{{--   MODAL SISIPKAN TABEL    --}}
+{{-- ========================= --}}
+<div class="modal fade" id="modalTable" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-table text-success me-2"></i>Sisipkan Tabel</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="nav nav-tabs mb-3" id="tableTabs">
+                    <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#tabCustom">Tabel Kustom</a></li>
+                    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tabKelasMapel">Kelas &amp; Mapel</a></li>
+                    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tabRaport">Raport Akademik</a></li>
+                    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tabProgramUnggulan">Program Unggulan</a></li>
+                    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tabEkskul">Ekstrakulikuler</a></li>
+                    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tabAbsensi">Absensi</a></li>
+                    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tabTTD">Area TTD</a></li>
+                </ul>
+                <div class="tab-content">
+
+                    {{-- TAB: TABEL KUSTOM --}}
+                    <div class="tab-pane fade show active" id="tabCustom">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold">Jumlah Baris</label>
+                                <input type="number" id="tableRows" class="form-control" value="5" min="1" max="50">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold">Jumlah Kolom</label>
+                                <input type="number" id="tableCols" class="form-control" value="4" min="1" max="12">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold">Lebar Tabel (px)</label>
+                                <input type="number" id="tableWidth" class="form-control" value="750" min="200" max="794">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold">Tinggi Baris (px)</label>
+                                <input type="number" id="tableRowHeight" class="form-control" value="24" min="14" max="80">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Warna Header</label>
+                                <input type="color" id="tableHeaderColor" class="form-control form-control-color" value="#1a5276">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Warna Baris Genap</label>
+                                <input type="color" id="tableStripeColor" class="form-control form-control-color" value="#eaf2ff">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Warna Border</label>
+                                <input type="color" id="tableBorderColor" class="form-control form-control-color" value="#adb5bd">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Header Kolom <small class="text-muted">(pisahkan dengan koma)</small></label>
+                                <input type="text" id="tableHeaders" class="form-control" placeholder="No, Nama Siswa, Nilai, Keterangan">
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="tableHasNo" checked>
+                                    <label class="form-check-label">Otomatis isi nomor urut di kolom pertama</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- TAB: KELAS & MATA PELAJARAN DINAMIS --}}
+                    <div class="tab-pane fade" id="tabKelasMapel">
+                        <div class="alert alert-info py-2 small mb-3">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Tabel dinamis berisi daftar kelas dan mata pelajaran dari database. Variabel akan digenerate otomatis.
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Tipe Tabel</label>
+                                <select id="kelasMapelType" class="form-select">
+                                    <option value="daftar_kelas">Daftar Kelas</option>
+                                    <option value="daftar_mapel">Daftar Mata Pelajaran</option>
+                                    <option value="jadwal_kelas">Jadwal Per Kelas</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Pilih Kelas (opsional)</label>
+                                <select id="kelasMapelKelas" class="form-select">
+                                    <option value="">— Semua Kelas —</option>
+                                    @foreach($kelasList ?? [] as $kls)
+                                    <option value="{{ $kls->id }}">{{ $kls->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Lebar Tabel (px)</label>
+                                <input type="number" id="kelasMapelWidth" class="form-control" value="754">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Tinggi Baris (px)</label>
+                                <input type="number" id="kelasMapelRowH" class="form-control" value="24">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Warna Header</label>
+                                <input type="color" id="kelasMapelHeaderColor" class="form-control form-control-color" value="#1a5276">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Kolom Tambahan <small class="text-muted">(pisahkan koma)</small></label>
+                                <input type="text" id="kelasMapelKolom" class="form-control" value="Keterangan">
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="kelasMapelAutoVar" checked>
+                                    <label class="form-check-label small">Auto-generate variabel untuk setiap baris</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- TAB: RAPORT AKADEMIK --}}
+                    <div class="tab-pane fade" id="tabRaport">
+                        <div class="row g-3">
+                            <div class="col-lg-7">
+                                <div class="d-flex gap-2 mb-3 align-items-end">
+                                    <div class="flex-fill">
+                                        <label class="form-label fw-semibold mb-1">Pilih Tingkat Kelas</label>
+                                        <select id="raportTingkatKelas" class="form-select">
+                                            <option value="">— Pilih Kelas —</option>
+                                        </select>
+                                    </div>
+                                    <button type="button" class="btn btn-outline-primary btn-sm" id="btnLoadMapel" disabled>
+                                        <i class="bi bi-arrow-clockwise"></i> Muat Mapel
+                                    </button>
+                                    <a href="/dashboard/kurikulum-mapel" target="_blank"
+                                       class="btn btn-outline-secondary btn-sm" title="Kelola kurikulum mapel">
+                                        <i class="bi bi-gear"></i>
+                                    </a>
+                                </div>
+                                <div id="raportMapelPreview">
+                                    <div class="text-center text-muted py-4 small border rounded bg-light">
+                                        <i class="bi bi-table fs-3 d-block mb-2"></i>
+                                        Pilih kelas untuk melihat daftar mapel
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-5">
+                                <label class="form-label fw-semibold">Lebar Tabel (px)</label>
+                                <input type="number" id="raportWidth" class="form-control form-control-sm mb-2" value="754" min="400" max="794">
+                                <label class="form-label fw-semibold">Warna Header</label>
+                                <input type="color" id="raportHeaderColor" class="form-control form-control-color form-control-sm mb-2" value="#1a5276">
+                                <label class="form-label fw-semibold">Tinggi Baris Data (px)</label>
+                                <input type="number" id="raportRowHeight" class="form-control form-control-sm mb-2" value="40" min="20" max="100">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="raportAutoVar" checked>
+                                    <label class="form-check-label small">Auto-generate variabel <code>@{{nilai_xxx}}</code>, <code>@{{capaian_xxx}}</code> per mapel</label>
+                                </div>
+                                <hr class="my-2">
+                                <div class="small fw-semibold text-muted mb-1">Kelompok yang disisipkan:</div>
+                                <div id="raportKelompokToggle" class="d-flex flex-wrap gap-1"></div>
+                                <div class="alert alert-warning py-2 small mt-3 mb-0" id="raportNoKelasAlert" style="display:none">
+                                    <i class="bi bi-exclamation-triangle me-1"></i>
+                                    Pilih kelas terlebih dahulu sebelum menyisipkan tabel.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- TAB: PROGRAM UNGGULAN --}}
+                    <div class="tab-pane fade" id="tabProgramUnggulan">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Nama Program</label>
+                                <input type="text" id="unggulanNama" class="form-control mb-2" value="TAHFIZ">
+                                <label class="form-label fw-semibold">Item Program <small class="text-muted">(satu per baris)</small></label>
+                                <textarea id="unggulanItems" class="form-control font-monospace" rows="10" style="font-size:0.85rem">a. Al-Fatihah
+b. Al-Fajr
+c. Al-Ghasyiyah
+d. Al-A'Ala
+e. Al-Thoriq
+f. Al-Buruj
+g. Al-Insyiqaq
+h. Al Mutafifin</textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Kolom Penilaian <small class="text-muted">(pisahkan koma)</small></label>
+                                <input type="text" id="unggulanKolom" class="form-control mb-2" value="Predikat,Keterangan">
+                                <label class="form-label fw-semibold">Lebar Tabel (px)</label>
+                                <input type="number" id="unggulanWidth" class="form-control mb-2" value="754">
+                                <label class="form-label fw-semibold">Warna Header</label>
+                                <input type="color" id="unggulanHeaderColor" class="form-control form-control-color mb-2" value="#1a5276">
+                                <div class="form-check mb-1">
+                                    <input class="form-check-input" type="checkbox" id="unggulanMergeHeader" checked>
+                                    <label class="form-check-label">Tampilkan nama program sebagai header merged row</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- TAB: EKSTRAKULIKULER --}}
+                    <div class="tab-pane fade" id="tabEkskul">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Daftar Ekskul <small class="text-muted">(satu per baris)</small></label>
+                                <textarea id="ekskulItems" class="form-control font-monospace" rows="12" style="font-size:0.85rem">Tapak Suci
+Futsal
+Karate
+Panahan
+Tilawah
+Tahfidz
+Bahasa Arab
+Kaligrafi
+English Fun
+Sains Club
+Math Club
+Mewarnai
+Tari
+Catur
+Teater
+Dokcil
+TIK</textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Kolom Penilaian <small class="text-muted">(pisahkan koma)</small></label>
+                                <input type="text" id="ekskulKolom" class="form-control mb-2" value="Predikat,Keterangan">
+                                <label class="form-label fw-semibold">Lebar Tabel (px)</label>
+                                <input type="number" id="ekskulWidth" class="form-control mb-2" value="754">
+                                <label class="form-label fw-semibold">Warna Header</label>
+                                <input type="color" id="ekskulHeaderColor" class="form-control form-control-color mb-2" value="#1a5276">
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- TAB: ABSENSI --}}
+                    <div class="tab-pane fade" id="tabAbsensi">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Jumlah Siswa (baris)</label>
+                                <input type="number" id="absensiRows" class="form-control" value="30" min="5" max="50">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Lebar Tabel (px)</label>
+                                <input type="number" id="absensiWidth" class="form-control" value="754">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Warna Header</label>
+                                <input type="color" id="absensiHeaderColor" class="form-control form-control-color" value="#1a5276">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Kolom Kehadiran <small class="text-muted">(pisahkan koma)</small></label>
+                                <input type="text" id="absensiKolom" class="form-control" value="S,I,A,Keterangan">
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- TAB: AREA TTD --}}
+                    <div class="tab-pane fade" id="tabTTD">
+                        <div class="alert alert-info py-2 small mb-3">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Area tanda tangan akan disisipkan sebagai blok HTML dengan kolom-kolom TTD.
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Kolom TTD <small class="text-muted">(format: Label,Nama,Jabatan — satu per baris)</small></label>
+                                <textarea id="ttdKolom" class="form-control font-monospace" rows="5" style="font-size:0.85rem">Orang Tua,@{{nama_ortu}},
+Wali Kelas,@{{wali_kelas}},NBM : @{{nbm_wali}}
+Kepala Sekolah,@{{kepala_sekolah}},NBM : @{{nip}}</textarea>
+                                <div class="form-text">Format tiap baris: <code>Label,Nama,Jabatan</code>. Nama/Jabatan bisa menggunakan variabel.</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Lebar Area (px)</label>
+                                <input type="number" id="ttdWidth" class="form-control" value="754">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Tinggi Ruang TTD (px)</label>
+                                <input type="number" id="ttdHeight" class="form-control" value="80">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Posisi Y di canvas (px)</label>
+                                <input type="number" id="ttdPosY" class="form-control" value="950">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-success" id="btnInsertTable">
+                    <i class="bi bi-table me-1"></i>Sisipkan ke Canvas
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -279,483 +837,82 @@
 
 @push('css')
 <style>
-    /* Fabric membuat 2 canvas (lower + upper). Pastikan keduanya tidak punya border/shadow sendiri */
-    #canvasWrapper canvas {
-        border: none !important;
-        box-shadow: none !important;
-        display: block !important;
-    }
+#canvasPagesContainer .page-block {
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    background: white;
+    line-height: 0;
+    position: relative;
+    margin-bottom: 16px;
+}
+#canvasPagesContainer .page-block.active-page {
+    box-shadow: 0 0 0 3px #0d6efd, 0 2px 12px rgba(0,0,0,0.15);
+}
+#canvasPagesContainer canvas {
+    border: none !important;
+    box-shadow: none !important;
+    display: block !important;
+}
+#editorContainer { user-select: none; }
+.page-label {
+    position: absolute;
+    top: -20px;
+    left: 0;
+    font-size: 11px;
+    color: #6c757d;
+    font-weight: 500;
+    white-space: nowrap;
+}
+#pageThumbnails .thumb-item {
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    padding: 2px;
+    margin-bottom: 4px;
+    transition: border-color .15s;
+    position: relative;
+}
+#pageThumbnails .thumb-item:hover,
+#pageThumbnails .thumb-item.active {
+    border-color: #0d6efd;
+}
+#pageThumbnails .thumb-item canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    pointer-events: none;
+}
+#pageThumbnails .thumb-label {
+    font-size: 10px;
+    color: #6c757d;
+    text-align: center;
+    margin-top: 2px;
+}
 </style>
 @endpush
 
 @push('js')
+{{-- textBaseline polyfill --}}
 <script>
-    // Patch: fix Fabric.js v5 'alphabetical' -> 'alphabetic' bug
-    (function() {
-        var proto = CanvasRenderingContext2D.prototype;
-        var descriptor = Object.getOwnPropertyDescriptor(proto, 'textBaseline');
-        if (descriptor && descriptor.set) {
-            var originalSet = descriptor.set;
-            Object.defineProperty(proto, 'textBaseline', {
-                get: descriptor.get,
-                set: function(val) {
-                    originalSet.call(this, val === 'alphabetical' ? 'alphabetic' : val);
-                },
-                configurable: true,
-                enumerable: descriptor.enumerable,
-            });
-        }
-    })();
+(function() {
+    var proto = CanvasRenderingContext2D.prototype;
+    var d = Object.getOwnPropertyDescriptor(proto, 'textBaseline');
+    if (d && d.set) {
+        var orig = d.set;
+        Object.defineProperty(proto, 'textBaseline', {
+            get: d.get,
+            set: function(v) { orig.call(this, v === 'alphabetical' ? 'alphabetic' : v); },
+            configurable: true, enumerable: d.enumerable,
+        });
+    }
+})();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/fabric@5.3.0/dist/fabric.min.js"></script>
-
-@verbatim
 <script>
-    // =====================
-    // INIT CANVAS
-    // =====================
-    var canvas = new fabric.Canvas('templateCanvas', {
-        preserveObjectStacking: true
-    });
-    canvas.setBackgroundColor('white', canvas.renderAll.bind(canvas));
-
-    // =====================
-    // VARIABEL REGISTRY
-    // =====================
-    var variableRegistry = []; // [{name, label}]
-
-    function registerVariable(name, label) {
-        if (variableRegistry.find(function(v) { return v.name === name; })) return;
-        variableRegistry.push({ name: name, label: label || name });
-        renderVariableChips();
-    }
-
-    function renderVariableChips() {
-        var panel   = document.getElementById('variablePanel');
-        var chipsEl = document.getElementById('variableChips');
-
-        if (variableRegistry.length === 0) {
-            panel.style.display = 'none';
-            return;
-        }
-
-        panel.style.display = 'block';
-        chipsEl.innerHTML = '';
-
-        variableRegistry.forEach(function(v) {
-            var chip = document.createElement('button');
-            chip.type = 'button';
-            chip.className = 'btn btn-primary btn-sm d-flex align-items-center gap-1';
-            chip.style.borderRadius = '20px';
-            chip.style.fontSize = '0.8rem';
-            chip.title = 'Klik untuk menaruh {{' + v.name + '}} ke canvas';
-            chip.innerHTML =
-                '<i class="bi bi-braces" style="font-size:0.7rem"></i>' +
-                '<span>' + v.label + '</span>' +
-                '<code style="font-size:0.7rem;color:rgba(255,255,255,0.75);margin-left:2px">{{' + v.name + '}}</code>';
-            chip.addEventListener('click', function() {
-                placeVariableOnCanvas(v.name);
-            });
-            chipsEl.appendChild(chip);
-        });
-    }
-
-    function placeVariableOnCanvas(name) {
-        var text = new fabric.Textbox('{{' + name + '}}', {
-            left: 100,
-            top: 150,
-            width: 250,
-            fontSize: 16,
-            fontFamily: 'Arial',
-            fill: '#1a56db',
-        });
-        canvas.add(text);
-        canvas.setActiveObject(text);
-        canvas.renderAll();
-    }
-
-    // =====================
-    // MODAL LOGIC — semua event via addEventListener, tidak ada onclick di HTML
-    // =====================
-    document.addEventListener('DOMContentLoaded', function() {
-
-        var varNameInput     = document.getElementById('varNameInput');
-        var varLabelInput    = document.getElementById('varLabelInput');
-        var varPreviewCode   = document.getElementById('varPreviewCode');
-        var btnConfirm       = document.getElementById('btnConfirmVariable');
-        var presetContainer  = document.getElementById('presetButtons');
-
-        // Live preview saat mengetik nama variabel
-        varNameInput.addEventListener('input', function() {
-            this.classList.remove('is-invalid');
-            var val = this.value.trim().replace(/\s+/g, '_').toLowerCase();
-            varPreviewCode.textContent = '{{ ' + (val || 'nama_variabel') + ' }}';
-        });
-
-        // Preset buttons — delegasi event
-        presetContainer.addEventListener('click', function(e) {
-            var btn = e.target.closest('button[data-name]');
-            if (!btn) return;
-            varNameInput.value  = btn.dataset.name;
-            varLabelInput.value = btn.dataset.label;
-            varPreviewCode.textContent = '{{ ' + btn.dataset.name + ' }}';
-            varNameInput.classList.remove('is-invalid');
-        });
-
-        // Tombol Tambah ke Canvas
-        btnConfirm.addEventListener('click', function() {
-            var rawName = varNameInput.value.trim();
-            if (!rawName) {
-                varNameInput.classList.add('is-invalid');
-                varNameInput.focus();
-                return;
-            }
-            varNameInput.classList.remove('is-invalid');
-
-            var name  = rawName.replace(/\s+/g, '_').toLowerCase();
-            var label = varLabelInput.value.trim() || name;
-
-            registerVariable(name, label);
-            placeVariableOnCanvas(name);
-
-            // Reset form
-            varNameInput.value  = '';
-            varLabelInput.value = '';
-            varPreviewCode.textContent = '{{ nama_variabel }}';
-
-            bootstrap.Modal.getInstance(document.getElementById('modalVariable')).hide();
-        });
-
-        // Enter key di input nama
-        varNameInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') { e.preventDefault(); btnConfirm.click(); }
-        });
-
-    });
-
-    // =====================
-    // UNDO / REDO
-    // =====================
-    var _history    = [];
-    var _historyRedo = [];
-    var _isSaving   = false;
-
-    function saveState() {
-        if (_isSaving) return;
-        _history.push(JSON.stringify(canvas.toJSON(['name'])));
-        _historyRedo = [];
-    }
-
-    function undo() {
-        if (_history.length < 2) return;
-        _isSaving = true;
-        _historyRedo.push(_history.pop());
-        canvas.loadFromJSON(_history[_history.length - 1], function() {
-            canvas.renderAll();
-            _isSaving = false;
-        });
-    }
-
-    function redo() {
-        if (_historyRedo.length === 0) return;
-        _isSaving = true;
-        var next = _historyRedo.pop();
-        _history.push(next);
-        canvas.loadFromJSON(next, function() {
-            canvas.renderAll();
-            _isSaving = false;
-        });
-    }
-
-    canvas.on('object:added',   saveState);
-    canvas.on('object:modified', saveState);
-    canvas.on('object:removed', saveState);
-    saveState();
-
-    // =====================
-    // FORMAT TOOLBAR
-    // =====================
-    canvas.on('selection:created', updateToolbar);
-    canvas.on('selection:updated', updateToolbar);
-    canvas.on('selection:cleared', function() {
-        document.getElementById('formatToolbar').style.display = 'none';
-    });
-
-    function updateToolbar() {
-        var obj = canvas.getActiveObject();
-        if (!obj) return;
-        document.getElementById('formatToolbar').style.display = 'block';
-        if (obj.type === 'textbox' || obj.type === 'i-text') {
-            document.getElementById('fontSize').value   = obj.fontSize   || 16;
-            document.getElementById('fontFamily').value = obj.fontFamily || 'Arial';
-            document.getElementById('fontColor').value  = obj.fill       || '#000000';
-            document.getElementById('objWidth').value   = Math.round(obj.width) || 200;
-        } else {
-            document.getElementById('objWidth').value = Math.round((obj.width || 0) * (obj.scaleX || 1));
-        }
-    }
-
-    function applyFormat(prop, value) {
-        var obj = canvas.getActiveObject();
-        if (!obj) return;
-        obj.set(prop, value);
-        canvas.renderAll();
-        saveState();
-    }
-
-    function applyWidth(val) {
-        var obj = canvas.getActiveObject();
-        if (!obj) return;
-        obj.type === 'textbox'
-            ? obj.set('width', val)
-            : obj.set('scaleX', val / obj.width);
-        canvas.renderAll();
-        saveState();
-    }
-
-    function toggleBold() {
-        var obj = canvas.getActiveObject();
-        if (!obj || obj.type !== 'textbox') return;
-        obj.set('fontWeight', obj.fontWeight === 'bold' ? 'normal' : 'bold');
-        canvas.renderAll(); saveState();
-    }
-
-    function toggleItalic() {
-        var obj = canvas.getActiveObject();
-        if (!obj || obj.type !== 'textbox') return;
-        obj.set('fontStyle', obj.fontStyle === 'italic' ? 'normal' : 'italic');
-        canvas.renderAll(); saveState();
-    }
-
-    function toggleUnderline() {
-        var obj = canvas.getActiveObject();
-        if (!obj || obj.type !== 'textbox') return;
-        obj.set('underline', !obj.underline);
-        canvas.renderAll(); saveState();
-    }
-
-    // =====================
-    // ADD TEXT
-    // =====================
-    function addText() {
-        var text = new fabric.Textbox('Tulis teks di sini', {
-            left: 100, top: 100, width: 300,
-            fontSize: 16, fontFamily: 'Arial', fill: '#000000',
-        });
-        canvas.add(text);
-        canvas.setActiveObject(text);
-    }
-
-    // =====================
-    // LOGO
-    // =====================
-    function triggerLogoUpload() {
-        document.getElementById('logoUpload').click();
-    }
-
-    function addLogoImage(event) {
-        var file = event.target.files[0];
-        if (!file) return;
-        var reader = new FileReader();
-        reader.onload = function(e) {
-            fabric.Image.fromURL(e.target.result, function(img) {
-                img.scaleToWidth(100);
-                img.set({ left: 40, top: 30, name: 'logo' });
-                canvas.add(img);
-                canvas.setActiveObject(img);
-                canvas.renderAll();
-            });
-        };
-        reader.readAsDataURL(file);
-        event.target.value = '';
-    }
-
-    // =====================
-    // BARCODE
-    // =====================
-    function addBarcode() {
-        var rect = new fabric.Rect({
-            width: 120, height: 120,
-            fill: '#fff', stroke: '#333', strokeWidth: 1, rx: 4, ry: 4,
-        });
-        var label = new fabric.Text('{{barcode_signature}}', {
-            fontSize: 9, fontFamily: 'Courier New', fill: '#333',
-            textAlign: 'center', originX: 'center', originY: 'center',
-            left: 60, top: 60,
-        });
-        var group = new fabric.Group([rect, label], {
-            left: 600, top: 940, name: 'barcode',
-        });
-        canvas.add(group);
-        canvas.setActiveObject(group);
-    }
-
-    // =====================
-    // REMOVE SELECTED
-    // =====================
-    function removeSelected() {
-        var obj = canvas.getActiveObject();
-        if (!obj) {
-            alert('Pilih elemen yang ingin dihapus terlebih dahulu.');
-            return;
-        }
-        canvas.remove(obj);
-        canvas.discardActiveObject();
-        canvas.renderAll();
-    }
-
-    // =====================
-    // GENERATE HTML — DomPDF pixel-perfect
-    //
-    // PENTING: Fabric.js menyimpan obj.left/top sebagai titik ORIGIN object.
-    // Origin bisa 'left'/'center'/'right' untuk X dan 'top'/'center'/'bottom' untuk Y.
-    // Kita harus hitung real top-left corner sebelum konversi ke pt.
-    //
-    // DomPDF bekerja dalam pt. A4 = 595.28pt x 841.89pt.
-    // Canvas = 794px x 1123px → rasio = 595.28 / 794 = 0.74975 pt/px
-    // =====================
-    function generateHTML() {
-        var CANVAS_W = canvas.width;    // 794
-        var CANVAS_H = canvas.height;   // 1123
-        var A4_W     = 595.28;
-        var A4_H     = 841.89;
-        var R        = A4_W / CANVAS_W; // px → pt
-
-        // Konversi nilai pixel ke pt, 2 desimal
-        function pt(px) {
-            return parseFloat((px * R).toFixed(2));
-        }
-
-        // Hitung real top-left corner dari Fabric object
-        // Fabric obj.left/top adalah posisi titik ORIGIN (bisa center, left, right, dll)
-        function realTopLeft(obj) {
-            var w = (obj.width  || 0) * (obj.scaleX || 1);
-            var h = (obj.height || 0) * (obj.scaleY || 1);
-            var ox = obj.originX || 'left';
-            var oy = obj.originY || 'top';
-
-            var x = obj.left || 0;
-            var y = obj.top  || 0;
-
-            // Koreksi X berdasarkan originX
-            if      (ox === 'center') x = x - w / 2;
-            else if (ox === 'right')  x = x - w;
-            // 'left' = tidak perlu koreksi
-
-            // Koreksi Y berdasarkan originY
-            if      (oy === 'center') y = y - h / 2;
-            else if (oy === 'bottom') y = y - h;
-            // 'top' = tidak perlu koreksi
-
-            return { x: x, y: y, w: w, h: h };
-        }
-
-        function escapeContent(text) {
-            var t = (text || '')
-                .replace(/&/g,  '&amp;')
-                .replace(/</g,  '&lt;')
-                .replace(/>/g,  '&gt;')
-                .replace(/\{\{([^}]+)\}\}/g, function(m, v) { return '{!' + v.trim() + '!}'; })
-                .replace(/\n/g, '<br>');
-            return t.replace(/\{!([^!]+)!\}/g, function(m, v) { return '{{' + v + '}}'; });
-        }
-
-        function textStyle(obj, wPx) {
-            // fontSize harus dikalikan scale karena Fabric.js scale seluruh object
-            var scaledFontSize = (obj.fontSize || 16) * (obj.scaleY || 1);
-            var parts = [
-                'font-size:'   + pt(scaledFontSize) + 'pt',
-                'font-family:' + (obj.fontFamily   || 'DejaVu Sans') + ',sans-serif',
-                'color:'       + (obj.fill         || '#000000'),
-                'font-weight:' + (obj.fontWeight   || 'normal'),
-                'font-style:'  + (obj.fontStyle    || 'normal'),
-                'text-align:'  + (obj.textAlign    || 'left'),
-                'line-height:' + (obj.lineHeight    || 1.4),
-                'width:'       + pt(wPx) + 'pt',
-                'overflow:visible',
-            ];
-            if (obj.underline) parts.push('text-decoration:underline');
-            return parts.join(';');
-        }
-
-        // Wrapper: ukuran A4 dalam pt, position:relative wajib untuk absolute children
-        var html = '<div style="position:relative;width:' + A4_W + 'pt;height:' + A4_H + 'pt;">';
-
-        var objects = canvas.getObjects();
-        // Render dari bawah ke atas z-order (background dulu)
-        objects.forEach(function(obj) {
-            var pos = realTopLeft(obj);
-            var lPt = pt(pos.x);
-            var tPt = pt(pos.y);
-            var wPt = pt(pos.w);
-            var hPt = pt(pos.h);
-
-            var posStyle = 'position:absolute;left:' + lPt + 'pt;top:' + tPt + 'pt;';
-
-            if (obj.type === 'textbox' || obj.type === 'i-text') {
-                html += '<div style="' + posStyle + textStyle(obj, pos.w) + '">'
-                      + escapeContent(obj.text)
-                      + '</div>';
-
-            } else if (obj.type === 'image') {
-                var dimStyle = 'width:' + wPt + 'pt;height:' + hPt + 'pt;';
-                if (obj.name === 'logo') {
-                    // Logo placeholder — diganti oleh DocumentGeneratorService
-                    // img di dalam div agar bisa dikontrol ukurannya
-                    html += '<div style="' + posStyle + dimStyle + '">{{logo}}</div>';
-                } else {
-                    var src = obj.toDataURL ? obj.toDataURL({ format: 'png' }) : '';
-                    html += '<img src="' + src + '" style="' + posStyle + dimStyle + '" />';
-                }
-
-            } else if (obj.type === 'group' && obj.name === 'barcode') {
-                html += '<div style="' + posStyle + 'width:' + wPt + 'pt;height:' + hPt + 'pt;">{{barcode_signature}}</div>';
-
-            } else if (obj.type === 'rect') {
-                var rectStyle = posStyle
-                    + 'width:'       + wPt + 'pt;'
-                    + 'height:'      + hPt + 'pt;'
-                    + 'background:'  + (obj.fill || 'transparent') + ';';
-                if (obj.stroke) {
-                    rectStyle += 'border:' + pt(obj.strokeWidth || 1) + 'pt solid ' + obj.stroke + ';';
-                }
-                html += '<div style="' + rectStyle + '"></div>';
-            }
-        });
-
-        html += '</div>';
-
-        document.getElementById('html_template').value = html;
-        document.getElementById('canvas_json').value   = JSON.stringify(canvas.toJSON(['name']));
-        return true;
-    }
-
-
-
-
-    // =====================
-    // FORM SUBMIT
-    // =====================
-    document.getElementById('templateForm').addEventListener('submit', function(e) {
-        if (canvas.getObjects().length === 0) {
-            e.preventDefault();
-            alert('Template masih kosong! Tambahkan elemen terlebih dahulu.');
-            return false;
-        }
-        generateHTML();
-    });
-
-    // =====================
-    // KEYBOARD SHORTCUTS
-    // =====================
-    document.addEventListener('keydown', function(e) {
-        if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undo(); }
-        if ((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); redo(); }
-        if ((e.key === 'Delete' || e.key === 'Backspace') &&
-            !['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) {
-            removeSelected();
-        }
-    });
+window.EXISTING_CANVAS_JSON = null;
+window.EDITOR_KELAS_LIST    = @json($kelasList ?? []);
+window.EDITOR_MAPEL_LIST    = @json($mapelList ?? []);
 </script>
-@endverbatim
+<script src="{{ asset('asset_dashboard/js/document/template-editor.js') }}"></script>
 @endpush

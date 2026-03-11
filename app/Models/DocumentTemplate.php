@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class DocumentTemplate extends Model
@@ -34,6 +35,18 @@ class DocumentTemplate extends Model
     public function documents(): HasMany
     {
         return $this->hasMany(Document::class, 'template_id');
+    }
+
+    public function kelasList(): BelongsToMany
+    {
+        return $this->belongsToMany(Kelas::class, 'document_template_kelas', 'document_template_id', 'kelas_id')
+                    ->withTimestamps();
+    }
+
+    public function pelajarans(): BelongsToMany
+    {
+        return $this->belongsToMany(Pelajaran::class, 'document_template_pelajaran', 'document_template_id', 'pelajaran_id')
+                    ->withTimestamps();
     }
 
     // =========================================================

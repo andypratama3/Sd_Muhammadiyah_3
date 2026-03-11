@@ -115,7 +115,7 @@ class DocumentGeneratorService
         ->setPaper('a4', 'portrait')
         ->setOptions([
             'defaultFont' => 'DejaVu Sans',
-            'isRemoteEnabled' => false,
+            'isRemoteEnabled' => true,
             'isHtml5ParserEnabled' => true,
             'dpi' => 96,
             'isFontSubsettingEnabled' => true,
@@ -245,7 +245,7 @@ class DocumentGeneratorService
         ->setPaper('a4', 'portrait')
         ->setOptions([
             'defaultFont' => 'DejaVu Sans',
-            'isRemoteEnabled' => false,
+            'isRemoteEnabled' => true,
             'isHtml5ParserEnabled' => true,
             'dpi' => 96,
             'isPhpEnabled' => true,

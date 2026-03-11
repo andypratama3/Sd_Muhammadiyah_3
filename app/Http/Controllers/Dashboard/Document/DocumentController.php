@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Dashboard\Document;
 use App\Http\Controllers\Controller;
 use App\Models\Document;
 use App\Models\DocumentTemplate;
-use App\Models\Student;
+use App\Models\Siswa;
 use App\Services\DocumentGeneratorService;
+use App\Services\TemplateVariableRegistry;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -39,9 +40,10 @@ class DocumentController extends Controller
     public function create(DocumentTemplate $template): View
     {
         $template->load('category');
-        $variables = $template->extractVariables();
+        $variables      = $template->extractVariables();
+        $variableGroups = TemplateVariableRegistry::getGrouped();
 
-        return view('dashboard.document.documents.create', compact('template', 'variables'));
+        return view('dashboard.document.documents.create', compact('template', 'variables', 'variableGroups'));
     }
 
     // =========================================================
@@ -129,7 +131,7 @@ class DocumentController extends Controller
         $variables = $template->extractVariables();
 
         // --- Ambil daftar siswa ---
-        $query = Student::query();
+        $query = Siswa::query();
 
         if ($request->scope === 'class') {
             $request->validate(['class' => 'required|string']);
@@ -152,7 +154,7 @@ class DocumentController extends Controller
             ->mapWithKeys(fn ($v, $k) => [str_replace('static_', '', $k) => $v]);
 
         // Bangun rows
-        $rows = $students->map(function (Student $student) use ($variables, $fieldMap, $staticVars) {
+        $rows = $students->map(function (Siswa $student) use ($variables, $fieldMap, $staticVars) {
             $row = ['_student_id' => $student->id];
 
             foreach ($variables as $var) {
@@ -306,5 +308,46 @@ class DocumentController extends Controller
         return redirect()
             ->route('dashboard.documents.index')
             ->with('success', 'Dokumen berhasil dihapus.');
+    }
+
+    // =========================================================
+    // AJAX: Search siswa by name/NISN
+    // =========================================================
+
+    public function searchSiswa(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $q = $request->input('q', '');
+
+        if (strlen($q) < 2) {
+            return response()->json([]);
+        }
+
+        $results = Siswa::query()
+            ->where('name', 'like', "%{$q}%")
+            ->orWhere('nisn', 'like', "%{$q}%")
+            ->limit(15)
+            ->get(['id', 'name', 'nisn', 'jk'])
+            ->map(fn (Siswa $s) => [
+                'id'   => $s->id,
+                'text' => $s->name . ($s->nisn ? " ({$s->nisn})" : ''),
+                'name' => $s->name,
+                'nisn' => $s->nisn,
+            ]);
+
+        return response()->json($results);
+    }
+
+    // =========================================================
+    // AJAX: Get siswa data mapped to template variables
+    // =========================================================
+
+    public function getSiswaData(Siswa $siswa): \Illuminate\Http\JsonResponse
+    {
+        $data = TemplateVariableRegistry::mapSiswaData($siswa);
+
+        // Merge sekolah defaults
+        $data = array_merge(TemplateVariableRegistry::getSekolahDefaults(), $data);
+
+        return response()->json($data);
     }
 }
