@@ -248,37 +248,6 @@
                          <div class="mx-3" data-i18n="Template">Template</div>
                      </a>
                  </li>
-
-                 <li class="menu-item {{ Request::routeIs('dashboard.datamaster.nilai.*') ? 'active' : ''  }}">
-                     <a class="menu-link"
-                         href="{{ route('dashboard.datamaster.nilai.index') }}">
-                         <i class="menu-icon tf-icons fas fa-solid fa-user"></i>
-                         <div class="mx-3" data-i18n="Nilai Siswa">Nilai Siswa</div>
-                     </a>
-                 </li>
-                 <li class="menu-item {{ Request::routeIs('dashboard.datamaster.judul.pembayaran.*') ? 'active' : ''  }}">
-                     <a class="menu-link"
-                         href="{{ route('dashboard.datamaster.judul.pembayaran.index') }}">
-                         <i class="menu-icon tf-icons fas fa-solid fa-money-check"></i>
-                         <div class="mx-3" data-i18n="Judul Pembayaran"> Kategori Pembayaran</div>
-                     </a>
-                 </li>
-                 @can('view-pembayaran')
-                 <li class="menu-item {{ Request::routeIs('dashboard.datamaster.charge.*') ? 'active' : ''  }}">
-                     <a class="menu-link"
-                         href="{{ route('dashboard.datamaster.charge.index') }}">
-                         <i class="menu-icon tf-icons fas fa-solid fa-file-invoice"></i>
-                         <div class="mx-3" data-i18n="Invoice">Charge</div>
-                     </a>
-                 </li>
-                 @endcan
-                 <li class="menu-item {{ Request::routeIs('dashboard.notifikasi.*') ? 'active' : ''  }}">
-                     <a class="menu-link"
-                         href="{{ route('dashboard.notifikasi.index') }}">
-                         <i class="menu-icon tf-icons fas fa-solid fa-bell"></i>
-                         <div class="mx-3" data-i18n="Invoice">Notifikasi</div>
-                     </a>
-                 </li>
              </ul>
          </li>
 
