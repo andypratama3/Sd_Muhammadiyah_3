@@ -2412,18 +2412,37 @@ function generateHTML() {
 // ============================================================
 // RESTORE EXISTING CANVAS
 // ============================================================
+function friendlyVarLabel(varName) {
+    // Hapus suffix angka acak: z3ded, 3ded, 2abc, dll
+    var clean = varName.replace(/[a-z]?\d+[a-z]{0,5}$/i, '');
+    // Hapus suffix huruf acak pendek di akhir (4-6 karakter, tidak bermakna)
+    clean = clean.replace(/_?[a-z]{3,6}(?=[A-Z_]|$)/i, function(m) {
+        // Pertahankan kata bermakna umum
+        var keep = ['nama','nilai','kelas','tanggal','nomor','bulan','tahun',
+                    'sekolah','siswa','mapel','capaian','akhir','awal'];
+        return keep.some(function(k){ return m.toLowerCase().includes(k); }) ? m : '';
+    });
+    clean = clean.replace(/_{2,}/g, '_').replace(/^_|_$/g, '');
+    if (!clean) clean = varName; // fallback
+    return clean.split('_').map(function(w){
+        return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
+    }).join(' ');
+}
+
 function restoreCanvas() {
     var data = window.EXISTING_CANVAS_JSON;
     if (!data) return;
     var parsed = (typeof data === 'string') ? JSON.parse(data) : data;
 
-    function restoreVars(canvas) {
+   function restoreVars(canvas) {
         canvas.getObjects().forEach(function (obj) {
             if (obj.type === 'textbox' || obj.type === 'i-text') {
                 var m = (obj.text || '').match(/\{\{([^}]+)\}\}/g);
                 if (m) m.forEach(function (v) {
                     var n = v.replace(/[{}]/g, '').trim();
-                    if (['logo', 'barcode_signature'].indexOf(n) === -1) registerVariable(n, n);
+                    if (['logo', 'barcode_signature'].indexOf(n) === -1) {
+                        registerVariable(n, friendlyVarLabel(n)); // ← pakai helper
+                    }
                 });
             }
         });

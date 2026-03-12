@@ -323,14 +323,23 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::get('documents/api/search-siswa', [DocumentController::class, 'searchSiswa'])->name('dashboard.documents.search-siswa');
         Route::get('documents/api/siswa-data/{siswa}', [DocumentController::class, 'getSiswaData'])->name('dashboard.documents.siswa-data');
         Route::get('documents', [DocumentController::class, 'index'])->name('dashboard.documents.index');
+    
+        Route::get('documents/generate/{template}/excel-template', [DocumentController::class, 'excelTemplate'])
+            ->name('dashboard.documents.excel-template');
+    
+        Route::post('documents/generate/{template}/batch', [DocumentController::class, 'batchGenerate'])
+            ->name('dashboard.documents.batch-generate');
+        Route::post('documents/generate/{template}/parse-excel', [DocumentController::class, 'parseExcel'])
+            ->name('dashboard.documents.parse-excel');
+    
         Route::get('documents/generate/{template}', [DocumentController::class, 'create'])->name('dashboard.documents.create');
         Route::post('documents/generate/{template}', [DocumentController::class, 'store'])->name('dashboard.documents.store');
         Route::get('documents/{document}/download', [DocumentController::class, 'download'])->name('dashboard.documents.download');
         Route::delete('documents/{document}', [DocumentController::class, 'destroy'])->name('dashboard.documents.destroy');
-
+    
         Route::get('signature-generate', [SignatureController::class, 'generateSignature'])->name('dashboard.documents.signature.index');
     });
-
+ 
     Route::group(['prefix' => 'pengaturan'], function () {
         // user settings
         Route::resource('profile', DashboardProfileController::class, ['names' => 'dashboard.pengaturan.profile']);
