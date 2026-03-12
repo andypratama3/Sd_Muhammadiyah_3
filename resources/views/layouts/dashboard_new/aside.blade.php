@@ -225,38 +225,42 @@
              </a>
          </li>
         @endrole
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Dokumen &amp; Template</span>
+        </li>
 
-         <li class="menu-header small text-uppercase"><span class="menu-header-text">Dokumen &amp;
-                 Template </span></li>
-         <!-- Forms -->
-         <li class="menu-item {{ Request::routeIs('dashboard.documents.*') ? 'open' : '' }}">
-             <a href="javascript:void(0);" class="menu-link menu-toggle">
-                 <i class="menu-icon tf-icons bx bx-detail"></i>
-                 <div data-i18n="Form Elements"> Dokumen &amp; Template</div>
-             </a>
-             <ul class="menu-sub">
-                 <li class="menu-item {{ Request::routeIs('dashboard.documents.categories.*') ? 'active' : ''  }}">
-                     <a class="menu-link" href="{{ route('dashboard.documents.categories.index') }}">
-                         <i class="menu-icon tf-icons fas fa-solid fa-users"> </i>
-                         <div class="mx-3" data-i18n="siswa"> Kategori Dokumen</div>
-                     </a>
-                 </li>
-                 <li class="menu-item {{ Request::routeIs('dashboard.documents.templates.*') ? 'active' : ''  }}">
-                     <a class="menu-link"
-                         href="{{ route('dashboard.documents.templates.index') }}">
-                         <i class="menu-icon tf-icons fas fa-solid fa-user"></i>
-                         <div class="mx-3" data-i18n="Template">Template</div>
-                     </a>
-                 </li>
-                 <li class="menu-item {{ Request::routeIs('dashboard.documents.signature.*') ? 'active' : ''  }}">
-                     <a class="menu-link"
-                         href="{{ route('dashboard.documents.signature.index') }}">
-                         <i class="menu-icon tf-icons fas fa-solid fa-check"></i>
-                         <div class="mx-3" data-i18n="Template">Signature</div>
-                     </a>
-                 </li>
-             </ul>
-         </li>
+        <li class="menu-item {{ Request::routeIs('dashboard.documents.*') ? 'open' : '' }}">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-file"></i>
+                <div data-i18n="Form Elements">Dokumen &amp; Template</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item {{ Request::routeIs('dashboard.documents.categories.*') ? 'active' : '' }}">
+                    <a class="menu-link" href="{{ route('dashboard.documents.categories.index') }}">
+                        <i class="menu-icon tf-icons bx bx-folder"></i>
+                        <div class="mx-3" data-i18n="Kategori">Kategori Dokumen</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ Request::routeIs('dashboard.documents.templates.*') ? 'active' : '' }}">
+                    <a class="menu-link" href="{{ route('dashboard.documents.templates.index') }}">
+                        <i class="menu-icon tf-icons bx bx-layout"></i>
+                        <div class="mx-3" data-i18n="Template">Template</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ Request::routeIs('dashboard.documents.index') ? 'active' : '' }}">
+                    <a class="menu-link" href="{{ route('dashboard.documents.index') }}">
+                        <i class="menu-icon tf-icons bx bx-collection"></i>
+                        <div class="mx-3" data-i18n="Dokumen">Dokumen</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ Request::routeIs('dashboard.documents.signature.*') ? 'active' : '' }}">
+                    <a class="menu-link" href="{{ route('dashboard.documents.signature.index') }}">
+                        <i class="menu-icon tf-icons bx bx-pen"></i>
+                        <div class="mx-3" data-i18n="Signature">Signature</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
 
         @canany('role:admin|superadmin')
          <!-- Forms & Tables -->

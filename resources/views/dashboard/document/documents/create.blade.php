@@ -176,11 +176,11 @@
                             <i class="bx bx-table me-1"></i> Template Excel
                         </a>
 
-                        {{-- 3. Import Excel → batch generate --}}
+                        {{-- 3. Import Excel → batch generate (ZIP) --}}
                         <label class="btn btn-outline-primary mb-0" for="excel-import-file"
-                               title="Upload Excel yang sudah diisi, PDF akan diunduh per baris">
+                               title="Upload Excel yang sudah diisi, semua PDF akan diunduh dalam satu file ZIP">
                             <i class="bx bx-upload me-1"></i>
-                            <span id="import-btn-label">Import &amp; Generate</span>
+                            <span id="import-btn-label">Import &amp; Generate ZIP</span>
                         </label>
                         <input type="file" id="excel-import-file" accept=".xlsx,.xls" style="display:none">
 
@@ -189,7 +189,7 @@
 
                 </form>
 
-                {{-- ── BATCH PROGRESS (revealed after file picked) ─────── --}}
+                {{-- ── BATCH PROGRESS ─────── --}}
                 <div id="batch-section" style="display:none;" class="mt-4">
                     <hr>
                     <div class="d-flex align-items-center justify-content-between mb-2">
@@ -300,9 +300,9 @@
             <div class="card-body py-3" style="font-size:12.5px;line-height:1.7;">
                 <ol class="ps-3 mb-0 d-flex flex-column gap-1">
                     <li>Klik <strong class="text-success">Template Excel</strong> — download file <code>.xlsx</code> dengan header kolom siap pakai.</li>
-                    <li>Buka file, isi data mulai baris ke-2. <strong>Satu baris = satu PDF.</strong></li>
-                    <li>Klik <strong class="text-primary">Import &amp; Generate</strong> lalu pilih file Excel yang sudah diisi.</li>
-                    <li>PDF akan otomatis terunduh satu per satu.</li>
+                    <li>Buka file, isi data mulai <strong>baris ke-4</strong>. <strong>Satu baris = satu PDF.</strong></li>
+                    <li>Klik <strong class="text-primary">Import &amp; Generate ZIP</strong> lalu pilih file Excel yang sudah diisi.</li>
+                    <li>Semua PDF akan dikemas otomatis dalam satu file <strong>.zip</strong> dan langsung terunduh.</li>
                 </ol>
             </div>
         </div>
@@ -333,11 +333,13 @@ document.getElementById('generate-form').addEventListener('submit', function () 
     label.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Membuat PDF…';
 });
 
-/* ── Batch Excel import ──────────────────────────────────── */
+/* ── Batch Excel import → ZIP download ──────────────────── */
 (function () {
-    const PARSE_URL  = "{{ route('dashboard.documents.parse-excel', $template) }}";
-    const SINGLE_URL = "{{ route('dashboard.documents.store', $template) }}";
-    const CSRF       = "{{ csrf_token() }}";
+
+    // ── Route ke batchGenerate (server generate ZIP langsung) ──
+    // Ganti route ini jika nama route berbeda di project Anda.
+    const BATCH_URL = "{{ route('dashboard.documents.batch-generate', $template) }}";
+    const CSRF      = "{{ csrf_token() }}";
 
     const fileInput  = document.getElementById('excel-import-file');
     const importLbl  = document.getElementById('import-btn-label');
@@ -351,114 +353,123 @@ document.getElementById('generate-form').addEventListener('submit', function () 
     fileInput.addEventListener('change', function () {
         const file = this.files[0];
         if (!file) return;
+
         if (!/\.(xlsx|xls)$/i.test(file.name)) {
             alert('Hanya file .xlsx atau .xls yang diperbolehkan.');
             this.value = '';
             return;
         }
+
         runBatch(file);
     });
 
     async function runBatch(file) {
-        /* ── reset UI ── */
-        section.style.display = 'block';
-        fileBadge.textContent = file.name;
-        list.innerHTML        = '';
+        /* ── Reset UI ── */
+        section.style.display   = 'block';
+        fileBadge.textContent   = file.name;
+        list.innerHTML          = '';
         summaryEl.style.display = 'none';
-        bar.style.width       = '0%';
-        bar.className         = 'progress-bar bg-success progress-bar-striped progress-bar-animated';
-        counter.textContent   = 'Membaca file…';
-        importLbl.innerHTML   = '<span class="spinner-border spinner-border-sm me-1"></span>';
+        bar.style.width         = '0%';
+        bar.className           = 'progress-bar bg-primary progress-bar-striped progress-bar-animated';
+        counter.textContent     = 'Mengirim file ke server…';
+        importLbl.innerHTML     = '<span class="spinner-border spinner-border-sm me-1"></span> Memproses…';
+
         section.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-        /* ── Step 1: send Excel to server → get parsed rows as JSON ── */
-        let rows = [];
+        /* ── Tampilkan item proses di list ── */
+        const processingItem = addItem(file.name, '⏳ Sedang generate semua PDF dan mengemas ZIP…', 'processing');
+
+        /* ── Kirim Excel ke server, terima ZIP ── */
         try {
             const fd = new FormData();
             fd.append('_token', CSRF);
             fd.append('excel_file', file);
 
-            const res  = await fetch(PARSE_URL, { method: 'POST', body: fd });
-            const json = await res.json();
-            if (!res.ok) throw new Error(json.message || 'Server error ' + res.status);
+            // Animasi progress bar semu selama upload/proses
+            let fakeProgress = 0;
+            const fakeTimer = setInterval(() => {
+                if (fakeProgress < 85) {
+                    fakeProgress += Math.random() * 8;
+                    bar.style.width = Math.min(fakeProgress, 85) + '%';
+                }
+            }, 400);
 
-            rows = json.rows || [];
-        } catch (e) {
-            showSummary(0, 0, 0, e.message);
-            counter.textContent = 'Gagal membaca file.';
-            bar.className = 'progress-bar bg-danger';
-            bar.style.width = '100%';
-            importLbl.innerHTML = 'Import &amp; Generate';
-            return;
-        }
+            const response = await fetch(BATCH_URL, {
+                method: 'POST',
+                body:   fd,
+            });
 
-        if (rows.length === 0) {
-            counter.textContent = 'Tidak ada baris data ditemukan.';
-            bar.style.width = '100%';
-            bar.className   = 'progress-bar bg-warning';
-            importLbl.innerHTML = 'Import &amp; Generate';
-            return;
-        }
+            clearInterval(fakeTimer);
 
-        const total = rows.length;
-        counter.textContent = `0 / ${total}`;
-        let done = 0, success = 0, failed = 0;
-
-        /* ── Step 2: generate PDF per row ── */
-        for (const row of rows) {
-            const item = addItem(row.label, '⏳ Memproses…', 'processing');
-
-            try {
-                const pfd = new FormData();
-                pfd.append('_token', CSRF);
-                Object.entries(row.data).forEach(([k, v]) => pfd.append(k, v ?? ''));
-
-                const pRes = await fetch(SINGLE_URL, { method: 'POST', body: pfd });
-                if (!pRes.ok) throw new Error('HTTP ' + pRes.status);
-
-                /* trigger download */
-                const blob   = await pRes.blob();
-                const dlUrl  = URL.createObjectURL(blob);
-                const anchor = document.createElement('a');
-                anchor.href     = dlUrl;
-                anchor.download = (row.filename || row.label) + '.pdf';
-                document.body.appendChild(anchor);
-                anchor.click();
-                anchor.remove();
-                setTimeout(() => URL.revokeObjectURL(dlUrl), 4000);
-
-                updateItem(item, row.label, '✅ Berhasil diunduh', 'success');
-                success++;
-
-            } catch (e) {
-                updateItem(item, row.label, '❌ Gagal: ' + e.message, 'error');
-                failed++;
+            if (!response.ok) {
+                // Coba baca pesan error dari server
+                let errMsg = 'Server error ' + response.status;
+                try {
+                    const errJson = await response.json();
+                    errMsg = errJson.message || errMsg;
+                } catch (_) {
+                    try {
+                        errMsg = await response.text();
+                        // Potong jika terlalu panjang (HTML error page)
+                        if (errMsg.length > 200) errMsg = 'Server error ' + response.status;
+                    } catch (_) {}
+                }
+                throw new Error(errMsg);
             }
 
-            done++;
-            bar.style.width     = Math.round((done / total) * 100) + '%';
-            counter.textContent = `${done} / ${total}`;
+            /* ── Ambil info dari header response ── */
+            const total    = parseInt(response.headers.get('X-Batch-Total') || '0', 10);
+            const filename = getFilenameFromResponse(response) || 'batch-dokumen.zip';
 
-            await sleep(350); /* slight delay so browser queues download */
+            /* ── Trigger download ZIP ── */
+            const blob   = await response.blob();
+            const dlUrl  = URL.createObjectURL(blob);
+            const anchor = document.createElement('a');
+            anchor.href     = dlUrl;
+            anchor.download = filename;
+            document.body.appendChild(anchor);
+            anchor.click();
+            anchor.remove();
+            setTimeout(() => URL.revokeObjectURL(dlUrl), 5000);
+
+            /* ── Update UI sukses ── */
+            bar.style.width = '100%';
+            bar.className   = 'progress-bar bg-success';
+
+            updateItem(
+                processingItem,
+                file.name,
+                `✅ Berhasil! ${total > 0 ? total + ' PDF' : 'Semua PDF'} dikemas dalam <strong>${esc(filename)}</strong> — cek folder unduhan Anda.`,
+                'success'
+            );
+
+            showSummary(total, filename);
+
+        } catch (err) {
+            bar.style.width = '100%';
+            bar.className   = 'progress-bar bg-danger';
+            updateItem(processingItem, file.name, '❌ Gagal: ' + esc(err.message), 'error');
+            showError(err.message);
         }
 
-        /* ── Finish ── */
-        bar.classList.remove('progress-bar-animated', 'progress-bar-striped');
-        if      (failed === 0) bar.classList.replace('bg-success', 'bg-success');
-        else if (success === 0) { bar.classList.remove('bg-success'); bar.classList.add('bg-danger'); }
-        else                   { bar.classList.remove('bg-success'); bar.classList.add('bg-warning'); }
-
-        showSummary(total, success, failed);
-        importLbl.innerHTML = 'Import &amp; Generate';
-        fileInput.value = '';
+        importLbl.innerHTML = 'Import &amp; Generate ZIP';
+        fileInput.value     = '';
     }
 
-    /* ── DOM helpers ─────────────────────────────────────── */
+    /* ── Ambil nama file dari Content-Disposition header ── */
+    function getFilenameFromResponse(response) {
+        const cd = response.headers.get('Content-Disposition') || '';
+        const m  = cd.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/i);
+        if (m && m[1]) return m[1].replace(/['"]/g, '').trim();
+        return null;
+    }
+
+    /* ── DOM helpers ── */
     function addItem(label, msg, state) {
         const el = document.createElement('div');
         el.className = `batch-item ${state}`;
         el.innerHTML = `<span class="row-label">${esc(label)}</span>
-                        <span class="status-msg">${esc(msg)}</span>`;
+                        <span class="status-msg">${msg}</span>`;
         list.appendChild(el);
         list.scrollTop = list.scrollHeight;
         return el;
@@ -466,27 +477,32 @@ document.getElementById('generate-form').addEventListener('submit', function () 
 
     function updateItem(el, label, msg, state) {
         el.className = `batch-item ${state}`;
-        el.querySelector('.status-msg').innerHTML = msg; /* msg may contain emoji */
+        el.querySelector('.row-label').textContent = label;
+        el.querySelector('.status-msg').innerHTML  = msg;
     }
 
-    function showSummary(total, success, failed, errMsg) {
+    function showSummary(total, filename) {
         summaryEl.style.display = 'block';
-        if (errMsg) {
-            summaryEl.innerHTML = `<div class="alert alert-danger mb-0 py-2 small">
-                <i class="bx bx-error me-1"></i><strong>Error:</strong> ${esc(errMsg)}</div>`;
-            return;
-        }
-        const cls = failed === 0 ? 'alert-success' : (success === 0 ? 'alert-danger' : 'alert-warning');
-        summaryEl.innerHTML = `<div class="alert ${cls} mb-0 py-2 small">
-            <i class="bx bx-check-circle me-1"></i>
-            Selesai — <strong>${success}</strong> berhasil diunduh,
-            <strong>${failed}</strong> gagal, dari total <strong>${total}</strong> baris.</div>`;
+        summaryEl.innerHTML =
+            `<div class="alert alert-success mb-0 py-2 small">
+                <i class="bx bx-check-circle me-1"></i>
+                Selesai — <strong>${total > 0 ? total + ' PDF' : 'Semua PDF'}</strong> telah dikemas dalam
+                <strong>${esc(filename)}</strong> dan sedang diunduh.
+             </div>`;
     }
 
-    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+    function showError(errMsg) {
+        summaryEl.style.display = 'block';
+        summaryEl.innerHTML =
+            `<div class="alert alert-danger mb-0 py-2 small">
+                <i class="bx bx-error me-1"></i>
+                <strong>Gagal:</strong> ${esc(errMsg)}
+             </div>`;
+    }
+
     function esc(s) {
         return String(s).replace(/[&<>"']/g, c =>
-            ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+            ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     }
 
 })();

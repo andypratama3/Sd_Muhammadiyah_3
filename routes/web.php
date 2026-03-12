@@ -331,7 +331,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
             ->name('dashboard.documents.batch-generate');
         Route::post('documents/generate/{template}/parse-excel', [DocumentController::class, 'parseExcel'])
             ->name('dashboard.documents.parse-excel');
-    
+        
+        Route::get('documents', [DocumentController::class, 'index'])->name('dashboard.documents.index');
         Route::get('documents/generate/{template}', [DocumentController::class, 'create'])->name('dashboard.documents.create');
         Route::post('documents/generate/{template}', [DocumentController::class, 'store'])->name('dashboard.documents.store');
         Route::get('documents/{document}/download', [DocumentController::class, 'download'])->name('dashboard.documents.download');
