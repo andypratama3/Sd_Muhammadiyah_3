@@ -7,6 +7,7 @@ use App\Actions\Dashboard\Kelas\KelasDeleteAction;
 use App\DataTransferObjects\KelasData;
 use App\Http\Controllers\Controller;
 use App\Models\Kelas;
+use App\Models\Pelajaran;
 
 class KelasController extends Controller
 {
@@ -28,7 +29,8 @@ class KelasController extends Controller
 
     public function create()
     {
-        return view('dashboard.data.kelas.create');
+        $pelajarans = Pelajaran::all();
+        return view('dashboard.data.kelas.create', compact('pelajarans'));
     }
 
     public function store(KelasData $kelasData, KelasAction $kelasAction)
@@ -41,8 +43,9 @@ class KelasController extends Controller
     public function edit($slug)
     {
         $kelas = Kelas::where('slug', $slug)->firstOrFail();
+        $pelajarans = Pelajaran::all();
 
-        return view('dashboard.data.kelas.edit', compact('kelas'));
+        return view('dashboard.data.kelas.edit', compact('kelas', 'pelajarans'));
     }
 
     public function update(KelasData $kelasData, KelasAction $kelasAction)

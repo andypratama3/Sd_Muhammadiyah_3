@@ -37,5 +37,9 @@ class Kelas extends Model
     {
         return $this->hasMany(Pembayaran::class, 'kelas', 'id');
     }
+    public function kelasPelajaran(): BelongsToMany
+    {
+        return $this->belongsToMany(Pelajaran::class, 'kelas_pelajaran', 'kelas_id', 'pelajaran_id');
+    }
 
 }

@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Rekapitulasi Fingerscan</title>
+    <title>Rekapitulasi Absensi</title>
     <style>
         body {
             font-family: Arial, Helvetica, sans-serif;
@@ -49,14 +49,34 @@
             background-color: #f0f0f0;
         }
 
-        .ttd { margin-top: 30px; }
+       .ttd {
+            margin-top: 30px;
+        }
+
         .ttd td {
             border: none;
             text-align: center;
             vertical-align: top;
             font-size: 10px;
-            padding-top: 40px;
             width: 33.33%;
+        }
+
+        .ttd-box{
+            padding:10px;
+            height:140px;
+            text-align:center;
+        }
+
+        .stempel{
+            width:70px;
+            position:absolute;
+            left:30px;
+            top:35px;
+        }
+
+        .ttd-img{
+            width:110px;
+            margin-top:20px;
         }
 
         .keterangan {
@@ -79,7 +99,7 @@
 
     <!-- HEADER -->
     <div class="header">
-        <h2>REKAPITULASI FINGERSCAN</h2>
+        <h2>REKAPITULASI ABSENSI</h2>
         <h3>SEKOLAH KREATIF SD MUHAMMADIYAH 3</h3>
         <h3>TAHUN {{ now()->year }}</h3>
     </div>
@@ -218,7 +238,7 @@
 
     <!-- TTD -->
     <table class="ttd" width="100%">
-        <tr>
+        <tr >
             <td>
                 Diterima Oleh<br><br><br>
                 <strong>{{ $karyawan->name }}</strong>
@@ -227,10 +247,21 @@
                 Disetujui Oleh<br><br><br>
                 <strong>Rusmini S.Pd</strong>
             </td>
-            <td>
-                Kepala Sekolah<br><br><br>
-                <strong>Ansar HS, S.Pd.M.M.Gr</strong>
-            </td>
+            <div class="ttd-box">
+                    <div style="margin-bottom:10px;">
+                    Kepala Sekolah
+                </div>
+
+                <div style="height:70px;">
+                    <img src="{{ public_path('asset/img/tanda_tangan_kepala_sekolah.png') }}"
+                        class="ttd-img">
+                </div>
+
+                <div style="margin-top:10px;">
+                    <strong>Ansar HS, S.Pd.M.M.Gr</strong>
+                </div>
+
+            </div>
         </tr>
     </table>
 

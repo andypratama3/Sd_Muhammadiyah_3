@@ -200,6 +200,8 @@ class DocumentTemplateController extends Controller
         $kelasList = Kelas::orderBy('name')
             ->get(['id', 'name', 'slug', 'category_kelas']);
 
+    
+
         return response()->json($kelasList);
     }
 
@@ -207,9 +209,16 @@ class DocumentTemplateController extends Controller
     // API: Pelajaran list for template editor JS
     // =========================================================
 
-    public function apiMapelList(Request $request): \Illuminate\Http\JsonResponse
+   public function apiMapelList(Request $request): \Illuminate\Http\JsonResponse
     {
         $query = Pelajaran::orderBy('name');
+
+        // Filter by kelas jika ada — untuk raport per tingkat
+        if ($request->filled('kelas_id')) {
+            $query->whereHas('kelasPelajaran', function ($q) use ($request) {
+                $q->where('kelas_id', $request->kelas_id);
+            });
+        }
 
         $mapelList = $query->get(['id', 'name', 'slug']);
 

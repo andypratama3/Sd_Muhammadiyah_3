@@ -22,6 +22,12 @@ class KelasRequest extends FormRequest
     {
         $this->category_kelas;
     }
+    
+    public function getPelajaran()
+    {
+        $this->pelajaran;
+    }
+
     public function getSlug()
     {
         $this->slug;

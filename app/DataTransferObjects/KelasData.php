@@ -11,6 +11,7 @@ class KelasData extends Data
         public readonly string $name,
         public readonly array $category_kelas,
         public readonly ?string $slug,
+        public readonly array $pelajaran,
 
     ) {
         //
@@ -22,6 +23,7 @@ class KelasData extends Data
             $request->getName(),
             $request->getCategoryKelas(),
             $request->getSlug(),
+            $request->getPelajaran(),
         ]);
     }
 
@@ -30,6 +32,7 @@ class KelasData extends Data
         return [
             'name.required' => 'Kolom Nama Kelas tidak boleh kosong!',
             'category_kelas.required' => 'Kolom Kategori Kelas Harus Memiliki Kategori!',
+            'pelajaran.required' => 'Kolom Pelajaran Harus Memiliki Pelajaran!',
         ];
     }
 }
