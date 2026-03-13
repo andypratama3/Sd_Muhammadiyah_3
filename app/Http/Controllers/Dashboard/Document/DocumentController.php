@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard\Document;
 
 use App\Http\Controllers\Controller;
 use App\Models\Document;
+use App\Models\DocumentCategory;
 use App\Models\DocumentTemplate;
 use App\Models\Siswa;
 use App\Services\DocumentGeneratorService;
@@ -13,12 +14,12 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx as XlsxWriter;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
-use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx as XlsxWriter;
 use ZipArchive;
 
 class DocumentController extends Controller
@@ -75,23 +76,6 @@ class DocumentController extends Controller
         ]);
     }
 
-    // =========================================================================
-    // EXCEL TEMPLATE DOWNLOAD
-    // =========================================================================
-    //
-    // PENTING: Baris pertama menyimpan nama variabel ASLI (snake_case) sebagai
-    // nilai tersembunyi di baris ke-2 untuk keperluan parsing balik.
-    //
-    // Struktur sheet "Data":
-    //   Baris 1  = Header LABEL cantik (untuk dibaca manusia)
-    //   Baris 2  = Header VARIABLE asli (disembunyikan dengan warna putih
-    //              di background putih, digunakan saat parseExcel)
-    //   Baris 3+ = Data isian pengguna
-    //
-    // Dengan cara ini, parseExcel() selalu bisa menemukan nama variabel yang
-    // tepat tanpa tebak-tebakan fuzzy matching.
-    // =========================================================================
-
     public function excelTemplate(DocumentTemplate $template): \Symfony\Component\HttpFoundation\StreamedResponse
     {
         $template->load('category');
@@ -101,11 +85,26 @@ class DocumentController extends Controller
         $sheet       = $spreadsheet->getActiveSheet();
         $sheet->setTitle('Data');
 
-        // ── Baris 1: Label cantik (untuk pengguna) ────────────────────────
-        foreach ($variables as $colIndex => $var) {
-            $col   = $colIndex + 1;
-            $cell  = Coordinate::stringFromColumnIndex($col) . '1';
-            $label = $this->friendlyVarLabel($var);
+        // ── Untuk kategori rapot, sisipkan kolom NISN & Nama Siswa di depan ──
+        $israpot        = strtolower($template->category?->name ?? '') === 'rapot';
+        $prefixColumns   = $israpot ? ['nisn' => 'NISN', 'nama_siswa' => 'Nama Siswa'] : [];
+
+        // Gabungkan prefix + variabel template (hindari duplikat)
+        $allColumns = [];
+        foreach ($prefixColumns as $key => $label) {
+            $allColumns[$key] = $label;
+        }
+        foreach ($variables as $var) {
+            if (!array_key_exists($var, $allColumns)) {
+                $allColumns[$var] = $this->friendlyVarLabel($var);
+            }
+        }
+
+        $colIndex = 1;
+
+        // ── Baris 1: Label cantik ─────────────────────────────────────────────
+        foreach ($allColumns as $varKey => $label) {
+            $cell = Coordinate::stringFromColumnIndex($colIndex) . '1';
 
             $sheet->setCellValue($cell, $label);
             $sheet->getStyle($cell)->applyFromArray([
@@ -117,7 +116,9 @@ class DocumentController extends Controller
                 ],
                 'fill' => [
                     'fillType'   => Fill::FILL_SOLID,
-                    'startColor' => ['argb' => 'FF1A5276'],
+                    'startColor' => ['argb' => $israpot && isset($prefixColumns[$varKey])
+                        ? 'FF154360'   // warna lebih gelap untuk kolom prefix rapot
+                        : 'FF1A5276'],
                 ],
                 'alignment' => [
                     'horizontal' => Alignment::HORIZONTAL_CENTER,
@@ -131,62 +132,84 @@ class DocumentController extends Controller
                 ],
             ]);
 
-            $sheet->getColumnDimensionByColumn($col)->setWidth(
+            $sheet->getColumnDimensionByColumn($colIndex)->setWidth(
                 max(18, min(40, strlen($label) + 4))
             );
+
+            $colIndex++;
         }
 
         $sheet->getRowDimension(1)->setRowHeight(24);
 
-        // ── Baris 2: Nama variabel ASLI (hidden row, teks putih di bg putih)
-        //    Ini kunci untuk parseExcel() agar matching selalu akurat.
-        foreach ($variables as $colIndex => $var) {
-            $col  = $colIndex + 1;
-            $cell = Coordinate::stringFromColumnIndex($col) . '2';
-            $sheet->setCellValue($cell, '__VAR__' . $var);
+        // ── Baris 2: Hidden variable row ──────────────────────────────────────
+        $colIndex = 1;
+        foreach ($allColumns as $varKey => $label) {
+            $cell = Coordinate::stringFromColumnIndex($colIndex) . '2';
+            $sheet->setCellValue($cell, '__VAR__' . $varKey);
             $sheet->getStyle($cell)->applyFromArray([
                 'font' => [
-                    'color' => ['argb' => 'FFFFFFFF'], // teks putih = tidak terlihat
+                    'color' => ['argb' => 'FFFFFFFF'],
                     'size'  => 8,
                     'name'  => 'Arial',
                 ],
                 'fill' => [
                     'fillType'   => Fill::FILL_SOLID,
-                    'startColor' => ['argb' => 'FFFFFFFF'], // bg putih
+                    'startColor' => ['argb' => 'FFFFFFFF'],
                 ],
             ]);
+            $colIndex++;
         }
-        $sheet->getRowDimension(2)->setRowHeight(4); // baris sangat tipis
+        $sheet->getRowDimension(2)->setRowHeight(4);
 
-        // ── Baris 3: Contoh data ──────────────────────────────────────────
-        foreach ($variables as $colIndex => $var) {
-            $col  = $colIndex + 1;
-            $cell = Coordinate::stringFromColumnIndex($col) . '3';
-            $sheet->setCellValue($cell, 'Contoh ' . ucwords(str_replace('_', ' ', $var)));
+        // ── Baris 3: Contoh data ──────────────────────────────────────────────
+        $colIndex = 1;
+        foreach ($allColumns as $varKey => $label) {
+            $cell = Coordinate::stringFromColumnIndex($colIndex) . '3';
+
+            // Untuk kolom prefix rapot, contoh lebih spesifik
+            $example = match($varKey) {
+                'nisn'       => '0012345678',
+                'nama_siswa' => 'Ahmad Fauzi',
+                default      => 'Contoh ' . ucwords(str_replace('_', ' ', $varKey)),
+            };
+
+            $sheet->setCellValue($cell, $example);
             $sheet->getStyle($cell)->applyFromArray([
                 'font'      => ['italic' => true, 'color' => ['argb' => 'FF9E9E9E'], 'name' => 'Arial'],
                 'fill'      => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FFF5F5F5']],
                 'alignment' => ['vertical' => Alignment::VERTICAL_CENTER],
             ]);
+
+            $colIndex++;
         }
         $sheet->getRowDimension(3)->setRowHeight(20);
 
         $sheet->freezePane('A4');
 
-        // ── Sheet Petunjuk ────────────────────────────────────────────────
+        // ── Sheet Petunjuk ────────────────────────────────────────────────────
         $info = $spreadsheet->createSheet();
         $info->setTitle('Petunjuk');
         $info->setCellValue('A1', 'PETUNJUK PENGISIAN');
-        $info->setCellValue('A3', '1. Isi data mulai dari BARIS KE-4 pada sheet "Data" (baris 1 = header, baris 2 = kode sistem, baris 3 = contoh yang bisa dihapus).');
+        $info->setCellValue('A3', '1. Isi data mulai dari BARIS KE-4 pada sheet "Data".');
         $info->setCellValue('A4', '2. Setiap baris = satu dokumen PDF yang akan digenerate.');
         $info->setCellValue('A5', '3. JANGAN mengubah nama kolom pada baris header (baris 1).');
         $info->setCellValue('A6', '4. JANGAN menghapus baris 2 (baris tipis berisi kode sistem).');
         $info->setCellValue('A7', '5. Upload file ini kembali di halaman Generate untuk memproses semua data sekaligus.');
-        $info->setCellValue('A9',  'Template : ' . $template->name);
-        $info->setCellValue('A10', 'Kategori : ' . $template->category->name);
-        $info->setCellValue('A11', 'Dibuat   : ' . now()->format('d M Y H:i'));
+
+        if ($israpot) {
+            $info->setCellValue('A9',  '* Kolom NISN dan Nama Siswa wajib diisi untuk template rapot.');
+            $info->setCellValue('A10', '* Data nilai diisi sesuai variabel masing-masing mata pelajaran.');
+            $info->getStyle('A9:A10')->getFont()->setBold(true)->getColor()->setARGB('FFC0392B');
+        }
+
+        $noteRow = $israpot ? 12 : 9;
+        $info->setCellValue('A' . $noteRow,       'Template : ' . $template->name);
+        $info->setCellValue('A' . ($noteRow + 1), 'Kategori : ' . ($template->category->name ?? '-'));
+        $info->setCellValue('A' . ($noteRow + 2), 'Dibuat   : ' . now()->format('d M Y H:i'));
+
         $info->getStyle('A1')->getFont()->setBold(true)->setSize(13);
-        $info->getStyle('A9:A11')->getFont()->setItalic(true)->getColor()->setARGB('FF757575');
+        $info->getStyle('A' . $noteRow . ':A' . ($noteRow + 2))
+            ->getFont()->setItalic(true)->getColor()->setARGB('FF757575');
         $info->getColumnDimension('A')->setWidth(100);
 
         $spreadsheet->setActiveSheetIndex(0);
@@ -202,29 +225,6 @@ class DocumentController extends Controller
             'Content-Disposition' => 'attachment; filename="' . $filename . '"',
         ]);
     }
-
-    // =========================================================================
-    // PARSE EXCEL  (dipanggil oleh JS batch generate)
-    // =========================================================================
-    //
-    // Strategi matching header → variabel (urutan prioritas):
-    //
-    //  1. Hidden variable row  — baris ke-2 berisi "__VAR__nama_variabel"
-    //     Ini cara paling akurat. Template baru selalu punya baris ini.
-    //
-    //  2. Exact slug match  — header di-slugify lalu dicocokkan langsung
-    //     ke daftar variabel template. Cocok jika header tidak diubah.
-    //
-    //  3. Normalized match  — strip karakter non-alphanumeric, bandingkan
-    //     versi bersih header dengan versi bersih nama variabel.
-    //     Contoh: "Nilai Agam" vs "nilai_agama_islamttze" → keduanya
-    //     menjadi "nilaiagam" → partial match diterima.
-    //
-    //  4. Positional fallback  — jika semua cara gagal, urutan kolom di
-    //     Excel dipetakan ke urutan variabel template secara berurutan.
-    //     Ini menangani kasus template lama yang headernya sudah dipotong.
-    //
-    // =========================================================================
 
     public function parseExcel(Request $request, DocumentTemplate $template): \Illuminate\Http\JsonResponse
     {
@@ -333,16 +333,21 @@ class DocumentController extends Controller
         $template->load('category');
         $variables = $template->extractVariables();
 
+        // ── Tambahkan kolom prefix rapot ke daftar variabel yang dikenali ──
+        $israpot          = strtolower($template->category?->name ?? '') === 'rapot';
+        $allKnownVariables = $israpot
+            ? array_merge(['nisn', 'nama_siswa'], $variables)
+            : $variables;
+
         $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load(
             $request->file('excel_file')->getRealPath()
         );
         $sheet = $spreadsheet->getActiveSheet();
         $rows  = $sheet->toArray(null, true, true, true);
 
-        $headerRow = array_shift($rows);
-        $hiddenRow = !empty($rows) ? array_shift($rows) : [];
-
-        $colToVar     = $this->buildColToVarMap($headerRow, $hiddenRow, $variables);
+        $headerRow     = array_shift($rows);
+        $hiddenRow     = !empty($rows) ? array_shift($rows) : [];
+        $colToVar      = $this->buildColToVarMap($headerRow, $hiddenRow, $allKnownVariables);
         $usePositional = empty($colToVar);
         $colKeys       = array_keys($headerRow);
 
@@ -365,8 +370,8 @@ class DocumentController extends Controller
             $userData = [];
 
             if ($usePositional) {
-                foreach ($variables as $varIndex => $varName) {
-                    $colKey = $colKeys[$varIndex] ?? null;
+                foreach ($allKnownVariables as $varIndex => $varName) {
+                    $colKey             = $colKeys[$varIndex] ?? null;
                     $userData[$varName] = $colKey && isset($row[$colKey])
                         ? $this->sanitizeCellValue($row[$colKey])
                         : '';
@@ -377,7 +382,7 @@ class DocumentController extends Controller
                         ? $this->sanitizeCellValue($row[$col])
                         : '';
                 }
-                foreach ($variables as $varName) {
+                foreach ($allKnownVariables as $varName) {
                     if (!array_key_exists($varName, $userData)) {
                         $userData[$varName] = '';
                     }
@@ -387,9 +392,22 @@ class DocumentController extends Controller
             try {
                 $document   = $this->generatorService->generate($template, $userData, []);
                 $pdfContent = \Storage::disk('public')->get($document->file_path);
+                // Untuk rapot: nama file pakai nama_siswa + nisn
+                if ($israpot && !empty($userData['nama_siswa'])) {
+                    // validate nisn
+                    // $siswa = Siswa::where('nisn', $userData['nisn'])->first();
+                    // if (!$siswa) {  
+                    //     continue;
+                    // }
 
-                $firstValue  = Str::slug(array_values($userData)[0] ?? 'dokumen');
-                $zipFileName = sprintf('%03d-%s.pdf', $count + 1, $firstValue ?: 'dokumen');
+                    $nameSlug    = Str::slug($userData['nama_siswa']);
+                    $nisnSuffix  = !empty($userData['nisn']) ? '-' . $userData['nisn'] : '';
+                    $zipFileName = sprintf('%03d-%s%s.pdf', $count + 1, $nameSlug, $nisnSuffix);
+                } else {
+                    $firstValue  = Str::slug(array_values($userData)[0] ?? 'dokumen');
+                    $zipFileName = sprintf('%03d-%s.pdf', $count + 1, $firstValue ?: 'dokumen');
+                }
+
                 $zip->addFromString($zipFileName, $pdfContent);
                 $count++;
             } catch (\Throwable $e) {
@@ -482,7 +500,7 @@ class DocumentController extends Controller
         });
 
         if ($request->output === 'merged') {
-            $label      = 'Raport-' . ($request->class ?? 'Semua') . '-' . now()->format('Ymd');
+            $label      = 'rapot-' . ($request->class ?? 'Semua') . '-' . now()->format('Ymd');
             $filePath   = $this->generatorService->generateBulkMergedPdf($template, $rows, $label);
             $pdfContent = \Storage::disk('public')->get($filePath);
 
