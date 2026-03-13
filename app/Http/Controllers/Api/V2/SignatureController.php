@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Api\V2;
 
 use App\Http\Controllers\Controller;
 use App\Models\Document;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class SignatureController extends Controller
 {
@@ -52,6 +53,37 @@ class SignatureController extends Controller
             'status' => 'valid',
             'data'   => $this->formatData($document),
         ], 'Dokumen ini terverifikasi dan sah.');
+    }
+
+    public function download(string $code)
+    {
+        $document = Document::with(['template'])->where('verification_code', $code)->first();
+
+        if (!$document) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Dokumen tidak ditemukan.',
+            ], 404);
+        }
+
+        if (!$document->fileExists()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'File dokumen tidak tersedia.',
+            ], 404);
+        }
+
+        // ✅ Sama persis dengan logic di formatData()
+        $dataJson = $document->data_json ?? [];
+        $label    = $dataJson['label'] ?? $document->template?->name ?? 'Dokumen';
+
+        $path     = Storage::disk('public')->path($document->file_path);
+        $filename = preg_replace('/[^\w\-\. ]/', '_', $label . '.pdf');
+
+        return response()->download($path, $filename, [
+            'Content-Type'        => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ]);
     }
 
     private function formatData(Document $document): array

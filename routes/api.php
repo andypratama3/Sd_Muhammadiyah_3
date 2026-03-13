@@ -228,8 +228,9 @@ Route::group(['prefix' => 'v2'], function () {
         });
 
         Route::get('signature/verify', [SignatureController::class, 'verify']);
+        Route::get('/signature/download/{verification_code}', [SignatureController::class,'download']);
 
-        // Statistics endpoint
+        // Statistics endpoint  
         Route::get('/statistics', [PrestasiDataController::class, 'statistics']);
     });
 
