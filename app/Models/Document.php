@@ -12,7 +12,7 @@ class Document extends Model
 
     protected $fillable = [
         'template_id',
-        'student_id',
+        'siswa_id',
         'created_by',
         'data_json',
         'file_path',
@@ -33,9 +33,9 @@ class Document extends Model
         return $this->belongsTo(DocumentTemplate::class);
     }
 
-    public function student(): BelongsTo
+    public function siswa(): BelongsTo
     {
-        return $this->belongsTo(Student::class);
+        return $this->belongsTo(Siswa::class, 'siswa_id', 'id');
     }
 
     public function creator(): BelongsTo

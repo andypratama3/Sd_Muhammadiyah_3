@@ -19,7 +19,7 @@ class SignatureController extends Controller
         */
 
         // $signaturePath = public_path('asset/img/ttd_pak_ansar.png');
-        $signaturePath = "Ini Ad"
+        $signaturePath = "Ini Ad";
 
         if (!file_exists($signaturePath)) {
             abort(404,'Signature not found');

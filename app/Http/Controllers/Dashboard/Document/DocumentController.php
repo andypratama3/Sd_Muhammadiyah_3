@@ -33,7 +33,7 @@ class DocumentController extends Controller
 
     public function index(): View
     {
-        $documents = Document::with('template.category', 'student')
+        $documents = Document::with('template.category', 'siswa')
             ->latest()
             ->paginate(20);
 

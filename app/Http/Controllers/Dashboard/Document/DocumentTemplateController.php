@@ -14,10 +14,6 @@ use Illuminate\View\View;
 
 class DocumentTemplateController extends Controller
 {
-    // =========================================================
-    // INDEX
-    // =========================================================
-
     public function index(): View
     {
         $templates = DocumentTemplate::with('category')
@@ -27,10 +23,6 @@ class DocumentTemplateController extends Controller
 
         return view('dashboard.document.templates.index', compact('templates'));
     }
-
-    // =========================================================
-    // CREATE
-    // =========================================================
 
     public function create(): View
     {
@@ -44,10 +36,6 @@ class DocumentTemplateController extends Controller
         ));
     }
 
-    // =========================================================
-    // STORE
-    // =========================================================
-
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
@@ -55,8 +43,7 @@ class DocumentTemplateController extends Controller
             'name'          => 'required|string|max:255',
             'html_template' => 'required|string',
             'canvas_json'   => 'nullable|string',
-            'kelas_ids'     => 'nullable|array',
-            'kelas_ids.*'   => 'exists:kelas,id',
+            'kelas_id'      => 'nullable|exists:kelas,id',
             'mapel_ids'     => 'nullable|array',
             'mapel_ids.*'   => 'exists:pelajarans,id',
         ]);
@@ -72,10 +59,6 @@ class DocumentTemplateController extends Controller
 
         $template = DocumentTemplate::create($validated);
 
-        // Sync many-to-many
-        if ($request->has('kelas_ids')) {
-            $template->kelasList()->sync($request->input('kelas_ids', []));
-        }
         if ($request->has('mapel_ids')) {
             $template->pelajarans()->sync($request->input('mapel_ids', []));
         }
@@ -84,10 +67,6 @@ class DocumentTemplateController extends Controller
             ->route('dashboard.documents.templates.edit', $template)
             ->with('success', 'Template berhasil dibuat. Anda bisa melanjutkan pengeditan.');
     }
-
-    // =========================================================
-    // EDIT
-    // =========================================================
 
     public function edit(DocumentTemplate $template): View
     {
@@ -104,10 +83,6 @@ class DocumentTemplateController extends Controller
         ));
     }
 
-    // =========================================================
-    // UPDATE
-    // =========================================================
-
     public function update(Request $request, DocumentTemplate $template): RedirectResponse
     {
         $validated = $request->validate([
@@ -115,34 +90,35 @@ class DocumentTemplateController extends Controller
             'name'          => 'required|string|max:255',
             'html_template' => 'required|string',
             'canvas_json'   => 'nullable|string',
-            'kelas_ids'     => 'nullable|array',
-            'kelas_ids.*'   => 'exists:kelas,id',
+            'kelas_id'      => 'nullable|exists:kelas,id',
             'mapel_ids'     => 'nullable|array',
             'mapel_ids.*'   => 'exists:pelajarans,id',
         ]);
 
-        // Sama seperti store: decode JSON string → array
         if (!empty($validated['canvas_json'])) {
             $decoded = json_decode($validated['canvas_json'], true);
             $validated['canvas_json'] = json_last_error() === JSON_ERROR_NONE
                 ? $decoded
-                : $template->canvas_json; // fallback ke nilai lama jika JSON rusak
+                : $template->canvas_json;
+        }
+
+        $categoryDocument = DocumentCategory::find($request->input('category_id'));
+
+        if($categoryDocument->name == 'Rapot') {
+            $validated['kelas_id'] = $request->input('kelas_id');
+        } else {
+            $validated['kelas_id'] = null;
         }
 
         $template->update($validated);
 
         // Sync many-to-many
-        $template->kelasList()->sync($request->input('kelas_ids', []));
         $template->pelajarans()->sync($request->input('mapel_ids', []));
 
         return redirect()
             ->route('dashboard.documents.templates.edit', $template)
             ->with('success', 'Template berhasil diperbarui.');
     }
-
-    // =========================================================
-    // DESTROY
-    // =========================================================
 
     public function destroy(DocumentTemplate $template): RedirectResponse
     {
@@ -154,10 +130,6 @@ class DocumentTemplateController extends Controller
             ->route('dashboard.documents.templates.index')
             ->with('success', 'Template berhasil dihapus.');
     }
-
-    // =========================================================
-    // AJAX: Preview variables dari canvas_json / html_template
-    // =========================================================
 
     public function previewVariables(Request $request): \Illuminate\Http\JsonResponse
     {
@@ -182,32 +154,18 @@ class DocumentTemplateController extends Controller
         return response()->json(['variables' => $variables]);
     }
 
-    // =========================================================
-    // AJAX: All available variables grouped (for template editor)
-    // =========================================================
-
     public function getAvailableVariables(): \Illuminate\Http\JsonResponse
     {
         return response()->json(TemplateVariableRegistry::getGrouped());
     }
-
-    // =========================================================
-    // API: Kelas list for template editor JS
-    // =========================================================
 
     public function apiKelasList(): \Illuminate\Http\JsonResponse
     {
         $kelasList = Kelas::orderBy('name')
             ->get(['id', 'name', 'slug', 'category_kelas']);
 
-    
-
         return response()->json($kelasList);
     }
-
-    // =========================================================
-    // API: Pelajaran list for template editor JS
-    // =========================================================
 
    public function apiMapelList(Request $request): \Illuminate\Http\JsonResponse
     {

@@ -41,5 +41,9 @@ class Kelas extends Model
     {
         return $this->belongsToMany(Pelajaran::class, 'kelas_pelajaran', 'kelas_id', 'pelajaran_id');
     }
+    public function documentTemplates(): HasMany
+    {
+        return $this->hasMany(DocumentTemplate::class, 'kelas_id', 'id');
+    }
 
 }

@@ -766,22 +766,31 @@ function attachTableHandles(pgData) {
     fc.on('object:moving', function (e) {
         if (_tblHandle.fabricObj === e.target) {
             _repositionHandles();
+                _repositionColHandles();
+
             _updateFloatPanelPos(pgData, e.target);
         }
     });
 }
-
 function _tryShowHandles(pgData, obj) {
     if (!obj || !obj.name) return;
     var td = pgData.tableStore[obj.name];
     if (!td || td.type === 'ttd') return;
+
+    obj.set({ lockMovementX: false, lockMovementY: false });
 
     _tblHandle.pgData    = pgData;
     _tblHandle.fabricObj = obj;
     _tblHandle.tableId   = obj.name;
     _tblHandle.td        = td;
 
+    // Tambahkan col handles
+    _colHandles.pgData    = pgData;
+    _colHandles.fabricObj = obj;
+    _colHandles.td        = td;
+
     _drawHandles();
+    _drawColHandles(); // ← tambahkan ini
     _showFloatPanel(pgData, obj, td);
 }
 
@@ -800,31 +809,43 @@ function _drawHandles() {
     var objLeft= obj.left || 0;
     var objW   = (obj.width  || td.totalWidth) * scaleX;
 
+    // Nonaktifkan pointer events tabel sementara
+    obj.set({ perPixelTargetFind: false });
+
     var cumY = objTop;
     s.handles = [];
 
     for (var ri = 0; ri < td.rowHeights.length - 1; ri++) {
         cumY += td.rowHeights[ri] * scaleY;
 
-        var line = new fabric.Line(
-            [objLeft, cumY, objLeft + objW, cumY],
-            {
-                stroke: '#38bdf8',
-                strokeWidth: 2,
-                selectable: false,
-                evented: true,
-                hoverCursor: 'row-resize',
-                name: '__handle_row_' + ri,
-                excludeFromExport: true,
-                padding: 7,
-            }
-        );
-        line._handleRowIndex = ri;
+        // Ganti Line dengan Rect tipis supaya hit area lebih lebar
+        var hitRect = new fabric.Rect({
+            left: objLeft,
+            top: cumY - 6,
+            width: objW,
+            height: 12,
+            fill: 'rgba(56,189,248,0.15)',
+            stroke: '#38bdf8',
+            strokeWidth: 2,
+            selectable: false,
+            evented: true,
+            hoverCursor: 'row-resize',
+            name: '__handle_row_' + ri,
+            excludeFromExport: true,
+            originX: 'left',
+            originY: 'top',
+            hasBorders: false,
+            hasControls: false,
+        });
+        hitRect._handleRowIndex = ri;
 
-        fc.add(line);
-        fc.bringToFront(line);
-        s.handles.push({ rowIndex: ri, lineObj: line });
+        fc.add(hitRect);
+        s.handles.forEach(function (h) { fc.bringToFront(h.lineObj); });
+        s.handles.push({ rowIndex: ri, lineObj: hitRect });
     }
+
+    // Paksa semua ke paling atas
+    s.handles.forEach(function (h) { fc.bringToFront(h.lineObj); });
 
     fc.requestRenderAll();
     _attachDragEvents(fc);
@@ -836,12 +857,35 @@ function _clearHandles() {
     if (!s.pgData) return;
     var fc = s.pgData.canvas;
 
+    // Kembalikan pointer events tabel
+    if (s.fabricObj) {
+        s.fabricObj.set({ perPixelTargetFind: false });
+    }
+
     s.handles.forEach(function (h) { fc.remove(h.lineObj); });
     s.handles      = [];
     s.dragging     = false;
     s.dragRowIndex = null;
     _detachDragEvents(fc);
 
+    _clearColHandles();
+    fc.requestRenderAll();
+}
+
+function _clearColHandles() {
+    var s = _colHandles;
+    if (!s.pgData) return;
+    var fc = s.pgData.canvas;
+
+    // Kembalikan pointer events tabel
+    if (s.fabricObj) {
+        s.fabricObj.set({ perPixelTargetFind: false });
+    }
+
+    s.handles.forEach(function (h) { fc.remove(h.lineObj); });
+    s.handles = [];
+    s.dragging = false;
+    s.dragColIndex = null;
     fc.requestRenderAll();
 }
 
@@ -866,64 +910,257 @@ function _repositionHandles() {
     });
     s.pgData.canvas.requestRenderAll();
 }
+// ============================================================
+// COL HANDLES STATE
+// ============================================================
+var _colHandles = {
+    handles: [],
+    pgData: null,
+    fabricObj: null,
+    td: null,
+    dragging: false,
+    dragColIndex: null,
+    dragStartX: null,
+    dragStartW: null,
+};
 
-// ─── Drag event handlers ─────────────────────────────────────
+function _drawColHandles() {
+    // Bersihkan handles lama dulu tanpa _clearColHandles penuh
+    var s = _colHandles;
+    if (s.pgData) {
+        var fcOld = s.pgData.canvas;
+        s.handles.forEach(function (h) { fcOld.remove(h.lineObj); });
+    }
+    s.handles = [];
+    s.dragging = false;
+    s.dragColIndex = null;
+
+    if (!s.td || !s.fabricObj) return;
+
+    var fc     = s.pgData.canvas;
+    var obj    = s.fabricObj;
+    var td     = s.td;
+    var scaleX = obj.scaleX || 1;
+    var scaleY = obj.scaleY || 1;
+    var objTop = obj.top  || 0;
+    var objLeft= obj.left || 0;
+    var objH   = td.totalHeight * scaleY;
+
+    var cumX = objLeft;
+
+    for (var ci = 0; ci < td.colWidths.length - 1; ci++) {
+        cumX += td.colWidths[ci] * scaleX;
+
+        var hitRect = new fabric.Rect({
+            left:   cumX - 6,
+            top:    objTop,
+            width:  12,
+            height: objH,
+            fill:   'rgba(249,115,22,0.15)',
+            stroke: '#f97316',
+            strokeWidth: 2,
+            selectable:  false,
+            evented:     false,   // ← FALSE, deteksi manual via absolutePointer
+            hoverCursor: 'col-resize',
+            name: '__handle_col_' + ci,
+            excludeFromExport: true,
+            originX: 'left',
+            originY: 'top',
+            hasBorders:  false,
+            hasControls: false,
+        });
+        hitRect._handleColIndex = ci;
+
+        fc.add(hitRect);
+        fc.bringToFront(hitRect);
+        s.handles.push({ colIndex: ci, lineObj: hitRect });
+    }
+
+    fc.requestRenderAll();
+}
+
+function _clearColHandles() {
+    var s = _colHandles;
+    if (!s.pgData) return;
+    var fc = s.pgData.canvas;
+    s.handles.forEach(function (h) { fc.remove(h.lineObj); });
+    s.handles      = [];
+    s.dragging     = false;
+    s.dragColIndex = null;
+    fc.requestRenderAll();
+}
+
+function _repositionColHandles() {
+    var s = _colHandles;
+    if (!s.fabricObj || !s.handles.length) return;
+
+    var obj    = s.fabricObj;
+    var td     = s.td;
+    var scaleX = obj.scaleX || 1;
+    var scaleY = obj.scaleY || 1;
+    var objTop = obj.top  || 0;
+    var objLeft= obj.left || 0;
+    var objH   = td.totalHeight * scaleY;
+
+    var cumX = objLeft;
+    s.handles.forEach(function (h, i) {
+        cumX += td.colWidths[i] * scaleX;
+        // Rect pakai left/top/width/height, BUKAN x1/y1
+        h.lineObj.set({
+            left:   cumX - 6,
+            top:    objTop,
+            width:  12,
+            height: objH,
+        });
+        h.lineObj.setCoords();
+    });
+    s.pgData.canvas.requestRenderAll();
+}
+
+function _showColHandleTooltip(width, pgData, colIndex) {
+    var tt = document.getElementById('__colHandleTooltip');
+    if (!tt) {
+        tt = document.createElement('div');
+        tt.id = '__colHandleTooltip';
+        tt.style.cssText =
+            'position:fixed;z-index:99999;background:rgba(15,23,42,0.92);color:#fff;' +
+            'font:bold 11px/1 monospace;padding:4px 8px;border-radius:5px;' +
+            'pointer-events:none;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.3);';
+        document.body.appendChild(tt);
+    }
+    var s    = _colHandles;
+    var fc   = pgData.canvas;
+    var rect = fc.wrapperEl.getBoundingClientRect();
+    var h    = s.handles[colIndex];
+    if (h) {
+        var lx = (h.lineObj.left + 6) * currentZoom;
+        tt.style.left = (rect.left + lx + 6) + 'px';
+        tt.style.top  = (rect.top + 8) + 'px';
+    }
+    tt.textContent = width + ' px';
+    tt.style.display = 'block';
+}
+
+function _removeColHandleTooltip() {
+    var tt = document.getElementById('__colHandleTooltip');
+    if (tt) tt.style.display = 'none';
+}
+
+// ============================================================
+// ROW + COL DRAG EVENTS — satu sistem terpadu
+// ============================================================
 function _attachDragEvents(fc) {
     _detachDragEvents(fc);
 
     _tblHandle._onDown = function (opt) {
-        var target = opt.target;
-        if (!target || typeof target._handleRowIndex === 'undefined') return;
+        var pointer = opt.absolutePointer;
+        if (!pointer) return;
 
-        var s         = _tblHandle;
-        s.dragging    = true;
-        s.dragRowIndex= target._handleRowIndex;
-        s.dragStartY  = opt.absolutePointer.y;
-        s.dragStartH  = s.td.rowHeights[s.dragRowIndex];
+        // ── Cek col handles (manual hit-test karena evented:false) ──
+        var sc = _colHandles;
+        for (var ci = 0; ci < sc.handles.length; ci++) {
+            var ch = sc.handles[ci].lineObj;
+            var chL = ch.left;
+            var chR = chL + (ch.width  || 12);
+            var chT = ch.top;
+            var chB = chT + (ch.height || 0);
+            if (pointer.x >= chL && pointer.x <= chR &&
+                pointer.y >= chT && pointer.y <= chB) {
+                sc.dragging     = true;
+                sc.dragColIndex = sc.handles[ci].colIndex;
+                sc.dragStartX   = pointer.x;
+                sc.dragStartW   = sc.td.colWidths[sc.dragColIndex];
+                fc.selection    = false;
+                if (sc.fabricObj) sc.fabricObj.set({ lockMovementX: true, lockMovementY: true });
+                ch.set({ fill: 'rgba(239,68,68,0.25)', stroke: '#ef4444', strokeWidth: 3 });
+                fc.requestRenderAll();
+                return;
+            }
+        }
 
-        // Lock movement tabel supaya tidak ikut geser
-        fc.selection = false;
-        if (s.fabricObj) s.fabricObj.set({ lockMovementX: true, lockMovementY: true });
-
-        // Highlight handle aktif
-        target.set({ stroke: '#f43f5e', strokeWidth: 3 });
-        fc.requestRenderAll();
+        // ── Cek row handles (manual hit-test karena evented:false) ──
+        var sr = _tblHandle;
+        for (var ri = 0; ri < sr.handles.length; ri++) {
+            var rh = sr.handles[ri].lineObj;
+            var rhL = rh.left;
+            var rhR = rhL + (rh.width  || 0);
+            var rhT = rh.top;
+            var rhB = rhT + (rh.height || 12);
+            if (pointer.x >= rhL && pointer.x <= rhR &&
+                pointer.y >= rhT && pointer.y <= rhB) {
+                sr.dragging     = true;
+                sr.dragRowIndex = sr.handles[ri].rowIndex;
+                sr.dragStartY   = pointer.y;
+                sr.dragStartH   = sr.td.rowHeights[sr.dragRowIndex];
+                fc.selection    = false;
+                if (sr.fabricObj) sr.fabricObj.set({ lockMovementX: true, lockMovementY: true });
+                rh.set({ fill: 'rgba(244,63,94,0.25)', stroke: '#f43f5e', strokeWidth: 3 });
+                fc.requestRenderAll();
+                return;
+            }
+        }
     };
 
     _tblHandle._onMove = function (opt) {
-        var s = _tblHandle;
-        if (!s.dragging) return;
+        var pointer = opt.absolutePointer;
+        if (!pointer) return;
 
-        var dy        = opt.absolutePointer.y - s.dragStartY;
-        var newHeight = Math.max(14, Math.round(s.dragStartH + dy));
+        // Col drag
+        if (_colHandles.dragging) {
+            var sc   = _colHandles;
+            var dx   = pointer.x - sc.dragStartX;
+            var newW = Math.max(20, Math.round(sc.dragStartW + dx));
+            sc.td.colWidths[sc.dragColIndex] = newW;
+            sc.td.totalWidth = sc.td.colWidths.reduce(function (a, b) { return a + b; }, 0);
+            _liveRerenderTable({ td: sc.td, fabricObj: sc.fabricObj, pgData: sc.pgData });
+            _repositionColHandles();
+            _repositionHandles();
+            _showColHandleTooltip(newW, sc.pgData, sc.dragColIndex);
+            return;
+        }
 
-        s.td.rowHeights[s.dragRowIndex] = newHeight;
-        s.td.totalHeight = s.td.rowHeights.reduce(function (a, b) { return a + b; }, 0);
-
-        _liveRerenderTable(s);
-        _repositionHandles();
-
-        // Update tooltip tinggi di handle yang aktif
-        _showHandleTooltip(s, newHeight);
+        // Row drag
+        if (_tblHandle.dragging) {
+            var sr   = _tblHandle;
+            var dy   = pointer.y - sr.dragStartY;
+            var newH = Math.max(14, Math.round(sr.dragStartH + dy));
+            sr.td.rowHeights[sr.dragRowIndex] = newH;
+            sr.td.totalHeight = sr.td.rowHeights.reduce(function (a, b) { return a + b; }, 0);
+            _liveRerenderTable(sr);
+            _repositionHandles();
+            _repositionColHandles();
+            _showHandleTooltip(sr, newH);
+        }
     };
 
     _tblHandle._onUp = function () {
-        var s = _tblHandle;
-        if (!s.dragging) return;
-
-        s.dragging = false;
         fc.selection = true;
-        if (s.fabricObj) s.fabricObj.set({ lockMovementX: false, lockMovementY: false });
 
-        // Reset warna semua handle
-        s.handles.forEach(function (h) {
-            h.lineObj.set({ stroke: '#38bdf8', strokeWidth: 2 });
-        });
+        if (_colHandles.dragging) {
+            var sc = _colHandles;
+            sc.dragging = false;
+            if (sc.fabricObj) sc.fabricObj.set({ lockMovementX: false, lockMovementY: false });
+            sc.handles.forEach(function (h) {
+                h.lineObj.set({ fill: 'rgba(249,115,22,0.15)', stroke: '#f97316', strokeWidth: 2 });
+            });
+            _removeColHandleTooltip();
+            fc.requestRenderAll();
+            saveStateForPage(sc.pgData);
+            renderPageThumbnails();
+        }
 
-        _removeHandleTooltip();
-        fc.requestRenderAll();
-        saveStateForPage(s.pgData);
-        renderPageThumbnails();
+        if (_tblHandle.dragging) {
+            var sr = _tblHandle;
+            sr.dragging = false;
+            if (sr.fabricObj) sr.fabricObj.set({ lockMovementX: false, lockMovementY: false });
+            sr.handles.forEach(function (h) {
+                h.lineObj.set({ fill: 'rgba(56,189,248,0.15)', stroke: '#38bdf8', strokeWidth: 2 });
+            });
+            _removeHandleTooltip();
+            fc.requestRenderAll();
+            saveStateForPage(sr.pgData);
+            renderPageThumbnails();
+        }
     };
 
     fc.on('mouse:down', _tblHandle._onDown);
@@ -996,7 +1233,7 @@ function _liveRerenderTable(s) {
             var oldLeft = obj.left, oldTop = obj.top, oldName = obj.name;
             newImg.set({
                 left: oldLeft, top: oldTop, name: oldName,
-                selectable: true, evented: true, hasBorders: true,
+                selectable: true, evented: false, hasBorders: true,
                 hasControls: true, lockRotation: true,
             });
             newImg._isTable = true;
@@ -1836,11 +2073,16 @@ document.addEventListener('DOMContentLoaded', function () {
     var btnLoad  = document.getElementById('btnLoadMapel');
     if (selKelas) selKelas.addEventListener('change', function () {
         var id = this.value;
+        // append value to input hidden 
+        var inputHiddenKelas = document.getElementById('kelas_id');
+        if (inputHiddenKelas) inputHiddenKelas.value = id;
         if (btnLoad) btnLoad.disabled = !id;
         if (id) loadMapelFromAPI(id);
     });
     if (btnLoad) btnLoad.addEventListener('click', function () {
         var id = document.getElementById('raportTingkatKelas').value;
+        var inputHiddenKelas = document.getElementById('kelas_id');
+        if (inputHiddenKelas) inputHiddenKelas.value = id;
         if (id) loadMapelFromAPI(id);
     });
 });

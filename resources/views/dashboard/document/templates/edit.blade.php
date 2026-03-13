@@ -2,198 +2,9 @@
 
 @push('css')
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
-<style>
-    /*
-     * ============================================================
-     * UKURAN A4 @ 96 DPI — SESUAI PDF
-     * ============================================================
-     *
-     *  A4 fisik      : 210 mm × 297 mm
-     *  Browser 96dpi : 1 mm = 96/25.4 = 3.7795 px
-     *  Canvas        : round(210×3.7795) × round(297×3.7795)
-     *                = 794 px × 1123 px  ← ukuran canvas Fabric.js
-     *
-     *  Export PDF    : 1 px = 0.75 pt  (72/96, exact)
-     *                  794px × 0.75 = 595.5 pt  (A4 = 595.28pt, err <0.04%)
-     *
-     *  Margin        : 20 mm = round(20×3.7795) = 76 px
-     *  Grid minor    : 5 mm  = 18.898 px  (~19px)
-     *  Grid major    : 10 mm = 37.795 px  (~38px)
-     *  Ruler         : 22 px tinggi/lebar
-     *
-     *  Lebar konten  : 794 − 2×76 = 642 px  ← pakai untuk default lebar tabel
-     * ============================================================
-     */
-    :root {
-        --a4-w:       794px;    /* 210mm @ 96dpi */
-        --a4-h:       1123px;   /* 297mm @ 96dpi */
-        --a4-margin:  76px;     /* 20mm  @ 96dpi */
-        --ruler-sz:   22px;     /* tinggi/lebar ruler canvas */
-        --canvas-bg:  #dde1e7;
-        --premium:    #0d6efd;
-        --glass-bg:   rgba(255,255,255,0.88);
-        --glass-bd:   rgba(255,255,255,0.35);
-        --glass-sh:   0 4px 24px rgba(31,38,135,.07);
-    }
-
-    /* ── Editor root ─────────────────────────────────────────── */
-    #editorRoot { font-family:'Inter',sans-serif; background:#f0f2f5; }
-
-    /* ── Card glass ──────────────────────────────────────────── */
-    .card.shadow-sm {
-        border: 1px solid var(--glass-bd);
-        background: var(--glass-bg);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        box-shadow: var(--glass-sh) !important;
-        border-radius: 12px;
-    }
-    .card-header {
-        background: transparent !important;
-        border-bottom: 1px solid rgba(0,0,0,.06);
-        font-family: 'Outfit',sans-serif;
-    }
-    .btn-sm {
-        border-radius: 8px;
-        padding: .38rem .8rem;
-        font-weight: 500;
-        transition: all .18s ease;
-    }
-    .btn-sm:hover { transform: translateY(-1px); box-shadow: 0 3px 8px rgba(0,0,0,.1); }
-
-    /* ── Sidebar ─────────────────────────────────────────────── */
-    #sidebarLeft { overflow-y:auto; height:max-content !important; scrollbar-width:thin; }
-    #sidebarLeft::-webkit-scrollbar { width:4px; }
-    #sidebarLeft::-webkit-scrollbar-thumb { background:#dee2e6; border-radius:10px; }
-
-    /* ── Editor container (scroll area abu-abu) ─────────────── */
-    #editorContainer {
-        overflow: auto;
-        background: var(--canvas-bg);
-        /* Pola titik sesuai grid 5mm (~19px) */
-        background-image: radial-gradient(circle, rgba(0,0,0,.09) 1px, transparent 1px);
-        background-size: 18.898px 18.898px;   /* 5mm */
-        background-position: var(--ruler-sz) var(--ruler-sz);
-        border-radius: 4px;
-        position: relative;
-        height: calc(100vh - 180px);
-        user-select: none;
-    }
-
-    /*
-     * ── Ruler layout grid ────────────────────────────────────
-     */
-    #rulerLayout {
-        display: grid;
-        grid-template-columns: var(--ruler-sz) minmax(var(--a4-w), 1fr);
-        grid-template-rows: var(--ruler-sz) 1fr;
-        width: fit-content;
-        margin: 0 auto;
-    }
-
-    /* ── Corner ──────────────────────────────────────────────── */
-    #rulerCorner {
-        width: var(--ruler-sz); height: var(--ruler-sz);
-        background: #e9ecef;
-        border-right: 1px solid #ced4da;
-        border-bottom: 1px solid #ced4da;
-        z-index: 30;
-        position: sticky; top: 0; left: 0;
-        display: flex; align-items: center; justify-content: center;
-        font: 700 6.5px 'SF Mono',Consolas,monospace;
-        color: #adb5bd; letter-spacing: .4px;
-    }
-
-    /* ── Ruler canvases ─────────────────────────────────────── */
-    #rulerH {
-        display: block;
-        height: var(--ruler-sz) !important;
-        background: #f1f3f5;
-        border-bottom: 1px solid #ced4da;
-    }
-    #rulerV {
-        display: block;
-        width: var(--ruler-sz) !important;
-        background: #f1f3f5;
-        border-right: 1px solid #ced4da;
-    }
-
-    /* ── Canvas pages container ─────────────────────────────── */
-    #canvasPagesContainer {
-        padding: 40px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 32px;
-    }
-
-    /*
-     * ── Page block ───────────────────────────────────────────
-     */
-    #canvasPagesContainer .page-block {
-        display: inline-block;
-        width:  var(--a4-w);    /* 794px — JS override saat zoom */
-        height: var(--a4-h);    /* 1123px — JS override saat zoom */
-        border: 1px solid #c8c8c8;
-        box-shadow: 0 2px 8px rgba(0,0,0,.12), 0 8px 24px rgba(0,0,0,.08);
-        background: white;
-        line-height: 0;
-        position: relative;
-        transition: box-shadow .2s;
-    }
-    #canvasPagesContainer .page-block:hover {
-        box-shadow: 0 4px 16px rgba(0,0,0,.16), 0 8px 32px rgba(0,0,0,.08);
-    }
-    #canvasPagesContainer .page-block.active-page {
-        box-shadow:
-            0 0 0 2px var(--premium),
-            0 0 0 5px rgba(13,110,253,.15),
-            0 4px 20px rgba(0,0,0,.18);
-    }
-    #canvasPagesContainer canvas { border:none !important; box-shadow:none !important; display:block !important; }
-
-    /* ── Page label ─────────────────────────────────────────── */
-    .page-label {
-        position: absolute; top: -24px; left: 0;
-        font-size: 10.5px; color: #6c757d; font-weight: 500;
-        white-space: nowrap; display: flex; align-items: center; gap: 6px;
-    }
-    /* badge A4 · 210×297mm */
-    .page-label::after {
-        content: 'A4 · 210×297mm · 794×1123px';
-        font-size: 9px; color: #adb5bd; font-weight: 400;
-        background: rgba(255,255,255,.75); padding: 1px 6px;
-        border-radius: 4px; border: 1px solid #dee2e6;
-    }
-
-    /* ── Page thumbnails ────────────────────────────────────── */
-    #pageThumbnails .thumb-item {
-        cursor:pointer; border:2px solid transparent; border-radius:5px;
-        padding:2px; margin-bottom:5px; transition:border-color .15s;
-    }
-    #pageThumbnails .thumb-item:hover,
-    #pageThumbnails .thumb-item.active { border-color:var(--premium); }
-    #pageThumbnails .thumb-item canvas { display:block; width:100%; height:auto; pointer-events:none; }
-    #pageThumbnails .thumb-label { font-size:10px; color:#6c757d; text-align:center; margin-top:2px; }
-
-    /* ── Koordinat badge ────────────────────────────────────── */
-    .coord-val {
-        font-family: 'SF Mono',Consolas,monospace;
-        font-size: .71rem; background: rgba(0,0,0,.06);
-        border-radius: 4px; padding: 1px 5px; color: #212529;
-        min-width: 52px; display: inline-block; text-align: center;
-    }
-
-    /* ── A4 pill badge di toolbar ───────────────────────────── */
-    .pill-a4 {
-        font-size: .71rem; font-weight: 700;
-        background: #e7f1ff; color: var(--premium);
-        border: 1px solid #b6d4fe; border-radius: 20px;
-        padding: 2px 10px; letter-spacing: .3px; white-space: nowrap;
-    }
-</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="{{ asset('asset_dashboard/js/document/style.css') }}">
 @endpush
-
 @section('title','Edit Template Surat')
 
 @section('content')
@@ -401,7 +212,7 @@
     {{-- ====================================================== --}}
     {{-- CANVAS AREA                                            --}}
     {{-- ====================================================== --}}
-    <div class="col" style="min-width:0;">
+    <div class="col m-3" style="min-width:0;">
 
         <form action="{{ route('dashboard.documents.templates.update', $template) }}" method="POST" id="templateForm">
             @csrf
@@ -425,8 +236,9 @@
                                 value="{{ $template->name }}" placeholder="Contoh: Surat Keterangan Aktif" required>
                         </div>
                         <div class="col-md-3 d-flex gap-1">
+                            <input type="hidden" name="kelas_id" id="kelas_id" value="{{ $template->kelas_id ?? '' }}">
                             <button type="submit" class="btn btn-primary btn-sm">
-                                <i class="bi bi-save"></i> Simpan Perubahan
+                                <i class="bi bi-save"></i> Update
                             </button>
                             <a href="{{ route('dashboard.documents.templates.index') }}"
                                class="btn btn-outline-secondary btn-sm">Batal</a>

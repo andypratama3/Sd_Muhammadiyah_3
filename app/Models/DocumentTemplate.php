@@ -14,6 +14,7 @@ class DocumentTemplate extends Model
 
     protected $fillable = [
         'category_id',
+        'kelas_id',
         'name',
         'html_template',
         'canvas_json',
@@ -37,10 +38,9 @@ class DocumentTemplate extends Model
         return $this->hasMany(Document::class, 'template_id');
     }
 
-    public function kelasList(): BelongsToMany
+    public function kelasList(): BelongsTo
     {
-        return $this->belongsToMany(Kelas::class, 'document_template_kelas', 'document_template_id', 'kelas_id')
-                    ->withTimestamps();
+        return $this->belongsTo(Kelas::class, 'kelas_id', 'id');
     }
 
     public function pelajarans(): BelongsToMany

@@ -91,11 +91,11 @@
                                             </td>
                                             <td class="text-end pe-4">
                                                 <div class="d-flex gap-1 justify-content-end">
-                                                    <a href="{{ route('verify.show', $doc->verification_code) }}"
+                                                    {{-- <a href="{{ route('verify.show', $doc->verification_code) }}"
                                                         target="_blank" class="btn btn-sm btn-icon btn-outline-info"
                                                         data-bs-toggle="tooltip" title="Verifikasi Dokumen">
                                                         <i class="bx bx-qr-scan"></i>
-                                                    </a>
+                                                    </a> --}}
                                                     <a href="{{ route('dashboard.documents.download', $doc) }}"
                                                         class="btn btn-sm btn-icon btn-outline-success"
                                                         data-bs-toggle="tooltip" title="Download PDF">
