@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Dashboard\Document;
 
 use App\Http\Controllers\Controller;
 use App\Models\Document;
-use App\Models\DocumentCategory;
 use App\Models\DocumentTemplate;
 use App\Models\Siswa;
 use App\Services\DocumentGeneratorService;
@@ -328,7 +327,7 @@ class DocumentController extends Controller
     {
         $request->validate([
             'excel_file' => 'required|file|mimes:xlsx,xls|max:10240',
-        ]);
+        ]);        
 
         $template->load('category');
         $variables = $template->extractVariables();
@@ -390,6 +389,10 @@ class DocumentController extends Controller
             }
 
             try {
+                // Sementara tambahkan ini setelah $rows = $sheet->toArray(...)
+                \Log::info('Total rows setelah shift header+hidden: ' . count($rows));
+                \Log::info('Sample row pertama: ', [array_values($rows)[0] ?? []]);
+                \Log::info('ColToVar mapping: ', $colToVar);
                 $document   = $this->generatorService->generate($template, $userData, []);
                 $pdfContent = \Storage::disk('public')->get($document->file_path);
                 // Untuk rapot: nama file pakai nama_siswa + nisn

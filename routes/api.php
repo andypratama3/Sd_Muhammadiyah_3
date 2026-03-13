@@ -1,34 +1,34 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\Api\IpaymuPaymentApi;
-use App\Http\Controllers\Api\V2\DataController;
-use App\Http\Controllers\Api\V2\SPMBController;
+use App\Http\Controllers\Api\Dashboard\SendOrderIDWhatsAppApi;
 use App\Http\Controllers\Api\Dashboard\SiswaApi;
 use App\Http\Controllers\Api\Dashboard\WilayahApi;
-use App\Http\Controllers\Api\V2\LandingController;
-use App\Http\Controllers\Api\V2\GuruDataController;
-use App\Http\Controllers\Api\V2\RapotDataController;
-use App\Http\Controllers\Api\V2\ViewsDataController;
-use App\Http\Controllers\Api\V2\BeritaDataController;
-use App\Http\Controllers\Api\V2\JadwalDataController;
-use App\Http\Controllers\Api\V2\GalleryDataController;
-use App\Http\Controllers\Api\V2\TentangDataController;
-use App\Http\Controllers\Api\V2\PrestasiDataController;
-use App\Http\Controllers\Api\V2\FasilitasDataController;
-use App\Http\Controllers\Api\V2\PembayaranDataController;
+use App\Http\Controllers\Api\IpaymuPaymentApi;
 use App\Http\Controllers\Api\V1\MidtransPaymentController;
 use App\Http\Controllers\Api\V2\Absensi\AbsensiController;
-use App\Http\Controllers\Dashboard\Api\FacebookController;
-use App\Http\Controllers\Api\Dashboard\SendOrderIDWhatsAppApi;
-use App\Http\Controllers\Api\V2\EkstrakurikulerDataController;
-use App\Http\Controllers\Api\V2\TenagaKependidikanDataController;
-
 use App\Http\Controllers\Api\V2\Auth\AuthController as AuthControllerMobile;
+use App\Http\Controllers\Api\V2\BeritaDataController;
+use App\Http\Controllers\Api\V2\DataController;
+use App\Http\Controllers\Api\V2\EkstrakurikulerDataController;
+use App\Http\Controllers\Api\V2\FasilitasDataController;
+use App\Http\Controllers\Api\V2\GalleryDataController;
+use App\Http\Controllers\Api\V2\GuruDataController;
+use App\Http\Controllers\Api\V2\JadwalDataController;
+use App\Http\Controllers\Api\V2\LandingController;
 use App\Http\Controllers\Api\V2\Mobile\DashboardController as MobileDashboardController;
 use App\Http\Controllers\Api\V2\Mobile\PembayaranController as MobilePembayaranController;
+use App\Http\Controllers\Api\V2\PembayaranDataController;
+use App\Http\Controllers\Api\V2\PrestasiDataController;
+use App\Http\Controllers\Api\V2\RapotDataController;
+use App\Http\Controllers\Api\V2\SignatureController;
+use App\Http\Controllers\Api\V2\SPMBController;
+use App\Http\Controllers\Api\V2\TenagaKependidikanDataController;
+use App\Http\Controllers\Api\V2\TentangDataController;
+use App\Http\Controllers\Api\V2\ViewsDataController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Dashboard\Api\FacebookController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 
 /*
@@ -147,7 +147,6 @@ Route::group(['prefix' => 'v2'], function () {
     Route::group(['middleware' => 'jwt'], function () {
 
         // Route::post('/spmb/store', [SPMBController::class, 'store']);
-
         Route::get('count-landing',[LandingController::class, 'count']);
         Route::get('gallery-landing',[LandingController::class, 'gallery_activity']);
         Route::get('prestasi-landing',[LandingController::class, 'prestasi_landing']);
@@ -194,7 +193,6 @@ Route::group(['prefix' => 'v2'], function () {
         });
 
 
-
         Route::group(['prefix' => 'prestasi'], function () {
             Route::get('/categories', [PrestasiDataController::class, 'categories']);
             Route::get('/categories/siswa', [PrestasiDataController::class, 'categoriesSiswa']);
@@ -228,6 +226,8 @@ Route::group(['prefix' => 'v2'], function () {
             // Alternative: Get temporary signed URL
             Route::get('/url/{siswaId}/{rapotId}', [RapotDataController::class, 'getDownloadUrl']);
         });
+
+        Route::get('signature/verify', [SignatureController::class, 'verify']);
 
         // Statistics endpoint
         Route::get('/statistics', [PrestasiDataController::class, 'statistics']);
