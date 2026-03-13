@@ -81,7 +81,7 @@ class DocumentGeneratorService
         //    QR di-render sebagai base64 PNG (bukan SVG inline) karena DomPDF
         //    memiliki bug rendering SVG inline yang menyebabkan shift posisi.
         if ($template->hasBarcodeSignature()) {
-            $verifyUrl = url('/verify/' . $verificationCode);
+            $verifyUrl = ('https://sdmuhammadiyah3smd.com/verify/' . $verificationCode);
             $html = str_replace('{{barcode_signature}}', $this->generateQrHtml($verifyUrl), $html);
         }
 
