@@ -2489,15 +2489,80 @@ function addLogoImage(e) {
         });
     };
     reader.readAsDataURL(f); e.target.value = '';
-}
+}function addBarcode() {
+    var canvas = getCanvas();
+    if (!canvas) return;
 
-function addBarcode() {
-    var canvas = getCanvas(); if (!canvas) return;
+    // Register variabel supaya muncul di panel variabel
+    registerVariable('barcode_signature',   'Barcode / TTD Digital');
+    registerVariable('name_kepala_sekolah', 'Nama Kepala Sekolah');
+
     var g = new fabric.Group([
-        new fabric.Rect({ width: 120, height: 120, fill: '#fff', stroke: '#333', strokeWidth: 1, rx: 4, ry: 4 }),
-        new fabric.Text('{{barcode_signature}}', { fontSize: 9, fontFamily: 'Courier New', fill: '#333', textAlign: 'center', originX: 'center', originY: 'center', left: 60, top: 60 }),
-    ], { left: 620, top: 860, name: 'barcode' });
-    canvas.add(g); canvas.requestRenderAll(); saveState();
+
+        // BOX BARCODE — tanpa border (fill putih saja)
+        new fabric.Rect({
+            width:       120,
+            height:      120,
+            fill:        '#fff',
+            stroke:      '#fff',      
+            strokeWidth: 1,
+            rx:          4,
+            ry:          4,
+            left:        0,
+            top:         0
+        }),
+
+        // TEXT BARCODE PLACEHOLDER — label judul
+        new fabric.Text('Kepala Sekolah', {
+            fontSize:   12,
+            fontFamily: 'Arial',
+            fill:       '#000',
+            fontWeight: 'bold',
+            textAlign:  'center',
+            originX:    'center',
+            left:       60,
+            top:        0
+        }),
+
+        // Variabel barcode di tengah kotak
+        new fabric.Text('{{barcode_signature}}', {
+            fontSize:   10,
+            fontFamily: 'Courier New',
+            fill:       '#333',
+            textAlign:  'center',
+            originX:    'center',
+            originY:    'center',
+            left:       60,
+            top:        60
+        }),
+
+        // NAMA KEPALA SEKOLAH
+        new fabric.Text('{{name_kepala_sekolah}}', {
+            fontSize:   12,
+            fontFamily: 'Arial',
+            fill:       '#000',
+            fontWeight: 'bold',
+            textAlign:  'center',
+            originX:    'center',
+            left:       60,
+            top:        135
+        })
+
+    ], {
+        left:        620,   // posisi asli tidak berubah
+        top:         860,   // posisi asli tidak berubah
+        name:        'barcode',
+        selectable:  true,
+        evented:     true,  // ← supaya bisa diseleksi
+        hasBorders:  true,
+        hasControls: true,
+        lockRotation: true,
+    });
+
+    canvas.add(g);
+    canvas.setActiveObject(g);
+    canvas.requestRenderAll();
+    saveState();
 }
 
 function removeSelected() {
@@ -2610,7 +2675,27 @@ function generateHTMLForPage(pgData) {
                 if (src) html += '<img src="' + src + '" style="' + posStyle + dimS + 'display:block;" />';
             }
         } else if (obj.type === 'group' && obj.name === 'barcode') {
-            html += '<div style="' + posStyle + 'width:' + wPt + 'pt;height:' + hPt + 'pt;">{{barcode_signature}}</div>';
+            var bScaleX = obj.scaleX || 1, bScaleY = obj.scaleY || 1;
+            var bHalfW  = (obj.width  || 0) / 2 * bScaleX;
+            var bHalfH  = (obj.height || 0) / 2 * bScaleY;
+            var bLeft   = (obj.left   || 0) - bHalfW;  // Fabric group origin = center
+            var bTop    = (obj.top    || 0) - bHalfH;
+            var bW      = (obj.width  || 170) * bScaleX;
+            var bH      = (obj.height || 170) * bScaleY;
+            // Kotak barcode (sub-elemen pertama setelah label)
+            var bBoxW = 120 * bScaleX, bBoxH = 120 * bScaleY;
+            var bBoxLeft = bLeft + (bW - bBoxW) / 2;
+            var bBoxTop  = bTop  + 16 * bScaleY;
+            html +=
+                '<div style="position:absolute;left:' + pt(bLeft) + 'pt;top:' + pt(bTop) + 'pt;' +
+                'width:' + pt(bW) + 'pt;font-family:DejaVu Sans,Arial,sans-serif;text-align:center;">' +
+                    '<div style="font-size:7.5pt;font-weight:bold;color:#1a5276;margin-bottom:2pt;">Kepala Sekolah</div>' +
+                    '<div style="width:' + pt(bBoxW) + 'pt;height:' + pt(bBoxH) + 'pt;' +
+                    'margin:0 auto;display:flex;align-items:center;justify-content:center;">' +
+                        '{{barcode_signature}}' +
+                    '</div>' +
+                    '<div style="font-size:7.5pt;font-weight:bold;color:#1a5276;margin-top:3pt;">{{name_kepala_sekolah}}</div>' +
+                '</div>';
         } else if (obj.type === 'line') {
             var br = obj.getBoundingRect(true), sw = pt(obj.strokeWidth || 1);
             if (sw < 0.75) sw = 0.75;
