@@ -18,7 +18,7 @@ var _rulerRafId  = null;
 var gridVisible  = false;
 
 // ── Margin state ──────────────────────────────────────────────
-var marginVisible = true;
+var marginVisible = false;
 
 // ─────────────────────────────────────────────────────────────
 // RULER

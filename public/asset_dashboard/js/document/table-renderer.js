@@ -1,7 +1,12 @@
 /**
  * table-renderer.js — render tabel ke canvas & semua fungsi insert tabel
  *
- * Depends: constants.js, utils.js, page-manager.js (saveState),
+ * PATCH:
+ *  - createTablePlaceholder: setelah insert, otomatis split ke halaman berikutnya
+ *    jika tabel melebihi batas bawah halaman (fix: 100+ baris overflow)
+ *  - Jika totalHeight > available space dari dropY, langsung split saat insert
+ *
+ * Depends: constants.js, utils.js, page-manager.js (saveState, checkTableOverflow),
  *          variable-registry.js (registerVariable)
  */
 
@@ -34,25 +39,117 @@ function createTablePlaceholder(tableData, startX, startY) {
         return Math.abs(p.x - startX) < 20 && Math.abs(p.y - dropY) < 20;
     })) { dropY += 20; }
 
-    // Render ke gambar
-    var offscreen   = renderTableToCanvas(tableData);
+    // Cek apakah tabel perlu langsung di-split saat insert
+    // (misal: 100 baris, totalHeight > sisa ruang halaman)
+    var availH = (CANVAS_H - MARGIN) - dropY;
+
+    if (tableData.totalHeight > availH && availH > 0) {
+        // Split langsung saat insert — bagian atas di halaman ini, sisanya ke halaman berikut
+        _splitTableOnInsert(pg, tableData, id, startX, dropY, availH);
+        return;
+    }
+
+    // Tabel muat di halaman ini — render normal
+    _renderAndPlace(pg, canvas, tableData, id, startX, dropY, true);
+}
+
+/**
+ * Render tabel dan tempatkan di canvas.
+ * @param {object}  pg         halaman
+ * @param {object}  canvas     fabric canvas
+ * @param {object}  td         table data
+ * @param {string}  id         nama object
+ * @param {number}  x          left
+ * @param {number}  y          top
+ * @param {boolean} setActive  apakah set sebagai active object
+ */
+function _renderAndPlace(pg, canvas, td, id, x, y, setActive) {
+    var offscreen   = renderTableToCanvas(td);
     var finalCanvas = document.createElement('canvas');
-    finalCanvas.width  = tableData.totalWidth;
-    finalCanvas.height = tableData.totalHeight;
-    finalCanvas.getContext('2d').drawImage(offscreen, 0, 0, tableData.totalWidth, tableData.totalHeight);
+    finalCanvas.width  = td.totalWidth;
+    finalCanvas.height = td.totalHeight;
+    finalCanvas.getContext('2d').drawImage(offscreen, 0, 0, td.totalWidth, td.totalHeight);
 
     fabric.Image.fromURL(finalCanvas.toDataURL(), function (img) {
         img.set({
-            left: startX, top: dropY, name: id,
+            left: x, top: y, name: id,
             selectable: true, evented: true,
             hasBorders: true, hasControls: true, lockRotation: true,
         });
         img._isTable = true;
         canvas.add(img);
-        canvas.setActiveObject(img);
+        if (setActive) canvas.setActiveObject(img);
         canvas.requestRenderAll();
-        saveState();
+        saveStateForPage(pg);
+        renderPageThumbnails();
     });
+}
+
+/**
+ * Split tabel saat insert: bagian yang muat → halaman ini,
+ * sisa baris → halaman berikutnya via _placeTableOnNextPage (page-manager.js).
+ * Rekursif: bagian bawah juga bisa overflow ke halaman ke-3, dst.
+ */
+function _splitTableOnInsert(pg, td, id, x, dropY, availH) {
+    var canvas = pg.canvas;
+
+    // Hitung sampai baris keberapa yang muat di availH
+    var cumH        = 0;
+    var splitRowIdx = -1;
+    for (var ri = 0; ri < td.rowHeights.length; ri++) {
+        cumH += td.rowHeights[ri];
+        if (cumH > availH) {
+            splitRowIdx = ri;
+            break;
+        }
+    }
+
+    // Tidak cukup ruang untuk header+1 baris → pindahkan semua ke halaman baru
+    if (splitRowIdx <= 1) {
+        delete pg.tableStore[id];
+        _placeTableOnNextPage(pg, td);  // dari page-manager.js, rekursif otomatis
+        switchPage(Math.min(pages.indexOf(pg) + 1, pages.length - 1));
+
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                toast: true, position: 'bottom-end', icon: 'info',
+                title: 'Tabel dipindahkan ke halaman baru (tidak cukup ruang)',
+                showConfirmButton: false, timer: 3000, timerProgressBar: true,
+            });
+        }
+        return;
+    }
+
+    // Bagian atas (muat di halaman ini)
+    var topRows    = td.rows.slice(0, splitRowIdx);
+    var topHeights = td.rowHeights.slice(0, splitRowIdx);
+    var topTd = Object.assign({}, td, {
+        rows:        topRows,
+        rowHeights:  topHeights,
+        totalHeight: topHeights.reduce(function (a, b) { return a + b; }, 0),
+    });
+    pg.tableStore[id] = topTd;
+    _renderAndPlace(pg, canvas, topTd, id, x, dropY, true);
+
+    // Bagian bawah — header diulang, ditempatkan via page-manager (rekursif otomatis)
+    var botRows    = [td.rows[0]].concat(td.rows.slice(splitRowIdx));
+    var botHeights = [td.rowHeights[0]].concat(td.rowHeights.slice(splitRowIdx));
+    var botTd = Object.assign({}, td, {
+        rows:        botRows,
+        rowHeights:  botHeights,
+        totalHeight: botHeights.reduce(function (a, b) { return a + b; }, 0),
+    });
+
+    // _placeTableOnNextPage di page-manager.js sudah handle rekursif
+    _placeTableOnNextPage(pg, botTd);
+
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            toast: true, position: 'bottom-end', icon: 'info',
+            title: 'Tabel dibagi otomatis ke beberapa halaman',
+            showConfirmButton: false, timer: 3000, timerProgressBar: true,
+        });
+    }
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -84,7 +181,6 @@ function renderTableToCanvas(td) {
         var isMergedRow = row[0] && row[0].isMerged;
 
         if (isMergedRow) {
-            // Baris merged (judul kelompok)
             ctx.fillStyle = headerColor;
             ctx.fillRect(0, curY, totalW, rowH);
             ctx.strokeStyle = borderColor;
@@ -120,14 +216,12 @@ function renderTableToCanvas(td) {
                 var cell  = row[ci] || { text: '', align: 'left' };
                 var cellW = colWidths[ci] || 60;
 
-                // Background + border
                 ctx.fillStyle   = rowBg;
                 ctx.fillRect(curX, curY, cellW, rowH);
                 ctx.strokeStyle = borderColor;
                 ctx.lineWidth   = 0.5;
                 ctx.strokeRect(curX + 0.25, curY + 0.25, cellW - 0.5, rowH - 0.5);
 
-                // Text
                 var cellText = (cell.text || '')
                     .replace(/\{\{[^}]+\}\}/g, '…')
                     .replace(/\n/g, ' ');
@@ -159,7 +253,7 @@ function renderTableToCanvas(td) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// INSERT FUNCTIONS
+// INSERT FUNCTIONS (sama persis dengan asli)
 // ─────────────────────────────────────────────────────────────
 
 function insertCustomTable() {
@@ -174,13 +268,11 @@ function insertCustomTable() {
     var headersRaw = document.getElementById('tableHeaders').value
         .split(',').map(function (s) { return s.trim(); });
 
-    // Baris header
     var headerRow = [];
     for (var c = 0; c < colCount; c++) {
         headerRow.push({ text: headersRaw[c] || 'Kolom ' + (c + 1), align: 'center' });
     }
 
-    // Baris data
     var tableRows = [headerRow];
     for (var r = 0; r < rowCount; r++) {
         var row = [];
@@ -193,7 +285,6 @@ function insertCustomTable() {
         tableRows.push(row);
     }
 
-    // Lebar kolom
     var colSpecs = [];
     if (hasRowNum) {
         colSpecs.push(28);
@@ -304,7 +395,12 @@ function insertKelasMapelTable() {
         });
     }
 
-    if (tableRows.length <= 1) { alert('Tidak ada data kelas/mapel.'); return; }
+    if (tableRows.length <= 1) {
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({ toast: true, position: 'bottom-end', icon: 'warning', title: 'Tidak ada data kelas/mapel.', showConfirmButton: false, timer: 2500 });
+        }
+        return;
+    }
 
     var colWidths = buildColWidths(colSpecs, tableWidth);
     var totalH    = (rowHeight + 4) + (tableRows.length - 1) * rowHeight;
@@ -323,7 +419,6 @@ function insertKelasMapelTable() {
     }, MARGIN, 200);
 }
 
-// ── Raport state ──────────────────────────────────────────────
 var _raportKelompoks     = [];
 var _raportAktifKelompok = {};
 
@@ -358,7 +453,7 @@ function insertRaportTable() {
     aktifKelompoks.forEach(function (grp) {
         grp.mapels.forEach(function (mp) {
             if (autoVar) {
-               autoVars.push({ name: mp.var_nilai,   label: 'Nilai '   + mp.nama });
+                autoVars.push({ name: mp.var_nilai,   label: 'Nilai '   + mp.nama });
                 autoVars.push({ name: mp.var_capaian, label: 'Capaian ' + mp.nama });
             }
             tableRows.push([
@@ -577,7 +672,6 @@ function insertTTDArea() {
         });
     });
 
-    // Buat group Fabric
     var objs = [];
     var cx   = 0;
 

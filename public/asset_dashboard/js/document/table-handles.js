@@ -1,6 +1,9 @@
 /**
  * table-handles.js — row & column resize drag handles di atas canvas
  *
+ * PATCH: _showFloatPanel → alias ke _showStylePanel (table-style-panel.js)
+ *        _updateFloatPanelPos → alias ke _updateStylePanelPos (table-style-panel.js)
+ *
  * Depends: constants.js, utils.js, page-manager.js (saveStateForPage, renderPageThumbnails)
  */
 
@@ -32,6 +35,31 @@ var _colHandle = {
     dragStartX:   null,
     dragStartW:   null,
 };
+
+// ─────────────────────────────────────────────────────────────
+// ALIAS FIX — sambungkan nama lama ke fungsi di table-style-panel.js
+// Dipanggil setelah kedua file di-load (DOMContentLoaded-safe)
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * _showFloatPanel — alias ke _showStylePanel
+ * Dipanggil oleh _tryShowHandles saat tabel dipilih.
+ */
+function _showFloatPanel(pgData, obj, td) {
+    if (typeof _showStylePanel === 'function') {
+        _showStylePanel(pgData, obj, td);
+    }
+}
+
+/**
+ * _updateFloatPanelPos — alias ke _updateStylePanelPos
+ * Dipanggil saat tabel di-drag agar panel ikut bergerak.
+ */
+function _updateFloatPanelPos(pgData, obj) {
+    if (typeof _updateStylePanelPos === 'function') {
+        _updateStylePanelPos(pgData, obj);
+    }
+}
 
 // ─────────────────────────────────────────────────────────────
 // ATTACH / DETACH to a page
@@ -430,11 +458,11 @@ function _showRowResizeTooltip(s, height) {
     var rect = fc.wrapperEl.getBoundingClientRect();
     var activeHandle = s.handles[s.dragRowIndex];
     if (activeHandle) {
-        var lineY = activeHandle.lineObj.y1 * currentZoom;
+        var lineY = (activeHandle.lineObj.top || 0) * currentZoom;
         tt.style.left = (rect.left + 8) + 'px';
         tt.style.top  = (rect.top + lineY - 20) + 'px';
     }
-    tt.textContent  = height + ' px';
+    tt.textContent   = height + ' px';
     tt.style.display = 'block';
 }
 
@@ -449,7 +477,7 @@ function _showColResizeTooltip(width, pgData, colIndex) {
     var rect = fc.wrapperEl.getBoundingClientRect();
     var h    = _colHandle.handles[colIndex];
     if (h) {
-        var lx = (h.lineObj.left + 6) * currentZoom;
+        var lx = ((h.lineObj.left || 0) + 6) * currentZoom;
         tt.style.left = (rect.left + lx + 6) + 'px';
         tt.style.top  = (rect.top + 8) + 'px';
     }
@@ -500,7 +528,7 @@ function _liveRerenderTable(s) {
 
             newImg.set({
                 left: oldLeft, top: oldTop, name: oldName,
-                selectable: true, evented: false,
+                selectable: true, evented: true,
                 hasBorders: true, hasControls: true, lockRotation: true,
             });
             newImg._isTable = true;

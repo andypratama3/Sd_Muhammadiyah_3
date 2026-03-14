@@ -1,10 +1,14 @@
 /**
- * init.js — inisialisasi saat DOMContentLoaded, modal handlers,
- *            restore canvas dari JSON, form submit, global exports
+ * init.js — inisialisasi DOMContentLoaded, modal handlers,
+ *            restore canvas, form submit, global exports
  *
- * Harus di-load TERAKHIR setelah semua modul lain.
- *
- * Depends: semua modul lain
+ * IMPROVEMENTS:
+ *  - SweetAlert2 untuk semua feedback & konfirmasi
+ *  - Form submit dengan validasi yang lebih baik
+ *  - Loading overlay saat menyimpan
+ *  - Toast notification untuk aksi berhasil
+ *  - Global exports lengkap termasuk addShape, distributeObjects
+ *  - Perbaikan modal tabel: tombol insert lebih robust
  */
 
 // ─────────────────────────────────────────────────────────────
@@ -24,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Preset buttons (pakai event delegation pada container)
+    // Preset buttons (event delegation)
     var presetContainer = document.getElementById('presetButtons');
     if (presetContainer) {
         presetContainer.addEventListener('click', function (e) {
@@ -33,21 +37,21 @@ document.addEventListener('DOMContentLoaded', function () {
             if (nameInput)   nameInput.value  = btn.dataset.name;
             if (labelInput)  labelInput.value = btn.dataset.label;
             if (previewCode) previewCode.textContent = '{{ ' + btn.dataset.name + ' }}';
-            if (nameInput)   nameInput.classList.remove('is-invalid');
+            nameInput && nameInput.classList.remove('is-invalid');
         });
     }
 
-    // Juga dukung preset dari accordion (_modal_variable.blade.php baru)
+    // Preset dari accordion
     document.addEventListener('click', function (e) {
         var btn = e.target.closest('.preset-var-btn');
         if (!btn) return;
         if (nameInput)   nameInput.value  = btn.dataset.name;
         if (labelInput)  labelInput.value = btn.dataset.label;
         if (previewCode) previewCode.textContent = '{{ ' + btn.dataset.name + ' }}';
-        if (nameInput)   nameInput.classList.remove('is-invalid');
+        nameInput && nameInput.classList.remove('is-invalid');
     });
 
-    // Tombol konfirmasi
+    // Konfirmasi tambah variabel
     var btnConfirm = document.getElementById('btnConfirmVariable');
     if (btnConfirm) {
         btnConfirm.addEventListener('click', function () {
@@ -57,6 +61,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     nameInput.classList.add('is-invalid');
                     nameInput.focus();
                 }
+                Swal.fire({
+                    toast: true, position: 'top', icon: 'warning',
+                    title: 'Nama variabel tidak boleh kosong',
+                    showConfirmButton: false, timer: 2000,
+                });
                 return;
             }
             var varName  = raw.replace(/\s+/g, '_').toLowerCase();
@@ -70,7 +79,13 @@ document.addEventListener('DOMContentLoaded', function () {
             if (previewCode) previewCode.textContent = '{{ nama_variabel }}';
 
             var modalEl = document.getElementById('modalVariable');
-            if (modalEl) bootstrap.Modal.getInstance(modalEl)?.hide();
+            if (modalEl) { var m = bootstrap.Modal.getInstance(modalEl); if (m) m.hide(); }
+
+            Swal.fire({
+                toast: true, position: 'bottom-end', icon: 'success',
+                title: 'Variabel <code>{{' + varName + '}}</code> ditambahkan',
+                showConfirmButton: false, timer: 2500,
+            });
         });
     }
 
@@ -78,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
         nameInput.addEventListener('keydown', function (e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                document.getElementById('btnConfirmVariable')?.click();
+                document.getElementById('btnConfirmVariable') && document.getElementById('btnConfirmVariable').click();
             }
         });
     }
@@ -129,7 +144,6 @@ document.addEventListener('DOMContentLoaded', function () {
             var TX = LW + 34;
             var TW = CW - TX - 20;
 
-            // Baris teks kop
             var textDefs = [
                 line1 ? [line1, 11, 'bold',   '#000000'] : null,
                 line2 ? [line2, 16, 'bold',   '#c0392b'] : null,
@@ -152,7 +166,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 curY += lineHeights[i];
             });
 
-            // NPSN baris kecil di bawah logo
             if (line6) {
                 canvas.add(new fabric.Textbox(line6, {
                     left: 20, top: KT + LW + 4,
@@ -162,7 +175,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 }));
             }
 
-            // Garis bawah kop
             var lineY = KT + LW + (line6 ? 16 : 4);
             if (borderType === 'double') {
                 canvas.add(new fabric.Line([20, lineY, CW - 20, lineY], {
@@ -188,29 +200,42 @@ document.addEventListener('DOMContentLoaded', function () {
                 canvas.sendToBack(imgObj);
                 canvas.requestRenderAll();
                 saveState();
+
                 var modalEl = document.getElementById('modalKop');
-                if (modalEl) bootstrap.Modal.getInstance(modalEl)?.hide();
+                if (modalEl) { var m = bootstrap.Modal.getInstance(modalEl); if (m) m.hide(); }
+
+                Swal.fire({
+                    toast: true, position: 'bottom-end', icon: 'success',
+                    title: 'Kop surat berhasil ditambahkan',
+                    showConfirmButton: false, timer: 2000,
+                });
             }
 
             if (logoDataUrl) {
                 fabric.Image.fromURL(logoDataUrl, addLogoObject);
             } else {
-                // Placeholder logo
                 canvas.add(new fabric.Rect({
                     left: 20, top: KT, width: LW, height: LW,
-                    fill: '#f0f0f0', stroke: '#bbbbbb', strokeWidth: 1,
+                    fill: '#f0f4f8', stroke: '#cbd5e1', strokeWidth: 1,
                     rx: 4, ry: 4, name: 'kop_logo',
                 }));
                 canvas.add(new fabric.Text('{{logo}}', {
                     left: 20 + LW / 2, top: KT + LW / 2,
-                    fontSize: 9, fontFamily: 'Arial', fill: '#888888',
+                    fontSize: 9, fontFamily: 'Arial', fill: '#94a3b8',
                     originX: 'center', originY: 'center',
                     name: 'kop_logo_label', selectable: false, evented: false,
                 }));
                 canvas.requestRenderAll();
                 saveState();
+
                 var modalEl2 = document.getElementById('modalKop');
-                if (modalEl2) bootstrap.Modal.getInstance(modalEl2)?.hide();
+                if (modalEl2) { var m2 = bootstrap.Modal.getInstance(modalEl2); if (m2) m2.hide(); }
+
+                Swal.fire({
+                    toast: true, position: 'bottom-end', icon: 'success',
+                    title: 'Kop surat ditambahkan (tanpa logo)',
+                    showConfirmButton: false, timer: 2000,
+                });
             }
         }
 
@@ -234,31 +259,62 @@ document.addEventListener('DOMContentLoaded', function () {
 
     btnInsertTable.addEventListener('click', function () {
         var activeTab = document.querySelector('#tableTabs .nav-link.active');
-        if (!activeTab) return;
+        if (!activeTab) {
+            Swal.fire({ toast: true, position: 'top', icon: 'info', title: 'Pilih jenis tabel terlebih dahulu', showConfirmButton: false, timer: 2000 });
+            return;
+        }
 
-        var href = activeTab.getAttribute('href');
-        if      (href === '#tabCustom')          insertCustomTable();
-        else if (href === '#tabKelasMapel')       insertKelasMapelTable();
-        else if (href === '#tabRaport')           insertRaportTable();
-        else if (href === '#tabProgramUnggulan')  insertUnggulanTable();
-        else if (href === '#tabEkskul')           insertEkskulTable();
-        else if (href === '#tabAbsensi')          insertAbsensiTable();
-        else if (href === '#tabTTD')              insertTTDArea();
+        var href = activeTab.getAttribute('href') || activeTab.getAttribute('data-bs-target');
+        var success = true;
 
-        var modalEl = document.getElementById('modalTable');
-        if (modalEl) bootstrap.Modal.getInstance(modalEl)?.hide();
+        try {
+            if      (href === '#tabCustom')         insertCustomTable();
+            else if (href === '#tabKelasMapel')      insertKelasMapelTable();
+            else if (href === '#tabRaport')          insertRaportTable();
+            else if (href === '#tabProgramUnggulan') insertUnggulanTable();
+            else if (href === '#tabEkskul')          insertEkskulTable();
+            else if (href === '#tabAbsensi')         insertAbsensiTable();
+            else if (href === '#tabTTD')             insertTTDArea();
+            else success = false;
+        } catch (err) {
+            console.error('[insertTable] error:', err);
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal Menyisipkan Tabel',
+                text: err.message || 'Terjadi kesalahan tidak diketahui.',
+                confirmButtonColor: '#1a5276',
+            });
+            return;
+        }
+
+        if (success) {
+            var modalEl = document.getElementById('modalTable');
+            if (modalEl) { var m = bootstrap.Modal.getInstance(modalEl); if (m) m.hide(); }
+
+            Swal.fire({
+                toast: true, position: 'bottom-end', icon: 'success',
+                title: 'Tabel berhasil disisipkan',
+                showConfirmButton: false, timer: 2000,
+            });
+        }
     });
 });
 
 // ─────────────────────────────────────────────────────────────
-// RESTORE CANVAS dari canvas_json (mode edit)
+// RESTORE CANVAS (mode edit)
 // ─────────────────────────────────────────────────────────────
 
 function restoreCanvas() {
     var data = window.EXISTING_CANVAS_JSON;
     if (!data) return;
 
-    var parsed = (typeof data === 'string') ? JSON.parse(data) : data;
+    var parsed;
+    try {
+        parsed = (typeof data === 'string') ? JSON.parse(data) : data;
+    } catch (err) {
+        console.error('[restoreCanvas] JSON parse error:', err);
+        return;
+    }
 
     function restoreVariablesFromCanvas(canvas) {
         canvas.getObjects().forEach(function (obj) {
@@ -330,9 +386,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (!hasContent) {
             e.preventDefault();
-            alert('Template masih kosong!');
+            Swal.fire({
+                icon: 'warning',
+                title: 'Template Kosong',
+                text: 'Tambahkan setidaknya satu elemen ke canvas sebelum menyimpan.',
+                confirmButtonText: 'OK, Saya Mengerti',
+                confirmButtonColor: '#1a5276',
+            });
             return false;
         }
+
+        // Loading indicator
+        var loadingDiv = document.createElement('div');
+        loadingDiv.id = '__savingOverlay';
+        loadingDiv.style.cssText =
+            'position:fixed;inset:0;z-index:99999;background:rgba(240,244,248,0.88);' +
+            'display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;' +
+            'backdrop-filter:blur(4px);';
+        loadingDiv.innerHTML =
+            '<div style="width:38px;height:38px;border:3px solid #e2e8f0;border-top-color:#1a5276;' +
+            'border-radius:50%;animation:spin 0.7s linear infinite;"></div>' +
+            '<div style="font-weight:700;color:#1a5276;font-size:0.9rem;">Menyimpan template…</div>';
+        document.body.appendChild(loadingDiv);
 
         generateHTML();
     });
@@ -349,7 +424,7 @@ document.addEventListener('DOMContentLoaded', function () {
     restoreCanvas();
     updatePageIndicator();
 
-    // Preload kelas & mapel jika belum ada
+    // Preload kelas & mapel
     if (!window.EDITOR_KELAS_LIST || !window.EDITOR_KELAS_LIST.length) {
         fetch('/dashboard/surat/templates/api/kelas-list', { headers: { 'Accept': 'application/json' } })
             .then(function (r) { return r.ok ? r.json() : []; })
@@ -363,10 +438,25 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(function (data) { window.EDITOR_MAPEL_LIST = data || []; })
             .catch(function () { window.EDITOR_MAPEL_LIST = []; });
     }
+
+    // Pastikan Swal tersedia (fallback ringan jika CDN gagal)
+    if (typeof Swal === 'undefined') {
+        window.Swal = {
+            fire: function (opts) {
+                if (opts.toast) { console.info('[Swal toast]', opts.title); return Promise.resolve({ isConfirmed: true }); }
+                var msg = (opts.title || '') + (opts.text ? '\n' + opts.text : '');
+                if (opts.showCancelButton) {
+                    return Promise.resolve({ isConfirmed: window.confirm(msg) });
+                }
+                window.alert(msg);
+                return Promise.resolve({ isConfirmed: true });
+            }
+        };
+    }
 });
 
 // ─────────────────────────────────────────────────────────────
-// GLOBAL EXPORTS (dipanggil dari HTML onclick="...")
+// GLOBAL EXPORTS
 // ─────────────────────────────────────────────────────────────
 
 window.toggleGrid          = toggleGrid;
@@ -377,6 +467,7 @@ window.zoomIn              = zoomIn;
 window.zoomOut             = zoomOut;
 window.zoomReset           = zoomReset;
 window.addText             = addText;
+window.addShape            = addShape;
 window.triggerImageUpload  = triggerImageUpload;
 window.addImage            = addImage;
 window.triggerLogoUpload   = triggerLogoUpload;
@@ -410,3 +501,5 @@ window.snapEnabled         = snapEnabled;
 window.setSnapEnabled      = function (v) { snapEnabled = v; };
 window.placeVariableOnCanvas = placeVariableOnCanvas;
 window.registerVariable    = registerVariable;
+window.hideContextMenu     = hideContextMenu;
+window.checkTableOverflow  = checkTableOverflow;

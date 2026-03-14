@@ -553,7 +553,7 @@ function toggleGrid(show) {
 // ============================================================
 // MARGIN GUIDES
 // ============================================================
-var marginVisible = true;
+var marginVisible = false;
 
 function drawMarginGuidesForPage(pg, show) {
     var mc  = pg.marginEl;

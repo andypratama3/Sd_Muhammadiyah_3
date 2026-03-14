@@ -1,8 +1,12 @@
 /**
- * page-manager.js — manajemen halaman (multi-page), zoom, thumbnails
+ * page-manager.js — manajemen halaman, zoom, thumbnails, table overflow
  *
- * Depends: constants.js, utils.js, ruler.js (drawMarginGuidesForPage),
- *          table-handles.js (attachTableHandles), table-style-panel.js (attachStylePanel)
+ * IMPROVEMENTS:
+ *  - SweetAlert2 menggantikan alert/confirm biasa
+ *  - Table overflow: jika tabel melebihi batas halaman, sisa baris otomatis
+ *    pindah ke halaman berikutnya
+ *  - Resize element: scaleX/scaleY dipertahankan, bukan diubah ulang
+ *  - saveState debounce lebih stabil
  */
 
 // ── Page creation ─────────────────────────────────────────────
@@ -11,7 +15,6 @@ function createPage() {
     var container = document.getElementById('canvasPagesContainer');
     var pageIndex = pages.length;
 
-    // Wrapper DOM
     var wrapper = document.createElement('div');
     wrapper.className = 'page-block' + (pageIndex === 0 ? ' active-page' : '');
     wrapper.style.position = 'relative';
@@ -21,14 +24,12 @@ function createPage() {
     label.textContent = 'Halaman ' + (pageIndex + 1);
     wrapper.appendChild(label);
 
-    // Canvas element
     var canvasEl = document.createElement('canvas');
     canvasEl.width  = CANVAS_W;
     canvasEl.height = CANVAS_H;
     wrapper.appendChild(canvasEl);
     container.appendChild(wrapper);
 
-    // Fabric canvas
     var fc = new fabric.Canvas(canvasEl, {
         preserveObjectStacking: true,
         renderOnAddRemove:      false,
@@ -38,26 +39,25 @@ function createPage() {
         selection:              true,
         allowTouchScrolling:    false,
         stopContextMenu:        true,
-        fireRightClick:         false,
+        fireRightClick:         true,  // enable right-click context menu
     });
     fc.setBackgroundColor('white', fc.renderAll.bind(fc));
 
-    // Default object styling
+    // Default object styling — Figma-like handles
     fabric.Object.prototype.set({
         transparentCorners:  false,
-        cornerColor:         '#0ea5e9',
+        cornerColor:         '#3b82f6',
         cornerStrokeColor:   '#ffffff',
-        borderColor:         '#0ea5e9',
-        cornerSize:          9,
+        borderColor:         '#3b82f6',
+        cornerSize:          8,
         cornerStyle:         'circle',
-        borderDashArray:     [4, 3],
+        borderDashArray:     null,
         borderScaleFactor:   1.5,
         padding:             5,
     });
 
     fc.upperCanvasEl.style.zIndex = '3';
 
-    // Overlay canvases (guide, grid, margin)
     var fabricWrapperEl = fc.wrapperEl;
 
     function makeOverlay(id, extraStyle) {
@@ -73,7 +73,7 @@ function createPage() {
     }
 
     var guideEl  = makeOverlay('overlay_guide', '');
-    var gridEl   = makeOverlay('overlay_grid',  'opacity:0.5;display:none;');
+    var gridEl   = makeOverlay('overlay_grid',  'opacity:0.45;display:none;');
     var marginEl = makeOverlay('overlay_margin', '');
 
     var pageData = {
@@ -89,14 +89,12 @@ function createPage() {
         _saveTimer:   null,
         _snapRafId:   null,
         _pageIndex:   pageIndex,
-        // snap state
         _pageSnapPoints:  [],
         _objGuidePoints:  [],
         _activeSnapX:     null,
         _activeSnapY:     null,
         _prevSnapX:       null,
         _prevSnapY:       null,
-        // guide fade
         _guideAlpha:      0,
         _guideAlphaRafId: null,
     };
@@ -104,6 +102,8 @@ function createPage() {
     pages.push(pageData);
 
     attachPageEvents(pageData);
+    attachTableHandles(pageData);
+    attachStylePanel(pageData);
     drawMarginGuidesForPage(pageData, marginVisible);
     renderPageThumbnails();
     saveStateForPage(pageData);
@@ -139,28 +139,46 @@ function addNewPage() {
 
 function removeCurrentPage() {
     if (pages.length <= 1) {
-        alert('Minimal harus ada 1 halaman.');
+        Swal.fire({
+            icon: 'warning',
+            title: 'Tidak Dapat Dihapus',
+            text: 'Minimal harus ada 1 halaman.',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#1a5276',
+        });
         return;
     }
-    if (!confirm('Hapus halaman ' + (currentPage + 1) + '?')) return;
 
-    var pg = pages[currentPage];
-    pg.canvas.dispose();
-    pg.wrapper.remove();
-    pages.splice(currentPage, 1);
+    Swal.fire({
+        title: 'Hapus Halaman ' + (currentPage + 1) + '?',
+        text: 'Semua elemen di halaman ini akan dihapus permanen.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: '<i class="bi bi-trash"></i> Hapus',
+        cancelButtonText: 'Batal',
+        confirmButtonColor: '#e74c3c',
+        cancelButtonColor: '#6c757d',
+        reverseButtons: true,
+    }).then(function (result) {
+        if (!result.isConfirmed) return;
 
-    // Re-label semua halaman
-    pages.forEach(function (p, i) {
-        var lbl = p.wrapper.querySelector('.page-label');
-        if (lbl) lbl.textContent = 'Halaman ' + (i + 1);
-        p._pageIndex = i;
+        var pg = pages[currentPage];
+        pg.canvas.dispose();
+        pg.wrapper.remove();
+        pages.splice(currentPage, 1);
+
+        pages.forEach(function (p, i) {
+            var lbl = p.wrapper.querySelector('.page-label');
+            if (lbl) lbl.textContent = 'Halaman ' + (i + 1);
+            p._pageIndex = i;
+        });
+
+        currentPage = Math.min(currentPage, pages.length - 1);
+        pages[currentPage].wrapper.classList.add('active-page');
+        updatePageIndicator();
+        renderPageThumbnails();
+        saveState();
     });
-
-    currentPage = Math.min(currentPage, pages.length - 1);
-    pages[currentPage].wrapper.classList.add('active-page');
-    updatePageIndicator();
-    renderPageThumbnails();
-    saveState();
 }
 
 function updatePageIndicator() {
@@ -192,12 +210,11 @@ function renderPageThumbnails() {
         item.addEventListener('click', function () { switchPage(idx); });
         container.appendChild(item);
 
-        // Render thumbnail async
         var ctx = tc.getContext('2d');
         ctx.fillStyle = '#fff';
         ctx.fillRect(0, 0, tc.width, tc.height);
 
-        var url = pg.canvas.toDataURL({ format: 'png', quality: 0.3 });
+        var url = pg.canvas.toDataURL({ format: 'png', quality: 0.25 });
         var img = new Image();
         img.onload = function () {
             ctx.drawImage(img, 0, 0, tc.width, tc.height);
@@ -209,7 +226,7 @@ function renderPageThumbnails() {
 // ── Zoom ──────────────────────────────────────────────────────
 
 function setZoom(z) {
-    z = Math.min(2.5, Math.max(0.4, parseFloat(z.toFixed(2))));
+    z = Math.min(3.0, Math.max(0.3, parseFloat(z.toFixed(2))));
     currentZoom = z;
 
     pages.forEach(function (pg) {
@@ -233,7 +250,8 @@ function setZoom(z) {
         }
     });
 
-    document.getElementById('zoomLabel').textContent = Math.round(z * 100) + '%';
+    var zlabel = document.getElementById('zoomLabel');
+    if (zlabel) zlabel.textContent = Math.round(z * 100) + '%';
     drawRulersBase();
     pages.forEach(function (pg) { drawMarginGuidesForPage(pg, marginVisible); });
 }
@@ -246,7 +264,8 @@ function zoomReset() { setZoom(1); }
 document.getElementById('editorContainer').addEventListener('wheel', function (e) {
     if (!e.ctrlKey) return;
     e.preventDefault();
-    e.deltaY < 0 ? zoomIn() : zoomOut();
+    var delta = e.deltaY < 0 ? 0.1 : -0.1;
+    setZoom(currentZoom + delta);
 }, { passive: false });
 
 // ── Undo / Redo ───────────────────────────────────────────────
@@ -255,13 +274,17 @@ function saveStateForPage(pgData) {
     if (pgData._isSaving) return;
     clearTimeout(pgData._saveTimer);
     pgData._saveTimer = setTimeout(function () {
-        var json = JSON.stringify(
-            pgData.canvas.toJSON(['name', 'excludeFromExport'])
-        );
-        pgData._history.push(json);
-        if (pgData._history.length > 50) pgData._history.shift();
-        pgData._historyRedo = [];
-    }, 60);
+        try {
+            var json = JSON.stringify(
+                pgData.canvas.toJSON(['name', 'excludeFromExport', '_isTable'])
+            );
+            pgData._history.push(json);
+            if (pgData._history.length > 60) pgData._history.shift();
+            pgData._historyRedo = [];
+        } catch (err) {
+            console.warn('[saveStateForPage] error:', err);
+        }
+    }, 80);
 }
 
 function saveState() {
@@ -277,6 +300,7 @@ function undo() {
         pg.canvas.renderAll();
         pg._isSaving = false;
         renderPageThumbnails();
+        scheduleCoordUpdate(null);
     });
 }
 
@@ -290,5 +314,189 @@ function redo() {
         pg.canvas.renderAll();
         pg._isSaving = false;
         renderPageThumbnails();
+        scheduleCoordUpdate(null);
     });
 }
+
+// ── TABLE OVERFLOW: auto-split ke halaman berikutnya ──────────
+/**
+ * Cek apakah tabel melewati batas bawah halaman setelah di-drag/resize.
+ * Dipanggil dari object:modified.
+ *
+ * FIX: gunakan tinggi aktual (height * scaleY), bukan hanya height
+ *      agar tabel yang sudah di-scale tetap terdeteksi overflow
+ *
+ * @param {object}       pgData  — halaman sumber
+ * @param {fabric.Image} imgObj  — fabric object tabel
+ * @returns {boolean}   true jika overflow terjadi dan split dilakukan
+ */
+function checkTableOverflow(pgData, imgObj) {
+    if (!imgObj || !imgObj.name) return false;
+    var td = pgData.tableStore[imgObj.name];
+    if (!td || td.type === 'ttd') return false;
+
+    var objTop    = imgObj.top    || 0;
+    var scaleY    = imgObj.scaleY || 1;
+    var scaleX    = imgObj.scaleX || 1;
+    // FIX: gunakan tinggi aktual dengan scaleY
+    var actualH   = (imgObj.height || td.totalHeight) * scaleY;
+    var objBottom = objTop + actualH;
+    var pageLimit = CANVAS_H - MARGIN;
+
+    // Tidak overflow
+    if (objBottom <= pageLimit) return false;
+
+    var availableH = pageLimit - objTop;
+
+    // Seluruh tabel di bawah batas atau tidak ada ruang sama sekali
+    if (availableH <= td.rowHeights[0]) {
+        _moveWholeTableToNextPage(pgData, imgObj, td);
+        return true;
+    }
+
+    // Hitung sampai baris keberapa yang muat
+    // Jika tabel di-scale, row heights juga perlu disesuaikan
+    var scaledRowHeights = td.rowHeights.map(function(h) { return h * scaleY; });
+    var cumH        = 0;
+    var splitRowIdx = -1;
+
+    for (var ri = 0; ri < scaledRowHeights.length; ri++) {
+        cumH += scaledRowHeights[ri];
+        if (cumH > availableH) {
+            splitRowIdx = ri;
+            break;
+        }
+    }
+
+    // Minimal header + 1 data row harus muat
+    if (splitRowIdx <= 1) {
+        _moveWholeTableToNextPage(pgData, imgObj, td);
+        return true;
+    }
+
+    // Split: bagian atas tetap di halaman ini, sisanya ke halaman berikut
+    var topRows    = td.rows.slice(0, splitRowIdx);
+    var topHeights = td.rowHeights.slice(0, splitRowIdx);
+    var botRows    = [td.rows[0]].concat(td.rows.slice(splitRowIdx)); // header diulang
+    var botHeights = [td.rowHeights[0]].concat(td.rowHeights.slice(splitRowIdx));
+
+    // Update tabel halaman ini (bagian atas)
+    var topTd = Object.assign({}, td, {
+        rows:        topRows,
+        rowHeights:  topHeights,
+        totalHeight: topHeights.reduce(function (a, b) { return a + b; }, 0),
+        totalWidth:  td.totalWidth * scaleX,
+        colWidths:   td.colWidths.map(function(w) { return w * scaleX; }),
+    });
+    // Reset scale karena sudah di-absorb ke colWidths/totalWidth
+    pgData.tableStore[imgObj.name] = topTd;
+    _rerenderTableImmediate(pgData, imgObj, topTd);
+    imgObj.set({ scaleX: 1, scaleY: 1 });
+    imgObj.setCoords();
+    pgData.canvas.requestRenderAll();
+
+    // Bagian bawah ke halaman berikutnya
+    var bottomTd = Object.assign({}, td, {
+        rows:        botRows,
+        rowHeights:  botHeights,
+        totalHeight: botHeights.reduce(function (a, b) { return a + b; }, 0),
+    });
+    _placeTableOnNextPage(pgData, bottomTd);
+
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            toast: true, position: 'bottom-end', icon: 'info',
+            title: 'Tabel dibagi otomatis ke halaman berikutnya',
+            showConfirmButton: false, timer: 2800, timerProgressBar: true,
+        });
+    }
+    return true;
+}
+
+function _rerenderTableImmediate(pgData, imgObj, td) {
+    var offscreen = renderTableToCanvas(td);
+    var fc2 = document.createElement('canvas');
+    fc2.width  = td.totalWidth;
+    fc2.height = td.totalHeight;
+    fc2.getContext('2d').drawImage(offscreen, 0, 0, td.totalWidth, td.totalHeight);
+    var dataUrl = fc2.toDataURL();
+
+    var imgEl = imgObj.getElement ? imgObj.getElement() : null;
+    if (imgEl) {
+        imgEl.onload = function () {
+            imgObj.set({ width: td.totalWidth, height: td.totalHeight });
+            imgObj.setCoords();
+            pgData.canvas.requestRenderAll();
+        };
+        imgEl.src = dataUrl;
+    }
+}
+
+/**
+ * Pindahkan seluruh tabel ke halaman berikutnya (karena tidak ada ruang sama sekali).
+ */
+function _moveWholeTableToNextPage(pgData, imgObj, td) {
+    var canvas = pgData.canvas;
+    var oldName = imgObj.name;
+    canvas.remove(imgObj);
+    delete pgData.tableStore[oldName];
+    canvas.discardActiveObject();
+    canvas.requestRenderAll();
+
+    _placeTableOnNextPage(pgData, td);
+    saveStateForPage(pgData);
+
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            toast: true, position: 'bottom-end', icon: 'info',
+            title: 'Tabel dipindahkan ke halaman berikutnya (tidak cukup ruang)',
+            showConfirmButton: false, timer: 3000, timerProgressBar: true,
+        });
+    }
+}
+
+function _placeTableOnNextPage(srcPgData, td) {
+    var srcIdx   = pages.indexOf(srcPgData);
+    var nextIdx  = srcIdx + 1;
+
+    if (nextIdx >= pages.length) {
+        createPage();
+        // createPage menambah ke pages array, nextIdx masih valid
+    }
+
+    var nextPg = pages[nextIdx];
+    if (!nextPg) return;
+
+    var startX = MARGIN;
+    var startY = MARGIN;
+
+    var id = 'tbl_' + (++tableCounter);
+    nextPg.tableStore[id] = td;
+
+    var offscreen = renderTableToCanvas(td);
+    var finalCanvas = document.createElement('canvas');
+    finalCanvas.width  = td.totalWidth;
+    finalCanvas.height = td.totalHeight;
+    finalCanvas.getContext('2d').drawImage(offscreen, 0, 0, td.totalWidth, td.totalHeight);
+
+    fabric.Image.fromURL(finalCanvas.toDataURL(), function (img) {
+        img.set({
+            left: startX, top: startY, name: id,
+            selectable: true, evented: true,
+            hasBorders: true, hasControls: true, lockRotation: true,
+        });
+        img._isTable = true;
+        nextPg.canvas.add(img);
+        nextPg.canvas.requestRenderAll();
+        saveStateForPage(nextPg);
+        renderPageThumbnails();
+
+        // Rekursif cek: bagian bawah juga mungkin overflow ke halaman ke-3, dst.
+        if (typeof checkTableOverflow === 'function') {
+            setTimeout(function() {
+                checkTableOverflow(nextPg, img);
+            }, 100);
+        }
+    });
+}
+
