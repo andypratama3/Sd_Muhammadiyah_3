@@ -65,14 +65,20 @@
     </ol>
 </nav>
 
-<div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+<div class="d-flex align-items-center mb-4 flex-wrap gap-2">
     <div>
         <h4 class="mb-0">Generate: {{ $template->name }}</h4>
         <small class="text-muted">Isi kolom berikut untuk membuat dokumen PDF</small>
     </div>
-    <a href="{{ route('dashboard.documents.templates.index') }}" class="btn btn-outline-secondary btn-sm">
-        <i class="bx bx-arrow-back me-1"></i> Kembali
-    </a>
+    <div class="col-md-9">
+        <a href="{{ route('dashboard.documents.templates.index') }}" class="btn btn-outline-secondary btn-sm">
+            <i class="bx bx-arrow-back me-1"></i> Kembali
+        </a>
+        <a href="{{ route('dashboard.documents.templates.edit', $template->id) }}" class="btn btn-primary float-end btn-sm">
+            <i class="bx bx-edit me-1"></i> Edit Template
+        </a>
+       
+    </div>    
 </div>
 
 @if($errors->any())

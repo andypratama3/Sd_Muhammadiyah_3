@@ -2740,19 +2740,69 @@ function generateHTML() {
 // RESTORE EXISTING CANVAS
 // ============================================================
 function friendlyVarLabel(varName) {
-    // Hapus suffix angka acak: z3ded, 3ded, 2abc, dll
-    var clean = varName.replace(/[a-z]?\d+[a-z]{0,5}$/i, '');
-    // Hapus suffix huruf acak pendek di akhir (4-6 karakter, tidak bermakna)
-    clean = clean.replace(/_?[a-z]{3,6}(?=[A-Z_]|$)/i, function(m) {
-        // Pertahankan kata bermakna umum
-        var keep = ['nama','nilai','kelas','tanggal','nomor','bulan','tahun',
-                    'sekolah','siswa','mapel','capaian','akhir','awal'];
-        return keep.some(function(k){ return m.toLowerCase().includes(k); }) ? m : '';
-    });
-    clean = clean.replace(/_{2,}/g, '_').replace(/^_|_$/g, '');
-    if (!clean) clean = varName; // fallback
-    return clean.split('_').map(function(w){
-        return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
+    var map = {
+        // Data Siswa
+        'nama_siswa'      : 'Nama Siswa',
+        'nisn'            : 'NISN',
+        'nis'             : 'NIS',
+        'jenis_kelamin'   : 'Jenis Kelamin',
+        'tempat_lahir'    : 'Tempat Lahir',
+        'tanggal_lahir'   : 'Tanggal Lahir',
+        'agama'           : 'Agama',
+        'nama_ayah'       : 'Nama Ayah',
+        'nama_ibu'        : 'Nama Ibu',
+        'pekerjaan_ayah'  : 'Pekerjaan Ayah',
+        'pekerjaan_ibu'   : 'Pekerjaan Ibu',
+        'alamat_siswa'    : 'Alamat',
+        'no_hp'           : 'No. HP',
+        'nama_wali'       : 'Nama Wali',
+        // Data Sekolah
+        'nama_sekolah'    : 'Nama Sekolah',
+        'alamat_sekolah'  : 'Alamat Sekolah',
+        'kepala_sekolah'  : 'Kepala Sekolah',
+        'nip'             : 'NIP/NBM',
+        'tahun_ajaran'    : 'Tahun Ajaran',
+        'semester'        : 'Semester',
+        'wali_kelas'      : 'Wali Kelas',
+        'nbm_wali'        : 'NBM Wali Kelas',
+        // Data Surat
+        'nomor_surat'     : 'Nomor Surat',
+        'tanggal'         : 'Tanggal',
+        'perihal'         : 'Perihal',
+        'keterangan'      : 'Keterangan',
+        'isi'             : 'Isi Surat',
+        'tujuan'          : 'Tujuan',
+        'tembusan'        : 'Tembusan',
+        // Nilai & Prestasi
+        'kelas'           : 'Kelas',
+        'fase'            : 'Fase',
+        'nama_kelas'      : 'Nama Kelas',
+        'nilai_rata'      : 'Nilai Rata-rata',
+        'peringkat'       : 'Peringkat',
+        'predikat'        : 'Predikat',
+        'catatan'         : 'Catatan',
+        'naik_kelas'      : 'Naik Kelas',
+        'mata_pelajaran'  : 'Mata Pelajaran',
+        // Lainnya
+        'nama_ortu'       : 'Nama Orang Tua',
+    };
+
+    // Jika ada di map → langsung pakai
+    if (map[varName]) return map[varName];
+
+    // Pola auto-generate raport: nilai_xxx / capaian_xxx
+    if (/^nilai_(.+)$/.test(varName)) {
+        var mapel = varName.replace(/^nilai_/, '').replace(/_/g, ' ');
+        return 'Nilai ' + mapel.charAt(0).toUpperCase() + mapel.slice(1);
+    }
+    if (/^capaian_(.+)$/.test(varName)) {
+        var mapel2 = varName.replace(/^capaian_/, '').replace(/_/g, ' ');
+        return 'Capaian ' + mapel2.charAt(0).toUpperCase() + mapel2.slice(1);
+    }
+
+    // Fallback: snake_case → Title Case
+    return varName.split('_').map(function(w) {
+        return w.charAt(0).toUpperCase() + w.slice(1);
     }).join(' ');
 }
 
