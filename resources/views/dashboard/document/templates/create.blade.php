@@ -261,7 +261,7 @@
         <div class="canvas-toolbar">
             <span class="pill-a4">
                 <i class="bi bi-file-earmark"></i>
-                A4 · 210×297mm · 794×1123px
+                A4 · 210x297mm · 794x1123px
             </span>
 
             <div class="ct-divider"></div>

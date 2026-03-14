@@ -74,7 +74,7 @@ function placeVariableOnCanvas(name) {
         width:      220,
         fontSize:   16,
         fontFamily: 'Arial',
-        fill:       '#1a56db',
+        fill:       '#000000',
         name:       'var_' + name,
     });
 
