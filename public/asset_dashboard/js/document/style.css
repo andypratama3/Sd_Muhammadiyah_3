@@ -1,24 +1,3 @@
-/*
-    * ============================================================
-    * UKURAN A4 @ 96 DPI — SESUAI PDF
-    * ============================================================
-    *
-    *  A4 fisik      : 210 mm × 297 mm
-    *  Browser 96dpi : 1 mm = 96/25.4 = 3.7795 px
-    *  Canvas        : round(210×3.7795) × round(297×3.7795)
-    *                = 794 px × 1123 px  ← ukuran canvas Fabric.js
-    *
-    *  Export PDF    : 1 px = 0.75 pt  (72/96, exact)
-    *                  794px × 0.75 = 595.5 pt  (A4 = 595.28pt, err <0.04%)
-    *
-    *  Margin        : 20 mm = round(20×3.7795) = 76 px
-    *  Grid minor    : 5 mm  = 18.898 px  (~19px)
-    *  Grid major    : 10 mm = 37.795 px  (~38px)
-    *  Ruler         : 22 px tinggi/lebar
-    *
-    *  Lebar konten  : 794 − 2×76 = 642 px  ← pakai untuk default lebar tabel
-    * ============================================================
-    */
 :root {
     --a4-w:       794px;    /* 210mm @ 96dpi */
     --a4-h:       1123px;   /* 297mm @ 96dpi */
@@ -57,39 +36,37 @@
 .btn-sm:hover { transform: translateY(-1px); box-shadow: 0 3px 8px rgba(0,0,0,.1); }
 
 /* ── Sidebar ─────────────────────────────────────────────── */
-#sidebarLeft { overflow-y:auto; height:max-content !important; scrollbar-width:thin; }
-#sidebarLeft::-webkit-scrollbar { width:4px; }
-#sidebarLeft::-webkit-scrollbar-thumb { background:#dee2e6; border-radius:10px; }
+/* sidebarLeft — lihat deklarasi lengkap di bawah */
 
 /* ── Editor container (scroll area abu-abu) ─────────────── */
 #editorContainer {
     overflow: auto;
     background: var(--canvas-bg);
-    /* Pola titik sesuai grid 5mm (~19px) */
     background-image: radial-gradient(circle, rgba(0,0,0,.09) 1px, transparent 1px);
     background-size: 18.898px 18.898px;   /* 5mm */
     background-position: var(--ruler-sz) var(--ruler-sz);
     border-radius: 4px;
     position: relative;
-    height: calc(100vh - 180px);
+    flex: 1 1 0;         /* mengisi sisa tinggi canvasArea */
+    min-height: 0;       /* KRITIS: izinkan flex child menyusut & scroll */
+    min-width: 0;
     user-select: none;
 }
 
 /*
     * ── Ruler layout grid ────────────────────────────────────
     *
-    *   col 0 = var(--ruler-sz)  = 22px    ← ruler vertikal & corner
-    *   col 1 = minmax(var(--a4-w), 1fr)   ← canvas + ruler horizontal
-    *
-    *   row 0 = var(--ruler-sz)  = 22px    ← ruler horizontal & corner
-    *   row 1 = 1fr                        ← isi canvas
+    *  #rulerLayout harus min-height: max-content agar seluruh
+    *  halaman canvas bisa di-render tanpa terpotong.
+    *  Scroll terjadi di #editorContainer (parent-nya), bukan di sini.
     */
 #rulerLayout {
     display: grid;
     grid-template-columns: var(--ruler-sz) minmax(var(--a4-w), 1fr);
-    grid-template-rows: var(--ruler-sz) 1fr;
+    grid-template-rows: var(--ruler-sz) auto;   /* auto → tinggi ikut konten */
     width: fit-content;
-    margin: 0 auto;
+    min-width: 100%;
+    min-height: max-content;  /* KRITIS: jangan terpotong oleh parent */
 }
 
 /* ── Corner ──────────────────────────────────────────────── */
@@ -201,3 +178,302 @@
     border: 1px solid #b6d4fe; border-radius: 20px;
     padding: 2px 10px; letter-spacing: .3px; white-space: nowrap;
 }
+:root {
+    --primary:       #1a5276;
+    --primary-mid:   #2980b9;
+    --primary-light: #eaf4fb;
+    --accent:        #27ae60;
+    --warn:          #e67e22;
+    --danger:        #e74c3c;
+    --text:          #1a252f;
+    --text-muted:    #6c7a89;
+    --border:        #d5dde4;
+    --bg:            #f0f4f8;
+    --card:          #ffffff;
+    --radius:        10px;
+    --shadow:        0 2px 12px rgba(26,82,118,.08);
+}
+* { box-sizing: border-box; }
+body { 
+    font-family: 'Plus Jakarta Sans', sans-serif; 
+    overflow: hidden;
+}
+/* ── TOPBAR ── */
+.editor-topbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--primary);
+    padding: 0 18px;
+    display: flex; align-items: center;
+    height: 80px; gap: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.18);
+}
+.editor-topbar .brand {
+    font-size: .92rem; font-weight: 700; color: #fff;
+    display: flex; align-items: center; gap: 7px;
+    white-space: nowrap;
+}
+.editor-topbar .sep { width: 1px; height: 24px; background: rgba(255,255,255,.25); }
+.tb-field {
+    display: flex; flex-direction: column; gap: 1px;
+}
+.tb-field label { font-size: .67rem; color: rgba(255,255,255,.65); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+.tb-field select,
+.tb-field input[type="text"] {
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.22);
+    border-radius: 6px;
+    color: #fff; font-size: .83rem;
+    font-family: inherit; padding: 3px 8px;
+    outline: none; min-width: 0;
+    transition: background .15s;
+}
+.tb-field select { min-width: 130px; }
+.tb-field input[type="text"] { min-width: 220px; }
+.tb-field select:focus,
+.tb-field input[type="text"]:focus {
+    background: rgba(255,255,255,.22);
+    border-color: rgba(255,255,255,.5);
+}
+.tb-field select option { background: var(--primary); color: #fff; }
+.tb-spacer { flex: 1; }
+.tb-btn {
+    background: rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.25);
+    color: #fff; border-radius: 7px;
+    padding: 6px 14px; font-size: .82rem;
+    font-weight: 600; font-family: inherit;
+    cursor: pointer; display: flex; align-items: center; gap: 5px;
+    transition: background .15s;
+    white-space: nowrap;
+    text-decoration: none;
+}
+.tb-btn:hover { background: rgba(255,255,255,.26); color: #fff; }
+.tb-btn.save {
+    background: var(--accent);
+    border-color: #1e8449;
+    box-shadow: 0 2px 8px rgba(39,174,96,.3);
+}
+.tb-btn.save:hover { background: #1e8449; }
+
+/* ── SIDEBAR ── */
+#sidebarLeft {
+    position: fixed;
+    top: 80px; left: 0; bottom: 0;
+    width: 248px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: var(--card);
+    border-right: 1px solid var(--border);
+    padding: 10px 8px 40px;  /* padding bawah ekstra agar item terakhir tidak terpotong */
+    display: flex; flex-direction: column; gap: 6px;
+    z-index: 95;
+    scrollbar-width: thin;
+}
+/* Cegah flex children menyusut — biarkan overflow terjadi */
+#sidebarLeft > * { flex-shrink: 0; }
+#sidebarLeft::-webkit-scrollbar { width: 4px; }
+#sidebarLeft::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* ── EDITOR ROOT ── */
+#editorRoot {
+    position: fixed;
+    top: 80px; left: 248px; right: 0; bottom: 0;
+    display: flex;
+    overflow: hidden;
+    background: var(--bg);
+    z-index: 90;
+}
+
+.sb-section {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+.sb-section-head {
+    background: var(--primary-light);
+    padding: 7px 10px;
+    font-size: .76rem; font-weight: 700;
+    color: var(--primary);
+    display: flex; align-items: center; gap: 6px;
+    border-bottom: 1px solid var(--border);
+}
+.sb-section-body {
+    padding: 8px;
+    display: flex; flex-direction: column; gap: 4px;
+}
+
+/* ── SIDEBAR BUTTONS ── */
+.sb-btn {
+    border: 1.5px solid var(--border);
+    background: #fff; border-radius: 7px;
+    padding: 6px 10px; font-size: .79rem;
+    font-weight: 600; color: var(--text);
+    font-family: inherit; cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+    transition: border-color .15s, background .15s, color .15s;
+    text-align: left;
+}
+.sb-btn:hover { border-color: var(--primary-mid); background: var(--primary-light); color: var(--primary); }
+.sb-btn.primary { background: var(--primary); border-color: var(--primary); color: #fff; }
+.sb-btn.primary:hover { background: #154360; }
+.sb-btn.outline-primary { border-color: var(--primary-mid); color: var(--primary-mid); }
+.sb-btn.outline-primary:hover { background: var(--primary-light); }
+.sb-btn.outline-success { border-color: var(--accent); color: var(--accent); }
+.sb-btn.outline-success:hover { background: #eafaf1; }
+.sb-btn.outline-warning { border-color: var(--warn); color: var(--warn); }
+.sb-btn.outline-warning:hover { background: #fef6ec; }
+.sb-btn.outline-danger  { border-color: var(--danger); color: var(--danger); }
+.sb-btn.outline-danger:hover  { background: #fdf2f2; }
+.sb-btn.outline-dark  { border-color: #555; color: #333; }
+.sb-btn.outline-dark:hover  { background: #f5f5f5; }
+.sb-btn.outline-info  { border-color: var(--primary-mid); color: var(--primary-mid); }
+.sb-row { display: flex; gap: 4px; }
+.sb-row .sb-btn { flex: 1; justify-content: center; }
+
+/* ── FORMAT TOOLBAR PANEL ── */
+#formatToolbar { display: none; }
+.fmt-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.fmt-label { font-size: .7rem; font-weight: 600; color: var(--text-muted); margin-bottom: 2px; display: block; }
+.fmt-input {
+    width: 100%; border: 1.5px solid var(--border); border-radius: 6px;
+    padding: 5px 7px; font-size: .8rem; font-family: inherit;
+    outline: none; transition: border-color .15s;
+}
+.fmt-input:focus { border-color: var(--primary-mid); }
+.fmt-select {
+    width: 100%; border: 1.5px solid var(--border); border-radius: 6px;
+    padding: 5px 7px; font-size: .8rem; font-family: inherit;
+    outline: none; background: #fff; transition: border-color .15s;
+}
+.fmt-select:focus { border-color: var(--primary-mid); }
+.fmt-color {
+    width: 100%; height: 32px; border: 1.5px solid var(--border);
+    border-radius: 6px; padding: 2px; cursor: pointer;
+}
+.fmt-range { width: 100%; accent-color: var(--primary-mid); }
+.fmt-range-row { display: flex; align-items: center; gap: 6px; font-size: .75rem; }
+.fmt-range-val { min-width: 28px; text-align: right; font-weight: 600; color: var(--primary); }
+
+/* ── COORD BAR ── */
+.coord-bar {
+    display: flex; gap: 6px; flex-wrap: wrap; padding: 4px 0;
+}
+.coord-item { font-size: .71rem; color: var(--text-muted); display: flex; align-items: center; gap: 3px; }
+.coord-val { font-weight: 700; color: var(--primary); }
+
+/* ── CANVAS AREA ── */
+#canvasArea {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;    /* scroll terjadi di #editorContainer, bukan di sini */
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── CANVAS TOOLBAR ── */
+.canvas-toolbar {
+    position: sticky; top: 0; z-index: 50;
+    background: #fff; border-bottom: 1px solid var(--border);
+    padding: 6px 14px;
+    display: flex; align-items: center; flex-wrap: wrap; gap: 8px;
+}
+.pill-a4 {
+    background: var(--primary-light);
+    border: 1px solid #c0d8ee;
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: .74rem; font-weight: 700;
+    color: var(--primary);
+    display: flex; align-items: center; gap: 4px;
+}
+.ct-divider { width: 1px; height: 20px; background: var(--border); }
+.ct-switch { display: flex; align-items: center; gap: 5px; font-size: .77rem; color: var(--text-muted); }
+.ct-switch input[type="checkbox"] { accent-color: var(--primary-mid); }
+.zoom-row { display: flex; align-items: center; gap: 4px; }
+.zoom-btn {
+    width: 26px; height: 26px; border: 1.5px solid var(--border);
+    background: #fff; border-radius: 6px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .8rem; color: var(--text-muted);
+    transition: border-color .15s, color .15s;
+}
+.zoom-btn:hover { border-color: var(--primary-mid); color: var(--primary); }
+#zoomLabel { font-size: .8rem; font-weight: 700; min-width: 38px; text-align: center; color: var(--text); }
+
+/* ── VARIABLE PANEL ── */
+#variablePanel { display: none; }
+.var-panel-wrap {
+    background: #fff; border-bottom: 1px solid var(--border);
+    padding: 8px 14px;
+}
+.var-panel-head {
+    font-size: .76rem; font-weight: 700; color: var(--primary);
+    margin-bottom: 6px; display: flex; align-items: center; gap: 5px;
+}
+
+/* ── CANVAS PAGES ── */
+#canvasPagesContainer {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 24px;
+    padding: 40px 24px 80px;  /* padding bawah ekstra agar halaman terakhir tidak terpotong */
+}
+.page-block {
+    box-shadow: 0 4px 24px rgba(0,0,0,.13);
+    border-radius: 3px;
+    position: relative;
+    background: #fff;
+}
+.page-block.active-page { outline: 3px solid var(--primary-mid); }
+.page-label {
+    position: absolute; top: -22px; left: 0;
+    font-size: .72rem; font-weight: 700;
+    color: var(--text-muted);
+}
+
+/* ── PAGE THUMBNAILS ── */
+.thumb-item {
+    border: 2px solid var(--border); border-radius: 6px;
+    cursor: pointer; overflow: hidden;
+    transition: border-color .15s;
+}
+.thumb-item.active { border-color: var(--primary-mid); }
+.thumb-item:hover { border-color: var(--primary-mid); }
+.thumb-label { font-size: .68rem; text-align: center; color: var(--text-muted); padding: 3px 0; }
+
+/* ── RULER LAYOUT ── */
+:root { --ruler-sz: 22px; }
+#rulerLayout {
+    display: grid;
+    grid-template-columns: var(--ruler-sz) 1fr;
+    grid-template-rows: var(--ruler-sz) 1fr;
+}
+#rulerCorner {
+    grid-column: 1; grid-row: 1;
+    background: #f1f3f5; border-right: 1px solid #ced4da; border-bottom: 1px solid #ced4da;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .58rem; color: #868e96; font-weight: 700;
+    position: sticky; top: 0; left: 0; z-index: 30;
+}
+#rulerH { grid-column: 2; grid-row: 1; }
+#rulerV { grid-column: 1; grid-row: 2; }
+#canvasPagesContainer { grid-column: 2; grid-row: 2; }
+
+/* ── PRESET BUTTON GROUPS ── */
+.preset-group { margin-bottom: 8px; }
+.preset-group-label {
+    font-size: .68rem; font-weight: 700;
+    color: var(--text-muted); text-transform: uppercase;
+    letter-spacing: .04em; margin-bottom: 4px;
+    display: flex; align-items: center; gap: 4px;
+}
+.preset-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.preset-chip {
+    background: #fff; border: 1.5px solid var(--border);
+    border-radius: 20px; padding: 2px 9px;
+    font-size: .71rem; font-weight: 600;
+    color: var(--text); cursor: pointer;
+    transition: border-color .13s, background .13s, color .13s;
+}
+.preset-chip:hover { border-color: var(--primary-mid); background: var(--primary-light); color: var(--primary); }

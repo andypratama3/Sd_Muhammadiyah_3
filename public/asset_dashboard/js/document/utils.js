@@ -196,15 +196,21 @@ function friendlyVarLabel(varName) {
     // Auto-generate raport: nilai_xxx → "Nilai Xxx"
     var nilaiMatch = varName.match(/^nilai_(.+)$/);
     if (nilaiMatch) {
-        return 'Nilai ' + nilaiMatch[1].replace(/_/g, ' ')
+        var rawNilai = nilaiMatch[1]
+            .replace(/_/g, ' ')
+            .trim()
             .replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+        return 'Nilai ' + rawNilai;
     }
 
     // Auto-generate raport: capaian_xxx → "Capaian Xxx"
     var capaianMatch = varName.match(/^capaian_(.+)$/);
     if (capaianMatch) {
-        return 'Capaian ' + capaianMatch[1].replace(/_/g, ' ')
+        var rawCapaian = capaianMatch[1]
+            .replace(/_/g, ' ')
+            .trim()
             .replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+        return 'Capaian ' + rawCapaian;
     }
 
     // Fallback: snake_case → Title Case

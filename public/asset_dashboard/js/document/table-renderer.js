@@ -330,7 +330,7 @@ var _raportAktifKelompok = {};
 function insertRaportTable() {
     var tableWidth  = parseInt(document.getElementById('raportWidth').value)     || 642;
     var headerColor = document.getElementById('raportHeaderColor').value;
-    var rowHeight   = parseInt(document.getElementById('raportRowHeight').value) || 40;
+    var rowHeight   = parseInt(document.getElementById('raportRowHeight').value) || 20;
     var autoVar     = document.getElementById('raportAutoVar').checked;
 
     if (!_raportKelompoks.length) {
@@ -358,8 +358,8 @@ function insertRaportTable() {
     aktifKelompoks.forEach(function (grp) {
         grp.mapels.forEach(function (mp) {
             if (autoVar) {
-                autoVars.push({ name: mp.var_nilai,   label: 'Nilai '   + mp.nama.substring(0, 18) });
-                autoVars.push({ name: mp.var_capaian, label: 'Capaian ' + mp.nama.substring(0, 15) });
+               autoVars.push({ name: mp.var_nilai,   label: 'Nilai '   + mp.nama });
+                autoVars.push({ name: mp.var_capaian, label: 'Capaian ' + mp.nama });
             }
             tableRows.push([
                 { text: String(no++),   align: 'center' },

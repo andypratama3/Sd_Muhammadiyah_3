@@ -71,6 +71,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // ── Load mapel dari API ───────────────────────────────────────
 
+/**
+ * Buat slug variabel yang bersih dari nama mapel.
+ *
+ * Tidak menggunakan mp.id karena bisa berupa UUID panjang.
+ * Cukup gunakan nama mapel yang di-slugify — sudah cukup unik
+ * dalam konteks satu template raport.
+ *
+ * Contoh:
+ *  { name: "Bahasa Arab" }  → "bahasa_arab"
+ *  { name: "Tahfidz"     }  → "tahfidz"
+ *  { name: "Al-Qur'an"   }  → "alquran"
+ *
+ * @param {{ name: string }} mp
+ * @returns {string}
+ */
+function _buildMapelSlug(mp) {
+    return (mp.name || '')
+        .toLowerCase()
+        .replace(/[''']/g, '')      // hapus apostrof
+        .replace(/[^a-z0-9]+/g, '_') // non-alphanumeric → underscore
+        .replace(/_+/g, '_')        // collapse underscore ganda
+        .replace(/^_|_$/g, '');     // trim underscore di tepi
+}
+
 function loadMapelFromAPI(tingkatId) {
     var previewEl = document.getElementById('raportMapelPreview');
     if (!previewEl) return;
@@ -92,8 +116,7 @@ function loadMapelFromAPI(tingkatId) {
             _raportKelompoks = [{
                 kelompok: { id: 'all', nama: 'Mata Pelajaran', warna_header: '#1a5276' },
                 mapels: data.map(function (mp) {
-                    var slug = (mp.slug || mp.name.toLowerCase().replace(/\s+/g, '_'))
-                        .replace(/[^a-z0-9_]/g, '');
+                    var slug = _buildMapelSlug(mp);
                     return {
                         nama:        mp.name,
                         var_nilai:   'nilai_'   + slug,

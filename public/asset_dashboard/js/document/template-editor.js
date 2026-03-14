@@ -2097,7 +2097,7 @@ function loadMapelFromAPI(tingkatId) {
             var mapels = Array.isArray(data) ? data : (data.kelompoks ? null : []);
             if (mapels) {
                 _raportKelompoks = [{ kelompok: { id: 'all', nama: 'Mata Pelajaran', warna_header: '#1a5276' }, mapels: mapels.map(function (mp) {
-                    var slug = (mp.slug || mp.name.toLowerCase().replace(/\s+/g, '_')).replace(/[^a-z0-9_]/g, '');
+                    var slug = (mp.name || '').toLowerCase().replace(/[''']/g, '').replace(/[^a-z0-9]+/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '');
                     return { nama: mp.name, var_nilai: 'nilai_' + slug, var_capaian: 'capaian_' + slug };
                 })}];
             } else _raportKelompoks = data.kelompoks || [];
