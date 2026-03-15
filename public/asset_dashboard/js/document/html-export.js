@@ -52,6 +52,10 @@ function buildTableHtml(tableId, objLeft, objTop, tableStore) {
     var strColor = td.stripeColor || '#eaf2ff';
     var bdColor  = td.borderColor || '#adb5bd';
 
+    // FIX: tabel mode daftar → variabel di data rows di-numbering per baris
+    // {{nama_lengkap}} di baris 1 → {{nama_lengkap_1}}, baris 2 → {{nama_lengkap_2}}, dst.
+    var isDaftar = (td.table_mode === 'daftar');
+
     var html =
         '<table style="position:absolute;left:' + leftPt + 'pt;top:' + topPt + 'pt;' +
         'width:' + widthPt + 'pt;border-collapse:collapse;table-layout:fixed;' +
@@ -63,10 +67,19 @@ function buildTableHtml(tableId, objLeft, objTop, tableStore) {
     });
     html += '</colgroup>';
 
+    // Counter untuk penomoran variabel di tabel daftar (mulai dari 1, hanya baris data)
+    var daftarRowIdx = 0;
+
     rows.forEach(function (row, rowIdx) {
         var rowHPt      = pt(rowHeights[rowIdx] || 20);
         var isMergedRow = row[0] && row[0].isMerged;
+        var isHeader    = (rowIdx === 0);
         var evenStripe  = rowIdx % 2 === 1 ? '#ffffff' : strColor;
+
+        // Hitung indeks baris data (bukan header) untuk penomoran daftar
+        if (!isHeader && !isMergedRow) {
+            daftarRowIdx++;
+        }
 
         html += '<tr>';
 
@@ -82,11 +95,22 @@ function buildTableHtml(tableId, objLeft, objTop, tableStore) {
             for (var ci = 0; ci < totalCols; ci++) {
                 var cell     = row[ci] || { text: '', align: 'left' };
                 var colWPt   = pt(colWidths[ci] || 60);
-                var isHeader = (rowIdx === 0);
                 var cellBg   = isHeader ? hdrColor : evenStripe;
                 var color    = isHeader ? '#ffffff' : '#212529';
                 var fw       = isHeader ? 'bold' : 'normal';
                 var align    = cell.align || 'left';
+
+                // FIX: jika mode daftar dan ini baris data (bukan header),
+                // ganti {{varname}} → {{varname_N}} sesuai urutan baris
+                var cellText = cell.text || '';
+                if (isDaftar && !isHeader && daftarRowIdx > 0) {
+                    cellText = cellText.replace(/\{\{([^}]+)\}\}/g, function(match, varName) {
+                        varName = varName.trim();
+                        // Jangan tambah nomor kalau sudah bernomor ({{nama_1}})
+                        if (/_.+\d+$/.test(varName)) return match;
+                        return '{{' + varName + '_' + daftarRowIdx + '}}';
+                    });
+                }
 
                 html +=
                     '<td style="width:' + colWPt + 'pt;background:' + cellBg + ';' +
@@ -94,7 +118,7 @@ function buildTableHtml(tableId, objLeft, objTop, tableStore) {
                     'color:' + color + ';padding:2pt 3pt;vertical-align:top;' +
                     'text-align:' + align + ';word-wrap:break-word;' +
                     'min-height:' + rowHPt + 'pt;height:auto;">' +
-                    escapeCellContent(cell.text || '') +
+                    escapeCellContent(cellText) +
                     '</td>';
             }
         }

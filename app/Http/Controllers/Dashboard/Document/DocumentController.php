@@ -106,18 +106,22 @@ class DocumentController extends Controller
         $lastCol   = Coordinate::stringFromColumnIndex($totalCols);
 
         // ── WARNA TEMA ────────────────────────────────────────────────────────
-        $colorHeader      = 'FF1A5276';
-        $colorHeaderRaport= 'FF154360';
-        $colorSubHeader   = 'FF2980B9';
-        $colorRowOdd      = 'FFF0F7FF';
-        $colorRowEven     = 'FFFFFFFF';
-        $colorHidden      = 'FFFFFFFF';
-        $colorExample     = 'FFFFFDE7';
+        $colorHeader       = 'FF1A5276';
+        $colorHeaderRaport = 'FF154360';
+        $colorSubHeader    = 'FF2980B9';
+        $colorRowOdd       = 'FFF0F7FF';
+        $colorRowEven      = 'FFFFFFFF';
+        $colorHidden       = 'FFFFFFFF';
+        $colorExample      = 'FFFFFDE7';
+
+        // ── Deteksi apakah ada tabel mode daftar di canvas ────────────────────
+        $tableModeMap   = $this->extractTableModeMap($template);
+        $hasDaftarTable = in_array('daftar', array_values($tableModeMap), true);
 
         // ── BARIS 1: JUDUL TEMPLATE ───────────────────────────────────────────
         $sheet->mergeCells('A1:' . $lastCol . '1');
-        $modeLabel = ($template->generate_mode ?? 'perorang') === 'daftar'
-            ? 'Mode: Daftar (semua baris → 1 PDF)'
+        $modeLabel = $hasDaftarTable
+            ? 'Mode: Daftar (ada tabel daftar — semua baris → 1 PDF)'
             : 'Mode: Per Orang (1 baris → 1 PDF)';
         $sheet->setCellValue('A1', '📋  Template: ' . $template->name
             . '   |   Kategori: ' . ($template->category?->name ?? '-')
@@ -145,22 +149,17 @@ class DocumentController extends Controller
 
         // ── BARIS 2: PANDUAN SINGKAT ──────────────────────────────────────────
         $sheet->mergeCells('A2:' . $lastCol . '2');
-
-        // FIX: panduan berbeda berdasarkan generate_mode
-        $isListMode = ($template->generate_mode ?? 'perorang') === 'daftar';
-        if ($isListMode) {
-            $guideText = '⚠  Mode DAFTAR: Isi semua data mulai baris ke-5. Semua baris akan digabung menjadi 1 PDF. Jangan ubah baris 3 dan 4.';
-        } else {
-            $guideText = '⚠  Mode PER ORANG: Isi data mulai baris ke-5. Setiap baris = 1 dokumen PDF terpisah. Jangan ubah baris 3 dan 4.';
-        }
+        $guideText = $hasDaftarTable
+            ? '⚠  Mode DAFTAR: Isi semua data mulai baris ke-5. Semua baris akan digabung menjadi 1 PDF. Jangan ubah baris 3 dan 4.'
+            : '⚠  Mode PER ORANG: Isi data mulai baris ke-5. Setiap baris = 1 dokumen PDF terpisah. Jangan ubah baris 3 dan 4.';
         $sheet->setCellValue('A2', $guideText);
 
         $sheet->getStyle('A2')->applyFromArray([
             'font' => [
-                'bold'   => true,
-                'size'   => 9,
-                'name'   => 'Arial',
-                'color'  => ['argb' => 'FF7D3C00'],
+                'bold'  => true,
+                'size'  => 9,
+                'name'  => 'Arial',
+                'color' => ['argb' => 'FF7D3C00'],
             ],
             'fill' => [
                 'fillType'   => Fill::FILL_SOLID,
@@ -183,9 +182,9 @@ class DocumentController extends Controller
         // ── BARIS 3: HEADER LABEL ─────────────────────────────────────────────
         $colIndex = 1;
         foreach ($allColumns as $varKey => $label) {
-            $cell      = Coordinate::stringFromColumnIndex($colIndex) . '3';
-            $isPrefix  = $isRaport && isset($prefixColumns[$varKey]);
-            $bgColor   = $isPrefix ? $colorHeaderRaport : $colorHeader;
+            $cell     = Coordinate::stringFromColumnIndex($colIndex) . '3';
+            $isPrefix = $isRaport && isset($prefixColumns[$varKey]);
+            $bgColor  = $isPrefix ? $colorHeaderRaport : $colorHeader;
 
             $sheet->setCellValue($cell, $label);
             $sheet->getStyle($cell)->applyFromArray([
@@ -219,7 +218,7 @@ class DocumentController extends Controller
         }
         $sheet->getRowDimension(3)->setRowHeight(26);
 
-        // ── BARIS 4: HIDDEN VARIABLE ROW ─────────────────────────────────────
+        // ── BARIS 4: HIDDEN VARIABLE ROW (untuk mapping saat import) ─────────
         $colIndex = 1;
         foreach ($allColumns as $varKey => $label) {
             $cell = Coordinate::stringFromColumnIndex($colIndex) . '4';
@@ -273,7 +272,7 @@ class DocumentController extends Controller
         }
         $sheet->getRowDimension(5)->setRowHeight(18);
 
-        // ── BARIS 6+: AREA DATA KOSONG (20 baris) ────────────────────────────
+        // ── BARIS 6+: AREA DATA KOSONG (zebra striping 20 baris) ─────────────
         for ($row = 6; $row <= 25; $row++) {
             $bgColor  = ($row % 2 === 0) ? $colorRowEven : $colorRowOdd;
             $colIndex = 1;
@@ -284,7 +283,10 @@ class DocumentController extends Controller
                         'fillType'   => Fill::FILL_SOLID,
                         'startColor' => ['argb' => $bgColor],
                     ],
-                    'font' => ['size' => 10, 'name' => 'Arial'],
+                    'font' => [
+                        'size' => 10,
+                        'name' => 'Arial',
+                    ],
                     'alignment' => [
                         'vertical' => Alignment::VERTICAL_CENTER,
                         'indent'   => 1,
@@ -352,12 +354,22 @@ class DocumentController extends Controller
         ]);
         $info->getRowDimension(1)->setRowHeight(32);
 
+        // Daftar tabel & mode masing-masing
+        $tableModeDisplay = empty($tableModeMap)
+            ? 'Tidak ada tabel (Per Orang)'
+            : implode(', ', array_map(
+                fn($id, $mode) => $id . ': ' . ($mode === 'daftar' ? 'Daftar' : 'Per Orang'),
+                array_keys($tableModeMap),
+                array_values($tableModeMap)
+              ));
+
         $infoMeta = [
-            ['Template',       $template->name],
-            ['Kategori',       $template->category?->name ?? '-'],
-            ['Mode Generate',  $isListMode ? 'Daftar — semua baris → 1 PDF' : 'Per Orang — 1 baris → 1 PDF'],
-            ['Variabel',       count($allColumns) . ' kolom'],
-            ['Dibuat',         now()->format('d M Y H:i')],
+            ['Template',      $template->name],
+            ['Kategori',      $template->category?->name ?? '-'],
+            ['Mode Utama',    $hasDaftarTable ? 'Daftar — semua baris → 1 PDF' : 'Per Orang — 1 baris → 1 PDF'],
+            ['Detail Tabel',  $tableModeDisplay],
+            ['Variabel',      count($allColumns) . ' kolom'],
+            ['Dibuat',        now()->format('d M Y H:i')],
         ];
 
         $row = 3;
@@ -372,7 +384,7 @@ class DocumentController extends Controller
             $row++;
         }
 
-        $steps = $isListMode ? [
+        $steps = $hasDaftarTable ? [
             ['no' => '1', 'step' => 'Buka sheet "Data"'],
             ['no' => '2', 'step' => 'Isi data mulai dari BARIS KE-5 (baris kuning adalah contoh, boleh ditimpa)'],
             ['no' => '3', 'step' => 'SEMUA baris akan digabung menjadi 1 PDF — cocok untuk daftar hadir, rekap kelas, dll.'],
@@ -419,9 +431,10 @@ class DocumentController extends Controller
             ]);
             $row++;
             foreach ([
-                'Kolom NISN dan Nama Siswa WAJIB diisi.',
+                'Kolom NISN dan Nama Siswa WAJIB diisi untuk setiap baris.',
                 'NISN harus sesuai dengan data siswa di sistem.',
                 'Kolom nilai diisi sesuai nama variabel masing-masing mata pelajaran.',
+                'Pastikan format nilai sesuai (angka/huruf tergantung kurikulum).',
             ] as $note) {
                 $info->setCellValue('B' . $row, '• ' . $note);
                 $info->getStyle('B' . $row)->applyFromArray([
@@ -440,12 +453,13 @@ class DocumentController extends Controller
             'font' => ['bold' => true, 'size' => 11, 'name' => 'Arial', 'color' => ['argb' => 'FF1A5276']],
         ]);
         $row++;
+
         $info->setCellValue('A' . $row, 'No');
         $info->setCellValue('B' . $row, 'Nama Kolom (Label)');
         $info->setCellValue('C' . $row, 'Kode Variabel');
         $info->getStyle('A' . $row . ':C' . $row)->applyFromArray([
-            'font' => ['bold' => true, 'size' => 10, 'name' => 'Arial', 'color' => ['argb' => 'FFFFFFFF']],
-            'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => $colorSubHeader]],
+            'font'      => ['bold' => true, 'size' => 10, 'name' => 'Arial', 'color' => ['argb' => 'FFFFFFFF']],
+            'fill'      => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => $colorSubHeader]],
             'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER],
         ]);
         $info->getRowDimension($row)->setRowHeight(20);
@@ -566,13 +580,16 @@ class DocumentController extends Controller
             $index++;
         }
 
+        // Sertakan info mode per tabel agar frontend bisa tampilkan keterangan
+        $tableModeMap = $this->extractTableModeMap($template);
+
         return response()->json([
             'rows'            => $result,
             'total'           => count($result),
             'mapping_method'  => $usePositional ? 'positional' : 'mapped',
             'variables_found' => array_values($colToVar),
-            // FIX: sertakan generate_mode di response agar frontend bisa tampilkan info yang benar
-            'generate_mode'   => $template->generate_mode ?? 'perorang',
+            'table_modes'     => $tableModeMap,
+            'has_daftar'      => in_array('daftar', array_values($tableModeMap), true),
         ]);
     }
 
@@ -593,12 +610,6 @@ class DocumentController extends Controller
         $allKnownVariables = $isRaport
             ? array_merge(['nisn', 'nama_siswa'], $variables)
             : $variables;
-
-        // ── FIX: Gunakan generate_mode dari template, BUKAN deteksi otomatis ─
-        // Deteksi otomatis dari pola variabel (nama_1, nama_2, ...) tidak reliable
-        // karena user bisa saja punya variabel bernomor di dokumen per orang.
-        // generate_mode yang disimpan saat buat template adalah source of truth.
-        $isListMode = ($template->generate_mode ?? 'perorang') === 'daftar';
 
         $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load(
             $request->file('excel_file')->getRealPath()
@@ -624,78 +635,174 @@ class DocumentController extends Controller
             $dataRows[$rowNum] = $row;
         }
 
+        // ══════════════════════════════════════════════════════════════════════
+        // DETEKSI KOLOM DAFTAR — 3 lapis prioritas
+        //
+        // [1] canvas_json: tabel dengan table_mode = 'daftar' (paling akurat)
+        // [2] canvas_json: variabel bernomor {{nama_1}}, {{nama_2}} di canvas
+        // [3] html_template: variabel yang muncul ≥2 kali di baris berbeda
+        //     dalam satu tabel → ini yang cover template lama seperti kasus ini
+        //
+        // Template di DB punya tbl_2 dengan {{nama_lengkap}} di 5 baris = daftar
+        // ══════════════════════════════════════════════════════════════════════
+        $daftarBaseVars = $this->extractDaftarVarNames($template);
+
+        if (empty($daftarBaseVars)) {
+            $daftarBaseVars = $this->detectListVarsFromTemplate($template, $colToVar);
+        }
+
+        if (empty($daftarBaseVars)) {
+            $daftarBaseVars = $this->detectListVarsFromHtml($template, $colToVar);
+        }
+
+        $hasDaftarTable = !empty($daftarBaseVars);
+        $varToCol        = array_flip($colToVar);
+
+        // ══════════════════════════════════════════════════════════════════════
+        // LANGKAH 1: Kumpulkan sharedData dari kolom daftar
+        //
+        // Loop SEMUA baris Excel, kumpulkan nilai kolom daftar jadi bernomor:
+        //   nama_lengkap_1 = 'Ahmad Fauzi Ramadhan'   ← baris 1
+        //   nama_lengkap_2 = 'Siti Aisyah Putri'       ← baris 2
+        //   nama_lengkap_3 = 'Muhammad Rizki Aditya'   ← baris 3
+        //   ... dst (semua baris, untuk semua PDF)
+        //
+        // sharedData ini di-inject ke SETIAP PDF yang digenerate
+        // ══════════════════════════════════════════════════════════════════════
+        $sharedData = [];
+
+        // 
+
+        if ($hasDaftarTable) {
+            $listIdx = 1;
+            foreach ($dataRows as $row) {
+                foreach ($daftarBaseVars as $baseVar) {
+                    // Cari kolom Excel — bisa jadi __VAR__nama_lengkap atau __VAR__nama_lengkap_1
+                    $colKey = $varToCol[$baseVar] ?? null;
+                    if (!$colKey) {
+                        // Coba cari kolom yang base-nya cocok
+                        foreach ($colToVar as $col => $mappedVar) {
+                            if (preg_replace('/_\d+$/', '', $mappedVar) === $baseVar) {
+                                $colKey = $col;
+                                break;
+                            }
+                        }
+                    }
+                    $sharedData[$baseVar . '_' . $listIdx] = ($colKey && isset($row[$colKey]))
+                        ? $this->sanitizeCellValue($row[$colKey])
+                        : '';
+                }
+                $listIdx++;
+            }
+        }
+
+        // ══════════════════════════════════════════════════════════════════════
+        // LANGKAH 2: Generate PDF
+        //
+        // Setiap baris Excel = 1 PDF berisi:
+        //   - Variabel per-orang dari baris itu (nilai, capaian, dsb.)
+        //   - sharedData dari semua baris (daftar nama lengkap, sama di tiap PDF)
+        // ══════════════════════════════════════════════════════════════════════
+        // ══════════════════════════════════════════════════════════════════════
+        // REBUILD html_template: sesuaikan jumlah baris tabel daftar
+        // dengan jumlah data aktual dari Excel.
+        //
+        // Template asli punya N baris fixed (misal 5), tapi data bisa 15.
+        // Method rebuildDaftarTablesInHtml() akan:
+        //   - Hapus semua baris data di tabel daftar
+        //   - Generate ulang baris sebanyak count($dataRows)
+        //   - Setiap baris pakai {{daftar_1}}, {{daftar_2}}, ... sesuai urutan
+        // ══════════════════════════════════════════════════════════════════════
+        $dynamicTemplate = null;
+        if ($hasDaftarTable && !empty($daftarBaseVars)) {
+            $rebuiltHtml = $this->rebuildDaftarTablesInHtml(
+                $template->html_template ?? '',
+                $daftarBaseVars,
+                count($dataRows)
+            );
+            if ($rebuiltHtml !== ($template->html_template ?? '')) {
+                // Buat salinan template dengan html_template yang sudah di-rebuild
+                $dynamicTemplate = clone $template;
+                $dynamicTemplate->html_template = $rebuiltHtml;
+            }
+        }
+        $activeTemplate = $dynamicTemplate ?? $template;
+
         $zipPath = sys_get_temp_dir() . '/batch_' . uniqid() . '.zip';
         $zip     = new ZipArchive();
         $zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
-
         $count = 0;
 
-        // ══════════════════════════════════════════════════════════════════════
-        // MODE DAFTAR: semua baris Excel → 1 PDF
-        // ══════════════════════════════════════════════════════════════════════
-        if ($isListMode) {
-            $userData = [];
-            $rowIndex = 1;
-
-            $baseMap = $this->buildBaseVarMap($headerRow, $hiddenRow);
-
-            foreach ($dataRows as $row) {
-                foreach ($baseMap as $col => $baseVar) {
-                    $numberedVar            = $baseVar . '_' . $rowIndex;
-                    $userData[$numberedVar] = isset($row[$col])
-                        ? $this->sanitizeCellValue($row[$col])
-                        : '';
-                }
-                $rowIndex++;
+        // Cek apakah ada variabel per-orang (kolom selain daftar)
+        $hasPerOrangVars = false;
+        foreach ($colToVar as $col => $varName) {
+            $base = preg_replace('/_\d+$/', '', $varName);
+            if (!in_array($base, $daftarBaseVars)) {
+                $hasPerOrangVars = true;
+                break;
             }
+        }
 
+        // Template hanya berisi kolom daftar → 1 PDF saja
+        if ($hasDaftarTable && !$hasPerOrangVars) {
             try {
-                $document   = $this->generatorService->generate($template, $userData, []);
-                $pdfContent = \Storage::disk('public')->get($document->file_path);
+                $doc        = $this->generatorService->generate($activeTemplate, $sharedData, []);
+                $pdfContent = \Storage::disk('public')->get($doc->file_path);
                 $zip->addFromString('daftar-' . Str::slug($template->name) . '.pdf', $pdfContent);
                 $count = 1;
             } catch (\Throwable $e) {
-                \Log::warning('List mode generate failed: ' . $e->getMessage());
+                \Log::warning('Daftar-only generate failed: ' . $e->getMessage());
             }
 
-        // ══════════════════════════════════════════════════════════════════════
-        // MODE PER ORANG: tiap baris Excel → 1 PDF
-        // ══════════════════════════════════════════════════════════════════════
+        // Hybrid atau murni per-orang → tiap baris = 1 PDF
         } else {
             foreach ($dataRows as $rowNum => $row) {
-                $userData = [];
+                $perOrangData = [];
 
                 if ($usePositional) {
-                    foreach ($allKnownVariables as $varIndex => $varName) {
-                        $colKey             = $colKeys[$varIndex] ?? null;
-                        $userData[$varName] = $colKey && isset($row[$colKey])
+                    foreach ($allKnownVariables as $varIdx => $varName) {
+                        $base = preg_replace('/_\d+$/', '', $varName);
+                        if (in_array($base, $daftarBaseVars)) continue;
+                        $colKey                 = $colKeys[$varIdx] ?? null;
+                        $perOrangData[$varName] = $colKey && isset($row[$colKey])
                             ? $this->sanitizeCellValue($row[$colKey])
                             : '';
                     }
                 } else {
                     foreach ($colToVar as $col => $varName) {
-                        $userData[$varName] = isset($row[$col])
+                        $base = preg_replace('/_\d+$/', '', $varName);
+                        if (in_array($base, $daftarBaseVars)) continue;
+                        $perOrangData[$varName] = isset($row[$col])
                             ? $this->sanitizeCellValue($row[$col])
                             : '';
                     }
                     foreach ($allKnownVariables as $varName) {
-                        if (!array_key_exists($varName, $userData)) {
-                            $userData[$varName] = '';
+                        $base = preg_replace('/_\d+$/', '', $varName);
+                        if (in_array($base, $daftarBaseVars)) continue;
+                        if (!array_key_exists($varName, $perOrangData)) {
+                            $perOrangData[$varName] = '';
                         }
                     }
                 }
 
+                // Gabungkan: per-orang (unik tiap baris) + sharedData (sama semua PDF)
+                $userData = array_merge($perOrangData, $sharedData);
+
                 try {
-                    $document   = $this->generatorService->generate($template, $userData, []);
-                    $pdfContent = \Storage::disk('public')->get($document->file_path);
+                    $doc        = $this->generatorService->generate($activeTemplate, $userData, []);
+                    $pdfContent = \Storage::disk('public')->get($doc->file_path);
 
                     if ($isRaport && !empty($userData['nama_siswa'])) {
-                        $nameSlug    = Str::slug($userData['nama_siswa']);
-                        $nisnSuffix  = !empty($userData['nisn']) ? '-' . $userData['nisn'] : '';
-                        $zipFileName = sprintf('%03d-%s%s.pdf', $count + 1, $nameSlug, $nisnSuffix);
+                        $slug        = Str::slug($userData['nama_siswa']);
+                        $nisn        = !empty($userData['nisn']) ? '-' . $userData['nisn'] : '';
+                        $zipFileName = sprintf('%03d-%s%s.pdf', $count + 1, $slug, $nisn);
                     } else {
-                        $firstValue  = Str::slug(array_values($userData)[0] ?? 'dokumen');
-                        $zipFileName = sprintf('%03d-%s.pdf', $count + 1, $firstValue ?: 'dokumen');
+                        $firstVal = '';
+                        foreach ($perOrangData as $v) {
+                            if ($v !== '') { $firstVal = $v; break; }
+                        }
+                        $slug        = Str::slug($firstVal ?: ('dokumen-' . ($count + 1)));
+                        $zipFileName = sprintf('%03d-%s.pdf', $count + 1, $slug ?: 'dokumen');
                     }
 
                     $zip->addFromString($zipFileName, $pdfContent);
@@ -912,7 +1019,10 @@ class DocumentController extends Controller
     public function searchSiswa(Request $request): \Illuminate\Http\JsonResponse
     {
         $q = $request->input('q', '');
-        if (strlen($q) < 2) return response()->json([]);
+
+        if (strlen($q) < 2) {
+            return response()->json([]);
+        }
 
         $results = Siswa::query()
             ->where('name', 'like', "%{$q}%")
@@ -941,23 +1051,490 @@ class DocumentController extends Controller
     // PRIVATE HELPERS
     // =========================================================================
 
-    private function detectListMode(array $variables): bool
-    {
-        // FIX: method ini masih ada tapi tidak lagi dipakai di batchGenerate.
-        // Tetap dipertahankan untuk backward-compatibility jika ada kode lain yang memanggilnya.
-        $baseCounts = [];
-        foreach ($variables as $var) {
-            if (preg_match('/^(.+)_(\d+)$/', $var, $m)) {
-                $base = $m[1];
-                $baseCounts[$base] = ($baseCounts[$base] ?? 0) + 1;
-            }
+    /**
+     * Rebuild tabel daftar di html_template agar jumlah barisnya sesuai
+     * dengan jumlah data aktual dari Excel.
+     *
+     * Masalah: template dibuat dengan N baris fixed (misal 5), tapi data
+     * bisa berisi 3, 10, atau 30 baris. Ini menyebabkan:
+     *  - Kalau data < baris template → baris kosong di PDF
+     *  - Kalau data > baris template → data terpotong, tidak semua muncul
+     *
+     * Solusi: parse html_template, cari tabel yang mengandung variabel daftar
+     * ({{daftar_1}}, {{daftar_2}}, atau {{daftar}} berulang), lalu rebuild
+     * tabel tersebut dengan jumlah baris = $totalRows.
+     *
+     * Warna zebra (background) dipertahankan sesuai pola asli.
+     *
+     * @param  string        $htmlTemplate   html_template dari DB
+     * @param  array<string> $daftarBaseVars  ['daftar', 'nama_lengkap', ...]
+     * @param  int           $totalRows       jumlah baris data aktual
+     * @return string        html_template yang sudah di-rebuild
+     */
+    private function rebuildDaftarTablesInHtml(
+        string $htmlTemplate,
+        array  $daftarBaseVars,
+        int    $totalRows
+    ): string {
+        if (empty($htmlTemplate) || empty($daftarBaseVars) || $totalRows <= 0) {
+            return $htmlTemplate;
         }
-        foreach ($baseCounts as $count) {
-            if ($count >= 2) return true;
-        }
-        return false;
+
+        // Pattern variabel daftar untuk pencocokan
+        $daftarVarPattern = implode('|', array_map('preg_quote', $daftarBaseVars));
+
+        // Cari dan replace setiap <table> yang mengandung variabel daftar
+        $result = preg_replace_callback(
+            '/<table([^>]*)>(.*?)<\/table>/is',
+            function (array $match) use ($daftarVarPattern, $totalRows) {
+                $tableAttrs    = $match[1];
+                $tableContent  = $match[2];
+
+                // Cek apakah tabel ini mengandung variabel daftar
+                if (!preg_match('/\{\{(' . $daftarVarPattern . ')(?:_\d+)?\}\}/i', $tableContent)) {
+                    return $match[0]; // bukan tabel daftar, biarkan
+                }
+
+                // Ambil semua baris
+                preg_match_all('/<tr([^>]*)>(.*?)<\/tr>/is', $tableContent, $rowMatches);
+                if (empty($rowMatches[0])) return $match[0];
+
+                $allRows   = $rowMatches[0];
+                $headerRow = $allRows[0]; // baris pertama = header, pertahankan
+                $dataRows  = array_slice($allRows, 1); // baris data
+
+                if (empty($dataRows)) return $match[0];
+
+                // Ambil template baris data (baris pertama data sebagai acuan style)
+                // Kita perlu 2 template: ganjil dan genap (untuk zebra striping)
+                $templateRowOdd  = $dataRows[0];
+                $templateRowEven = count($dataRows) > 1 ? $dataRows[1] : $dataRows[0];
+
+                // Ekstrak style background dari baris template
+                $bgOdd  = $this->extractRowBackground($templateRowOdd);
+                $bgEven = $this->extractRowBackground($templateRowEven);
+
+                // Ekstrak template <td> dari baris pertama data
+                // (struktur kolom, style, dll — kecuali background dan isi variabel)
+                $tdTemplates = $this->extractTdTemplates($templateRowOdd);
+
+                // Ekstrak nomor baris (kolom No) jika ada
+                $hasNoColumn = $this->detectNoColumn($templateRowOdd);
+
+                // Generate baris baru sesuai $totalRows
+                $newRows = [];
+                for ($i = 1; $i <= $totalRows; $i++) {
+                    $isOdd  = ($i % 2 === 1);
+                    $bgColor = $isOdd ? $bgOdd : $bgEven;
+                    $rowHtml = $this->buildDaftarRow($tdTemplates, $i, $bgColor, $hasNoColumn, $daftarVarPattern);
+                    $newRows[] = $rowHtml;
+                }
+
+                // Rebuild tabel: header + baris baru
+                $newTableContent = $headerRow . implode('', $newRows);
+
+                // Pertahankan <colgroup> jika ada
+                preg_match('/<colgroup[^>]*>.*?<\/colgroup>/is', $tableContent, $colgroupMatch);
+                $colgroup = $colgroupMatch[0] ?? '';
+
+                return '<table' . $tableAttrs . '>' . $colgroup . $newTableContent . '</table>';
+            },
+            $htmlTemplate
+        );
+
+        return $result ?? $htmlTemplate;
     }
 
+    /**
+     * Ekstrak warna background dari baris <tr>.
+     */
+    private function extractRowBackground(string $trHtml): string
+    {
+        // Ambil background dari TD pertama
+        if (preg_match('/background(?:-color)?:\s*([^;>"\']+)/i', $trHtml, $m)) {
+            return trim($m[1]);
+        }
+        return '#ffffff';
+    }
+
+    /**
+     * Ekstrak template <td> dari baris data (tanpa isi, pertahankan style).
+     * Return array of td style strings.
+     */
+    private function extractTdTemplates(string $trHtml): array
+    {
+        preg_match_all('/<td([^>]*)>(.*?)<\/td>/is', $trHtml, $m);
+        $templates = [];
+        foreach ($m[1] as $idx => $attrs) {
+            $templates[] = [
+                'attrs'   => $attrs,
+                'content' => $m[2][$idx] ?? '',
+            ];
+        }
+        return $templates;
+    }
+
+    /**
+     * Deteksi apakah kolom pertama adalah kolom "No" (nomor urut).
+     */
+    private function detectNoColumn(string $trHtml): bool
+    {
+        preg_match('/<td[^>]*>(.*?)<\/td>/is', $trHtml, $m);
+        $firstCell = strip_tags($m[1] ?? '');
+        // Kolom No biasanya berisi angka kecil
+        return is_numeric(trim($firstCell));
+    }
+
+    /**
+     * Build satu baris <tr> untuk tabel daftar.
+     *
+     * @param  array  $tdTemplates   template kolom dari baris asli
+     * @param  int    $rowNum        nomor baris (1-based)
+     * @param  string $bgColor       warna background baris ini
+     * @param  bool   $hasNoColumn   apakah kolom pertama adalah nomor urut
+     * @param  string $varPattern    regex pattern variabel daftar
+     */
+    private function buildDaftarRow(
+        array  $tdTemplates,
+        int    $rowNum,
+        string $bgColor,
+        bool   $hasNoColumn,
+        string $varPattern
+    ): string {
+        $tds = '';
+        foreach ($tdTemplates as $colIdx => $td) {
+            // Update background di style attr
+            $attrs = preg_replace(
+                '/background(?:-color)?:\s*[^;>"\']+/i',
+                'background:' . $bgColor,
+                $td['attrs']
+            );
+
+            $content = $td['content'];
+
+            if ($hasNoColumn && $colIdx === 0) {
+                // Kolom No → isi nomor urut
+                $content = (string) $rowNum;
+            } else {
+                // Kolom data → ganti variabel dengan versi bernomor
+                $content = preg_replace_callback(
+                    '/\{\{(' . $varPattern . ')(?:_\d+)?\}\}/i',
+                    fn($m) => '{{' . $m[1] . '_' . $rowNum . '}}',
+                    $content
+                );
+            }
+
+            $tds .= '<td' . $attrs . '>' . $content . '</td>';
+        }
+
+        return '<tr>' . $tds . '</tr>';
+    }
+
+    /**
+     * Deteksi variabel daftar dari html_template yang tersimpan di DB.
+     *
+     * Logika: parse html_template, cari tabel yang punya variabel {{X}}
+     * muncul di ≥ 2 baris data berbeda → variabel itu adalah variabel daftar.
+     *
+     * Ini cover template lama yang dibuat sebelum fitur table_mode ada,
+     * di mana tabel daftar nama pakai {{nama_lengkap}} di tiap baris (bukan bernomor).
+     *
+     * Contoh html_template yang terdeteksi:
+     *   <tr><td>1</td><td>{{nama_lengkap}}</td></tr>
+     *   <tr><td>2</td><td>{{nama_lengkap}}</td></tr>  ← sama = daftar
+     *   <tr><td>3</td><td>{{nama_lengkap}}</td></tr>
+     *
+     * @param  DocumentTemplate  $template
+     * @param  array             $colToVar  mapping kolom Excel → varName
+     * @return array<string>     base names variabel daftar, misal ['nama_lengkap']
+     */
+    private function detectListVarsFromHtml(DocumentTemplate $template, array $colToVar): array
+    {
+        $htmlTemplate = $template->html_template ?? '';
+        if (empty($htmlTemplate)) return [];
+
+        // Ambil semua tabel dari html_template
+        preg_match_all('/<table[^>]*>(.*?)<\/table>/is', $htmlTemplate, $tableMatches);
+        if (empty($tableMatches[1])) return [];
+
+        $listVars = [];
+
+        foreach ($tableMatches[1] as $tableContent) {
+            // Ambil semua baris <tr>
+            preg_match_all('/<tr[^>]*>(.*?)<\/tr>/is', $tableContent, $rowMatches);
+            if (empty($rowMatches[1])) continue;
+
+            $dataRows = $rowMatches[1];
+            // Skip baris pertama (header)
+            if (count($dataRows) <= 1) continue;
+            $dataRows = array_slice($dataRows, 1);
+
+            // Hitung berapa kali tiap variabel muncul di baris-baris berbeda
+            $varRowCount = []; // varName → jumlah baris yang memuat variabel ini
+
+            foreach ($dataRows as $rowHtml) {
+                preg_match_all('/\{\{([^}]+)\}\}/', $rowHtml, $varMatches);
+                $varsInRow = array_unique(array_map('trim', $varMatches[1]));
+                foreach ($varsInRow as $var) {
+                    $varRowCount[$var] = ($varRowCount[$var] ?? 0) + 1;
+                }
+            }
+
+            // Variabel yang muncul di ≥ 2 baris = variabel daftar
+            foreach ($varRowCount as $var => $count) {
+                if ($count >= 2 && !in_array($var, $listVars)) {
+                    // Konfirmasi: variabel ini ada di Excel (ada kolomnya)
+                    $excelVarBases = array_map(
+                        fn($v) => preg_replace('/_\d+$/', '', $v),
+                        array_values($colToVar)
+                    );
+                    $base = preg_replace('/_\d+$/', '', $var);
+                    if (in_array($base, $excelVarBases) || in_array($var, array_values($colToVar))) {
+                        $listVars[] = $var; // simpan nama asli (nama_lengkap, bukan bernomor)
+                    }
+                }
+            }
+        }
+
+        return $listVars;
+    }
+
+    /**
+     * Deteksi otomatis variabel daftar dari template canvas (backward-compatible).
+     *
+     * Logika: variabel yang di canvas pakai POLA BERNOMOR ({{nama_lengkap_1}},
+     * {{nama_lengkap_2}}, ...) tapi di Excel hanya ada SATU kolom (nama_lengkap)
+     * = kolom daftar yang harus dikumpulkan dari semua baris.
+     *
+     * Contoh:
+     *   Template canvas punya: {{nama_lengkap_1}}, {{nama_lengkap_2}}, {{nama_lengkap_3}}
+     *   Excel punya kolom: nama_lengkap (satu kolom)
+     *   → deteksi: "nama_lengkap" adalah variabel daftar
+     *
+     * @param  DocumentTemplate  $template
+     * @param  array             $colToVar  mapping kolom Excel → varName saat ini
+     * @return array<string>     base names variabel daftar, misal ['nama_lengkap']
+     */
+    private function detectListVarsFromTemplate(DocumentTemplate $template, array $colToVar): array
+    {
+        $canvasJson = $template->canvas_json;
+        if (empty($canvasJson)) return [];
+
+        $data = is_array($canvasJson)
+            ? $canvasJson
+            : json_decode($canvasJson, true);
+
+        if (!is_array($data)) return [];
+
+        // Kumpulkan semua variabel di canvas (dari semua teks, semua halaman)
+        $canvasVars = [];
+        $this->collectCanvasVars($data, $canvasVars);
+
+        // Cari variabel yang punya pola bernomor: nama_lengkap_1, nama_lengkap_2, dst
+        // Group by base name
+        $numberedBases = [];
+        foreach ($canvasVars as $var) {
+            if (preg_match('/^(.+)_(\d+)$/', $var, $m)) {
+                $base = $m[1];
+                $numberedBases[$base] = ($numberedBases[$base] ?? 0) + 1;
+            }
+        }
+
+        // Hanya base name yang muncul ≥ 2 kali bernomor = variabel daftar
+        $listBases = [];
+        foreach ($numberedBases as $base => $count) {
+            if ($count >= 2) {
+                $listBases[] = $base;
+            }
+        }
+
+        if (empty($listBases)) return [];
+
+        // Konfirmasi: base name ini ada di Excel sebagai kolom TIDAK bernomor
+        // (jika di Excel sudah bernomor nama_lengkap_1 bukan nama_lengkap, beda kasus)
+        $excelVarBases = [];
+        foreach ($colToVar as $col => $varName) {
+            $excelVarBases[] = preg_replace('/_\d+$/', '', $varName);
+        }
+
+        $confirmed = [];
+        foreach ($listBases as $base) {
+            // Ada di canvas sebagai bernomor DAN ada di Excel sebagai kolom (bernomor atau tidak)
+            if (in_array($base, $excelVarBases)) {
+                $confirmed[] = $base;
+            }
+        }
+
+        return $confirmed;
+    }
+
+    /**
+     * Rekursif kumpulkan semua nama variabel {{...}} dari canvas JSON.
+     */
+    private function collectCanvasVars(array $data, array &$vars): void
+    {
+        // Cari di semua teks object canvas
+        if (isset($data['objects']) && is_array($data['objects'])) {
+            foreach ($data['objects'] as $obj) {
+                $text = $obj['text'] ?? '';
+                if ($text && preg_match_all('/\{\{([^}]+)\}\}/', $text, $m)) {
+                    foreach ($m[1] as $v) {
+                        $v = trim($v);
+                        if ($v && !in_array($v, $vars)) $vars[] = $v;
+                    }
+                }
+                // Rekursif untuk group
+                if (!empty($obj['objects'])) {
+                    $this->collectCanvasVars($obj, $vars);
+                }
+            }
+        }
+
+        // Cari di tableStore
+        if (isset($data['_tableStore']) && is_array($data['_tableStore'])) {
+            foreach ($data['_tableStore'] as $tableId => $td) {
+                foreach ($td['rows'] ?? [] as $row) {
+                    foreach ($row as $cell) {
+                        $text = $cell['text'] ?? '';
+                        if ($text && preg_match_all('/\{\{([^}]+)\}\}/', $text, $m)) {
+                            foreach ($m[1] as $v) {
+                                $v = trim($v);
+                                if ($v && !in_array($v, $vars)) $vars[] = $v;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Multi-halaman v2
+        if (isset($data['pages']) && is_array($data['pages'])) {
+            foreach ($data['pages'] as $page) {
+                $this->collectCanvasVars($page, $vars);
+            }
+        }
+    }
+
+    /**
+     * Ekstrak peta table_id → table_mode dari canvas_json template.
+     *
+     * Format canvas_json v2 (multi-halaman):
+     *   { version: 2, pages: [ { _tableStore: { tbl_1: { table_mode: 'daftar', ... } } } ] }
+     *
+     * Format canvas_json v1 (single page):
+     *   { _tableStore: { tbl_1: { table_mode: 'perorang', ... } } }
+     *
+     * Tabel tanpa field table_mode di-default ke 'perorang' (backward compatible).
+     *
+     * @param  DocumentTemplate  $template
+     * @return array<string, string>  ['tbl_1' => 'perorang', 'tbl_2' => 'daftar', ...]
+     */
+    private function extractTableModeMap(DocumentTemplate $template): array
+    {
+        $canvasJson = $template->canvas_json;
+        if (empty($canvasJson)) return [];
+
+        $data = is_array($canvasJson)
+            ? $canvasJson
+            : json_decode($canvasJson, true);
+
+        if (!is_array($data)) return [];
+
+        $modeMap = [];
+
+        // Format v2: multi-halaman
+        if (isset($data['version']) && $data['version'] === 2 && !empty($data['pages'])) {
+            foreach ($data['pages'] as $page) {
+                $tableStore = $page['_tableStore'] ?? [];
+                foreach ($tableStore as $tableId => $tableData) {
+                    $modeMap[$tableId] = $tableData['table_mode'] ?? 'perorang';
+                }
+            }
+            return $modeMap;
+        }
+
+        // Format v1: single page
+        $tableStore = $data['_tableStore'] ?? [];
+        foreach ($tableStore as $tableId => $tableData) {
+            $modeMap[$tableId] = $tableData['table_mode'] ?? 'perorang';
+        }
+
+        return $modeMap;
+    }
+
+    /**
+     * Ekstrak daftar nama variabel yang berasal dari tabel mode 'daftar'.
+     *
+     * Membaca canvas_json → tableStore, cari tabel dengan table_mode = 'daftar',
+     * lalu kumpulkan semua variabel {{...}} yang ada di sel tabel tersebut.
+     *
+     * Hasilnya dipakai oleh batchGenerate() untuk memisahkan:
+     *  - variabel "daftar" → dikumpulkan dari semua baris Excel jadi bernomor (nama_1, nama_2, ...)
+     *  - variabel "perorang" → diambil dari baris Excel masing-masing siswa
+     *
+     * @param  DocumentTemplate  $template
+     * @return array<string>  ['nama_lengkap', 'kelas', ...]  — base name tanpa nomor
+     */
+    private function extractDaftarVarNames(DocumentTemplate $template): array
+    {
+        $canvasJson = $template->canvas_json;
+        if (empty($canvasJson)) return [];
+
+        $data = is_array($canvasJson)
+            ? $canvasJson
+            : json_decode($canvasJson, true);
+
+        if (!is_array($data)) return [];
+
+        $daftarVars = [];
+
+        // Kumpulkan semua tableStore dari semua halaman (v1 & v2)
+        $allTableStores = [];
+        if (isset($data['version']) && $data['version'] === 2 && !empty($data['pages'])) {
+            foreach ($data['pages'] as $page) {
+                if (!empty($page['_tableStore'])) {
+                    $allTableStores[] = $page['_tableStore'];
+                }
+            }
+        } else {
+            if (!empty($data['_tableStore'])) {
+                $allTableStores[] = $data['_tableStore'];
+            }
+        }
+
+        // Cari tabel dengan table_mode = 'daftar' dan ekstrak variabel dari sel-selnya
+        foreach ($allTableStores as $tableStore) {
+            foreach ($tableStore as $tableId => $tableData) {
+                $mode = $tableData['table_mode'] ?? 'perorang';
+                if ($mode !== 'daftar') continue;
+
+                // Scan semua sel tabel untuk variabel {{...}}
+                $rows = $tableData['rows'] ?? [];
+                foreach ($rows as $row) {
+                    foreach ($row as $cell) {
+                        $text = $cell['text'] ?? '';
+                        if (preg_match_all('/\{\{([^}]+)\}\}/', $text, $matches)) {
+                            foreach ($matches[1] as $varName) {
+                                $varName = trim($varName);
+                                // Simpan base name — hapus nomor akhir jika ada (nama_1 → nama)
+                                $baseName = preg_replace('/_\d+$/', '', $varName);
+                                if ($baseName && !in_array($baseName, $daftarVars)) {
+                                    $daftarVars[] = $baseName;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $daftarVars;
+    }
+
+    /**
+     * Bangun mapping kolom → base variable name (tanpa nomor) untuk mode daftar.
+     * Contoh: kolom A header 'Nama', hidden '__VAR__nama_1' → ['A' => 'nama']
+     */
     private function buildBaseVarMap(array $headerRow, array $hiddenRow): array
     {
         $baseMap = [];
@@ -982,6 +1559,15 @@ class DocumentController extends Controller
         return $baseMap;
     }
 
+    /**
+     * Membangun peta kolom Excel → nama variabel template.
+     *
+     * Urutan prioritas:
+     *  1. Hidden row baris 4 (berisi "__VAR__nama_variabel") — paling akurat
+     *  2. Exact slug match antara label header dan nama variabel
+     *  3. Exact match nama variabel langsung
+     *  4. Normalized partial match
+     */
     private function buildColToVarMap(array $headerRow, array $hiddenRow, array $variables): array
     {
         $colToVar = [];
@@ -1008,13 +1594,13 @@ class DocumentController extends Controller
                 continue;
             }
 
-            // Prioritas 2b: Match langsung nama variabel
+            // Prioritas 3: Match langsung nama variabel
             if (in_array($labelClean, $variables)) {
                 $colToVar[$col] = $labelClean;
                 continue;
             }
 
-            // Prioritas 3: Normalized partial match
+            // Prioritas 4: Normalized partial match
             $labelNorm = preg_replace('/[^a-z0-9]/', '', $labelClean);
 
             if (!empty($labelNorm)) {
@@ -1048,6 +1634,9 @@ class DocumentController extends Controller
         return $colToVar;
     }
 
+    /**
+     * Membersihkan nilai cell dari Excel menjadi string yang aman.
+     */
     private function sanitizeCellValue(mixed $value): string
     {
         if ($value === null) return '';
@@ -1064,27 +1653,51 @@ class DocumentController extends Controller
         return trim((string) $value);
     }
 
+    /**
+     * Mengubah nama variabel snake_case menjadi label cantik untuk header Excel.
+     */
     private function friendlyVarLabel(string $varName): string
     {
         $map = [
-            'nama_siswa' => 'Nama Siswa', 'nisn' => 'NISN', 'nis' => 'NIS',
-            'jenis_kelamin' => 'Jenis Kelamin', 'tempat_lahir' => 'Tempat Lahir',
-            'tanggal_lahir' => 'Tanggal Lahir', 'agama' => 'Agama',
-            'nama_ayah' => 'Nama Ayah', 'nama_ibu' => 'Nama Ibu',
-            'pekerjaan_ayah' => 'Pekerjaan Ayah', 'pekerjaan_ibu' => 'Pekerjaan Ibu',
-            'alamat_siswa' => 'Alamat', 'no_hp' => 'No. HP', 'nama_wali' => 'Nama Wali',
-            'nama_sekolah' => 'Nama Sekolah', 'alamat_sekolah' => 'Alamat Sekolah',
-            'kepala_sekolah' => 'Kepala Sekolah', 'nip' => 'NIP/NBM',
-            'tahun_ajaran' => 'Tahun Ajaran', 'semester' => 'Semester',
-            'wali_kelas' => 'Wali Kelas', 'nbm_wali' => 'NBM Wali Kelas',
-            'nomor_surat' => 'Nomor Surat', 'tanggal' => 'Tanggal',
-            'perihal' => 'Perihal', 'keterangan' => 'Keterangan',
-            'isi' => 'Isi Surat', 'tujuan' => 'Tujuan', 'tembusan' => 'Tembusan',
-            'kelas' => 'Kelas', 'fase' => 'Fase', 'nama_kelas' => 'Nama Kelas',
-            'nilai_rata' => 'Nilai Rata-rata', 'peringkat' => 'Peringkat',
-            'predikat' => 'Predikat', 'catatan' => 'Catatan',
-            'naik_kelas' => 'Naik Kelas', 'mata_pelajaran' => 'Mata Pelajaran',
-            'nama_ortu' => 'Nama Orang Tua',
+            'nama_siswa'     => 'Nama Siswa',
+            'nisn'           => 'NISN',
+            'nis'            => 'NIS',
+            'jenis_kelamin'  => 'Jenis Kelamin',
+            'tempat_lahir'   => 'Tempat Lahir',
+            'tanggal_lahir'  => 'Tanggal Lahir',
+            'agama'          => 'Agama',
+            'nama_ayah'      => 'Nama Ayah',
+            'nama_ibu'       => 'Nama Ibu',
+            'pekerjaan_ayah' => 'Pekerjaan Ayah',
+            'pekerjaan_ibu'  => 'Pekerjaan Ibu',
+            'alamat_siswa'   => 'Alamat',
+            'no_hp'          => 'No. HP',
+            'nama_wali'      => 'Nama Wali',
+            'nama_sekolah'   => 'Nama Sekolah',
+            'alamat_sekolah' => 'Alamat Sekolah',
+            'kepala_sekolah' => 'Kepala Sekolah',
+            'nip'            => 'NIP/NBM',
+            'tahun_ajaran'   => 'Tahun Ajaran',
+            'semester'       => 'Semester',
+            'wali_kelas'     => 'Wali Kelas',
+            'nbm_wali'       => 'NBM Wali Kelas',
+            'nomor_surat'    => 'Nomor Surat',
+            'tanggal'        => 'Tanggal',
+            'perihal'        => 'Perihal',
+            'keterangan'     => 'Keterangan',
+            'isi'            => 'Isi Surat',
+            'tujuan'         => 'Tujuan',
+            'tembusan'       => 'Tembusan',
+            'kelas'          => 'Kelas',
+            'fase'           => 'Fase',
+            'nama_kelas'     => 'Nama Kelas',
+            'nilai_rata'     => 'Nilai Rata-rata',
+            'peringkat'      => 'Peringkat',
+            'predikat'       => 'Predikat',
+            'catatan'        => 'Catatan',
+            'naik_kelas'     => 'Naik Kelas',
+            'mata_pelajaran' => 'Mata Pelajaran',
+            'nama_ortu'      => 'Nama Orang Tua',
         ];
 
         if (isset($map[$varName])) return $map[$varName];
@@ -1099,28 +1712,51 @@ class DocumentController extends Controller
         return ucwords(str_replace('_', ' ', $varName));
     }
 
+    /**
+     * Menghasilkan contoh nilai untuk setiap variabel di baris contoh Excel.
+     */
     private function getExampleValue(string $varKey): string
     {
         $examples = [
-            'nama_siswa' => 'Ahmad Fauzi', 'nisn' => '0012345678', 'nis' => '2324001',
-            'jenis_kelamin' => 'Laki-laki', 'tempat_lahir' => 'Samarinda',
-            'tanggal_lahir' => '10 Mei 2015', 'agama' => 'Islam',
-            'nama_ayah' => 'Budi Santoso', 'nama_ibu' => 'Siti Aminah',
-            'pekerjaan_ayah' => 'Wiraswasta', 'pekerjaan_ibu' => 'Ibu Rumah Tangga',
-            'alamat_siswa' => 'Jl. Sungai Keledang No. 10', 'no_hp' => '081234567890',
-            'nama_wali' => 'Budi Santoso', 'nama_sekolah' => 'SD Muhammadiyah 3 Samarinda',
+            'nama_siswa'     => 'Ahmad Fauzi',
+            'nisn'           => '0012345678',
+            'nis'            => '2324001',
+            'jenis_kelamin'  => 'Laki-laki',
+            'tempat_lahir'   => 'Samarinda',
+            'tanggal_lahir'  => '10 Mei 2015',
+            'agama'          => 'Islam',
+            'nama_ayah'      => 'Budi Santoso',
+            'nama_ibu'       => 'Siti Aminah',
+            'pekerjaan_ayah' => 'Wiraswasta',
+            'pekerjaan_ibu'  => 'Ibu Rumah Tangga',
+            'alamat_siswa'   => 'Jl. Sungai Keledang No. 10',
+            'no_hp'          => '081234567890',
+            'nama_wali'      => 'Budi Santoso',
+            'nama_sekolah'   => 'SD Muhammadiyah 3 Samarinda',
             'alamat_sekolah' => 'Jl. Dato Iba, Samarinda Seberang',
-            'kepala_sekolah' => 'Drs. H. Mahmud, M.Pd', 'nip' => '197001012000031001',
-            'tahun_ajaran' => '2024/2025', 'semester' => 'Genap',
-            'wali_kelas' => 'Ibu Rahmawati, S.Pd', 'nbm_wali' => '1234567',
-            'nomor_surat' => '001/SKA/IV/2025', 'tanggal' => now()->translatedFormat('d F Y'),
-            'perihal' => 'Keterangan Aktif Belajar', 'keterangan' => 'Yang bersangkutan adalah siswa aktif',
-            'isi' => 'Isi surat keterangan...', 'tujuan' => 'Kepada Yth. ...',
-            'tembusan' => '1. Arsip', 'kelas' => '4A', 'fase' => 'Fase B',
-            'nama_kelas' => 'Kelas 4A', 'nilai_rata' => '88.50', 'peringkat' => '3',
-            'predikat' => 'Baik', 'catatan' => 'Siswa menunjukkan perkembangan yang baik',
-            'naik_kelas' => 'NAIK KELAS', 'mata_pelajaran' => 'Matematika',
-            'nama_ortu' => 'Budi Santoso',
+            'kepala_sekolah' => 'Drs. H. Mahmud, M.Pd',
+            'nip'            => '197001012000031001',
+            'tahun_ajaran'   => '2024/2025',
+            'semester'       => 'Genap',
+            'wali_kelas'     => 'Ibu Rahmawati, S.Pd',
+            'nbm_wali'       => '1234567',
+            'nomor_surat'    => '001/SKA/IV/2025',
+            'tanggal'        => now()->translatedFormat('d F Y'),
+            'perihal'        => 'Keterangan Aktif Belajar',
+            'keterangan'     => 'Yang bersangkutan adalah siswa aktif',
+            'isi'            => 'Isi surat keterangan...',
+            'tujuan'         => 'Kepada Yth. ...',
+            'tembusan'       => '1. Arsip',
+            'kelas'          => '4A',
+            'fase'           => 'Fase B',
+            'nama_kelas'     => 'Kelas 4A',
+            'nilai_rata'     => '88.50',
+            'peringkat'      => '3',
+            'predikat'       => 'Baik',
+            'catatan'        => 'Siswa menunjukkan perkembangan yang baik',
+            'naik_kelas'     => 'NAIK KELAS',
+            'mata_pelajaran' => 'Matematika',
+            'nama_ortu'      => 'Budi Santoso',
         ];
 
         if (isset($examples[$varKey])) return $examples[$varKey];

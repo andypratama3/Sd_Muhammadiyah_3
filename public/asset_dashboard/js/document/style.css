@@ -1130,3 +1130,158 @@ body {
     top: -8px;
     pointer-events: none;
 }
+
+/* ── GENERATE MODE TOGGLE (topbar) ──────────────────────────── */
+/* Container toggle di dalam .tb-field di topbar gelap */
+.tb-mode-toggle {
+    display: flex;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 7px;
+    padding: 2px;
+    gap: 2px;
+    height: 30px;
+    align-items: center;
+}
+
+.tb-mode-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0 9px;
+    height: 24px;
+    border: none;
+    border-radius: 5px;
+    font-size: .73rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all .15s ease;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.5);
+    white-space: nowrap;
+    line-height: 1;
+}
+
+.tb-mode-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.9);
+    transform: none; /* override default tb-btn hover */
+}
+
+.tb-mode-btn.active {
+    background: rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Daftar aktif — hijau toska agar mudah dibedakan dari Per Orang */
+#modeBtnDaftar.active {
+    background: rgba(16, 185, 129, 0.28);
+    color: #6ee7b7;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.tb-mode-btn i {
+    font-size: .72rem;
+    flex-shrink: 0;
+}
+
+/* ── TABLE MODE STRIP (modal insert tabel) ───────────────────── */
+.table-mode-strip {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 14px;
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 14px;
+}
+
+.tms-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: .75rem;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+.tms-toggle {
+    display: flex;
+    gap: 6px;
+}
+
+.tms-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: #fff;
+    color: #64748b;
+    font-size: .78rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all .18s ease;
+    flex: 1;
+    justify-content: center;
+}
+
+.tms-btn:hover {
+    border-color: #94a3b8;
+    color: #334155;
+    transform: none;
+}
+
+.tms-btn.active {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(26, 82, 118, .25);
+}
+
+.tms-btn.active.daftar-active {
+    border-color: var(--accent);
+    background: var(--accent);
+    box-shadow: 0 2px 8px rgba(39, 174, 96, .25);
+}
+
+.tms-pill {
+    font-size: .68rem;
+    padding: 1px 6px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, .2);
+    font-weight: 400;
+    border: 1px solid rgba(255, 255, 255, .3);
+    margin-left: 2px;
+}
+
+.tms-btn:not(.active) .tms-pill {
+    background: #f1f5f9;
+    border-color: var(--border);
+    color: #94a3b8;
+}
+
+.tms-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: .73rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+    padding: 5px 8px;
+    background: rgba(26, 82, 118, .05);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--primary);
+    transition: border-color .2s ease, background .2s ease;
+}
+
+.tms-info.daftar {
+    border-left-color: var(--accent);
+    background: rgba(39, 174, 96, .05);
+}

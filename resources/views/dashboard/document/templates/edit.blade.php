@@ -49,9 +49,6 @@
             </div>
         </div>
 
-        @include('dashboard.document.templates._generate_mode_snippet')
-
-
         <div class="tb-spacer"></div>
 
         <button type="button" class="tb-btn" onclick="undo()" title="Undo (Ctrl+Z)">
@@ -313,7 +310,9 @@
 @push('js')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fabric@5.3.0/dist/fabric.min.js"></script>
-{{-- <script src="{{ asset('asset_dashboard/js/document/constants.js') }}"></script>
+
+{{-- Editor JS — urutan PENTING, jangan diubah --}}
+<script src="{{ asset('asset_dashboard/js/document/constants.js') }}"></script>
 <script src="{{ asset('asset_dashboard/js/document/utils.js') }}"></script>
 <script src="{{ asset('asset_dashboard/js/document/ruler.js') }}"></script>
 <script src="{{ asset('asset_dashboard/js/document/variable-registry.js') }}"></script>
@@ -324,38 +323,9 @@
 <script src="{{ asset('asset_dashboard/js/document/page-manager.js') }}"></script>
 <script src="{{ asset('asset_dashboard/js/document/canvas-events.js') }}"></script>
 <script src="{{ asset('asset_dashboard/js/document/elements.js') }}"></script>
-<script src="{{ asset('asset_dashboard/js/document/html-export.js') }}"></script> --}}
-<script src="{{ asset('asset_dashboard/js/document/constants.js') }}"></script>
-<script src="{{ asset('asset_dashboard/js/document/utils.js') }}"></script>
-
-{{-- 2. Canvas core --}}
-<script src="{{ asset('asset_dashboard/js/document/canvas-events.js') }}"></script>
-<script src="{{ asset('asset_dashboard/js/document/page-manager.js') }}"></script>
-
-{{-- 3. Table system --}}
-<script src="{{ asset('asset_dashboard/js/document/table-renderer.js') }}"></script>
-<script src="{{ asset('asset_dashboard/js/document/table-handles.js') }}"></script>
-<script src="{{ asset('asset_dashboard/js/document/table-style-panel.js') }}"></script>
-
-{{-- 4. Elements --}}
-<script src="{{ asset('asset_dashboard/js/document/elements.js') }}"></script>
-<script src="{{ asset('asset_dashboard/js/document/elements-patch.js') }}"></script>  {{-- override addBarcode, tambah addKopSurat dll --}}
-
-{{-- 5. Variables & Export --}}
-<script src="{{ asset('asset_dashboard/js/document/variable-registry.js') }}"></script>  {{-- override registerVariable --}}
 <script src="{{ asset('asset_dashboard/js/document/html-export.js') }}"></script>
 
-{{-- 6. UI Helpers --}}
-<script src="{{ asset('asset_dashboard/js/document/ruler.js') }}"></script>
-<script src="{{ asset('asset_dashboard/js/document/raport-api.js') }}"></script>
 
-{{-- 7. Init (DOMContentLoaded + global exports) --}}
-<script src="{{ asset('asset_dashboard/js/document/init.js') }}"></script>
-
-{{-- 8. Patch (TERAKHIR - hanya addons, tidak override) --}}
-<script src="{{ asset('asset_dashboard/js/document/canvas-events-patch.js') }}"></script>
-
-{{-- 9. Progress tracker (halaman generate, bukan editor) --}}
 <script>
 (function () {
     var proto = CanvasRenderingContext2D.prototype;

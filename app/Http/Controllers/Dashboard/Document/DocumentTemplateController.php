@@ -77,6 +77,8 @@ class DocumentTemplateController extends Controller
 
     public function edit(DocumentTemplate $template): View
     {
+
+        // dd($template->canvas_json, $template->html_template);
         $template->load(['kelasList', 'pelajarans']);
 
         $categories     = DocumentCategory::orderBy('name')->get();

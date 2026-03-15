@@ -14,12 +14,29 @@
 // CREATE TABLE PLACEHOLDER (canvas image)
 // ─────────────────────────────────────────────────────────────
 
+/**
+ * _getTableModeFromModal — baca pilihan mode dari hidden input di modal tabel.
+ * Dipanggil oleh semua fungsi insertXxxTable() sebelum createTablePlaceholder().
+ * Default ke 'perorang' jika elemen tidak ditemukan.
+ * @returns {'perorang'|'daftar'}
+ */
+function _getTableModeFromModal() {
+    var el = document.getElementById('tableInsertMode');
+    return (el && el.value === 'daftar') ? 'daftar' : 'perorang';
+}
+
 function createTablePlaceholder(tableData, startX, startY) {
     var canvas = getCanvas();
     if (!canvas) return;
     var pg = pages[currentPage];
     if (!pg) return;
 
+    // FIX: pastikan table_mode selalu tersimpan di tableData.
+    // Jika pemanggil sudah set (misal dari insertCustomTable), gunakan itu.
+    // Jika belum, ambil dari modal (fallback 'perorang').
+    if (!tableData.table_mode) {
+        tableData.table_mode = _getTableModeFromModal();
+    }
     var id = 'tbl_' + (++tableCounter);
     pg.tableStore[id] = tableData;
 
@@ -294,6 +311,8 @@ function insertCustomTable() {
     var tableModeEl = document.getElementById('tableMode');
     var tableMode   = tableModeEl ? tableModeEl.value : 'perorang';
 
+    console.log(tableMode);
+
     var headersRaw = document.getElementById('tableHeaders').value
         .split(',').map(function (s) { return s.trim(); });
 
@@ -369,6 +388,7 @@ function insertCustomTable() {
     createTablePlaceholder({
         type:             'custom',
         tableMode:        tableMode,   // simpan mode agar DocumentController bisa baca
+        table_mode:       _getTableModeFromModal(), // FIX: mode per-tabel dari modal
         totalWidth:       tableWidth,
         totalHeight:      (rowHeight + 4) + rowCount * rowHeight,
         colWidths:        colWidths,
@@ -480,6 +500,7 @@ function insertKelasMapelTable() {
 
     createTablePlaceholder({
         type:             'kelas_mapel',
+        table_mode:       _getTableModeFromModal(),
         totalWidth:       tableWidth,
         totalHeight:      totalH,
         colWidths:        colWidths,
@@ -544,6 +565,7 @@ function insertRaportTable() {
 
     createTablePlaceholder({
         type:             'raport',
+        table_mode:       'perorang', // Raport selalu per orang — tiap siswa dapat PDF sendiri
         totalWidth:       tableWidth,
         totalHeight:      rowHeights.reduce(function (a, b) { return a + b; }, 0),
         colWidths:        colWidths,
@@ -604,6 +626,7 @@ function insertUnggulanTable() {
 
     createTablePlaceholder({
         type:        'unggulan',
+        table_mode:  _getTableModeFromModal(),
         totalWidth:  tableWidth,
         totalHeight: rowHeights.reduce(function (a, b) { return a + b; }, 0),
         colWidths:   colWidths,
@@ -646,6 +669,7 @@ function insertEkskulTable() {
 
     createTablePlaceholder({
         type:        'ekskul',
+        table_mode:  _getTableModeFromModal(),
         totalWidth:  tableWidth,
         totalHeight: (rowH + 4) + itemsRaw.length * rowH,
         colWidths:   colWidths,
@@ -690,6 +714,7 @@ function insertAbsensiTable() {
 
     createTablePlaceholder({
         type:        'absensi',
+        table_mode:  _getTableModeFromModal(),
         totalWidth:  tableWidth,
         totalHeight: (rowH + 4) + rowCount * rowH,
         colWidths:   colWidths,

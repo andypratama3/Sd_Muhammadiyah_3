@@ -23,6 +23,7 @@ class DocumentTemplate extends Model
 
     protected $casts = [
         'canvas_json' => 'array',
+        'generate_mode' => 'string',
     ];
 
     // =========================================================
