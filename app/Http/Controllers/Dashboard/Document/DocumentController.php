@@ -602,6 +602,12 @@ class DocumentController extends Controller
             ? array_merge(['nisn', 'nama_siswa'], $variables)
             : $variables;
 
+        // ── Deteksi mode: LIST vs PER ORANG ──────────────────────────────────
+        // Jika variabel template bernomor (nama_1, nama_2, ...) → mode LIST
+        // Semua baris Excel digabung ke 1 userData → 1 PDF
+        // Jika variabel flat (nama, nilai) → mode PER ORANG → tiap baris = 1 PDF
+        $isListMode = $this->detectListMode($variables);
+
         $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load(
             $request->file('excel_file')->getRealPath()
         );
@@ -617,61 +623,98 @@ class DocumentController extends Controller
         $usePositional = empty($colToVar);
         $colKeys       = array_keys($headerRow);
 
+        // Filter baris kosong & contoh
+        $dataRows = [];
+        foreach ($rows as $rowNum => $row) {
+            $values = array_filter(array_values($row), fn($v) => $v !== null && $v !== '');
+            if (empty($values)) continue;
+            $firstVal = trim((string) (array_values($row)[0] ?? ''));
+            if (str_starts_with($firstVal, 'Contoh ')) continue;
+            $dataRows[$rowNum] = $row;
+        }
+
         $zipPath = sys_get_temp_dir() . '/batch_' . uniqid() . '.zip';
         $zip     = new ZipArchive();
         $zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
         $count = 0;
-        foreach ($rows as $rowNum => $row) {
-            $values = array_filter(array_values($row), fn($v) => $v !== null && $v !== '');
-            if (empty($values)) {
-                continue;
-            }
 
-            $firstVal = trim((string) (array_values($row)[0] ?? ''));
-            if (str_starts_with($firstVal, 'Contoh ')) {
-                continue;
-            }
-
+        // ══════════════════════════════════════════════════════════════════════
+        // MODE LIST: semua baris Excel → 1 PDF
+        // Tiap baris Excel mengisi variabel bernomor: nama_1, nama_2, nama_N
+        // ══════════════════════════════════════════════════════════════════════
+        if ($isListMode) {
             $userData = [];
+            $rowIndex = 1;
 
-            if ($usePositional) {
-                foreach ($allKnownVariables as $varIndex => $varName) {
-                    $colKey             = $colKeys[$varIndex] ?? null;
-                    $userData[$varName] = $colKey && isset($row[$colKey])
-                        ? $this->sanitizeCellValue($row[$colKey])
-                        : '';
-                }
-            } else {
-                foreach ($colToVar as $col => $varName) {
-                    $userData[$varName] = isset($row[$col])
+        // Mapping kolom → base variable name, hitung sekali di luar loop
+            $baseMap = $this->buildBaseVarMap($headerRow, $hiddenRow);
+
+            foreach ($dataRows as $row) {
+                foreach ($baseMap as $col => $baseVar) {
+                    $numberedVar          = $baseVar . '_' . $rowIndex;
+                    $userData[$numberedVar] = isset($row[$col])
                         ? $this->sanitizeCellValue($row[$col])
                         : '';
                 }
-                foreach ($allKnownVariables as $varName) {
-                    if (!array_key_exists($varName, $userData)) {
-                        $userData[$varName] = '';
-                    }
-                }
+                $rowIndex++;
             }
 
+            // Generate 1 PDF untuk seluruh daftar
             try {
                 $document   = $this->generatorService->generate($template, $userData, []);
                 $pdfContent = \Storage::disk('public')->get($document->file_path);
+                $zip->addFromString('daftar-' . Str::slug($template->name) . '.pdf', $pdfContent);
+                $count = 1;
+            } catch (\Throwable $e) {
+                \Log::warning('List mode generate failed: ' . $e->getMessage());
+            }
 
-                if ($isRaport && !empty($userData['nama_siswa'])) {
-                    $nameSlug    = Str::slug($userData['nama_siswa']);
-                    $nisnSuffix  = !empty($userData['nisn']) ? '-' . $userData['nisn'] : '';
-                    $zipFileName = sprintf('%03d-%s%s.pdf', $count + 1, $nameSlug, $nisnSuffix);
+        // ══════════════════════════════════════════════════════════════════════
+        // MODE PER ORANG: tiap baris Excel → 1 PDF (behavior lama)
+        // ══════════════════════════════════════════════════════════════════════
+        } else {
+            foreach ($dataRows as $rowNum => $row) {
+                $userData = [];
+
+                if ($usePositional) {
+                    foreach ($allKnownVariables as $varIndex => $varName) {
+                        $colKey             = $colKeys[$varIndex] ?? null;
+                        $userData[$varName] = $colKey && isset($row[$colKey])
+                            ? $this->sanitizeCellValue($row[$colKey])
+                            : '';
+                    }
                 } else {
-                    $firstValue  = Str::slug(array_values($userData)[0] ?? 'dokumen');
-                    $zipFileName = sprintf('%03d-%s.pdf', $count + 1, $firstValue ?: 'dokumen');
+                    foreach ($colToVar as $col => $varName) {
+                        $userData[$varName] = isset($row[$col])
+                            ? $this->sanitizeCellValue($row[$col])
+                            : '';
+                    }
+                    foreach ($allKnownVariables as $varName) {
+                        if (!array_key_exists($varName, $userData)) {
+                            $userData[$varName] = '';
+                        }
+                    }
                 }
 
-                $zip->addFromString($zipFileName, $pdfContent);
-                $count++;
-            } catch (\Throwable $e) {
-                \Log::warning("Batch generate row {$rowNum} failed: " . $e->getMessage());
+                try {
+                    $document   = $this->generatorService->generate($template, $userData, []);
+                    $pdfContent = \Storage::disk('public')->get($document->file_path);
+
+                    if ($isRaport && !empty($userData['nama_siswa'])) {
+                        $nameSlug    = Str::slug($userData['nama_siswa']);
+                        $nisnSuffix  = !empty($userData['nisn']) ? '-' . $userData['nisn'] : '';
+                        $zipFileName = sprintf('%03d-%s%s.pdf', $count + 1, $nameSlug, $nisnSuffix);
+                    } else {
+                        $firstValue  = Str::slug(array_values($userData)[0] ?? 'dokumen');
+                        $zipFileName = sprintf('%03d-%s.pdf', $count + 1, $firstValue ?: 'dokumen');
+                    }
+
+                    $zip->addFromString($zipFileName, $pdfContent);
+                    $count++;
+                } catch (\Throwable $e) {
+                    \Log::warning("Batch generate row {$rowNum} failed: " . $e->getMessage());
+                }
             }
         }
 
@@ -923,6 +966,58 @@ class DocumentController extends Controller
      *  2. Exact slug match antara label header dan nama variabel
      *  3. Normalized partial match (strip non-alphanumeric, prefix match)
      */
+    /**
+     * Deteksi apakah template menggunakan mode LIST.
+     * Mode list: variabel template bernomor seperti nama_1, nama_2, nilai_1, dst.
+     * Minimal 2 variabel bernomor dengan base name yang sama → mode list.
+     */
+    private function detectListMode(array $variables): bool
+    {
+        $baseCounts = [];
+        foreach ($variables as $var) {
+            if (preg_match('/^(.+)_(\d+)$/', $var, $m)) {
+                $base = $m[1];
+                $baseCounts[$base] = ($baseCounts[$base] ?? 0) + 1;
+            }
+        }
+        // Jika ada base name yang muncul >= 2 kali → mode list
+        foreach ($baseCounts as $count) {
+            if ($count >= 2) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Bangun mapping kolom → base variable name (tanpa nomor) untuk mode list.
+     * Contoh: kolom A header 'Nama', hidden '__VAR__nama_1' → ['A' => 'nama']
+     * Atau fallback ke slug dari header label.
+     */
+    private function buildBaseVarMap(array $headerRow, array $hiddenRow): array
+    {
+        $baseMap = [];
+        foreach ($headerRow as $col => $label) {
+            if (empty($label)) continue;
+
+            $hiddenVal = trim((string) ($hiddenRow[$col] ?? ''));
+            if (str_starts_with($hiddenVal, '__VAR__')) {
+                $varName = substr($hiddenVal, 7);
+                // Hapus nomor dari akhir jika ada: nama_1 → nama
+                $base = preg_replace('/_\d+$/', '', $varName);
+                $baseMap[$col] = $base;
+                continue;
+            }
+
+            // Fallback: slug dari label
+            $slug = strtolower(trim((string) $label));
+            $slug = preg_replace('/[^a-z0-9]+/', '_', $slug);
+            $slug = trim($slug, '_');
+            if ($slug) {
+                $baseMap[$col] = $slug;
+            }
+        }
+        return $baseMap;
+    }
+
     private function buildColToVarMap(array $headerRow, array $hiddenRow, array $variables): array
     {
         $colToVar = [];
@@ -932,7 +1027,8 @@ class DocumentController extends Controller
                 continue;
             }
 
-            // Prioritas 1: Hidden variable row
+            // Prioritas 1: Hidden variable row (__VAR__varname)
+            // Ini adalah cara terpaling akurat — diset oleh excelTemplate()
             $hiddenVal = trim((string) ($hiddenRow[$col] ?? ''));
             if (str_starts_with($hiddenVal, '__VAR__')) {
                 $varName = substr($hiddenVal, 7);
@@ -948,6 +1044,13 @@ class DocumentController extends Controller
             $slug = strtolower(str_replace([' ', '-'], '_', $labelClean));
             if (in_array($slug, $variables)) {
                 $colToVar[$col] = $slug;
+                continue;
+            }
+
+            // ✅ FIX Prioritas 2b: Match langsung nama variabel (tanpa slug)
+            // Contoh: header "siswa_baris1_nama" langsung cocok dengan variabel tersebut
+            if (in_array($labelClean, $variables)) {
+                $colToVar[$col] = $labelClean;
                 continue;
             }
 
@@ -1075,6 +1178,8 @@ class DocumentController extends Controller
             return 'Capaian ' . ucwords(str_replace('_', ' ', $m[1]));
         }
 
+
+
         // Fallback: snake_case → Title Case
         return ucwords(str_replace('_', ' ', $varName));
     }
@@ -1137,6 +1242,8 @@ class DocumentController extends Controller
         if (preg_match('/^capaian_(.+)$/', $varKey)) {
             return 'Peserta didik mampu memahami materi dengan baik';
         }
+
+
 
         return 'Contoh ' . ucwords(str_replace('_', ' ', $varKey));
     }

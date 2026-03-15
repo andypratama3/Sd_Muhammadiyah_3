@@ -11,7 +11,6 @@ use App\Services\TemplateVariableRegistry;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use function PHPUnit\Framework\returnArgument;
 
 class DocumentTemplateController extends Controller
 {
@@ -49,8 +48,6 @@ class DocumentTemplateController extends Controller
             'mapel_ids.*'   => 'exists:pelajarans,id',
         ]);
 
-        // canvas_json dikirim sebagai string JSON dari JS,
-        // decode dulu agar model cast array bekerja benar.
         if (!empty($validated['canvas_json'])) {
             $decoded = json_decode($validated['canvas_json'], true);
             $validated['canvas_json'] = json_last_error() === JSON_ERROR_NONE
@@ -58,11 +55,16 @@ class DocumentTemplateController extends Controller
                 : null;
         }
 
+        // BUG #3 FIX: pada store(), kelas_id tidak di-handle sama sekali.
+        // Seharusnya konsisten dengan update() — hanya set kelas_id untuk Rapot.
+        $category = DocumentCategory::find($validated['category_id']);
+        if ($category && strtolower($category->name) !== 'rapot') {
+            $validated['kelas_id'] = null;
+        }
+
         $template = DocumentTemplate::create($validated);
 
-        if ($request->has('mapel_ids')) {
-            $template->pelajarans()->sync($request->input('mapel_ids', []));
-        }
+        $template->pelajarans()->sync($request->input('mapel_ids', []));
 
         return redirect()
             ->route('dashboard.documents.templates.edit', $template)
@@ -103,9 +105,9 @@ class DocumentTemplateController extends Controller
                 : $template->canvas_json;
         }
 
-        $categoryDocument = DocumentCategory::find($request->input('category_id'));
+        $category = DocumentCategory::find($request->input('category_id'));
 
-        if($categoryDocument->name == 'Rapot') {
+        if ($category && strtolower($category->name) === 'rapot') {
             $validated['kelas_id'] = $request->input('kelas_id');
         } else {
             $validated['kelas_id'] = null;
@@ -123,7 +125,11 @@ class DocumentTemplateController extends Controller
 
     public function destroy(DocumentTemplate $template): RedirectResponse
     {
-        $template->kelasList()->detach();
+        try {
+            $template->kelasList()->detach();
+        } catch (\Throwable $e) {
+        }
+
         $template->pelajarans()->detach();
         $template->delete();
 
@@ -134,6 +140,7 @@ class DocumentTemplateController extends Controller
 
     public function previewVariables(Request $request): \Illuminate\Http\JsonResponse
     {
+        // Jika ada template_id → ambil variabel dari template yang tersimpan
         if ($request->filled('template_id')) {
             $template  = DocumentTemplate::findOrFail($request->integer('template_id'));
             $variables = $template->extractVariables();
@@ -141,6 +148,7 @@ class DocumentTemplateController extends Controller
             return response()->json(['variables' => $variables]);
         }
 
+        // Jika ada html langsung → parse variabel dari HTML (preview sebelum save)
         $html = $request->input('html', '');
         preg_match_all('/\{\{(.*?)\}\}/', $html, $matches);
 
@@ -168,11 +176,10 @@ class DocumentTemplateController extends Controller
         return response()->json($kelasList);
     }
 
-   public function apiMapelList(Request $request): \Illuminate\Http\JsonResponse
+    public function apiMapelList(Request $request): \Illuminate\Http\JsonResponse
     {
         $query = Pelajaran::orderBy('name');
 
-        // Filter by kelas jika ada — untuk raport per tingkat
         if ($request->filled('kelas_id')) {
             $query->whereHas('kelasPelajaran', function ($q) use ($request) {
                 $q->where('kelas_id', $request->kelas_id);

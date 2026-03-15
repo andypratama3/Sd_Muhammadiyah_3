@@ -3,10 +3,10 @@
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-header py-2">
-                <h5 class="modal-title fs-6">
+                <h5 class="modal-title fs-6 text-white">
                     <i class="bi bi-table text-success me-2"></i>Sisipkan Tabel
                 </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
 
@@ -72,7 +72,75 @@
                                     <label class="form-check-label small">Otomatis isi nomor urut di kolom pertama</label>
                                 </div>
                             </div>
+
+                            {{-- Opsi auto-generate variabel dari header kolom (untuk import Excel) --}}
+                            <div class="col-12 mt-1">
+                                <hr class="my-1">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="tableAutoVar">
+                                    <label class="form-check-label small fw-semibold text-primary">
+                                        <i class="bi bi-braces me-1"></i>Auto-generate variabel dari nama kolom
+                                        <span class="badge bg-success ms-1" style="font-size:0.65rem">Wajib untuk import Excel</span>
+                                    </label>
+                                </div>
+                                <div class="form-text ms-4 small text-muted">
+                                    Nama kolom otomatis jadi variabel. Contoh header <code>Nama Siswa</code>
+                                    → variabel <code>{nama_siswa}</code>, header <code>Nilai</code> → <code>{nilai}</code>.
+                                    Semua baris di kolom yang sama pakai variabel yang sama — cocok untuk
+                                    skenario <strong>1 baris Excel = 1 PDF</strong>.
+                                </div>
+                            </div>
+
+                            <div class="col-12" id="tableVarPreviewBox" style="display:none;">
+                                <div class="alert alert-light border py-2 small mb-0">
+                                    <i class="bi bi-eye me-1 text-primary"></i>
+                                    <strong>Preview variabel yang akan dibuat:</strong>
+                                    <code id="tableVarPreviewText" class="text-primary ms-1">—</code>
+                                </div>
+                            </div>
                         </div>
+
+                        <script>
+                        (function () {
+                            function toSlug(s) {
+                                return (s || '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '') || 'kolom';
+                            }
+
+                            function updateVarPreview() {
+                                var headers = document.getElementById('tableHeaders').value.split(',');
+                                var hasNo   = document.getElementById('tableHasNo').checked;
+                                var parts   = [];
+                                for (var ci = 0; ci < headers.length; ci++) {
+                                    if (hasNo && ci === 0) continue; // kolom No tidak jadi variabel
+                                    var slug = toSlug(headers[ci]);
+                                    if (slug) parts.push('{{' + slug + '}}');
+                                }
+                                var el = document.getElementById('tableVarPreviewText');
+                                if (el) el.textContent = parts.length ? parts.join('   ') : '—';
+                            }
+
+                            document.addEventListener('DOMContentLoaded', function () {
+                                var chk     = document.getElementById('tableAutoVar');
+                                var box     = document.getElementById('tableVarPreviewBox');
+                                var headers = document.getElementById('tableHeaders');
+                                var hasNo   = document.getElementById('tableHasNo');
+
+                                if (!chk) return;
+
+                                chk.addEventListener('change', function () {
+                                    box.style.display = this.checked ? '' : 'none';
+                                    if (this.checked) updateVarPreview();
+                                });
+
+                                if (headers) headers.addEventListener('input', function () {
+                                    if (chk.checked) updateVarPreview();
+                                });
+                                if (hasNo) hasNo.addEventListener('change', function () {
+                                    if (chk.checked) updateVarPreview();
+                                });
+                            });
+                        })();
+                        </script>
                     </div>
 
                     {{-- KELAS & MAPEL --}}
