@@ -23,8 +23,12 @@ function buildTextStyle(obj, widthPx) {
         'word-wrap:break-word',
         'overflow:hidden',
     ];
-    if (obj.underline)   parts.push('text-decoration:underline');
-    if (obj.linethrough) parts.push('text-decoration:line-through');
+    // FIX: gabungkan underline dan linethrough dalam satu property text-decoration
+    // agar keduanya bisa aktif bersamaan (sebelumnya saling overwrite)
+    var decorations = [];
+    if (obj.underline)   decorations.push('underline');
+    if (obj.linethrough) decorations.push('line-through');
+    if (decorations.length) parts.push('text-decoration:' + decorations.join(' '));
     return parts.join(';');
 }
 
@@ -197,19 +201,17 @@ function generateHTMLForPage(pgData) {
 
         // Barcode group
         if (obj.type === 'group' && obj.name === 'barcode') {
+            // FIX: gunakan realTopLeft (sudah handle originX/Y center) —
+            // jangan hitung manual bLeft/bTop karena akan double-count offset
+            var bPos   = realTopLeft(obj);
             var bScaleX = obj.scaleX || 1;
             var bScaleY = obj.scaleY || 1;
-            var bHalfW  = (obj.width  || 0) / 2 * bScaleX;
-            var bHalfH  = (obj.height || 0) / 2 * bScaleY;
-            var bLeft   = (obj.left   || 0) - bHalfW;
-            var bTop    = (obj.top    || 0) - bHalfH;
-            var bW      = (obj.width  || 170) * bScaleX;
             var bBoxW   = 120 * bScaleX;
             var bBoxH   = 120 * bScaleY;
 
             html +=
-                '<div style="position:absolute;left:' + pt(bLeft) + 'pt;top:' + pt(bTop) + 'pt;' +
-                'width:' + pt(bW) + 'pt;font-family:DejaVu Sans,Arial,sans-serif;text-align:center;">' +
+                '<div style="position:absolute;left:' + pt(bPos.x) + 'pt;top:' + pt(bPos.y) + 'pt;' +
+                'width:' + pt(bPos.w) + 'pt;font-family:DejaVu Sans,Arial,sans-serif;text-align:center;">' +
                 '<div style="font-size:7.5pt;font-weight:bold;color:#1a5276;margin-bottom:2pt;">' +
                 'Kepala Sekolah</div>' +
                 '<div style="width:' + pt(bBoxW) + 'pt;height:' + pt(bBoxH) + 'pt;' +

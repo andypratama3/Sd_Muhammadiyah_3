@@ -46,6 +46,8 @@ class DocumentTemplateController extends Controller
             'kelas_id'      => 'nullable|exists:kelas,id',
             'mapel_ids'     => 'nullable|array',
             'mapel_ids.*'   => 'exists:pelajarans,id',
+            // FIX: tambah validasi generate_mode
+            'generate_mode' => 'nullable|in:perorang,daftar',
         ]);
 
         if (!empty($validated['canvas_json'])) {
@@ -55,8 +57,10 @@ class DocumentTemplateController extends Controller
                 : null;
         }
 
-        // BUG #3 FIX: pada store(), kelas_id tidak di-handle sama sekali.
-        // Seharusnya konsisten dengan update() — hanya set kelas_id untuk Rapot.
+        // Default generate_mode ke 'perorang' jika tidak dikirim
+        $validated['generate_mode'] = $validated['generate_mode'] ?? 'perorang';
+
+        // Hanya set kelas_id untuk kategori Rapot
         $category = DocumentCategory::find($validated['category_id']);
         if ($category && strtolower($category->name) !== 'rapot') {
             $validated['kelas_id'] = null;
@@ -96,6 +100,8 @@ class DocumentTemplateController extends Controller
             'kelas_id'      => 'nullable|exists:kelas,id',
             'mapel_ids'     => 'nullable|array',
             'mapel_ids.*'   => 'exists:pelajarans,id',
+            // FIX: tambah validasi generate_mode
+            'generate_mode' => 'nullable|in:perorang,daftar',
         ]);
 
         if (!empty($validated['canvas_json'])) {
@@ -104,6 +110,9 @@ class DocumentTemplateController extends Controller
                 ? $decoded
                 : $template->canvas_json;
         }
+
+        // Default generate_mode ke nilai lama jika tidak dikirim
+        $validated['generate_mode'] = $validated['generate_mode'] ?? $template->generate_mode ?? 'perorang';
 
         $category = DocumentCategory::find($request->input('category_id'));
 
@@ -115,7 +124,6 @@ class DocumentTemplateController extends Controller
 
         $template->update($validated);
 
-        // Sync many-to-many
         $template->pelajarans()->sync($request->input('mapel_ids', []));
 
         return redirect()
@@ -140,7 +148,6 @@ class DocumentTemplateController extends Controller
 
     public function previewVariables(Request $request): \Illuminate\Http\JsonResponse
     {
-        // Jika ada template_id → ambil variabel dari template yang tersimpan
         if ($request->filled('template_id')) {
             $template  = DocumentTemplate::findOrFail($request->integer('template_id'));
             $variables = $template->extractVariables();
@@ -148,7 +155,6 @@ class DocumentTemplateController extends Controller
             return response()->json(['variables' => $variables]);
         }
 
-        // Jika ada html langsung → parse variabel dari HTML (preview sebelum save)
         $html = $request->input('html', '');
         preg_match_all('/\{\{(.*?)\}\}/', $html, $matches);
 

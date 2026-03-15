@@ -106,19 +106,22 @@ class DocumentController extends Controller
         $lastCol   = Coordinate::stringFromColumnIndex($totalCols);
 
         // ── WARNA TEMA ────────────────────────────────────────────────────────
-        $colorHeader      = 'FF1A5276';   // biru tua — header utama
-        $colorHeaderRaport= 'FF154360';   // biru lebih gelap — kolom prefix raport
-        $colorSubHeader   = 'FF2980B9';   // biru medium — sub-header info
-        $colorRowOdd      = 'FFF0F7FF';   // biru sangat muda — baris ganjil
-        $colorRowEven     = 'FFFFFFFF';   // putih — baris genap
-        $colorAccent      = 'FF27AE60';   // hijau — highlight penting
-        $colorHidden      = 'FFFFFFFF';   // putih — baris hidden var
-        $colorExample     = 'FFFFFDE7';   // kuning sangat muda — baris contoh
+        $colorHeader      = 'FF1A5276';
+        $colorHeaderRaport= 'FF154360';
+        $colorSubHeader   = 'FF2980B9';
+        $colorRowOdd      = 'FFF0F7FF';
+        $colorRowEven     = 'FFFFFFFF';
+        $colorHidden      = 'FFFFFFFF';
+        $colorExample     = 'FFFFFDE7';
 
         // ── BARIS 1: JUDUL TEMPLATE ───────────────────────────────────────────
         $sheet->mergeCells('A1:' . $lastCol . '1');
+        $modeLabel = ($template->generate_mode ?? 'perorang') === 'daftar'
+            ? 'Mode: Daftar (semua baris → 1 PDF)'
+            : 'Mode: Per Orang (1 baris → 1 PDF)';
         $sheet->setCellValue('A1', '📋  Template: ' . $template->name
             . '   |   Kategori: ' . ($template->category?->name ?? '-')
+            . '   |   ' . $modeLabel
             . '   |   ' . now()->format('d M Y'));
 
         $sheet->getStyle('A1')->applyFromArray([
@@ -142,8 +145,15 @@ class DocumentController extends Controller
 
         // ── BARIS 2: PANDUAN SINGKAT ──────────────────────────────────────────
         $sheet->mergeCells('A2:' . $lastCol . '2');
-        $sheet->setCellValue('A2',
-            '⚠  Isi data mulai baris ke-5. Jangan ubah/hapus baris 3 dan 4. Setiap baris = 1 dokumen PDF.');
+
+        // FIX: panduan berbeda berdasarkan generate_mode
+        $isListMode = ($template->generate_mode ?? 'perorang') === 'daftar';
+        if ($isListMode) {
+            $guideText = '⚠  Mode DAFTAR: Isi semua data mulai baris ke-5. Semua baris akan digabung menjadi 1 PDF. Jangan ubah baris 3 dan 4.';
+        } else {
+            $guideText = '⚠  Mode PER ORANG: Isi data mulai baris ke-5. Setiap baris = 1 dokumen PDF terpisah. Jangan ubah baris 3 dan 4.';
+        }
+        $sheet->setCellValue('A2', $guideText);
 
         $sheet->getStyle('A2')->applyFromArray([
             'font' => [
@@ -170,7 +180,7 @@ class DocumentController extends Controller
         ]);
         $sheet->getRowDimension(2)->setRowHeight(20);
 
-        // ── BARIS 3: HEADER LABEL (yang user baca) ────────────────────────────
+        // ── BARIS 3: HEADER LABEL ─────────────────────────────────────────────
         $colIndex = 1;
         foreach ($allColumns as $varKey => $label) {
             $cell      = Coordinate::stringFromColumnIndex($colIndex) . '3';
@@ -202,7 +212,6 @@ class DocumentController extends Controller
                 ],
             ]);
 
-            // Lebar kolom otomatis (min 16, max 38)
             $sheet->getColumnDimensionByColumn($colIndex)
                   ->setWidth(max(16, min(38, mb_strlen($label) + 6)));
 
@@ -210,7 +219,7 @@ class DocumentController extends Controller
         }
         $sheet->getRowDimension(3)->setRowHeight(26);
 
-        // ── BARIS 4: HIDDEN VARIABLE ROW (untuk mapping saat import) ─────────
+        // ── BARIS 4: HIDDEN VARIABLE ROW ─────────────────────────────────────
         $colIndex = 1;
         foreach ($allColumns as $varKey => $label) {
             $cell = Coordinate::stringFromColumnIndex($colIndex) . '4';
@@ -219,7 +228,7 @@ class DocumentController extends Controller
                 'font' => [
                     'size'  => 7,
                     'name'  => 'Arial',
-                    'color' => ['argb' => $colorHidden], // invisible — sama dengan bg
+                    'color' => ['argb' => $colorHidden],
                 ],
                 'fill' => [
                     'fillType'   => Fill::FILL_SOLID,
@@ -228,9 +237,9 @@ class DocumentController extends Controller
             ]);
             $colIndex++;
         }
-        $sheet->getRowDimension(4)->setRowHeight(3); // sangat tipis
+        $sheet->getRowDimension(4)->setRowHeight(3);
 
-        // ── BARIS 5: CONTOH DATA (italic, warna muda) ─────────────────────────
+        // ── BARIS 5: CONTOH DATA ──────────────────────────────────────────────
         $colIndex = 1;
         foreach ($allColumns as $varKey => $label) {
             $cell    = Coordinate::stringFromColumnIndex($colIndex) . '5';
@@ -264,9 +273,9 @@ class DocumentController extends Controller
         }
         $sheet->getRowDimension(5)->setRowHeight(18);
 
-        // ── BARIS 6+: Area data kosong (zebra striping 20 baris) ─────────────
+        // ── BARIS 6+: AREA DATA KOSONG (20 baris) ────────────────────────────
         for ($row = 6; $row <= 25; $row++) {
-            $bgColor = ($row % 2 === 0) ? $colorRowEven : $colorRowOdd;
+            $bgColor  = ($row % 2 === 0) ? $colorRowEven : $colorRowOdd;
             $colIndex = 1;
             foreach ($allColumns as $varKey => $label) {
                 $cell = Coordinate::stringFromColumnIndex($colIndex) . $row;
@@ -275,10 +284,7 @@ class DocumentController extends Controller
                         'fillType'   => Fill::FILL_SOLID,
                         'startColor' => ['argb' => $bgColor],
                     ],
-                    'font' => [
-                        'size' => 10,
-                        'name' => 'Arial',
-                    ],
+                    'font' => ['size' => 10, 'name' => 'Arial'],
                     'alignment' => [
                         'vertical' => Alignment::VERTICAL_CENTER,
                         'indent'   => 1,
@@ -295,7 +301,7 @@ class DocumentController extends Controller
             $sheet->getRowDimension($row)->setRowHeight(20);
         }
 
-        // ── BORDER TEBAL DI SEKELILING HEADER ────────────────────────────────
+        // ── BORDER & FREEZE ───────────────────────────────────────────────────
         $sheet->getStyle('A3:' . $lastCol . '3')->applyFromArray([
             'borders' => [
                 'outline' => [
@@ -304,8 +310,6 @@ class DocumentController extends Controller
                 ],
             ],
         ]);
-
-        // ── BORDER TEBAL DI SEKELILING AREA DATA ─────────────────────────────
         $sheet->getStyle('A5:' . $lastCol . '25')->applyFromArray([
             'borders' => [
                 'outline' => [
@@ -314,14 +318,11 @@ class DocumentController extends Controller
                 ],
             ],
         ]);
-
-        // ── FREEZE PANE di baris 5 (setelah header + hidden row) ─────────────
         $sheet->freezePane('A5');
 
-        // ── KOLOM A: lebar minimal lebih lebar jika ada prefix ────────────────
         if ($isRaport) {
-            $sheet->getColumnDimension('A')->setWidth(18); // NISN
-            $sheet->getColumnDimension('B')->setWidth(28); // Nama Siswa
+            $sheet->getColumnDimension('A')->setWidth(18);
+            $sheet->getColumnDimension('B')->setWidth(28);
         }
 
         // =========================================================================
@@ -331,7 +332,6 @@ class DocumentController extends Controller
         $info = $spreadsheet->createSheet();
         $info->setTitle('Petunjuk');
 
-        // Judul
         $info->mergeCells('A1:C1');
         $info->setCellValue('A1', 'PETUNJUK PENGISIAN TEMPLATE');
         $info->getStyle('A1')->applyFromArray([
@@ -352,12 +352,12 @@ class DocumentController extends Controller
         ]);
         $info->getRowDimension(1)->setRowHeight(32);
 
-        // Info template
         $infoMeta = [
-            ['Template',  $template->name],
-            ['Kategori',  $template->category?->name ?? '-'],
-            ['Variabel',  count($allColumns) . ' kolom'],
-            ['Dibuat',    now()->format('d M Y H:i')],
+            ['Template',       $template->name],
+            ['Kategori',       $template->category?->name ?? '-'],
+            ['Mode Generate',  $isListMode ? 'Daftar — semua baris → 1 PDF' : 'Per Orang — 1 baris → 1 PDF'],
+            ['Variabel',       count($allColumns) . ' kolom'],
+            ['Dibuat',         now()->format('d M Y H:i')],
         ];
 
         $row = 3;
@@ -372,13 +372,19 @@ class DocumentController extends Controller
             $row++;
         }
 
-        // Panduan langkah
-        $steps = [
+        $steps = $isListMode ? [
             ['no' => '1', 'step' => 'Buka sheet "Data"'],
-            ['no' => '2', 'step' => 'Isi data mulai dari BARIS KE-5 (baris kuning muda adalah contoh, boleh ditimpa)'],
-            ['no' => '3', 'step' => 'Setiap baris = satu dokumen PDF yang akan digenerate'],
+            ['no' => '2', 'step' => 'Isi data mulai dari BARIS KE-5 (baris kuning adalah contoh, boleh ditimpa)'],
+            ['no' => '3', 'step' => 'SEMUA baris akan digabung menjadi 1 PDF — cocok untuk daftar hadir, rekap kelas, dll.'],
             ['no' => '4', 'step' => 'JANGAN mengubah atau menghapus baris 3 (header biru)'],
-            ['no' => '5', 'step' => 'JANGAN mengubah atau menghapus baris 4 (baris sangat tipis/tidak terlihat — kode sistem)'],
+            ['no' => '5', 'step' => 'JANGAN mengubah atau menghapus baris 4 (baris sangat tipis — kode sistem)'],
+            ['no' => '6', 'step' => 'Simpan file, lalu upload kembali di halaman Generate Dokumen'],
+        ] : [
+            ['no' => '1', 'step' => 'Buka sheet "Data"'],
+            ['no' => '2', 'step' => 'Isi data mulai dari BARIS KE-5 (baris kuning adalah contoh, boleh ditimpa)'],
+            ['no' => '3', 'step' => 'Setiap baris = satu dokumen PDF yang akan digenerate secara terpisah'],
+            ['no' => '4', 'step' => 'JANGAN mengubah atau menghapus baris 3 (header biru)'],
+            ['no' => '5', 'step' => 'JANGAN mengubah atau menghapus baris 4 (baris sangat tipis — kode sistem)'],
             ['no' => '6', 'step' => 'Simpan file, lalu upload kembali di halaman Generate Dokumen'],
         ];
 
@@ -405,7 +411,6 @@ class DocumentController extends Controller
             $row++;
         }
 
-        // Catatan khusus raport
         if ($isRaport) {
             $row++;
             $info->setCellValue('A' . $row, '⚠ CATATAN KHUSUS RAPORT:');
@@ -413,14 +418,11 @@ class DocumentController extends Controller
                 'font' => ['bold' => true, 'size' => 11, 'name' => 'Arial', 'color' => ['argb' => 'FFC0392B']],
             ]);
             $row++;
-
-            $raportNotes = [
-                'Kolom NISN dan Nama Siswa WAJIB diisi untuk setiap baris.',
+            foreach ([
+                'Kolom NISN dan Nama Siswa WAJIB diisi.',
                 'NISN harus sesuai dengan data siswa di sistem.',
                 'Kolom nilai diisi sesuai nama variabel masing-masing mata pelajaran.',
-                'Pastikan format nilai sesuai (angka/huruf tergantung kurikulum).',
-            ];
-            foreach ($raportNotes as $note) {
+            ] as $note) {
                 $info->setCellValue('B' . $row, '• ' . $note);
                 $info->getStyle('B' . $row)->applyFromArray([
                     'font'      => ['size' => 10, 'name' => 'Arial', 'color' => ['argb' => 'FFC0392B'], 'bold' => true],
@@ -431,14 +433,13 @@ class DocumentController extends Controller
             }
         }
 
-        // Daftar variabel yang tersedia
+        // Daftar variabel
         $row++;
         $info->setCellValue('A' . $row, 'DAFTAR KOLOM TEMPLATE INI:');
         $info->getStyle('A' . $row)->applyFromArray([
             'font' => ['bold' => true, 'size' => 11, 'name' => 'Arial', 'color' => ['argb' => 'FF1A5276']],
         ]);
         $row++;
-
         $info->setCellValue('A' . $row, 'No');
         $info->setCellValue('B' . $row, 'Nama Kolom (Label)');
         $info->setCellValue('C' . $row, 'Kode Variabel');
@@ -474,7 +475,6 @@ class DocumentController extends Controller
         $info->getColumnDimension('B')->setWidth(30);
         $info->getColumnDimension('C')->setWidth(28);
 
-        // ── Aktifkan sheet Data sebagai sheet aktif ───────────────────────────
         $spreadsheet->setActiveSheetIndex(0);
 
         $filename = 'template-' . Str::slug($template->name) . '-' . now()->format('Ymd') . '.xlsx';
@@ -512,16 +512,10 @@ class DocumentController extends Controller
             return response()->json(['rows' => []]);
         }
 
-        // Baris 1 = judul template (skip)
-        // Baris 2 = panduan (skip)
-        // Baris 3 = header label
-        // Baris 4 = hidden var row
-        // Baris 5+ = data
-
-        array_shift($rows); // skip baris 1 (judul)
-        array_shift($rows); // skip baris 2 (panduan)
-        $headerRow = array_shift($rows); // baris 3 — label
-        $hiddenRow = !empty($rows) ? array_shift($rows) : []; // baris 4 — __VAR__
+        array_shift($rows); // baris 1: judul
+        array_shift($rows); // baris 2: panduan
+        $headerRow = array_shift($rows); // baris 3: label
+        $hiddenRow = !empty($rows) ? array_shift($rows) : []; // baris 4: __VAR__
 
         $colToVar      = $this->buildColToVarMap($headerRow, $hiddenRow, $variables);
         $usePositional = empty($colToVar);
@@ -532,14 +526,10 @@ class DocumentController extends Controller
 
         foreach ($rows as $row) {
             $values = array_filter(array_values($row), fn($v) => $v !== null && $v !== '');
-            if (empty($values)) {
-                continue;
-            }
+            if (empty($values)) continue;
 
             $firstVal = trim((string) (array_values($row)[0] ?? ''));
-            if (str_starts_with($firstVal, 'Contoh ')) {
-                continue;
-            }
+            if (str_starts_with($firstVal, 'Contoh ')) continue;
 
             $data = [];
 
@@ -581,6 +571,8 @@ class DocumentController extends Controller
             'total'           => count($result),
             'mapping_method'  => $usePositional ? 'positional' : 'mapped',
             'variables_found' => array_values($colToVar),
+            // FIX: sertakan generate_mode di response agar frontend bisa tampilkan info yang benar
+            'generate_mode'   => $template->generate_mode ?? 'perorang',
         ]);
     }
 
@@ -602,11 +594,11 @@ class DocumentController extends Controller
             ? array_merge(['nisn', 'nama_siswa'], $variables)
             : $variables;
 
-        // ── Deteksi mode: LIST vs PER ORANG ──────────────────────────────────
-        // Jika variabel template bernomor (nama_1, nama_2, ...) → mode LIST
-        // Semua baris Excel digabung ke 1 userData → 1 PDF
-        // Jika variabel flat (nama, nilai) → mode PER ORANG → tiap baris = 1 PDF
-        $isListMode = $this->detectListMode($variables);
+        // ── FIX: Gunakan generate_mode dari template, BUKAN deteksi otomatis ─
+        // Deteksi otomatis dari pola variabel (nama_1, nama_2, ...) tidak reliable
+        // karena user bisa saja punya variabel bernomor di dokumen per orang.
+        // generate_mode yang disimpan saat buat template adalah source of truth.
+        $isListMode = ($template->generate_mode ?? 'perorang') === 'daftar';
 
         $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load(
             $request->file('excel_file')->getRealPath()
@@ -614,11 +606,10 @@ class DocumentController extends Controller
         $sheet = $spreadsheet->getActiveSheet();
         $rows  = $sheet->toArray(null, true, true, true);
 
-        // Skip baris 1 (judul), 2 (panduan), ambil 3 (header), 4 (hidden)
-        array_shift($rows); // baris 1
-        array_shift($rows); // baris 2
-        $headerRow     = array_shift($rows); // baris 3
-        $hiddenRow     = !empty($rows) ? array_shift($rows) : []; // baris 4
+        array_shift($rows); // baris 1: judul
+        array_shift($rows); // baris 2: panduan
+        $headerRow     = array_shift($rows); // baris 3: label
+        $hiddenRow     = !empty($rows) ? array_shift($rows) : []; // baris 4: __VAR__
         $colToVar      = $this->buildColToVarMap($headerRow, $hiddenRow, $allKnownVariables);
         $usePositional = empty($colToVar);
         $colKeys       = array_keys($headerRow);
@@ -640,19 +631,17 @@ class DocumentController extends Controller
         $count = 0;
 
         // ══════════════════════════════════════════════════════════════════════
-        // MODE LIST: semua baris Excel → 1 PDF
-        // Tiap baris Excel mengisi variabel bernomor: nama_1, nama_2, nama_N
+        // MODE DAFTAR: semua baris Excel → 1 PDF
         // ══════════════════════════════════════════════════════════════════════
         if ($isListMode) {
             $userData = [];
             $rowIndex = 1;
 
-        // Mapping kolom → base variable name, hitung sekali di luar loop
             $baseMap = $this->buildBaseVarMap($headerRow, $hiddenRow);
 
             foreach ($dataRows as $row) {
                 foreach ($baseMap as $col => $baseVar) {
-                    $numberedVar          = $baseVar . '_' . $rowIndex;
+                    $numberedVar            = $baseVar . '_' . $rowIndex;
                     $userData[$numberedVar] = isset($row[$col])
                         ? $this->sanitizeCellValue($row[$col])
                         : '';
@@ -660,7 +649,6 @@ class DocumentController extends Controller
                 $rowIndex++;
             }
 
-            // Generate 1 PDF untuk seluruh daftar
             try {
                 $document   = $this->generatorService->generate($template, $userData, []);
                 $pdfContent = \Storage::disk('public')->get($document->file_path);
@@ -671,7 +659,7 @@ class DocumentController extends Controller
             }
 
         // ══════════════════════════════════════════════════════════════════════
-        // MODE PER ORANG: tiap baris Excel → 1 PDF (behavior lama)
+        // MODE PER ORANG: tiap baris Excel → 1 PDF
         // ══════════════════════════════════════════════════════════════════════
         } else {
             foreach ($dataRows as $rowNum => $row) {
@@ -852,9 +840,7 @@ class DocumentController extends Controller
                 $headers = array_map('trim', $line);
                 continue;
             }
-            if (count($line) !== count($headers)) {
-                continue;
-            }
+            if (count($line) !== count($headers)) continue;
             $rows->push(array_combine($headers, array_map('trim', $line)));
         }
 
@@ -926,10 +912,7 @@ class DocumentController extends Controller
     public function searchSiswa(Request $request): \Illuminate\Http\JsonResponse
     {
         $q = $request->input('q', '');
-
-        if (strlen($q) < 2) {
-            return response()->json([]);
-        }
+        if (strlen($q) < 2) return response()->json([]);
 
         $results = Siswa::query()
             ->where('name', 'like', "%{$q}%")
@@ -958,21 +941,10 @@ class DocumentController extends Controller
     // PRIVATE HELPERS
     // =========================================================================
 
-    /**
-     * Membangun peta kolom Excel → nama variabel template.
-     *
-     * Urutan prioritas:
-     *  1. Hidden row baris 4 (berisi "__VAR__nama_variabel") — paling akurat
-     *  2. Exact slug match antara label header dan nama variabel
-     *  3. Normalized partial match (strip non-alphanumeric, prefix match)
-     */
-    /**
-     * Deteksi apakah template menggunakan mode LIST.
-     * Mode list: variabel template bernomor seperti nama_1, nama_2, nilai_1, dst.
-     * Minimal 2 variabel bernomor dengan base name yang sama → mode list.
-     */
     private function detectListMode(array $variables): bool
     {
+        // FIX: method ini masih ada tapi tidak lagi dipakai di batchGenerate.
+        // Tetap dipertahankan untuk backward-compatibility jika ada kode lain yang memanggilnya.
         $baseCounts = [];
         foreach ($variables as $var) {
             if (preg_match('/^(.+)_(\d+)$/', $var, $m)) {
@@ -980,18 +952,12 @@ class DocumentController extends Controller
                 $baseCounts[$base] = ($baseCounts[$base] ?? 0) + 1;
             }
         }
-        // Jika ada base name yang muncul >= 2 kali → mode list
         foreach ($baseCounts as $count) {
             if ($count >= 2) return true;
         }
         return false;
     }
 
-    /**
-     * Bangun mapping kolom → base variable name (tanpa nomor) untuk mode list.
-     * Contoh: kolom A header 'Nama', hidden '__VAR__nama_1' → ['A' => 'nama']
-     * Atau fallback ke slug dari header label.
-     */
     private function buildBaseVarMap(array $headerRow, array $hiddenRow): array
     {
         $baseMap = [];
@@ -1000,14 +966,12 @@ class DocumentController extends Controller
 
             $hiddenVal = trim((string) ($hiddenRow[$col] ?? ''));
             if (str_starts_with($hiddenVal, '__VAR__')) {
-                $varName = substr($hiddenVal, 7);
-                // Hapus nomor dari akhir jika ada: nama_1 → nama
-                $base = preg_replace('/_\d+$/', '', $varName);
+                $varName       = substr($hiddenVal, 7);
+                $base          = preg_replace('/_\d+$/', '', $varName);
                 $baseMap[$col] = $base;
                 continue;
             }
 
-            // Fallback: slug dari label
             $slug = strtolower(trim((string) $label));
             $slug = preg_replace('/[^a-z0-9]+/', '_', $slug);
             $slug = trim($slug, '_');
@@ -1023,12 +987,9 @@ class DocumentController extends Controller
         $colToVar = [];
 
         foreach ($headerRow as $col => $label) {
-            if (empty($label)) {
-                continue;
-            }
+            if (empty($label)) continue;
 
-            // Prioritas 1: Hidden variable row (__VAR__varname)
-            // Ini adalah cara terpaling akurat — diset oleh excelTemplate()
+            // Prioritas 1: Hidden variable row
             $hiddenVal = trim((string) ($hiddenRow[$col] ?? ''));
             if (str_starts_with($hiddenVal, '__VAR__')) {
                 $varName = substr($hiddenVal, 7);
@@ -1047,8 +1008,7 @@ class DocumentController extends Controller
                 continue;
             }
 
-            // ✅ FIX Prioritas 2b: Match langsung nama variabel (tanpa slug)
-            // Contoh: header "siswa_baris1_nama" langsung cocok dengan variabel tersebut
+            // Prioritas 2b: Match langsung nama variabel
             if (in_array($labelClean, $variables)) {
                 $colToVar[$col] = $labelClean;
                 continue;
@@ -1065,9 +1025,7 @@ class DocumentController extends Controller
                     $varNorm = preg_replace('/[^a-z0-9]/', '', strtolower($varName));
                     $minLen  = min(strlen($labelNorm), strlen($varNorm));
 
-                    if ($minLen < 4) {
-                        continue;
-                    }
+                    if ($minLen < 4) continue;
 
                     $labelPrefix = substr($labelNorm, 0, $minLen);
                     $varPrefix   = substr($varNorm, 0, $minLen);
@@ -1090,18 +1048,11 @@ class DocumentController extends Controller
         return $colToVar;
     }
 
-    /**
-     * Membersihkan nilai cell dari Excel menjadi string yang aman.
-     */
     private function sanitizeCellValue(mixed $value): string
     {
-        if ($value === null) {
-            return '';
-        }
+        if ($value === null) return '';
 
-        if (is_bool($value)) {
-            return $value ? '1' : '0';
-        }
+        if (is_bool($value)) return $value ? '1' : '0';
 
         if (is_float($value) || is_int($value)) {
             if (is_float($value) && floor($value) == $value && abs($value) < 1e15) {
@@ -1113,64 +1064,31 @@ class DocumentController extends Controller
         return trim((string) $value);
     }
 
-    /**
-     * Mengubah nama variabel snake_case menjadi label cantik untuk header Excel.
-     * Mapping statis sesuai TemplateVariableRegistry — konsisten dengan JS editor.
-     */
     private function friendlyVarLabel(string $varName): string
     {
         $map = [
-            // Data Siswa
-            'nama_siswa'      => 'Nama Siswa',
-            'nisn'            => 'NISN',
-            'nis'             => 'NIS',
-            'jenis_kelamin'   => 'Jenis Kelamin',
-            'tempat_lahir'    => 'Tempat Lahir',
-            'tanggal_lahir'   => 'Tanggal Lahir',
-            'agama'           => 'Agama',
-            'nama_ayah'       => 'Nama Ayah',
-            'nama_ibu'        => 'Nama Ibu',
-            'pekerjaan_ayah'  => 'Pekerjaan Ayah',
-            'pekerjaan_ibu'   => 'Pekerjaan Ibu',
-            'alamat_siswa'    => 'Alamat',
-            'no_hp'           => 'No. HP',
-            'nama_wali'       => 'Nama Wali',
-            // Data Sekolah
-            'nama_sekolah'    => 'Nama Sekolah',
-            'alamat_sekolah'  => 'Alamat Sekolah',
-            'kepala_sekolah'  => 'Kepala Sekolah',
-            'nip'             => 'NIP/NBM',
-            'tahun_ajaran'    => 'Tahun Ajaran',
-            'semester'        => 'Semester',
-            'wali_kelas'      => 'Wali Kelas',
-            'nbm_wali'        => 'NBM Wali Kelas',
-            // Data Surat
-            'nomor_surat'     => 'Nomor Surat',
-            'tanggal'         => 'Tanggal',
-            'perihal'         => 'Perihal',
-            'keterangan'      => 'Keterangan',
-            'isi'             => 'Isi Surat',
-            'tujuan'          => 'Tujuan',
-            'tembusan'        => 'Tembusan',
-            // Nilai & Prestasi
-            'kelas'           => 'Kelas',
-            'fase'            => 'Fase',
-            'nama_kelas'      => 'Nama Kelas',
-            'nilai_rata'      => 'Nilai Rata-rata',
-            'peringkat'       => 'Peringkat',
-            'predikat'        => 'Predikat',
-            'catatan'         => 'Catatan',
-            'naik_kelas'      => 'Naik Kelas',
-            'mata_pelajaran'  => 'Mata Pelajaran',
-            // Lainnya
-            'nama_ortu'       => 'Nama Orang Tua',
+            'nama_siswa' => 'Nama Siswa', 'nisn' => 'NISN', 'nis' => 'NIS',
+            'jenis_kelamin' => 'Jenis Kelamin', 'tempat_lahir' => 'Tempat Lahir',
+            'tanggal_lahir' => 'Tanggal Lahir', 'agama' => 'Agama',
+            'nama_ayah' => 'Nama Ayah', 'nama_ibu' => 'Nama Ibu',
+            'pekerjaan_ayah' => 'Pekerjaan Ayah', 'pekerjaan_ibu' => 'Pekerjaan Ibu',
+            'alamat_siswa' => 'Alamat', 'no_hp' => 'No. HP', 'nama_wali' => 'Nama Wali',
+            'nama_sekolah' => 'Nama Sekolah', 'alamat_sekolah' => 'Alamat Sekolah',
+            'kepala_sekolah' => 'Kepala Sekolah', 'nip' => 'NIP/NBM',
+            'tahun_ajaran' => 'Tahun Ajaran', 'semester' => 'Semester',
+            'wali_kelas' => 'Wali Kelas', 'nbm_wali' => 'NBM Wali Kelas',
+            'nomor_surat' => 'Nomor Surat', 'tanggal' => 'Tanggal',
+            'perihal' => 'Perihal', 'keterangan' => 'Keterangan',
+            'isi' => 'Isi Surat', 'tujuan' => 'Tujuan', 'tembusan' => 'Tembusan',
+            'kelas' => 'Kelas', 'fase' => 'Fase', 'nama_kelas' => 'Nama Kelas',
+            'nilai_rata' => 'Nilai Rata-rata', 'peringkat' => 'Peringkat',
+            'predikat' => 'Predikat', 'catatan' => 'Catatan',
+            'naik_kelas' => 'Naik Kelas', 'mata_pelajaran' => 'Mata Pelajaran',
+            'nama_ortu' => 'Nama Orang Tua',
         ];
 
-        if (isset($map[$varName])) {
-            return $map[$varName];
-        }
+        if (isset($map[$varName])) return $map[$varName];
 
-        // Pola auto-generate raport: nilai_xxx / capaian_xxx
         if (preg_match('/^nilai_(.+)$/', $varName, $m)) {
             return 'Nilai ' . ucwords(str_replace('_', ' ', $m[1]));
         }
@@ -1178,72 +1096,37 @@ class DocumentController extends Controller
             return 'Capaian ' . ucwords(str_replace('_', ' ', $m[1]));
         }
 
-
-
-        // Fallback: snake_case → Title Case
         return ucwords(str_replace('_', ' ', $varName));
     }
 
-    /**
-     * Menghasilkan contoh nilai untuk setiap variabel di baris contoh Excel.
-     */
     private function getExampleValue(string $varKey): string
     {
         $examples = [
-            'nama_siswa'      => 'Ahmad Fauzi',
-            'nisn'            => '0012345678',
-            'nis'             => '2324001',
-            'jenis_kelamin'   => 'Laki-laki',
-            'tempat_lahir'    => 'Samarinda',
-            'tanggal_lahir'   => '10 Mei 2015',
-            'agama'           => 'Islam',
-            'nama_ayah'       => 'Budi Santoso',
-            'nama_ibu'        => 'Siti Aminah',
-            'pekerjaan_ayah'  => 'Wiraswasta',
-            'pekerjaan_ibu'   => 'Ibu Rumah Tangga',
-            'alamat_siswa'    => 'Jl. Sungai Keledang No. 10',
-            'no_hp'           => '081234567890',
-            'nama_wali'       => 'Budi Santoso',
-            'nama_sekolah'    => 'SD Muhammadiyah 3 Samarinda',
-            'alamat_sekolah'  => 'Jl. Dato Iba, Samarinda Seberang',
-            'kepala_sekolah'  => 'Drs. H. Mahmud, M.Pd',
-            'nip'             => '197001012000031001',
-            'tahun_ajaran'    => '2024/2025',
-            'semester'        => 'Genap',
-            'wali_kelas'      => 'Ibu Rahmawati, S.Pd',
-            'nbm_wali'        => '1234567',
-            'nomor_surat'     => '001/SKA/IV/2025',
-            'tanggal'         => now()->translatedFormat('d F Y'),
-            'perihal'         => 'Keterangan Aktif Belajar',
-            'keterangan'      => 'Yang bersangkutan adalah siswa aktif',
-            'isi'             => 'Isi surat keterangan...',
-            'tujuan'          => 'Kepada Yth. ...',
-            'tembusan'        => '1. Arsip',
-            'kelas'           => '4A',
-            'fase'            => 'Fase B',
-            'nama_kelas'      => 'Kelas 4A',
-            'nilai_rata'      => '88.50',
-            'peringkat'       => '3',
-            'predikat'        => 'Baik',
-            'catatan'         => 'Siswa menunjukkan perkembangan yang baik',
-            'naik_kelas'      => 'NAIK KELAS',
-            'mata_pelajaran'  => 'Matematika',
-            'nama_ortu'       => 'Budi Santoso',
+            'nama_siswa' => 'Ahmad Fauzi', 'nisn' => '0012345678', 'nis' => '2324001',
+            'jenis_kelamin' => 'Laki-laki', 'tempat_lahir' => 'Samarinda',
+            'tanggal_lahir' => '10 Mei 2015', 'agama' => 'Islam',
+            'nama_ayah' => 'Budi Santoso', 'nama_ibu' => 'Siti Aminah',
+            'pekerjaan_ayah' => 'Wiraswasta', 'pekerjaan_ibu' => 'Ibu Rumah Tangga',
+            'alamat_siswa' => 'Jl. Sungai Keledang No. 10', 'no_hp' => '081234567890',
+            'nama_wali' => 'Budi Santoso', 'nama_sekolah' => 'SD Muhammadiyah 3 Samarinda',
+            'alamat_sekolah' => 'Jl. Dato Iba, Samarinda Seberang',
+            'kepala_sekolah' => 'Drs. H. Mahmud, M.Pd', 'nip' => '197001012000031001',
+            'tahun_ajaran' => '2024/2025', 'semester' => 'Genap',
+            'wali_kelas' => 'Ibu Rahmawati, S.Pd', 'nbm_wali' => '1234567',
+            'nomor_surat' => '001/SKA/IV/2025', 'tanggal' => now()->translatedFormat('d F Y'),
+            'perihal' => 'Keterangan Aktif Belajar', 'keterangan' => 'Yang bersangkutan adalah siswa aktif',
+            'isi' => 'Isi surat keterangan...', 'tujuan' => 'Kepada Yth. ...',
+            'tembusan' => '1. Arsip', 'kelas' => '4A', 'fase' => 'Fase B',
+            'nama_kelas' => 'Kelas 4A', 'nilai_rata' => '88.50', 'peringkat' => '3',
+            'predikat' => 'Baik', 'catatan' => 'Siswa menunjukkan perkembangan yang baik',
+            'naik_kelas' => 'NAIK KELAS', 'mata_pelajaran' => 'Matematika',
+            'nama_ortu' => 'Budi Santoso',
         ];
 
-        if (isset($examples[$varKey])) {
-            return $examples[$varKey];
-        }
+        if (isset($examples[$varKey])) return $examples[$varKey];
 
-        // Pola nilai/capaian raport
-        if (preg_match('/^nilai_(.+)$/', $varKey)) {
-            return '85';
-        }
-        if (preg_match('/^capaian_(.+)$/', $varKey)) {
-            return 'Peserta didik mampu memahami materi dengan baik';
-        }
-
-
+        if (preg_match('/^nilai_(.+)$/', $varKey)) return '85';
+        if (preg_match('/^capaian_(.+)$/', $varKey)) return 'Peserta didik mampu memahami materi dengan baik';
 
         return 'Contoh ' . ucwords(str_replace('_', ' ', $varKey));
     }

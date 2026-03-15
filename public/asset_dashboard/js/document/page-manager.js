@@ -97,6 +97,11 @@ function createPage() {
         _prevSnapY:       null,
         _guideAlpha:      0,
         _guideAlphaRafId: null,
+        // FIX: snap pointer-lock state — wajib ada agar tidak crash sebelum mouse:down pertama
+        _snapLockedAtX:   null,
+        _snapLockedAtY:   null,
+        _lastPointerX:    null,
+        _lastPointerY:    null,
     };
 
     pages.push(pageData);
@@ -275,10 +280,10 @@ function saveStateForPage(pgData) {
     clearTimeout(pgData._saveTimer);
     pgData._saveTimer = setTimeout(function () {
         try {
-            var json = JSON.stringify(
-                pgData.canvas.toJSON(['name', 'excludeFromExport', '_isTable'])
-            );
-            pgData._history.push(json);
+            var json = pgData.canvas.toJSON(['name', 'excludeFromExport', '_isTable']);
+            // FIX: simpan tableStore bersama snapshot canvas agar undo/redo tidak kehilangan data tabel
+            json._tableStore = JSON.parse(JSON.stringify(pgData.tableStore || {}));
+            pgData._history.push(JSON.stringify(json));
             if (pgData._history.length > 60) pgData._history.shift();
             pgData._historyRedo = [];
         } catch (err) {
@@ -296,7 +301,12 @@ function undo() {
     if (!pg || pg._history.length < 2) return;
     pg._isSaving = true;
     pg._historyRedo.push(pg._history.pop());
-    pg.canvas.loadFromJSON(pg._history[pg._history.length - 1], function () {
+    var snapshot = JSON.parse(pg._history[pg._history.length - 1]);
+    // FIX: restore tableStore dari snapshot
+    var restoredStore = snapshot._tableStore || {};
+    delete snapshot._tableStore;
+    pg.canvas.loadFromJSON(snapshot, function () {
+        pg.tableStore = restoredStore;
         pg.canvas.renderAll();
         pg._isSaving = false;
         renderPageThumbnails();
@@ -308,9 +318,14 @@ function redo() {
     var pg = pages[currentPage];
     if (!pg || !pg._historyRedo.length) return;
     pg._isSaving = true;
-    var snapshot = pg._historyRedo.pop();
-    pg._history.push(snapshot);
+    var raw = pg._historyRedo.pop();
+    pg._history.push(raw);
+    var snapshot = JSON.parse(raw);
+    // FIX: restore tableStore dari snapshot
+    var restoredStore = snapshot._tableStore || {};
+    delete snapshot._tableStore;
     pg.canvas.loadFromJSON(snapshot, function () {
+        pg.tableStore = restoredStore;
         pg.canvas.renderAll();
         pg._isSaving = false;
         renderPageThumbnails();

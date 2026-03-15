@@ -244,7 +244,11 @@ function renderTableToCanvas(td) {
                     var align = cell.align || (ci === 0 ? 'center' : 'left');
                     ctx.textAlign = align;
                     var maxW  = cellW - 6;
-                    var tx    = align === 'center' ? curX + cellW / 2 : curX + 3;
+                    // FIX: hitung tx untuk semua alignment (left, center, right)
+                    var tx;
+                    if      (align === 'center') tx = curX + cellW / 2;
+                    else if (align === 'right')  tx = curX + cellW - 3;
+                    else                         tx = curX + 3;
                     var disp  = cellText;
                     while (disp.length > 1 && ctx.measureText(disp).width > maxW) {
                         disp = disp.slice(0, -1);

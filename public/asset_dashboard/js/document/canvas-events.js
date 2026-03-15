@@ -39,12 +39,18 @@ function attachPageEvents(pgData) {
     fc.on('mouse:down', function (e) {
         if (pgData !== pages[currentPage]) return;
 
-        pgData._pageSnapPoints = [];
-        pgData._objGuidePoints = [];
-        pgData._activeSnapX    = null;
-        pgData._activeSnapY    = null;
-        pgData._prevSnapX      = null;
-        pgData._prevSnapY      = null;
+        pgData._pageSnapPoints  = [];
+        pgData._objGuidePoints  = [];
+        pgData._activeSnapX     = null;
+        pgData._activeSnapY     = null;
+        pgData._prevSnapX       = null;
+        pgData._prevSnapY       = null;
+        // FIX: simpan posisi pointer terakhir untuk hitung release jarak pointer
+        pgData._lastPointerX    = null;
+        pgData._lastPointerY    = null;
+        // FIX: posisi pointer saat snap pertama kali terjadi
+        pgData._snapLockedAtX   = null;
+        pgData._snapLockedAtY   = null;
 
         if (!e.target) return;
         var obj = e.target;
@@ -84,12 +90,19 @@ function attachPageEvents(pgData) {
         if (!snapEnabled) return;
 
         var obj  = e.target;
+        // Jangan snap jika object sedang dikunci (misal saat resize row/col tabel)
+        if (obj.lockMovementX && obj.lockMovementY) return;
+
         var zoom = fc.getZoom();
         var T_IN  = SNAP_THRESHOLD / zoom;
-        // FIX: release distance jauh lebih besar dari pull-in,
-        // dan dihitung dari jarak TEPI OBJECT ke snap point (bukan pointer)
-        // Ini mencegah snap "terjebak" saat drag tabel di dekat margin
-        var T_OUT = (SNAP_RELEASE * 3) / zoom;
+        // Release threshold dihitung dari pergerakan POINTER sejak snap terjadi,
+        // bukan dari jarak tepi object ke garis (karena tepi selalu dipaksa ke garis → stuck).
+        var T_OUT = (SNAP_RELEASE * 2.5) / zoom;
+
+        // Ambil posisi pointer saat ini (dalam koordinat canvas)
+        var ptr = e.pointer || (e.absolutePointer) || null;
+        var ptrX = ptr ? ptr.x : null;
+        var ptrY = ptr ? ptr.y : null;
 
         var oBox = obj.getBoundingRect(true);
         var oCX  = oBox.left + oBox.width  / 2;
@@ -103,15 +116,25 @@ function attachPageEvents(pgData) {
                 var wasSnapped = pgData._activeSnapX &&
                     Math.abs(pgData._activeSnapX.ref - sp.ref) < 0.5;
                 if (wasSnapped) {
-                    // FIX: jarak tepi object dari snap point, bukan pointer
-                    var ex = [oBox.left, oCX, oBox.left + oBox.width];
-                    var minDX = Math.min(Math.abs(ex[0]-sp.ref), Math.abs(ex[1]-sp.ref), Math.abs(ex[2]-sp.ref));
-                    if (minDX < T_OUT) newSnapX = sp;
-                    // jika minDX >= T_OUT → snap dilepas, object bebas bergerak
+                    // BUGFIX: Ukur seberapa jauh POINTER bergerak sejak snap terkunci,
+                    // bukan jarak tepi object (tepi selalu = 0 karena dipaksa ke snap point).
+                    var lockedAt = pgData._snapLockedAtX;
+                    var ptrDist  = (ptrX !== null && lockedAt !== null)
+                        ? Math.abs(ptrX - lockedAt)
+                        : 0;
+                    if (ptrDist < T_OUT) {
+                        newSnapX = sp; // tetap snap
+                    }
+                    // jika ptrDist >= T_OUT → lepas snap, object bebas bergerak
                 } else {
                     var edgesX = [oBox.left, oCX, oBox.left + oBox.width];
                     for (var i = 0; i < 3; i++) {
-                        if (Math.abs(edgesX[i] - sp.ref) < T_IN) { newSnapX = sp; break; }
+                        if (Math.abs(edgesX[i] - sp.ref) < T_IN) {
+                            newSnapX = sp;
+                            // Catat posisi pointer saat snap pertama kali terjadi
+                            pgData._snapLockedAtX = ptrX;
+                            break;
+                        }
                     }
                 }
             }
@@ -119,18 +142,32 @@ function attachPageEvents(pgData) {
                 var wasSnappedY = pgData._activeSnapY &&
                     Math.abs(pgData._activeSnapY.ref - sp.ref) < 0.5;
                 if (wasSnappedY) {
-                    // FIX: jarak tepi object dari snap point
-                    var ey = [oBox.top, oCY, oBox.top + oBox.height];
-                    var minDY = Math.min(Math.abs(ey[0]-sp.ref), Math.abs(ey[1]-sp.ref), Math.abs(ey[2]-sp.ref));
-                    if (minDY < T_OUT) newSnapY = sp;
+                    // BUGFIX: Sama — gunakan jarak pointer, bukan jarak tepi object
+                    var lockedAtY = pgData._snapLockedAtY;
+                    var ptrDistY  = (ptrY !== null && lockedAtY !== null)
+                        ? Math.abs(ptrY - lockedAtY)
+                        : 0;
+                    if (ptrDistY < T_OUT) {
+                        newSnapY = sp; // tetap snap
+                    }
+                    // jika ptrDistY >= T_OUT → lepas snap
                 } else {
                     var edgesY = [oBox.top, oCY, oBox.top + oBox.height];
                     for (var j = 0; j < 3; j++) {
-                        if (Math.abs(edgesY[j] - sp.ref) < T_IN) { newSnapY = sp; break; }
+                        if (Math.abs(edgesY[j] - sp.ref) < T_IN) {
+                            newSnapY = sp;
+                            // Catat posisi pointer saat snap pertama kali terjadi
+                            pgData._snapLockedAtY = ptrY;
+                            break;
+                        }
                     }
                 }
             }
         });
+
+        // Reset lock position jika snap dilepas
+        if (!newSnapX) pgData._snapLockedAtX = null;
+        if (!newSnapY) pgData._snapLockedAtY = null;
 
         // Terapkan snap
         if (newSnapX) {
@@ -224,11 +261,16 @@ function attachPageEvents(pgData) {
     });
 
     fc.on('mouse:up', function () {
-        // FIX: reset snap state pada mouse:up agar snap tidak "terjebak" antar drag
+        // Reset snap state pada mouse:up agar snap tidak "terjebak" antar drag
         pgData._activeSnapX     = null;
         pgData._activeSnapY     = null;
         pgData._prevSnapX       = null;
         pgData._prevSnapY       = null;
+        // FIX: reset pointer lock position agar drag berikutnya tidak pakai posisi lama
+        pgData._snapLockedAtX   = null;
+        pgData._snapLockedAtY   = null;
+        pgData._lastPointerX    = null;
+        pgData._lastPointerY    = null;
         if (pgData._guideAlpha > 0) {
             fadeGuides(pgData, 0, null, null, null, null);
         }
@@ -679,8 +721,7 @@ function alignObj(dir) {
     else if (dir === 'vcenter') o.set('top',  (CANVAS_H - b.height) / 2);
     else if (dir === 'bottom')  o.set('top',   CANVAS_H - b.height);
 
-    // CRITICAL FIX: pastikan lock dari drag handle selalu dilepas setelah align
-    // tanpa ini tabel tidak bisa digeser setelah di-center/align
+    // Pastikan lock dari drag handle selalu dilepas setelah align
     o.set({
         lockMovementX: false,
         lockMovementY: false,
@@ -689,12 +730,22 @@ function alignObj(dir) {
     canvas.requestRenderAll();
     saveState();
 
+    // FIX: reset snap pointer-lock state agar drag berikutnya mulai bersih
+    var pgAlign = pages[currentPage];
+    if (pgAlign) {
+        pgAlign._activeSnapX   = null;
+        pgAlign._activeSnapY   = null;
+        pgAlign._prevSnapX     = null;
+        pgAlign._prevSnapY     = null;
+        pgAlign._snapLockedAtX = null;
+        pgAlign._snapLockedAtY = null;
+    }
+
     // Re-trigger handles jika ini tabel (agar handle positions ikut update)
-    var pg = pages[currentPage];
-    if (pg && o.name && pg.tableStore[o.name]) {
+    if (pgAlign && o.name && pgAlign.tableStore[o.name]) {
         if (typeof _repositionRowHandles === 'function') _repositionRowHandles();
         if (typeof _repositionColHandles === 'function') _repositionColHandles();
-        if (typeof _updateFloatPanelPos  === 'function') _updateFloatPanelPos(pg, o);
+        if (typeof _updateFloatPanelPos  === 'function') _updateFloatPanelPos(pgAlign, o);
     }
 }
 

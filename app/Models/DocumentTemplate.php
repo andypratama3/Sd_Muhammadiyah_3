@@ -18,6 +18,7 @@ class DocumentTemplate extends Model
         'name',
         'html_template',
         'canvas_json',
+        'generate_mode',
     ];
 
     protected $casts = [

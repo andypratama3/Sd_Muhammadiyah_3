@@ -156,8 +156,9 @@ function addLogoImage(e) {
     var reader = new FileReader();
     reader.onload = function (ev) {
         fabric.Image.fromURL(ev.target.result, function (img) {
+            // FIX: scaleToWidth saja — jangan diikuti scaleToHeight karena
+            // scaleToHeight akan override scaleX/scaleY dari scaleToWidth → logo gepeng
             img.scaleToWidth(100);
-            img.scaleToHeight(100);
             img.set({ left: 20, top: 20, name: 'logo' });
             canvas.add(img);
             canvas.requestRenderAll();

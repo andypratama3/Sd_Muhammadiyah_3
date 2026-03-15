@@ -44,6 +44,8 @@
                     placeholder="Contoh: Surat Keterangan Aktif" required>
             </div>
         </div>
+        @include('dashboard.document.templates._generate_mode_snippet')
+
 
         <div class="tb-spacer"></div>
 

@@ -49,6 +49,9 @@
             </div>
         </div>
 
+        @include('dashboard.document.templates._generate_mode_snippet')
+
+
         <div class="tb-spacer"></div>
 
         <button type="button" class="tb-btn" onclick="undo()" title="Undo (Ctrl+Z)">
