@@ -17,6 +17,11 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(DocumentGeneratorService::class);
+        $this->app->singleton(\App\Services\WhatsAppBotService::class, function ($app) {
+            return new \App\Services\WhatsAppBotService(
+                $app->make(\App\Services\WhatsappMetaService::class)
+            );
+        });
     }
 
     /**

@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\V2\SPMBController;
 use App\Http\Controllers\Api\V2\TenagaKependidikanDataController;
 use App\Http\Controllers\Api\V2\TentangDataController;
 use App\Http\Controllers\Api\V2\ViewsDataController;
+use App\Http\Controllers\Api\WhatsAppPaymentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Dashboard\Api\FacebookController;
 use Illuminate\Http\Request;
@@ -120,6 +121,16 @@ Route::group(['prefix' => 'v2'], function () {
             Route::get('/history', [AbsensiController::class, 'getHistory'])->name('attendance.history');
             Route::get('/{id}', [AbsensiController::class, 'show'])->name('attendance.show');
         });
+    });
+
+    // ============================================================================
+    // N8N API ROUTES (for n8n)
+    // ============================================================================
+
+    Route::prefix('whatsapp')->middleware(['validate.n8n', 'wa.ratelimit'])->group(function () {
+        // Endpoint utama: cek pembayaran
+        
+
     });
 
     // ============================================================================

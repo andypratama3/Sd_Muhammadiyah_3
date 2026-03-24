@@ -84,7 +84,8 @@ class Kernel extends HttpKernel
         'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         'jwt' => \App\Http\Middleware\JwtMiddleware::class,
         'verify.signature' => \App\Http\Middleware\VerifyApiSignature::class,
-
+        'validate.n8n'    => \App\Http\Middleware\ValidateN8nRequest::class,
+        'wa.ratelimit'    => \App\Http\Middleware\WhatsAppRateLimiter::class,
 
     ];
 }
