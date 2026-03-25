@@ -512,7 +512,7 @@ class WhatsAppBotService
                 ->where('no_hp', $localPhone)
                 ->whereNull('deleted_at')
                 ->with(['kelas' => function ($q) {
-                    $q->select('kelas.id', 'kelas.name', 'kelas.grade')
+                    $q->select('kelas.id', 'kelas.name')
                       ->withPivot('category_kelas');
                 }])
                 ->first();
