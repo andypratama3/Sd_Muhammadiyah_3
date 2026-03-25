@@ -1,0 +1,682 @@
+[
+  {
+    "keywords": ["cara bayar spp", "bayar spp", "pembayaran spp", "spp bulanan", "bayar bulanan"],
+    "question": "Bagaimana cara membayar SPP?",
+    "answer": "💳 *Cara Pembayaran SPP*\n\nKirimkan *NISN* putra/putri Anda (10 digit) ke bot ini untuk melihat tagihan & nomor Virtual Account.\n\nPembayaran bisa dilakukan via transfer bank menggunakan VA yang tertera, atau *langsung ke sekolah*.\n\n_Untuk info nominal SPP, silakan hubungi Tata Usaha sekolah._"
+  },
+  {
+    "keywords": ["cek tagihan", "lihat tagihan", "berapa tagihan", "total tunggakan", "tagihan bulan ini"],
+    "question": "Gimana cara cek tagihan sekolah anak saya?",
+    "answer": "📋 *Cek Tagihan Sekolah*\n\nGampang! Cukup kirimkan *NISN* putra/putri Anda (10 digit angka) ke bot ini.\n\nSistem akan langsung menampilkan tagihan yang belum dibayar beserta riwayat pembayaran terakhir.\n\n_Pastikan nomor WA Anda sudah terdaftar di sekolah ya, Bapak/Ibu._ 😊"
+  },
+  {
+    "keywords": ["nisn itu apa", "apa itu nisn", "nisn untuk apa", "nisn dimana", "cari nisn"],
+    "question": "NISN itu apa dan gimana cara tahu NISN anak saya?",
+    "answer": "🔢 *Tentang NISN*\n\nNISN (Nomor Induk Siswa Nasional) adalah nomor unik 10 digit yang dimiliki setiap siswa di Indonesia.\n\nNISN bisa ditemukan di *rapor, kartu pelajar, atau buku induk sekolah*.\n\nJika tidak menemukan NISN putra/putri Anda, silakan hubungi *Tata Usaha* sekolah untuk mendapatkan informasinya. 🙏"
+  },
+  {
+    "keywords": ["lupa nisn", "nisn tidak tahu", "nisn hilang", "tidak hafal nisn"],
+    "question": "Saya lupa NISN anak, bagaimana?",
+    "answer": "😊 Tenang, Bapak/Ibu!\n\nNISN bisa dilihat di *rapor semester terakhir* atau *kartu pelajar* putra/putri Anda.\n\nBisa juga dicek di situs resmi NISN: *nisn.data.kemdikbud.go.id* dengan memasukkan nama siswa.\n\nAtau langsung hubungi *Tata Usaha* sekolah, kami siap membantu! 🙏"
+  },
+  {
+    "keywords": ["va bank", "virtual account", "nomor rekening", "transfer ke mana", "bayar lewat bank mana"],
+    "question": "Bayar tagihan sekolah bisa lewat bank apa saja?",
+    "answer": "🏦 *Pembayaran Via Virtual Account*\n\nCek tagihan dulu dengan kirim *NISN* ke bot ini — sistem akan tampilkan nomor VA dan nama bank yang bisa digunakan.\n\nUntuk info bank yang tersedia, silakan hubungi *Tata Usaha* sekolah.\n\n_Pembayaran tunai juga bisa dilakukan langsung di sekolah._ 💵"
+  },
+  {
+    "keywords": ["tunggakan spp", "belum bayar berapa bulan", "nunggak bayaran", "cicil spp", "cicilan tunggakan"],
+    "question": "Anak saya ada tunggakan SPP, bisa dicicil tidak?",
+    "answer": "💬 Untuk informasi mengenai *cicilan atau keringanan tunggakan*, silakan hubungi langsung *Tata Usaha* sekolah.\n\nBapak/Ibu bisa cek total tunggakan terlebih dahulu dengan mengirimkan *NISN* ke bot ini.\n\n_Sekolah akan berusaha memberikan solusi terbaik untuk Bapak/Ibu._ 🙏"
+  },
+  {
+    "keywords": ["sudah bayar tapi belum lunas", "pembayaran tidak masuk", "sudah transfer belum update", "konfirmasi bayar"],
+    "question": "Saya sudah transfer tapi di sistem masih belum lunas, kenapa?",
+    "answer": "⏳ Pembayaran via transfer bank biasanya memerlukan waktu *1x24 jam* untuk terverifikasi di sistem.\n\nJika lebih dari 24 jam masih belum update, silakan hubungi *Tata Usaha* sekolah dengan menyiapkan *bukti transfer*.\n\nJangan lupa cek ulang dengan kirim *NISN* di bot ini untuk melihat status terbaru. 😊"
+  },
+  {
+    "keywords": ["dpp itu apa", "uang pangkal", "uang masuk sekolah", "biaya daftar", "biaya masuk"],
+    "question": "DPP itu apa? Apakah sama dengan uang pangkal?",
+    "answer": "📌 *DPP (Dana Pengembangan Pendidikan)* adalah biaya yang dibayarkan saat pertama kali siswa masuk sekolah, sering disebut uang pangkal.\n\nUntuk nominal dan ketentuan DPP, silakan hubungi *Tata Usaha* sekolah karena nilainya bisa berbeda tiap tahun ajaran.\n\n_Info lengkap tersedia di sekolah._ 🏫"
+  },
+  {
+    "keywords": ["bukti pembayaran", "kwitansi bayar", "struk bayar", "cetak kwitansi"],
+    "question": "Gimana cara dapat bukti pembayaran atau kwitansi?",
+    "answer": "🧾 Bukti pembayaran (kwitansi) dapat diambil langsung di *Tata Usaha* sekolah.\n\nUntuk pembayaran tunai di sekolah, kwitansi langsung diberikan saat transaksi.\n\nUntuk pembayaran via transfer, bukti bisa diminta ke TU dengan membawa *struk transfer*.\n\n_Jam operasional TU: Senin–Jumat, jam sekolah._ 🙏"
+  },
+  {
+    "keywords": ["jam masuk sekolah", "jam mulai sekolah", "jam pelajaran", "masuk jam berapa", "jam belajar"],
+    "question": "SD Muhammadiyah 3 masuk jam berapa?",
+    "answer": "⏰ *Jam Masuk Sekolah*\n\nUntuk jadwal jam masuk yang akurat, silakan konfirmasi ke *Tata Usaha* atau wali kelas putra/putri Anda.\n\nJam bisa berbeda antar kelas dan berubah di periode tertentu.\n\n_Info terbaru tersedia di sekolah atau grup WhatsApp kelas._ 🏫"
+  },
+  {
+    "keywords": ["jam pulang sekolah", "pulang jam berapa", "jam selesai sekolah", "jam keluar kelas"],
+    "question": "Anak saya pulang sekolah jam berapa?",
+    "answer": "🏠 Jam pulang sekolah berbeda tiap kelas dan bisa berubah sesuai jadwal.\n\nSilakan konfirmasi ke *wali kelas* atau cek di *grup WhatsApp kelas* untuk info jam pulang yang akurat.\n\n_Tata Usaha juga siap membantu jika Anda membutuhkan informasi ini._ 😊"
+  },
+  {
+    "keywords": ["lokasi sekolah", "alamat sd muhammadiyah 3", "dimana sekolah", "alamat sdm3 samarinda"],
+    "question": "Di mana lokasi SD Muhammadiyah 3 Samarinda?",
+    "answer": "📍 *SD Muhammadiyah 3 Samarinda* berlokasi di kota *Samarinda, Kalimantan Timur*.\n\nUntuk alamat lengkap dan petunjuk arah, silakan hubungi *Tata Usaha* sekolah.\n\n_Anda juga bisa mencari di Google Maps dengan kata kunci \"SD Muhammadiyah 3 Samarinda\"._ 🗺️"
+  },
+  {
+    "keywords": ["nomor telepon sekolah", "kontak sekolah", "telepon tu", "hubungi sekolah", "wa sekolah"],
+    "question": "Berapa nomor telepon atau WA sekolah yang bisa dihubungi?",
+    "answer": "📞 Untuk *nomor kontak resmi* sekolah, silakan hubungi *Tata Usaha* SD Muhammadiyah 3 Samarinda.\n\nAnda juga bisa datang langsung ke sekolah di jam operasional untuk mendapatkan informasi yang dibutuhkan.\n\n_Bot ini melayani cek tagihan & informasi umum sekolah._ 🙏"
+  },
+  {
+    "keywords": ["jam operasional sekolah", "jam buka tu", "jam kantor sekolah", "jam pelayanan"],
+    "question": "Jam operasional Tata Usaha sekolah sampai jam berapa?",
+    "answer": "🕐 *Jam Operasional TU*\n\nTata Usaha SD Muhammadiyah 3 Samarinda buka pada hari *Senin – Jumat* selama jam sekolah berlangsung.\n\nUntuk jam buka yang pasti, silakan konfirmasi langsung ke sekolah.\n\n_Kami sarankan datang atau menghubungi sebelum jam 12 siang untuk pelayanan optimal._ 😊"
+  },
+  {
+    "keywords": ["izin tidak masuk", "izin sakit wa", "cara izin anak", "anak sakit izin", "lapor tidak masuk"],
+    "question": "Anak saya sakit, bagaimana cara izin tidak masuk sekolah?",
+    "answer": "🤒 Untuk izin tidak masuk karena sakit, silakan:\n\n1. Hubungi *wali kelas* via WhatsApp atau telepon\n2. Kirimkan keterangan sakit (bisa via WA)\n3. Jika lebih dari 2 hari, lampirkan *surat keterangan dokter*\n\n_Laporkan segera agar tidak tercatat alpa._ 🙏"
+  },
+  {
+    "keywords": ["izin keperluan keluarga", "izin libur", "izin acara", "izin kegiatan", "minta izin sekolah"],
+    "question": "Anak saya ada acara keluarga, bagaimana cara minta izin?",
+    "answer": "📝 Untuk izin keperluan keluarga, silakan:\n\n1. Hubungi *wali kelas* terlebih dahulu via WA atau telepon\n2. Sampaikan alasan dan berapa hari izin\n3. Jika lebih dari 1 hari, sebaiknya buat *surat izin tertulis*\n\n_Izin disetujui sesuai kebijakan sekolah._ 🙏"
+  },
+  {
+    "keywords": ["absensi anak", "kehadiran siswa", "rekap absen", "cek absensi", "berapa hari masuk"],
+    "question": "Bagaimana cara cek absensi kehadiran anak saya?",
+    "answer": "📊 Informasi kehadiran/absensi siswa dapat dilihat di:\n\n• *Rapor semester* (tercantum rekap kehadiran)\n• Menghubungi langsung *wali kelas*\n• Aplikasi/platform yang digunakan sekolah\n\n_Bot ini saat ini melayani informasi tagihan pembayaran._ 🙏"
+  },
+  {
+    "keywords": ["jadwal ujian", "kapan ulangan", "ujian semester", "tanggal uts", "tanggal uas", "ujian kapan"],
+    "question": "Kapan jadwal ujian semester anak saya?",
+    "answer": "📅 *Jadwal Ujian*\n\nJadwal ujian (UTS/PAS/PAT) diumumkan oleh sekolah melalui *wali kelas* atau *grup WhatsApp kelas*.\n\nSilakan pantau informasi dari wali kelas untuk jadwal ujian yang akurat dan terbaru.\n\n_Tata Usaha juga dapat memberikan informasi jadwal akademik._ 📚"
+  },
+  {
+    "keywords": ["rapor kapan", "ambil rapor", "jadwal rapor", "pengambilan rapor", "kapan terima rapor"],
+    "question": "Kapan bisa ambil rapor anak saya?",
+    "answer": "📋 *Pengambilan Rapor*\n\nJadwal pengambilan rapor diumumkan melalui *wali kelas* dan *grup WhatsApp kelas*.\n\nBiasanya rapor dibagikan di akhir semester — cek info dari sekolah untuk tanggal pastinya.\n\n_Jika berhalangan hadir, koordinasikan dengan wali kelas._ 🙏"
+  },
+  {
+    "keywords": ["kenaikan kelas", "syarat naik kelas", "anak tidak naik kelas", "kriteria kenaikan kelas"],
+    "question": "Apa syarat agar anak bisa naik kelas?",
+    "answer": "📈 Syarat kenaikan kelas mengacu pada *kebijakan sekolah* yang mencakup nilai akademik, kehadiran, dan perilaku siswa.\n\nInfo lengkap mengenai kriteria kenaikan kelas bisa ditanyakan ke *wali kelas* atau *Kepala Sekolah*.\n\n_Kenaikan kelas juga bisa dipengaruhi status administrasi & pembayaran._ 🙏"
+  },
+  {
+    "keywords": ["pindah sekolah", "mutasi keluar", "keluar dari sekolah", "surat pindah", "pindah sekolah ke mana"],
+    "question": "Anak saya mau pindah sekolah, bagaimana prosesnya?",
+    "answer": "📝 *Proses Mutasi/Pindah Sekolah*\n\nSilakan datang ke *Tata Usaha* sekolah untuk mengajukan proses mutasi keluar.\n\nDokumen yang biasanya diperlukan: surat permohonan orang tua, rapor terakhir, dan surat keterangan dari sekolah tujuan.\n\n_Pastikan semua administrasi & tagihan terselesaikan sebelum proses mutasi._ 🙏"
+  },
+  {
+    "keywords": ["pindah masuk sekolah", "mutasi masuk", "pindah ke sdm3", "daftar pindahan", "siswa pindahan"],
+    "question": "Anak saya mau pindah ke SD Muhammadiyah 3, bagaimana caranya?",
+    "answer": "🏫 Untuk proses *penerimaan siswa pindahan*, silakan datang langsung ke *Tata Usaha* SD Muhammadiyah 3 Samarinda.\n\nDokumen yang biasanya diperlukan: surat pindah dari sekolah asal, rapor, akta kelahiran, dan dokumen lainnya.\n\n_Ketersediaan tempat menyesuaikan kapasitas kelas._ 🙏"
+  },
+  {
+    "keywords": ["seragam sekolah", "beli seragam", "seragam baru", "ukuran seragam", "seragam sdm3"],
+    "question": "Di mana beli seragam SD Muhammadiyah 3?",
+    "answer": "👕 *Seragam Sekolah*\n\nPembelian seragam resmi SD Muhammadiyah 3 Samarinda dapat dilakukan di *Tata Usaha* sekolah.\n\nSilakan datang langsung untuk mendapatkan info ukuran dan ketersediaan stok.\n\n_Penggunaan seragam wajib sesuai aturan yang berlaku._ 🙏"
+  },
+  {
+    "keywords": ["seragam olahraga", "baju olahraga", "baju or", "seragam pe", "beli baju olahraga sekolah"],
+    "question": "Seragam olahraga beli di mana?",
+    "answer": "🏃 Seragam olahraga resmi sekolah bisa didapatkan di *Tata Usaha* SD Muhammadiyah 3 Samarinda.\n\nSilakan tanyakan ketersediaan ukuran dan harga ke TU.\n\n_Seragam olahraga wajib dipakai saat mata pelajaran olahraga._ 💪"
+  },
+  {
+    "keywords": ["aturan seragam", "jadwal pakai seragam", "seragam hari apa", "wajib seragam", "aturan baju sekolah"],
+    "question": "Hari apa saja seragam tertentu dipakai?",
+    "answer": "👔 Jadwal penggunaan seragam diatur oleh sekolah dan bisa diinformasikan oleh *wali kelas*.\n\nUmumnya sekolah Muhammadiyah memiliki jadwal seragam harian tertentu.\n\n_Cek info lengkap melalui wali kelas atau grup WhatsApp kelas ya, Bapak/Ibu._ 😊"
+  },
+  {
+    "keywords": ["buku pelajaran", "beli buku sekolah", "buku wajib", "daftar buku", "buku teks sekolah"],
+    "question": "Buku pelajaran beli di mana?",
+    "answer": "📚 Untuk informasi daftar buku pelajaran dan tempat pembeliannya, silakan tanyakan kepada *wali kelas* atau *Tata Usaha* sekolah.\n\nBeberapa buku mungkin disediakan oleh sekolah, sementara yang lain perlu dibeli sendiri.\n\n_Info lengkap akan disampaikan di awal tahun ajaran._ 🙏"
+  },
+  {
+    "keywords": ["kegiatan ekstra", "ekstrakurikuler", "ekskul apa saja", "daftar ekskul", "ekstra kulikuler"],
+    "question": "Apa saja kegiatan ekstrakurikuler di SD Muhammadiyah 3?",
+    "answer": "🎯 *Ekstrakurikuler*\n\nSD Muhammadiyah 3 Samarinda menyediakan berbagai kegiatan ekstrakurikuler untuk pengembangan bakat siswa.\n\nUntuk daftar lengkap ekskul yang tersedia, jadwal, dan cara mendaftar, silakan tanyakan ke *Tata Usaha* atau *wali kelas*.\n\n_Info ekskul juga biasanya disampaikan di awal tahun ajaran._ 🏆"
+  },
+  {
+    "keywords": ["daftar ekskul", "daftar ekstrakurikuler", "ikut ekskul", "cara daftar ekskul", "ekskul pilihan"],
+    "question": "Bagaimana cara mendaftarkan anak ke ekstrakurikuler?",
+    "answer": "🏅 Pendaftaran ekstrakurikuler biasanya dilakukan melalui *wali kelas* atau langsung ke *koordinator ekskul* yang bersangkutan.\n\nInfo jadwal pendaftaran akan diumumkan melalui grup kelas.\n\n_Tata Usaha juga dapat memberikan info lebih lanjut._ 🙏"
+  },
+  {
+    "keywords": ["upacara bendera", "jadwal upacara", "upacara senin", "upacara hari besar"],
+    "question": "Apakah ada upacara bendera rutin di sekolah?",
+    "answer": "🇮🇩 SD Muhammadiyah 3 Samarinda menyelenggarakan upacara bendera secara rutin.\n\nUntuk jadwal dan informasi lebih lanjut, silakan tanyakan ke *wali kelas* atau pantau pengumuman di grup kelas.\n\n_Kehadiran upacara termasuk dalam catatan kehadiran siswa._ 🙏"
+  },
+  {
+    "keywords": ["wisuda kelas 6", "perpisahan sekolah", "acara kelulusan", "wisuda sd", "graduasi sd"],
+    "question": "Kapan ada acara wisuda atau perpisahan kelas 6?",
+    "answer": "🎓 *Acara Wisuda/Kelulusan*\n\nJadwal wisuda dan perpisahan kelas 6 diumumkan melalui *wali kelas* dan pengumuman resmi sekolah.\n\nBiasanya dilaksanakan di akhir tahun ajaran setelah pengumuman kelulusan.\n\n_Pantau informasi dari sekolah untuk tanggal dan teknisnya ya._ 🎉"
+  },
+  {
+    "keywords": ["pondok ramadan", "pesantren kilat", "kegiatan ramadan", "ramadan sekolah", "acara ramadan"],
+    "question": "Apakah ada kegiatan pesantren kilat saat Ramadan?",
+    "answer": "🌙 SD Muhammadiyah 3 Samarinda sebagai sekolah Muhammadiyah memiliki kegiatan keislaman termasuk di bulan Ramadan.\n\nUntuk jadwal dan teknis kegiatan Ramadan, silakan tunggu pengumuman resmi dari sekolah.\n\n_Info akan disampaikan melalui wali kelas dan grup kelas._ 🙏"
+  },
+  {
+    "keywords": ["foto siswa", "foto sekolah", "pas foto sekolah", "foto untuk rapor", "cetak foto siswa"],
+    "question": "Ada jadwal foto siswa tidak dari sekolah?",
+    "answer": "📸 Jadwal pemotretan siswa biasanya diumumkan oleh sekolah melalui *wali kelas* dan *grup WhatsApp kelas*.\n\nSilakan pantau informasi dari wali kelas untuk jadwal dan persyaratannya.\n\n_Tata Usaha juga dapat memberikan informasi lebih lanjut._ 🙏"
+  },
+  {
+    "keywords": ["update data orang tua", "ganti nomor hp", "ubah data siswa", "perbarui data", "data wali murid"],
+    "question": "Bagaimana cara update nomor HP saya di data sekolah?",
+    "answer": "📱 Untuk mengubah atau memperbarui data nomor HP, silakan datang langsung ke *Tata Usaha* sekolah.\n\nBawa identitas diri (KTP) dan siapkan nomor baru yang ingin didaftarkan.\n\n_Pastikan nomor WA yang terdaftar aktif agar bisa menggunakan layanan bot ini._ 🙏"
+  },
+  {
+    "keywords": ["nomor wa tidak terdaftar", "wa tidak bisa cek tagihan", "nomor tidak terdeteksi", "wa tidak sesuai data"],
+    "question": "Kenapa nomor WA saya tidak bisa digunakan untuk cek tagihan?",
+    "answer": "⚠️ Layanan bot ini memverifikasi *NISN + nomor WA* yang harus sesuai dengan data di sekolah.\n\nJika nomor WA Anda belum terdaftar, silakan update data ke *Tata Usaha* sekolah.\n\nSetelah data diperbarui, Anda bisa langsung menggunakan layanan ini. 😊"
+  },
+  {
+    "keywords": ["bot tidak merespons", "bot error", "bot tidak bisa diakses", "bot tidak berjalan", "sistem error wa"],
+    "question": "Bot WhatsApp sekolah tidak merespons, bagaimana?",
+    "answer": "🔧 Jika bot tidak merespons, mungkin sedang ada gangguan sementara.\n\nCoba kirim ulang pesan setelah beberapa menit.\n\nJika masalah berlanjut, silakan hubungi *Tata Usaha* sekolah secara langsung untuk bantuan.\n\n_Mohon maaf atas ketidaknyamanannya._ 🙏"
+  },
+  {
+    "keywords": ["cara pakai bot wa", "cara kirim nisn", "panduan bot whatsapp", "petunjuk cek tagihan wa", "tutorial bot"],
+    "question": "Bagaimana cara menggunakan bot WhatsApp sekolah ini?",
+    "answer": "📱 *Panduan Bot WhatsApp SDM 3*\n\n1️⃣ Kirimkan *NISN* putra/putri Anda (10 digit angka)\n2️⃣ Sistem akan menampilkan tagihan & riwayat pembayaran\n3️⃣ Ketik *cek* atau *1* untuk perbarui data\n\n_Pastikan nomor WA Anda sudah terdaftar di sekolah._ 😊"
+  },
+  {
+    "keywords": ["ppdb", "pendaftaran murid baru", "daftar sekolah baru", "penerimaan siswa baru", "cara masuk sdm3"],
+    "question": "Bagaimana cara mendaftarkan anak ke SD Muhammadiyah 3?",
+    "answer": "🏫 *Pendaftaran Siswa Baru*\n\nUntuk informasi PPDB (Penerimaan Peserta Didik Baru), silakan:\n\n• Datang langsung ke *Tata Usaha* sekolah\n• Atau hubungi nomor kontak resmi sekolah\n\nPendaftaran biasanya dibuka di awal tahun atau sesuai jadwal yang diumumkan. 📝"
+  },
+  {
+    "keywords": ["syarat masuk sd", "persyaratan pendaftaran", "dokumen daftar sekolah", "berkas daftar siswa baru"],
+    "question": "Apa saja syarat dokumen untuk mendaftar ke SD Muhammadiyah 3?",
+    "answer": "📋 *Dokumen Pendaftaran Siswa Baru*\n\nUmumnya dokumen yang diperlukan:\n• Akta kelahiran\n• Kartu Keluarga\n• Pas foto\n• Ijazah/STTB TK (jika ada)\n\n_Untuk persyaratan lengkap dan terbaru, silakan tanyakan ke *Tata Usaha* sekolah._ 🙏"
+  },
+  {
+    "keywords": ["anak nakal di sekolah", "lapor masalah anak", "masalah perilaku siswa", "anak bermasalah", "konsultasi anak"],
+    "question": "Anak saya ada masalah perilaku di sekolah, harus lapor ke siapa?",
+    "answer": "💬 Untuk masalah perilaku atau karakter siswa, silakan hubungi *wali kelas* terlebih dahulu.\n\nJika diperlukan penanganan lebih lanjut, wali kelas akan mengarahkan ke *guru BK* atau *Kepala Sekolah*.\n\n_Komunikasi yang baik antara orang tua dan sekolah sangat penting untuk perkembangan anak._ 🙏"
+  },
+  {
+    "keywords": ["les tambahan", "bimbel sekolah", "kelas tambahan", "remedial", "tambahan pelajaran"],
+    "question": "Apakah ada kelas tambahan atau les di sekolah?",
+    "answer": "📚 Informasi mengenai *kelas tambahan atau remedial* dapat ditanyakan kepada *wali kelas* atau guru mata pelajaran yang bersangkutan.\n\nBeberapa kelas tambahan mungkin diadakan menjelang ujian atau untuk siswa yang membutuhkan.\n\n_Info detail tersedia di sekolah._ 🙏"
+  },
+  {
+    "keywords": ["nilai rapor", "nilai anak jelek", "cara tahu nilai", "hasil belajar anak", "prestasi anak"],
+    "question": "Bagaimana cara tahu nilai atau hasil belajar anak saya?",
+    "answer": "📊 Nilai siswa dapat dilihat melalui:\n\n• *Rapor* yang dibagikan tiap semester\n• Berkomunikasi langsung dengan *wali kelas*\n• Platform digital yang digunakan sekolah (jika ada)\n\n_Jika ada kekhawatiran tentang nilai anak, jangan ragu menghubungi wali kelas._ 🙏"
+  },
+  {
+    "keywords": ["keamanan sekolah", "penjagaan sekolah", "satpam sekolah", "keamanan siswa", "sekolah aman"],
+    "question": "Bagaimana keamanan di SD Muhammadiyah 3?",
+    "answer": "🔐 SD Muhammadiyah 3 Samarinda berkomitmen menjaga keamanan seluruh siswa.\n\nUntuk informasi lebih detail mengenai sistem keamanan sekolah, silakan tanyakan ke *Tata Usaha* atau *Kepala Sekolah*.\n\n_Keselamatan dan kenyamanan siswa adalah prioritas kami._ 🙏"
+  },
+  {
+    "keywords": ["kantin sekolah", "makanan di sekolah", "jajan anak", "uang saku", "makan di sekolah"],
+    "question": "Apakah ada kantin di SD Muhammadiyah 3?",
+    "answer": "🍱 Untuk informasi mengenai fasilitas kantin dan makanan yang tersedia, silakan tanyakan ke *Tata Usaha* sekolah.\n\n_Pastikan anak membawa bekal atau uang saku yang cukup sesuai kebutuhan._ 😊"
+  },
+  {
+    "keywords": ["antar jemput", "layanan bus sekolah", "shuttle sekolah", "transportasi sekolah"],
+    "question": "Apakah sekolah menyediakan layanan antar jemput?",
+    "answer": "🚌 Untuk informasi mengenai layanan antar jemput atau transportasi sekolah, silakan hubungi *Tata Usaha* SD Muhammadiyah 3 Samarinda.\n\n_Info ketersediaan layanan ini tersedia di sekolah._ 🙏"
+  },
+  {
+    "keywords": ["libur sekolah", "jadwal libur", "libur nasional sekolah", "libur semester", "kapan libur"],
+    "question": "Kapan jadwal libur sekolah?",
+    "answer": "📅 *Jadwal Libur Sekolah*\n\nJadwal libur mengikuti *kalender akademik* yang ditetapkan pemerintah dan sekolah.\n\nPengumuman libur disampaikan melalui *wali kelas* dan *grup WhatsApp kelas*.\n\n_Pantau informasi dari sekolah untuk jadwal libur terbaru._ 🙏"
+  },
+  {
+    "keywords": ["cuti sekolah", "libur panjang", "izin panjang anak", "liburan keluarga lama"],
+    "question": "Anak saya mau liburan keluarga agak lama, boleh tidak?",
+    "answer": "✈️ Untuk izin tidak masuk dalam jangka waktu panjang, silakan:\n\n1. Koordinasikan dengan *wali kelas*\n2. Buat *surat permohonan izin* tertulis\n3. Dapatkan persetujuan dari *Kepala Sekolah*\n\n_Keputusan izin sesuai kebijakan sekolah._ 🙏"
+  },
+  {
+    "keywords": ["sakit lama", "anak sakit berkepanjangan", "izin sakit lama", "anak opname", "surat dokter sekolah"],
+    "question": "Anak saya sakit dan harus opname, bagaimana?",
+    "answer": "🏥 Semoga putra/putri Anda cepat pulih ya, Bapak/Ibu. 🙏\n\nSegera informasikan ke *wali kelas* mengenai kondisi anak.\n\nSiapkan *surat keterangan dokter/rumah sakit* sebagai dokumen izin resmi setelah pulih.\n\n_Wali kelas akan membantu proses pengumpulan tugas selama sakit._"
+  },
+  {
+    "keywords": ["hafalan quran", "tahfidz", "program quran", "hafalan siswa", "program keagamaan"],
+    "question": "Apakah ada program tahfidz atau hafalan Quran di sekolah?",
+    "answer": "📖 Sebagai sekolah Muhammadiyah, SD Muhammadiyah 3 Samarinda memiliki program keislaman termasuk kegiatan Al-Quran.\n\nUntuk info lengkap program tahfidz dan keagamaan, silakan tanyakan ke *Tata Usaha* atau *wali kelas*.\n\n_Program keislaman merupakan bagian penting dari pendidikan di sekolah kami._ 🌟"
+  },
+  {
+    "keywords": ["sholat berjamaah", "sholat di sekolah", "kegiatan ibadah sekolah", "sholat dhuha", "program islami"],
+    "question": "Apakah ada kegiatan sholat berjamaah di sekolah?",
+    "answer": "🕌 SD Muhammadiyah 3 Samarinda menerapkan pembiasaan ibadah termasuk sholat berjamaah sebagai bagian dari pendidikan karakter Islami.\n\nUntuk jadwal dan program ibadah lengkap, silakan tanyakan ke *wali kelas*.\n\n_Pendidikan akhlak dan ibadah adalah prioritas utama sekolah kami._ 🙏"
+  },
+  {
+    "keywords": ["prestasi sekolah", "juara sekolah", "kompetisi siswa", "olimpiade sekolah", "lomba sekolah"],
+    "question": "Apa saja prestasi yang pernah diraih SD Muhammadiyah 3?",
+    "answer": "🏆 SD Muhammadiyah 3 Samarinda memiliki berbagai prestasi yang membanggakan di bidang akademik maupun non-akademik.\n\nUntuk informasi lengkap mengenai prestasi sekolah, silakan tanyakan ke *Tata Usaha* atau kunjungi sekolah.\n\n_Kami terus mendorong siswa untuk berprestasi terbaik!_ 🌟"
+  },
+  {
+    "keywords": ["akreditasi sekolah", "status akreditasi", "akreditasi sdm3", "nilai akreditasi"],
+    "question": "Apa akreditasi SD Muhammadiyah 3 Samarinda?",
+    "answer": "🏫 Untuk informasi akreditasi resmi SD Muhammadiyah 3 Samarinda, silakan tanyakan langsung ke *Tata Usaha* sekolah.\n\nData akreditasi juga bisa dicek di sistem Kementerian Pendidikan.\n\n_Akreditasi mencerminkan kualitas pendidikan yang kami berikan._ 🙏"
+  },
+  {
+    "keywords": ["perpustakaan sekolah", "pinjam buku", "fasilitas perpus", "pustaka sekolah"],
+    "question": "Apakah ada perpustakaan di SD Muhammadiyah 3?",
+    "answer": "📚 SD Muhammadiyah 3 Samarinda memiliki fasilitas perpustakaan untuk mendukung kegiatan belajar siswa.\n\nUntuk jam operasional dan tata cara peminjaman buku, silakan tanyakan ke *pihak sekolah* atau *petugas perpustakaan*.\n\n_Budaya membaca adalah kunci keberhasilan belajar._ 📖"
+  },
+  {
+    "keywords": ["uks sekolah", "fasilitas kesehatan", "sakit di sekolah", "anak sakit di sekolah", "P3K sekolah"],
+    "question": "Kalau anak sakit di sekolah, ditangani bagaimana?",
+    "answer": "🏥 Jika siswa sakit di sekolah, akan ditangani oleh *petugas UKS (Unit Kesehatan Sekolah)* terlebih dahulu.\n\nOrang tua akan dihubungi jika kondisi memerlukan penanganan lebih lanjut.\n\n_Pastikan nomor HP Anda selalu aktif dan terdaftar di data sekolah._ 📱"
+  },
+  {
+    "keywords": ["lapangan sekolah", "fasilitas olahraga", "sarana sekolah", "fasilitas sdm3"],
+    "question": "Fasilitas apa saja yang ada di SD Muhammadiyah 3?",
+    "answer": "🏫 SD Muhammadiyah 3 Samarinda dilengkapi berbagai fasilitas untuk mendukung kegiatan belajar mengajar.\n\nUntuk info lengkap fasilitas yang tersedia, silakan kunjungi sekolah atau hubungi *Tata Usaha*.\n\n_Kami terus berupaya meningkatkan fasilitas untuk kenyamanan siswa._ 🌟"
+  },
+  {
+    "keywords": ["laporan kehilangan", "barang hilang sekolah", "anak kehilangan", "barang ketinggalan di sekolah"],
+    "question": "Anak saya kehilangan barang di sekolah, lapor ke mana?",
+    "answer": "😟 Segera laporkan kehilangan ke *wali kelas* atau *Tata Usaha* sekolah.\n\nCeritakan barang yang hilang, kapan terakhir dilihat, dan dimana kemungkinan tertinggal.\n\n_Biasanya barang yang ditemukan akan dikumpulkan di TU atau wali kelas._ 🙏"
+  },
+  {
+    "keywords": ["tipe pembayaran", "jenis tagihan", "macam tagihan sekolah", "biaya apa saja", "tagihan apa saja"],
+    "question": "Tagihan apa saja yang bisa saya cek lewat bot ini?",
+    "answer": "📋 *Tagihan yang Bisa Dicek*\n\nMelalui bot ini, Anda bisa melihat semua tagihan yang tercatat dalam sistem sekolah, seperti *SPP, DPP, seragam, dan biaya lainnya*.\n\nCukup kirim *NISN* (10 digit) dan semua tagihan akan ditampilkan.\n\n_Untuk pertanyaan detail nominal, hubungi Tata Usaha._ 🙏"
+  },
+  {
+    "keywords": ["surat keterangan siswa", "surat aktif sekolah", "surat untuk bank", "butuh surat sekolah"],
+    "question": "Saya butuh surat keterangan aktif sekolah untuk anak, bagaimana caranya?",
+    "answer": "📝 *Surat Keterangan Aktif Sekolah*\n\nSilakan datang ke *Tata Usaha* SD Muhammadiyah 3 Samarinda dengan membawa:\n• Identitas orang tua/wali (KTP)\n• Menyebutkan keperluan surat\n\nSurat biasanya dapat diproses dalam waktu *1-2 hari kerja*.\n\n_Pastikan administrasi sekolah anak tidak ada tunggakan._ 🙏"
+  },
+  {
+    "keywords": ["surat rekomendasi", "surat pindah domisili", "surat kelakuan baik", "surat prestasi"],
+    "question": "Bagaimana cara membuat surat rekomendasi dari sekolah?",
+    "answer": "📜 Untuk membuat berbagai jenis surat dari sekolah, silakan datang langsung ke *Tata Usaha*.\n\nSampaikan jenis surat yang dibutuhkan dan keperluan penggunaannya.\n\n_Proses pembuatan surat menyesuaikan jenis dan kebutuhan._ 🙏"
+  },
+  {
+    "keywords": ["beasiswa", "bantuan biaya sekolah", "program beasiswa", "kip sekolah", "keringanan biaya"],
+    "question": "Apakah ada program beasiswa di SD Muhammadiyah 3?",
+    "answer": "🌟 Untuk informasi mengenai *program beasiswa atau keringanan biaya*, silakan hubungi langsung *Tata Usaha* atau *Kepala Sekolah*.\n\nSekolah berupaya membantu siswa berprestasi maupun yang membutuhkan bantuan biaya pendidikan.\n\n_Persyaratan dan ketentuan beasiswa tersedia di sekolah._ 🙏"
+  },
+  {
+    "keywords": ["sudah bayar tapi masih ada tagihan", "bayar sudah lunas tapi muncul", "tagihan sudah dibayar tapi masih tertagih"],
+    "question": "Saya yakin sudah bayar tapi masih muncul tagihan, kenapa?",
+    "answer": "🔍 Kemungkinan ada *jeda waktu* antara pembayaran dan verifikasi sistem, atau ada tagihan *berbeda* yang belum terbayar.\n\nSilakan cek ulang dengan kirim *NISN* dan perhatikan detail nama tagihan yang muncul.\n\nJika ada ketidaksesuaian, hubungi *Tata Usaha* dengan membawa bukti pembayaran. 🙏"
+  },
+  {
+    "keywords": ["ganti kelas", "pindah kelas", "minta ganti kelas", "kelas tidak cocok"],
+    "question": "Anak saya mau pindah kelas, bisa tidak?",
+    "answer": "🏫 Permintaan pindah kelas diproses melalui *wali kelas* dan *Kepala Sekolah*.\n\nAda pertimbangan tertentu yang menjadi dasar keputusan pindah kelas.\n\nSilakan sampaikan alasan dan kekhawatiran Anda kepada wali kelas terlebih dahulu. 🙏"
+  },
+  {
+    "keywords": ["guru baru", "ganti wali kelas", "wali kelas siapa", "nama wali kelas", "siapa gurunya"],
+    "question": "Siapa wali kelas anak saya sekarang?",
+    "answer": "👨‍🏫 Informasi wali kelas dapat diperoleh dari *Tata Usaha* sekolah atau diumumkan melalui grup WhatsApp kelas.\n\n_Biasanya info wali kelas disampaikan di awal tahun ajaran baru._ 😊"
+  },
+  {
+    "keywords": ["teman anak bermasalah", "bullying", "perundungan sekolah", "anak dibully", "lapor bullying"],
+    "question": "Anak saya mengalami perundungan di sekolah, harus bagaimana?",
+    "answer": "😢 Kami turut prihatin, Bapak/Ibu. Segera laporkan ke *wali kelas* dan *guru BK* sekolah.\n\nJika perlu, minta pertemuan langsung dengan *Kepala Sekolah* untuk penanganan yang lebih serius.\n\nSekolah memiliki kebijakan tegas terhadap perundungan. Jangan ragu untuk melapor. 🙏"
+  },
+  {
+    "keywords": ["hp anak di sekolah", "bawa hp ke sekolah", "aturan hp", "larangan hp sekolah", "ponsel siswa"],
+    "question": "Apakah anak boleh membawa HP ke sekolah?",
+    "answer": "📱 Kebijakan mengenai penggunaan HP oleh siswa di sekolah diatur dalam *tata tertib* SD Muhammadiyah 3 Samarinda.\n\nUntuk info lengkap aturan HP, silakan tanyakan ke *wali kelas* atau *Tata Usaha*.\n\n_Tata tertib lengkap biasanya disampaikan di awal tahun ajaran._ 🙏"
+  },
+  {
+    "keywords": ["aturan sekolah", "tata tertib", "peraturan siswa", "larangan sekolah", "kebijakan sekolah"],
+    "question": "Apa saja tata tertib di SD Muhammadiyah 3?",
+    "answer": "📋 Tata tertib lengkap SD Muhammadiyah 3 Samarinda mencakup aturan kehadiran, seragam, perilaku, dan lainnya.\n\nDokumen tata tertib dapat diperoleh dari *Tata Usaha* sekolah.\n\n_Orang tua diharapkan mengingatkan siswa untuk selalu mematuhi tata tertib._ 🙏"
+  },
+  {
+    "keywords": ["konsultasi orang tua", "jadwal pertemuan guru", "temu wali murid", "meeting orang tua", "rapat wali murid"],
+    "question": "Kapan ada pertemuan orang tua dengan sekolah?",
+    "answer": "👨‍👩‍👧 *Pertemuan Wali Murid*\n\nJadwal pertemuan orang tua (rapat wali murid) diumumkan melalui *wali kelas* dan *grup WhatsApp kelas*.\n\nBiasanya diadakan di awal semester atau menjelang penerimaan rapor.\n\n_Kehadiran orang tua sangat diharapkan untuk perkembangan anak._ 🙏"
+  },
+  {
+    "keywords": ["komite sekolah", "koperasi sekolah", "bpk sekolah", "paguyuban orang tua"],
+    "question": "Apakah ada komite sekolah atau paguyuban orang tua?",
+    "answer": "🤝 SD Muhammadiyah 3 Samarinda memiliki *Komite Sekolah* yang terdiri dari perwakilan orang tua siswa.\n\nUntuk info mengenai komite sekolah dan cara bergabung, silakan tanyakan ke *Tata Usaha* atau *Kepala Sekolah*.\n\n_Partisipasi orang tua sangat penting untuk kemajuan sekolah._ 🙏"
+  },
+  {
+    "keywords": ["study tour", "wisata edukasi", "karyawisata sekolah", "field trip", "piknik sekolah"],
+    "question": "Apakah ada kegiatan study tour atau karyawisata?",
+    "answer": "🚌 Info mengenai kegiatan *study tour atau karyawisata* akan diumumkan oleh sekolah melalui *wali kelas* dan surat resmi kepada orang tua.\n\n_Pantau informasi dari grup kelas untuk pengumuman kegiatan ini._ 🌟"
+  },
+  {
+    "keywords": ["masa orientasi siswa", "mos", "mpls", "ospek sd", "kegiatan siswa baru"],
+    "question": "Apakah ada kegiatan orientasi untuk siswa baru?",
+    "answer": "🎒 Siswa baru SD Muhammadiyah 3 biasanya mengikuti *Masa Pengenalan Lingkungan Sekolah (MPLS)* di awal tahun ajaran.\n\nInfo jadwal dan teknis MPLS akan diumumkan ke orang tua siswa baru.\n\n_Kegiatan ini bertujuan mengenalkan lingkungan dan aturan sekolah kepada siswa baru._ 😊"
+  },
+  {
+    "keywords": ["sertifikat lomba", "piala juara", "penghargaan siswa", "sertifikat siswa"],
+    "question": "Anak saya juara lomba, bagaimana cara dapat sertifikat dari sekolah?",
+    "answer": "🏅 Untuk pengurusan sertifikat atau piagam penghargaan dari sekolah, silakan hubungi *wali kelas* atau *Tata Usaha*.\n\nSiapkan bukti prestasi (foto, sertifikat lomba) untuk mempercepat prosesnya.\n\n_Sekolah bangga dengan prestasi setiap siswa!_ 🌟"
+  },
+  {
+    "keywords": ["akun siswa", "login portal sekolah", "akun e-learning", "platform belajar online", "akses digital siswa"],
+    "question": "Anak saya butuh akun untuk belajar online, bagaimana?",
+    "answer": "💻 Untuk informasi akun belajar digital atau platform e-learning yang digunakan, silakan tanyakan ke *wali kelas* atau *Tata Usaha* sekolah.\n\n_Penggunaan platform digital disesuaikan dengan kebijakan dan kebutuhan masing-masing kelas._ 🙏"
+  },
+  {
+    "keywords": ["lupa password", "reset password akun sekolah", "akun terkunci", "tidak bisa login"],
+    "question": "Saya lupa password akun portal sekolah, bagaimana?",
+    "answer": "🔐 Untuk reset atau pemulihan akun digital sekolah, silakan hubungi *Tata Usaha* atau *operator IT* sekolah.\n\nSiapkan identitas diri dan data siswa untuk verifikasi.\n\n_Info kontak IT sekolah tersedia di Tata Usaha._ 🙏"
+  },
+  {
+    "keywords": ["lapor kecelakaan sekolah", "anak jatuh di sekolah", "kecelakaan siswa", "anak cedera sekolah"],
+    "question": "Anak saya cedera/jatuh di sekolah, siapa yang bertanggung jawab?",
+    "answer": "🚑 Jika siswa mengalami cedera di sekolah, *pihak sekolah* akan segera memberikan pertolongan pertama melalui UKS.\n\nOrang tua akan segera dihubungi untuk penanganan lebih lanjut.\n\nUntuk hal ini, segera koordinasikan dengan *wali kelas* atau *Kepala Sekolah*.\n\n_Keselamatan siswa adalah tanggung jawab bersama._ 🙏"
+  },
+  {
+    "keywords": ["cara komplain sekolah", "keluhan orang tua", "pengaduan sekolah", "lapor masalah sekolah"],
+    "question": "Saya punya keluhan tentang sekolah, harus ke mana?",
+    "answer": "💬 Keluhan atau masukan dapat disampaikan melalui:\n\n1. *Wali kelas* untuk masalah sehari-hari di kelas\n2. *Tata Usaha* untuk masalah administrasi\n3. *Kepala Sekolah* untuk masalah yang lebih serius\n\n_Kami terbuka untuk masukan demi perbaikan layanan._ 🙏"
+  },
+  {
+    "keywords": ["media sosial sekolah", "instagram sekolah", "facebook sdm3", "website sekolah", "info sekolah online"],
+    "question": "Apakah SD Muhammadiyah 3 punya media sosial resmi?",
+    "answer": "📱 Untuk info media sosial dan website resmi SD Muhammadiyah 3 Samarinda, silakan tanyakan ke *Tata Usaha* sekolah.\n\n_Ikuti akun resmi sekolah untuk mendapatkan info dan berita terbaru._ 😊"
+  },
+  {
+    "keywords": ["absen alfa", "anak alfa tanpa keterangan", "tidak masuk tanpa izin", "alpa sekolah"],
+    "question": "Anak saya tercatat alfa, padahal sudah izin. Bagaimana?",
+    "answer": "⚠️ Segera hubungi *wali kelas* untuk mengklarifikasi ketidakhadiran yang tercatat sebagai alfa.\n\nSiapkan bukti izin (screenshot WA, surat, atau surat dokter) untuk proses klarifikasi.\n\n_Semakin cepat diklasifikasikan, semakin baik untuk rekap kehadiran._ 🙏"
+  },
+  {
+    "keywords": ["rekap nilai", "rata-rata nilai", "KKM sekolah", "nilai minimum", "batas lulus"],
+    "question": "Berapa KKM (nilai minimum) di SD Muhammadiyah 3?",
+    "answer": "📊 Informasi mengenai *KKM (Kriteria Ketuntasan Minimal)* per mata pelajaran dapat ditanyakan ke *wali kelas* atau *guru mata pelajaran* yang bersangkutan.\n\n_KKM bisa berbeda antar kelas dan mata pelajaran._ 🙏"
+  },
+  {
+    "keywords": ["les privat sekolah", "guru les dari sekolah", "les di luar sekolah", "bimbel untuk anak sd"],
+    "question": "Apakah sekolah menyediakan les privat?",
+    "answer": "📚 Untuk informasi program bimbingan belajar tambahan yang disediakan sekolah, tanyakan ke *wali kelas* atau *Tata Usaha*.\n\nBeberapa guru sekolah mungkin juga menyediakan les privat secara independen.\n\n_Semangat belajar adalah kunci sukses anak!_ 💪"
+  },
+  {
+    "keywords": ["jumlah siswa", "banyak siswa", "jumlah kelas", "kapasitas sekolah", "total murid sdm3"],
+    "question": "Berapa jumlah siswa di SD Muhammadiyah 3?",
+    "answer": "🏫 Untuk informasi jumlah siswa dan kelas yang ada, silakan tanyakan langsung ke *Tata Usaha* SD Muhammadiyah 3 Samarinda.\n\n_Data sekolah tersedia untuk keperluan informasi umum._ 😊"
+  },
+  {
+    "keywords": ["guru berpengalaman", "kualitas guru", "latar belakang guru", "guru sdm3", "tenaga pengajar"],
+    "question": "Bagaimana kualitas guru di SD Muhammadiyah 3?",
+    "answer": "👨‍🏫 SD Muhammadiyah 3 Samarinda memiliki tenaga pengajar yang *berpengalaman dan berkompeten* di bidangnya.\n\nUntuk info lebih detail mengenai profil guru, silakan kunjungi *Tata Usaha* atau website resmi sekolah.\n\n_Kami berkomitmen memberikan pendidikan berkualitas._ 🌟"
+  },
+  {
+    "keywords": ["download aplikasi sekolah", "app sekolah", "aplikasi pembayaran sekolah", "app sdm3"],
+    "question": "Apakah ada aplikasi khusus dari SD Muhammadiyah 3?",
+    "answer": "📱 Saat ini cek tagihan dan informasi pembayaran dapat dilakukan melalui *bot WhatsApp* ini.\n\nUntuk info mengenai aplikasi lain yang mungkin digunakan sekolah, silakan tanyakan ke *Tata Usaha*.\n\n_Layanan bot WA ini hadir untuk kemudahan Anda!_ 😊"
+  },
+  {
+    "keywords": ["cara reset sesi bot", "mulai ulang chat bot", "bot tidak ingat nisn", "sesi bot expired", "lanjut chat bot"],
+    "question": "Bot sepertinya tidak ingat NISN saya, harus bagaimana?",
+    "answer": "🔄 Sesi bot berlaku selama *24 jam*. Jika sudah lewat atau sesi berakhir, cukup kirimkan *NISN* kembali.\n\nKetik *cek* atau *1* untuk memperbarui data jika NISN sudah terverifikasi sebelumnya.\n\n_Tidak perlu khawatir, data Anda aman di sistem kami._ 😊"
+  },
+  {
+    "keywords": ["anak tidak mau sekolah", "mogok sekolah", "anak malas sekolah", "anak tidak suka sekolah"],
+    "question": "Anak saya tidak mau sekolah, saya harus bagaimana?",
+    "answer": "💬 Coba cari tahu penyebabnya dengan berbicara baik-baik dengan anak.\n\nJika masalah berkaitan dengan lingkungan sekolah, segera konsultasikan dengan *wali kelas* atau *guru BK*.\n\nKomunikasi antara orang tua, anak, dan sekolah sangat penting dalam situasi ini. 🙏"
+  },
+  {
+    "keywords": ["info sekolah muhammadiyah", "apa itu muhammadiyah", "sekolah islami", "ciri khas sdm3", "keunggulan sdm3"],
+    "question": "Apa keunggulan SD Muhammadiyah 3 dibanding sekolah lain?",
+    "answer": "🌟 *Keunggulan SD Muhammadiyah 3 Samarinda*\n\nSekolah kami mengintegrasikan pendidikan akademik berkualitas dengan *pembentukan karakter Islami* yang kuat.\n\nDengan program tahfidz, pembiasaan ibadah, dan ekstrakurikuler beragam, kami siapkan generasi unggul.\n\n_Untuk info lebih lengkap, silakan kunjungi sekolah kami!_ 🏫"
+  },
+  {
+    "keywords": ["anak tidak naik kelas", "tidak bisa naik kelas", "tinggal kelas", "anak remedial naik kelas"],
+    "question": "Anak saya dinyatakan tidak naik kelas, apa yang harus dilakukan?",
+    "answer": "💬 Jika anak dinyatakan tidak naik kelas, segera jadwalkan *pertemuan dengan wali kelas* untuk memahami alasannya.\n\nBersama wali kelas, susun rencana perbaikan untuk mendukung perkembangan anak.\n\n_Keputusan ini bertujuan demi kebaikan dan kesiapan anak ke depan._ 🙏"
+  },
+  {
+    "keywords": ["kegiatan pramuka", "pramuka sd", "anggota pramuka", "kegiatan kepanduan", "pramuka sekolah"],
+    "question": "Apakah ada kegiatan Pramuka di SD Muhammadiyah 3?",
+    "answer": "⚜️ Pramuka merupakan kegiatan ekstrakurikuler yang umumnya ada di sekolah dasar.\n\nUntuk info kegiatan Pramuka di SD Muhammadiyah 3, silakan tanyakan ke *wali kelas* atau *Tata Usaha*.\n\n_Pramuka melatih kemandirian dan kedisiplinan siswa._ 🙏"
+  },
+  {
+    "keywords": ["konsultasi akademik", "bimbingan belajar", "anak kesulitan belajar", "anak lambat belajar", "anak butuh bimbingan"],
+    "question": "Anak saya kesulitan mengikuti pelajaran, bagaimana?",
+    "answer": "📚 Jika anak kesulitan dalam belajar, segera koordinasikan dengan *wali kelas* untuk mendapat bimbingan khusus.\n\nSekolah memiliki program *remedial* untuk membantu siswa yang memerlukan perhatian lebih.\n\n_Jangan ragu meminta bantuan — kami ada untuk mendukung perkembangan setiap siswa._ 🙏"
+  },
+  {
+    "keywords": ["cara mendapat info terbaru", "update info sekolah", "berita sekolah", "pengumuman sekolah", "info terkini sdm3"],
+    "question": "Bagaimana cara mendapatkan informasi terbaru dari sekolah?",
+    "answer": "📢 Informasi terbaru dari sekolah disampaikan melalui:\n\n• *Grup WhatsApp kelas* (dari wali kelas)\n• *Surat/edaran* resmi sekolah\n• *Papan pengumuman* di sekolah\n• Bot WhatsApp ini untuk info tagihan\n\n_Pastikan Anda bergabung di grup WA kelas!_ 😊"
+  },
+  {
+    "keywords": ["kartu pelajar", "id card siswa", "kartu siswa", "buat kartu pelajar", "kartu identitas siswa"],
+    "question": "Bagaimana cara membuat kartu pelajar?",
+    "answer": "🪪 Untuk pembuatan atau penggantian kartu pelajar, silakan datang ke *Tata Usaha* sekolah.\n\nBawa foto siswa dan data yang diperlukan.\n\n_Kartu pelajar berguna sebagai identitas resmi siswa di berbagai keperluan._ 🙏"
+  },
+  {
+    "keywords": ["parkir sekolah", "area parkir", "tempat parkir antar jemput", "parkir kendaraan"],
+    "question": "Apakah ada area parkir untuk orang tua yang mengantar anak?",
+    "answer": "🅿️ Untuk informasi area parkir dan tata tertib antar jemput, silakan tanyakan ke *pihak keamanan* atau *Tata Usaha* sekolah.\n\n_Ketertiban area antar jemput penting untuk keselamatan semua siswa._ 🙏"
+  },
+  {
+    "keywords": ["dana bos", "bantuan operasional sekolah", "bos sekolah", "bos untuk apa", "dana pemerintah"],
+    "question": "Apakah SD Muhammadiyah 3 menerima dana BOS?",
+    "answer": "💰 Informasi mengenai *pengelolaan dana BOS dan anggaran sekolah* dapat ditanyakan kepada *Kepala Sekolah* atau *Bendahara sekolah*.\n\nSekolah berkewajiban transparan dalam penggunaan dana BOS sesuai regulasi pemerintah.\n\n_Info detail tersedia melalui jalur resmi sekolah._ 🙏"
+  },
+  {
+    "keywords": ["buku laporan", "buku catatan", "buku agenda siswa", "buku penghubung", "buku komunikasi"],
+    "question": "Apakah ada buku penghubung antara orang tua dan sekolah?",
+    "answer": "📓 Beberapa sekolah menggunakan *buku penghubung* sebagai media komunikasi antara orang tua dan guru.\n\nUntuk info apakah SD Muhammadiyah 3 menggunakan buku penghubung, tanyakan ke *wali kelas*.\n\n_Komunikasi aktif antara orang tua dan sekolah sangat penting!_ 🙏"
+  },
+  {
+    "keywords": ["cuti hamil guru", "guru berhalangan", "kelas tanpa guru", "pengganti guru", "guru izin"],
+    "question": "Jika guru kelas berhalangan hadir, siapa yang menggantikan?",
+    "answer": "👩‍🏫 Jika wali kelas atau guru berhalangan, sekolah akan menyediakan *guru pengganti* agar kegiatan belajar tetap berlangsung.\n\nJika ada info khusus mengenai ini, biasanya wali kelas akan mengumumkan di grup WhatsApp kelas.\n\n_Kegiatan belajar siswa tetap menjadi prioritas._ 🙏"
+  },
+  {
+    "keywords": ["cek apakah siswa aktif", "status siswa aktif", "siswa masih terdaftar", "anak masih sekolah di sini"],
+    "question": "Bagaimana memastikan anak saya masih terdaftar aktif di sekolah?",
+    "answer": "✅ Status keaktifan siswa dapat dikonfirmasi melalui *Tata Usaha* sekolah.\n\nAnda juga bisa mengecek data siswa melalui sistem Dapodik di situs Kemdikbud.\n\n_Pastikan data anak selalu diperbarui di sekolah untuk menghindari masalah administrasi._ 🙏"
+  },
+  {
+    "keywords": ["ujian nasional", "un sd", "asesmen nasional", "an sd", "ujian kelulusan sd"],
+    "question": "Apakah masih ada Ujian Nasional untuk SD?",
+    "answer": "📝 Ujian Nasional (UN) untuk SD sudah *tidak diberlakukan* lagi sejak beberapa tahun terakhir.\n\nSebagai gantinya, ada *Asesmen Nasional (AN)* yang diikuti oleh siswa kelas 5 sebagai perwakilan.\n\nKelulusan SD ditentukan oleh *penilaian internal sekolah*.\n\n_Info terbaru disampaikan oleh wali kelas._ 🙏"
+  },
+  {
+    "keywords": ["rapor digital", "rapor online", "e-rapor", "lihat rapor di hp", "akses rapor"],
+    "question": "Apakah rapor anak bisa dilihat secara online?",
+    "answer": "💻 Beberapa sekolah sudah menggunakan sistem *e-Rapor* yang bisa diakses online.\n\nUntuk informasi apakah SD Muhammadiyah 3 menggunakan sistem ini, tanyakan ke *wali kelas* atau *Tata Usaha*.\n\n_Bot ini saat ini melayani pengecekan tagihan pembayaran._ 😊"
+  },
+  {
+    "keywords": ["anak ikut olimpiade", "olimpiade siswa", "lomba akademik", "kompetisi antar sekolah", "daftar lomba"],
+    "question": "Bagaimana cara mendaftarkan anak untuk olimpiade atau lomba?",
+    "answer": "🏆 Info pendaftaran olimpiade dan lomba diumumkan oleh *wali kelas* atau *guru mata pelajaran* yang relevan.\n\nBiasanya sekolah menyeleksi siswa berdasarkan kemampuan akademik atau minat.\n\n_Pantau pengumuman dari wali kelas untuk kesempatan lomba!_ 🌟"
+  },
+  {
+    "keywords": ["kelas jauh", "siswa dari luar kota", "domisili siswa", "jarak rumah sekolah"],
+    "question": "Apakah anak dari luar daerah bisa mendaftar ke SD Muhammadiyah 3?",
+    "answer": "🏘️ SD Muhammadiyah 3 Samarinda menerima siswa dari berbagai wilayah di Samarinda.\n\nUntuk info persyaratan dan ketersediaan tempat, silakan datang ke *Tata Usaha* sekolah.\n\n_Kami terbuka untuk semua calon siswa yang memenuhi syarat._ 🙏"
+  },
+  {
+    "keywords": ["nilai islami", "pendidikan agama", "pelajaran agama islam", "mapel pai", "guruan agama"],
+    "question": "Bagaimana sistem pendidikan agama Islam di SD Muhammadiyah 3?",
+    "answer": "☪️ Pendidikan Islam merupakan *inti dari kurikulum* SD Muhammadiyah 3 Samarinda.\n\nMencakup mata pelajaran PAI, Al-Quran/Tahfidz, pembiasaan ibadah, dan pembentukan akhlak mulia.\n\n_Kami berkomitmen membentuk generasi yang berilmu dan berakhlak._ 🌟"
+  },
+  {
+    "keywords": ["kurikulum merdeka", "kurikulum 2013", "k13", "kurikulum sekolah", "sistem belajar sdm3"],
+    "question": "Kurikulum apa yang digunakan SD Muhammadiyah 3?",
+    "answer": "📚 SD Muhammadiyah 3 Samarinda mengikuti *kurikulum nasional* yang ditetapkan oleh Kemendikbud, termasuk penerapan Kurikulum Merdeka.\n\nUntuk detail implementasi kurikulum, silakan tanyakan ke *Tata Usaha* atau *Kepala Sekolah*.\n\n_Kurikulum terus disesuaikan dengan perkembangan pendidikan nasional._ 🙏"
+  },
+  {
+    "keywords": ["izin khitanan", "izin sunatan", "anak dikhitan", "izin aqiqah", "izin syukuran"],
+    "question": "Anak saya akan dikhitan, apakah bisa minta izin sekolah?",
+    "answer": "✅ Izin untuk keperluan khitan atau acara keluarga dapat diajukan melalui *wali kelas*.\n\nSampaikan informasi tanggal dan perkiraan berapa hari tidak masuk.\n\n_Buat surat izin tertulis jika diperlukan sesuai kebijakan sekolah._ 🙏"
+  },
+  {
+    "keywords": ["bot wa untuk apa", "fungsi bot whatsapp", "kegunaan bot wa sekolah", "manfaat bot wa sdm3"],
+    "question": "Bot WhatsApp ini bisa membantu apa saja?",
+    "answer": "🤖 *Layanan Bot WhatsApp SDM 3*\n\nBot ini dapat membantu:\n• ✅ Cek tagihan & status pembayaran\n• ✅ Lihat riwayat pembayaran\n• ✅ Info Virtual Account untuk bayar\n• ✅ Informasi umum sekolah\n\n_Untuk kebutuhan lain, hubungi Tata Usaha sekolah._ 😊"
+  },
+  {
+    "keywords": ["privasi data wa", "keamanan data pribadi", "data aman bot wa", "perlindungan data"],
+    "question": "Apakah data NISN dan nomor WA saya aman di sistem ini?",
+    "answer": "🔒 *Keamanan Data Anda*\n\nData NISN dan nomor WA Anda digunakan *hanya untuk verifikasi* akses ke informasi tagihan Anda sendiri.\n\nSistem kami menggunakan enkripsi dan protokol keamanan standar.\n\n_Kami tidak menyebarkan data pribadi ke pihak manapun._ 🙏"
+  },
+  {
+    "keywords": ["nisn tidak cocok", "nisn salah", "nisn tidak diterima", "nisn tidak valid", "gagal verifikasi nisn"],
+    "question": "NISN saya sudah 10 digit tapi tidak bisa diverifikasi, kenapa?",
+    "answer": "⚠️ Ada beberapa kemungkinan:\n\n1. NISN yang diinput kurang tepat — coba cek ulang\n2. Nomor WA Anda *belum terdaftar* di sistem sekolah\n3. Data siswa belum sinkron\n\nSilakan hubungi *Tata Usaha* untuk verifikasi data Anda di sistem. 🙏"
+  },
+  {
+    "keywords": ["pisah akun wa", "ganti hp wa", "nomor wa baru", "wa pindah nomor", "ganti nomor wa orang tua"],
+    "question": "Nomor WA saya ganti, bagaimana cara update ke sistem sekolah?",
+    "answer": "📱 Silakan datang ke *Tata Usaha* sekolah untuk memperbarui nomor WA yang terdaftar.\n\nBawa identitas diri (KTP) dan sampaikan nomor lama serta nomor baru.\n\n_Setelah update, Anda bisa langsung menggunakan bot dengan nomor baru._ 🙏"
+  },
+  {
+    "keywords": ["tagihan seragam", "biaya seragam", "cicil seragam", "seragam belum lunas", "bayar seragam"],
+    "question": "Tagihan seragam bisa dicicil tidak?",
+    "answer": "💬 Untuk informasi mengenai cicilan tagihan seragam, silakan hubungi *Tata Usaha* sekolah secara langsung.\n\nKebijakan cicilan ditentukan oleh pihak sekolah.\n\n_Cek tagihan seragam Anda dengan kirim NISN ke bot ini._ 🙏"
+  },
+  {
+    "keywords": ["tagihan dpp cicil", "uang pangkal dicicil", "cicil dpp", "bayar dpp bertahap"],
+    "question": "DPP atau uang pangkal bisa dicicil tidak?",
+    "answer": "💰 Untuk ketentuan cicilan DPP/uang pangkal, silakan diskusikan langsung dengan *Tata Usaha* atau *Kepala Sekolah*.\n\nSekolah biasanya terbuka untuk diskusi mengenai kemudahan pembayaran bagi orang tua.\n\n_Komunikasikan kebutuhan Anda dengan pihak sekolah._ 🙏"
+  },
+  {
+    "keywords": ["jam shalat sekolah", "waktu istirahat", "jam istirahat sekolah", "jadwal makan siang", "jam shalat dzuhur"],
+    "question": "Jam berapa anak istirahat dan sholat di sekolah?",
+    "answer": "🕌 Jadwal istirahat dan waktu sholat terintegrasi dalam jadwal harian sekolah.\n\nUntuk jadwal detail, silakan tanyakan ke *wali kelas* atau pantau informasi dari grup kelas.\n\n_Pembiasaan sholat tepat waktu adalah bagian penting dari pendidikan di sekolah kami._ 🙏"
+  },
+  {
+    "keywords": ["nilai merah", "anak dapat nilai jelek", "nilai di bawah kkm", "tidak tuntas", "remedial nilai"],
+    "question": "Anak saya dapat nilai di bawah KKM, harus bagaimana?",
+    "answer": "📉 Siswa yang nilai di bawah KKM biasanya akan mengikuti *program remedial* yang disediakan guru.\n\nSilakan koordinasikan dengan *wali kelas* untuk rencana perbaikan nilai anak.\n\n_Dukungan belajar di rumah juga sangat membantu!_ 💪"
+  },
+  {
+    "keywords": ["pensiun guru", "guru keluar", "guru baru", "info guru pengganti", "guru resign"],
+    "question": "Ada info kalau guru atau wali kelas anak saya diganti?",
+    "answer": "👨‍🏫 Info mengenai perubahan wali kelas atau guru akan disampaikan langsung oleh *pihak sekolah* melalui grup WhatsApp kelas atau surat resmi.\n\n_Pantau pengumuman resmi dari sekolah ya, Bapak/Ibu._ 🙏"
+  },
+  {
+    "keywords": ["sekolah hari sabtu", "masuk sabtu tidak", "sekolah 5 hari", "hari efektif sekolah", "jadwal masuk sekolah"],
+    "question": "Apakah sekolah masuk hari Sabtu?",
+    "answer": "📅 Jadwal hari efektif sekolah mengikuti kebijakan Dinas Pendidikan dan sekolah.\n\nUntuk info apakah ada kegiatan di hari Sabtu, silakan tanyakan ke *wali kelas* atau *Tata Usaha*.\n\n_Jadwal bisa berubah sesuai program sekolah._ 🙏"
+  },
+  {
+    "keywords": ["program unggulan", "kelas unggulan", "kelas khusus", "kelas prestasi", "kelas akselerasi"],
+    "question": "Apakah ada kelas unggulan di SD Muhammadiyah 3?",
+    "answer": "⭐ Untuk informasi mengenai program atau kelas unggulan yang tersedia, silakan tanyakan ke *Tata Usaha* atau *Kepala Sekolah*.\n\n_Sekolah berkomitmen memberikan pendidikan terbaik untuk semua siswa._ 🌟"
+  },
+  {
+    "keywords": ["anak tidak mau makan", "bekal sekolah", "anak tidak makan di sekolah", "kebiasaan makan anak"],
+    "question": "Anak saya tidak mau makan di sekolah, apakah ada perhatian dari guru?",
+    "answer": "🍱 Guru kelas biasanya memperhatikan kebiasaan makan siswa, terutama untuk siswa kelas kecil.\n\nJika Anda khawatir dengan pola makan anak, konsultasikan dengan *wali kelas* untuk mendapat perhatian khusus.\n\n_Komunikasi yang baik dengan guru sangat membantu._ 🙏"
+  },
+  {
+    "keywords": ["cara kirim tugas", "tugas online", "pengumpulan tugas", "format tugas", "submit tugas"],
+    "question": "Bagaimana cara mengirimkan tugas anak jika tidak masuk sekolah?",
+    "answer": "📤 Tata cara pengiriman tugas saat tidak masuk berbeda-beda tiap kelas.\n\nSilakan tanyakan kepada *wali kelas* mengenai cara pengumpulan tugas yang diizinkan (WhatsApp, platform digital, dll).\n\n_Pastikan tugas tetap dikerjakan meski tidak hadir ya._ 📚"
+  },
+  {
+    "keywords": ["kegiatan agustus", "hari kemerdekaan sekolah", "17 agustus sekolah", "peringatan kemerdekaan"],
+    "question": "Apakah ada kegiatan HUT Kemerdekaan di sekolah?",
+    "answer": "🇮🇩 SD Muhammadiyah 3 Samarinda biasanya memperingati *HUT Kemerdekaan RI* dengan berbagai kegiatan.\n\nInfo jadwal dan bentuk kegiatan akan diumumkan melalui *wali kelas* dan grup kelas.\n\n_Merdeka! 🎉_"
+  },
+  {
+    "keywords": ["informasi kesehatan siswa", "riwayat kesehatan anak", "alergi siswa", "data kesehatan sekolah"],
+    "question": "Di mana saya bisa melaporkan kondisi kesehatan atau alergi anak ke sekolah?",
+    "answer": "🏥 Informasi kondisi kesehatan dan alergi anak sangat penting untuk disampaikan ke *wali kelas* dan *petugas UKS* sekolah.\n\nSampaikan info ini sejak awal tahun ajaran agar sekolah bisa memberikan penanganan yang tepat.\n\n_Kesehatan anak adalah prioritas bersama._ 🙏"
+  },
+  {
+    "keywords": ["cara komplain tagihan", "tagihan salah", "tagihan tidak sesuai", "protes tagihan", "keberatan bayar"],
+    "question": "Saya merasa ada tagihan yang tidak sesuai, bagaimana cara komplainnya?",
+    "answer": "💬 Jika ada tagihan yang Anda rasa tidak sesuai, silakan hubungi *Tata Usaha* sekolah dengan membawa:\n\n• Bukti pembayaran sebelumnya\n• Detail tagihan yang dipertanyakan (bisa screenshot dari bot ini)\n\n_Tim TU akan memverifikasi dan memberikan klarifikasi._ 🙏"
+  },
+  {
+    "keywords": ["kelas berapa cocok", "anak masuk kelas berapa", "penempatan kelas", "kelas sesuai usia", "tes masuk sekolah"],
+    "question": "Anak saya umur 6 tahun, masuk kelas berapa?",
+    "answer": "🎒 Anak usia 6-7 tahun biasanya masuk *kelas 1 SD*.\n\nAda beberapa sekolah yang melakukan *tes kesiapan* sebelum masuk kelas 1.\n\nUntuk info penempatan kelas di SD Muhammadiyah 3, silakan hubungi *Tata Usaha* sekolah. 🙏"
+  },
+  {
+    "keywords": ["nilai afektif", "penilaian sikap", "rapor sikap", "nilai kelakuan", "raport karakter"],
+    "question": "Apa itu penilaian sikap dan bagaimana pengaruhnya ke rapor?",
+    "answer": "📊 *Penilaian sikap (afektif)* mencerminkan karakter dan perilaku siswa di sekolah, meliputi kejujuran, disiplin, tanggung jawab, dan lainnya.\n\nNilai sikap terpisah dari nilai akademik di rapor namun sama pentingnya.\n\n_Info detail tersedia melalui wali kelas._ 🙏"
+  },
+  {
+    "keywords": ["sekolah tatap muka", "kelas online", "belajar daring", "sekolah luring", "belajar dari rumah"],
+    "question": "Apakah sekolah sudah sepenuhnya tatap muka?",
+    "answer": "🏫 Saat ini kegiatan belajar mengajar di SD Muhammadiyah 3 Samarinda berjalan secara *tatap muka*.\n\nJika ada perubahan kebijakan, akan diumumkan melalui wali kelas dan surat resmi.\n\n_Info terkini selalu tersedia dari sekolah._ 🙏"
+  },
+  {
+    "keywords": ["pelajaran komputer", "TIK sekolah", "lab komputer", "pelajaran teknologi", "komputer sd"],
+    "question": "Apakah ada pelajaran komputer atau TIK di SD Muhammadiyah 3?",
+    "answer": "💻 Untuk informasi mata pelajaran teknologi/komputer yang tersedia, silakan tanyakan ke *wali kelas* atau *Tata Usaha*.\n\n_Literasi digital merupakan bagian penting dari pendidikan masa kini._ 🌟"
+  },
+  {
+    "keywords": ["kegiatan pentas seni", "pentas seni sekolah", "pagelaran seni", "festival sekolah", "pekan seni"],
+    "question": "Apakah ada kegiatan pentas seni di sekolah?",
+    "answer": "🎭 Kegiatan seni dan budaya merupakan bagian dari pengembangan siswa di sekolah.\n\nInfo mengenai jadwal pentas seni atau festival sekolah akan diumumkan melalui *wali kelas* dan grup kelas.\n\n_Dukung bakat dan kreativitas anak!_ 🌟"
+  },
+  {
+    "keywords": ["sumbangan sukarela", "infak sekolah", "sumbangan sekolah", "iuran sukarela", "donasi ke sekolah"],
+    "question": "Apakah ada iuran atau sumbangan sukarela di sekolah?",
+    "answer": "💰 Untuk informasi mengenai iuran atau sumbangan di luar tagihan resmi, silakan tanyakan ke *Tata Usaha* atau *Komite Sekolah*.\n\n_Semua iuran resmi tercantum dalam sistem tagihan yang bisa dicek via bot ini._ 🙏"
+  },
+  {
+    "keywords": ["tidak bisa chat bot", "bot tidak aktif", "chat wa sekolah error", "tidak ada balasan bot", "bot offline"],
+    "question": "Bot tidak aktif atau tidak ada balasan sama sekali, bagaimana?",
+    "answer": "🔧 Jika bot benar-benar tidak merespons dalam waktu lama, mungkin sedang ada *pemeliharaan sistem*.\n\nSilakan coba lagi setelah beberapa saat, atau hubungi *Tata Usaha* sekolah secara langsung untuk keperluan mendesak.\n\n_Mohon maaf atas ketidaknyamanannya._ 🙏"
+  },
+  {
+    "keywords": ["dua anak di sdm3", "anak lebih dari satu", "saudara di sekolah yang sama", "cek tagihan dua anak"],
+    "question": "Saya punya 2 anak di SDM 3, bisa cek tagihan keduanya?",
+    "answer": "👨‍👩‍👧‍👦 Tentu bisa! Cukup kirimkan *NISN masing-masing anak* secara bergantian ke bot ini.\n\nSetiap NISN akan menampilkan tagihan siswa yang bersangkutan.\n\n_Pastikan nomor WA Anda terdaftar untuk kedua anak ya._ 😊"
+  },
+  {
+    "keywords": ["bayar via gopay", "bayar via ovo", "bayar via dana", "dompet digital sekolah", "e-wallet bayar spp"],
+    "question": "Apakah pembayaran bisa menggunakan dompet digital seperti GoPay atau OVO?",
+    "answer": "📱 Untuk metode pembayaran yang tersedia (termasuk dompet digital), silakan cek *Virtual Account* yang tampil setelah kirim NISN.\n\nInfo lengkap metode pembayaran yang diterima juga bisa ditanyakan ke *Tata Usaha* sekolah.\n\n_Pilih metode yang paling mudah untuk Anda._ 😊"
+  },
+  {
+    "keywords": ["bayar di mini market", "bayar indomaret alfamart", "bayar spp di minimarket", "bayar via minimarket"],
+    "question": "Bisa bayar tagihan sekolah di minimarket seperti Indomaret/Alfamart?",
+    "answer": "🏪 Kemampuan pembayaran via minimarket bergantung pada *bank penerbit VA* yang digunakan.\n\nCek detail VA yang ditampilkan setelah kirim NISN — ada info bank yang bisa digunakan.\n\n_Untuk kepastian, tanyakan ke Tata Usaha sekolah._ 🙏"
+  },
+  {
+    "keywords": ["jadwal libur ramadan", "libur puasa sekolah", "sekolah saat ramadan", "jadwal ramadan"],
+    "question": "Apakah ada penyesuaian jam sekolah saat bulan Ramadan?",
+    "answer": "🌙 *Jadwal Sekolah di Bulan Ramadan*\n\nBiasanya sekolah menyesuaikan jam pelajaran selama bulan Ramadan sesuai kebijakan Dinas Pendidikan.\n\nPengumuman resmi akan disampaikan oleh *wali kelas* melalui grup WhatsApp kelas.\n\n_Ramadan Mubarak! 🤲_"
+  },
+  {
+    "keywords": ["kegiatan class meeting", "class meeting sekolah", "akhir semester kegiatan", "setelah ujian kegiatan"],
+    "question": "Setelah ujian semester ada kegiatan apa di sekolah?",
+    "answer": "🎯 Setelah ujian semester biasanya ada kegiatan *class meeting* berupa lomba antar kelas atau kegiatan non-akademik lainnya.\n\nInfo jadwal dan kegiatan pasca ujian akan diumumkan oleh *wali kelas*.\n\n_Tetap semangat dan nikmati setiap kegiatan sekolah!_ 🎉"
+  },
+  {
+    "keywords": ["dapat informasi ppdb", "kapan buka ppdb", "jadwal ppdb sdm3", "pendaftaran sd 2025", "ppdb sd muhammadiyah"],
+    "question": "Kapan pendaftaran siswa baru SD Muhammadiyah 3 dibuka?",
+    "answer": "📅 Jadwal *PPDB (Penerimaan Peserta Didik Baru)* SD Muhammadiyah 3 Samarinda biasanya dibuka menjelang tahun ajaran baru.\n\nUntuk info tanggal pasti dan kuota yang tersedia, silakan hubungi *Tata Usaha* sekolah atau pantau pengumuman resmi.\n\n_Segera daftarkan putra/putri Anda sebelum tempat penuh!_ 🙏"
+  },
+  {
+    "keywords": ["keluhan makanan kantin", "makanan tidak sehat", "jajan tidak sehat", "lapor makanan kantin"],
+    "question": "Saya khawatir makanan di kantin tidak sehat, bagaimana?",
+    "answer": "🍱 Kekhawatiran mengenai kelayakan makanan di sekolah bisa disampaikan ke *wali kelas* atau *Tata Usaha*.\n\nSekolah bertanggung jawab memastikan makanan yang dijual di lingkungan sekolah aman dan sehat.\n\n_Masukan Anda sangat berarti untuk perbaikan!_ 🙏"
+  },
+  {
+    "keywords": ["anak tidak betah sekolah", "anak sering minta pulang", "anak cemas sekolah", "anxiety anak sekolah"],
+    "question": "Anak saya sering minta pulang dan terlihat cemas di sekolah, apa yang harus saya lakukan?",
+    "answer": "💙 Pahami perasaan anak dengan mendengarkan ceritanya tanpa menghakimi.\n\nKonsultasikan situasi ini dengan *wali kelas* dan *guru BK* agar bisa ditangani bersama.\n\n_Dukungan orang tua dan sekolah yang solid sangat penting untuk anak._ 🙏"
+  },
+  {
+    "keywords": ["kenapa bayaran mahal", "biaya sekolah tinggi", "spp mahal", "tagihan sekolah banyak", "mahalnya sekolah"],
+    "question": "Mengapa biaya sekolah terasa tinggi? Untuk apa saja biaya itu?",
+    "answer": "💬 Biaya sekolah digunakan untuk operasional, fasilitas, gaji guru, dan berbagai program pendidikan berkualitas.\n\nUntuk rincian penggunaan biaya sekolah, silakan tanyakan ke *Tata Usaha* atau *Kepala Sekolah*.\n\n_Investasi terbaik untuk masa depan putra/putri Anda._ 🌟"
+  },
+  {
+    "keywords": ["terima kasih bot", "makasih wa sekolah", "bot sangat membantu", "bagus bot wa"],
+    "question": "Terima kasih, bot ini sangat membantu!",
+    "answer": "😊 Terima kasih atas apresiasinya, Bapak/Ibu!\n\nKami senang bot ini bisa membantu memudahkan akses informasi tagihan sekolah.\n\nJika ada pertanyaan lebih lanjut, *Tata Usaha* SD Muhammadiyah 3 Samarinda siap membantu. 🙏🏫"
+  },
+  {
+    "keywords": ["formulir pendaftaran", "download formulir", "formulir online", "form pendaftaran sdm3"],
+    "question": "Apakah ada formulir pendaftaran online untuk SD Muhammadiyah 3?",
+    "answer": "📝 Untuk info formulir pendaftaran (online maupun offline), silakan hubungi *Tata Usaha* SD Muhammadiyah 3 Samarinda.\n\nBeberapa sekolah menyediakan formulir digital — konfirmasikan ke sekolah untuk prosedur terbaru.\n\n_Jangan sampai ketinggalan pendaftaran!_ 😊"
+  },
+  {
+    "keywords": ["wa grup kelas", "masuk grup whatsapp kelas", "grup wa sekolah", "gabung grup orang tua"],
+    "question": "Bagaimana cara masuk ke grup WhatsApp kelas anak saya?",
+    "answer": "📱 Untuk bergabung di grup WhatsApp kelas, silakan hubungi *wali kelas* putra/putri Anda.\n\nWali kelas yang akan menambahkan nomor WA Anda ke grup yang sesuai.\n\n_Pastikan nomor WA yang digunakan aktif dan terdaftar di data sekolah._ 🙏"
+  }
+]

@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Log;
  *  - Intent detection dari teks bebas
  *  - Routing ke handler yang sesuai
  *  - Format pesan balasan
+ *  - FAQ matching dari faq-prompt.json
  *
  * States:
  *  new          → user belum pernah chat / session expired
@@ -30,9 +31,102 @@ class WhatsAppBotService
     // Prefix cache key
     private const SESSION_PREFIX = 'wa_session:';
 
+    // Path ke file FAQ JSON (relatif terhadap base_path())
+    private const FAQ_FILE = 'public/asset_dashboard/faq-prompt.json';
+
+    // Cache key untuk FAQ
+    private const FAQ_CACHE_KEY = 'wa_faq_data';
+
+    // TTL cache FAQ = 1 jam (agar update file tidak perlu restart)
+    private const FAQ_CACHE_TTL = 3600;
+
+    /** @var array<int, array{keywords: string[], question: string, answer: string}> */
+    private array $faqData = [];
+
     public function __construct(
         private readonly WhatsappMetaService $whatsapp
-    ) {}
+    ) {
+        $this->loadFaq();
+    }
+
+    // =========================================================================
+    // FAQ LOADER
+    // =========================================================================
+
+    /**
+     * Muat data FAQ dari faq-prompt.json
+     *
+     * File diletakkan di base_path() (root Laravel project).
+     * Hasil di-cache 1 jam via Redis untuk performa.
+     * Jika file tidak ditemukan atau JSON tidak valid, FAQ dinonaktifkan
+     * secara silent agar bot tetap berjalan normal.
+     */
+    private function loadFaq(): void
+    {
+        try {
+            $this->faqData = Cache::remember(self::FAQ_CACHE_KEY, self::FAQ_CACHE_TTL, function () {
+                $path = base_path(self::FAQ_FILE);
+
+                if (!file_exists($path)) {
+                    Log::channel('whatsapp')->warning('⚠️ FAQ file not found', ['path' => $path]);
+                    return [];
+                }
+
+                $raw = file_get_contents($path);
+                $decoded = json_decode($raw, true);
+
+                if (!is_array($decoded)) {
+                    Log::channel('whatsapp')->error('❌ FAQ JSON invalid', ['path' => $path]);
+                    return [];
+                }
+
+                Log::channel('whatsapp')->info('📚 FAQ loaded', ['count' => count($decoded)]);
+
+                return $decoded;
+            });
+        } catch (\Exception $e) {
+            Log::channel('whatsapp')->error('❌ FAQ load error', ['error' => $e->getMessage()]);
+            $this->faqData = [];
+        }
+    }
+
+    /**
+     * Paksa reload FAQ (invalidate cache) — berguna saat file diupdate
+     */
+    public function reloadFaq(): void
+    {
+        Cache::forget(self::FAQ_CACHE_KEY);
+        $this->loadFaq();
+    }
+
+    /**
+     * Cari FAQ yang cocok dengan teks input user
+     *
+     * Mengembalikan jawaban FAQ jika ada keyword yang cocok,
+     * atau null jika tidak ada yang match.
+     */
+    private function matchFaq(string $text): ?string
+    {
+        if (empty($this->faqData)) {
+            return null;
+        }
+
+        $lower = mb_strtolower(trim($text));
+
+        foreach ($this->faqData as $item) {
+            if (empty($item['keywords']) || empty($item['answer'])) {
+                continue;
+            }
+
+            foreach ($item['keywords'] as $keyword) {
+                if (str_contains($lower, mb_strtolower($keyword))) {
+                    return $item['answer'];
+                }
+            }
+        }
+
+        return null;
+    }
 
     // =========================================================================
     // ENTRY POINT - dipanggil dari WebhookController
@@ -94,11 +188,12 @@ class WhatsAppBotService
      *
      * Priority order:
      *  1. Angka tepat 10 digit  → nisn_input
-     *  2. Keyword pembayaran    → check_payment
+     *  2. Keyword pembayaran    → check_payment / recheck
      *  3. Recheck / refresh     → recheck
      *  4. Greeting              → greeting
      *  5. Bantuan / help        → help
-     *  6. Semua lainnya         → unknown
+     *  6. FAQ match             → faq
+     *  7. Semua lainnya         → unknown
      */
     private function detectIntent(string $text, string $state): string
     {
@@ -151,11 +246,20 @@ class WhatsAppBotService
         $helpKeywords = ['help', 'bantuan', 'panduan', 'cara', 'gimana', 'bagaimana', 'petunjuk', '?'];
         foreach ($helpKeywords as $kw) {
             if (str_contains($lower, $kw)) {
+                // Cek FAQ dulu — mungkin pertanyaan spesifik
+                if ($this->matchFaq($text) !== null) {
+                    return 'faq';
+                }
                 return 'help';
             }
         }
 
-        // --- 7. Default berdasarkan state ---
+        // --- 7. FAQ match ---
+        if ($this->matchFaq($text) !== null) {
+            return 'faq';
+        }
+
+        // --- 8. Default berdasarkan state ---
         if ($state === 'waiting_nisn') {
             // User kirim sesuatu tapi bukan NISN 10 digit
             return 'invalid_nisn_format';
@@ -186,6 +290,7 @@ class WhatsAppBotService
             'check_payment_intent' => $this->handleCheckPaymentIntent($phone, $profileName, $session),
             'recheck'              => $this->handleRecheck($phone, $session),
             'invalid_nisn_format'  => $this->handleInvalidNisn($phone),
+            'faq'                  => $this->handleFaq($phone, $messageText, $session),
             'help'                 => $this->handleHelp($phone, $session),
             'unknown_verified'     => $this->handleUnknownVerified($phone, $session),
             'unknown_new'          => $this->handleUnknownNew($phone, $profileName, $session),
@@ -301,6 +406,39 @@ class WhatsAppBotService
     }
 
     /**
+     * Jawab pertanyaan dari FAQ
+     *
+     * Sesi tidak berubah — FAQ bersifat informatif dan tidak menginterupsi
+     * alur verifikasi NISN. Jika user sudah verified, tambahkan reminder
+     * untuk cek tagihan di akhir pesan.
+     */
+    private function handleFaq(string $phone, string $messageText, array $session): string
+    {
+        $answer = $this->matchFaq($messageText);
+
+        if (!$answer) {
+            // Fallback: seharusnya tidak sampai sini karena intent sudah match
+            return $this->handleHelp($phone, $session);
+        }
+
+        Log::channel('whatsapp')->info('📖 FAQ matched', [
+            'phone'   => $this->maskPhone($phone),
+            'message' => mb_substr($messageText, 0, 50),
+        ]);
+
+        // Jika user belum verified, tambahkan prompt NISN setelah jawaban FAQ
+        if ($session['state'] !== 'verified') {
+            $answer .= "\n\n━━━━━━━━━━━━━━━━━\n"
+                . "💡 Untuk cek tagihan, kirimkan *NISN* putra/putri Anda (10 digit).";
+        } else {
+            $answer .= "\n\n━━━━━━━━━━━━━━━━━\n"
+                . "💡 Ketik *cek* atau *1* untuk melihat tagihan terbaru.";
+        }
+
+        return $answer;
+    }
+
+    /**
      * Bantuan umum
      */
     private function handleHelp(string $phone, array $session): string
@@ -312,9 +450,9 @@ class WhatsAppBotService
             . "━━━━━━━━━━━━━━━━━\n\n"
             . "Layanan ini membantu Anda mengecek informasi tagihan sekolah.\n\n"
             . "*Cara menggunakan:*\n"
-            . "1️⃣ Kirimkan *NISN* putra/putri Anda (10 digit)\n"
-            . "2️⃣ Sistem akan menampilkan tagihan dan riwayat pembayaran\n"
-            . "3️⃣ Ketik *cek* atau *1* untuk memperbarui data\n\n"
+            . "1. Kirimkan *NISN* putra/putri Anda (10 digit)\n"
+            . "2. Sistem akan menampilkan tagihan dan riwayat pembayaran\n"
+            . "3. Ketik *cek* atau *1* untuk memperbarui data\n\n"
             . "*Status Anda:* {$nisn}\n\n"
             . "━━━━━━━━━━━━━━━━━\n"
             . "📞 Butuh bantuan lebih lanjut?\nHubungi Tata Usaha sekolah.";

@@ -25,7 +25,7 @@
         "midtrans/midtrans-php": "^2.5",
         "php-flasher/flasher-toastr-laravel": "*",
         "php-open-source-saver/jwt-auth": "^2.3",
-        "predis/predis": "^3.0",
+        "predis/predis": "^3.4",
         "spatie/laravel-activitylog": "^4.7",
         "spatie/laravel-csp": "^2.9",
         "spatie/laravel-data": "^3.8",
