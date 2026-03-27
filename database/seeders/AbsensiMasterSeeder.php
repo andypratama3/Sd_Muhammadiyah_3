@@ -27,9 +27,9 @@ class AbsensiMasterSeeder extends Seeder
                 'jenis_pegawai' => 'guru',
                 'hari'          => $hari,
                 'jam_masuk'     => '06:45:00',
-                'batas_masuk'   => '07:15:00',
-                'jam_pulang'    => '13:15:00',
-                'batas_pulang'  => '13:15:00',
+                'batas_masuk'   => '07:00:00',  // Lewat jam ini = terlambat
+                'jam_pulang'    => '14:15:00',
+                'batas_pulang'  => '14:15:00',  // Boleh pulang mulai jam ini
                 'is_default'    => false,
                 'created_at'    => now(),
                 'updated_at'    => now(),
@@ -67,9 +67,9 @@ class AbsensiMasterSeeder extends Seeder
                 'jenis_pegawai' => 'tenaga-pendidikan',
                 'hari'          => $hari,
                 'jam_masuk'     => '06:45:00',
-                'batas_masuk'   => '07:15:00',
-                'jam_pulang'    => '13:15:00',
-                'batas_pulang'  => '13:15:00',
+                'batas_masuk'   => '07:00:00',  // Lewat jam ini = terlambat
+                'jam_pulang'    => '14:15:00',
+                'batas_pulang'  => '14:15:00', 
                 'is_default'    => false,
                 'created_at'    => now(),
                 'updated_at'    => now(),
@@ -107,9 +107,9 @@ class AbsensiMasterSeeder extends Seeder
                 'jenis_pegawai' => 'shadow-teacher',
                 'hari'          => $hari,
                 'jam_masuk'     => '06:45:00',
-                'batas_masuk'   => '07:15:00',
-                'jam_pulang'    => '13:15:00',
-                'batas_pulang'  => '13:15:00',
+                'batas_masuk'   => '07:00:00',  // Lewat jam ini = terlambat
+                'jam_pulang'    => '14:15:00',
+                'batas_pulang'  => '14:15:00', 
                 'is_default'    => false,
                 'created_at'    => now(),
                 'updated_at'    => now(),
