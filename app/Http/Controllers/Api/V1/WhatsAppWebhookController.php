@@ -153,6 +153,15 @@ class WhatsAppWebhookController extends Controller
 
             $profileName = $value['contacts'][0]['profile']['name'] ?? 'Bapak/Ibu';
 
+             // ✅ TAMBAHKAN INI — Filter nomor provider / operator
+            if ($this->isBlockedSender($from, $profileName)) {
+                Log::channel('whatsapp')->info('🚫 Ignored: blocked sender', [
+                    'from' => substr($from, 0, 4) . '****',
+                    'name' => $profileName,
+                ]);
+                return; 
+            }
+
             Log::channel('whatsapp')->info('📬 Incoming message', [
                 'from' => substr($from, 0, 4) . '****',
                 'name' => $profileName,
@@ -380,6 +389,74 @@ class WhatsAppWebhookController extends Controller
         } catch (\Exception $e) {
             Log::channel('whatsapp')->error('❌ Store status error', ['error' => $e->getMessage()]);
         }
+    }
+
+    private function isBlockedSender(string $phone, string $profileName = ''): bool
+    {
+        $cleaned = preg_replace('/\D/', '', $phone);
+
+        // ── 1. Shortcode: nomor ≤ 7 digit (3636, 1414, 185, dll.) ────────────
+        if (strlen($cleaned) <= 7) {
+            return true;
+        }
+
+        // ── 2. Nomor provider Indonesia yang dikenal ──────────────────────────
+        $blockedNumbers = [
+            // Telkomsel
+            '6281100008080', '6208001000800', '62811000',
+            // Indosat / IM3 / Mentari
+            '6285500185',    '6285500186',    '6285500000185',
+            // XL / Axis
+            '6281700817',    '6281789817',
+            // Tri
+            '628985001234',
+            // Smartfren
+            '628817777333',
+        ];
+
+        foreach ($blockedNumbers as $blocked) {
+            if (str_starts_with($cleaned, $blocked)) {
+                return true;
+            }
+        }
+
+        // ── 3. Prefix nomor layanan & call center umum ────────────────────────
+        $blockedPrefixes = [
+            '6214',   // 14xxx — call center Indonesia (1400x, 1414, 14000, dll.)
+            '6215',   // 15xxx — call center Indonesia (1500x, dll.)
+            '1650',   // US automated sender
+            '1844', '1855', '1866', '1877', '1888', // US toll-free automated
+        ];
+
+        foreach ($blockedPrefixes as $prefix) {
+            if (str_starts_with($cleaned, $prefix)) {
+                return true;
+            }
+        }
+
+        // ── 4. Display name mengandung kata kunci provider / sistem ───────────
+        if ($profileName !== '') {
+            $lowerName = mb_strtolower(trim($profileName));
+
+            $blockedNames = [
+                'telkomsel', 'indosat', 'ooredoo', 'xl axiata', 'xl ', 'axis',
+                'smartfren', 'tri indonesia', '3 indonesia', 'by.u', 'byu',
+                'whatsapp',  'meta', 'facebook',
+                'tokopedia', 'shopee', 'lazada', 'blibli',
+                'gojek',     'grab',  'maxim',
+                'bca',  'bni', 'bri', 'mandiri', 'bsi', 'danamon', 'cimb',
+                'ovo',  'dana', 'linkaja', 'gopay', 'shopeepay',
+                'pln',  'bpjs', 'samsat',
+            ];
+
+            foreach ($blockedNames as $kw) {
+                if (str_contains($lowerName, $kw)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     // =========================================================================
