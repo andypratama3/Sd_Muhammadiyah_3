@@ -555,7 +555,7 @@ class AbsensiService
             $statusMasuk    = $nowHM <= $jadwalHM ? 'tepat_waktu' : 'terlambat';
         }
 
-        $rp_masuk = ($this->isRoleDapatPoin($jenisPegawai) && $statusMasuk === 'tepat_waktu') ? 4000 : 4000;
+        $rp_masuk = ($this->isRoleDapatPoin($jenisPegawai) && $statusMasuk === 'tepat_waktu') ? 4000 : 0;
 
         // Cek duplikasi
         $absensiHariIni = Absensi::where('karyawan_id', $karyawan->id)
@@ -684,11 +684,16 @@ class AbsensiService
         if ($this->isRoleTerbatas($jenisPegawai) && $absensi->jamKerja) {
             $batasPulang  = Carbon::parse($absensi->jamKerja->batas_pulang, 'Asia/Makassar');
             $statusPulang = $now->lessThan($batasPulang) ? 'pulang_cepat' : 'tepat_waktu';
-            $rp_pulang    = ($this->isRoleDapatPoin($jenisPegawai) && $statusPulang === 'tepat_waktu') ? 4000 : 0;
+
+            // ✅ Hanya guru & tenaga-pendidikan yang dapat rp_pulang
+            $rp_pulang = ($this->isRoleDapatPoin($jenisPegawai) && $statusPulang === 'tepat_waktu') ? 4000 : 0;
 
         } elseif ($absensi->jamKerja && $absensi->jamKerja->batas_pulang) {
             $batasPulang  = Carbon::parse($absensi->jamKerja->batas_pulang, 'Asia/Makassar');
             $statusPulang = $now->lessThan($batasPulang) ? 'pulang_cepat' : 'tepat_waktu';
+
+            // ✅ Jenis pegawai lain (shadow-teacher, umum) tetap rp_pulang = 0
+            $rp_pulang = ($this->isRoleDapatPoin($jenisPegawai) && $statusPulang === 'tepat_waktu') ? 4000 : 0;
         }
 
         try {
