@@ -15,10 +15,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('app:sync-wilayah-command')->yearly();
         $schedule->command('app:site-map-command')->daily();
 
-        // $schedule->command('absensi:generate-harian')
-        //     ->dailyAt('16:00') // 16:00 WITA
-        //     ->timezone('Asia/Makassar')
-        //     ->appendOutputTo(storage_path('logs/absensi-generate.log'));
+        $schedule->command('absensi:generate-harian')
+            ->dailyAt('16:00') // 16:00 WITA
+            ->timezone('Asia/Makassar')
+            ->appendOutputTo(storage_path('logs/absensi-generate.log'));
             
         // $schedule->command('app:site-map-command')->sundays();
         // $schedule->command('app:charge-payment-xendit')->sundays();
