@@ -49,10 +49,6 @@ class WhatsAppBotService
     // MENU UTAMA — 10 Pilihan
     // =========================================================================
 
-    /**
-     * Definisi menu utama bot.
-     * Setiap item: emoji, label, intent yang dipicu.
-     */
     private const MAIN_MENU = [
         1  => ['label' => 'Cek Tagihan / SPP',            'intent' => 'check_payment_intent', 'emoji' => '💳'],
         2  => ['label' => 'Cara Pembayaran',               'intent' => 'faq_cara_bayar',       'emoji' => '🏦'],
@@ -67,13 +63,13 @@ class WhatsAppBotService
     ];
 
     // =========================================================================
-    // KEYWORD MAPS — sentralisasi semua keyword agar mudah di-maintain
+    // KEYWORD MAPS
     // =========================================================================
 
     private const KEYWORDS_ISLAMIC_GREETING = [
         'assalamualaikum', 'assalamu alaikum', "assalamu'alaikum",
         'waalaikumsalam', 'wa alaikum salam', 'alaikumsalam',
-        'assalam', 'aslm', 'ass ',
+        'assalam', 'aslm',
     ];
 
     private const KEYWORDS_GREETING = [
@@ -81,7 +77,7 @@ class WhatsAppBotService
         'selamat pagi', 'selamat siang', 'selamat sore', 'selamat malam',
         'met pagi', 'met siang', 'met sore', 'met malam',
         'good morning', 'good afternoon', 'good evening', 'good night',
-        'permisi', 'pagi ', 'sore ', 'malam ',
+        'permisi', 'pagi', 'sore', 'malam',
     ];
 
     private const KEYWORDS_THANKS = [
@@ -94,8 +90,8 @@ class WhatsAppBotService
     ];
 
     private const KEYWORDS_GOODBYE = [
-        'sampai jumpa', 'dadah', 'bye', 'bye bye', 'selamat tinggal',
-        'sampai ketemu', 'wassalam', 'wassalamualaikum', 'wslm', 'ws',
+        'sampai jumpa', 'dadah', 'bye bye', 'selamat tinggal',
+        'sampai ketemu', 'wassalam', 'wassalamualaikum', 'wslm',
         'sudah cukup', 'cukup sekian', 'sekian', 'itu saja', 'selesai',
         'ok makasih', 'oke makasih', 'ok terima kasih', 'oke terima kasih',
         'baik terima kasih', 'siap terima kasih', 'ya sudah',
@@ -119,7 +115,7 @@ class WhatsAppBotService
         'spp', 'bayar', 'tagihan', 'tunggakan', 'cicilan',
         'pembayaran', 'lunas', 'belum bayar', 'cek bayar',
         'info bayar', 'biaya', 'iuran', 'dpp', 'seragam',
-        'virtual account', 'va ', 'transfer', 'nunggak',
+        'virtual account', 'transfer', 'nunggak',
     ];
 
     private const KEYWORDS_RECHECK = [
@@ -128,12 +124,83 @@ class WhatsAppBotService
     ];
 
     private const KEYWORDS_HELP = [
-        'help', 'bantuan', 'panduan', 'cara', 'gimana', 'bagaimana',
-        'petunjuk', 'bisa apa', 'apa yang bisa', 'fitur', '?',
+        'help', 'bantuan', 'panduan', 'gimana', 'bagaimana',
+        'petunjuk', 'bisa apa', 'apa yang bisa', 'fitur',
     ];
 
     // =========================================================================
-    // MENU-SPECIFIC FAQ KEYWORDS — mapping menu intent ke keyword FAQ JSON
+    // AUTOMATED MESSAGE DETECTION — Filter pesan dari provider / bot lain
+    // =========================================================================
+
+    /**
+     * Keyword yang mengindikasikan pesan otomatis dari provider/operator/bot lain.
+     * Semua dalam huruf kecil untuk pencocokan case-insensitive.
+     */
+    private const AUTOMATED_MESSAGE_KEYWORDS = [
+        // Pola umum auto-reply
+        'terima kasih sudah menghubungi',
+        'this is an automated',
+        'this is an auto',
+        'pesan otomatis',
+        'auto reply',
+        'autoreply',
+        'auto-reply',
+        'layanan pelanggan otomatis',
+        'do not reply',
+        'do not respond',
+        'jangan balas',
+        'tidak perlu membalas',
+        'mohon tidak membalas',
+        'please do not reply',
+        'noreply',
+        'no-reply',
+
+        // Nama bot / layanan provider Indonesia yang diketahui
+        'indira',           // Bot IM3 Ooredoo
+        'im3 ooredoo',
+        'myim3',
+        'tri indonesia',
+        'myxl',
+        'xl axiata',
+        'telkomsel',
+        'mytelkomsel',
+        'smartfren',
+        'by.u',
+        'axis',
+
+        // Pola notifikasi sistem
+        'notifikasi sistem',
+        'system notification',
+        'pesan ini dikirim secara otomatis',
+        'this message was sent automatically',
+        'layanan ini tidak dapat menerima',
+        'nomor ini tidak dapat dihubungi',
+    ];
+
+    /**
+     * Nama profil yang diketahui sebagai sistem / provider.
+     * Semua dalam huruf kecil untuk pencocokan case-insensitive.
+     */
+    private const AUTOMATED_PROFILE_NAMES = [
+        'indira',
+        'im3',
+        'im3 ooredoo',
+        'tri',
+        'telkomsel',
+        'xl',
+        'smartfren',
+        'axis',
+        'by.u',
+        'myxl',
+        'system',
+        'notifikasi',
+        'notification',
+        'info',
+        'alert',
+    ];
+
+    // =========================================================================
+    // MENU-SPECIFIC FAQ KEYWORDS
     // =========================================================================
 
     private const MENU_FAQ_KEYWORDS = [
@@ -191,10 +258,6 @@ class WhatsAppBotService
         $this->loadFaq();
     }
 
-    /**
-     * Cari FAQ yang cocok dengan teks input user.
-     * Mengembalikan jawaban atau null jika tidak ada yang match.
-     */
     private function matchFaq(string $text): ?string
     {
         if (empty($this->faqData)) {
@@ -209,7 +272,7 @@ class WhatsAppBotService
             }
 
             foreach ($item['keywords'] as $keyword) {
-                if (str_contains($lower, mb_strtolower($keyword))) {
+                if (str_contains($lower, mb_strtolower((string) $keyword))) {
                     return $item['answer'];
                 }
             }
@@ -218,10 +281,6 @@ class WhatsAppBotService
         return null;
     }
 
-    /**
-     * Cari FAQ berdasarkan keyword intent menu tertentu.
-     * Digunakan ketika user memilih nomor menu.
-     */
     private function matchFaqByMenuIntent(string $menuIntent): ?string
     {
         $keywords = self::MENU_FAQ_KEYWORDS[$menuIntent] ?? [];
@@ -237,14 +296,94 @@ class WhatsAppBotService
     }
 
     // =========================================================================
+    // AUTOMATED MESSAGE FILTER
+    // =========================================================================
+
+    /**
+     * Deteksi apakah pesan berasal dari provider/operator/bot otomatis.
+     *
+     * Cek berlapis:
+     *  1. Nomor shortcode (< 8 digit setelah kode negara) → pasti sistem
+     *  2. Profile name cocok dengan daftar nama sistem
+     *  3. Isi pesan mengandung keyword auto-reply
+     */
+    private function isAutomatedMessage(string $phone, string $messageText, string $profileName): bool
+    {
+        // --- 1. Cek nomor shortcode ---
+        // Nomor asli pengguna WhatsApp minimal 10 digit (62 + 8 digit lokal).
+        // Provider kadang pakai shortcode 4–6 digit.
+        $cleanPhone = preg_replace('/\D/', '', $phone);
+
+        // Hapus kode negara 62 sebelum menghitung panjang
+        if (str_starts_with($cleanPhone, '62')) {
+            $localPart = substr($cleanPhone, 2);
+        } else {
+            $localPart = ltrim($cleanPhone, '0');
+        }
+
+        if (strlen($localPart) < 8) {
+            Log::channel('whatsapp')->info('🚫 Shortcode number blocked', [
+                'phone' => $this->maskPhone($phone),
+            ]);
+            return true;
+        }
+
+        // --- 2. Cek profile name ---
+        $lowerName = mb_strtolower(trim($profileName));
+
+        foreach (self::AUTOMATED_PROFILE_NAMES as $automatedName) {
+            if ($lowerName === $automatedName || str_contains($lowerName, $automatedName)) {
+                Log::channel('whatsapp')->info('🚫 Automated profile name blocked', [
+                    'profile_name' => $profileName,
+                    'matched'      => $automatedName,
+                ]);
+                return true;
+            }
+        }
+
+        // --- 3. Cek isi pesan ---
+        $lowerText = mb_strtolower(trim($messageText));
+
+        foreach (self::AUTOMATED_MESSAGE_KEYWORDS as $keyword) {
+            if (str_contains($lowerText, $keyword)) {
+                Log::channel('whatsapp')->info('🚫 Automated message keyword blocked', [
+                    'phone'   => $this->maskPhone($phone),
+                    'keyword' => $keyword,
+                    'message' => mb_substr($messageText, 0, 60),
+                ]);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // =========================================================================
     // ENTRY POINT
     // =========================================================================
 
-    public function handle(string $phone, string $messageText, string $profileName = 'Bapak/Ibu'): void
+    public function handle(string $phone, string $messageText, string $profileName = 'Pengguna'): void
     {
         $startTime = microtime(true);
 
         try {
+            // ---------------------------------------------------------------
+            // GUARD: Abaikan pesan otomatis dari provider / bot lain
+            // ---------------------------------------------------------------
+            if ($this->isAutomatedMessage($phone, $messageText, $profileName)) {
+                return; // Tidak balas, tidak proses — diam saja
+            }
+
+            // ---------------------------------------------------------------
+            // GUARD: Abaikan pesan kosong atau terlalu pendek (< 1 karakter)
+            // ---------------------------------------------------------------
+            if (mb_strlen(trim($messageText)) === 0) {
+                Log::channel('whatsapp')->info('⏭️ Empty message ignored', [
+                    'phone' => $this->maskPhone($phone),
+                ]);
+                return;
+            }
+
             Log::channel('whatsapp')->info('🤖 Bot handle', [
                 'phone'   => $this->maskPhone($phone),
                 'message' => mb_substr($messageText, 0, 50),
@@ -268,6 +407,7 @@ class WhatsAppBotService
         } catch (\Exception $e) {
             Log::channel('whatsapp')->error('❌ Bot handle error', [
                 'error' => $e->getMessage(),
+                'trace' => mb_substr($e->getTraceAsString(), 0, 500),
                 'phone' => $this->maskPhone($phone),
             ]);
 
@@ -277,7 +417,7 @@ class WhatsAppBotService
                     "⚠️ *Sistem sedang mengalami gangguan*\n\nMohon coba beberapa saat lagi.\n\nJika masalah berlanjut, hubungi admin sekolah."
                 );
             } catch (\Exception) {
-                // Silent fail
+                // Silent fail — jangan lempar exception baru di sini
             }
         }
     }
@@ -322,36 +462,54 @@ class WhatsAppBotService
         }
 
         // --- 3. Pilihan menu (angka 1–10) atau "0" ---
+        // BUG FIX: Gunakan ^ dan $ agar "10" tidak salah match sebagai "1" + "0"
         if (preg_match('/^(10|[0-9])$/', $clean)) {
             if ($clean === '0') {
                 return 'back_to_menu';
             }
-            // Angka 1–10: jika di state menu → pilih menu, jika verified & "1" → recheck
             if ($state === 'menu') {
                 return 'menu_selection';
             }
+            // BUG FIX: Di state verified, angka 1 saja yang berarti recheck.
+            // Angka lain tidak diproses sebagai recheck agar tidak salah arah.
             if ($state === 'verified' && $clean === '1') {
                 return 'recheck';
             }
         }
 
         // --- 4. Back to menu keywords ---
+        // BUG FIX: Exact match dulu, baru str_contains, agar "menu" dalam kalimat
+        // panjang tidak selalu memicu back_to_menu.
         foreach (self::KEYWORDS_BACK_TO_MENU as $kw) {
-            if ($lower === $kw || str_contains($lower, $kw)) {
+            if ($lower === $kw) {
+                return 'back_to_menu';
+            }
+        }
+        // str_contains hanya untuk frasa multi-kata yang memang bermakna navigasi
+        $backPhrases = ['kembali ke menu', 'menu utama', 'daftar menu', 'tampilkan menu', 'mulai lagi'];
+        foreach ($backPhrases as $phrase) {
+            if (str_contains($lower, $phrase)) {
                 return 'back_to_menu';
             }
         }
 
-        // --- 5. Islamic greeting (sebelum greeting biasa agar tidak tertimpa) ---
+        // --- 5. Islamic greeting ---
         foreach (self::KEYWORDS_ISLAMIC_GREETING as $kw) {
             if (str_contains($lower, $kw)) {
                 return 'islamic_greeting';
             }
         }
 
-        // --- 6. Goodbye / penutup ---
+        // --- 6. Goodbye ---
+        // BUG FIX: "bye" sendiri juga bisa valid, tapi cegah "bye" di dalam kata lain
+        // dengan mengecek kata terisolasi jika keyword pendek.
         foreach (self::KEYWORDS_GOODBYE as $kw) {
-            if (str_contains($lower, $kw)) {
+            if (strlen($kw) <= 3) {
+                // Pastikan merupakan kata berdiri sendiri
+                if (preg_match('/\b' . preg_quote($kw, '/') . '\b/ui', $lower)) {
+                    return 'goodbye';
+                }
+            } elseif (str_contains($lower, $kw)) {
                 return 'goodbye';
             }
         }
@@ -365,14 +523,22 @@ class WhatsAppBotService
 
         // --- 8. Acknowledgement (exact match agar tidak overmatch) ---
         foreach (self::KEYWORDS_ACKNOWLEDGEMENT as $kw) {
-            if ($lower === $kw || $lower === $kw . '!' || $lower === $kw . '.') {
+            $stripped = rtrim($lower, '.!?,');
+            if ($stripped === $kw) {
                 return 'acknowledgement';
             }
         }
 
         // --- 9. Greeting biasa ---
+        // BUG FIX: Keyword seperti "pagi", "sore", "malam" yang pendek di-check
+        // sebagai whole-word agar tidak match di tengah kalimat seperti
+        // "saya mau tanya soal sore ini".
         foreach (self::KEYWORDS_GREETING as $kw) {
-            if (str_contains($lower, $kw)) {
+            if (strlen($kw) <= 5) {
+                if (preg_match('/\b' . preg_quote($kw, '/') . '\b/ui', $lower)) {
+                    return 'greeting';
+                }
+            } elseif (str_contains($lower, $kw)) {
                 return 'greeting';
             }
         }
@@ -384,7 +550,7 @@ class WhatsAppBotService
             }
         }
 
-        // --- 11. Recheck keywords ---
+        // --- 11. Recheck keywords (exact atau starts-with) ---
         foreach (self::KEYWORDS_RECHECK as $kw) {
             if ($lower === $kw || str_starts_with($lower, $kw . ' ')) {
                 return $state === 'verified' ? 'recheck' : 'check_payment_intent';
@@ -403,7 +569,7 @@ class WhatsAppBotService
             return 'faq';
         }
 
-        // --- 14. Angka selain NISN 10 digit ---
+        // --- 14. Angka selain NISN 10 digit saat waiting_nisn ---
         if (preg_match('/^\d+$/', $clean) && $state === 'waiting_nisn') {
             return 'invalid_nisn_format';
         }
@@ -473,9 +639,6 @@ class WhatsAppBotService
     // HANDLERS — SALAM & SOSIAL
     // =========================================================================
 
-    /**
-     * Balas assalamualaikum → tampilkan menu utama.
-     */
     private function handleIslamicGreeting(string $phone, string $profileName, array $session): string
     {
         $this->updateSession($phone, ['state' => 'menu']);
@@ -489,9 +652,6 @@ class WhatsAppBotService
             . $this->buildMainMenu();
     }
 
-    /**
-     * Salam biasa → tampilkan menu utama.
-     */
     private function handleGreeting(string $phone, string $profileName, array $session): string
     {
         $this->updateSession($phone, ['state' => 'menu']);
@@ -504,9 +664,6 @@ class WhatsAppBotService
             . $this->buildMainMenu();
     }
 
-    /**
-     * Terima kasih → respon hangat + hint shortcut.
-     */
     private function handleThanks(string $phone, array $session): string
     {
         $responses = [
@@ -517,7 +674,6 @@ class WhatsAppBotService
 
         $msg = $responses[array_rand($responses)];
 
-        // Tambahkan hint sesuai state
         if ($session['state'] === 'verified') {
             $msg .= "\n\nKetik *cek* untuk lihat tagihan terbaru,\natau *0* / *menu* untuk daftar pilihan lainnya. 🙏";
         } else {
@@ -527,9 +683,6 @@ class WhatsAppBotService
         return $msg;
     }
 
-    /**
-     * Pamit → balas hangat tanpa reset session.
-     */
     private function handleGoodbye(string $phone, array $session): string
     {
         $greeting = $this->getTimeGreeting();
@@ -541,9 +694,6 @@ class WhatsAppBotService
             . "Wassalamualaikum Warahmatullahi Wabarakatuh 🤲";
     }
 
-    /**
-     * Acknowledgement (oke, siap, dll) → respon singkat + hint.
-     */
     private function handleAcknowledgement(string $phone, array $session): string
     {
         if ($session['state'] === 'verified') {
@@ -561,9 +711,6 @@ class WhatsAppBotService
     // HANDLERS — MENU
     // =========================================================================
 
-    /**
-     * Bangun string menu utama.
-     */
     private function buildMainMenu(): string
     {
         $menu  = "Silakan pilih layanan yang Anda butuhkan\n";
@@ -581,9 +728,6 @@ class WhatsAppBotService
         return $menu;
     }
 
-    /**
-     * User memilih nomor dari menu (1–10).
-     */
     private function handleMenuSelection(string $phone, string $messageText, string $profileName, array $session): string
     {
         $no   = (int) trim($messageText);
@@ -609,15 +753,12 @@ class WhatsAppBotService
         };
     }
 
-    /**
-     * Kembali ke menu utama.
-     */
     private function handleBackToMenu(string $phone, array $session): string
     {
         $this->updateSession($phone, ['state' => 'menu']);
 
         $extra = '';
-        if ($session['state'] === 'verified' && $session['nisn']) {
+        if ($session['state'] === 'verified' && !empty($session['nisn'])) {
             $extra = "\n✅ _NISN {$session['nisn']} masih aktif. Ketik *cek* untuk lihat tagihan._\n";
         }
 
@@ -627,15 +768,10 @@ class WhatsAppBotService
             . $this->buildMainMenu();
     }
 
-    /**
-     * Tampilkan jawaban FAQ berdasarkan menu intent (pilihan 2–9).
-     */
     private function handleMenuFaq(string $phone, string $menuIntent, array $session): string
     {
-        // Coba match dari FAQ JSON terlebih dahulu
         $answer = $this->matchFaqByMenuIntent($menuIntent);
 
-        // Jika tidak ada, gunakan teks statis fallback
         if (!$answer) {
             $answer = $this->getFaqFallback($menuIntent);
         }
@@ -645,7 +781,6 @@ class WhatsAppBotService
             'intent' => $menuIntent,
         ]);
 
-        // Tambahkan footer navigasi
         $answer .= "\n\n━━━━━━━━━━━━━━━━━\n";
         $answer .= "Ketik *0* atau *menu* untuk kembali ke daftar pilihan.";
         if ($session['state'] === 'verified') {
@@ -655,9 +790,6 @@ class WhatsAppBotService
         return $answer;
     }
 
-    /**
-     * Fallback statis per menu intent jika FAQ JSON tidak match.
-     */
     private function getFaqFallback(string $menuIntent): string
     {
         return match ($menuIntent) {
@@ -736,9 +868,6 @@ class WhatsAppBotService
         };
     }
 
-    /**
-     * Pilihan 10: Tanya Bebas.
-     */
     private function handleFreeQuestion(string $phone, array $session): string
     {
         return "💬 *Tanya Bebas*\n\n"
@@ -756,12 +885,10 @@ class WhatsAppBotService
     // HANDLERS — PEMBAYARAN
     // =========================================================================
 
-    /**
-     * User sebut tagihan/SPP tapi belum verified → minta NISN.
-     */
     private function handleCheckPaymentIntent(string $phone, string $profileName, array $session): string
     {
-        if ($session['state'] === 'verified' && $session['nisn']) {
+        // BUG FIX: Jika sudah verified dan NISN ada, langsung recheck
+        if ($session['state'] === 'verified' && !empty($session['nisn'])) {
             return $this->handleRecheck($phone, $session);
         }
 
@@ -776,9 +903,6 @@ class WhatsAppBotService
             . "Ketik *0* atau *menu* untuk kembali.";
     }
 
-    /**
-     * User input NISN → validasi + query database.
-     */
     private function handleNisnInput(string $phone, string $messageText, string $profileName, array $session): string
     {
         $nisn = $this->extractNisn($messageText);
@@ -807,12 +931,9 @@ class WhatsAppBotService
         return $this->formatErrorMessage($result, $phone);
     }
 
-    /**
-     * User sudah verified → cek ulang tagihan.
-     */
     private function handleRecheck(string $phone, array $session): string
     {
-        if (!$session['nisn']) {
+        if (empty($session['nisn'])) {
             $this->updateSession($phone, ['state' => 'waiting_nisn']);
             return "Sesi Anda telah berakhir. Silakan kirimkan *NISN* kembali.\n\n_Contoh: 1234567890_";
         }
@@ -831,9 +952,6 @@ class WhatsAppBotService
         return $this->formatErrorMessage($result, $phone);
     }
 
-    /**
-     * Format NISN tidak valid.
-     */
     private function handleInvalidNisn(string $phone): string
     {
         return "⚠️ *Format tidak dikenali*\n\n"
@@ -851,9 +969,6 @@ class WhatsAppBotService
     // HANDLERS — FAQ & HELP
     // =========================================================================
 
-    /**
-     * Jawab pertanyaan dari FAQ JSON (tanya bebas / teks panjang).
-     */
     private function handleFaq(string $phone, string $messageText, array $session): string
     {
         $answer = $this->matchFaq($messageText);
@@ -876,12 +991,10 @@ class WhatsAppBotService
         return $answer;
     }
 
-    /**
-     * Bantuan umum + tampilkan menu.
-     */
     private function handleHelp(string $phone, array $session): string
     {
-        $nisnStatus = $session['nisn']
+        // BUG FIX: Gunakan empty() untuk hindari "null" tercetak sebagai string
+        $nisnStatus = !empty($session['nisn'])
             ? "✅ NISN: {$session['nisn']} (terverifikasi)"
             : "❌ NISN belum diinput";
 
@@ -898,12 +1011,10 @@ class WhatsAppBotService
             . $this->buildMainMenu();
     }
 
-    /**
-     * Verified tapi pesan tidak dikenali.
-     */
     private function handleUnknownVerified(string $phone, array $session): string
     {
-        $nama = $session['siswa_name'] ?? 'putra/putri Anda';
+        // BUG FIX: Gunakan empty() agar tidak tampilkan null sebagai string
+        $nama = !empty($session['siswa_name']) ? $session['siswa_name'] : 'putra/putri Anda';
 
         return "Maaf, perintah tidak dikenali. 🙏\n\n"
             . "Yang bisa saya bantu:\n"
@@ -914,9 +1025,6 @@ class WhatsAppBotService
             . "_Atau hubungi Tata Usaha untuk bantuan lebih lanjut._";
     }
 
-    /**
-     * User baru / session expired → tampilkan menu utama.
-     */
     private function handleUnknownNew(string $phone, string $profileName, array $session): string
     {
         $this->updateSession($phone, ['state' => 'menu']);
@@ -938,6 +1046,7 @@ class WhatsAppBotService
         try {
             $localPhone = $this->phoneToLocal($phone);
 
+            // REQUIREMENT: Ensure Siswa model has 'no_hp' column for phone verification
             Log::channel('whatsapp')->info('🔍 Query payment', [
                 'nisn'       => $nisn,
                 'phone_mask' => $this->maskPhone($phone),
@@ -966,8 +1075,8 @@ class WhatsAppBotService
                 ];
             }
 
-            $kelasAktif = $siswa->kelas->first();
-            $namaKelas  = $kelasAktif ? ($kelasAktif->name ?? '-') : '-';
+            // BUG FIX: Use safe operators to handle relationship safely
+            $namaKelas = $siswa->kelas?->first()?->name ?? $siswa->kelas?->name ?? '-';
 
             $charges = Charge::where('siswa_id', $siswa->id)
                 ->whereNull('deleted_at')
@@ -1009,8 +1118,8 @@ class WhatsAppBotService
                     'tagihan' => $tagihan->toArray(),
                     'lunas'   => $lunas->toArray(),
                     'summary' => [
-                        'jumlah_tagihan'           => $tagihan->count(),
-                        'total_tagihan_belum_bayar' => $totalBelumBayar,
+                        'jumlah_tagihan'            => $tagihan->count(),
+                        'total_tagihan_belum_bayar'  => $totalBelumBayar,
                     ],
                 ],
             ];
@@ -1031,12 +1140,12 @@ class WhatsAppBotService
 
     private function formatTagihanItem(Charge $charge): array
     {
-        $nominal = 'Rp ' . number_format($charge->gross_amount, 0, ',', '.');
+        $nominal = 'Rp ' . number_format((float) $charge->gross_amount, 0, ',', '.');
 
         $statusLabel = match ($charge->transaction_status) {
             'pending' => '⏳ Menunggu Pembayaran',
             'expired' => '❌ Kadaluarsa',
-            default   => $charge->transaction_status,
+            default   => (string) $charge->transaction_status,
         };
 
         return [
@@ -1053,7 +1162,7 @@ class WhatsAppBotService
 
     private function formatLunasItem(Charge $charge): array
     {
-        $nominal = 'Rp ' . number_format($charge->gross_amount, 0, ',', '.');
+        $nominal = 'Rp ' . number_format((float) $charge->gross_amount, 0, ',', '.');
 
         $tgl = $charge->transaction_time
             ? \Carbon\Carbon::parse($charge->transaction_time)->isoFormat('D MMM Y')
@@ -1097,7 +1206,7 @@ class WhatsAppBotService
                 $msg .= "   💰 {$t['nominal']}\n";
                 $msg .= "   📌 {$t['status']}\n";
                 if ($t['va_number'] !== '-' && $t['bank'] !== '-') {
-                    $bank = strtoupper($t['bank']);
+                    $bank = strtoupper((string) $t['bank']);
                     $msg .= "   🏦 {$bank} — VA: {$t['va_number']}\n";
                 }
                 if ($t['tanggal'] !== '-') {
@@ -1105,7 +1214,7 @@ class WhatsAppBotService
                 }
             }
 
-            $total = number_format($summary['total_tagihan_belum_bayar'], 0, ',', '.');
+            $total = number_format((float) $summary['total_tagihan_belum_bayar'], 0, ',', '.');
             $msg  .= "\n💳 *Total Tagihan: Rp {$total}*\n";
 
         } else {
@@ -1164,30 +1273,27 @@ class WhatsAppBotService
         $key     = self::SESSION_PREFIX . $phone;
         $session = Cache::get($key);
 
-        if (!$session) {
-            $session = [
-                'state'      => 'new',
-                'nisn'       => null,
-                'siswa_id'   => null,
-                'siswa_name' => null,
-                'created_at' => now()->timestamp,
-            ];
+        if (!$session || !is_array($session)) {
+            $session = $this->defaultSession();
             Cache::put($key, $session, self::SESSION_TTL);
         }
 
-        return $session;
+        // BUG FIX: Pastikan semua key yang dibutuhkan selalu ada
+        // agar tidak ada Undefined index error di handler
+        return array_merge($this->defaultSession(), $session);
     }
 
     private function updateSession(string $phone, array $data): void
     {
         $key     = self::SESSION_PREFIX . $phone;
-        $session = Cache::get($key, [
-            'state'      => 'new',
-            'nisn'       => null,
-            'siswa_id'   => null,
-            'siswa_name' => null,
-            'created_at' => now()->timestamp,
-        ]);
+        $session = Cache::get($key);
+
+        if (!$session || !is_array($session)) {
+            $session = $this->defaultSession();
+        } else {
+            // BUG FIX: Merge dengan default agar key tidak hilang
+            $session = array_merge($this->defaultSession(), $session);
+        }
 
         $session = array_merge($session, $data, ['last_activity' => now()->timestamp]);
         Cache::put($key, $session, self::SESSION_TTL);
@@ -1203,7 +1309,7 @@ class WhatsAppBotService
         $key     = self::SESSION_PREFIX . $phone;
         $session = Cache::get($key);
 
-        if ($session) {
+        if ($session && is_array($session)) {
             $session['last_activity'] = now()->timestamp;
             Cache::put($key, $session, self::SESSION_TTL);
         }
@@ -1212,6 +1318,23 @@ class WhatsAppBotService
     public function resetSession(string $phone): void
     {
         Cache::forget(self::SESSION_PREFIX . $phone);
+    }
+
+    /**
+     * Struktur default session agar semua key selalu tersedia.
+     */
+    private function defaultSession(): array
+    {
+        // BUG FIX: Call now() once to avoid timing drift in same request
+        $timestamp = now()->timestamp;
+        return [
+            'state'         => 'new',
+            'nisn'          => null,
+            'siswa_id'      => null,
+            'siswa_name'    => null,
+            'created_at'    => $timestamp,
+            'last_activity' => $timestamp,
+        ];
     }
 
     // =========================================================================
