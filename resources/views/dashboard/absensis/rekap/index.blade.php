@@ -5,7 +5,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
     <style>
-        .filter-section { 
+        .filter-section {
             border-radius: 0.5rem;
             margin-bottom: 2rem;
         }
@@ -81,7 +81,7 @@
                         autocomplete="off"
                     >
                 </div>
-                <label for="status_kehadiran" class="mb-2 mt-2">
+                <label for="status_kehadiran" class="mt-2 mb-2">
                     <i class="fas fa-check-circle"></i> Status Kehadiran
                 </label>
                 <select name="status_kehadiran" id="status_kehadiran" class="form-control">
@@ -92,37 +92,38 @@
                     <option value="sakit">Sakit</option>
                     <option value="alpha">Alpha</option>
                 </select>
-    
-                <div class="btn-group-filter mt-2">
+
+                <div class="mt-2 btn-group-filter">
                     <button type="button" id="btn_filter" class="btn btn-primary">
                         <i class="fas fa-search"></i> Cari
                     </button>
                     <button type="button" id="btn_reset" class="btn btn-secondary">
                         <i class="fas fa-redo"></i> Reset
                     </button>
-    
+
                     @role('admin|superadmin')
                         <button type="button" id="btn_export_pdf" class="btn btn-danger" title="Download laporan dalam format PDF">
                             <i class="fas fa-file-pdf"></i> PDF
                         </button>
-    
+
                         <button type="button" id="btn_export_excel" class="btn btn-success" title="Download laporan dalam format Excel">
                             <i class="fas fa-file-excel"></i> Excel
                         </button>
                     @endrole
                 </div>
-    
-                <div class="col-md-12 mt-2">
-                 
+
+                <div class="mt-2 col-md-12">
+
                 </div>
             </div>
         </div>
-        <div class="table-responsive mt-4">
+        <div class="mt-4 table-responsive">
             <table class="table table-bordered table-striped" id="table_absensi">
                 <thead class="table-light">
                     <tr>
                         <th>No</th>
                         <th>Nama</th>
+                        <th>Jenis Pegawai</th>
                         <th>Tanggal</th>
                         <th>Status</th>
                         <th>Masuk</th>
@@ -152,7 +153,7 @@
                 <div class="modal-body">
                     <input type="hidden" id="absensi_id" name="id">
 
-                    <div class="mb-3 form-group mt-2">
+                    <div class="mt-2 mb-3 form-group">
                         <label for="edit_nama" class="form-label">
                             <i class="fas fa-user"></i> Nama Karyawan
                         </label>
@@ -160,7 +161,7 @@
                         <small class="text-muted">Field ini tidak dapat diubah</small>
                     </div>
 
-                    <div class="mb-3 form-group mt-2">
+                    <div class="mt-2 mb-3 form-group">
                         <label for="edit_tanggal" class="form-label">
                             <i class="fas fa-calendar"></i> Tanggal
                         </label>
@@ -168,7 +169,7 @@
                         <div class="invalid-feedback" id="error_tanggal"></div>
                     </div>
 
-                    <div class="mb-3 form-group mt-2">
+                    <div class="mt-2 mb-3 form-group">
                         <label for="edit_status" class="form-label">
                             <i class="fas fa-check-circle"></i> Status Kehadiran
                         </label>
@@ -291,6 +292,7 @@
                 columns: [
                     { data: 'DT_RowIndex', orderable: false, searchable: false },
                     { data: 'karyawan', name: 'karyawan.name' },
+                    { data: 'jenis_pegawai', name: 'jenis_pegawai' },
                     { data: 'tanggal', name: 'tanggal' },
                     { data: 'status', orderable: false, searchable: false },
                     { data: 'jam_masuk', name: 'jam_masuk' },

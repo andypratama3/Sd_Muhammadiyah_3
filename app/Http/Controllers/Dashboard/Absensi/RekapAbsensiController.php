@@ -40,7 +40,7 @@ class RekapAbsensiController extends Controller
 
             return DataTables::of($query)
                 ->addColumn('karyawan', function ($row) {
-                    return $row->karyawan->name ?? '-';
+                    return $row->karyawan->name ?? '-' ;
                 })
                 ->addColumn('tanggal', function ($row) {
                     return \Carbon\Carbon::parse($row->tanggal)
@@ -62,6 +62,9 @@ class RekapAbsensiController extends Controller
                         default:
                             return '<span class="badge bg-secondary"><i class="fas fa-question"></i> Tidak Diketahui</span>';
                     }
+                })
+                ->addColumn('jenis_pegawai', function ($row) {
+                    return $row->karyawan?->jenis_pegawai_from_role ?? $row->karyawan?->jenis_pegawai ?? '-';
                 })
                 ->addColumn('jam_masuk', fn ($row) =>
                     $row->jam_masuk ? \Carbon\Carbon::parse($row->jam_masuk)->format('H:i') : '-'
