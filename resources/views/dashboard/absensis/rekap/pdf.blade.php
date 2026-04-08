@@ -238,15 +238,41 @@
 
     <!-- TTD -->
     <table class="ttd" width="100%">
-        <tr >
+        <tr>
             <td>
-                Diterima Oleh<br><br><br>
-                <strong>{{ $karyawan->name }}</strong>
+                <div class="ttd-box">
+                    <div style="margin-bottom:10px;">
+                        Diterima Oleh
+                    </div>
+
+                    <div style="height:70px;">
+
+                    </div>
+
+                    <div style="margin-top:10px;">
+                        <strong>{{ $karyawan->name ?? '-' }}</strong>
+                    </div>
+
+                </div>
             </td>
             <td>
-                Disetujui Oleh<br><br><br>
-                <strong>Rusmini S.Pd</strong>
+                <div class="ttd-box">
+                    <div style="margin-bottom:10px;">
+                        Disetujui Oleh
+                    </div>
+
+                    <div style="height:70px;">
+                        <img src="{{ public_path('asset/img/ttd_bu_rusmini.png') }}"
+                            class="ttd-img">
+                    </div>
+
+                    <div style="margin-top:10px;">
+                        <strong>Rusmini S.Pd</strong>
+                    </div>
+
+                </div>
             </td>
+
             <div class="ttd-box">
                     <div style="margin-bottom:10px;">
                     Kepala Sekolah

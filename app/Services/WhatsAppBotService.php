@@ -1046,7 +1046,6 @@ class WhatsAppBotService
         try {
             $localPhone = $this->phoneToLocal($phone);
 
-            // REQUIREMENT: Ensure Siswa model has 'no_hp' column for phone verification
             Log::channel('whatsapp')->info('🔍 Query payment', [
                 'nisn'       => $nisn,
                 'phone_mask' => $this->maskPhone($phone),
