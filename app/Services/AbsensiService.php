@@ -643,7 +643,9 @@ class AbsensiService
         if ($absensi->jamKerja && $absensi->jamKerja->batas_pulang) {
             $batasPulang  = Carbon::parse($absensi->jamKerja->batas_pulang, 'Asia/Makassar');
             $statusPulang = $now->lessThan($batasPulang) ? 'pulang_cepat' : 'tepat_waktu';
-            $rp_pulang    = ($this->isRoleDapatPoin($jenisPegawai) && $statusPulang === 'tepat_waktu') ? 4000 : 0;
+            if ((int) ($absensi->rp_masuk ?? 0) > 0) {
+                $rp_pulang = ($this->isRoleDapatPoin($jenisPegawai) && $statusPulang === 'tepat_waktu') ? 4000 : 0;
+            }
         }
 
         try {
