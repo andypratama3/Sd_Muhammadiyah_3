@@ -1,0 +1,14 @@
+APP_NAME="SD Muhammadiyah 3 Testing"
+APP_ENV=testing
+APP_KEY=base64:klSL9Wy4hzkFfAwiXArE37n/yrbnnKjSlb9VzqAGwqo=
+APP_DEBUG=true
+APP_URL=http://localhost
+
+DB_CONNECTION=sqlite
+DB_DATABASE=sd_muhammadiyah_3_test
+
+CACHE_DRIVER=array
+SESSION_DRIVER=array
+QUEUE_CONNECTION=sync
+
+ABSENSI_USE_KML=false

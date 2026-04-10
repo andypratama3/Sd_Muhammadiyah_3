@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'use_kml' => true,
+    'use_kml' => env('ABSENSI_USE_KML', true),
     'kml_file_path' => env(
         'KML_RELATIVE_PATH',
         'kml/SD_Muhammadiyah_3_Samarinda.kml'

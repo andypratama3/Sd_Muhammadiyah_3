@@ -17,6 +17,8 @@ return new class extends Migration
             $table->enum('sex', ['Laki-Laki', 'Perempuan']);
             $table->string('phone');
             $table->string('slug');
+            $table->string('nip')->nullable();
+            $table->string('jenis_pegawai')->nullable();
             $table->foreignUuid('user_id')->nullable()->references('id')->on('users')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();

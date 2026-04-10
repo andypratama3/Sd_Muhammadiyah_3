@@ -17,7 +17,7 @@ class RekapAbsensiController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Absensi::with(['karyawan', 'lokasiAbsensi', 'jamKerja'])
+        $query = Absensi::with(['karyawan.user.roles', 'lokasiAbsensi', 'jamKerja']) // ← fix di sini
             ->orderBy('tanggal', 'desc');
 
         if ($request->ajax()) {
@@ -39,51 +39,40 @@ class RekapAbsensiController extends Controller
             }
 
             return DataTables::of($query)
-                ->addColumn('karyawan', function ($row) {
-                    return $row->karyawan->name ?? '-' ;
-                })
+                ->addColumn('karyawan', fn ($row) => $row->karyawan->name ?? '-')
                 ->addColumn('tanggal', function ($row) {
                     return \Carbon\Carbon::parse($row->tanggal)
                         ->locale('id')
                         ->translatedFormat('l, d F Y');
                 })
                 ->addColumn('status', function ($row) {
-                    switch ($row->status_kehadiran) {
-                        case 'hadir':
-                            return '<span class="badge bg-success"><i class="fas fa-check"></i> Hadir</span>';
-                        case 'cuti':
-                            return '<span class="badge bg-warning"><i class="fas fa-calendar-check"></i> Cuti</span>';
-                        case 'izin':
-                            return '<span class="badge bg-info"><i class="fas fa-file-alt"></i> Izin</span>';
-                        case 'sakit':
-                            return '<span class="badge bg-danger"><i class="fas fa-hospital-alt"></i> Sakit</span>';
-                        case 'alpha':
-                            return '<span class="badge bg-secondary"><i class="fas fa-ban"></i> Alpha</span>';
-                        default:
-                            return '<span class="badge bg-secondary"><i class="fas fa-question"></i> Tidak Diketahui</span>';
-                    }
+                    return match($row->status_kehadiran) {
+                        'hadir'  => '<span class="badge bg-success"><i class="fas fa-check"></i> Hadir</span>',
+                        'cuti'   => '<span class="badge bg-warning"><i class="fas fa-calendar-check"></i> Cuti</span>',
+                        'izin'   => '<span class="badge bg-info"><i class="fas fa-file-alt"></i> Izin</span>',
+                        'sakit'  => '<span class="badge bg-danger"><i class="fas fa-hospital-alt"></i> Sakit</span>',
+                        'alpha'  => '<span class="badge bg-secondary"><i class="fas fa-ban"></i> Alpha</span>',
+                        default  => '<span class="badge bg-secondary"><i class="fas fa-question"></i> Tidak Diketahui</span>',
+                    };
                 })
-                ->addColumn('jenis_pegawai', function ($row) {
-                    return $row->karyawan?->jenis_pegawai_from_role ?? $row->karyawan?->jenis_pegawai ?? '-';
-                })
+                ->addColumn('jenis_pegawai', fn ($row) =>
+                    $row->karyawan?->jenis_pegawai_from_role ?? '-'  // ← user.roles sudah di-load, cukup ini
+                )
                 ->addColumn('jam_masuk', fn ($row) =>
                     $row->jam_masuk ? \Carbon\Carbon::parse($row->jam_masuk)->format('H:i') : '-'
                 )
                 ->addColumn('jam_pulang', fn ($row) =>
                     $row->jam_pulang ? \Carbon\Carbon::parse($row->jam_pulang)->format('H:i') : '-'
                 )
-                ->addColumn('keterangan', function ($row) {
-                    return $row->keterangan ?? '-';
-                })
-                ->addColumn('rp_masuk', function ($row) {
-                    return 'Rp. ' . number_format(floatval($row->rp_masuk ?? 0), 0, '.', '');
-                })
-                ->addColumn('rp_pulang', function ($row) {
-                    return 'Rp. ' . number_format(floatval($row->rp_pulang ?? 0), 0, '.', '');
-                })
+                ->addColumn('keterangan', fn ($row) => $row->keterangan ?? '-')
+                ->addColumn('rp_masuk', fn ($row) =>
+                    'Rp. ' . number_format(floatval($row->rp_masuk ?? 0), 0, '.', '')
+                )
+                ->addColumn('rp_pulang', fn ($row) =>
+                    'Rp. ' . number_format(floatval($row->rp_pulang ?? 0), 0, '.', '')
+                )
                 ->addColumn('aksi', function ($row) {
                     $buttons = '<div class="btn-group" role="group">';
-
                     if (Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
                         $buttons .= '<button class="btn btn-sm btn-warning btn-edit" data-id="' . $row->id . '" title="Edit data absensi">
                                         <i class="fas fa-edit"></i> Edit
@@ -92,7 +81,6 @@ class RekapAbsensiController extends Controller
                                         <i class="fas fa-trash"></i> Hapus
                                     </button>';
                     }
-
                     $buttons .= '</div>';
                     return $buttons;
                 })
@@ -103,7 +91,6 @@ class RekapAbsensiController extends Controller
 
         return view('dashboard.absensis.rekap.index');
     }
-
     public function show($id)
     {
         try {
@@ -382,7 +369,7 @@ class RekapAbsensiController extends Controller
             }
         };
 
-        $query = Karyawan::with(['absensi' => function ($q) use ($applyDateFilter) {
+        $query = Karyawan::with(['user.roles', 'absensi' => function ($q) use ($applyDateFilter) {
             $applyDateFilter($q);
             $q->orderBy('tanggal', 'asc');
         }]);

@@ -122,6 +122,11 @@
             <td style="border: none;">:</td>
             <td style="border: none;"><strong>{{ $karyawan->name ?? '-' }}</strong></td>
         </tr>
+        <tr>
+            <td style="border: none;">Jenis Pegawai</td>
+            <td style="border: none;">:</td>
+            <td style="border: none;"><strong>{{ $karyawan->jenis_pegawai_from_role ?? '-' }}</strong></td>
+        </tr>
     </table>
 
     <!-- TABEL ABSENSI -->

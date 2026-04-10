@@ -2,15 +2,17 @@
 
 namespace App\Models;
 
-use Str;
 use App\Http\Traits\UsesUuid;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Str;
 
 class Karyawan extends Model
 {
     use UsesUuid;
     use SoftDeletes;
+    use HasFactory;
 
     protected $table = 'karyawans';
 
@@ -74,21 +76,23 @@ class Karyawan extends Model
     /**
      * Get jenis pegawai dari user role
      */
-    public function getJenisPegawaiFromRoleAttribute()
+    public function getJenisPegawaiFromRoleAttribute(): string
     {
         $role = $this->user?->roles?->first();
 
-        if ($role) {
-            $roleMap = [
-                'guru' => 'guru',
-                'tenaga-kependidikan' => 'tenaga_kependidikan',
-                'shadow-teacher' => 'shadow-teacher',
-            ];
+        if (!$role) return $this->jenis_pegawai ?? '-';
 
-            return $roleMap[$role->name] ?? 'umum';
-        }
+        $roleMap = [
+            'guru'               => 'Guru',
+            'tenaga-pendidikan'  => 'Tenaga Pendidik',
+            'shadow-teacher'     => 'Shadow Teacher',
+            'admin'              => 'Admin',
+            'superadmin'         => 'Super Admin',
+            'umum'               => 'Umum',
+        ];
 
-        return $this->jenis_pegawai ?? 'umum';
+        // Label tampilan untuk UI
+        return $roleMap[$role->name] ?? $role->name;
     }
 
     /**

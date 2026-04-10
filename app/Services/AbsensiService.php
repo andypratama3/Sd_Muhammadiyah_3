@@ -278,17 +278,19 @@ class AbsensiService
             ->first();
     }
 
-    public function getJenisPegawaiFromRole(Karyawan $karyawan)
+    public function getJenisPegawaiFromRole(Karyawan $karyawan): string
     {
         $role = $karyawan->user?->roles?->first();
 
         if (!$role) return 'umum';
 
         $roleMap = [
-            'guru'              => 'guru',
-            'tenaga-pendidikan' => 'tenaga-pendidikan',
-            'admin'             => 'tenaga-pendidikan',
-            'shadow-teacher'    => 'shadow-teacher',
+            'guru'               => 'guru',
+            'tenaga-pendidikan'  => 'tenaga-pendidikan',
+            'shadow-teacher'     => 'shadow-teacher',
+            'admin'              => 'umum',        // ← admin bebas, tidak kena aturan jam
+            'superadmin'         => 'umum',        // ← sama
+            'umum'               => 'umum',
         ];
 
         return $roleMap[$role->name] ?? 'umum';

@@ -152,6 +152,7 @@ class RekapAbsensiExport implements FromCollection, WithHeadings, WithStyles, Wi
                 'No',
                 'Nama Karyawan',
                 'NIP',
+                'Jenis Pegawai',
                 'Hadir',
                 'Cuti',
                 'Izin',
@@ -170,6 +171,7 @@ class RekapAbsensiExport implements FromCollection, WithHeadings, WithStyles, Wi
                     $no++,
                     $karyawan->name ?? '-',
                     $karyawan->nip ?? '-',
+                    $karyawan->jenis_pegawai_from_role ?? '-',
                     $karyawan->hadir_count ?? 0,
                     $karyawan->cuti_count ?? 0,
                     $karyawan->izin_count ?? 0,
@@ -187,6 +189,7 @@ class RekapAbsensiExport implements FromCollection, WithHeadings, WithStyles, Wi
                 'No',
                 'Nama Karyawan',
                 'NIP',
+                'Jenis Pegawai',
                 'Tanggal',
                 'Hari',
                 'Status',
@@ -203,6 +206,7 @@ class RekapAbsensiExport implements FromCollection, WithHeadings, WithStyles, Wi
                         $no++,
                         $karyawan->name ?? '-',
                         $karyawan->nip ?? '-',
+                        $karyawan->jenis_pegawai_from_role ?? '-',
                         '-',
                         '-',
                         'Tidak ada data',
@@ -218,6 +222,7 @@ class RekapAbsensiExport implements FromCollection, WithHeadings, WithStyles, Wi
                                 $no++,
                                 $karyawan->name ?? '-',
                                 $karyawan->nip ?? '-',
+                                $karyawan->jenis_pegawai_from_role ?? '-',
                                 Carbon::parse($absen->tanggal)->format('d-m-Y'),
                                 Carbon::parse($absen->tanggal)->locale('id')->translatedFormat('l'),
                                 $this->formatStatus($absen->status_kehadiran),
@@ -268,7 +273,7 @@ class RekapAbsensiExport implements FromCollection, WithHeadings, WithStyles, Wi
             $maxRow = $sheet->getHighestRow();
 
             // ===== TITLE STYLING (Row 1) =====
-            $sheet->mergeCells('A1:I1');
+            $sheet->mergeCells('A1:J1');
             $sheet->getStyle('A1')->applyFromArray([
                 'font' => [
                     'bold' => true,
@@ -289,7 +294,7 @@ class RekapAbsensiExport implements FromCollection, WithHeadings, WithStyles, Wi
             $sheet->getRowDimensions()[1]->setRowHeight(25);
 
             // ===== SUBTITLE STYLING (Row 2) =====
-            $sheet->mergeCells('A2:I2');
+            $sheet->mergeCells('A2:J2');
             $sheet->getStyle('A2')->applyFromArray([
                 'font' => [
                     'size' => 11,
@@ -325,7 +330,7 @@ class RekapAbsensiExport implements FromCollection, WithHeadings, WithStyles, Wi
                     $cellValue = (string)($sheet->getCell("A{$row}")->getValue() ?? '');
 
                     if ($cellValue === 'RINGKASAN ABSENSI') {
-                        $sheet->mergeCells("A{$row}:I{$row}");
+                        $sheet->mergeCells("A{$row}:J{$row}");
                         $sheet->getStyle("A{$row}")->applyFromArray([
                             'font' => [
                                 'bold' => true,
@@ -345,7 +350,7 @@ class RekapAbsensiExport implements FromCollection, WithHeadings, WithStyles, Wi
                     }
 
                     if ($cellValue === 'DETAIL ABSENSI') {
-                        $sheet->mergeCells("A{$row}:I{$row}");
+                        $sheet->mergeCells("A{$row}:J{$row}");
                         $sheet->getStyle("A{$row}")->applyFromArray([
                             'font' => [
                                 'bold' => true,
@@ -420,7 +425,7 @@ class RekapAbsensiExport implements FromCollection, WithHeadings, WithStyles, Wi
 
             // Border untuk ringkasan section
             if ($detailStartRow !== null) {
-                $sheet->getStyle("A8:I" . ($detailStartRow - 2))->applyFromArray([
+                $sheet->getStyle("A8:J" . ($detailStartRow - 2))->applyFromArray([
                     'border' => [
                         'allBorders' => [
                             'borderStyle' => Border::BORDER_THIN,
@@ -444,7 +449,7 @@ class RekapAbsensiExport implements FromCollection, WithHeadings, WithStyles, Wi
 
             // Border untuk detail section
             if ($detailStartRow !== null && $detailStartRow < $maxRow) {
-                $sheet->getStyle("A" . ($detailStartRow + 2) . ":I{$maxRow}")->applyFromArray([
+                $sheet->getStyle("A" . ($detailStartRow + 2) . ":J{$maxRow}")->applyFromArray([
                     'border' => [
                         'allBorders' => [
                             'borderStyle' => Border::BORDER_THIN,
@@ -485,7 +490,7 @@ class RekapAbsensiExport implements FromCollection, WithHeadings, WithStyles, Wi
             // ===== MERGE CELLS & BORDERS UNTUK HEADER =====
             try {
                 // Merge row 1 (Title)
-                $sheet->mergeCells('A1:I1');
+                $sheet->mergeCells('A1:J1');
                 $sheet->getStyle('A1')->applyFromArray([
                     'border' => [
                         'allBorders' => [
@@ -496,7 +501,7 @@ class RekapAbsensiExport implements FromCollection, WithHeadings, WithStyles, Wi
                 ]);
 
                 // Merge row 2 (Subtitle)
-                $sheet->mergeCells('A2:I2');
+                $sheet->mergeCells('A2:J2');
                 $sheet->getStyle('A2')->applyFromArray([
                     'border' => [
                         'allBorders' => [
@@ -507,7 +512,7 @@ class RekapAbsensiExport implements FromCollection, WithHeadings, WithStyles, Wi
                 ]);
 
                 // Merge row 4 (Periode)
-                $sheet->mergeCells('A4:I4');
+                $sheet->mergeCells('A4:J4');
                 $sheet->getStyle('A4')->applyFromArray([
                     'border' => [
                         'allBorders' => [
@@ -518,7 +523,7 @@ class RekapAbsensiExport implements FromCollection, WithHeadings, WithStyles, Wi
                 ]);
 
                 // Merge row 5 (Dicetak pada)
-                $sheet->mergeCells('A5:I5');
+                $sheet->mergeCells('A5:J5');
                 $sheet->getStyle('A5')->applyFromArray([
                     'border' => [
                         'allBorders' => [
@@ -548,7 +553,7 @@ class RekapAbsensiExport implements FromCollection, WithHeadings, WithStyles, Wi
     private function styleHeaderRow($sheet, $row)
     {
         try {
-            $sheet->getStyle("A{$row}:I{$row}")->applyFromArray([
+            $sheet->getStyle("A{$row}:J{$row}")->applyFromArray([
                 'font' => [
                     'bold' => true,
                     'size' => 11,
@@ -585,12 +590,13 @@ class RekapAbsensiExport implements FromCollection, WithHeadings, WithStyles, Wi
             'A' => 5,      // No
             'B' => 25,     // Nama Karyawan
             'C' => 14,     // NIP
-            'D' => 12,     // Hadir / Tanggal
-            'E' => 12,     // Cuti / Hari
-            'F' => 12,     // Izin / Status
-            'G' => 12,     // Sakit / Jam Masuk
-            'H' => 12,     // Alpha / Jam Pulang
-            'I' => 20,     // Total / Keterangan
+            'D' => 20,     // Jenis Pegawai
+            'E' => 12,     // Hadir / Tanggal
+            'F' => 12,     // Cuti / Hari
+            'G' => 12,     // Izin / Status
+            'H' => 12,     // Sakit / Jam Masuk
+            'I' => 12,     // Alpha / Jam Pulang
+            'J' => 20,     // Total / Keterangan
         ];
     }
 
