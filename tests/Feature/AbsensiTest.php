@@ -323,6 +323,26 @@ class AbsensiTest extends TestCase
         $this->assertStringContainsString('sudah absen pulang', $result['message']);
     }
 
+    /** @test */
+    public function jika_tidak_dapat_poin_masuk_maka_pulang_juga_tidak_dapat(): void
+    {
+        ['user' => $user] = $this->buatKaryawanDenganRole('tenaga-pendidikan');
+        $this->buatJamKerja('tenaga-pendidikan');
+        $lokasi = $this->buatLokasi();
+
+        // Absen masuk terlambat (06:50) -> Rp 0
+        Carbon::setTestNow(Carbon::now('Asia/Makassar')->setTime(6, 50));
+        $resMasuk = app(AbsensiService::class)->absenMasuk($user->id, $lokasi->latitude, $lokasi->longitude, $lokasi->id);
+        $this->assertEquals(0, $resMasuk['data']['rp_masuk']);
+
+        // Absen pulang tepat waktu (14:05) -> Harus tetap Rp 0 karena masuknya telat
+        Carbon::setTestNow(Carbon::now('Asia/Makassar')->setTime(14, 5));
+        $resPulang = app(AbsensiService::class)->absenPulang($user->id, $lokasi->latitude, $lokasi->longitude, $lokasi->id);
+        
+        $this->assertTrue($resPulang['success']);
+        $this->assertEquals(0, $resPulang['data']['rp_pulang']);
+    }
+
     // =========================================================================
     // 6. VALIDASI LOKASI
     // =========================================================================

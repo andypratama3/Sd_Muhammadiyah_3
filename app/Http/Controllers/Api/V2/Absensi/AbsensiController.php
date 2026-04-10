@@ -85,7 +85,6 @@ class AbsensiController extends Controller
                 ], 422);
             }
 
-            $nip = $user->nip;
             $latitude = $request->input('latitude');
             $longitude = $request->input('longitude');
             $lokasiId = $request->input('lokasi_id', 1);
@@ -95,7 +94,7 @@ class AbsensiController extends Controller
 
             // Call AbsensiService
             $result = $this->absensiService->absenMasuk(
-                $nip,
+                $user->id,
                 $latitude,
                 $longitude,
                 $lokasiId,
@@ -191,7 +190,6 @@ class AbsensiController extends Controller
                 ], 422);
             }
 
-            $nip = $user->nip;
             $latitude = $request->input('latitude');
             $longitude = $request->input('longitude');
             $lokasiId = $request->input('lokasi_id', 1);
@@ -201,7 +199,7 @@ class AbsensiController extends Controller
 
             // Call AbsensiService
             $result = $this->absensiService->absenPulang(
-                $nip,
+                $user->id,
                 $latitude,
                 $longitude,
                 $lokasiId,
@@ -392,10 +390,8 @@ class AbsensiController extends Controller
             $status = $request->input('status', 'semua');
             $perPage = $request->input('per_page', 15);
 
-            $nip = $user->nip;
-
             // Call AbsensiService to get history
-            $result = $this->absensiService->getRiwayatAbsensi($nip, $bulan, $tahun);
+            $result = $this->absensiService->getRiwayatAbsensi($user->id, $bulan, $tahun);
 
             if (!$result['success']) {
                 return response()->json([
