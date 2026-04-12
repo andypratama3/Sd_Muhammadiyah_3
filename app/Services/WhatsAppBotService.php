@@ -874,7 +874,7 @@ class WhatsAppBotService
             . "Silakan ketik pertanyaan Anda seputar:\n"
             . "• Administrasi & dokumen sekolah\n"
             . "• Kegiatan & program sekolah\n"
-            . "• Informasi umum SDM 3\n"
+            . "• Informasi umum SD Muhammadiyah 3 Samarinda\n"
             . "• Dan lainnya\n\n"
             . "Saya akan berusaha membantu sebaik mungkin. 😊\n\n"
             . "_Atau hubungi *Tata Usaha* untuk info yang lebih spesifik._\n\n"
