@@ -323,6 +323,7 @@
 </div>
 
 @include('dashboard.statistik_absensi')
+@include('dashboard.statistik_absensi_sholat')
 @endif
 <!--Row-->
 @push('js')

@@ -7,6 +7,11 @@ return [
         'kml/SD_Muhammadiyah_3_Samarinda.kml'
     ),
 
+    'area_types' => [
+        'kerja'  => ['SD Muhammadiyah 3 Samarinda'],
+        'sholat' => ['Area Sholat'],
+    ],
+
     'cache_kml' => true,
     'cache_ttl' => 3600,
 ];

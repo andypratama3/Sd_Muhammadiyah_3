@@ -263,6 +263,9 @@ class AbsensiService
         }
 
         if (!$jamKerja) {
+            if (app()->isLocal() || app()->environment('development')) {
+                return null;
+            }
             throw new \Exception('Jam kerja untuk ' . $jenisPegawai . ' belum dikonfigurasi');
         }
 
@@ -336,7 +339,7 @@ class AbsensiService
      * Catatan: method ini hanya dipanggil jika isRoleDapatPoin() = true,
      * sehingga shadow dan umum tidak akan masuk ke sini.
      */
-    private function hitungRpMasuk(string $jenisPegawai, Carbon $now, JamKerja $jamKerja): int
+    private function hitungRpMasuk(string $jenisPegawai, Carbon $now, ?JamKerja $jamKerja): int
     {
         if ($jenisPegawai === 'guru') {
             // Guru: dapat 4000 selama masih lolos batas_masuk.
@@ -488,9 +491,9 @@ class AbsensiService
             if ($this->isRoleTerbatas($jenisPegawai)) {
                 $jamKerja = $this->getJamKerja($jenisPegawai, $now);
 
-                if (is_null($jamKerja->jam_masuk) || $jamKerja->jam_masuk === '00:00:00') {
-                    return ['success' => false, 'message' => 'Hari ini adalah hari libur. Absensi tidak diperlukan.'];
-                }
+                // if (!$jamKerja || is_null($jamKerja->jam_masuk) || $jamKerja->jam_masuk === '00:02:00') {
+                //     return ['success' => false, 'message' => 'Hari ini adalah hari libur. Absensi tidak diperlukan.'];
+                // }
 
                 // Semua role terbatas: lewat batas_masuk (07:00) → blokir total
                 $batasMasuk = Carbon::parse($jamKerja->batas_masuk, 'Asia/Makassar');

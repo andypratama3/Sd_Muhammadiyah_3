@@ -17,7 +17,7 @@ class RekapAbsensiController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Absensi::with(['karyawan.user.roles', 'lokasiAbsensi', 'jamKerja']) // ← fix di sini
+        $query = Absensi::with(['karyawan.user.roles', 'lokasiAbsensi', 'jamKerja']) 
             ->orderBy('tanggal', 'desc');
 
         if ($request->ajax()) {

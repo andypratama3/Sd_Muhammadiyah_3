@@ -38,9 +38,9 @@
     }
 
     .stat-card-total   { background: #f0f4ff; border-left: 4px solid #4f81ff; }
-    .stat-card-hadir   { background: #eafaf1; border-left: 4px solid #27ae60; }
-    .stat-card-absen   { background: #fdecea; border-left: 4px solid #e74c3c; }
-    .stat-card-cuti    { background: #fff8e1; border-left: 4px solid #f39c12; }
+    .stat-card-duha   { background: #e8f5e9; border-left: 4px solid #4caf50; }
+    .stat-card-dzuhur { background: #fff3e0; border-left: 4px solid #ff9800; }
+    .stat-card-blm-absen { background: #fce4ec; border-left: 4px solid #e91e63; }
 
     .chart-card {
         border-radius: 12px;
@@ -59,7 +59,6 @@
         margin-bottom: 1rem;
     }
 
-    /* Mobile adjustments */
     @media (max-width: 576px) {
         .stat-card .stat-value {
             font-size: 1.7rem;
@@ -73,57 +72,52 @@
     }
 </style>
 
-{{-- Stats Grid --}}
-<div class="stats-grid d-flex flex-wrap gap-3">
+<div class="stats-grid d-flex flex-wrap gap-3 mt-4">
 
-    {{-- Total Karyawan --}}
     <div class="flex-fill" style="min-width: 140px">
         <div class="shadow-sm card stat-card stat-card-total h-100">
             <div class="card-body d-flex justify-content-between align-items-center">
                 <div>
                     <div class="stat-label">Total Karyawan</div>
-                    <div class="stat-value">{{ $totalKaryawan }}</div>
+                    <div class="stat-value">{{ $totalKaryawanSholat }}</div>
                 </div>
                 <i class="fas fa-users stat-icon text-primary"></i>
             </div>
         </div>
     </div>
 
-    {{-- Hadir --}}
     <div class="flex-fill" style="min-width: 140px">
-        <div class="shadow-sm card stat-card stat-card-hadir h-100">
+        <div class="shadow-sm card stat-card stat-card-duha h-100">
             <div class="card-body d-flex justify-content-between align-items-center">
                 <div>
-                    <div class="stat-label">Hadir Hari Ini</div>
-                    <div class="stat-value">{{ $totalHadir }}</div>
+                    <div class="stat-label">Sholat Duha</div>
+                    <div class="stat-value">{{ $totalDuha }}</div>
                 </div>
-                <i class="fas fa-user-check stat-icon text-success"></i>
+                <i class="fas fa-sun stat-icon text-success"></i>
             </div>
         </div>
     </div>
 
-    {{-- Tidak Hadir --}}
     <div class="flex-fill" style="min-width: 140px">
-        <div class="shadow-sm card stat-card stat-card-absen h-100">
+        <div class="shadow-sm card stat-card stat-card-dzuhur h-100">
             <div class="card-body d-flex justify-content-between align-items-center">
                 <div>
-                    <div class="stat-label">Tidak Hadir</div>
-                    <div class="stat-value">{{ $tidakHadirHariIni }}</div>
+                    <div class="stat-label">Sholat Dzuhur</div>
+                    <div class="stat-value">{{ $totalDzuhur }}</div>
                 </div>
-                <i class="fas fa-user-times stat-icon text-danger"></i>
+                <i class="fas fa-mosque stat-icon text-warning"></i>
             </div>
         </div>
     </div>
 
-    {{-- Cuti Aktif --}}
     <div class="flex-fill" style="min-width: 140px">
-        <div class="shadow-sm card stat-card stat-card-cuti h-100">
+        <div class="shadow-sm card stat-card stat-card-blm-absen h-100">
             <div class="card-body d-flex justify-content-between align-items-center">
                 <div>
-                    <div class="stat-label">Cuti Hari Ini</div>
-                    <div class="stat-value">{{ $cutiAktif }}</div>
+                    <div class="stat-label">Belum Absen</div>
+                    <div class="stat-value">{{ $belumAbsenSholat }}</div>
                 </div>
-                <i class="fas fa-umbrella-beach stat-icon text-warning"></i>
+                <i class="fas fa-user-clock stat-icon text-danger"></i>
             </div>
         </div>
     </div>
@@ -131,32 +125,39 @@
 </div>
 <div class="mt-4 card">
     <div class="card-body">
-        <h5>Grafik Kehadiran 7 Hari Terakhir</h5>
-        <canvas id="absensiChart" height="100"></canvas>
+        <h5>Grafik Absensi Sholat 7 Hari Terakhir</h5>
+        <canvas id="absensiSholatChart" height="100"></canvas>
     </div>
 </div>
 @push('js')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-const ctx = document.getElementById('absensiChart');
-new Chart(ctx, {
-    type: 'line',
+const ctxSholat = document.getElementById('absensiSholatChart');
+new Chart(ctxSholat, {
+    type: 'bar',
     data: {
-        labels: {!! json_encode(array_column($grafik,'tanggal')) !!},
-        datasets: [{
-            label: 'Hadir',
-            data: {!! json_encode(array_column($grafik,'hadir')) !!},
-            borderColor: '#27ae60',
-            backgroundColor: 'rgba(39, 174, 96, 0.1)',
-            borderWidth: 2,
-            fill: true,
-            tension: 0.4
-        }]
+        labels: {!! json_encode(array_column($grafikSholat,'tanggal')) !!},
+        datasets: [
+            {
+                label: 'Sholat Duha',
+                data: {!! json_encode(array_column($grafikSholat,'duha')) !!},
+                backgroundColor: 'rgba(76, 175, 80, 0.7)',
+                borderColor: '#4caf50',
+                borderWidth: 1
+            },
+            {
+                label: 'Sholat Dzuhur',
+                data: {!! json_encode(array_column($grafikSholat,'dzuhur')) !!},
+                backgroundColor: 'rgba(255, 152, 0, 0.7)',
+                borderColor: '#ff9800',
+                borderWidth: 1
+            }
+        ]
     },
     options: {
         responsive: true,
         plugins: {
-            legend: { display: false }
+            legend: { position: 'top' }
         },
         scales: {
             y: { beginAtZero: true, stepSize: 1 }
@@ -165,4 +166,3 @@ new Chart(ctx, {
 });
 </script>
 @endpush
-

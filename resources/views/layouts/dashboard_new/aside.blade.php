@@ -50,6 +50,12 @@
                 <div>Rekap Absensi</div>
             </a>
         </li>
+        <li class="menu-item {{ Request::routeIs('dashboard.rekap.sholat.*') ? 'active' : '' }}">
+            <a href="{{ route('dashboard.rekap.sholat.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-prayer"></i>
+                <div>Rekap Sholat</div>
+            </a>
+        </li>
         @role('admin|superadmin')
         <li class="menu-header small text-uppercase"><span class="menu-header-text">Pengaturan Absensi</span></li>
          <!-- Pengaturan -->

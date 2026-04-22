@@ -1,6 +1,11 @@
 /**
  * Map & Location Management
  * File: public/js/absensi-map.js
+ *
+ * Perubahan dari versi sebelumnya:
+ * - Polygon area 'kerja'  → warna biru  (#4299e1)
+ * - Polygon area 'sholat' → warna hijau (#48bb78)
+ * - Backend harus mengembalikan field area_type di setiap polygon
  */
 
 // ============================================
@@ -10,7 +15,7 @@
 let map            = null;
 let userMarker     = null;
 let accuracyCircle = null;
-let polygonLayers  = [];
+let polygonLayers  = [];   // semua layer polygon
 let mapReady       = false;
 
 // ============================================
@@ -21,9 +26,9 @@ function initializeMap() {
     console.log('🗺️ Initializing map...');
 
     map = L.map('map-container', {
-        center:           [-0.5093246, 117.1298813],
-        zoom:             17,
-        zoomControl:      true,
+        center:             [-0.5093246, 117.1298813],
+        zoom:               17,
+        zoomControl:        true,
         attributionControl: true
     });
 
@@ -46,11 +51,11 @@ function initializeMap() {
     loadKmlPolygon().then(() => {
         mapReady = true;
 
-        window.map           = map;
-        window.userMarker    = userMarker;
+        window.map            = map;
+        window.userMarker     = userMarker;
         window.accuracyCircle = accuracyCircle;
-        window.polygonLayers = polygonLayers;
-        window.mapReady      = mapReady;
+        window.polygonLayers  = polygonLayers;
+        window.mapReady       = mapReady;
 
         console.log('✅ Map fully loaded and ready');
 
@@ -58,6 +63,55 @@ function initializeMap() {
             detail: { map, polygonLayers }
         }));
     });
+}
+
+// ============================================
+// STYLE PER AREA TYPE
+// ============================================
+
+/**
+ * Kembalikan style Leaflet berdasarkan tipe area.
+ *
+ * kerja  → biru
+ * sholat → hijau
+ * lainnya → abu-abu
+ */
+function getPolygonStyle(areaType) {
+    const styles = {
+        kerja: {
+            color:       '#2b6cb0',
+            fillColor:   '#4299e1',
+            fillOpacity: 0.25,
+            weight:      3,
+            opacity:     0.9
+        },
+        sholat: {
+            color:       '#276749',
+            fillColor:   '#48bb78',
+            fillOpacity: 0.25,
+            weight:      3,
+            opacity:     0.9
+        }
+    };
+
+    return styles[areaType] ?? {
+        color:       '#718096',
+        fillColor:   '#a0aec0',
+        fillOpacity: 0.2,
+        weight:      2,
+        opacity:     0.8
+    };
+}
+
+/**
+ * Kembalikan icon/label berdasarkan tipe area untuk popup.
+ */
+function getAreaLabel(areaType) {
+    const labels = {
+        kerja:  { icon: 'fa-school',  text: 'Area Kerja'  },
+        sholat: { icon: 'fa-mosque',  text: 'Area Sholat' }
+    };
+    return labels[areaType] ?? { icon: 'fa-map-marker-alt', text: 'Area' };
 }
 
 // ============================================
@@ -108,24 +162,32 @@ async function loadKmlPolygon() {
                 return;
             }
 
-            const polygonLayer = L.polygon(coordinates, {
-                color:       '#4299e1',
-                fillColor:   '#4299e1',
-                fillOpacity: 0.3,
-                weight:      3,
-                opacity:     0.8
-            }).addTo(map);
+            const areaType  = polygon.area_type ?? 'kerja';
+            const style     = getPolygonStyle(areaType);
+            const areaLabel = getAreaLabel(areaType);
+
+            const polygonLayer = L.polygon(coordinates, style).addTo(map);
 
             polygonLayer.bindPopup(`
-                <div style="text-align:center; padding:5px;">
-                    <strong><i class="fas fa-school"></i> ${escapeHtml(polygon.name)}</strong><br>
-                    <small class="text-muted">${coordinates.length} titik koordinat</small><br>
-                    <small class="text-muted">Polygon ${index + 1} dari ${polygons.length}</small>
+                <div style="text-align:center; padding:5px; min-width:160px;">
+                    <strong>
+                        <i class="fas ${areaLabel.icon}"></i>
+                        ${escapeHtml(polygon.name)}
+                    </strong>
+                    <br>
+                    <span class="badge" style="background:${style.color}; color:#fff; font-size:11px; padding:2px 8px; border-radius:10px;">
+                        ${areaLabel.text}
+                    </span>
+                    <br>
+                    <small class="text-muted">${coordinates.length} titik koordinat</small>
                 </div>
-            `, { maxWidth: 200 });
+            `, { maxWidth: 220 });
+
+            // Simpan area_type di layer untuk keperluan checkIfInsidePolygon
+            polygonLayer._areaType = areaType;
 
             polygonLayers.push(polygonLayer);
-            console.log(`✅ Polygon ${index + 1} loaded: ${polygon.name}`);
+            console.log(`✅ Polygon ${index + 1} loaded: [${areaType}] ${polygon.name}`);
         });
 
         if (polygonLayers.length > 0) {
@@ -133,7 +195,12 @@ async function loadKmlPolygon() {
             map.fitBounds(group.getBounds().pad(0.1));
         }
 
-        notify.success(`${polygons.length} area berhasil dimuat`, 'Peta Siap');
+        const kerjaCount  = polygonLayers.filter(l => l._areaType === 'kerja').length;
+        const sholatCount = polygonLayers.filter(l => l._areaType === 'sholat').length;
+        notify.success(
+            `${polygons.length} area dimuat (${kerjaCount} kerja, ${sholatCount} sholat)`,
+            'Peta Siap'
+        );
 
     } catch (error) {
         console.error('❌ Error loading KML:', error);
@@ -174,7 +241,7 @@ function createInitialUserMarker(latitude, longitude, accuracy) {
         dashArray:   '5, 5'
     }).addTo(map);
 
-    window.userMarker    = userMarker;
+    window.userMarker     = userMarker;
     window.accuracyCircle = accuracyCircle;
 
     map.setView([latitude, longitude], 18, { animate: true, duration: 1 });
@@ -204,12 +271,48 @@ function updateMapStatusBadge(isInside) {
 // POINT-IN-POLYGON CHECK
 // ============================================
 
+/**
+ * Cek apakah titik berada dalam polygon manapun.
+ * Mengembalikan false atau { inside: true, areaType, areaName }.
+ */
 function checkIfInsidePolygon(lat, lon) {
     if (polygonLayers.length === 0) return false;
 
     const point = L.latLng(lat, lon);
 
     for (let layer of polygonLayers) {
+        const bounds = layer.getBounds();
+        if (bounds.contains(point)) {
+            const polygon = layer.getLatLngs()[0];
+            if (isPointInPolygon(point, polygon)) {
+                return {
+                    inside:   true,
+                    areaType: layer._areaType ?? 'kerja'
+                };
+            }
+        }
+    }
+
+    return false;
+}
+
+/**
+ * Cek apakah titik berada di dalam polygon bertipe tertentu.
+ * Digunakan frontend untuk aktif/nonaktifkan tombol sholat.
+ *
+ * @param {number} lat
+ * @param {number} lon
+ * @param {string} type  'kerja' | 'sholat'
+ * @returns {boolean}
+ */
+function checkIfInsidePolygonByType(lat, lon, type) {
+    if (polygonLayers.length === 0) return false;
+
+    const point = L.latLng(lat, lon);
+
+    for (let layer of polygonLayers) {
+        if ((layer._areaType ?? 'kerja') !== type) continue;
+
         const bounds = layer.getBounds();
         if (bounds.contains(point)) {
             const polygon = layer.getLatLngs()[0];
@@ -272,7 +375,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 window.addEventListener('beforeunload', cleanupMap);
 
-// Export untuk digunakan realtime tracker
-window.checkIfInsidePolygon  = checkIfInsidePolygon;
-window.updateMapStatusBadge  = updateMapStatusBadge;
-window.createInitialUserMarker = createInitialUserMarker;
+// Export untuk digunakan realtime tracker & main
+window.checkIfInsidePolygon       = checkIfInsidePolygon;
+window.checkIfInsidePolygonByType = checkIfInsidePolygonByType;
+window.updateMapStatusBadge       = updateMapStatusBadge;
+window.createInitialUserMarker    = createInitialUserMarker;

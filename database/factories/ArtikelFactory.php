@@ -14,7 +14,7 @@ class ArtikelFactory extends Factory
     public function definition()
     {
 
-        $user = User::where('name', 'Superadmin')->first();
+        $user = User::first();
         return [
             'name' => $this->faker->sentence,
             'artikel' => $this->faker->paragraph,

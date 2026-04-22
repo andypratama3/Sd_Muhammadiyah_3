@@ -11,6 +11,7 @@ use App\Models\Artikel;
 use App\Models\Visitor;
 use App\Models\Karyawan;
 use App\Models\Prestasi;
+use App\Models\AbsensiSholat;
 use App\Charts\SiswaChart;
 use App\Models\Pembayaran;
 use App\Charts\ChargeChart;
@@ -148,6 +149,43 @@ class DashboardController extends Controller
             ];
         }
 
+        // ========================================================
+        // STATISTIK ABSENSI SHOLAT
+        // ========================================================
+        $totalKaryawanSholat = Karyawan::count();
+        $tanggalHariIni = Carbon::today()->toDateString();
+
+        $totalDuha = AbsensiSholat::whereDate('tanggal', $tanggalHariIni)
+            ->where('jenis_sholat', 'duha')
+            ->distinct('karyawan_id')
+            ->count('karyawan_id');
+
+        $totalDzuhur = AbsensiSholat::whereDate('tanggal', $tanggalHariIni)
+            ->where('jenis_sholat', 'dzuhur')
+            ->distinct('karyawan_id')
+            ->count('karyawan_id');
+
+        $totalSholatHariIni = $totalDuha + $totalDzuhur;
+        $belumAbsenSholat = $totalKaryawanSholat - $totalSholatHariIni;
+
+        // Grafik sholat 7 hari
+        $grafikSholat = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $tanggal = Carbon::today()->subDays($i)->toDateString();
+
+            $grafikSholat[] = [
+                'tanggal' => Carbon::parse($tanggal)->format('d M'),
+                'duha' => AbsensiSholat::whereDate('tanggal', $tanggal)
+                    ->where('jenis_sholat', 'duha')
+                    ->distinct('karyawan_id')
+                    ->count('karyawan_id'),
+                'dzuhur' => AbsensiSholat::whereDate('tanggal', $tanggal)
+                    ->where('jenis_sholat', 'dzuhur')
+                    ->distinct('karyawan_id')
+                    ->count('karyawan_id')
+            ];
+        }
+
 
         return view('dashboard.index', compact(
             'siswas',
@@ -174,7 +212,12 @@ class DashboardController extends Controller
             'tidakHadirHariIni',
             'cutiAktif',
             'grafik',
-            'totalHadir'
+            'totalHadir',
+            'totalKaryawanSholat',
+            'totalDuha',
+            'totalDzuhur',
+            'belumAbsenSholat',
+            'grafikSholat'
         ));
     }
 }

@@ -2,9 +2,9 @@
  * Main Absensi Form Logic
  * File: public/js/absensi-main.js
  *
- * ✅ User ID diambil dari auth (backend)
- * ✅ device_id persisten via localStorage (stable UUID)
- * ✅ Tidak ada input NIP
+ * Perubahan dari versi sebelumnya:
+ * - Tambah prosesAbsensiSholat() untuk absen sholat
+ * - Tombol sholat terhubung ke endpoint POST /dashboard/absensis/sholat
  */
 
 // ============================================
@@ -13,17 +13,6 @@
 
 const DEVICE_ID_KEY = 'absensi_device_id';
 
-/**
- * Ambil atau buat device_id yang persisten.
- *
- * Menggunakan crypto.randomUUID() jika tersedia (lebih aman),
- * fallback ke generator manual untuk browser lama.
- *
- * ⚠️  Pastikan user TIDAK menghapus localStorage —
- *      jika terhapus, device baru akan terdaftar otomatis.
- *      Untuk app native (Android/iOS), ganti dengan ANDROID_ID /
- *      identifierForVendor yang dikirim sebagai device_id.
- */
 function getDeviceId() {
     let deviceId = localStorage.getItem(DEVICE_ID_KEY);
 
@@ -38,16 +27,10 @@ function getDeviceId() {
     return deviceId;
 }
 
-/**
- * Generate UUID v4 yang stabil.
- * Gunakan Web Crypto API bila tersedia untuk entropi lebih tinggi.
- */
 function generateStableUUID() {
     if (typeof crypto !== 'undefined' && crypto.randomUUID) {
         return crypto.randomUUID();
     }
-
-    // Fallback manual UUID v4
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
         const r = (Math.random() * 16) | 0;
         const v = c === 'x' ? r : (r & 0x3) | 0x8;
@@ -55,10 +38,6 @@ function generateStableUUID() {
     });
 }
 
-/**
- * Kumpulkan info device untuk dikirim ke server.
- * Hanya device_id yang digunakan sebagai identifier utama di backend.
- */
 function getDeviceInfo() {
     return {
         device_id:         getDeviceId(),
@@ -73,11 +52,6 @@ function getDeviceInfo() {
 // LOCATION RETRIEVAL
 // ============================================
 
-/**
- * Get lokasi user dengan retry otomatis.
- * Attempt 1: high accuracy (GPS), timeout 10 detik.
- * Attempt 2: normal accuracy (network/wifi), timeout 15 detik.
- */
 function getLocation() {
     return new Promise((resolve, reject) => {
         if (!navigator.geolocation) {
@@ -93,7 +67,6 @@ function getLocation() {
             navigator.geolocation.getCurrentPosition(
                 pos => {
                     console.log(`✅ GPS ditemukan (Attempt ${attemptNum})`);
-                    console.log(`   Accuracy: ±${pos.coords.accuracy.toFixed(0)}m`);
                     resolve({
                         latitude:  pos.coords.latitude,
                         longitude: pos.coords.longitude,
@@ -105,29 +78,19 @@ function getLocation() {
                     console.warn(`⚠️ Attempt ${attemptNum} gagal (${error.code}):`, error.message);
 
                     if (attemptCount < maxAttempts) {
-                        console.log('🔄 Retry dengan normal accuracy...');
-                        setTimeout(() => {
-                            attemptGetLocation(false, 15000, attemptNum + 1);
-                        }, 1000);
+                        setTimeout(() => attemptGetLocation(false, 15000, attemptNum + 1), 1000);
                     } else {
-                        console.error('❌ Semua attempt gagal');
                         let msg = 'Gagal mendapatkan lokasi. ';
-
                         switch (error.code) {
                             case 1: msg += 'Akses lokasi ditolak. Mohon izinkan akses lokasi di pengaturan browser.'; break;
                             case 2: msg += 'Informasi lokasi tidak tersedia. Pastikan GPS aktif.'; break;
-                            case 3: msg += 'Waktu permintaan lokasi habis. Pastikan GPS aktif dan sinyal kuat. Coba lagi.'; break;
+                            case 3: msg += 'Waktu permintaan lokasi habis. Pastikan GPS aktif dan sinyal kuat.'; break;
                             default: msg += 'Terjadi kesalahan tidak dikenal.';
                         }
-
                         reject(new Error(msg));
                     }
                 },
-                {
-                    enableHighAccuracy: isHighAccuracy,
-                    timeout:            timeout,
-                    maximumAge:         0
-                }
+                { enableHighAccuracy: isHighAccuracy, timeout, maximumAge: 0 }
             );
         }
 
@@ -135,29 +98,17 @@ function getLocation() {
     });
 }
 
-/**
- * Reverse geocode koordinat ke nama kota via Nominatim
- */
 async function getNamaKota(lat, lon) {
     try {
         const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10&addressdetails=1`;
         const response = await fetch(url, { headers: { 'User-Agent': 'AbsensiApp/1.0' } });
-        const data = await response.json();
-
-        return data.address.city
-            || data.address.town
-            || data.address.village
-            || data.address.county
-            || 'Tidak diketahui';
-    } catch (error) {
-        console.error('Error mendapatkan nama kota:', error);
+        const data     = await response.json();
+        return data.address.city || data.address.town || data.address.village || data.address.county || 'Tidak diketahui';
+    } catch {
         return 'Tidak diketahui';
     }
 }
 
-/**
- * Tampilkan nama kota user di badge header
- */
 async function tampilkanKotaUser() {
     const badge = document.getElementById('lokasi-label');
     if (!badge) return;
@@ -165,11 +116,9 @@ async function tampilkanKotaUser() {
     try {
         const lokasi = await getLocation();
         const kota   = await getNamaKota(lokasi.latitude, lokasi.longitude);
-
-        badge.innerHTML   = `<i class="fas fa-map-marker-alt"></i> ${escapeHtml(kota)}`;
-        badge.className   = 'badge bg-success';
-    } catch (error) {
-        console.error('Error tampilkan kota:', error);
+        badge.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${escapeHtml(kota)}`;
+        badge.className = 'badge bg-success';
+    } catch {
         badge.innerHTML = '<i class="fas fa-map-marker-alt"></i> Lokasi tidak tersedia';
         badge.className = 'badge bg-warning';
     }
@@ -200,17 +149,18 @@ function updateWaktu() {
 }
 
 // ============================================
-// ABSENSI PROCESSING
+// ABSENSI KERJA (MASUK / PULANG)
 // ============================================
 
 async function prosesAbsensi(tipe) {
     const btnMasuk   = document.getElementById('btn-absen-masuk');
     const btnPulang  = document.getElementById('btn-absen-pulang');
+    const btnSholat  = document.getElementById('btn-absen-sholat');
     const btnRiwayat = document.getElementById('btn-riwayat');
     const csrfToken  = document.querySelector('meta[name="csrf-token"]')?.content || '';
 
     showLoading();
-    [btnMasuk, btnPulang, btnRiwayat].forEach(btn => { if (btn) btn.disabled = true; });
+    [btnMasuk, btnPulang, btnSholat, btnRiwayat].forEach(btn => { if (btn) btn.disabled = true; });
 
     try {
         const location   = await getLocation();
@@ -219,14 +169,6 @@ async function prosesAbsensi(tipe) {
         const endpoint = tipe === 'masuk'
             ? '/dashboard/absensis/masuk'
             : '/dashboard/absensis/pulang';
-
-        console.log('📤 Request absensi:', {
-            tipe,
-            latitude:  location.latitude,
-            longitude: location.longitude,
-            accuracy:  location.accuracy,
-            device_id: deviceInfo.device_id
-        });
 
         const response = await fetch(endpoint, {
             method: 'POST',
@@ -238,24 +180,18 @@ async function prosesAbsensi(tipe) {
             body: JSON.stringify({
                 latitude:  location.latitude,
                 longitude: location.longitude,
-                device_id: deviceInfo.device_id     // ✅ Identifier utama
+                device_id: deviceInfo.device_id
             })
         });
 
         if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
 
         const result = await response.json();
-        console.log('📥 Response server:', result);
 
         if (result.success) {
             const tipeName = tipe === 'masuk' ? 'Masuk' : 'Pulang';
             let message    = result.message;
-
-            if (result.data?.is_new_device) {
-                message += ' (Device baru berhasil didaftarkan)';
-                console.log('🆕 Device baru terdaftar');
-            }
-
+            if (result.data?.is_new_device) message += ' (Device baru berhasil didaftarkan)';
             notify.success(message, `Absen ${tipeName} Berhasil`);
         } else {
             notify.error(result.message || 'Terjadi kesalahan saat memproses absensi', 'Gagal Absensi');
@@ -266,17 +202,79 @@ async function prosesAbsensi(tipe) {
         notify.error(err.message || 'Terjadi kesalahan yang tidak diketahui', 'Terjadi Kesalahan');
     } finally {
         hideLoading();
-        [btnMasuk, btnPulang, btnRiwayat].forEach(btn => { if (btn) btn.disabled = false; });
+        [btnMasuk, btnPulang, btnSholat, btnRiwayat].forEach(btn => { if (btn) btn.disabled = false; });
     }
 }
 
 // ============================================
-// RIWAYAT ABSENSI
+// ABSENSI SHOLAT
+// ============================================
+
+async function prosesAbsensiSholat() {
+    const btnMasuk   = document.getElementById('btn-absen-masuk');
+    const btnPulang  = document.getElementById('btn-absen-pulang');
+    const btnSholat  = document.getElementById('btn-absen-sholat');
+    const btnRiwayat = document.getElementById('btn-riwayat');
+    const csrfToken  = document.querySelector('meta[name="csrf-token"]')?.content || '';
+
+    showLoading();
+    [btnMasuk, btnPulang, btnSholat, btnRiwayat].forEach(btn => { if (btn) btn.disabled = true; });
+
+    try {
+        const location   = await getLocation();
+        const deviceInfo = getDeviceInfo();
+
+        console.log('🕌 Request absensi sholat:', {
+            latitude:  location.latitude,
+            longitude: location.longitude,
+            device_id: deviceInfo.device_id
+        });
+
+        const response = await fetch('/dashboard/absensis/sholat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept':       'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify({
+                latitude:  location.latitude,
+                longitude: location.longitude,
+                device_id: deviceInfo.device_id
+            })
+        });
+
+        if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+
+        const result = await response.json();
+        console.log('📥 Response sholat:', result);
+
+        if (result.success) {
+            const totalHariIni = result.data?.total_hari_ini ?? 1;
+            const area         = result.data?.area ?? 'Area Sholat';
+            notify.success(
+                `${result.message} (${area} · ke-${totalHariIni} hari ini)`,
+                'Absen Sholat Berhasil'
+            );
+        } else {
+            notify.error(result.message || 'Gagal mencatat absensi sholat', 'Gagal Absen Sholat');
+        }
+
+    } catch (err) {
+        console.error('❌ Error absensi sholat:', err);
+        notify.error(err.message || 'Terjadi kesalahan', 'Terjadi Kesalahan');
+    } finally {
+        hideLoading();
+        [btnMasuk, btnPulang, btnSholat, btnRiwayat].forEach(btn => { if (btn) btn.disabled = false; });
+    }
+}
+
+// ============================================
+// RIWAYAT ABSENSI KERJA
 // ============================================
 
 async function tampilkanRiwayat() {
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
-
     showLoading();
 
     try {
@@ -284,10 +282,7 @@ async function tampilkanRiwayat() {
         const bulan = now.getMonth() + 1;
         const tahun = now.getFullYear();
 
-        // user_id diambil dari auth session di server
-        const url = `/dashboard/absensis/riwayat?bulan=${bulan}&tahun=${tahun}`;
-
-        const response = await fetch(url, {
+        const response = await fetch(`/dashboard/absensis/riwayat?bulan=${bulan}&tahun=${tahun}`, {
             headers: { 'X-CSRF-TOKEN': csrfToken }
         });
 
@@ -305,14 +300,13 @@ async function tampilkanRiwayat() {
 
         container.classList.remove('d-none');
 
-        const pegawai      = result.data?.pegawai;
-        const riwayat      = result.data?.riwayat || [];
-        const infoPegawai  = document.getElementById('info-pegawai');
-        const riwayatList  = document.getElementById('riwayat-list');
+        const pegawai     = result.data?.pegawai;
+        const riwayat     = result.data?.riwayat || [];
+        const infoPegawai = document.getElementById('info-pegawai');
+        const riwayatList = document.getElementById('riwayat-list');
 
         if (!infoPegawai || !riwayatList) throw new Error('Element tidak ditemukan');
 
-        // Info pegawai
         if (pegawai) {
             infoPegawai.innerHTML = `
                 <div class="d-flex align-items-center">
@@ -328,7 +322,6 @@ async function tampilkanRiwayat() {
             `;
         }
 
-        // List riwayat
         if (riwayat.length > 0) {
             riwayatList.innerHTML = riwayat.map(item => {
                 const tanggalFormatted = new Date(item.tanggal).toLocaleDateString('id-ID', {
@@ -423,10 +416,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const btnMasuk   = document.getElementById('btn-absen-masuk');
     const btnPulang  = document.getElementById('btn-absen-pulang');
+    const btnSholat  = document.getElementById('btn-absen-sholat');   // ← baru
     const btnRiwayat = document.getElementById('btn-riwayat');
 
     if (btnMasuk)   btnMasuk.addEventListener('click',   () => prosesAbsensi('masuk'));
     if (btnPulang)  btnPulang.addEventListener('click',  () => prosesAbsensi('pulang'));
+    if (btnSholat)  btnSholat.addEventListener('click',  prosesAbsensiSholat);           // ← baru
     if (btnRiwayat) btnRiwayat.addEventListener('click', tampilkanRiwayat);
 
     console.log('✅ absensi-main.js loaded');

@@ -18,8 +18,15 @@ class Kernel extends ConsoleKernel
         $schedule->command('absensi:generate-harian')
             ->dailyAt('16:00') // 16:00 WITA
             ->timezone('Asia/Makassar')
+            ->weekdays()
             ->appendOutputTo(storage_path('logs/absensi-generate.log'));
-            
+
+        $schedule->command('db:backup')
+            ->dailyAt('23:00')
+            ->timezone('Asia/Makassar')
+            ->weekdays()
+            ->appendOutputTo(storage_path('logs/backup.log'));
+
         // $schedule->command('app:site-map-command')->sundays();
         // $schedule->command('app:charge-payment-xendit')->sundays();
 
