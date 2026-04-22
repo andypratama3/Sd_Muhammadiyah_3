@@ -208,6 +208,12 @@ function handleLocationUpdate(location) {
 
     updateRealtimeInfoPanel(location);
 
+    updateAbsensiButtons(
+        window.realtimeTracker?.geofenceStatus === 'inside',
+        location.latitude,
+        location.longitude
+    );
+
 
     const logFrequency = 0.3;
     if (Math.random() < logFrequency) {
@@ -353,22 +359,26 @@ function handleGeofenceChange(data) {
     }
 
 
-    updateAbsensiButtons(data.status === 'inside');
+    updateAbsensiButtons(
+        data.status === 'inside',
+        data.latitude,
+        data.longitude
+    );
 }
 
 /**
  * Enable/disable absensi buttons berdasarkan geofence (PERSISTENT)
  */
-function updateAbsensiButtons(isInsideGeofence) {
+function updateAbsensiButtons(isInsideGeofence, lat, lon) {
     const btnMasuk = document.getElementById('btn-absen-masuk');
     const btnPulang = document.getElementById('btn-absen-pulang');
+    const btnSholat = document.getElementById('btn-absen-sholat');
 
     if (btnMasuk) {
         btnMasuk.disabled = !isInsideGeofence;
         btnMasuk.title = isInsideGeofence
             ? 'Klik untuk absen masuk'
             : 'Anda harus berada dalam area absensi';
-
 
         if (isInsideGeofence) {
             btnMasuk.classList.remove('btn-disabled');
@@ -383,7 +393,6 @@ function updateAbsensiButtons(isInsideGeofence) {
             ? 'Klik untuk absen pulang'
             : 'Anda harus berada dalam area absensi';
 
-
         if (isInsideGeofence) {
             btnPulang.classList.remove('btn-disabled');
         } else {
@@ -391,7 +400,27 @@ function updateAbsensiButtons(isInsideGeofence) {
         }
     }
 
-    console.log(`🔘 Buttons ${isInsideGeofence ? 'enabled ✅' : 'disabled ❌'}`);
+    let isInsideSholatArea = false;
+    if (btnSholat && lat !== undefined && lon !== undefined) {
+        if (window.checkIfInsidePolygonByType) {
+            isInsideSholatArea = window.checkIfInsidePolygonByType(lat, lon, 'sholat');
+        }
+    }
+
+    if (btnSholat) {
+        btnSholat.disabled = !isInsideSholatArea;
+        btnSholat.title = isInsideSholatArea
+            ? 'Klik untuk absen sholat'
+            : 'Anda harus berada di Area Sholat (hijau pada peta)';
+
+        if (isInsideSholatArea) {
+            btnSholat.classList.remove('btn-disabled');
+        } else {
+            btnSholat.classList.add('btn-disabled');
+        }
+    }
+
+    console.log(`🔘 Buttons: kerja=${isInsideGeofence ? '✅' : '❌'}, sholat=${isInsideSholatArea ? '✅' : '❌'}`);
 }
 
 
