@@ -184,9 +184,12 @@ async function prosesAbsensi(tipe) {
             })
         });
 
-        if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-
         const result = await response.json();
+
+        if (!response.ok) {
+            notify.error(result.message || `HTTP Error: ${response.status}`, 'Gagal Absensi');
+            return;
+        }
 
         if (result.success) {
             const tipeName = tipe === 'masuk' ? 'Masuk' : 'Pulang';
@@ -244,9 +247,13 @@ async function prosesAbsensiSholat() {
             })
         });
 
-        if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-
         const result = await response.json();
+
+        if (!response.ok) {
+            notify.error(result.message || `HTTP Error: ${response.status}`, 'Gagal Absen Sholat');
+            return;
+        }
+
         console.log('📥 Response sholat:', result);
 
         if (result.success) {
@@ -286,9 +293,12 @@ async function tampilkanRiwayat() {
             headers: { 'X-CSRF-TOKEN': csrfToken }
         });
 
-        if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-
         const result = await response.json();
+
+        if (!response.ok) {
+            notify.error(result.message || `HTTP Error: ${response.status}`, 'Gagal Memuat Riwayat');
+            return;
+        }
 
         if (!result.success) {
             notify.error(result.message || 'Gagal memuat riwayat', 'Gagal Memuat Riwayat');

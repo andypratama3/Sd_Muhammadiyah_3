@@ -31,7 +31,7 @@ class AbsensiSholatController extends Controller
             deviceId:  $request->device_id,
         );
 
-        return response()->json($result, $result['success'] ? 200 : 400);
+        return response()->json($result, $result['success'] ? 200 : 422);
     }
 
     /**
@@ -40,7 +40,7 @@ class AbsensiSholatController extends Controller
     public function status(): JsonResponse
     {
         $result = $this->service->getStatusHariIni(auth()->id());
-        return response()->json($result, $result['success'] ? 200 : 400);
+        return response()->json($result, $result['success'] ? 200 : 422);
     }
 
     /**
@@ -54,6 +54,6 @@ class AbsensiSholatController extends Controller
             tahun:  $request->query('tahun'),
         );
 
-        return response()->json($result, $result['success'] ? 200 : 400);
+        return response()->json($result, $result['success'] ? 200 : 422);
     }
 }
