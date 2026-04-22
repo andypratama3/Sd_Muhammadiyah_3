@@ -29,7 +29,7 @@ class AbsensiSholatService
 
         if ($jam >= '05:30:00' && $jam < '11:30:00') {
             return 'duha';
-        } elseif ($jam >= '11:30:00' && $jam < '14:00:00') {
+        } elseif ($jam >= '11:30:00') {
             return 'dzuhur';
         }
 
@@ -42,7 +42,7 @@ class AbsensiSholatService
         if ($waktu->isWeekend()) {
             return false;
         }
-        return ($jam >= '05:30:00' && $jam < '14:00:00');
+        return ($jam >= '05:30:00');
     }
 
     private function getPesanBerhasil(string $jenisSholat, int $totalHariIni): string
