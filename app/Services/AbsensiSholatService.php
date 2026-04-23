@@ -81,6 +81,19 @@ class AbsensiSholatService
             ];
         }
 
+        // Cek apakah sudah izin hari ini
+        $sudahIzin = AbsensiSholat::where('karyawan_id', $karyawan->id)
+            ->where('tanggal', $tanggalHariIni)
+            ->where('jenis_sholat', 'izin')
+            ->first();
+
+        if ($sudahIzin) {
+            return [
+                'success' => false,
+                'message' => "Anda sudah melakukan izin berhalangan sholat hari ini."
+            ];
+        }
+
         $sudahAbsen = AbsensiSholat::where('karyawan_id', $karyawan->id)
             ->where('tanggal', $tanggalHariIni)
             ->where('jenis_sholat', $jenisSholat)
@@ -204,6 +217,19 @@ class AbsensiSholatService
             return [
                 'success' => false,
                 'message' => "Anda sudah melakukan izin sholat hari ini."
+            ];
+        }
+
+        // Cek apakah sudah ada absen sholat hari ini
+        $sudahAbsen = AbsensiSholat::where('karyawan_id', $karyawan->id)
+            ->where('tanggal', $tanggalHariIni)
+            ->whereIn('jenis_sholat', ['duha', 'dzuhur'])
+            ->exists();
+
+        if ($sudahAbsen) {
+            return [
+                'success' => false,
+                'message' => "Tidak dapat melakukan izin karena Anda sudah melakukan absen sholat hari ini."
             ];
         }
 
