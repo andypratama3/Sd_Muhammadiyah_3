@@ -106,6 +106,13 @@
                                 <i class="fas fa-mosque"></i> Absen Sholat
                             </button>
                         </div>
+                        <div class="mb-1">
+                            <button type="button" id="btn-izin-absen-sholat"
+                                class="btn btn-absensi w-100"
+                                style="background-color:#059669; border-color:#059669; color:#fff;">
+                                <i class="fas fa-mosque"></i> Izin/Berhalangan
+                            </button>
+                        </div>
                         <p class="mb-3 text-muted" style="font-size:11px;">
                             <i class="fas fa-info-circle"></i>
                             Harus berada di <strong>Area Sholat</strong> (area hijau pada peta). Dapat dilakukan beberapa kali per hari.
@@ -359,17 +366,20 @@ document.getElementById('btn-riwayat-sholat')?.addEventListener('click', async f
                                 ${escapeHtml(item.hari)}, ${escapeHtml(item.tanggal)}
                             </h6>
                             <span class="badge" style="background:#059669;">
-                                ${item.total}× sholat
+                                ${item.izin > 0 ? 'Izin Telah Dicatat' : item.total + '× sholat'}
                             </span>
                         </div>
                         <div class="flex-wrap gap-2 d-flex">
-                            ${item.detail.map(d => `
-                                <span class="border badge bg-light text-dark" style="font-size:12px;">
-                                    <i class="fas fa-clock" style="color:#059669"></i>
-                                    ${escapeHtml(d.jam_sholat)} WITA
-                                    <small class="text-muted ms-1">${escapeHtml(d.area)}</small>
-                                </span>
-                            `).join('')}
+                            ${item.detail.map(d => {
+                                const isIzin = d.jenis_sholat === 'izin';
+                                return `
+                                    <span class="border badge ${isIzin ? 'bg-info text-white' : 'bg-light text-dark'}" style="font-size:12px;">
+                                        <i class="fas ${isIzin ? 'fa-info-circle' : 'fa-clock'}" style="${isIzin ? 'color:#fff' : 'color:#059669'}"></i>
+                                        ${isIzin ? 'Izin Berhalangan' : escapeHtml(d.nama_sholat) + ' ' + escapeHtml(d.jam_sholat) + ' WITA'}
+                                        ${!isIzin ? `<small class="text-muted ms-1">${escapeHtml(d.area)}</small>` : ''}
+                                    </span>
+                                `;
+                            }).join('')}
                         </div>
                     </div>
                 </div>

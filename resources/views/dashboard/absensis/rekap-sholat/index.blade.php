@@ -80,10 +80,11 @@
                     <thead class="table-light">
                         <tr>
                             <th>No</th>
-                            <th>Nama</th>
-                            <th>Tanggal</th>
-                            <th>Duha</th>
-                            <th>Dzuhur</th>
+                            <th>Nama Karyawan</th>
+                            <th>Detail Absensi</th>
+                            @hasanyrole('admin|superadmin')
+                                <th>Aksi</th>
+                            @endhasanyrole
                         </tr>
                     </thead>
                 </table>
@@ -103,6 +104,27 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+    {{-- Modal Detail --}}
+    <div class="modal fade" id="modalDetail" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="modal-title m-0"><i class="fas fa-info-circle"></i> Detail Absensi Sholat</h5>
+                </div>
+                <div class="modal-body" id="detail-content">
+                    {{-- Content loaded via JS --}}
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p class="mt-2">Memuat data...</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         $(document).ready(function() {
@@ -148,7 +170,7 @@
                         className: 'buttons-pdf',
                         title: 'Rekap Absensi Sholat',
                         exportOptions: {
-                            columns: [0, 1, 2, 3, 4],
+                            columns: [0, 1, 2],
                             stripHtml: true
                         }
                     },
@@ -158,7 +180,7 @@
                         className: 'buttons-excel',
                         title: 'Rekap Absensi Sholat',
                         exportOptions: {
-                            columns: [0, 1, 2, 3, 4],
+                            columns: [0, 1, 2],
                             stripHtml: true
                         }
                     },
@@ -167,7 +189,7 @@
                         text: '<i class="fas fa-print"></i> Print',
                         className: 'buttons-print',
                         exportOptions: {
-                            columns: [0, 1, 2, 3, 4],
+                            columns: [0, 1, 2],
                             stripHtml: true
                         }
                     }
@@ -183,19 +205,17 @@
                         name: 'karyawan'
                     },
                     {
-                        data: 'tanggal',
-                        name: 'tanggal'
+                        data: 'absensi_list',
+                        name: 'absensi_list'
                     },
+                    @hasanyrole('admin|superadmin')
                     {
-                        data: 'duha',
-                        name: 'duha',
-                        defaultContent: '-'
-                    },
-                    {
-                        data: 'dzuhur',
-                        name: 'dzuhur',
-                        defaultContent: '-'
+                        data: 'aksi',
+                        name: 'aksi',
+                        orderable: false,
+                        searchable: false
                     }
+                    @endhasanyrole
                 ]
             });
 
@@ -206,6 +226,39 @@
             $('#btn_reset').on('click', function() {
                 $('#date_range').val('');
                 table.ajax.reload();
+            });
+
+            // Action: Edit (Placeholder / Detail)
+            $(document).on('click', '.btn-edit', function() {
+                const id = $(this).data('id');
+                // Untuk rekap sholat per karyawan, 'id' adalah ID Karyawan. 
+                // Biasanya diarahkan ke riwayat detail karyawan tersebut.
+                window.location.href = `/dashboard/absensis?karyawan_id=${id}`;
+            });
+
+            // Action: Delete
+            $(document).on('click', '.btn-delete', function() {
+                const id = $(this).data('id');
+                if (confirm('Apakah Anda yakin ingin menghapus data absensi sholat karyawan ini? (Tindakan ini mungkin menghapus semua record dalam jangkauan filter)')) {
+                    $.ajax({
+                        url: `/dashboard/rekap-sholat/${id}`,
+                        type: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(res) {
+                            if (res.success) {
+                                alert(res.message);
+                                table.ajax.reload();
+                            } else {
+                                alert('Gagal: ' + res.message);
+                            }
+                        },
+                        error: function() {
+                            alert('Terjadi kesalahan server.');
+                        }
+                    });
+                }
             });
         });
     </script>

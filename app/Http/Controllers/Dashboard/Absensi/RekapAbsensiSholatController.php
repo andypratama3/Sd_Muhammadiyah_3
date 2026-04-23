@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard\Absensi;
 
 use App\Http\Controllers\Controller;
 use App\Models\AbsensiSholat;
+use App\Models\Karyawan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -14,72 +15,116 @@ class RekapAbsensiSholatController extends Controller
 {
     public function index(Request $request)
     {
-        $query = AbsensiSholat::select(
-                'karyawan_id',
-                'tanggal',
+        $startDate = now()->format('Y-m-d');
+        $endDate = now()->format('Y-m-d');
 
-                DB::raw("MAX(CASE WHEN jenis_sholat = 'duha' THEN jam_sholat END) as duha"),
-                DB::raw("MAX(CASE WHEN jenis_sholat = 'dzuhur' THEN jam_sholat END) as dzuhur")
-            )
-            ->with('karyawan')
-            ->groupBy('karyawan_id', 'tanggal');
+        if ($request->filled('date')) {
+            $dates = explode(' : ', $request->date);
+            if (count($dates) === 2) {
+                try {
+                    $startDate = Carbon::createFromFormat('d-m-Y', trim($dates[0]))->format('Y-m-d');
+                    $endDate   = Carbon::createFromFormat('d-m-Y', trim($dates[1]))->format('Y-m-d');
+                } catch (\Throwable $th) {}
+            }
+        }
+
+        $allDates = [];
+        $current = Carbon::parse($startDate);
+        $end = Carbon::parse($endDate);
+
+        while ($current->lte($end)) {
+            $allDates[] = $current->format('Y-m-d');
+            $current->addDay();
+        }
+
+        $absensiData = AbsensiSholat::select(
+            'karyawan_id',
+            'tanggal',
+            DB::raw("MAX(CASE WHEN jenis_sholat = 'duha' THEN jam_sholat END) as duha"),
+            DB::raw("MAX(CASE WHEN jenis_sholat = 'dzuhur' THEN jam_sholat END) as dzuhur"),
+            DB::raw("MAX(CASE WHEN jenis_sholat = 'izin' THEN jam_sholat END) as izin")
+        )
+        ->whereBetween('tanggal', [$startDate, $endDate])
+        ->groupBy('karyawan_id', 'tanggal')
+        ->get()
+        ->groupBy('karyawan_id');
+
+        $karyawans = Karyawan::orderBy('name');
+
+        if (!Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
+            $karyawans->where('id', Auth::user()->karyawan->id);
+        }
+
+        $karyawans = $karyawans->get();
 
         if ($request->ajax()) {
+            return DataTables::of($karyawans)
+                ->addColumn('karyawan', fn ($row) => $row->name ?? '-')
 
-            if (!Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
-                $query->where('karyawan_id', Auth::user()->karyawan->id);
-            }
+                ->addColumn('absensi_list', function ($row) use ($absensiData, $allDates) {
+                    $userAbsensi = $absensiData
+                        ->get($row->id, collect())
+                        ->keyBy(fn ($item) => Carbon::parse($item->tanggal)->format('Y-m-d'));
 
-            if ($request->filled('date')) {
-                $dates = explode(' : ', $request->date);
-                if (count($dates) === 2) {
-                    try {
-                        $startDate = Carbon::createFromFormat('d-m-Y', trim($dates[0]))->format('Y-m-d');
-                        $endDate   = Carbon::createFromFormat('d-m-Y', trim($dates[1]))->format('Y-m-d');
-                        $query->whereBetween('tanggal', [$startDate, $endDate]);
-                    } catch (\Throwable $th) {}
-                }
-            }
+                    $html = '<div class="gap-1 d-flex flex-column">';
 
-            $query->orderBy('karyawan_id');
+                    foreach ($allDates as $tanggal) {
+                        $dayData = $userAbsensi->get($tanggal);
+                        $tanggalDisplay = Carbon::parse($tanggal)->format('d/m/Y');
 
-            return DataTables::of($query)
-                ->addColumn('karyawan', fn ($row) => $row->karyawan->name ?? '-')
+                        if ($dayData) {
+                            if ($dayData->izin) {
+                                $html .= '<div class="d-flex justify-content-between" style="font-size: 0.85rem; padding: 2px 4px; background: rgba(0,0,0,0.03); border-radius: 3px;">
+                                    <span>' . $tanggalDisplay . '</span>
+                                    <div class="gap-2 d-flex">
+                                        <span class="badge bg-info"><i class="fas fa-info-circle"></i> Izin</span>
+                                    </div>
+                                </div>';
+                                continue;
+                            }
+                            $duha = $dayData->duha
+                                ? '<span class="text-success">✔ ' . Carbon::parse($dayData->duha)->format('H:i') . '</span>'
+                                : '<span class="text-danger">✖</span>';
+                            $dzuhur = $dayData->dzuhur
+                                ? '<span class="text-success">✔ ' . Carbon::parse($dayData->dzuhur)->format('H:i') . '</span>'
+                                : '<span class="text-danger">✖</span>';
+                        } else {
+                            $duha = '<span class="text-muted">-</span>';
+                            $dzuhur = '<span class="text-muted">-</span>';
+                        }
 
-                ->editColumn('tanggal', function ($row) {
-                    return Carbon::parse($row->tanggal)
-                        ->locale('id')
-                        ->translatedFormat('l, d F Y');
-                })
-
-                // ✅ DUHA
-                ->editColumn('duha', function ($row) {
-                    if ($row->duha) {
-                        return '<span class="text-success">✔</span> ' . $row->duha;
+                        $html .= '<div class="d-flex justify-content-between" style="font-size: 0.85rem; padding: 2px 4px; background: rgba(0,0,0,0.03); border-radius: 3px;">
+                            <span>' . $tanggalDisplay . '</span>
+                            <div class="gap-2 d-flex">
+                                <span>Duha: ' . $duha . '</span>
+                                <span>Dzuhur: ' . $dzuhur . '</span>
+                            </div>
+                        </div>';
                     }
-                    return '<span class="text-danger">✖</span> -';
+                    $html .= '</div>';
+                    return $html;
                 })
 
-                // ✅ DZUHUR
-                ->editColumn('dzuhur', function ($row) {
-                    if ($row->dzuhur) {
-                        return '<span class="text-success">✔</span> ' . $row->dzuhur;
+                ->addColumn('aksi', function ($row) {
+                    $buttons = '<div class="btn-group" role="group">';
+                    if (Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
+                        $buttons .= '<button class="btn btn-sm btn-warning btn-edit" data-id="' . $row->id . '" title="Edit data">
+                                        <i class="fas fa-edit"></i>
+                                    </button>';
+                        $buttons .= '<button class="btn btn-sm btn-danger btn-delete" data-id="' . $row->id . '" title="Hapus data">
+                                        <i class="fas fa-trash"></i>
+                                    </button>';
                     }
-                    return '<span class="text-danger">✖</span> -';
+                    $buttons .= '</div>';
+                    return $buttons;
                 })
 
-                ->filterColumn('karyawan', function ($query, $keyword) {
-                    $query->whereHas('karyawan', function ($q) use ($keyword) {
-                        $q->where('name', 'like', "%{$keyword}%");
-                    });
-                })
-
-                ->rawColumns(['duha', 'dzuhur']) // ⚠️ penting biar HTML ke render
+                ->rawColumns(['absensi_list', 'aksi'])
                 ->addIndexColumn()
                 ->make(true);
         }
 
-        return view('dashboard.absensis.rekap-sholat.index');
+        return view('dashboard.absensis.rekap-sholat.index')->with('dateRange', "$startDate : $endDate");
     }
 
     public function show($id)
@@ -105,6 +150,10 @@ class RekapAbsensiSholatController extends Controller
 
     public function destroy($id)
     {
+        if (!Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
+            return response()->json(['success' => false, 'message' => 'Anda tidak memiliki akses untuk menghapus data ini'], 403);
+        }
+
         $absensi = AbsensiSholat::find($id);
 
         if (!$absensi) {

@@ -156,11 +156,12 @@ async function prosesAbsensi(tipe) {
     const btnMasuk   = document.getElementById('btn-absen-masuk');
     const btnPulang  = document.getElementById('btn-absen-pulang');
     const btnSholat  = document.getElementById('btn-absen-sholat');
+    const btnIzin    = document.getElementById('btn-izin-absen-sholat');
     const btnRiwayat = document.getElementById('btn-riwayat');
     const csrfToken  = document.querySelector('meta[name="csrf-token"]')?.content || '';
 
     showLoading();
-    [btnMasuk, btnPulang, btnSholat, btnRiwayat].forEach(btn => { if (btn) btn.disabled = true; });
+    [btnMasuk, btnPulang, btnSholat, btnIzin, btnRiwayat].forEach(btn => { if (btn) btn.disabled = true; });
 
     try {
         const location   = await getLocation();
@@ -205,7 +206,7 @@ async function prosesAbsensi(tipe) {
         notify.error(err.message || 'Terjadi kesalahan yang tidak diketahui', 'Terjadi Kesalahan');
     } finally {
         hideLoading();
-        [btnMasuk, btnPulang, btnSholat, btnRiwayat].forEach(btn => { if (btn) btn.disabled = false; });
+        [btnMasuk, btnPulang, btnSholat, btnIzin, btnRiwayat].forEach(btn => { if (btn) btn.disabled = false; });
     }
 }
 
@@ -217,11 +218,12 @@ async function prosesAbsensiSholat() {
     const btnMasuk   = document.getElementById('btn-absen-masuk');
     const btnPulang  = document.getElementById('btn-absen-pulang');
     const btnSholat  = document.getElementById('btn-absen-sholat');
+    const btnIzin    = document.getElementById('btn-izin-absen-sholat');
     const btnRiwayat = document.getElementById('btn-riwayat');
     const csrfToken  = document.querySelector('meta[name="csrf-token"]')?.content || '';
 
     showLoading();
-    [btnMasuk, btnPulang, btnSholat, btnRiwayat].forEach(btn => { if (btn) btn.disabled = true; });
+    [btnMasuk, btnPulang, btnSholat, btnIzin, btnRiwayat].forEach(btn => { if (btn) btn.disabled = true; });
 
     try {
         const location   = await getLocation();
@@ -272,7 +274,58 @@ async function prosesAbsensiSholat() {
         notify.error(err.message || 'Terjadi kesalahan', 'Terjadi Kesalahan');
     } finally {
         hideLoading();
-        [btnMasuk, btnPulang, btnSholat, btnRiwayat].forEach(btn => { if (btn) btn.disabled = false; });
+        [btnMasuk, btnPulang, btnSholat, btnIzin, btnRiwayat].forEach(btn => { if (btn) btn.disabled = false; });
+    }
+}
+
+async function prosesIzinSholat() {
+    const btnMasuk   = document.getElementById('btn-absen-masuk');
+    const btnPulang  = document.getElementById('btn-absen-pulang');
+    const btnSholat  = document.getElementById('btn-absen-sholat');
+    const btnIzin    = document.getElementById('btn-izin-absen-sholat');
+    const btnRiwayat = document.getElementById('btn-riwayat');
+    const csrfToken  = document.querySelector('meta[name="csrf-token"]')?.content || '';
+
+    showLoading();
+    [btnMasuk, btnPulang, btnSholat, btnIzin, btnRiwayat].forEach(btn => { if (btn) btn.disabled = true; });
+
+    try {
+        const location   = await getLocation();
+        const deviceInfo = getDeviceInfo();
+
+        const response = await fetch('/dashboard/absensis/sholat/izin', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept':       'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify({
+                latitude:  location.latitude,
+                longitude: location.longitude,
+                device_id: deviceInfo.device_id
+            })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            notify.error(result.message || `HTTP Error: ${response.status}`, 'Gagal Izin Sholat');
+            return;
+        }
+
+        if (result.success) {
+            notify.success(result.message, 'Izin Sholat Berhasil');
+        } else {
+            notify.error(result.message || 'Gagal mencatat izin sholat', 'Gagal Izin Sholat');
+        }
+
+    } catch (err) {
+        console.error('❌ Error izin sholat:', err);
+        notify.error(err.message || 'Terjadi kesalahan', 'Terjadi Kesalahan');
+    } finally {
+        hideLoading();
+        [btnMasuk, btnPulang, btnSholat, btnIzin, btnRiwayat].forEach(btn => { if (btn) btn.disabled = false; });
     }
 }
 
@@ -426,12 +479,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const btnMasuk   = document.getElementById('btn-absen-masuk');
     const btnPulang  = document.getElementById('btn-absen-pulang');
-    const btnSholat  = document.getElementById('btn-absen-sholat');   // ← baru
+    const btnSholat  = document.getElementById('btn-absen-sholat');
+    const btnIzin    = document.getElementById('btn-izin-absen-sholat');
     const btnRiwayat = document.getElementById('btn-riwayat');
 
     if (btnMasuk)   btnMasuk.addEventListener('click',   () => prosesAbsensi('masuk'));
     if (btnPulang)  btnPulang.addEventListener('click',  () => prosesAbsensi('pulang'));
-    if (btnSholat)  btnSholat.addEventListener('click',  prosesAbsensiSholat);           // ← baru
+    if (btnSholat)  btnSholat.addEventListener('click',  prosesAbsensiSholat);
+    if (btnIzin)    btnIzin.addEventListener('click',    prosesIzinSholat);
     if (btnRiwayat) btnRiwayat.addEventListener('click', tampilkanRiwayat);
 
     console.log('✅ absensi-main.js loaded');

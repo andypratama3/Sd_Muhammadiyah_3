@@ -177,6 +177,94 @@ class AbsensiSholatService
         }
     }
 
+    public function izinSholat(
+        $userId,
+        $latitude,
+        $longitude,
+        $ipAddress = null,
+        $userAgent = null,
+        $deviceId  = null
+    ): array {
+        $karyawan = Karyawan::where('user_id', $userId)->first();
+
+        if (!$karyawan) {
+            return ['success' => false, 'message' => 'Data karyawan tidak ditemukan'];
+        }
+
+        $now            = Carbon::now('Asia/Makassar');
+        $tanggalHariIni = $now->toDateString();
+
+        // 1 hari hanya 1 kali izin
+        $sudahIzin = AbsensiSholat::where('karyawan_id', $karyawan->id)
+            ->where('tanggal', $tanggalHariIni)
+            ->where('jenis_sholat', 'izin')
+            ->first();
+
+        if ($sudahIzin) {
+            return [
+                'success' => false,
+                'message' => "Anda sudah melakukan izin sholat hari ini."
+            ];
+        }
+
+        if ($ipAddress && $userAgent) {
+            $deviceValidation = $this->absensiService->validasiDevice(
+                $karyawan->id, $ipAddress, $userAgent, $deviceId
+            );
+
+            if (!$deviceValidation['valid']) {
+                return ['success' => false, 'message' => $deviceValidation['message']];
+            }
+        } else {
+            $deviceValidation = null;
+        }
+
+        try {
+            $record = AbsensiSholat::create([
+                'karyawan_id'  => $karyawan->id,
+                'tanggal'      => $tanggalHariIni,
+                'jam_sholat'   => $now->toTimeString(),
+                'jenis_sholat' => 'izin',
+                'latitude'     => $latitude,
+                'longitude'    => $longitude,
+                'area_name'    => 'Izin',
+                'ip_address'   => $ipAddress,
+                'device_id'    => $deviceId,
+                'user_agent'   => $userAgent,
+            ]);
+
+            $deviceName = $deviceValidation
+                ? ($deviceValidation['device']->device_name ?? 'Unknown')
+                : 'Unknown';
+
+            Log::info('Izin Absensi Sholat', [
+                'user_id'     => $userId,
+                'nama'        => $karyawan->name,
+                'waktu'       => $now->toDateTimeString(),
+                'ip'          => $ipAddress,
+                'device'      => $deviceName,
+            ]);
+
+            return [
+                'success' => true,
+                'message' => 'Izin berhalangan sholat berhasil dicatat.',
+                'data'    => [
+                    'nama'         => $karyawan->name,
+                    'jenis_sholat' => 'izin',
+                    'jam_sholat'   => $now->format('H:i:s'),
+                    'device'       => $deviceName,
+                ]
+            ];
+
+        } catch (\Exception $e) {
+            Log::error('Error simpan izin sholat', [
+                'user_id' => $userId,
+                'error'   => $e->getMessage()
+            ]);
+            return ['success' => false, 'message' => 'Terjadi kesalahan saat menyimpan data izin.'];
+        }
+    }
+
     // =========================================================================
     // RIWAYAT
     // =========================================================================
@@ -205,20 +293,22 @@ class AbsensiSholatService
                 'hari'         => $item->tanggal->locale('id')->dayName,
                 'jam_sholat'   => Carbon::parse($item->jam_sholat)->format('H:i'),
                 'jenis_sholat' => $item->jenis_sholat,
-                'nama_sholat'  => $item->jenis_sholat === 'duha' ? 'Sholat Duha' : 'Sholat Dzuhur',
+                'nama_sholat'  => $item->jenis_sholat === 'izin' ? 'Izin' : ($item->jenis_sholat === 'duha' ? 'Sholat Duha' : 'Sholat Dzuhur'),
                 'area'         => $item->area_name ?? '-',
             ]);
 
         $grouped = $records->groupBy('tanggal')->map(function ($items, $tanggal) {
             $duha = $items->where('jenis_sholat', 'duha')->count();
             $dzuhur = $items->where('jenis_sholat', 'dzuhur')->count();
+            $izin = $items->where('jenis_sholat', 'izin')->count();
             
             return [
                 'tanggal'  => $tanggal,
                 'hari'     => $items->first()['hari'],
                 'duha'     => $duha,
                 'dzuhur'   => $dzuhur,
-                'total'    => $duha + $dzuhur,
+                'izin'     => $izin,
+                'total'    => $duha + $dzuhur + $izin,
                 'detail'   => $items->values(),
             ];
         })->values();
@@ -237,7 +327,7 @@ class AbsensiSholatService
                 ],
                 'riwayat'    => $grouped,
                 'summary'    => $summary,
-                'total_bulan' => $records->count(),
+                'total_bulan' => $records->where('jenis_sholat', '!=', 'izin')->count(),
             ]
         ];
     }
@@ -262,6 +352,7 @@ class AbsensiSholatService
             'tanggal'       => $tanggalHariIni,
             'duha_selesai'  => $absensiHariIni->where('jenis_sholat', 'duha')->isNotEmpty(),
             'dzuhur_selesai' => $absensiHariIni->where('jenis_sholat', 'dzuhur')->isNotEmpty(),
+            'izin_selesai'   => $absensiHariIni->where('jenis_sholat', 'izin')->isNotEmpty(),
         ];
     }
 }

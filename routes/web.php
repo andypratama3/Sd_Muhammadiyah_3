@@ -206,9 +206,9 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
 
         // ─── Absensi Sholat ───────────────────────────────────────────────
         Route::post('/sholat',          [AbsensiSholatController::class, 'absen'])   ->name('absensis.sholat');
-        Route::get('/sholat/status',    [AbsensiSholatController::class, 'status'])->name('absensis.sholat.status');
-
-    Route::get('/sholat/riwayat',   [AbsensiSholatController::class, 'riwayat']) ->name('absensis.sholat.riwayat');
+        Route::post('/sholat/izin',     [AbsensiSholatController::class, 'izin'])    ->name('absensis.sholat.izin');
+        Route::get('/sholat/status',    [AbsensiSholatController::class, 'status'])  ->name('absensis.sholat.status');
+        Route::get('/sholat/riwayat',   [AbsensiSholatController::class, 'riwayat']) ->name('absensis.sholat.riwayat');
 
     });
 
