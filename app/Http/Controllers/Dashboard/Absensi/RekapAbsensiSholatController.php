@@ -8,15 +8,14 @@ use App\Models\Karyawan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
 class RekapAbsensiSholatController extends Controller
 {
     public function index(Request $request)
     {
-        $startDate = now()->format('Y-m-d');
-        $endDate = now()->format('Y-m-d');
+        $startDate = now()->startOfMonth()->format('Y-m-d');
+        $endDate   = now()->endOfMonth()->format('Y-m-d');
 
         if ($request->filled('date')) {
             $dates = explode(' : ', $request->date);
@@ -28,103 +27,97 @@ class RekapAbsensiSholatController extends Controller
             }
         }
 
-        $allDates = [];
-        $current = Carbon::parse($startDate);
-        $end = Carbon::parse($endDate);
-
-        while ($current->lte($end)) {
-            $allDates[] = $current->format('Y-m-d');
-            $current->addDay();
-        }
-
-        $absensiData = AbsensiSholat::select(
-            'karyawan_id',
-            'tanggal',
-            DB::raw("MAX(CASE WHEN jenis_sholat = 'duha' THEN jam_sholat END) as duha"),
-            DB::raw("MAX(CASE WHEN jenis_sholat = 'dzuhur' THEN jam_sholat END) as dzuhur"),
-            DB::raw("MAX(CASE WHEN jenis_sholat = 'izin' THEN jam_sholat END) as izin")
-        )
-        ->whereBetween('tanggal', [$startDate, $endDate])
-        ->groupBy('karyawan_id', 'tanggal')
-        ->get()
-        ->groupBy('karyawan_id');
-
-        $karyawans = Karyawan::orderBy('name');
-
-        if (!Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
-            $karyawans->where('id', Auth::user()->karyawan->id);
-        }
-
-        $karyawans = $karyawans->get();
-
         if ($request->ajax()) {
-            return DataTables::of($karyawans)
-                ->addColumn('karyawan', fn ($row) => $row->name ?? '-')
+            // 1. Ambil semua karyawan diurutkan berdasarkan nama
+            $karyawanQuery = Karyawan::orderBy('name');
+            if (!Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
+                $karyawanQuery->where('id', Auth::user()->karyawan->id);
+            }
+            $karyawanList = $karyawanQuery->get();
 
-                ->addColumn('absensi_list', function ($row) use ($absensiData, $allDates) {
-                    $userAbsensi = $absensiData
-                        ->get($row->id, collect())
-                        ->keyBy(fn ($item) => Carbon::parse($item->tanggal)->format('Y-m-d'));
+            // 2. Ambil semua data absensi dalam rentang tanggal, group by karyawan_id
+            $absensiRecords = AbsensiSholat::whereBetween('tanggal', [$startDate, $endDate])
+                ->orderBy('tanggal', 'desc')
+                ->get()
+                ->groupBy('karyawan_id');
 
-                    $html = '<div class="gap-1 d-flex flex-column">';
+            $data = [];
 
-                    foreach ($allDates as $tanggal) {
-                        $dayData = $userAbsensi->get($tanggal);
-                        $tanggalDisplay = Carbon::parse($tanggal)->format('d/m/Y');
+            // 3. Loop SEMUA karyawan terlebih dahulu
+            foreach ($karyawanList as $karyawan) {
 
-                        if ($dayData) {
-                            if ($dayData->izin) {
-                                $html .= '<div class="d-flex justify-content-between" style="font-size: 0.85rem; padding: 2px 4px; background: rgba(0,0,0,0.03); border-radius: 3px;">
-                                    <span>' . $tanggalDisplay . '</span>
-                                    <div class="gap-2 d-flex">
-                                        <span class="badge bg-info"><i class="fas fa-info-circle"></i> Izin</span>
-                                    </div>
-                                </div>';
-                                continue;
-                            }
-                            $duha = $dayData->duha
-                                ? '<span class="text-success">✔ ' . Carbon::parse($dayData->duha)->format('H:i') . '</span>'
-                                : '<span class="text-danger">✖</span>';
-                            $dzuhur = $dayData->dzuhur
-                                ? '<span class="text-success">✔ ' . Carbon::parse($dayData->dzuhur)->format('H:i') . '</span>'
-                                : '<span class="text-danger">✖</span>';
-                        } else {
-                            $duha = '<span class="text-muted">-</span>';
-                            $dzuhur = '<span class="text-muted">-</span>';
-                        }
+                // 4. Ambil absensi milik karyawan ini, group per tanggal
+                $karyawanAbsensi = isset($absensiRecords[$karyawan->id])
+                    ? $absensiRecords[$karyawan->id]->groupBy(fn($r) => $r->tanggal->format('Y-m-d'))
+                    : collect();
 
-                        $html .= '<div class="d-flex justify-content-between" style="font-size: 0.85rem; padding: 2px 4px; background: rgba(0,0,0,0.03); border-radius: 3px;">
-                            <span>' . $tanggalDisplay . '</span>
-                            <div class="gap-2 d-flex">
-                                <span>Duha: ' . $duha . '</span>
-                                <span>Dzuhur: ' . $dzuhur . '</span>
-                            </div>
-                        </div>';
-                    }
-                    $html .= '</div>';
-                    return $html;
+                // 5. Jika karyawan tidak punya absensi di periode ini,
+                //    tetap tampilkan 1 baris kosong agar semua karyawan muncul
+                if ($karyawanAbsensi->isEmpty()) {
+                    $data[] = [
+                        'id'              => null,
+                        'karyawan_id'     => $karyawan->id,
+                        'karyawan'        => $karyawan->name,
+                        'tanggal'         => null,
+                        'tanggal_display' => '-',
+                        'duha'            => '-',
+                        'dzuhur'          => '-',
+                        'is_izin'         => false,
+                    ];
+                    continue;
+                }
+
+                // 6. Loop per tanggal (sudah di-group per hari)
+                foreach ($karyawanAbsensi as $tanggal => $dayRecords) {
+                    $duha   = $dayRecords->firstWhere('jenis_sholat', 'duha');
+                    $dzuhur = $dayRecords->firstWhere('jenis_sholat', 'dzuhur');
+                    $izin   = $dayRecords->firstWhere('jenis_sholat', 'izin');
+
+                    $data[] = [
+                        'id'              => $dayRecords->first()->id,
+                        'karyawan_id'     => $karyawan->id,
+                        'karyawan'        => $karyawan->name,
+                        'tanggal'         => $tanggal,
+                        'tanggal_display' => Carbon::parse($tanggal)->translatedFormat('l, d F Y'),
+                        'duha'            => $izin ? 'Izin' : ($duha   ? Carbon::parse($duha->jam_sholat)->format('H:i:s')   : '-'),
+                        'dzuhur'          => $izin ? 'Izin' : ($dzuhur ? Carbon::parse($dzuhur->jam_sholat)->format('H:i:s') : '-'),
+                        'is_izin'         => (bool) $izin,
+                    ];
+                }
+            }
+
+            return DataTables::of($data)
+                ->addColumn('duha', function ($row) {
+                    if ($row['is_izin']) return '<span class="badge bg-info">Izin</span>';
+                    return $row['duha'];
                 })
-
+                ->addColumn('dzuhur', function ($row) {
+                    if ($row['is_izin']) return '<span class="badge bg-info">Izin</span>';
+                    return $row['dzuhur'];
+                })
                 ->addColumn('aksi', function ($row) {
                     $buttons = '<div class="btn-group" role="group">';
                     if (Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
-                        $buttons .= '<button class="btn btn-sm btn-warning btn-edit" data-id="' . $row->id . '" title="Edit data">
-                                        <i class="fas fa-edit"></i>
-                                    </button>';
-                        $buttons .= '<button class="btn btn-sm btn-danger btn-delete" data-id="' . $row->id . '" title="Hapus data">
-                                        <i class="fas fa-trash"></i>
-                                    </button>';
+                        if ($row['id']) {
+                            $buttons .= '<button class="btn btn-sm btn-warning btn-edit" data-id="' . $row['id'] . '" title="Edit data absensi">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </button>';
+                            $buttons .= '<button class="btn btn-sm btn-danger btn-delete" data-id="' . $row['id'] . '" title="Hapus data absensi">
+                                            <i class="fas fa-trash"></i> Hapus
+                                        </button>';
+                        } else {
+                            $buttons .= '<span class="text-muted small">No Data</span>';
+                        }
                     }
                     $buttons .= '</div>';
                     return $buttons;
                 })
-
-                ->rawColumns(['absensi_list', 'aksi'])
+                ->rawColumns(['duha', 'dzuhur', 'aksi'])
                 ->addIndexColumn()
                 ->make(true);
         }
 
-        return view('dashboard.absensis.rekap-sholat.index')->with('dateRange', "$startDate : $endDate");
+        return view('dashboard.absensis.rekap-sholat.index');
     }
 
     public function show($id)
@@ -148,10 +141,51 @@ class RekapAbsensiSholatController extends Controller
         ]);
     }
 
+    public function update(Request $request, $id)
+    {
+        try {
+            $absensi = AbsensiSholat::find($id);
+
+            if (!$absensi) {
+                return response()->json(['success' => false, 'message' => 'Data tidak ditemukan'], 404);
+            }
+
+            if (!Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
+                if ($absensi->karyawan_id !== Auth::user()->karyawan->id) {
+                    return response()->json(['success' => false, 'message' => 'Anda tidak memiliki akses untuk mengubah data ini'], 403);
+                }
+            }
+
+            $validated = $request->validate([
+                'tanggal'      => 'required|date',
+                'jenis_sholat' => 'required|in:duha,dzuhur,izin',
+                'jam_sholat'   => ['nullable', 'regex:/^\d{2}:\d{2}(:\d{2})?$/'],
+            ]);
+
+            $jamSholat = $validated['jam_sholat'];
+            if ($jamSholat && strlen($jamSholat) === 5) {
+                $jamSholat .= ':00';
+            }
+
+            $absensi->update([
+                'tanggal'      => $validated['tanggal'],
+                'jenis_sholat' => $validated['jenis_sholat'],
+                'jam_sholat'   => $jamSholat,
+            ]);
+
+            return response()->json(['success' => true, 'message' => 'Data berhasil diperbarui']);
+        } catch (\Throwable $th) {
+            return response()->json(['success' => false, 'message' => 'Gagal memperbarui data: ' . $th->getMessage()], 500);
+        }
+    }
+
     public function destroy($id)
     {
         if (!Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
-            return response()->json(['success' => false, 'message' => 'Anda tidak memiliki akses untuk menghapus data ini'], 403);
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda tidak memiliki akses untuk menghapus data ini'
+            ], 403);
         }
 
         $absensi = AbsensiSholat::find($id);
@@ -181,17 +215,17 @@ class RekapAbsensiSholatController extends Controller
                   ->whereYear('tanggal', now()->year);
         }
 
-        $total = $query->distinct('karyawan_id')->count('karyawan_id');
-        $duha = (clone $query)->where('jenis_sholat', 'duha')->distinct('karyawan_id')->count('karyawan_id');
-        $dzuhur = (clone $query)->where('jenis_sholat', 'dzuhur')->distinct('karyawan_id')->count('karyawan_id');
+        $total         = $query->distinct('karyawan_id')->count('karyawan_id');
+        $duha          = (clone $query)->where('jenis_sholat', 'duha')->distinct('karyawan_id')->count('karyawan_id');
+        $dzuhur        = (clone $query)->where('jenis_sholat', 'dzuhur')->distinct('karyawan_id')->count('karyawan_id');
         $karyawanCount = (clone $query)->distinct('karyawan_id')->count('karyawan_id');
 
         return response()->json([
             'success' => true,
             'data' => [
                 'total'          => $total,
-                'duha'          => $duha,
-                'dzuhur'        => $dzuhur,
+                'duha'           => $duha,
+                'dzuhur'         => $dzuhur,
                 'karyawan_count' => $karyawanCount,
             ]
         ]);

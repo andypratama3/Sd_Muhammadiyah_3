@@ -326,7 +326,7 @@
              </ul>
          </li>
          @endcanany
-         @canany('role: admin|superadmin')
+        @canany('role: admin|superadmin')
          <li class="menu-header small text-uppercase"><span class="menu-header-text">Pengunjung</span></li>
 
          <li class="menu-item {{ Request::routeIs('dashboard.url.visitor.*') ? 'active' : '' }}">
@@ -380,7 +380,7 @@
                         <div class="mx-3" data-i18n="Karyawan">Karyawan</div>
                     </a>
                 </li>
-                @can('role: superadmin')
+                @can('role: superadmin|admin')
                 <li class="menu-item {{ Request::routeIs('dashboard.pengaturan.user.*') ? 'active' : ''  }}">
                     <a href="{{ route('dashboard.pengaturan.user.index') }}" class="menu-link">
                         <i class="menu-icon tf-icons fa fa-users"></i>

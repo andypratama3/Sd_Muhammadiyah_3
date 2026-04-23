@@ -81,10 +81,10 @@
                         <tr>
                             <th>No</th>
                             <th>Nama Karyawan</th>
-                            <th>Detail Absensi</th>
-                            @hasanyrole('admin|superadmin')
-                                <th>Aksi</th>
-                            @endhasanyrole
+                            <th>Tanggal</th>
+                            <th>Dhuha</th>
+                            <th>Dzuhur</th>
+                            <th style="width: 120px;">Aksi</th>
                         </tr>
                     </thead>
                 </table>
@@ -106,14 +106,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 
     {{-- Modal Detail --}}
-    <div class="modal fade" id="modalDetail" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="modalDetailAbsensi" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="modal-title m-0"><i class="fas fa-info-circle"></i> Detail Absensi Sholat</h5>
+                    <h5 class="modal-title m-0">
+                        <i class="fas fa-info-circle"></i> Detail Absensi Sholat
+                    </h5>
                 </div>
                 <div class="modal-body" id="detail-content">
-                    {{-- Content loaded via JS --}}
                     <div class="text-center py-4">
                         <div class="spinner-border text-primary" role="status"></div>
                         <p class="mt-2">Memuat data...</p>
@@ -126,10 +127,68 @@
         </div>
     </div>
 
+    <!-- Modal Edit Absensi Sholat -->
+    <div class="modal fade" id="modalEditAbsensiSholat" tabindex="-1" aria-labelledby="modalEditAbsensiSholatLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEditAbsensiSholatLabel">Edit Data Absensi Sholat</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="formEditAbsensiSholat" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-body">
+                        <input type="hidden" id="edit_id" name="id">
+
+                        <div class="mb-3 form-group">
+                            <label for="edit_nama" class="form-label">
+                                <i class="fas fa-user"></i> Nama Karyawan
+                            </label>
+                            <input type="text" class="form-control" id="edit_nama" disabled>
+                        </div>
+
+                        <div class="mb-3 form-group">
+                            <label for="edit_tanggal" class="form-label">
+                                <i class="fas fa-calendar"></i> Tanggal
+                            </label>
+                            <input type="date" class="form-control" id="edit_tanggal" name="tanggal" required>
+                        </div>
+
+                        <div class="mb-3 form-group">
+                            <label for="edit_jenis" class="form-label">
+                                <i class="fas fa-pray"></i> Jenis Sholat
+                            </label>
+                            <select class="form-select" id="edit_jenis" name="jenis_sholat" required>
+                                <option value="duha">Dhuha</option>
+                                <option value="dzuhur">Dzuhur</option>
+                                <option value="izin">Izin</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3 form-group">
+                            <label for="edit_jam" class="form-label">
+                                <i class="fas fa-clock"></i> Jam Sholat
+                            </label>
+                            <input type="time" class="form-control" id="edit_jam" name="jam_sholat" step="60">
+                            <small class="text-muted">Kosongkan jika Izin</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary" id="btn_save">Simpan Perubahan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
         $(document).ready(function() {
             const tableSelector = '#table_absensi_sholat';
 
+            // Inisialisasi DateRangePicker
             $('input[name="date"]').daterangepicker({
                 autoUpdateInput: false,
                 timePicker: false,
@@ -140,8 +199,9 @@
             });
 
             $('input[name="date"]').on('apply.daterangepicker', function(ev, picker) {
-                $(this).val(picker.startDate.format('DD-MM-YYYY') + ' : ' + picker.endDate.format(
-                    'DD-MM-YYYY'));
+                $(this).val(
+                    picker.startDate.format('DD-MM-YYYY') + ' : ' + picker.endDate.format('DD-MM-YYYY')
+                );
                 table.ajax.reload();
             });
 
@@ -150,6 +210,7 @@
                 table.ajax.reload();
             });
 
+            // Inisialisasi DataTables
             const table = $(tableSelector).DataTable({
                 ordering: true,
                 paging: true,
@@ -169,9 +230,18 @@
                         text: '<i class="fas fa-file-pdf"></i> PDF',
                         className: 'buttons-pdf',
                         title: 'Rekap Absensi Sholat',
+                        orientation: 'portrait',
+                        pageSize: 'A4',
                         exportOptions: {
-                            columns: [0, 1, 2],
-                            stripHtml: true
+                            columns: [0, 1, 2, 3, 4],
+                        },
+                        customize: function(doc) {
+                            doc.content[1].table.widths = ['10%', '35%', '25%', '20%', '15%'];
+                            doc.content[1].alignment = 'center';
+                            doc.styles.tableHeader.alignment = 'center';
+                            doc.styles.tableBodyEven.alignment = 'center';
+                            doc.styles.tableBodyOdd.alignment = 'center';
+                            doc.content[0].alignment = 'center';
                         }
                     },
                     {
@@ -180,17 +250,29 @@
                         className: 'buttons-excel',
                         title: 'Rekap Absensi Sholat',
                         exportOptions: {
-                            columns: [0, 1, 2],
-                            stripHtml: true
+                            columns: [0, 1, 2, 3, 4],
                         }
                     },
                     {
                         extend: 'print',
                         text: '<i class="fas fa-print"></i> Print',
                         className: 'buttons-print',
+                        title: '',
                         exportOptions: {
-                            columns: [0, 1, 2],
-                            stripHtml: true
+                            columns: [0, 1, 2, 3, 4],
+                        },
+                        customize: function(win) {
+                            $(win.document.body)
+                                .css('font-size', '10pt')
+                                .css('text-align', 'center');
+                            $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit')
+                                .css('margin', '20px auto')
+                                .css('width', '100%');
+                            $(win.document.body).prepend(
+                                '<h3 style="text-align:center; margin-bottom:20px;">Rekap Absensi Sholat</h3>'
+                            );
                         }
                     }
                 ],
@@ -198,67 +280,137 @@
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
                         orderable: false,
-                        searchable: false
+                        searchable: false,
+                        className: 'text-center'
                     },
                     {
                         data: 'karyawan',
                         name: 'karyawan'
                     },
                     {
-                        data: 'absensi_list',
-                        name: 'absensi_list'
+                        data: 'tanggal_display',
+                        name: 'tanggal'
                     },
-                    @hasanyrole('admin|superadmin')
+                    {
+                        data: 'duha',
+                        name: 'duha',
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'dzuhur',
+                        name: 'dzuhur',
+                        className: 'text-center'
+                    },
                     {
                         data: 'aksi',
                         name: 'aksi',
                         orderable: false,
-                        searchable: false
+                        searchable: false,
+                        className: 'text-center'
                     }
-                    @endhasanyrole
                 ]
             });
 
+            // Tombol Filter
             $('#btn_filter').on('click', function() {
                 table.ajax.reload();
             });
 
+            // Tombol Reset
             $('#btn_reset').on('click', function() {
                 $('#date_range').val('');
                 table.ajax.reload();
             });
 
-            // Action: Edit (Placeholder / Detail)
+            // Aksi: Edit data absensi sholat
             $(document).on('click', '.btn-edit', function() {
                 const id = $(this).data('id');
-                // Untuk rekap sholat per karyawan, 'id' adalah ID Karyawan. 
-                // Biasanya diarahkan ke riwayat detail karyawan tersebut.
-                window.location.href = `/dashboard/absensis?karyawan_id=${id}`;
+                $.ajax({
+                    url: `/dashboard/rekap-sholat/${id}`,
+                    type: 'GET',
+                    success: function(res) {
+                        if (res.success) {
+                            const data = res.data;
+                            $('#edit_id').val(data.id);
+                            $('#edit_nama').val(data.karyawan);
+
+                            // Format tanggal YYYY-MM-DD
+                            const parts = data.tanggal.split('-');
+                            $('#edit_tanggal').val(`${parts[2]}-${parts[1]}-${parts[0]}`);
+
+                            $('#edit_jenis').val(data.jenis_sholat);
+                            $('#edit_jam').val(data.jam_sholat);
+
+                            const modal = new bootstrap.Modal(document.getElementById(
+                                'modalEditAbsensiSholat'));
+                            modal.show();
+                        }
+                    }
+                });
             });
 
-            // Action: Delete
+            // Submit Form Edit
+            $('#formEditAbsensiSholat').on('submit', function(e) {
+                e.preventDefault();
+                const id = $('#edit_id').val();
+                const formData = $(this).serialize();
+
+                $.ajax({
+                    url: `/dashboard/rekap-sholat/${id}`,
+                    type: 'PUT',
+                    data: formData,
+                    success: function(res) {
+                        if (res.success) {
+                            Swal.fire('Berhasil', res.message, 'success');
+                            bootstrap.Modal.getInstance(document.getElementById(
+                                'modalEditAbsensiSholat')).hide();
+                            table.ajax.reload();
+                        } else {
+                            Swal.fire('Gagal', res.message, 'error');
+                        }
+                    },
+                    error: function(xhr) {
+                        Swal.fire('Error', xhr.responseJSON?.message || 'Terjadi kesalahan',
+                            'error');
+                    }
+                });
+            });
+
+            // Aksi: Hapus data absensi
             $(document).on('click', '.btn-delete', function() {
                 const id = $(this).data('id');
-                if (confirm('Apakah Anda yakin ingin menghapus data absensi sholat karyawan ini? (Tindakan ini mungkin menghapus semua record dalam jangkauan filter)')) {
-                    $.ajax({
-                        url: `/dashboard/rekap-sholat/${id}`,
-                        type: 'DELETE',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        success: function(res) {
-                            if (res.success) {
-                                alert(res.message);
-                                table.ajax.reload();
-                            } else {
-                                alert('Gagal: ' + res.message);
+
+                Swal.fire({
+                    title: 'Anda yakin?',
+                    text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, Hapus!',
+                    cancelButtonText: 'Batal',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: `/dashboard/rekap-sholat/${id}`,
+                            type: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function(res) {
+                                if (res.success) {
+                                    Swal.fire('Berhasil', res.message, 'success');
+                                    table.ajax.reload();
+                                } else {
+                                    Swal.fire('Gagal', res.message, 'error');
+                                }
+                            },
+                            error: function() {
+                                Swal.fire('Error', 'Terjadi kesalahan server.',
+                                'error');
                             }
-                        },
-                        error: function() {
-                            alert('Terjadi kesalahan server.');
-                        }
-                    });
-                }
+                        });
+                    }
+                });
             });
         });
     </script>
