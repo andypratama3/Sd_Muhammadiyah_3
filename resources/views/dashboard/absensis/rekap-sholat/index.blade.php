@@ -22,6 +22,21 @@
         .invalid-feedback { display: block; color: #dc3545; font-size: .875rem; margin-top: .25rem; }
         .is-invalid { border-color: #dc3545 !important; }
 
+        /* Tabel Rekap Sholat Enhancements */
+        #table_absensi_sholat td {
+            vertical-align: middle;
+            font-size: 0.9rem;
+        }
+        #table_absensi_sholat thead th {
+            text-align: center;
+            vertical-align: middle;
+            font-weight: 600;
+        }
+        .badge {
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
         /* Pastikan SweetAlert selalu di atas modal Bootstrap */
         .swal-on-modal { z-index: 99999 !important; }
     </style>

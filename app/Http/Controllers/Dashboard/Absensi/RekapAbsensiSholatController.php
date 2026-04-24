@@ -95,7 +95,7 @@ class RekapAbsensiSholatController extends Controller
                 ->addColumn('duha', function ($row) {
                     // Jika sedang izin, tidak perlu tombol apapun di kolom ini
                     if ($row['is_izin']) {
-                        return '<span class="badge bg-info text-white px-2 py-1">Izin</span>';
+                        return '<span class="badge bg-info text-white p-1" style="font-size: 0.85rem; min-width: 50px;">Izin</span>';
                     }
 
                     $html = '';
@@ -103,7 +103,7 @@ class RekapAbsensiSholatController extends Controller
                     if ($row['duha_id']) {
                         // Sudah ada → tampilkan jam + tombol Edit & Hapus
                         $html .= '<div class="d-flex flex-column align-items-center gap-1">';
-                        $html .= '<span class="badge bg-success px-2 py-1">' . e($row['duha_jam']) . '</span>';
+                        $html .= '<span class="badge bg-success p-1" style="font-size: 0.85rem; min-width: 50px;">' . e($row['duha_jam']) . '</span>';
 
                         if ($row['is_admin']) {
                             $html .= '<div class="d-flex gap-1">';
@@ -122,7 +122,8 @@ class RekapAbsensiSholatController extends Controller
                                 $row['karyawan_id'],
                                 $row['karyawan'],
                                 $row['tanggal'],
-                                'duha'
+                                'duha',
+                                'btn-primary'
                             );
                         }
                     }
@@ -133,14 +134,14 @@ class RekapAbsensiSholatController extends Controller
                 // ── Kolom DZUHUR ─────────────────────────────────────────────
                 ->addColumn('dzuhur', function ($row) {
                     if ($row['is_izin']) {
-                        return '<span class="badge bg-info text-white px-2 py-1">Izin</span>';
+                        return '<span class="badge bg-info text-white p-1" style="font-size: 0.85rem; min-width: 50px;">Izin</span>';
                     }
 
                     $html = '';
 
                     if ($row['dzuhur_id']) {
                         $html .= '<div class="d-flex flex-column align-items-center gap-1">';
-                        $html .= '<span class="badge bg-success px-2 py-1">' . e($row['dzuhur_jam']) . '</span>';
+                        $html .= '<span class="badge bg-success p-1" style="font-size: 0.85rem; min-width: 50px;">' . e($row['dzuhur_jam']) . '</span>';
 
                         if ($row['is_admin']) {
                             $html .= '<div class="d-flex gap-1">';
@@ -158,7 +159,8 @@ class RekapAbsensiSholatController extends Controller
                                 $row['karyawan_id'],
                                 $row['karyawan'],
                                 $row['tanggal'],
-                                'dzuhur'
+                                'dzuhur',
+                                'btn-primary'
                             );
                         }
                     }
@@ -209,8 +211,10 @@ class RekapAbsensiSholatController extends Controller
     private function btnEdit(string $id, string $size = 'sm', string $label = ''): string
     {
         $text = $label ? '<i class="fas fa-edit"></i> ' . e($label) : '<i class="fas fa-edit"></i>';
-        return '<button class="btn btn-' . $size . ' btn-warning btn-edit"
+        $classSize = $size ? 'btn-' . $size : 'btn-sm';
+        return '<button class="btn ' . $classSize . ' btn-warning btn-edit"
                     data-id="' . $id . '"
+                    style="font-size: 0.85rem; padding: 0.25rem 0.5rem;"
                     title="Edit">
                     ' . $text . '
                 </button>';
@@ -221,8 +225,10 @@ class RekapAbsensiSholatController extends Controller
      */
     private function btnDelete(string $id, string $size = 'sm'): string
     {
-        return '<button class="btn btn-' . $size . ' btn-danger btn-delete"
+        $classSize = $size ? 'btn-' . $size : 'btn-sm';
+        return '<button class="btn ' . $classSize . ' btn-danger btn-delete"
                     data-id="' . $id . '"
+                    style="font-size: 0.85rem; padding: 0.25rem 0.5rem;"
                     title="Hapus">
                     <i class="fas fa-trash"></i>
                 </button>';
@@ -246,6 +252,7 @@ class RekapAbsensiSholatController extends Controller
                     data-karyawan-nama="' . e($karyawanNama) . '"
                     data-tanggal="'       . e($tanggal)       . '"
                     data-jenis="'         . e($jenisSholat)   . '"
+                    style="font-size: 0.85rem; padding: 0.25rem 0.6rem; font-weight: 500;"
                     title="Tambah ' . ucfirst($jenisSholat) . '">
                     <i class="fas fa-plus"></i> ' . ucfirst($jenisSholat) . '
                 </button>';
@@ -267,15 +274,19 @@ class RekapAbsensiSholatController extends Controller
                 'karyawan_id'  => 'required|exists:karyawans,id',
                 'tanggal'      => 'required|date',
                 'jenis_sholat' => 'required|in:duha,dzuhur,izin',
-                'jam_sholat'   => ['nullable', 'regex:/^\d{2}:\d{2}(:\d{2})?$/'],
+                'jam_sholat'   => [
+                    $request->jenis_sholat === 'izin' ? 'nullable' : 'required',
+                    'regex:/^\d{2}:\d{2}(:\d{2})?$/'
+                ],
             ], [
-                'karyawan_id.required'  => 'Karyawan harus dipilih',
-                'karyawan_id.exists'    => 'Karyawan tidak ditemukan',
-                'tanggal.required'      => 'Tanggal harus diisi',
-                'tanggal.date'          => 'Format tanggal tidak valid',
-                'jenis_sholat.required' => 'Jenis sholat harus dipilih',
-                'jenis_sholat.in'       => 'Jenis sholat tidak valid',
-                'jam_sholat.regex'      => 'Format jam tidak valid (HH:MM)',
+                'karyawan_id.required'  => 'Pilih karyawan terlebih dahulu.',
+                'karyawan_id.exists'    => 'Karyawan yang dipilih tidak valid.',
+                'tanggal.required'      => 'Tanggal absensi harus diisi.',
+                'tanggal.date'          => 'Format tanggal tidak valid.',
+                'jenis_sholat.required' => 'Jenis sholat/izin harus dipilih.',
+                'jenis_sholat.in'       => 'Jenis sholat tidak valid.',
+                'jam_sholat.required'   => 'Jam sholat harus diisi jika bukan izin.',
+                'jam_sholat.regex'      => 'Format jam tidak valid (Gunakan format HH:MM).',
             ]);
 
             $jamSholat = $validated['jam_sholat'] ?? null;
@@ -373,13 +384,17 @@ class RekapAbsensiSholatController extends Controller
             $validated = $request->validate([
                 'tanggal'      => 'required|date',
                 'jenis_sholat' => 'required|in:duha,dzuhur,izin',
-                'jam_sholat'   => ['nullable', 'regex:/^\d{2}:\d{2}(:\d{2})?$/'],
+                'jam_sholat'   => [
+                    $request->jenis_sholat === 'izin' ? 'nullable' : 'required',
+                    'regex:/^\d{2}:\d{2}(:\d{2})?$/'
+                ],
             ], [
-                'tanggal.required'      => 'Tanggal harus diisi',
-                'tanggal.date'          => 'Format tanggal tidak valid',
-                'jenis_sholat.required' => 'Jenis sholat harus dipilih',
-                'jenis_sholat.in'       => 'Jenis sholat tidak valid',
-                'jam_sholat.regex'      => 'Format jam tidak valid (HH:MM)',
+                'tanggal.required'      => 'Tanggal absensi harus diisi.',
+                'tanggal.date'          => 'Format tanggal tidak valid.',
+                'jenis_sholat.required' => 'Jenis sholat/izin harus dipilih.',
+                'jenis_sholat.in'       => 'Jenis sholat tidak valid.',
+                'jam_sholat.required'   => 'Jam sholat harus diisi jika bukan izin.',
+                'jam_sholat.regex'      => 'Format jam tidak valid (Gunakan format HH:MM).',
             ]);
 
             $jamSholat = $validated['jam_sholat'] ?? null;
