@@ -23,39 +23,40 @@ class RekapAbsensiSholatController extends Controller
                 try {
                     $startDate = Carbon::createFromFormat('d-m-Y', trim($dates[0]))->format('Y-m-d');
                     $endDate   = Carbon::createFromFormat('d-m-Y', trim($dates[1]))->format('Y-m-d');
-                } catch (\Throwable $th) {}
+                } catch (\Throwable $th) {
+                    // Biarkan default (hari ini)
+                }
             }
         }
 
         if ($request->ajax()) {
-            // 1. Ambil semua karyawan diurutkan berdasarkan nama
+            // 1. Ambil semua karyawan
             $karyawanQuery = Karyawan::orderBy('name');
             if (!Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
                 $karyawanQuery->where('id', Auth::user()->karyawan->id);
             }
             $karyawanList = $karyawanQuery->get();
 
-            // 2. Ambil semua record absensi dalam range, group by karyawan_id → tanggal
+            // 2. Ambil semua absensi dalam range, group by karyawan_id → tanggal
             $absensiRecords = AbsensiSholat::whereBetween('tanggal', [$startDate, $endDate])
                 ->get()
                 ->groupBy([
                     fn($r) => $r->karyawan_id,
-                    fn($r) => $r->tanggal->format('Y-m-d'),
+                    fn($r) => Carbon::parse($r->tanggal)->format('Y-m-d'),
                 ]);
 
-            // 3. Buat daftar tanggal dari endDate → startDate (terbaru duluan)
+            // 3. Daftar tanggal terbaru duluan
             $dateRange = [];
             $current   = Carbon::parse($endDate);
             $start     = Carbon::parse($startDate);
-
             while ($current->gte($start)) {
                 $dateRange[] = $current->format('Y-m-d');
                 $current->subDay();
             }
 
-            $data = [];
+            $data    = [];
+            $isAdmin = Auth::user()->hasAnyRole(['admin', 'superadmin']);
 
-            // 4. Loop per TANGGAL → per KARYAWAN
             foreach ($dateRange as $tanggal) {
                 foreach ($karyawanList as $karyawan) {
 
@@ -66,65 +67,132 @@ class RekapAbsensiSholatController extends Controller
                     $izin   = $dayRecords->firstWhere('jenis_sholat', 'izin');
 
                     $data[] = [
-                        'id'              => $dayRecords->first()->id ?? null,
                         'karyawan_id'     => $karyawan->id,
                         'karyawan'        => $karyawan->name,
                         'tanggal'         => $tanggal,
                         'tanggal_display' => Carbon::parse($tanggal)
                                                 ->locale('id')
                                                 ->translatedFormat('l, d F Y'),
-                        'duha'            => $izin
-                                                ? 'Izin'
-                                                : ($duha   ? Carbon::parse($duha->jam_sholat)->format('H:i')   : '-'),
-                        'dzuhur'          => $izin
-                                                ? 'Izin'
-                                                : ($dzuhur ? Carbon::parse($dzuhur->jam_sholat)->format('H:i') : '-'),
+
+                        // ID per jenis — null = belum ada
+                        'duha_id'         => $duha   ? $duha->id   : null,
+                        'dzuhur_id'       => $dzuhur ? $dzuhur->id : null,
+                        'izin_id'         => $izin   ? $izin->id   : null,
+
+                        // Tampilan jam
+                        'duha_jam'        => $duha   ? Carbon::parse($duha->jam_sholat)->format('H:i')   : null,
+                        'dzuhur_jam'      => $dzuhur ? Carbon::parse($dzuhur->jam_sholat)->format('H:i') : null,
+
                         'is_izin'         => (bool) $izin,
-                        'has_data'        => $dayRecords->isNotEmpty(),
+                        'is_admin'        => $isAdmin,
                     ];
                 }
             }
 
             return DataTables::of($data)
-                ->addColumn('duha', function ($row) {
-                    if ($row['is_izin'])      return '<span class="badge bg-info">Izin</span>';
-                    if ($row['duha'] === '-') return '<span class="text-muted">-</span>';
-                    return '<span class="badge bg-success">' . $row['duha'] . '</span>';
-                })
-                ->addColumn('dzuhur', function ($row) {
-                    if ($row['is_izin'])        return '<span class="badge bg-info">Izin</span>';
-                    if ($row['dzuhur'] === '-') return '<span class="text-muted">-</span>';
-                    return '<span class="badge bg-success">' . $row['dzuhur'] . '</span>';
-                })
-                ->addColumn('aksi', function ($row) {
-                    $buttons = '<div class="btn-group" role="group">';
 
-                    if (Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
-                        if ($row['has_data']) {
-                            $buttons .= '<button class="btn btn-sm btn-warning btn-edit"
-                                            data-id="' . $row['id'] . '"
-                                            title="Edit data absensi">
-                                            <i class="fas fa-edit"></i> Edit
-                                        </button>';
-                            $buttons .= '<button class="btn btn-sm btn-danger btn-delete"
-                                            data-id="' . $row['id'] . '"
-                                            title="Hapus data absensi">
-                                            <i class="fas fa-trash"></i> Hapus
-                                        </button>';
-                        } else {
-                            $buttons .= '<button class="btn btn-sm btn-primary btn-add"
-                                            data-karyawan-id="'   . $row['karyawan_id'] . '"
-                                            data-karyawan-nama="' . e($row['karyawan'])  . '"
-                                            data-tanggal="'       . $row['tanggal']      . '"
-                                            title="Tambah data absensi sholat">
-                                            <i class="fas fa-plus"></i> Tambah
-                                        </button>';
+                // ── Kolom DHUHA ──────────────────────────────────────────────
+                ->addColumn('duha', function ($row) {
+                    // Jika sedang izin, tidak perlu tombol apapun di kolom ini
+                    if ($row['is_izin']) {
+                        return '<span class="badge bg-info text-white px-2 py-1">Izin</span>';
+                    }
+
+                    $html = '';
+
+                    if ($row['duha_id']) {
+                        // Sudah ada → tampilkan jam + tombol Edit & Hapus
+                        $html .= '<div class="d-flex flex-column align-items-center gap-1">';
+                        $html .= '<span class="badge bg-success px-2 py-1">' . e($row['duha_jam']) . '</span>';
+
+                        if ($row['is_admin']) {
+                            $html .= '<div class="d-flex gap-1">';
+                            $html .= $this->btnEdit($row['duha_id'], 'sm');
+                            $html .= $this->btnDelete($row['duha_id'], 'sm');
+                            $html .= '</div>';
+                        }
+
+                        $html .= '</div>';
+                    } else {
+                        // Belum ada → tombol Tambah (admin saja)
+                        $html .= '<span class="text-muted d-block mb-1">-</span>';
+
+                        if ($row['is_admin']) {
+                            $html .= $this->btnAdd(
+                                $row['karyawan_id'],
+                                $row['karyawan'],
+                                $row['tanggal'],
+                                'duha'
+                            );
                         }
                     }
 
-                    $buttons .= '</div>';
-                    return $buttons;
+                    return $html;
                 })
+
+                // ── Kolom DZUHUR ─────────────────────────────────────────────
+                ->addColumn('dzuhur', function ($row) {
+                    if ($row['is_izin']) {
+                        return '<span class="badge bg-info text-white px-2 py-1">Izin</span>';
+                    }
+
+                    $html = '';
+
+                    if ($row['dzuhur_id']) {
+                        $html .= '<div class="d-flex flex-column align-items-center gap-1">';
+                        $html .= '<span class="badge bg-success px-2 py-1">' . e($row['dzuhur_jam']) . '</span>';
+
+                        if ($row['is_admin']) {
+                            $html .= '<div class="d-flex gap-1">';
+                            $html .= $this->btnEdit($row['dzuhur_id'], 'sm');
+                            $html .= $this->btnDelete($row['dzuhur_id'], 'sm');
+                            $html .= '</div>';
+                        }
+
+                        $html .= '</div>';
+                    } else {
+                        $html .= '<span class="text-muted d-block mb-1">-</span>';
+
+                        if ($row['is_admin']) {
+                            $html .= $this->btnAdd(
+                                $row['karyawan_id'],
+                                $row['karyawan'],
+                                $row['tanggal'],
+                                'dzuhur'
+                            );
+                        }
+                    }
+
+                    return $html;
+                })
+
+                // ── Kolom AKSI (khusus Izin) ─────────────────────────────────
+                ->addColumn('aksi', function ($row) {
+                    if (!$row['is_admin']) {
+                        return '<span class="text-muted">-</span>';
+                    }
+
+                    $html = '<div class="d-flex gap-1 justify-content-center">';
+
+                    if ($row['izin_id']) {
+                        // Sudah izin → Edit + Hapus izin
+                        $html .= $this->btnEdit($row['izin_id'], 'sm', 'Izin');
+                        $html .= $this->btnDelete($row['izin_id'], 'sm');
+                    } else {
+                        // Belum izin → Tambah Izin
+                        $html .= $this->btnAdd(
+                            $row['karyawan_id'],
+                            $row['karyawan'],
+                            $row['tanggal'],
+                            'izin',
+                            'btn-secondary'
+                        );
+                    }
+
+                    $html .= '</div>';
+                    return $html;
+                })
+
                 ->rawColumns(['duha', 'dzuhur', 'aksi'])
                 ->addIndexColumn()
                 ->make(true);
@@ -133,16 +201,65 @@ class RekapAbsensiSholatController extends Controller
         return view('dashboard.absensis.rekap-sholat.index');
     }
 
+    // ── Helpers tombol ───────────────────────────────────────────────────────
+
     /**
-     * Simpan data absensi sholat baru (mode Tambah)
+     * Tombol Edit (orange) — dipakai di kolom Duha, Dzuhur, dan Aksi
      */
+    private function btnEdit(string $id, string $size = 'sm', string $label = ''): string
+    {
+        $text = $label ? '<i class="fas fa-edit"></i> ' . e($label) : '<i class="fas fa-edit"></i>';
+        return '<button class="btn btn-' . $size . ' btn-warning btn-edit"
+                    data-id="' . $id . '"
+                    title="Edit">
+                    ' . $text . '
+                </button>';
+    }
+
+    /**
+     * Tombol Hapus (merah)
+     */
+    private function btnDelete(string $id, string $size = 'sm'): string
+    {
+        return '<button class="btn btn-' . $size . ' btn-danger btn-delete"
+                    data-id="' . $id . '"
+                    title="Hapus">
+                    <i class="fas fa-trash"></i>
+                </button>';
+    }
+
+    /**
+     * Tombol Tambah — membawa data-jenis agar modal langsung tahu jenis yang ditambah
+     *
+     * @param string $jenisSholat duha | dzuhur | izin
+     * @param string $btnClass    Bootstrap btn color class
+     */
+    private function btnAdd(
+        string    $karyawanId,
+        string $karyawanNama,
+        string $tanggal,
+        string $jenisSholat,
+        string $btnClass = 'btn-primary'
+    ): string {
+        return '<button class="btn btn-sm ' . $btnClass . ' btn-add"
+                    data-karyawan-id="'   . e($karyawanId)   . '"
+                    data-karyawan-nama="' . e($karyawanNama) . '"
+                    data-tanggal="'       . e($tanggal)       . '"
+                    data-jenis="'         . e($jenisSholat)   . '"
+                    title="Tambah ' . ucfirst($jenisSholat) . '">
+                    <i class="fas fa-plus"></i> ' . ucfirst($jenisSholat) . '
+                </button>';
+    }
+
+    // ── Store ────────────────────────────────────────────────────────────────
+
     public function store(Request $request)
     {
         try {
             if (!Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Anda tidak memiliki akses untuk menambah data'
+                    'message' => 'Anda tidak memiliki akses untuk menambah data',
                 ], 403);
             }
 
@@ -166,18 +283,20 @@ class RekapAbsensiSholatController extends Controller
                 $jamSholat .= ':00';
             }
 
+            if($request->jenis_sholat == 'izin') {
+                $jamSholat = "00:00";
+            }
+
             $absensi = AbsensiSholat::updateOrCreate(
                 [
+                    'jenis_sholat' => $validated['jenis_sholat'],
                     'karyawan_id'  => $validated['karyawan_id'],
                     'tanggal'      => $validated['tanggal'],
-                    'jenis_sholat' => $validated['jenis_sholat'],
                 ],
-                [
-                    'jam_sholat' => $jamSholat,
-                ]
+                ['jam_sholat' => $jamSholat]
             );
 
-            \Log::info('RekapAbsensiSholatController - Store Success', [
+            \Log::info('RekapAbsensiSholatController@store success', [
                 'absensi_id' => $absensi->id,
                 'user_id'    => Auth::id(),
             ]);
@@ -185,34 +304,33 @@ class RekapAbsensiSholatController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Data absensi sholat berhasil ditambahkan',
-                'data'    => $absensi
+                'data'    => $absensi,
             ]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'success' => false,
-                'errors'  => $e->validator->errors()
+                'errors'  => $e->validator->errors(),
             ], 422);
 
         } catch (\Throwable $th) {
-            \Log::error('RekapAbsensiSholatController - Store Error', [
+            \Log::error('RekapAbsensiSholatController@store error', [
                 'error' => $th->getMessage(),
                 'file'  => $th->getFile(),
                 'line'  => $th->getLine(),
             ]);
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal menambahkan data: ' . $th->getMessage()
+                'message' => 'Gagal menambahkan data: ' . $th->getMessage(),
             ], 500);
         }
     }
 
-    /**
-     * Ambil detail data absensi sholat (untuk modal edit)
-     */
+    // ── Show ─────────────────────────────────────────────────────────────────
+
     public function show($id)
     {
-        $absensi = AbsensiSholat::with(['karyawan'])->where('id', $id)->first();
+        $absensi = AbsensiSholat::with('karyawan')->find($id);
 
         if (!$absensi) {
             return response()->json(['success' => false, 'message' => 'Data tidak ditemukan'], 404);
@@ -228,14 +346,12 @@ class RekapAbsensiSholatController extends Controller
                 'jam_sholat'   => $absensi->jam_sholat
                                     ? Carbon::parse($absensi->jam_sholat)->format('H:i')
                                     : null,
-                'area'         => $absensi->area_name ?? '-',
-            ]
+            ],
         ]);
     }
 
-    /**
-     * Update data absensi sholat
-     */
+    // ── Update ───────────────────────────────────────────────────────────────
+
     public function update(Request $request, $id)
     {
         try {
@@ -249,7 +365,7 @@ class RekapAbsensiSholatController extends Controller
                 if ($absensi->karyawan_id !== Auth::user()->karyawan->id) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'Anda tidak memiliki akses untuk mengubah data ini'
+                        'message' => 'Anda tidak memiliki akses untuk mengubah data ini',
                     ], 403);
                 }
             }
@@ -277,7 +393,7 @@ class RekapAbsensiSholatController extends Controller
                 'jam_sholat'   => $jamSholat,
             ]);
 
-            \Log::info('RekapAbsensiSholatController - Update Success', [
+            \Log::info('RekapAbsensiSholatController@update success', [
                 'absensi_id' => $id,
                 'user_id'    => Auth::id(),
             ]);
@@ -287,30 +403,29 @@ class RekapAbsensiSholatController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'success' => false,
-                'errors'  => $e->validator->errors()
+                'errors'  => $e->validator->errors(),
             ], 422);
 
         } catch (\Throwable $th) {
-            \Log::error('RekapAbsensiSholatController - Update Error', [
+            \Log::error('RekapAbsensiSholatController@update error', [
                 'error'      => $th->getMessage(),
                 'absensi_id' => $id,
             ]);
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal memperbarui data: ' . $th->getMessage()
+                'message' => 'Gagal memperbarui data: ' . $th->getMessage(),
             ], 500);
         }
     }
 
-    /**
-     * Hapus data absensi sholat
-     */
+    // ── Destroy ──────────────────────────────────────────────────────────────
+
     public function destroy($id)
     {
         if (!Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
             return response()->json([
                 'success' => false,
-                'message' => 'Anda tidak memiliki akses untuk menghapus data ini'
+                'message' => 'Anda tidak memiliki akses untuk menghapus data ini',
             ], 403);
         }
 
@@ -322,7 +437,7 @@ class RekapAbsensiSholatController extends Controller
 
         $absensi->delete();
 
-        \Log::info('RekapAbsensiSholatController - Delete Success', [
+        \Log::info('RekapAbsensiSholatController@destroy success', [
             'absensi_id' => $id,
             'user_id'    => Auth::id(),
         ]);
@@ -330,9 +445,8 @@ class RekapAbsensiSholatController extends Controller
         return response()->json(['success' => true, 'message' => 'Data berhasil dihapus']);
     }
 
-    /**
-     * Statistik absensi sholat
-     */
+    // ── Statistik ────────────────────────────────────────────────────────────
+
     public function statistik(Request $request)
     {
         $query = AbsensiSholat::query();
@@ -351,19 +465,14 @@ class RekapAbsensiSholatController extends Controller
                   ->whereYear('tanggal', now()->year);
         }
 
-        $total         = $query->distinct('karyawan_id')->count('karyawan_id');
-        $duha          = (clone $query)->where('jenis_sholat', 'duha')->distinct('karyawan_id')->count('karyawan_id');
-        $dzuhur        = (clone $query)->where('jenis_sholat', 'dzuhur')->distinct('karyawan_id')->count('karyawan_id');
-        $karyawanCount = (clone $query)->distinct('karyawan_id')->count('karyawan_id');
-
         return response()->json([
             'success' => true,
             'data'    => [
-                'total'          => $total,
-                'duha'           => $duha,
-                'dzuhur'         => $dzuhur,
-                'karyawan_count' => $karyawanCount,
-            ]
+                'total'          => (clone $query)->distinct('karyawan_id')->count('karyawan_id'),
+                'duha'           => (clone $query)->where('jenis_sholat', 'duha')->distinct('karyawan_id')->count('karyawan_id'),
+                'dzuhur'         => (clone $query)->where('jenis_sholat', 'dzuhur')->distinct('karyawan_id')->count('karyawan_id'),
+                'karyawan_count' => (clone $query)->distinct('karyawan_id')->count('karyawan_id'),
+            ],
         ]);
     }
 }
