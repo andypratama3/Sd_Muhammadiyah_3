@@ -35,74 +35,72 @@ class RekapAbsensiSholatController extends Controller
             }
             $karyawanList = $karyawanQuery->get();
 
-            // 2. Ambil semua data absensi dalam rentang tanggal, group by karyawan_id
+            // 2. Ambil semua record absensi dalam range, group by karyawan_id → tanggal
             $absensiRecords = AbsensiSholat::whereBetween('tanggal', [$startDate, $endDate])
-                ->orderBy('tanggal', 'desc')
                 ->get()
-                ->groupBy('karyawan_id');
+                ->groupBy([
+                    fn($r) => $r->karyawan_id,
+                    fn($r) => $r->tanggal->format('Y-m-d'),
+                ]);
+
+            // 3. Buat daftar tanggal dari endDate → startDate (terbaru duluan)
+            $dateRange = [];
+            $current   = Carbon::parse($endDate);
+            $start     = Carbon::parse($startDate);
+
+            while ($current->gte($start)) {
+                $dateRange[] = $current->format('Y-m-d');
+                $current->subDay();
+            }
 
             $data = [];
 
-            // 3. Loop SEMUA karyawan
-            foreach ($karyawanList as $karyawan) {
+            // 4. Loop per TANGGAL → per KARYAWAN
+            foreach ($dateRange as $tanggal) {
+                foreach ($karyawanList as $karyawan) {
 
-                // 4. Ambil absensi milik karyawan ini, group per tanggal
-                $karyawanAbsensi = isset($absensiRecords[$karyawan->id])
-                    ? $absensiRecords[$karyawan->id]->groupBy(fn($r) => $r->tanggal->format('Y-m-d'))
-                    : collect();
+                    $dayRecords = $absensiRecords[$karyawan->id][$tanggal] ?? collect();
 
-                // 5. Jika karyawan tidak punya absensi di periode ini,
-                //    tampilkan 1 baris kosong agar semua karyawan muncul + ada tombol Tambah
-                if ($karyawanAbsensi->isEmpty()) {
-                    $data[] = [
-                        'id'              => null,
-                        'karyawan_id'     => $karyawan->id,
-                        'karyawan'        => $karyawan->name,
-                        'tanggal'         => null,
-                        'tanggal_display' => '-',
-                        'duha'            => '-',
-                        'dzuhur'          => '-',
-                        'is_izin'         => false,
-                    ];
-                    continue;
-                }
-
-                // 6. Loop per tanggal (sudah di-group per hari)
-                foreach ($karyawanAbsensi as $tanggal => $dayRecords) {
                     $duha   = $dayRecords->firstWhere('jenis_sholat', 'duha');
                     $dzuhur = $dayRecords->firstWhere('jenis_sholat', 'dzuhur');
                     $izin   = $dayRecords->firstWhere('jenis_sholat', 'izin');
 
                     $data[] = [
-                        'id'              => $dayRecords->first()->id,
+                        'id'              => $dayRecords->first()->id ?? null,
                         'karyawan_id'     => $karyawan->id,
                         'karyawan'        => $karyawan->name,
                         'tanggal'         => $tanggal,
-                        'tanggal_display' => Carbon::parse($tanggal)->translatedFormat('l, d F Y'),
-                        'duha'            => $izin ? 'Izin' : ($duha   ? Carbon::parse($duha->jam_sholat)->format('H:i')   : '-'),
-                        'dzuhur'          => $izin ? 'Izin' : ($dzuhur ? Carbon::parse($dzuhur->jam_sholat)->format('H:i') : '-'),
+                        'tanggal_display' => Carbon::parse($tanggal)
+                                                ->locale('id')
+                                                ->translatedFormat('l, d F Y'),
+                        'duha'            => $izin
+                                                ? 'Izin'
+                                                : ($duha   ? Carbon::parse($duha->jam_sholat)->format('H:i')   : '-'),
+                        'dzuhur'          => $izin
+                                                ? 'Izin'
+                                                : ($dzuhur ? Carbon::parse($dzuhur->jam_sholat)->format('H:i') : '-'),
                         'is_izin'         => (bool) $izin,
+                        'has_data'        => $dayRecords->isNotEmpty(),
                     ];
                 }
             }
 
             return DataTables::of($data)
                 ->addColumn('duha', function ($row) {
-                    if ($row['is_izin']) return '<span class="badge bg-info">Izin</span>';
+                    if ($row['is_izin'])      return '<span class="badge bg-info">Izin</span>';
                     if ($row['duha'] === '-') return '<span class="text-muted">-</span>';
-                    return $row['duha'];
+                    return '<span class="badge bg-success">' . $row['duha'] . '</span>';
                 })
                 ->addColumn('dzuhur', function ($row) {
-                    if ($row['is_izin']) return '<span class="badge bg-info">Izin</span>';
+                    if ($row['is_izin'])        return '<span class="badge bg-info">Izin</span>';
                     if ($row['dzuhur'] === '-') return '<span class="text-muted">-</span>';
-                    return $row['dzuhur'];
+                    return '<span class="badge bg-success">' . $row['dzuhur'] . '</span>';
                 })
                 ->addColumn('aksi', function ($row) {
                     $buttons = '<div class="btn-group" role="group">';
 
                     if (Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
-                        if ($row['id']) {
-                            // Ada data → tombol Edit & Hapus
+                        if ($row['has_data']) {
                             $buttons .= '<button class="btn btn-sm btn-warning btn-edit"
                                             data-id="' . $row['id'] . '"
                                             title="Edit data absensi">
@@ -114,10 +112,10 @@ class RekapAbsensiSholatController extends Controller
                                             <i class="fas fa-trash"></i> Hapus
                                         </button>';
                         } else {
-                            // Tidak ada data → tombol Tambah
                             $buttons .= '<button class="btn btn-sm btn-primary btn-add"
-                                            data-karyawan-id="' . $row['karyawan_id'] . '"
-                                            data-karyawan-nama="' . e($row['karyawan']) . '"
+                                            data-karyawan-id="'   . $row['karyawan_id'] . '"
+                                            data-karyawan-nama="' . e($row['karyawan'])  . '"
+                                            data-tanggal="'       . $row['tanggal']      . '"
                                             title="Tambah data absensi sholat">
                                             <i class="fas fa-plus"></i> Tambah
                                         </button>';
@@ -163,13 +161,11 @@ class RekapAbsensiSholatController extends Controller
                 'jam_sholat.regex'      => 'Format jam tidak valid (HH:MM)',
             ]);
 
-            // Normalisasi jam ke H:i:s
             $jamSholat = $validated['jam_sholat'] ?? null;
             if ($jamSholat && strlen($jamSholat) === 5) {
                 $jamSholat .= ':00';
             }
 
-            // Gunakan updateOrCreate agar tidak duplikat
             $absensi = AbsensiSholat::updateOrCreate(
                 [
                     'karyawan_id'  => $validated['karyawan_id'],
@@ -224,14 +220,14 @@ class RekapAbsensiSholatController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => [
+            'data'    => [
                 'id'           => $absensi->id,
                 'karyawan'     => $absensi->karyawan->name ?? '-',
                 'tanggal'      => Carbon::parse($absensi->tanggal)->format('d-m-Y'),
                 'jenis_sholat' => $absensi->jenis_sholat,
                 'jam_sholat'   => $absensi->jam_sholat
-                    ? Carbon::parse($absensi->jam_sholat)->format('H:i')
-                    : null,
+                                    ? Carbon::parse($absensi->jam_sholat)->format('H:i')
+                                    : null,
                 'area'         => $absensi->area_name ?? '-',
             ]
         ]);
@@ -270,7 +266,6 @@ class RekapAbsensiSholatController extends Controller
                 'jam_sholat.regex'      => 'Format jam tidak valid (HH:MM)',
             ]);
 
-            // Normalisasi jam ke H:i:s
             $jamSholat = $validated['jam_sholat'] ?? null;
             if ($jamSholat && strlen($jamSholat) === 5) {
                 $jamSholat .= ':00';
@@ -363,7 +358,7 @@ class RekapAbsensiSholatController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => [
+            'data'    => [
                 'total'          => $total,
                 'duha'           => $duha,
                 'dzuhur'         => $dzuhur,

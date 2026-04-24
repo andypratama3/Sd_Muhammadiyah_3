@@ -52,8 +52,7 @@
             {{-- ── Filter ── --}}
             <div class="filter-section">
                 <div class="filter-title">
-                    <i class="fas fa-filter"></i>
-                    Pengaturan Filter
+                    <i class="fas fa-filter"></i> Pengaturan Filter
                 </div>
 
                 <div class="row g-3">
@@ -62,15 +61,16 @@
                             <i class="fas fa-calendar-alt"></i> Periode Tanggal
                         </label>
                         <input type="text" id="date_range" name="date" class="form-control"
-                            placeholder="Pilih rentang tanggal (dd-mm-yyyy : dd-mm-yyyy)" autocomplete="off">
+                            placeholder="Pilih rentang tanggal (dd-mm-yyyy : dd-mm-yyyy)"
+                            autocomplete="off">
                     </div>
 
-                    <div class="col-md-3 d-flex align-items-end">
+                    <div class="col-md-4 d-flex align-items-end">
                         <div class="gap-2 d-flex w-100">
-                            <button type="button" id="btn_filter" class="btn btn-primary w-100">
+                            <button type="button" id="btn_filter" class="btn btn-primary">
                                 <i class="fas fa-search"></i> Cari
                             </button>
-                            <button type="button" id="btn_reset" class="btn btn-secondary w-100">
+                            <button type="button" id="btn_reset" class="btn btn-secondary">
                                 <i class="fas fa-redo"></i> Reset
                             </button>
                         </div>
@@ -84,11 +84,11 @@
                     <thead class="table-light">
                         <tr>
                             <th>No</th>
-                            <th>Nama Karyawan</th>
                             <th>Tanggal</th>
-                            <th>Dhuha</th>
-                            <th>Dzuhur</th>
-                            <th style="width: 140px;">Aksi</th>
+                            <th>Nama Karyawan</th>
+                            <th class="text-center">Dhuha</th>
+                            <th class="text-center">Dzuhur</th>
+                            <th class="text-center" style="width: 150px;">Aksi</th>
                         </tr>
                     </thead>
                 </table>
@@ -97,18 +97,19 @@
     </div>
 
     {{-- ── Modal Edit / Tambah ── --}}
-    <div class="modal fade" id="modalEditAbsensiSholat" tabindex="-1"
-         aria-labelledby="modalEditAbsensiSholatLabel" aria-hidden="true">
+    <div class="modal fade" id="modalAbsensiSholat" tabindex="-1"
+         aria-labelledby="modalAbsensiSholatLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalEditAbsensiSholatLabel">
-                        Edit Data Absensi Sholat
+                    <h5 class="modal-title" id="modalAbsensiSholatLabel">
+                        Tambah Data Absensi Sholat
                     </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                 </div>
 
-                <form id="formEditAbsensiSholat" method="POST">
+                <form id="formAbsensiSholat">
                     @csrf
                     <div class="modal-body">
 
@@ -167,11 +168,10 @@
                             <i class="fas fa-times"></i> Batal
                         </button>
                         <button type="submit" class="btn btn-primary" id="btn_save">
-                            <i class="fas fa-save"></i> Simpan Perubahan
+                            <i class="fas fa-save"></i> Simpan
                         </button>
                     </div>
                 </form>
-
             </div>
         </div>
     </div>
@@ -192,19 +192,16 @@
     $(document).ready(function () {
 
         // ── State modal ──────────────────────────────────────────────────────
-        // 'edit'  → update record yang sudah ada (PUT /{id})
-        // 'add'   → buat record baru (POST /)
-        let modalMode        = 'edit';
+        // 'add'  → POST store (data baru)
+        // 'edit' → PUT update (data existing)
+        let modalMode         = 'add';
         let currentKaryawanId = null;
 
         // ── DateRangePicker ──────────────────────────────────────────────────
         $('input[name="date"]').daterangepicker({
-            autoUpdateInput: false,
-            timePicker: false,
-            locale: {
-                format: 'DD-MM-YYYY',
-                cancelLabel: 'Bersihkan'
-            }
+            autoUpdateInput : false,
+            timePicker      : false,
+            locale          : { format: 'DD-MM-YYYY', cancelLabel: 'Bersihkan' }
         });
 
         $('input[name="date"]').on('apply.daterangepicker', function (ev, picker) {
@@ -222,55 +219,51 @@
 
         // ── DataTables ───────────────────────────────────────────────────────
         const table = $('#table_absensi_sholat').DataTable({
-            ordering   : true,
-            paging     : true,
-            serverSide : true,
-            processing : true,
-            responsive : true,
-            pageLength: 100,
-            lengthMenu : [    
-                [10, 25, 50, 100, 500, -1],
-                [10, 25, 50, 100, 500, 'Semua']
-            ],
-            dom : 'Blfrtip', 
+            ordering    : true,
+            paging      : true,
+            serverSide  : true,
+            processing  : true,
+            responsive  : true,
+            pageLength  : 100,
+            lengthMenu  : [[10, 25, 50, 100, 250, 500, 1000, -1], [10, 25, 50, 100, 250, 500, 1000, 'Semua']],
+            dom         : 'Blfrtip',
             ajax: {
-                url : "{{ route('dashboard.rekap.sholat.index') }}",
-                data: function (d) {
+                url  : "{{ route('dashboard.rekap.sholat.index') }}",
+                data : function (d) {
                     d.date = $('#date_range').val();
                 }
             },
             buttons: [
                 {
-                    extend       : 'pdfHtml5',
-                    text         : '<i class="fas fa-file-pdf"></i> PDF',
-                    className    : 'buttons-pdf',
-                    title        : 'Rekap Absensi Sholat',
-                    orientation  : 'portrait',
-                    pageSize     : 'A4',
-                    exportOptions: { columns: [0, 1, 2, 3, 4] },
-                    customize    : function (doc) {
-                        doc.content[1].table.widths = ['10%','35%','25%','15%','15%'];
-                        doc.content[1].alignment = 'center';
+                    extend        : 'pdfHtml5',
+                    text          : '<i class="fas fa-file-pdf"></i> PDF',
+                    className     : 'buttons-pdf',
+                    title         : 'Rekap Absensi Sholat',
+                    orientation   : 'landscape',
+                    pageSize      : 'A4',
+                    exportOptions : { columns: [0, 1, 2, 3, 4] },
+                    customize     : function (doc) {
+                        doc.content[1].table.widths = ['8%','30%','30%','16%','16%'];
                         doc.styles.tableHeader.alignment    = 'center';
-                        doc.styles.tableBodyEven.alignment = 'center';
-                        doc.styles.tableBodyOdd.alignment  = 'center';
-                        doc.content[0].alignment = 'center';
+                        doc.styles.tableBodyEven.alignment  = 'center';
+                        doc.styles.tableBodyOdd.alignment   = 'center';
+                        doc.content[0].alignment            = 'center';
                     }
                 },
                 {
-                    extend       : 'excelHtml5',
-                    text         : '<i class="fas fa-file-excel"></i> Excel',
-                    className    : 'buttons-excel',
-                    title        : 'Rekap Absensi Sholat',
-                    exportOptions: { columns: [0, 1, 2, 3, 4] }
+                    extend        : 'excelHtml5',
+                    text          : '<i class="fas fa-file-excel"></i> Excel',
+                    className     : 'buttons-excel',
+                    title         : 'Rekap Absensi Sholat',
+                    exportOptions : { columns: [0, 1, 2, 3, 4] }
                 },
                 {
-                    extend       : 'print',
-                    text         : '<i class="fas fa-print"></i> Print',
-                    className    : 'buttons-print',
-                    title        : '',
-                    exportOptions: { columns: [0, 1, 2, 3, 4] },
-                    customize    : function (win) {
+                    extend        : 'print',
+                    text          : '<i class="fas fa-print"></i> Print',
+                    className     : 'buttons-print',
+                    title         : '',
+                    exportOptions : { columns: [0, 1, 2, 3, 4] },
+                    customize     : function (win) {
                         $(win.document.body).css('font-size', '10pt');
                         $(win.document.body).find('table')
                             .addClass('compact')
@@ -282,47 +275,72 @@
                 }
             ],
             columns: [
-                { data: 'DT_RowIndex',      name: 'DT_RowIndex',   orderable: false, searchable: false, className: 'text-center' },
-                { data: 'karyawan',          name: 'karyawan' },
-                { data: 'tanggal_display',   name: 'tanggal' },
-                { data: 'duha',              name: 'duha',   className: 'text-center' },
-                { data: 'dzuhur',            name: 'dzuhur', className: 'text-center' },
-                { data: 'aksi',              name: 'aksi',   orderable: false, searchable: false, className: 'text-center' }
+                {
+                    data        : 'DT_RowIndex',
+                    name        : 'DT_RowIndex',
+                    orderable   : false,
+                    searchable  : false,
+                    className   : 'text-center'
+                },
+                {
+                    data : 'tanggal_display',
+                    name : 'tanggal'
+                },
+                {
+                    data : 'karyawan',
+                    name : 'karyawan'
+                },
+                {
+                    data      : 'duha',
+                    name      : 'duha',
+                    className : 'text-center'
+                },
+                {
+                    data      : 'dzuhur',
+                    name      : 'dzuhur',
+                    className : 'text-center'
+                },
+                {
+                    data       : 'aksi',
+                    name       : 'aksi',
+                    orderable  : false,
+                    searchable : false,
+                    className  : 'text-center'
+                }
             ]
         });
 
-        // ── Tombol Filter / Reset ────────────────────────────────────────────
+        // ── Filter / Reset ───────────────────────────────────────────────────
         $('#btn_filter').on('click', function () { table.ajax.reload(); });
+
         $('#btn_reset').on('click', function () {
             $('#date_range').val('');
             table.ajax.reload();
         });
 
-        // ── Tombol TAMBAH (baris no data) ────────────────────────────────────
+        // ── Tombol TAMBAH (baris belum ada data) ─────────────────────────────
         $(document).on('click', '.btn-add', function () {
             modalMode         = 'add';
             currentKaryawanId = $(this).data('karyawan-id');
 
             resetModal();
-            $('#modalEditAbsensiSholatLabel').text('Tambah Data Absensi Sholat');
-            $('#edit_id').val('');
+            $('#modalAbsensiSholatLabel').text('Tambah Data Absensi Sholat');
             $('#edit_karyawan_id').val(currentKaryawanId);
             $('#edit_nama').val($(this).data('karyawan-nama'));
 
-            // Default tanggal = hari ini
-            const today = new Date().toISOString().split('T')[0];
-            $('#edit_tanggal').val(today);
+            // Pakai tanggal dari baris yang diklik (format Y-m-d)
+            $('#edit_tanggal').val($(this).data('tanggal'));
 
-            new bootstrap.Modal(document.getElementById('modalEditAbsensiSholat')).show();
+            new bootstrap.Modal(document.getElementById('modalAbsensiSholat')).show();
         });
 
-        // ── Tombol EDIT (baris yang sudah ada data) ──────────────────────────
+        // ── Tombol EDIT (baris sudah ada data) ───────────────────────────────
         $(document).on('click', '.btn-edit', function () {
             modalMode         = 'edit';
             currentKaryawanId = null;
 
             resetModal();
-            $('#modalEditAbsensiSholatLabel').text('Edit Data Absensi Sholat');
+            $('#modalAbsensiSholatLabel').text('Edit Data Absensi Sholat');
 
             const id = $(this).data('id');
 
@@ -344,7 +362,7 @@
                         $('#edit_jam').val(d.jam_sholat || '');
 
                         new bootstrap.Modal(
-                            document.getElementById('modalEditAbsensiSholat')
+                            document.getElementById('modalAbsensiSholat')
                         ).show();
                     } else {
                         Swal.fire('Error', res.message || 'Gagal memuat data', 'error');
@@ -356,48 +374,47 @@
             });
         });
 
-        // ── Submit Form (Edit & Tambah) ───────────────────────────────────────
-        $('#formEditAbsensiSholat').on('submit', function (e) {
+        // ── Submit Form ───────────────────────────────────────────────────────
+        $('#formAbsensiSholat').on('submit', function (e) {
             e.preventDefault();
             clearErrors();
 
-            const jamRaw = $('#edit_jam').val();
-            // Append ':00' agar backend menerima format H:i:s
+            const jamRaw    = $('#edit_jam').val();
             const jamSholat = jamRaw ? jamRaw + ':00' : null;
 
             if (modalMode === 'edit') {
-                // ── Mode Edit: PUT /rekap-sholat/{id} ──
+                // ── PUT /rekap-sholat/{id} ──
                 const id = $('#edit_id').val();
 
                 $.ajax({
-                    url     : "{{ route('dashboard.rekap.sholat.update', '') }}" + '/' + id,
-                    type    : 'PUT',
-                    data    : {
+                    url  : "{{ route('dashboard.rekap.sholat.update', '') }}" + '/' + id,
+                    type : 'PUT',
+                    data : {
                         _token       : '{{ csrf_token() }}',
                         tanggal      : $('#edit_tanggal').val(),
                         jenis_sholat : $('#edit_jenis').val(),
                         jam_sholat   : jamSholat,
                     },
-                    beforeSend: function () { lockBtn(); },
-                    success  : function (res) { handleSuccess(res); },
-                    error    : function (xhr) { handleError(xhr); }
+                    beforeSend : function () { lockBtn(); },
+                    success    : function (res) { handleSuccess(res); },
+                    error      : function (xhr) { handleError(xhr); }
                 });
 
             } else {
-                // ── Mode Tambah: POST /rekap-sholat ──
+                // ── POST /rekap-sholat ──
                 $.ajax({
-                    url     : "{{ route('dashboard.rekap.sholat.store') }}",
-                    type    : 'POST',
-                    data    : {
+                    url  : "{{ route('dashboard.rekap.sholat.store') }}",
+                    type : 'POST',
+                    data : {
                         _token       : '{{ csrf_token() }}',
                         karyawan_id  : currentKaryawanId,
                         tanggal      : $('#edit_tanggal').val(),
                         jenis_sholat : $('#edit_jenis').val(),
                         jam_sholat   : jamSholat,
                     },
-                    beforeSend: function () { lockBtn(); },
-                    success  : function (res) { handleSuccess(res); },
-                    error    : function (xhr) { handleError(xhr); }
+                    beforeSend : function () { lockBtn(); },
+                    success    : function (res) { handleSuccess(res); },
+                    error      : function (xhr) { handleError(xhr); }
                 });
             }
         });
@@ -408,27 +425,27 @@
             const url = "{{ route('dashboard.rekap.sholat.destroy', '') }}" + '/' + id;
 
             Swal.fire({
-                title              : 'Anda yakin?',
-                text               : 'Data yang sudah dihapus tidak dapat dikembalikan!',
-                icon               : 'warning',
-                showCancelButton   : true,
-                confirmButtonText  : 'Ya, Hapus!',
-                cancelButtonText   : 'Batal',
-                reverseButtons     : true
+                title             : 'Anda yakin?',
+                text              : 'Data yang sudah dihapus tidak dapat dikembalikan!',
+                icon              : 'warning',
+                showCancelButton  : true,
+                confirmButtonText : 'Ya, Hapus!',
+                cancelButtonText  : 'Batal',
+                reverseButtons    : true
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url    : url,
-                        type   : 'DELETE',
-                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                        success: function (res) {
+                        url     : url,
+                        type    : 'DELETE',
+                        headers : { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                        success : function (res) {
                             if (res.success) {
                                 Swal.fire({
                                     icon             : 'success',
                                     title            : 'Berhasil',
                                     text             : res.message,
                                     timer            : 2000,
-                                    showConfirmButton: false
+                                    showConfirmButton : false
                                 });
                                 table.ajax.reload();
                             } else {
@@ -451,21 +468,21 @@
 
         function unlockBtn() {
             $('#btn_save').prop('disabled', false)
-                .html('<i class="fas fa-save"></i> Simpan Perubahan');
+                .html('<i class="fas fa-save"></i> Simpan');
         }
 
         function handleSuccess(res) {
             unlockBtn();
             if (res.success) {
                 Swal.fire({
-                    icon             : 'success',
-                    title            : 'Berhasil',
-                    text             : res.message,
-                    timer            : 2000,
-                    showConfirmButton : false
+                    icon              : 'success',
+                    title             : 'Berhasil',
+                    text              : res.message,
+                    timer             : 2000,
+                    showConfirmButton  : false
                 });
                 bootstrap.Modal.getInstance(
-                    document.getElementById('modalEditAbsensiSholat')
+                    document.getElementById('modalAbsensiSholat')
                 ).hide();
                 table.ajax.reload();
             } else {
@@ -478,7 +495,6 @@
             if (xhr.status === 422) {
                 const errors = xhr.responseJSON?.errors || {};
                 displayErrors(errors);
-                // Tampilkan ringkasan via Swal jika banyak error
                 const msgs = Object.values(errors).flat().join('<br>');
                 if (msgs) Swal.fire({ icon: 'error', title: 'Validasi Gagal', html: msgs });
             } else {
@@ -492,13 +508,15 @@
         function displayErrors(errors) {
             $.each(errors, function (field, messages) {
                 $('#error_' + field).text(messages[0]);
-                $('#edit_' + field).addClass('is-invalid');
+                // edit_jenis_sholat → edit_jenis (sesuaikan nama id input)
+                const inputId = field === 'jenis_sholat' ? '#edit_jenis' : '#edit_' + field;
+                $(inputId).addClass('is-invalid');
             });
         }
 
         function clearErrors() {
-            $('#formEditAbsensiSholat').find('.invalid-feedback').text('');
-            $('#formEditAbsensiSholat').find('input, select').removeClass('is-invalid');
+            $('#formAbsensiSholat').find('.invalid-feedback').text('');
+            $('#formAbsensiSholat').find('input, select').removeClass('is-invalid');
         }
 
         function resetModal() {
