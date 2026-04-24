@@ -43,7 +43,7 @@ class RekapAbsensiSholatController extends Controller
 
             $data = [];
 
-            // 3. Loop SEMUA karyawan terlebih dahulu
+            // 3. Loop SEMUA karyawan
             foreach ($karyawanList as $karyawan) {
 
                 // 4. Ambil absensi milik karyawan ini, group per tanggal
@@ -52,7 +52,7 @@ class RekapAbsensiSholatController extends Controller
                     : collect();
 
                 // 5. Jika karyawan tidak punya absensi di periode ini,
-                //    tetap tampilkan 1 baris kosong agar semua karyawan muncul
+                //    tampilkan 1 baris kosong agar semua karyawan muncul + ada tombol Tambah
                 if ($karyawanAbsensi->isEmpty()) {
                     $data[] = [
                         'id'              => null,
@@ -79,8 +79,8 @@ class RekapAbsensiSholatController extends Controller
                         'karyawan'        => $karyawan->name,
                         'tanggal'         => $tanggal,
                         'tanggal_display' => Carbon::parse($tanggal)->translatedFormat('l, d F Y'),
-                        'duha'            => $izin ? 'Izin' : ($duha   ? Carbon::parse($duha->jam_sholat)->format('H:i:s')   : '-'),
-                        'dzuhur'          => $izin ? 'Izin' : ($dzuhur ? Carbon::parse($dzuhur->jam_sholat)->format('H:i:s') : '-'),
+                        'duha'            => $izin ? 'Izin' : ($duha   ? Carbon::parse($duha->jam_sholat)->format('H:i')   : '-'),
+                        'dzuhur'          => $izin ? 'Izin' : ($dzuhur ? Carbon::parse($dzuhur->jam_sholat)->format('H:i') : '-'),
                         'is_izin'         => (bool) $izin,
                     ];
                 }
@@ -89,26 +89,41 @@ class RekapAbsensiSholatController extends Controller
             return DataTables::of($data)
                 ->addColumn('duha', function ($row) {
                     if ($row['is_izin']) return '<span class="badge bg-info">Izin</span>';
+                    if ($row['duha'] === '-') return '<span class="text-muted">-</span>';
                     return $row['duha'];
                 })
                 ->addColumn('dzuhur', function ($row) {
                     if ($row['is_izin']) return '<span class="badge bg-info">Izin</span>';
+                    if ($row['dzuhur'] === '-') return '<span class="text-muted">-</span>';
                     return $row['dzuhur'];
                 })
                 ->addColumn('aksi', function ($row) {
                     $buttons = '<div class="btn-group" role="group">';
+
                     if (Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
                         if ($row['id']) {
-                            $buttons .= '<button class="btn btn-sm btn-warning btn-edit" data-id="' . $row['id'] . '" title="Edit data absensi">
+                            // Ada data → tombol Edit & Hapus
+                            $buttons .= '<button class="btn btn-sm btn-warning btn-edit"
+                                            data-id="' . $row['id'] . '"
+                                            title="Edit data absensi">
                                             <i class="fas fa-edit"></i> Edit
                                         </button>';
-                            $buttons .= '<button class="btn btn-sm btn-danger btn-delete" data-id="' . $row['id'] . '" title="Hapus data absensi">
+                            $buttons .= '<button class="btn btn-sm btn-danger btn-delete"
+                                            data-id="' . $row['id'] . '"
+                                            title="Hapus data absensi">
                                             <i class="fas fa-trash"></i> Hapus
                                         </button>';
                         } else {
-                            $buttons .= '<span class="text-muted small">No Data</span>';
+                            // Tidak ada data → tombol Tambah
+                            $buttons .= '<button class="btn btn-sm btn-primary btn-add"
+                                            data-karyawan-id="' . $row['karyawan_id'] . '"
+                                            data-karyawan-nama="' . e($row['karyawan']) . '"
+                                            title="Tambah data absensi sholat">
+                                            <i class="fas fa-plus"></i> Tambah
+                                        </button>';
                         }
                     }
+
                     $buttons .= '</div>';
                     return $buttons;
                 })
@@ -120,12 +135,91 @@ class RekapAbsensiSholatController extends Controller
         return view('dashboard.absensis.rekap-sholat.index');
     }
 
+    /**
+     * Simpan data absensi sholat baru (mode Tambah)
+     */
+    public function store(Request $request)
+    {
+        try {
+            if (!Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Anda tidak memiliki akses untuk menambah data'
+                ], 403);
+            }
+
+            $validated = $request->validate([
+                'karyawan_id'  => 'required|exists:karyawans,id',
+                'tanggal'      => 'required|date',
+                'jenis_sholat' => 'required|in:duha,dzuhur,izin',
+                'jam_sholat'   => ['nullable', 'regex:/^\d{2}:\d{2}(:\d{2})?$/'],
+            ], [
+                'karyawan_id.required'  => 'Karyawan harus dipilih',
+                'karyawan_id.exists'    => 'Karyawan tidak ditemukan',
+                'tanggal.required'      => 'Tanggal harus diisi',
+                'tanggal.date'          => 'Format tanggal tidak valid',
+                'jenis_sholat.required' => 'Jenis sholat harus dipilih',
+                'jenis_sholat.in'       => 'Jenis sholat tidak valid',
+                'jam_sholat.regex'      => 'Format jam tidak valid (HH:MM)',
+            ]);
+
+            // Normalisasi jam ke H:i:s
+            $jamSholat = $validated['jam_sholat'] ?? null;
+            if ($jamSholat && strlen($jamSholat) === 5) {
+                $jamSholat .= ':00';
+            }
+
+            // Gunakan updateOrCreate agar tidak duplikat
+            $absensi = AbsensiSholat::updateOrCreate(
+                [
+                    'karyawan_id'  => $validated['karyawan_id'],
+                    'tanggal'      => $validated['tanggal'],
+                    'jenis_sholat' => $validated['jenis_sholat'],
+                ],
+                [
+                    'jam_sholat' => $jamSholat,
+                ]
+            );
+
+            \Log::info('RekapAbsensiSholatController - Store Success', [
+                'absensi_id' => $absensi->id,
+                'user_id'    => Auth::id(),
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data absensi sholat berhasil ditambahkan',
+                'data'    => $absensi
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'errors'  => $e->validator->errors()
+            ], 422);
+
+        } catch (\Throwable $th) {
+            \Log::error('RekapAbsensiSholatController - Store Error', [
+                'error' => $th->getMessage(),
+                'file'  => $th->getFile(),
+                'line'  => $th->getLine(),
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menambahkan data: ' . $th->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Ambil detail data absensi sholat (untuk modal edit)
+     */
     public function show($id)
     {
         $absensi = AbsensiSholat::with(['karyawan'])->where('id', $id)->first();
 
         if (!$absensi) {
-            return response()->json(['success' => false, 'message' => 'Data tidak ditemukan']);
+            return response()->json(['success' => false, 'message' => 'Data tidak ditemukan'], 404);
         }
 
         return response()->json([
@@ -135,12 +229,17 @@ class RekapAbsensiSholatController extends Controller
                 'karyawan'     => $absensi->karyawan->name ?? '-',
                 'tanggal'      => Carbon::parse($absensi->tanggal)->format('d-m-Y'),
                 'jenis_sholat' => $absensi->jenis_sholat,
-                'jam_sholat'   => Carbon::parse($absensi->jam_sholat)->format('H:i'),
+                'jam_sholat'   => $absensi->jam_sholat
+                    ? Carbon::parse($absensi->jam_sholat)->format('H:i')
+                    : null,
                 'area'         => $absensi->area_name ?? '-',
             ]
         ]);
     }
 
+    /**
+     * Update data absensi sholat
+     */
     public function update(Request $request, $id)
     {
         try {
@@ -152,7 +251,10 @@ class RekapAbsensiSholatController extends Controller
 
             if (!Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
                 if ($absensi->karyawan_id !== Auth::user()->karyawan->id) {
-                    return response()->json(['success' => false, 'message' => 'Anda tidak memiliki akses untuk mengubah data ini'], 403);
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Anda tidak memiliki akses untuk mengubah data ini'
+                    ], 403);
                 }
             }
 
@@ -160,9 +262,16 @@ class RekapAbsensiSholatController extends Controller
                 'tanggal'      => 'required|date',
                 'jenis_sholat' => 'required|in:duha,dzuhur,izin',
                 'jam_sholat'   => ['nullable', 'regex:/^\d{2}:\d{2}(:\d{2})?$/'],
+            ], [
+                'tanggal.required'      => 'Tanggal harus diisi',
+                'tanggal.date'          => 'Format tanggal tidak valid',
+                'jenis_sholat.required' => 'Jenis sholat harus dipilih',
+                'jenis_sholat.in'       => 'Jenis sholat tidak valid',
+                'jam_sholat.regex'      => 'Format jam tidak valid (HH:MM)',
             ]);
 
-            $jamSholat = $validated['jam_sholat'];
+            // Normalisasi jam ke H:i:s
+            $jamSholat = $validated['jam_sholat'] ?? null;
             if ($jamSholat && strlen($jamSholat) === 5) {
                 $jamSholat .= ':00';
             }
@@ -173,12 +282,34 @@ class RekapAbsensiSholatController extends Controller
                 'jam_sholat'   => $jamSholat,
             ]);
 
+            \Log::info('RekapAbsensiSholatController - Update Success', [
+                'absensi_id' => $id,
+                'user_id'    => Auth::id(),
+            ]);
+
             return response()->json(['success' => true, 'message' => 'Data berhasil diperbarui']);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'errors'  => $e->validator->errors()
+            ], 422);
+
         } catch (\Throwable $th) {
-            return response()->json(['success' => false, 'message' => 'Gagal memperbarui data: ' . $th->getMessage()], 500);
+            \Log::error('RekapAbsensiSholatController - Update Error', [
+                'error'      => $th->getMessage(),
+                'absensi_id' => $id,
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memperbarui data: ' . $th->getMessage()
+            ], 500);
         }
     }
 
+    /**
+     * Hapus data absensi sholat
+     */
     public function destroy($id)
     {
         if (!Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
@@ -196,9 +327,17 @@ class RekapAbsensiSholatController extends Controller
 
         $absensi->delete();
 
+        \Log::info('RekapAbsensiSholatController - Delete Success', [
+            'absensi_id' => $id,
+            'user_id'    => Auth::id(),
+        ]);
+
         return response()->json(['success' => true, 'message' => 'Data berhasil dihapus']);
     }
 
+    /**
+     * Statistik absensi sholat
+     */
     public function statistik(Request $request)
     {
         $query = AbsensiSholat::query();
@@ -206,9 +345,11 @@ class RekapAbsensiSholatController extends Controller
         if ($request->filled('date')) {
             $dates = explode(' : ', $request->date);
             if (count($dates) === 2) {
-                $startDate = Carbon::createFromFormat('d-m-Y', trim($dates[0]))->format('Y-m-d');
-                $endDate   = Carbon::createFromFormat('d-m-Y', trim($dates[1]))->format('Y-m-d');
-                $query     = $query->whereBetween('tanggal', [$startDate, $endDate]);
+                try {
+                    $startDate = Carbon::createFromFormat('d-m-Y', trim($dates[0]))->format('Y-m-d');
+                    $endDate   = Carbon::createFromFormat('d-m-Y', trim($dates[1]))->format('Y-m-d');
+                    $query->whereBetween('tanggal', [$startDate, $endDate]);
+                } catch (\Throwable $th) {}
             }
         } else {
             $query->whereMonth('tanggal', now()->month)

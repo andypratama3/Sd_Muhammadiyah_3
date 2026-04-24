@@ -236,11 +236,13 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
     });
 
      Route::prefix('rekap-sholat')->name('dashboard.rekap.sholat.')->group(function () {
-            Route::get('/',             [RekapAbsensiSholatController::class, 'index'])->name('index');
-            Route::get('/statistik',    [RekapAbsensiSholatController::class, 'statistik'])->name('statistik');
-            Route::get('/{id}',         [RekapAbsensiSholatController::class, 'show'])->name('show');
-            Route::delete('/{id}',      [RekapAbsensiSholatController::class, 'destroy'])->name('destroy');
-        });
+        Route::get('/',             [RekapAbsensiSholatController::class, 'index'])   ->name('index');
+        Route::get('/statistik',    [RekapAbsensiSholatController::class, 'statistik'])->name('statistik');
+        Route::post('/',            [RekapAbsensiSholatController::class, 'store'])   ->name('store');
+        Route::get('/{id}',         [RekapAbsensiSholatController::class, 'show'])   ->name('show');
+        Route::put('/{id}',         [RekapAbsensiSholatController::class, 'update']) ->name('update');
+        Route::delete('/{id}',      [RekapAbsensiSholatController::class, 'destroy'])->name('destroy');
+    });
 
 
     Route::resource('absensi', AttendancesController::class, ['names'=> 'dashboard.attendances']);
