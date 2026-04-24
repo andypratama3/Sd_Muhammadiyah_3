@@ -227,9 +227,10 @@
             serverSide : true,
             processing : true,
             responsive : true,
+            pageLength: 100,
             lengthMenu : [    
-                [10, 25, 50, 100, -1],
-                [10, 25, 50, 100, 'Semua']
+                [10, 25, 50, 100, 500, -1],
+                [10, 25, 50, 100, 500, 'Semua']
             ],
             dom : 'Blfrtip', 
             ajax: {
