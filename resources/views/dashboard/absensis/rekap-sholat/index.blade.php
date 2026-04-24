@@ -220,8 +220,8 @@
         // ── Set default date range ke bulan ini saat halaman pertama dimuat ──
         // Harus dilakukan SEBELUM inisialisasi DataTables agar saat ajax
         // pertama kali dipanggil, nilai #date_range sudah terisi.
-        const defaultStart = moment().startOf('month');
-        const defaultEnd   = moment().endOf('month');
+        const defaultStart = moment();
+        const defaultEnd   = moment();
 
         $('#date_range').val(
             defaultStart.format('DD-MM-YYYY') + ' : ' + defaultEnd.format('DD-MM-YYYY')

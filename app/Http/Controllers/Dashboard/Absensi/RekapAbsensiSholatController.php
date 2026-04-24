@@ -14,8 +14,8 @@ class RekapAbsensiSholatController extends Controller
 {
     public function index(Request $request)
     {
-        $startDate = now()->startOfMonth()->format('Y-m-d');
-        $endDate   = now()->endOfMonth()->format('Y-m-d');
+        $startDate = now()->format('Y-m-d');
+        $endDate   = now()->format('Y-m-d');
 
         if ($request->filled('date')) {
             $dates = explode(' : ', $request->date);
