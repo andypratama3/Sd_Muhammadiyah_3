@@ -217,6 +217,16 @@
             table.ajax.reload();
         });
 
+        // ── Set default date range ke bulan ini saat halaman pertama dimuat ──
+        // Harus dilakukan SEBELUM inisialisasi DataTables agar saat ajax
+        // pertama kali dipanggil, nilai #date_range sudah terisi.
+        const defaultStart = moment().startOf('month');
+        const defaultEnd   = moment().endOf('month');
+
+        $('#date_range').val(
+            defaultStart.format('DD-MM-YYYY') + ' : ' + defaultEnd.format('DD-MM-YYYY')
+        );
+
         // ── DataTables ───────────────────────────────────────────────────────
         const table = $('#table_absensi_sholat').DataTable({
             ordering    : true,
@@ -310,11 +320,15 @@
             ]
         });
 
-        // ── Filter / Reset ───────────────────────────────────────────────────
+        // ── Filter ───────────────────────────────────────────────────────────
         $('#btn_filter').on('click', function () { table.ajax.reload(); });
 
+        // ── Reset → kembali ke bulan ini ─────────────────────────────────────
         $('#btn_reset').on('click', function () {
-            $('#date_range').val('');
+            $('#date_range').val(
+                moment().startOf('month').format('DD-MM-YYYY') + ' : ' +
+                moment().endOf('month').format('DD-MM-YYYY')
+            );
             table.ajax.reload();
         });
 
