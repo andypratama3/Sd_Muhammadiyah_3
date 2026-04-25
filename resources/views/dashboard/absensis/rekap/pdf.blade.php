@@ -52,10 +52,27 @@
 
         .page-break { page-break-after: always; }
         .no-data    { text-align: center; padding: 20px; font-style: italic; color: #666; }
+
+        /* ── Halaman Summary ── */
+        .summary-table th { background-color: #f0f0f0; }
+        .summary-table td.no   { width: 5%;  text-align: center; }
+        .summary-table td.nama { width: 50%; text-align: left; }
+        .summary-table td.jml  { width: 20%; text-align: center; }
+        .summary-table td.ttd  { width: 25%; text-align: center; }
+        .summary-grand { font-weight: bold; background-color: #f0f0f0; }
+
+        .summary-footer        { margin-top: 30px; width: 100%; border-collapse: collapse; }
+        .summary-footer td     { border: none; font-size: 10px; vertical-align: top; }
+        .summary-footer td.kiri  { width: 70%; }
+        .summary-footer td.kanan { width: 30%; text-align: center; }
+        .summary-footer .ttd-space-sm { height: 60px; }
     </style>
 </head>
 <body>
 
+{{-- ================================================================== --}}
+{{-- HALAMAN PER KARYAWAN (struktur tidak berubah)                      --}}
+{{-- ================================================================== --}}
 @forelse($karyawans as $karyawan)
 
     <!-- HEADER -->
@@ -216,15 +233,86 @@
         </table>
     </div>
 
-    @if(!$loop->last)
-        <div class="page-break"></div>
-    @endif
+    {{-- Page break setelah setiap karyawan (termasuk karyawan terakhir
+         agar halaman summary selalu mulai dari halaman baru) --}}
+    <div class="page-break"></div>
 
 @empty
     <div class="no-data">
         <h3>Tidak ada data karyawan untuk ditampilkan</h3>
     </div>
 @endforelse
+
+{{-- ================================================================== --}}
+{{-- HALAMAN TERAKHIR : REKAPITULASI TOTAL SEMUA KARYAWAN               --}}
+{{-- (hanya ditampilkan jika ada data)                                  --}}
+{{-- ================================================================== --}}
+@if(isset($summaryData) && $summaryData->isNotEmpty())
+
+    <!-- HEADER HALAMAN SUMMARY -->
+    <div class="header">
+        <h2>REKAPITULASI ABSENSI</h2>
+        <h3>SEKOLAH KREATIF SD MUHAMMADIYAH 3</h3>
+        <h3>TAHUN {{ now()->year }}</h3>
+    </div>
+
+    <!-- INFO PERIODE -->
+    <table class="info">
+        <tr>
+            <td width="80" style="border:none;">Periode</td>
+            <td width="10" style="border:none;">:</td>
+            <td style="border:none;">{{ $dateRange }}</td>
+        </tr>
+    </table>
+
+    <!-- TABEL REKAPITULASI TOTAL -->
+    <table class="summary-table">
+        <thead>
+            <tr>
+                <th width="5%">NO</th>
+                <th width="50%">NAMA</th>
+                <th width="20%">JUMLAH</th>
+                <th width="25%">TANDA TANGAN</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($summaryData as $index => $item)
+                <tr>
+                    <td class="no">{{ $index + 1 }}</td>
+                    <td class="nama">{{ $item['name'] }}</td>
+                    <td class="jml">
+                        {{ $item['total'] > 0 ? number_format($item['total'], 0, ',', '.') : '-' }}
+                    </td>
+                    <td class="ttd-col"></td>
+                </tr>
+            @endforeach
+        </tbody>
+        <tfoot>
+            <tr class="summary-grand">
+                <td colspan="2" class="text-center">TOTAL KESELURUHAN</td>
+                <td class="text-center">
+                    {{ number_format($grandTotal, 0, ',', '.') }}
+                </td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <!-- FOOTER: TANGGAL & PETUGAS -->
+    <table class="summary-footer">
+        <tr>
+            <td class="kiri"></td>
+            <td class="kanan">
+                Samarinda, {{ now()->locale('id')->translatedFormat('d F Y') }}<br>
+                <br>
+                Petugas,
+                <div class="ttd-space-sm"></div>
+                <strong>{{ $petugasName ?? '-' }}</strong>
+            </td>
+        </tr>
+    </table>
+
+@endif
 
 </body>
 </html>

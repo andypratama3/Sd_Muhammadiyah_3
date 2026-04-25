@@ -261,8 +261,6 @@ class RekapAbsensiController extends Controller
                 ? $request->date
                 : now()->translatedFormat('F Y');
 
-            // Resize + konversi gambar TTD ke base64 SEKALI di sini,
-            // bukan di blade dan bukan di dalam loop karyawan
             $ttdRusminiBase64 = $this->getTtdBase64(
                 public_path('asset/img/ttd_bu_rusmini.png')
             );
@@ -281,72 +279,57 @@ class RekapAbsensiController extends Controller
                 return redirect()->back()->with('warning', 'Tidak ada data karyawan untuk diekspor.');
             }
 
-            // Folder temp unik agar tidak tabrakan jika ada request bersamaan
-            $tempDir = storage_path('app/temp_pdf/' . uniqid('rekap_'));
-            if (!is_dir($tempDir)) {
-                mkdir($tempDir, 0755, true);
-            }
-
-            $fileCount = 0;
-
+            // Load semua karyawan yang punya data absensi di periode ini
+            $karyawans = collect();
             foreach ($karyawanIds as $karyawanId) {
                 $karyawan = $this->getSingleKaryawanRekap($karyawanId, $request);
-
-                // Skip karyawan tanpa data absensi di periode ini
-                if (!$karyawan || $karyawan->absensi->isEmpty()) {
-                    unset($karyawan);
-                    continue;
+                if ($karyawan && $karyawan->absensi->isNotEmpty()) {
+                    $karyawans->push($karyawan);
                 }
-
-                $pdf = PDF::loadView('dashboard.absensis.rekap.pdf', [
-                    'karyawans'        => collect([$karyawan]),
-                    'dateRange'        => $dateRange,
-                    'ttdRusminiBase64' => $ttdRusminiBase64,
-                    'ttdKepalaBase64'  => $ttdKepalaBase64,
-                ])->setPaper('a4', 'landscape');
-
-                // Nama file aman: "01_Nama_Karyawan.pdf"
-                $safeName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $karyawan->name ?? 'karyawan');
-                $pdfName  = str_pad(++$fileCount, 2, '0', STR_PAD_LEFT) . '_' . $safeName . '.pdf';
-
-                $pdf->save($tempDir . '/' . $pdfName);
-
-                // Bebaskan memory setelah tiap karyawan
-                unset($pdf, $karyawan);
-                gc_collect_cycles();
+                unset($karyawan);
             }
 
-            if ($fileCount === 0) {
-                rmdir($tempDir);
+            if ($karyawans->isEmpty()) {
                 return redirect()->back()->with('warning', 'Tidak ada data absensi untuk diekspor.');
             }
 
-            // Buat ZIP berisi semua PDF
-            $zipFilename = 'rekap-absensi-' . now()->format('d-m-Y-H-i-s') . '.zip';
-            $zipPath     = storage_path('app/temp_pdf/' . $zipFilename);
+            // ----------------------------------------------------------------
+            // Hitung summary per karyawan untuk halaman terakhir (rekapitulasi)
+            // Menggunakan data absensi yang sudah di-load — TANPA query tambahan
+            // ----------------------------------------------------------------
+            $summaryData = $karyawans->map(function ($k) {
+                $totalMasuk  = $k->absensi->sum(fn ($a) => floatval($a->rp_masuk  ?? 0));
+                $totalPulang = $k->absensi->sum(fn ($a) => floatval($a->rp_pulang ?? 0));
 
-            $zip = new \ZipArchive();
-            if ($zip->open($zipPath, \ZipArchive::CREATE) !== true) {
-                throw new \Exception('Gagal membuat file ZIP');
-            }
+                return [
+                    'name'  => $k->name ?? '-',
+                    'total' => $totalMasuk + $totalPulang,
+                ];
+            });
 
-            foreach (glob($tempDir . '/*.pdf') as $pdfFile) {
-                $zip->addFile($pdfFile, basename($pdfFile));
-            }
-            $zip->close();
+            $grandTotal  = $summaryData->sum('total');
+            $petugasName = Auth::user()->name ?? '-';
 
-            // Hapus file PDF temp, lalu folder temp
-            foreach (glob($tempDir . '/*.pdf') as $pdfFile) {
-                unlink($pdfFile);
-            }
-            rmdir($tempDir);
+            // Generate 1 PDF berisi semua karyawan + halaman rekapitulasi total
+            $pdf = PDF::loadView('dashboard.absensis.rekap.pdf', [
+                'karyawans'        => $karyawans,
+                'dateRange'        => $dateRange,
+                'ttdRusminiBase64' => $ttdRusminiBase64,
+                'ttdKepalaBase64'  => $ttdKepalaBase64,
+                // Variabel untuk halaman summary terakhir
+                'summaryData'      => $summaryData,
+                'grandTotal'       => $grandTotal,
+                'petugasName'      => $petugasName,
+            ])->setPaper('a4', 'landscape');
 
-            \Log::info('RekapAbsensiController - exportPdf ZIP Created', [
-                'filename'   => $zipFilename,
-                'file_count' => $fileCount,
+            $filename = 'rekap-absensi-' . now()->format('d-m-Y-H-i-s') . '.pdf';
+
+            \Log::info('RekapAbsensiController - exportPdf Success', [
+                'filename'        => $filename,
+                'jumlah_karyawan' => $karyawans->count(),
             ]);
 
-            return response()->download($zipPath, $zipFilename)->deleteFileAfterSend(true);
+            return $pdf->download($filename);
 
         } catch (\Exception $e) {
             \Log::error('RekapAbsensiController - exportPdf Error', [
@@ -390,8 +373,6 @@ class RekapAbsensiController extends Controller
 
     /**
      * Resize gambar TTD ke max lebar tertentu lalu encode ke base64.
-     * Ini kunci utama pengecilan ukuran PDF — gambar dikecilkan pikselnya
-     * sebelum di-embed, bukan hanya diubah cara aksesnya.
      */
     private function getTtdBase64(string $path, int $maxWidth = 200): string
     {
@@ -399,7 +380,6 @@ class RekapAbsensiController extends Controller
 
         [$origWidth, $origHeight, $type] = getimagesize($path);
 
-        // Jika gambar sudah kecil, langsung encode tanpa resize
         if ($origWidth <= $maxWidth) {
             return 'data:image/png;base64,' . base64_encode(file_get_contents($path));
         }
@@ -408,14 +388,12 @@ class RekapAbsensiController extends Controller
         $newWidth  = $maxWidth;
         $newHeight = (int) round($origHeight * $ratio);
 
-        // Canvas baru dengan transparansi
         $dst = imagecreatetruecolor($newWidth, $newHeight);
         imagealphablending($dst, false);
         imagesavealpha($dst, true);
         $transparent = imagecolorallocatealpha($dst, 0, 0, 0, 127);
         imagefilledrectangle($dst, 0, 0, $newWidth, $newHeight, $transparent);
 
-        // Load gambar sumber
         $src = match($type) {
             IMAGETYPE_PNG  => imagecreatefrompng($path),
             IMAGETYPE_JPEG => imagecreatefromjpeg($path),
@@ -424,17 +402,14 @@ class RekapAbsensiController extends Controller
         };
 
         if (!$src) {
-            // Fallback jika format tidak didukung
             imagedestroy($dst);
             return 'data:image/png;base64,' . base64_encode(file_get_contents($path));
         }
 
-        // Resize proporsional
         imagecopyresampled($dst, $src, 0, 0, 0, 0, $newWidth, $newHeight, $origWidth, $origHeight);
 
-        // Capture sebagai PNG ke buffer
         ob_start();
-        imagepng($dst, null, 6); // level 6: balance speed vs ukuran
+        imagepng($dst, null, 6);
         $imageData = ob_get_clean();
 
         imagedestroy($src);
