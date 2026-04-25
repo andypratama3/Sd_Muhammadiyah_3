@@ -307,6 +307,10 @@
                                         <span style="color:red;">Sakit</span>
                                     @break
 
+                                    @case('libur')
+                                        <span style="color:purple;">Libur</span>
+                                    @break
+
                                     @case('alpha')
                                         <span style="color:darkred;">Alpha</span>
                                     @break
@@ -317,9 +321,6 @@
                             </td>
                             <td>
                                 {{ $row->keterangan ?? '-' }}
-                                @if (!$isHariKerja)
-                                    <br /><em>(Bukan hari kerja)</em>
-                                @endif
                             </td>
                         </tr>
                     @endforeach
