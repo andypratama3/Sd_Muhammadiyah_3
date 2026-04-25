@@ -98,22 +98,16 @@ class RekapAbsensiController extends Controller
             $absensi = Absensi::with(['karyawan'])->where('id', $id)->first();
 
             if (!$absensi) {
-                return response()->json([
-                    'message' => 'Data absensi tidak ditemukan'
-                ], 404);
+                return response()->json(['message' => 'Data absensi tidak ditemukan'], 404);
             }
 
             if (!Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
                 if ($absensi->karyawan_id !== Auth::user()->karyawan->id) {
-                    return response()->json([
-                        'message' => 'Anda tidak memiliki akses untuk melihat data ini'
-                    ], 403);
+                    return response()->json(['message' => 'Anda tidak memiliki akses untuk melihat data ini'], 403);
                 }
             }
 
-            return response()->json([
-                'absensi' => $absensi
-            ]);
+            return response()->json(['absensi' => $absensi]);
 
         } catch (\Exception $e) {
             \Log::error('RekapAbsensiController - show Error', [
@@ -121,10 +115,7 @@ class RekapAbsensiController extends Controller
                 'file'  => $e->getFile(),
                 'line'  => $e->getLine(),
             ]);
-
-            return response()->json([
-                'message' => 'Gagal memuat data absensi'
-            ], 500);
+            return response()->json(['message' => 'Gagal memuat data absensi'], 500);
         }
     }
 
@@ -134,16 +125,12 @@ class RekapAbsensiController extends Controller
             $absensi = Absensi::find($id);
 
             if (!$absensi) {
-                return response()->json([
-                    'message' => 'Data absensi tidak ditemukan'
-                ], 404);
+                return response()->json(['message' => 'Data absensi tidak ditemukan'], 404);
             }
 
             if (!Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
                 if ($absensi->karyawan_id !== Auth::user()->karyawan->id) {
-                    return response()->json([
-                        'message' => 'Anda tidak memiliki akses untuk mengubah data ini'
-                    ], 403);
+                    return response()->json(['message' => 'Anda tidak memiliki akses untuk mengubah data ini'], 403);
                 }
             }
 
@@ -187,7 +174,6 @@ class RekapAbsensiController extends Controller
             if (isset($validated['rp_masuk']) && $validated['rp_masuk'] !== null) {
                 $updateData['rp_masuk'] = $validated['rp_masuk'];
             }
-
             if (isset($validated['rp_pulang']) && $validated['rp_pulang'] !== null) {
                 $updateData['rp_pulang'] = $validated['rp_pulang'];
             }
@@ -197,30 +183,25 @@ class RekapAbsensiController extends Controller
             \Log::info('RekapAbsensiController - Update Success', [
                 'absensi_id'   => $id,
                 'user_id'      => Auth::id(),
-                'updated_data' => $validated
+                'updated_data' => $validated,
             ]);
 
             return response()->json([
                 'message' => 'Data absensi berhasil diperbarui',
-                'absensi' => $absensi
+                'absensi' => $absensi,
             ], 200);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json([
-                'errors' => $e->validator->errors()
-            ], 422);
+            return response()->json(['errors' => $e->validator->errors()], 422);
 
         } catch (\Exception $e) {
             \Log::error('RekapAbsensiController - Update Error', [
                 'error'      => $e->getMessage(),
                 'file'       => $e->getFile(),
                 'line'       => $e->getLine(),
-                'absensi_id' => $id
+                'absensi_id' => $id,
             ]);
-
-            return response()->json([
-                'message' => 'Gagal mengupdate data absensi: ' . $e->getMessage()
-            ], 500);
+            return response()->json(['message' => 'Gagal mengupdate data absensi: ' . $e->getMessage()], 500);
         }
     }
 
@@ -230,15 +211,13 @@ class RekapAbsensiController extends Controller
             $absensi = Absensi::find($id);
 
             if (!$absensi) {
-                return response()->json([
-                    'message' => 'Data absensi tidak ditemukan'
-                ], 404);
+                return response()->json(['message' => 'Data absensi tidak ditemukan'], 404);
             }
 
             if (!Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
                 return response()->json([
                     'status'  => 'error',
-                    'message' => 'Anda tidak memiliki akses untuk menghapus data ini'
+                    'message' => 'Anda tidak memiliki akses untuk menghapus data ini',
                 ], 403);
             }
 
@@ -246,12 +225,12 @@ class RekapAbsensiController extends Controller
 
             \Log::info('RekapAbsensiController - Delete Success', [
                 'absensi_id' => $id,
-                'user_id'    => Auth::id()
+                'user_id'    => Auth::id(),
             ]);
 
             return response()->json([
                 'status'  => 'success',
-                'message' => 'Data absensi berhasil dihapus'
+                'message' => 'Data absensi berhasil dihapus',
             ], 200);
 
         } catch (\Exception $e) {
@@ -259,12 +238,11 @@ class RekapAbsensiController extends Controller
                 'error'      => $e->getMessage(),
                 'file'       => $e->getFile(),
                 'line'       => $e->getLine(),
-                'absensi_id' => $id
+                'absensi_id' => $id,
             ]);
-
             return response()->json([
                 'status'  => 'error',
-                'message' => 'Gagal menghapus data absensi'
+                'message' => 'Gagal menghapus data absensi',
             ], 500);
         }
     }
@@ -276,12 +254,21 @@ class RekapAbsensiController extends Controller
 
             \Log::info('RekapAbsensiController - exportPdf Started', [
                 'request_date' => $request->date ?? 'null',
-                'user_id'      => Auth::user()->id ?? 'null'
+                'user_id'      => Auth::user()->id ?? 'null',
             ]);
 
             $dateRange = $request->filled('date')
                 ? $request->date
                 : now()->translatedFormat('F Y');
+
+            // Resize + konversi gambar TTD ke base64 SEKALI di sini,
+            // bukan di blade dan bukan di dalam loop karyawan
+            $ttdRusminiBase64 = $this->getTtdBase64(
+                public_path('asset/img/ttd_bu_rusmini.png')
+            );
+            $ttdKepalaBase64 = $this->getTtdBase64(
+                public_path('asset/img/tanda_tangan_kepala_sekolah.png')
+            );
 
             // Ambil ID karyawan saja dulu — query ringan
             $karyawanQuery = Karyawan::with('user.roles');
@@ -294,7 +281,7 @@ class RekapAbsensiController extends Controller
                 return redirect()->back()->with('warning', 'Tidak ada data karyawan untuk diekspor.');
             }
 
-            // Buat folder temp unik agar tidak tabrakan jika ada request bersamaan
+            // Folder temp unik agar tidak tabrakan jika ada request bersamaan
             $tempDir = storage_path('app/temp_pdf/' . uniqid('rekap_'));
             if (!is_dir($tempDir)) {
                 mkdir($tempDir, 0755, true);
@@ -312,8 +299,10 @@ class RekapAbsensiController extends Controller
                 }
 
                 $pdf = PDF::loadView('dashboard.absensis.rekap.pdf', [
-                    'karyawans' => collect([$karyawan]),
-                    'dateRange' => $dateRange,
+                    'karyawans'        => collect([$karyawan]),
+                    'dateRange'        => $dateRange,
+                    'ttdRusminiBase64' => $ttdRusminiBase64,
+                    'ttdKepalaBase64'  => $ttdKepalaBase64,
                 ])->setPaper('a4', 'landscape');
 
                 // Nama file aman: "01_Nama_Karyawan.pdf"
@@ -346,7 +335,7 @@ class RekapAbsensiController extends Controller
             }
             $zip->close();
 
-            // Hapus file PDF temp satu per satu, lalu hapus folder temp
+            // Hapus file PDF temp, lalu folder temp
             foreach (glob($tempDir . '/*.pdf') as $pdfFile) {
                 unlink($pdfFile);
             }
@@ -357,7 +346,6 @@ class RekapAbsensiController extends Controller
                 'file_count' => $fileCount,
             ]);
 
-            // Download ZIP lalu hapus otomatis dari server
             return response()->download($zipPath, $zipFilename)->deleteFileAfterSend(true);
 
         } catch (\Exception $e) {
@@ -376,7 +364,7 @@ class RekapAbsensiController extends Controller
         try {
             \Log::info('RekapAbsensiController - exportExcel Started', [
                 'request_date' => $request->date ?? 'null',
-                'user_id'      => Auth::user()->id ?? 'null'
+                'user_id'      => Auth::user()->id ?? 'null',
             ]);
 
             $filename = 'rekap-absensi-' . now()->format('d-m-Y-H-i-s') . '.xlsx';
@@ -390,19 +378,73 @@ class RekapAbsensiController extends Controller
                 'error' => $e->getMessage(),
                 'file'  => $e->getFile(),
                 'line'  => $e->getLine(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
             return redirect()->back()->with('error', 'Gagal mengekspor Excel: ' . $e->getMessage());
         }
     }
 
-    // -------------------------------------------------------------------------
-    // Private helpers
-    // -------------------------------------------------------------------------
+    // =========================================================================
+    // Private Helpers
+    // =========================================================================
 
     /**
-     * Load satu karyawan beserta absensi + count per status,
-     * dengan date filter yang sama seperti export.
+     * Resize gambar TTD ke max lebar tertentu lalu encode ke base64.
+     * Ini kunci utama pengecilan ukuran PDF — gambar dikecilkan pikselnya
+     * sebelum di-embed, bukan hanya diubah cara aksesnya.
+     */
+    private function getTtdBase64(string $path, int $maxWidth = 200): string
+    {
+        if (!file_exists($path)) return '';
+
+        [$origWidth, $origHeight, $type] = getimagesize($path);
+
+        // Jika gambar sudah kecil, langsung encode tanpa resize
+        if ($origWidth <= $maxWidth) {
+            return 'data:image/png;base64,' . base64_encode(file_get_contents($path));
+        }
+
+        $ratio     = $maxWidth / $origWidth;
+        $newWidth  = $maxWidth;
+        $newHeight = (int) round($origHeight * $ratio);
+
+        // Canvas baru dengan transparansi
+        $dst = imagecreatetruecolor($newWidth, $newHeight);
+        imagealphablending($dst, false);
+        imagesavealpha($dst, true);
+        $transparent = imagecolorallocatealpha($dst, 0, 0, 0, 127);
+        imagefilledrectangle($dst, 0, 0, $newWidth, $newHeight, $transparent);
+
+        // Load gambar sumber
+        $src = match($type) {
+            IMAGETYPE_PNG  => imagecreatefrompng($path),
+            IMAGETYPE_JPEG => imagecreatefromjpeg($path),
+            IMAGETYPE_WEBP => imagecreatefromwebp($path),
+            default        => null,
+        };
+
+        if (!$src) {
+            // Fallback jika format tidak didukung
+            imagedestroy($dst);
+            return 'data:image/png;base64,' . base64_encode(file_get_contents($path));
+        }
+
+        // Resize proporsional
+        imagecopyresampled($dst, $src, 0, 0, 0, 0, $newWidth, $newHeight, $origWidth, $origHeight);
+
+        // Capture sebagai PNG ke buffer
+        ob_start();
+        imagepng($dst, null, 6); // level 6: balance speed vs ukuran
+        $imageData = ob_get_clean();
+
+        imagedestroy($src);
+        imagedestroy($dst);
+
+        return 'data:image/png;base64,' . base64_encode($imageData);
+    }
+
+    /**
+     * Load satu karyawan + absensi + count per status dengan date filter.
      */
     private function getSingleKaryawanRekap($karyawanId, $request)
     {
@@ -422,7 +464,7 @@ class RekapAbsensiController extends Controller
             'absensi' => function ($q) use ($applyDateFilter) {
                 $applyDateFilter($q);
                 $q->orderBy('tanggal', 'asc');
-            }
+            },
         ])->where('id', $karyawanId);
 
         foreach (['hadir', 'cuti', 'izin', 'sakit', 'alpha'] as $status) {
@@ -430,7 +472,7 @@ class RekapAbsensiController extends Controller
                 "absensi as {$status}_count" => function ($q) use ($status, $applyDateFilter) {
                     $q->where('status_kehadiran', $status);
                     $applyDateFilter($q);
-                }
+                },
             ]);
         }
 
@@ -438,8 +480,7 @@ class RekapAbsensiController extends Controller
     }
 
     /**
-     * Ambil rekap semua karyawan — dipakai untuk keperluan lain
-     * (misalnya preview atau future merge PDF).
+     * Load semua karyawan sekaligus — dipertahankan untuk keperluan lain.
      */
     private function getRekapKaryawan($request)
     {
@@ -464,7 +505,7 @@ class RekapAbsensiController extends Controller
                 "absensi as {$status}_count" => function ($q) use ($status, $applyDateFilter) {
                     $q->where('status_kehadiran', $status);
                     $applyDateFilter($q);
-                }
+                },
             ]);
         }
 

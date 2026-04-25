@@ -26,65 +26,35 @@
         th, td { border: 1px solid #000; padding: 4px; font-size: 10px; }
         th { text-align: center; font-weight: bold; background-color: #f0f0f0; }
 
-        tfoot td              { border: 1px solid #000 !important; }
-        tfoot td:empty        { border-left: 1px solid #000; border-right: 1px solid #000; }
+        tfoot td       { border: 1px solid #000 !important; }
+        tfoot td:empty { border-left: 1px solid #000; border-right: 1px solid #000; }
 
-        .header               { text-align: center; margin-bottom: 10px; }
-        .info                 { margin-bottom: 10px; }
-        .info td              { border: none; padding: 2px 4px; }
-        .hari-merah           { color: red; font-weight: bold; }
-        .summary              { font-weight: bold; background-color: #f0f0f0; }
+        .header  { text-align: center; margin-bottom: 10px; }
+        .info    { margin-bottom: 10px; }
+        .info td { border: none; padding: 2px 4px; }
 
-        /* TTD */
-        .ttd                  { margin-top: 30px; width: 100%; border-collapse: collapse; }
-        .ttd td               { border: none; text-align: center; vertical-align: top;
-                                font-size: 10px; width: 33.33%; padding: 10px; }
-        .ttd-label            { margin-bottom: 8px; }
-        .ttd-space            { height: 70px; position: relative; }
+        .hari-merah { color: red; font-weight: bold; }
+        .summary    { font-weight: bold; background-color: #f0f0f0; }
 
-        /*
-         * Optimasi gambar TTD:
-         * - Gunakan width eksplisit yang kecil (max 100px) agar DomPDF
-         *   tidak perlu resize besar saat render
-         * - Hindari margin/padding berlebih di sekitar gambar
-         */
-        .ttd-img              { width: 100px; height: auto; display: block; margin: 0 auto; }
+        .ttd    { margin-top: 30px; width: 100%; border-collapse: collapse; }
+        .ttd td { border: none; text-align: center; vertical-align: top;
+                  font-size: 10px; width: 33.33%; padding: 10px; }
 
-        .ttd-name             { margin-top: 8px; font-weight: bold; }
+        .ttd-label { margin-bottom: 8px; }
+        .ttd-space { height: 70px; }
+        .ttd-img   { width: 100px; height: auto; display: block; margin: 0 auto; }
+        .ttd-name  { margin-top: 8px; font-weight: bold; }
 
-        .keterangan           { font-size: 10px; margin-top: 20px;
-                                border: 1px solid #000; padding: 10px; }
-        .keterangan strong    { display: block; margin-bottom: 5px; }
-        .keterangan table     { border: none; }
-        .keterangan td        { border: none; }
+        .keterangan        { font-size: 10px; margin-top: 20px; border: 1px solid #000; padding: 10px; }
+        .keterangan strong { display: block; margin-bottom: 5px; }
+        .keterangan table  { border: none; }
+        .keterangan td     { border: none; }
 
-        .page-break           { page-break-after: always; }
-        .no-data              { text-align: center; padding: 20px;
-                                font-style: italic; color: #666; }
+        .page-break { page-break-after: always; }
+        .no-data    { text-align: center; padding: 20px; font-style: italic; color: #666; }
     </style>
 </head>
 <body>
-
-{{--
-    Konversi gambar TTD ke base64 SEKALI di luar loop,
-    agar tidak di-baca dari disk berulang kali per karyawan.
-    Ini penghematan I/O dan memory yang signifikan.
---}}
-@php
-    $ttdRusminiBase64   = '';
-    $ttdKepalaBase64    = '';
-
-    $pathRusmini = public_path('asset/img/ttd_bu_rusmini.png');
-    $pathKepala  = public_path('asset/img/tanda_tangan_kepala_sekolah.png');
-
-    if (file_exists($pathRusmini)) {
-        $ttdRusminiBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($pathRusmini));
-    }
-
-    if (file_exists($pathKepala)) {
-        $ttdKepalaBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($pathKepala));
-    }
-@endphp
 
 @forelse($karyawans as $karyawan)
 
@@ -197,16 +167,6 @@
     @endif
 
     <!-- TTD -->
-    {{--
-        FIX struktur HTML:
-        - Sebelumnya kolom ke-3 adalah <div> di dalam <tr>, bukan <td>
-          sehingga DomPDF harus kerja ekstra parse HTML yang invalid.
-        - Sekarang semua 3 kolom adalah <td> yang benar.
-
-        Optimasi gambar:
-        - Pakai src base64 yang sudah disiapkan di atas (tidak baca file lagi)
-        - width eksplisit 100px agar DomPDF tidak perlu resize
-    --}}
     <table class="ttd">
         <tr>
             <!-- Kolom 1: Diterima Oleh -->
@@ -220,18 +180,18 @@
             <td>
                 <div class="ttd-label">Disetujui Oleh</div>
                 <div class="ttd-space">
-                    @if($ttdRusminiBase64)
+                    @if(!empty($ttdRusminiBase64))
                         <img src="{{ $ttdRusminiBase64 }}" class="ttd-img" alt="TTD Rusmini">
                     @endif
                 </div>
                 <div class="ttd-name">Rusmini S.Pd</div>
             </td>
 
-            <!-- Kolom 3: Kepala Sekolah (FIX: sebelumnya <div> bukan <td>) -->
+            <!-- Kolom 3: Kepala Sekolah -->
             <td>
                 <div class="ttd-label">Kepala Sekolah</div>
                 <div class="ttd-space">
-                    @if($ttdKepalaBase64)
+                    @if(!empty($ttdKepalaBase64))
                         <img src="{{ $ttdKepalaBase64 }}" class="ttd-img" alt="TTD Kepala Sekolah">
                     @endif
                 </div>
