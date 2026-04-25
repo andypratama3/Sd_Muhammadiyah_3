@@ -17,7 +17,7 @@ class RekapAbsensiController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Absensi::with(['karyawan.user.roles', 'lokasiAbsensi', 'jamKerja']) 
+        $query = Absensi::with(['karyawan.user.roles', 'lokasiAbsensi', 'jamKerja'])
             ->orderBy('tanggal', 'desc');
 
         if ($request->ajax()) {
@@ -56,7 +56,7 @@ class RekapAbsensiController extends Controller
                     };
                 })
                 ->addColumn('jenis_pegawai', fn ($row) =>
-                    $row->karyawan?->jenis_pegawai_from_role ?? '-'  // ← user.roles sudah di-load, cukup ini
+                    $row->karyawan?->jenis_pegawai_from_role ?? '-'
                 )
                 ->addColumn('jam_masuk', fn ($row) =>
                     $row->jam_masuk ? \Carbon\Carbon::parse($row->jam_masuk)->format('H:i') : '-'
@@ -91,7 +91,7 @@ class RekapAbsensiController extends Controller
 
         return view('dashboard.absensis.rekap.index');
     }
-    
+
     public function show($id)
     {
         try {
@@ -128,9 +128,6 @@ class RekapAbsensiController extends Controller
         }
     }
 
-    /**
-     * Update data absensi
-     */
     public function update(Request $request, $id)
     {
         try {
@@ -150,9 +147,6 @@ class RekapAbsensiController extends Controller
                 }
             }
 
-            // FIX: Accept both H:i (HH:MM) and H:i:s (HH:MM:SS) formats
-            // The frontend sends HH:MM:00 after stripping & re-appending seconds,
-            // so we validate with date_format:H:i:s as primary, H:i as fallback.
             $validated = $request->validate([
                 'tanggal'          => 'required|date',
                 'status_kehadiran' => 'required|in:hadir,cuti,izin,sakit,alpha',
@@ -175,14 +169,9 @@ class RekapAbsensiController extends Controller
                 'keterangan.max'            => 'Keterangan maksimal 500 karakter',
             ]);
 
-            // FIX: Normalize time values to H:i:s before saving to the DB.
-            // If front-end sends "08:30" we store "08:30:00".
-            // If front-end sends "08:30:00" we store "08:30:00" as-is.
             $normalizeTime = function (?string $time): ?string {
                 if (empty($time)) return null;
-                // Already has seconds
                 if (strlen($time) === 8) return $time;
-                // Only HH:MM — append seconds
                 return $time . ':00';
             };
 
@@ -235,9 +224,6 @@ class RekapAbsensiController extends Controller
         }
     }
 
-    /**
-     * Delete data absensi
-     */
     public function destroy($id)
     {
         try {
@@ -283,52 +269,108 @@ class RekapAbsensiController extends Controller
         }
     }
 
-    /**
-     * Export ke PDF dengan data terfilter
-     */
     public function exportPdf(Request $request)
     {
         try {
+            ini_set('memory_limit', '512M');
+
             \Log::info('RekapAbsensiController - exportPdf Started', [
                 'request_date' => $request->date ?? 'null',
                 'user_id'      => Auth::user()->id ?? 'null'
             ]);
 
-            $karyawans = $this->getRekapKaryawan($request);
+            $dateRange = $request->filled('date')
+                ? $request->date
+                : now()->translatedFormat('F Y');
 
-            if ($karyawans->isEmpty()) {
-                \Log::warning('RekapAbsensiController - No data to export');
+            // Ambil ID karyawan saja dulu — query ringan
+            $karyawanQuery = Karyawan::with('user.roles');
+            if (!Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
+                $karyawanQuery->where('id', Auth::user()->karyawan->id);
+            }
+            $karyawanIds = $karyawanQuery->pluck('id');
+
+            if ($karyawanIds->isEmpty()) {
+                return redirect()->back()->with('warning', 'Tidak ada data karyawan untuk diekspor.');
+            }
+
+            // Buat folder temp unik agar tidak tabrakan jika ada request bersamaan
+            $tempDir = storage_path('app/temp_pdf/' . uniqid('rekap_'));
+            if (!is_dir($tempDir)) {
+                mkdir($tempDir, 0755, true);
+            }
+
+            $fileCount = 0;
+
+            foreach ($karyawanIds as $karyawanId) {
+                $karyawan = $this->getSingleKaryawanRekap($karyawanId, $request);
+
+                // Skip karyawan tanpa data absensi di periode ini
+                if (!$karyawan || $karyawan->absensi->isEmpty()) {
+                    unset($karyawan);
+                    continue;
+                }
+
+                $pdf = PDF::loadView('dashboard.absensis.rekap.pdf', [
+                    'karyawans' => collect([$karyawan]),
+                    'dateRange' => $dateRange,
+                ])->setPaper('a4', 'landscape');
+
+                // Nama file aman: "01_Nama_Karyawan.pdf"
+                $safeName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $karyawan->name ?? 'karyawan');
+                $pdfName  = str_pad(++$fileCount, 2, '0', STR_PAD_LEFT) . '_' . $safeName . '.pdf';
+
+                $pdf->save($tempDir . '/' . $pdfName);
+
+                // Bebaskan memory setelah tiap karyawan
+                unset($pdf, $karyawan);
+                gc_collect_cycles();
+            }
+
+            if ($fileCount === 0) {
+                rmdir($tempDir);
                 return redirect()->back()->with('warning', 'Tidak ada data absensi untuk diekspor.');
             }
 
-            $dateRange = $request->filled('date') ? $request->date : 'Semua Tanggal';
+            // Buat ZIP berisi semua PDF
+            $zipFilename = 'rekap-absensi-' . now()->format('d-m-Y-H-i-s') . '.zip';
+            $zipPath     = storage_path('app/temp_pdf/' . $zipFilename);
 
-            $pdf = PDF::loadView('dashboard.absensis.rekap.pdf', [
-                'karyawans' => $karyawans,
-                'dateRange' => $dateRange
-            ])->setPaper('a4', 'landscape');
+            $zip = new \ZipArchive();
+            if ($zip->open($zipPath, \ZipArchive::CREATE) !== true) {
+                throw new \Exception('Gagal membuat file ZIP');
+            }
 
-            $filename = 'rekap-absensi-' . now()->format('d-m-Y-H-i-s') . '.pdf';
+            foreach (glob($tempDir . '/*.pdf') as $pdfFile) {
+                $zip->addFile($pdfFile, basename($pdfFile));
+            }
+            $zip->close();
 
-            \Log::info('RekapAbsensiController - Exporting PDF', ['filename' => $filename]);
+            // Hapus file PDF temp satu per satu, lalu hapus folder temp
+            foreach (glob($tempDir . '/*.pdf') as $pdfFile) {
+                unlink($pdfFile);
+            }
+            rmdir($tempDir);
 
-            return $pdf->download($filename);
-            // return $pdf->stream($filename);
+            \Log::info('RekapAbsensiController - exportPdf ZIP Created', [
+                'filename'   => $zipFilename,
+                'file_count' => $fileCount,
+            ]);
+
+            // Download ZIP lalu hapus otomatis dari server
+            return response()->download($zipPath, $zipFilename)->deleteFileAfterSend(true);
 
         } catch (\Exception $e) {
             \Log::error('RekapAbsensiController - exportPdf Error', [
                 'error' => $e->getMessage(),
                 'file'  => $e->getFile(),
                 'line'  => $e->getLine(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
             return redirect()->back()->with('error', 'Gagal mengekspor PDF: ' . $e->getMessage());
         }
     }
 
-    /**
-     * Export ke Excel dengan data terfilter
-     */
     public function exportExcel(Request $request)
     {
         try {
@@ -354,8 +396,50 @@ class RekapAbsensiController extends Controller
         }
     }
 
+    // -------------------------------------------------------------------------
+    // Private helpers
+    // -------------------------------------------------------------------------
+
     /**
-     * Ambil rekap data karyawan dengan filter berdasarkan date range
+     * Load satu karyawan beserta absensi + count per status,
+     * dengan date filter yang sama seperti export.
+     */
+    private function getSingleKaryawanRekap($karyawanId, $request)
+    {
+        $applyDateFilter = function ($q) use ($request) {
+            if ($request->filled('date')) {
+                $dates = explode(' : ', $request->date);
+                if (count($dates) === 2) {
+                    $start = Carbon::createFromFormat('d-m-Y', trim($dates[0]))->startOfDay();
+                    $end   = Carbon::createFromFormat('d-m-Y', trim($dates[1]))->endOfDay();
+                    $q->whereBetween('tanggal', [$start, $end]);
+                }
+            }
+        };
+
+        $query = Karyawan::with([
+            'user.roles',
+            'absensi' => function ($q) use ($applyDateFilter) {
+                $applyDateFilter($q);
+                $q->orderBy('tanggal', 'asc');
+            }
+        ])->where('id', $karyawanId);
+
+        foreach (['hadir', 'cuti', 'izin', 'sakit', 'alpha'] as $status) {
+            $query->withCount([
+                "absensi as {$status}_count" => function ($q) use ($status, $applyDateFilter) {
+                    $q->where('status_kehadiran', $status);
+                    $applyDateFilter($q);
+                }
+            ]);
+        }
+
+        return $query->first();
+    }
+
+    /**
+     * Ambil rekap semua karyawan — dipakai untuk keperluan lain
+     * (misalnya preview atau future merge PDF).
      */
     private function getRekapKaryawan($request)
     {
