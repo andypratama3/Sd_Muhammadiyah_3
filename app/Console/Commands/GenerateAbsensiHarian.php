@@ -100,10 +100,16 @@ class GenerateAbsensiHarian extends Command
             ->where('tanggal', $tanggalString)
             ->first();
 
+        // Jika sudah ada absensi dengan status khusus atau sudah absen masuk (jam_masuk terisi)
         if ($existingAbsensi) {
             // Jika sudah ada status kehadiran selain hadir (cuti/izin/sakit/libur)
             if (in_array($existingAbsensi->status_kehadiran, ['cuti', 'izin', 'sakit', 'libur'])) {
                 return $existingAbsensi->status_kehadiran;
+            }
+
+            // Jika sudah ada jam_masuk (sudah absen), jangan override statusnya
+            if ($existingAbsensi->jam_masuk) {
+                return 'hadir'; // Sudah absen, keep as is
             }
         }
 
@@ -127,7 +133,7 @@ class GenerateAbsensiHarian extends Command
             }
         }
 
-        // 3. Jika bukan hari kerja, set status libur
+        // 3. Jika bukan hari kerja, set status libur (hanya jika belum ada absensi sama sekali)
         if (!$isHariKerja) {
             if (!$existingAbsensi) {
                 $jamKerjaId = $this->getJamKerjaId($karyawan, $tanggal);
