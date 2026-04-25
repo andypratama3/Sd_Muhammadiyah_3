@@ -195,6 +195,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
     Route::group(['prefix'=> 'pengaturan-absen'], function () {
         Route::resource('lokasi-absen', LokasiAbsenController::class, ['names' => 'dashboard.lokasi.absen']);
         Route::resource('jam-absen', JamAbsenController::class, ['names' => 'dashboard.jam.absen']);
+        Route::post('jam-absen/{jamKerja}/toggle-hari-kerja', [JamAbsenController::class, 'toggleHariKerja'])->name('dashboard.jam.absen.toggle-hari-kerja');
     });
 
     Route::group(['prefix' => 'absensis'], function () {

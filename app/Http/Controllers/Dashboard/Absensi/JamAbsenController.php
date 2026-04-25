@@ -46,6 +46,7 @@ class JamAbsenController extends Controller
 
             'hari'          => 'required|in:senin,selasa,rabu,kamis,jumat,sabtu,minggu',
             'is_default'    => 'nullable|boolean',
+            'is_hari_kerja'  => 'nullable|boolean',
         ], [
             'jam_masuk.regex'    => 'Format jam masuk tidak valid (contoh: 07:00:00)',
             'batas_masuk.regex'  => 'Format batas masuk tidak valid (contoh: 08:00:00)',
@@ -100,6 +101,7 @@ class JamAbsenController extends Controller
 
             'hari'          => 'required|in:senin,selasa,rabu,kamis,jumat,sabtu,minggu',
             'is_default'    => 'nullable|boolean',
+            'is_hari_kerja'  => 'nullable|boolean',
         ], [
             'jam_masuk.regex'    => 'Format jam masuk tidak valid (contoh: 07:00:00)',
             'batas_masuk.regex'  => 'Format batas masuk tidak valid (contoh: 08:00:00)',
@@ -147,6 +149,21 @@ class JamAbsenController extends Controller
         return redirect()
             ->route('dashboard.jam.absen.index')
             ->with('success', 'Jam kerja berhasil dihapus');
+    }
+
+    /**
+     * Toggle is_hari_kerja
+     */
+    public function toggleHariKerja(JamKerja $jamKerja)
+    {
+        $jamKerja->update(['is_hari_kerja' => !$jamKerja->is_hari_kerja]);
+        $status = $jamKerja->is_hari_kerja ? 'Hari Kerja' : 'Bukan Hari Kerja';
+
+        return response()->json([
+            'success'       => true,
+            'message'       => "Status berhasil diubah menjadi: {$status}",
+            'is_hari_kerja' => $jamKerja->is_hari_kerja
+        ]);
     }
 
     // =========================================================================

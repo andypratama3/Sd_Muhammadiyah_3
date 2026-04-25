@@ -18,7 +18,8 @@ class JamKerja extends Model
         'jam_pulang',
         'batas_pulang',
         'hari',
-        'is_default'
+        'is_default',
+        'is_hari_kerja'
     ];
 
 

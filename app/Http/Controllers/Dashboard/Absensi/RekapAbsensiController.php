@@ -439,6 +439,7 @@ class RekapAbsensiController extends Controller
             'absensi' => function ($q) use ($applyDateFilter) {
                 $applyDateFilter($q);
                 $q->orderBy('tanggal', 'asc');
+                $q->with('jamKerja:id,hari,is_hari_kerja');
             },
         ])->where('id', $karyawanId);
 
