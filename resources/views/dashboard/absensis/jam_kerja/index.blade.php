@@ -93,7 +93,7 @@
         </div>
     </div>
 
-@push('scripts')
+@push('js')
 <script>
     document.querySelectorAll('.toggle-hari-kerja-switch').forEach(switchEl => {
         switchEl.addEventListener('change', async function(e) {
