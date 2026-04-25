@@ -52,15 +52,14 @@
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    <button type="button" class="btn btn-sm toggle-hari-kerja"
-                                            data-id="{{ $item->id }}"
-                                            data-status="{{ $item->is_hari_kerja ? 'true' : 'false' }}">
-                                        @if ($item->is_hari_kerja)
-                                            <span class="badge bg-success cursor-pointer">YA</span>
-                                        @else
-                                            <span class="badge bg-secondary cursor-pointer">TIDAK</span>
-                                        @endif
-                                    </button>
+                                    <div class="form-check form-switch" style="display: flex; justify-content: center;">
+                                        <input class="form-check-input toggle-hari-kerja-switch"
+                                               type="checkbox"
+                                               id="switch-{{ $item->id }}"
+                                               data-id="{{ $item->id }}"
+                                               {{ $item->is_hari_kerja ? 'checked' : '' }}
+                                               style="cursor: pointer;">
+                                    </div>
                                 </td>
                                 <td class="text-center">
                                     <a href="{{ route('dashboard.jam.absen.edit', $item->id) }}"
@@ -96,11 +95,10 @@
 
 @push('scripts')
 <script>
-    document.querySelectorAll('.toggle-hari-kerja').forEach(btn => {
-        btn.addEventListener('click', async function(e) {
-            e.preventDefault();
+    document.querySelectorAll('.toggle-hari-kerja-switch').forEach(switchEl => {
+        switchEl.addEventListener('change', async function(e) {
             const id = this.dataset.id;
-            const badge = this.querySelector('.badge');
+            const isChecked = this.checked;
 
             try {
                 const response = await fetch(`/dashboard/pengaturan-absen/jam-absen/${id}/toggle-hari-kerja`, {
@@ -114,28 +112,35 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    // Update badge
-                    if (data.is_hari_kerja) {
-                        badge.classList.remove('bg-secondary');
-                        badge.classList.add('bg-success');
-                        badge.textContent = 'YA';
-                    } else {
-                        badge.classList.remove('bg-success');
-                        badge.classList.add('bg-secondary');
-                        badge.textContent = 'TIDAK';
-                    }
+                    // Update checkbox state based on response
+                    this.checked = data.is_hari_kerja;
 
                     // Show success message
-                    if (typeof showAlert !== 'undefined') {
-                        showAlert(data.message, 'success');
-                    } else {
-                        alert(data.message);
-                    }
+                    const alertDiv = document.createElement('div');
+                    alertDiv.className = 'alert alert-success alert-dismissible fade show';
+                    alertDiv.setAttribute('role', 'alert');
+                    alertDiv.innerHTML = `
+                        ${data.message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    `;
+
+                    // Insert alert at top of card-body
+                    const cardBody = document.querySelector('.card-body');
+                    cardBody.insertBefore(alertDiv, cardBody.firstChild);
+
+                    // Auto-dismiss after 3 seconds
+                    setTimeout(() => {
+                        alertDiv.remove();
+                    }, 3000);
                 } else {
+                    // Revert checkbox
+                    this.checked = !isChecked;
                     alert('Gagal mengubah status');
                 }
             } catch (error) {
                 console.error('Error:', error);
+                // Revert checkbox
+                this.checked = !isChecked;
                 alert('Terjadi kesalahan');
             }
         });
