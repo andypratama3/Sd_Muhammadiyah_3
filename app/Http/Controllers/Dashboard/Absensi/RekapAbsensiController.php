@@ -43,7 +43,20 @@ class RekapAbsensiController extends Controller
                 ->addColumn('tanggal', function ($row) {
                     return \Carbon\Carbon::parse($row->tanggal)
                         ->locale('id')
-                        ->translatedFormat('l, d F Y');
+                        ->translatedFormat('d F Y');
+                })
+                ->addColumn('hari', function ($row) {
+                    return \Carbon\Carbon::parse($row->tanggal)
+                        ->locale('id')
+                        ->translatedFormat('l');
+                })
+                ->addColumn('libur', function ($row) {
+                    $isHariKerja = $row->jamKerja?->is_hari_kerja ?? false;
+                    if ($isHariKerja) {
+                        return '<span class="badge bg-success"><i class="fas fa-check"></i> Kerja</span>';
+                    } else {
+                        return '<span class="badge bg-secondary"><i class="fas fa-moon"></i> Libur</span>';
+                    }
                 })
                 ->addColumn('status', function ($row) {
                     return match($row->status_kehadiran) {
@@ -51,6 +64,7 @@ class RekapAbsensiController extends Controller
                         'cuti'   => '<span class="badge bg-warning"><i class="fas fa-calendar-check"></i> Cuti</span>',
                         'izin'   => '<span class="badge bg-info"><i class="fas fa-file-alt"></i> Izin</span>',
                         'sakit'  => '<span class="badge bg-danger"><i class="fas fa-hospital-alt"></i> Sakit</span>',
+                        'libur'  => '<span class="badge bg-purple"><i class="fas fa-bed"></i> Libur</span>',
                         'alpha'  => '<span class="badge bg-secondary"><i class="fas fa-ban"></i> Alpha</span>',
                         default  => '<span class="badge bg-secondary"><i class="fas fa-question"></i> Tidak Diketahui</span>',
                     };
@@ -84,7 +98,7 @@ class RekapAbsensiController extends Controller
                     $buttons .= '</div>';
                     return $buttons;
                 })
-                ->rawColumns(['status', 'aksi'])
+                ->rawColumns(['status', 'libur', 'aksi'])
                 ->addIndexColumn()
                 ->make(true);
         }
