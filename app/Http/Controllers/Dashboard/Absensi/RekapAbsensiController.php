@@ -271,18 +271,15 @@ class RekapAbsensiController extends Controller
                 'user_id'      => Auth::user()->id ?? 'null',
             ]);
 
-            $dateRange = $request->filled('date')
-                ? $request->date
-                : now()->translatedFormat('F Y');
+            // ----------------------------------------------------------------
+            // Resolusi label date range & nama file/zip
+            // ----------------------------------------------------------------
+            $dateRangeLabel = $this->resolveDateRangeLabel($request);
+            $safeDateLabel  = $this->safeDateLabel($request);
 
-            $ttdRusminiBase64 = $this->getTtdBase64(
-                public_path('asset/img/ttd_bu_rusmini.png')
-            );
-            $ttdKepalaBase64 = $this->getTtdBase64(
-                public_path('asset/img/tanda_tangan_kepala_sekolah.png')
-            );
+            $ttdRusminiBase64 = $this->getTtdBase64(public_path('asset/img/ttd_bu_rusmini.png'));
+            $ttdKepalaBase64  = $this->getTtdBase64(public_path('asset/img/tanda_tangan_kepala_sekolah.png'));
 
-            // Ambil ID karyawan saja dulu — query ringan
             $karyawanQuery = Karyawan::with('user.roles');
             if (!Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
                 $karyawanQuery->where('id', Auth::user()->karyawan->id);
@@ -293,57 +290,89 @@ class RekapAbsensiController extends Controller
                 return redirect()->back()->with('warning', 'Tidak ada data karyawan untuk diekspor.');
             }
 
-            // Load semua karyawan yang punya data absensi di periode ini
-            $karyawans = collect();
+            // Buat folder temp
+            $tempDir = storage_path('app/temp/rekap_pdf_' . now()->format('YmdHis') . '_' . uniqid());
+            \File::makeDirectory($tempDir, 0755, true);
+
+            $summaryData = collect();
+            $fileCount   = 0;
+
             foreach ($karyawanIds as $karyawanId) {
                 $karyawan = $this->getSingleKaryawanRekap($karyawanId, $request);
-                if ($karyawan && $karyawan->absensi->isNotEmpty()) {
-                    $karyawans->push($karyawan);
+
+                if (!$karyawan || $karyawan->absensi->isEmpty()) {
+                    unset($karyawan);
+                    continue;
                 }
-                unset($karyawan);
+
+                $totalMasuk  = $karyawan->absensi->sum(fn ($a) => floatval($a->rp_masuk  ?? 0));
+                $totalPulang = $karyawan->absensi->sum(fn ($a) => floatval($a->rp_pulang ?? 0));
+
+                $summaryData->push([
+                    'name'  => $karyawan->name ?? '-',
+                    'total' => $totalMasuk + $totalPulang,
+                ]);
+
+                $pdf = PDF::loadView('dashboard.absensis.rekap.pdf', [
+                    'karyawans'        => collect([$karyawan]),
+                    'dateRange'        => $dateRangeLabel,
+                    'ttdRusminiBase64' => $ttdRusminiBase64,
+                    'ttdKepalaBase64'  => $ttdKepalaBase64,
+                    'summaryData'      => collect([]),
+                    'grandTotal'       => 0,
+                    'petugasName'      => Auth::user()->name ?? '-',
+                ])->setPaper('a4', 'landscape');
+
+                // Nama file: NamaKaryawan_DateRange.pdf
+                $safeName = preg_replace('/[^a-zA-Z0-9_\-]/', '_', $karyawan->name ?? 'karyawan');
+                $pdfPath  = $tempDir . '/' . $safeName . '_' . $safeDateLabel . '.pdf';
+                $pdf->save($pdfPath);
+
+                unset($pdf, $karyawan);
+                $fileCount++;
             }
 
-            if ($karyawans->isEmpty()) {
+            if ($fileCount === 0) {
+                \File::deleteDirectory($tempDir);
                 return redirect()->back()->with('warning', 'Tidak ada data absensi untuk diekspor.');
             }
 
-            // ----------------------------------------------------------------
-            // Hitung summary per karyawan untuk halaman terakhir (rekapitulasi)
-            // Menggunakan data absensi yang sudah di-load — TANPA query tambahan
-            // ----------------------------------------------------------------
-            $summaryData = $karyawans->map(function ($k) {
-                $totalMasuk  = $k->absensi->sum(fn ($a) => floatval($a->rp_masuk  ?? 0));
-                $totalPulang = $k->absensi->sum(fn ($a) => floatval($a->rp_pulang ?? 0));
+            // Jika hanya 1 karyawan, langsung return PDF tanpa ZIP
+            if ($fileCount === 1) {
+                $pdfFile  = collect(\File::files($tempDir))->first();
+                $content  = file_get_contents($pdfFile->getPathname());
+                $filename = $pdfFile->getFilename();
+                \File::deleteDirectory($tempDir);
 
-                return [
-                    'name'  => $k->name ?? '-',
-                    'total' => $totalMasuk + $totalPulang,
-                ];
-            });
+                return response($content, 200, [
+                    'Content-Type'        => 'application/pdf',
+                    'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+                ]);
+            }
 
-            $grandTotal  = $summaryData->sum('total');
-            $petugasName = Auth::user()->name ?? '-';
+            // Buat ZIP — nama ZIP mengikuti date range
+            $zipFilename = 'Rekap_Absensi_' . $safeDateLabel . '.zip';
+            $zipPath     = storage_path('app/temp/' . $zipFilename);
 
-            // Generate 1 PDF berisi semua karyawan + halaman rekapitulasi total
-            $pdf = PDF::loadView('dashboard.absensis.rekap.pdf', [
-                'karyawans'        => $karyawans,
-                'dateRange'        => $dateRange,
-                'ttdRusminiBase64' => $ttdRusminiBase64,
-                'ttdKepalaBase64'  => $ttdKepalaBase64,
-                // Variabel untuk halaman summary terakhir
-                'summaryData'      => $summaryData,
-                'grandTotal'       => $grandTotal,
-                'petugasName'      => $petugasName,
-            ])->setPaper('a4', 'landscape');
+            $zip = new \ZipArchive();
+            if ($zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== true) {
+                \File::deleteDirectory($tempDir);
+                return redirect()->back()->with('error', 'Gagal membuat file ZIP.');
+            }
 
-            $filename = 'rekap-absensi-' . now()->format('d-m-Y-H-i-s') . '.pdf';
+            foreach (\File::files($tempDir) as $file) {
+                $zip->addFile($file->getPathname(), $file->getFilename());
+            }
+            $zip->close();
 
-            \Log::info('RekapAbsensiController - exportPdf Success', [
-                'filename'        => $filename,
-                'jumlah_karyawan' => $karyawans->count(),
+            \File::deleteDirectory($tempDir);
+
+            \Log::info('RekapAbsensiController - exportPdf (ZIP) Success', [
+                'filename'        => $zipFilename,
+                'jumlah_karyawan' => $fileCount,
             ]);
 
-            return $pdf->download($filename);
+            return response()->download($zipPath, $zipFilename)->deleteFileAfterSend(true);
 
         } catch (\Exception $e) {
             \Log::error('RekapAbsensiController - exportPdf Error', [
@@ -364,11 +393,87 @@ class RekapAbsensiController extends Controller
                 'user_id'      => Auth::user()->id ?? 'null',
             ]);
 
-            $filename = 'rekap-absensi-' . now()->format('d-m-Y-H-i-s') . '.xlsx';
+            $safeDateLabel = $this->safeDateLabel($request);
 
-            \Log::info('RekapAbsensiController - Exporting Excel', ['filename' => $filename]);
+            $karyawanQuery = Karyawan::with('user.roles');
+            if (!Auth::user()->hasAnyRole(['admin', 'superadmin'])) {
+                $karyawanQuery->where('id', Auth::user()->karyawan->id);
+            }
+            $karyawanIds = $karyawanQuery->pluck('id');
 
-            return Excel::download(new RekapAbsensiExport($request), $filename);
+            if ($karyawanIds->isEmpty()) {
+                return redirect()->back()->with('warning', 'Tidak ada data karyawan untuk diekspor.');
+            }
+
+            // Buat folder temp
+            $tempDir = storage_path('app/temp/rekap_excel_' . now()->format('YmdHis') . '_' . uniqid());
+            \File::makeDirectory($tempDir, 0755, true);
+
+            $fileCount = 0;
+
+            foreach ($karyawanIds as $karyawanId) {
+                $karyawan = $this->getSingleKaryawanRekap($karyawanId, $request);
+
+                if (!$karyawan || $karyawan->absensi->isEmpty()) {
+                    unset($karyawan);
+                    continue;
+                }
+
+                // Nama file: NamaKaryawan_DateRange.xlsx
+                $safeName = preg_replace('/[^a-zA-Z0-9_\-]/', '_', $karyawan->name ?? 'karyawan');
+                $xlsxPath = $tempDir . '/' . $safeName . '_' . $safeDateLabel . '.xlsx';
+
+                Excel::store(
+                    new RekapAbsensiExport($request, $karyawanId),
+                    $xlsxPath,
+                    'local_absolute'
+                );
+
+                unset($karyawan);
+                $fileCount++;
+            }
+
+            if ($fileCount === 0) {
+                \File::deleteDirectory($tempDir);
+                return redirect()->back()->with('warning', 'Tidak ada data absensi untuk diekspor.');
+            }
+
+            // Jika hanya 1 karyawan, langsung return XLSX tanpa ZIP
+            if ($fileCount === 1) {
+                $xlsxFile = collect(\File::files($tempDir))->first();
+                $content  = file_get_contents($xlsxFile->getPathname());
+                $filename = $xlsxFile->getFilename();
+                \File::deleteDirectory($tempDir);
+
+                return response($content, 200, [
+                    'Content-Type'        => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+                ]);
+            }
+
+            // Buat ZIP — nama ZIP mengikuti date range
+            $zipFilename = 'Rekap_Absensi_' . $safeDateLabel . '.zip';
+            $zipPath     = storage_path('app/temp/' . $zipFilename);
+
+            $zip = new \ZipArchive();
+            if ($zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== true) {
+                \File::deleteDirectory($tempDir);
+                return redirect()->back()->with('error', 'Gagal membuat file ZIP.');
+            }
+
+            foreach (\File::files($tempDir) as $file) {
+                $zip->addFile($file->getPathname(), $file->getFilename());
+            }
+            $zip->close();
+
+            \File::deleteDirectory($tempDir);
+
+            \Log::info('RekapAbsensiController - exportExcel (ZIP) Success', [
+                'filename'        => $zipFilename,
+                'jumlah_karyawan' => $fileCount,
+            ]);
+
+            return response()->download($zipPath, $zipFilename)->deleteFileAfterSend(true);
 
         } catch (\Exception $e) {
             \Log::error('RekapAbsensiController - exportExcel Error', [
@@ -384,6 +489,52 @@ class RekapAbsensiController extends Controller
     // =========================================================================
     // Private Helpers
     // =========================================================================
+
+    /**
+     * Label date range yang ditampilkan di dokumen (human-readable).
+     * Contoh: "01 Januari 2025 - 31 Januari 2025" atau "April 2025"
+     */
+    private function resolveDateRangeLabel(Request $request): string
+    {
+        if ($request->filled('date')) {
+            $dates = explode(' : ', $request->date);
+            if (count($dates) === 2) {
+                $start = Carbon::createFromFormat('d-m-Y', trim($dates[0]));
+                $end   = Carbon::createFromFormat('d-m-Y', trim($dates[1]));
+
+                return $start->locale('id')->translatedFormat('d F Y')
+                    . ' - '
+                    . $end->locale('id')->translatedFormat('d F Y');
+            }
+        }
+
+        return now()->locale('id')->translatedFormat('F Y');
+    }
+
+    /**
+     * Label date range yang aman dipakai sebagai bagian nama file/zip.
+     * Spasi & karakter khusus diganti underscore/strip.
+     * Contoh: "01-01-2025_sd_31-01-2025" atau "April_2025"
+     */
+    private function safeDateLabel(Request $request): string
+    {
+        if ($request->filled('date')) {
+            $dates = explode(' : ', $request->date);
+            if (count($dates) === 2) {
+                $start = trim($dates[0]); // sudah format d-m-Y
+                $end   = trim($dates[1]);
+
+                // Ganti - dengan _ agar lebih clean di nama file
+                $start = str_replace('-', '_', $start);
+                $end   = str_replace('-', '_', $end);
+
+                return $start . '_sd_' . $end;
+            }
+        }
+
+        // Fallback: bulan & tahun saat ini
+        return now()->locale('id')->translatedFormat('F_Y');
+    }
 
     /**
      * Resize gambar TTD ke max lebar tertentu lalu encode ke base64.
