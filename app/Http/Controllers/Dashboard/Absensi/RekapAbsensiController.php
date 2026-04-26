@@ -50,14 +50,6 @@ class RekapAbsensiController extends Controller
                         ->locale('id')
                         ->translatedFormat('l');
                 })
-                ->addColumn('libur', function ($row) {
-                    $isHariKerja = $row->jamKerja?->is_hari_kerja ?? false;
-                    if ($isHariKerja) {
-                        return '<span class="badge bg-success"><i class="fas fa-check"></i> Kerja</span>';
-                    } else {
-                        return '<span class="badge bg-secondary"><i class="fas fa-moon"></i> Libur</span>';
-                    }
-                })
                 ->addColumn('status', function ($row) {
                     return match($row->status_kehadiran) {
                         'hadir'  => '<span class="badge bg-success"><i class="fas fa-check"></i> Hadir</span>',

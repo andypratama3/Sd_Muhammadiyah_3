@@ -123,7 +123,6 @@
                                 <th>Jenis Pegawai</th>
                                 <th>Tanggal</th>
                                 <th>Hari</th>
-                                <th>Libur</th>
                                 <th>Status</th>
                                 <th>Masuk</th>
                                 <th>Pulang</th>
@@ -311,6 +310,10 @@
                             {
                                 data: 'tanggal',
                                 name: 'tanggal'
+                            },
+                            {
+                                data: 'hari',
+                                name: 'hari'
                             },
                             {
                                 data: 'status',
