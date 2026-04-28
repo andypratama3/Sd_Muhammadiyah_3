@@ -288,6 +288,7 @@ class RekapAbsensiController extends Controller
 
             $summaryData = collect();
             $fileCount   = 0;
+            $filePerKaryawan = [];
 
             foreach ($karyawanIds as $karyawanId) {
                 $karyawan = $this->getSingleKaryawanRekap($karyawanId, $request);
@@ -320,6 +321,10 @@ class RekapAbsensiController extends Controller
                 $pdfPath  = $tempDir . '/' . $safeName . '_' . $safeDateLabel . '.pdf';
                 $pdf->save($pdfPath);
 
+                // Track file per karyawan
+                $filename = basename($pdfPath);
+                $filePerKaryawan[$karyawanId] = $filename;
+
                 unset($pdf, $karyawan);
                 $fileCount++;
             }
@@ -334,6 +339,40 @@ class RekapAbsensiController extends Controller
                 $pdfFile  = collect(\File::files($tempDir))->first();
                 $content  = file_get_contents($pdfFile->getPathname());
                 $filename = $pdfFile->getFilename();
+
+                // Save to permanent storage
+                $storagePath = 'rekap_absensi/' . now()->format('Y/m');
+                if (!\Storage::disk('public')->exists($storagePath)) {
+                    \Storage::disk('public')->makeDirectory($storagePath);
+                }
+
+                $permanentPath = $storagePath . '/' . $filename;
+                \Storage::disk('public')->put($permanentPath, $content);
+
+                // Simpan history (try-catch so it doesn't break download)
+                try {
+                    $dates = explode(' : ', $request->date);
+                    $startDate = count($dates) === 2 ? \Carbon\Carbon::createFromFormat('d-m-Y', trim($dates[0]))->format('Y-m-d') : null;
+                    $endDate = count($dates) === 2 ? \Carbon\Carbon::createFromFormat('d-m-Y', trim($dates[1]))->format('Y-m-d') : null;
+
+                    \App\Models\RekapAbsensiHistory::create([
+                        'user_id' => \Auth::id(),
+                        'start_date' => $startDate,
+                        'end_date' => $endDate,
+                        'zip_file_path' => $permanentPath,
+                        'zip_filename' => $filename,
+                        'status' => 'draft',
+                        'file_per_karyawan' => $filePerKaryawan,
+                        'keterangan' => 'Generated PDF Rekap Absensi (Single File)',
+                    ]);
+                } catch (\Exception $historyEx) {
+                    \Log::error('RekapAbsensiController - History Save Error', [
+                        'error' => $historyEx->getMessage(),
+                        'file' => $historyEx->getFile(),
+                        'line' => $historyEx->getLine(),
+                    ]);
+                }
+
                 \File::deleteDirectory($tempDir);
 
                 return response($content, 200, [
@@ -357,12 +396,46 @@ class RekapAbsensiController extends Controller
             }
             $zip->close();
 
-            \File::deleteDirectory($tempDir);
-
             \Log::info('RekapAbsensiController - exportPdf (ZIP) Success', [
                 'filename'        => $zipFilename,
                 'jumlah_karyawan' => $fileCount,
             ]);
+
+            // Move zip to permanent storage
+            $storagePath = 'rekap_absensi/' . now()->format('Y/m');
+            $permanentZipPath = $storagePath . '/' . $zipFilename;
+
+            if (!\Storage::disk('public')->exists($storagePath)) {
+                \Storage::disk('public')->makeDirectory($storagePath);
+            }
+
+            \Storage::disk('public')->put($permanentZipPath, file_get_contents($zipPath));
+
+            // Simpan history (try-catch so it doesn't break download)
+            try {
+                $dates = explode(' : ', $request->date);
+                $startDate = count($dates) === 2 ? \Carbon\Carbon::createFromFormat('d-m-Y', trim($dates[0]))->format('Y-m-d') : null;
+                $endDate = count($dates) === 2 ? \Carbon\Carbon::createFromFormat('d-m-Y', trim($dates[1]))->format('Y-m-d') : null;
+
+                \App\Models\RekapAbsensiHistory::create([
+                    'user_id' => \Auth::id(),
+                    'start_date' => $startDate,
+                    'end_date' => $endDate,
+                    'zip_file_path' => $permanentZipPath,
+                    'zip_filename' => $zipFilename,
+                    'status' => 'draft',
+                    'file_per_karyawan' => $filePerKaryawan,
+                    'keterangan' => 'Generated PDF Rekap Absensi',
+                ]);
+            } catch (\Exception $historyEx) {
+                \Log::error('RekapAbsensiController - History Save Error', [
+                    'error' => $historyEx->getMessage(),
+                    'file' => $historyEx->getFile(),
+                    'line' => $historyEx->getLine(),
+                ]);
+            }
+
+            \File::deleteDirectory($tempDir);
 
             return response()->download($zipPath, $zipFilename)->deleteFileAfterSend(true);
 
@@ -402,6 +475,7 @@ class RekapAbsensiController extends Controller
             \File::makeDirectory($tempDir, 0755, true);
 
             $fileCount = 0;
+            $filePerKaryawan = [];
 
             foreach ($karyawanIds as $karyawanId) {
                 $karyawan = $this->getSingleKaryawanRekap($karyawanId, $request);
@@ -421,6 +495,9 @@ class RekapAbsensiController extends Controller
                     'local_absolute'
                 );
 
+                // Track file per karyawan
+                $filePerKaryawan[$karyawanId] = basename($xlsxPath);
+
                 unset($karyawan);
                 $fileCount++;
             }
@@ -435,6 +512,40 @@ class RekapAbsensiController extends Controller
                 $xlsxFile = collect(\File::files($tempDir))->first();
                 $content  = file_get_contents($xlsxFile->getPathname());
                 $filename = $xlsxFile->getFilename();
+
+                // Save to permanent storage
+                $storagePath = 'rekap_absensi/' . now()->format('Y/m');
+                if (!\Storage::disk('public')->exists($storagePath)) {
+                    \Storage::disk('public')->makeDirectory($storagePath);
+                }
+
+                $permanentPath = $storagePath . '/' . $filename;
+                \Storage::disk('public')->put($permanentPath, $content);
+
+                // Simpan history (try-catch so it doesn't break download)
+                try {
+                    $dates = explode(' : ', $request->date);
+                    $startDate = count($dates) === 2 ? \Carbon\Carbon::createFromFormat('d-m-Y', trim($dates[0]))->format('Y-m-d') : null;
+                    $endDate = count($dates) === 2 ? \Carbon\Carbon::createFromFormat('d-m-Y', trim($dates[1]))->format('Y-m-d') : null;
+
+                    \App\Models\RekapAbsensiHistory::create([
+                        'user_id' => \Auth::id(),
+                        'start_date' => $startDate,
+                        'end_date' => $endDate,
+                        'zip_file_path' => $permanentPath,
+                        'zip_filename' => $filename,
+                        'status' => 'draft',
+                        'file_per_karyawan' => $filePerKaryawan,
+                        'keterangan' => 'Generated Excel Rekap Absensi (Single File)',
+                    ]);
+                } catch (\Exception $historyEx) {
+                    \Log::error('RekapAbsensiController - History Save Error', [
+                        'error' => $historyEx->getMessage(),
+                        'file' => $historyEx->getFile(),
+                        'line' => $historyEx->getLine(),
+                    ]);
+                }
+
                 \File::deleteDirectory($tempDir);
 
                 return response($content, 200, [
@@ -458,12 +569,46 @@ class RekapAbsensiController extends Controller
             }
             $zip->close();
 
-            \File::deleteDirectory($tempDir);
-
             \Log::info('RekapAbsensiController - exportExcel (ZIP) Success', [
                 'filename'        => $zipFilename,
                 'jumlah_karyawan' => $fileCount,
             ]);
+
+            // Move zip to permanent storage
+            $storagePath = 'rekap_absensi/' . now()->format('Y/m');
+            $permanentZipPath = $storagePath . '/' . $zipFilename;
+
+            if (!\Storage::disk('public')->exists($storagePath)) {
+                \Storage::disk('public')->makeDirectory($storagePath);
+            }
+
+            \Storage::disk('public')->put($permanentZipPath, file_get_contents($zipPath));
+
+            // Simpan history (try-catch so it doesn't break download)
+            try {
+                $dates = explode(' : ', $request->date);
+                $startDate = count($dates) === 2 ? \Carbon\Carbon::createFromFormat('d-m-Y', trim($dates[0]))->format('Y-m-d') : null;
+                $endDate = count($dates) === 2 ? \Carbon\Carbon::createFromFormat('d-m-Y', trim($dates[1]))->format('Y-m-d') : null;
+
+                \App\Models\RekapAbsensiHistory::create([
+                    'user_id' => \Auth::id(),
+                    'start_date' => $startDate,
+                    'end_date' => $endDate,
+                    'zip_file_path' => $permanentZipPath,
+                    'zip_filename' => $zipFilename,
+                    'status' => 'draft',
+                    'file_per_karyawan' => $filePerKaryawan,
+                    'keterangan' => 'Generated Excel Rekap Absensi',
+                ]);
+            } catch (\Exception $historyEx) {
+                \Log::error('RekapAbsensiController - History Save Error', [
+                    'error' => $historyEx->getMessage(),
+                    'file' => $historyEx->getFile(),
+                    'line' => $historyEx->getLine(),
+                ]);
+            }
+
+            \File::deleteDirectory($tempDir);
 
             return response()->download($zipPath, $zipFilename)->deleteFileAfterSend(true);
 

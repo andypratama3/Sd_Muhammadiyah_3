@@ -96,17 +96,29 @@
                                 <i class="fas fa-redo"></i> Reset
                             </button>
 
-                            @role('admin|superadmin')
-                                <button type="button" id="btn_export_pdf" class="btn btn-danger"
-                                    title="Download laporan dalam format PDF">
-                                    <i class="fas fa-file-pdf"></i> PDF
-                                </button>
+                             @if(Auth::user()->hasAnyRole(['admin', 'superadmin']))
+                                 <button type="button" id="btn_export_pdf" class="btn btn-danger"
+                                     title="Download laporan dalam format PDF">
+                                     <i class="fas fa-file-pdf"></i> PDF
+                                 </button>
 
-                                <button type="button" id="btn_export_excel" class="btn btn-success"
-                                    title="Download laporan dalam format Excel">
-                                    <i class="fas fa-file-excel"></i> Excel
-                                </button>
-                            @endrole
+                                 <button type="button" id="btn_export_excel" class="btn btn-success"
+                                     title="Download laporan dalam format Excel">
+                                     <i class="fas fa-file-excel"></i> Excel
+                                 </button>
+
+                                 <a href="{{ route('dashboard.rekap-absensi-history.index') }}" id="btn_history"
+                                     class="btn btn-info" title="Lihat History Rekap Absensi">
+                                     <i class="fas fa-history"></i> History
+                                 </a>
+                             @else
+                                 @if(Auth::user()->karyawan)
+                                     <a href="{{ route('dashboard.rekap-absensi-history.karyawan-index') }}"
+                                        class="btn btn-primary" title="Lihat File Saya">
+                                         <i class="fas fa-file-alt"></i> Lihat File Saya
+                                     </a>
+                                 @endif
+                             @endif
                         </div>
 
                         <div class="mt-2 col-md-12">

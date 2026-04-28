@@ -77,11 +77,6 @@
             padding: 2px 4px;
         }
 
-        .hari-merah {
-            color: red;
-            font-weight: bold;
-        }
-
         .summary {
             font-weight: bold;
             background-color: #f0f0f0;
@@ -275,7 +270,7 @@
                         @endphp
                         <tr>
                             <td class="text-center">{{ $tanggal->format('d-m-Y') }}</td>
-                            <td class="text-center {{ $isWeekend || !$isHariKerja ? 'hari-merah' : '' }}">
+                            <td class="text-center">
                                 {{ $hari }}</td>
                             <td class="text-center">
                                 {{ $row->jam_masuk ? \Carbon\Carbon::parse($row->jam_masuk)->format('H:i') : '-' }}
@@ -289,7 +284,7 @@
                             <td class="text-center">
                                 {{ $row->rp_pulang ? 'Rp. ' . number_format(floatval($row->rp_pulang), 0, ',', '.') : '-' }}
                             </td>
-                            <td class="text-center">
+                            <td class="text-center @if($row->status_kehadiran == 'libur') hari-merah @endif">
                                 @switch($row->status_kehadiran)
                                     @case('hadir')
                                         <span style="color:green;">Hadir</span>
@@ -308,7 +303,7 @@
                                     @break
 
                                     @case('libur')
-                                        <span style="color:purple;">Libur</span>
+                                        <span style="color:red; font-weight:bold;">Libur</span>
                                     @break
 
                                     @case('alpha')

@@ -72,6 +72,8 @@ class KaryawanSeeder extends Seeder
             ['name' => 'Yuliani Kirana, S.Ag', 'sex' => 'Perempuan', 'phone' => '081350702229'],
             ['name' => 'Inayah', 'sex' => 'Perempuan', 'phone' => ''],
             ['name' => 'Musdhalifah Zulhaifa, S.Pd., Gr', 'sex' => 'Perempuan', 'phone' => '081256048332'],
+            ['name' => 'Nurul Masrufah', 'sex' => 'Perempuan', 'phone' => '0895700661960'],
+
         ];
 
         foreach ($guru as $data) {
@@ -96,7 +98,7 @@ class KaryawanSeeder extends Seeder
         // Karyawan Umum
         $karyawan = [
             ['name' => 'Nahdiah, S.H., M.E.', 'sex' => 'Perempuan', 'phone' => '089510837651'],
-            ['name' => 'M. Rifqie Abrar', 'sex' => 'Laki-Laki', 'phone' => ''],           
+            ['name' => 'M. Rifqie Abrar', 'sex' => 'Laki-Laki', 'phone' => ''],
         ];
 
         foreach ($karyawan as $data) {
@@ -137,6 +139,7 @@ class KaryawanSeeder extends Seeder
             ['name' => 'Farhan Ajran Y.', 'sex' => 'Laki-Laki', 'phone' => ''],
             ['name' => 'Agusti Fajrin', 'sex' => 'Laki-Laki', 'phone' => ''],
             ['name' => 'Muhammad Indra Ashari', 'sex' => 'Laki-Laki', 'phone' => ''],
+
         ];
 
         foreach ($tendik as $data) {

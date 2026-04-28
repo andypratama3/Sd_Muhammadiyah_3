@@ -8,6 +8,7 @@ use App\Http\Controllers\Dashboard\Absensi\JamAbsenController;
 use App\Http\Controllers\Dashboard\Absensi\LokasiAbsenController;
 use App\Http\Controllers\Dashboard\Absensi\PengajuanCutiController;
 use App\Http\Controllers\Dashboard\Absensi\RekapAbsensiController;
+use App\Http\Controllers\Dashboard\Absensi\RekapAbsensiHistoryController;
 use App\Http\Controllers\Dashboard\Absensi\RekapAbsensiSholatController;
 use App\Http\Controllers\Dashboard\AchivementController;
 use App\Http\Controllers\Dashboard\ActivityController;
@@ -234,6 +235,17 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
         Route::get('/{id}', [RekapAbsensiController::class, 'show'])->name('show');
         Route::put('/{id}', [RekapAbsensiController::class, 'update'])->name('update');
         Route::delete('/{id}', [RekapAbsensiController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::prefix('rekap-absensi-history')->name('dashboard.rekap-absensi-history.')->group(function () {
+        Route::get('/', [RekapAbsensiHistoryController::class, 'index'])->name('index');
+        Route::get('/karyawan-index', [RekapAbsensiHistoryController::class, 'karyawanIndex'])->name('karyawan-index');
+        Route::get('/{id}', [RekapAbsensiHistoryController::class, 'show'])->name('show');
+        Route::post('/{id}/publish', [RekapAbsensiHistoryController::class, 'publish'])->name('publish');
+        Route::post('/{id}/unpublish', [RekapAbsensiHistoryController::class, 'unpublish'])->name('unpublish');
+        Route::get('/{id}/download', [RekapAbsensiHistoryController::class, 'download'])->name('download');
+        Route::get('/{id}/karyawan-download/{karyawanId}', [RekapAbsensiHistoryController::class, 'karyawanDownload'])->name('karyawan-download');
+        Route::delete('/{id}', [RekapAbsensiHistoryController::class, 'destroy'])->name('destroy');
     });
 
      Route::prefix('rekap-sholat')->name('dashboard.rekap.sholat.')->group(function () {
