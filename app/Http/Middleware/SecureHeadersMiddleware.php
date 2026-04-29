@@ -39,7 +39,7 @@ class SecureHeadersMiddleware
         $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
 
         // ✅ Permissions-Policy
-        $response->headers->set('Permissions-Policy', 
+        $response->headers->set('Permissions-Policy',
             'geolocation=(self), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()'
         );
 
@@ -59,7 +59,7 @@ class SecureHeadersMiddleware
             "connect-src 'self' https://app.midtrans.com https://app.sandbox.midtrans.com " .
                 "https://www.googletagmanager.com https://www.google-analytics.com " .
                 "https://kit.fontawesome.com https://ka-f.fontawesome.com " .
-                "https://nominatim.openstreetmap.org https://unpkg.com " .
+                "https://nominatim.openstreetmap.org https://unpkg.com https://cdnjs.cloudflare.com " .
                 "https://cdn.jsdelivr.net; " .  // ✅ Added for Chart.js sourcemaps
             "object-src 'none'; " .
             "base-uri 'self'; " .
