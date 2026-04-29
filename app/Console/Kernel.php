@@ -18,7 +18,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('absensi:generate-harian')
             ->dailyAt('16:00') // 16:00 WITA
             ->timezone('Asia/Makassar')
-            ->weekdays()
+            ->daily()
             ->appendOutputTo(storage_path('logs/absensi-generate.log'));
 
         $schedule->command('db:backup')
