@@ -56,7 +56,7 @@ class RekapAbsensiController extends Controller
                         'cuti'   => '<span class="badge bg-warning"><i class="fas fa-calendar-check"></i> Cuti</span>',
                         'izin'   => '<span class="badge bg-info"><i class="fas fa-file-alt"></i> Izin</span>',
                         'sakit'  => '<span class="badge bg-danger"><i class="fas fa-hospital-alt"></i> Sakit</span>',
-                        'libur'  => '<span class="badge bg-purple"><i class="fas fa-bed"></i> Libur</span>',
+                        'libur'  => '<span class="badge bg-secondary"><i class="fas fa-bed"></i> Libur</span>',
                         'alpha'  => '<span class="badge bg-secondary"><i class="fas fa-ban"></i> Alpha</span>',
                         default  => '<span class="badge bg-secondary"><i class="fas fa-question"></i> Tidak Diketahui</span>',
                     };
