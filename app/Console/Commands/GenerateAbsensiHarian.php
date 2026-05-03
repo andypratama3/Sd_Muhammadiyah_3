@@ -9,7 +9,6 @@ use App\Models\JamKerja;
 use App\Services\AbsensiService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
-use Yasumi\Yasumi;
 
 class GenerateAbsensiHarian extends Command
 {
@@ -17,9 +16,6 @@ class GenerateAbsensiHarian extends Command
     protected $description = 'Generate status absensi harian untuk semua karyawan (alpha jika tidak absen dan tidak cuti)';
 
     protected $absensiService;
-
-    /** Cache holidays per tahun supaya tidak re-init tiap iterasi karyawan */
-    private array $holidayCache = [];
 
     public function __construct(AbsensiService $absensiService)
     {
@@ -191,38 +187,12 @@ class GenerateAbsensiHarian extends Command
     }
 
     // =========================================================================
-    // LIBUR NASIONAL — Yasumi (otomatis, tanpa mapping manual)
+    // LIBUR NASIONAL — Disabled (TODO: implement with database)
     // =========================================================================
 
     private function getNamaLiburNasional(Carbon $tanggal): ?string
     {
-        try {
-            $tahun = (int) $tanggal->year;
-
-            if (!isset($this->holidayCache[$tahun])) {
-                $this->holidayCache[$tahun] = Yasumi::create('id', $tahun);
-            }
-
-            $provider = $this->holidayCache[$tahun];
-
-            if (!$provider->isHoliday($tanggal->toDateTimeImmutable())) {
-                return null;
-            }
-
-            foreach ($provider->getHolidays() as $holiday) {
-                if ($holiday->format('Y-m-d') === $tanggal->format('Y-m-d')) {
-                    return $holiday->getName();
-                }
-            }
-
-            return 'Hari Libur Nasional';
-        } catch (\Exception $e) {
-            Log::warning('Yasumi provider error, skipping holiday detection', [
-                'tanggal' => $tanggal->toDateString(),
-                'error'   => $e->getMessage(),
-            ]);
-            return null;
-        }
+        return null; // Holiday detection disabled for now
     }
 
     // =========================================================================

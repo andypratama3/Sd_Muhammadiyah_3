@@ -31,6 +31,7 @@ class AbsensiMasterSeeder extends Seeder
                 'jam_pulang'    => '14:15:00',
                 'batas_pulang'  => '14:15:00',  // Boleh pulang mulai jam ini
                 'is_default'    => false,
+                'is_hari_kerja' => true,
                 'created_at'    => now(),
                 'updated_at'    => now(),
             ]);
@@ -51,6 +52,7 @@ class AbsensiMasterSeeder extends Seeder
                 'jam_pulang'    => '00:00:00',
                 'batas_pulang'  => '00:00:00',
                 'is_default'    => false,
+                'is_hari_kerja' => false,
                 'created_at'    => now(),
                 'updated_at'    => now(),
             ]);
@@ -69,8 +71,9 @@ class AbsensiMasterSeeder extends Seeder
                 'jam_masuk'     => '06:45:00',
                 'batas_masuk'   => '07:00:00',  // Lewat jam ini = terlambat
                 'jam_pulang'    => '14:15:00',
-                'batas_pulang'  => '14:15:00', 
+                'batas_pulang'  => '14:15:00',
                 'is_default'    => false,
+                'is_hari_kerja' => true,
                 'created_at'    => now(),
                 'updated_at'    => now(),
             ]);
@@ -91,6 +94,7 @@ class AbsensiMasterSeeder extends Seeder
                 'jam_pulang'    => '00:00:00',
                 'batas_pulang'  => '00:00:00',
                 'is_default'    => false,
+                'is_hari_kerja' => false,
                 'created_at'    => now(),
                 'updated_at'    => now(),
             ]);
@@ -109,8 +113,9 @@ class AbsensiMasterSeeder extends Seeder
                 'jam_masuk'     => '06:45:00',
                 'batas_masuk'   => '07:00:00',  // Lewat jam ini = terlambat
                 'jam_pulang'    => '14:15:00',
-                'batas_pulang'  => '14:15:00', 
+                'batas_pulang'  => '14:15:00',
                 'is_default'    => false,
+                'is_hari_kerja' => true,
                 'created_at'    => now(),
                 'updated_at'    => now(),
             ]);
@@ -131,6 +136,7 @@ class AbsensiMasterSeeder extends Seeder
                 'jam_pulang'    => '00:00:00',
                 'batas_pulang'  => '00:00:00',
                 'is_default'    => false,
+                'is_hari_kerja' => false,
                 'created_at'    => now(),
                 'updated_at'    => now(),
             ]);
@@ -151,6 +157,7 @@ class AbsensiMasterSeeder extends Seeder
                 'jam_pulang'    => '13:15:00',
                 'batas_pulang'  => '13:15:00',
                 'is_default'    => true,
+                'is_hari_kerja' => true,
                 'created_at'    => now(),
                 'updated_at'    => now(),
             ],
@@ -163,6 +170,7 @@ class AbsensiMasterSeeder extends Seeder
                 'jam_pulang'    => '13:15:00',
                 'batas_pulang'  => '13:15:00',
                 'is_default'    => true,
+                'is_hari_kerja' => true,
                 'created_at'    => now(),
                 'updated_at'    => now(),
             ],
@@ -175,6 +183,7 @@ class AbsensiMasterSeeder extends Seeder
                 'jam_pulang'    => '13:15:00',
                 'batas_pulang'  => '13:15:00',
                 'is_default'    => true,
+                'is_hari_kerja' => true,
                 'created_at'    => now(),
                 'updated_at'    => now(),
             ],
