@@ -9,6 +9,7 @@ use App\Models\JamKerja;
 use App\Services\AbsensiService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Yasumi\Yasumi;
 
 class GenerateAbsensiHarian extends Command
 {
@@ -16,6 +17,9 @@ class GenerateAbsensiHarian extends Command
     protected $description = 'Generate status absensi harian untuk semua karyawan (alpha jika tidak absen dan tidak cuti)';
 
     protected $absensiService;
+
+    /** Cache holidays per tahun supaya tidak re-init tiap iterasi karyawan */
+    private array $holidayCache = [];
 
     public function __construct(AbsensiService $absensiService)
     {
@@ -28,19 +32,20 @@ class GenerateAbsensiHarian extends Command
         $this->info('🚀 Memulai generate absensi harian...');
 
         $tanggalString = $this->option('date') ?? Carbon::now()->format('Y-m-d');
-        $tanggal = Carbon::createFromFormat('Y-m-d', $tanggalString);
+        $tanggal       = Carbon::createFromFormat('Y-m-d', $tanggalString);
 
         $karyawans = Karyawan::with(['user.roles'])->get();
         $this->info("👥 Total karyawan aktif: {$karyawans->count()}");
 
         $stats = [
-            'hadir'  => 0,
-            'cuti'   => 0,
-            'izin'   => 0,
-            'sakit'  => 0,
-            'alpha'  => 0,
-            'libur'  => 0,
-            'error'  => 0
+            'hadir'          => 0,
+            'cuti'           => 0,
+            'izin'           => 0,
+            'sakit'          => 0,
+            'alpha'          => 0,
+            'libur'          => 0,
+            'libur_nasional' => 0,
+            'error'          => 0,
         ];
 
         $progressBar = $this->output->createProgressBar($karyawans->count());
@@ -55,7 +60,7 @@ class GenerateAbsensiHarian extends Command
                 Log::error('Generate Absensi Error', [
                     'karyawan_id' => $karyawan->id,
                     'tanggal'     => $tanggal->toDateString(),
-                    'error'       => $e->getMessage()
+                    'error'       => $e->getMessage(),
                 ]);
                 $stats['error']++;
             }
@@ -72,48 +77,59 @@ class GenerateAbsensiHarian extends Command
         return 0;
     }
 
-    /**
-     * Cek apakah hari kerja berdasarkan JamKerja database
-     */
-    private function isHariKerja(Carbon $tanggal)
-    {
-        $namaHari = strtolower($tanggal->locale('id')->dayName);
+    // =========================================================================
+    // PROCESS PER KARYAWAN
+    // =========================================================================
 
-        // Cek apakah ada jam kerja untuk hari ini dengan is_hari_kerja = true
-        $jamKerjaHariIni = JamKerja::where('hari', $namaHari)
-            ->where('is_hari_kerja', true)
-            ->exists();
-
-        return $jamKerjaHariIni;
-    }
-
-    /**
-     * Process single karyawan
-     */
     private function processKaryawan(Karyawan $karyawan, Carbon $tanggal)
     {
         $tanggalString = $tanggal->toDateString();
-        $isHariKerja = $this->isHariKerja($tanggal);
+        $isHariKerja   = $this->isHariKerja($tanggal);
+        $namaLiburNas  = $this->getNamaLiburNasional($tanggal); // null = bukan libnas
 
-        // 1. Cek apakah sudah ada absensi
+        // ------------------------------------------------------------------
+        // 1. Cek absensi yang sudah ada — jangan override
+        // ------------------------------------------------------------------
         $existingAbsensi = Absensi::where('karyawan_id', $karyawan->id)
             ->where('tanggal', $tanggalString)
             ->first();
 
-        // Jika sudah ada absensi dengan status khusus atau sudah absen masuk (jam_masuk terisi)
         if ($existingAbsensi) {
-            // Jika sudah ada status kehadiran selain hadir (cuti/izin/sakit/libur)
-            if (in_array($existingAbsensi->status_kehadiran, ['cuti', 'izin', 'sakit', 'libur'])) {
+            if (in_array($existingAbsensi->status_kehadiran, ['cuti', 'izin', 'sakit', 'libur', 'libur_nasional'])) {
                 return $existingAbsensi->status_kehadiran;
             }
 
-            // Jika sudah ada jam_masuk (sudah absen), jangan override statusnya
+            // Sudah absen masuk, jangan disentuh
             if ($existingAbsensi->jam_masuk) {
-                return 'hadir'; // Sudah absen, keep as is
+                return 'hadir';
             }
         }
 
-        // 2. Cek apakah sedang cuti/izin/sakit yang disetujui (hanya jika hari kerja)
+        // ------------------------------------------------------------------
+        // 2. Libur nasional — deteksi otomatis via Yasumi, prioritas tertinggi
+        //    (Lebaran/Nyepi bisa jatuh di hari kerja DB, tetap harus libur)
+        //    jam_masuk & jam_pulang dibiarkan NULL agar karyawan tetap bisa
+        //    absen jika ternyata masuk kerja di hari libur nasional
+        // ------------------------------------------------------------------
+        if ($namaLiburNas !== null) {
+            if (!$existingAbsensi) {
+                Absensi::create([
+                    'karyawan_id'       => $karyawan->id,
+                    'tanggal'           => $tanggalString,
+                    'jam_kerja_id'      => $this->getJamKerjaId($karyawan, $tanggal),
+                    'status_kehadiran'  => 'libur',
+                    'jam_masuk'         => null, // NULL = masih bisa absen jika masuk
+                    'jam_pulang'        => null,
+                    'lokasi_absensi_id' => null,
+                    'keterangan'        => 'Auto-generated: Libur Nasional — ' . $namaLiburNas,
+                ]);
+            }
+            return 'libur_nasional';
+        }
+
+        // ------------------------------------------------------------------
+        // 3. Cuti / Izin / Sakit yang disetujui (hanya jika hari kerja)
+        // ------------------------------------------------------------------
         if ($isHariKerja) {
             $pengajuanCuti = $this->absensiService->cekStatusCuti($karyawan->id, $tanggalString);
 
@@ -121,11 +137,11 @@ class GenerateAbsensiHarian extends Command
                 Absensi::updateOrCreate(
                     [
                         'karyawan_id' => $karyawan->id,
-                        'tanggal'     => $tanggalString
+                        'tanggal'     => $tanggalString,
                     ],
                     [
                         'status_kehadiran' => $pengajuanCuti->jenis,
-                        'keterangan'       => 'Auto-generated: ' . ucfirst($pengajuanCuti->jenis) . ' - ' . $pengajuanCuti->alasan
+                        'keterangan'       => 'Auto-generated: ' . ucfirst($pengajuanCuti->jenis) . ' - ' . $pengajuanCuti->alasan,
                     ]
                 );
 
@@ -133,48 +149,99 @@ class GenerateAbsensiHarian extends Command
             }
         }
 
-        // 3. Jika bukan hari kerja, set status libur (hanya jika belum ada absensi sama sekali)
+        // ------------------------------------------------------------------
+        // 4. Bukan hari kerja (Sabtu/Minggu sesuai konfigurasi DB)
+        //    jam NULL agar tetap bisa absen jika ada yang masuk
+        // ------------------------------------------------------------------
         if (!$isHariKerja) {
             if (!$existingAbsensi) {
-                $jamKerjaId = $this->getJamKerjaId($karyawan, $tanggal);
-
                 Absensi::create([
                     'karyawan_id'       => $karyawan->id,
                     'tanggal'           => $tanggalString,
-                    'jam_kerja_id'      => $jamKerjaId,
+                    'jam_kerja_id'      => $this->getJamKerjaId($karyawan, $tanggal),
                     'status_kehadiran'  => 'libur',
-                    'jam_masuk'         => $tanggalString . ' 00:00:00',
-                    'jam_pulang'        => $tanggalString . ' 00:00:00',
+                    'jam_masuk'         => null, // NULL = masih bisa absen jika masuk
+                    'jam_pulang'        => null,
                     'lokasi_absensi_id' => null,
-                    'keterangan'        => 'Auto-generated: Hari libur (bukan hari kerja)'
+                    'keterangan'        => 'Auto-generated: Hari libur (bukan hari kerja)',
                 ]);
             }
 
             return 'libur';
         }
 
-        // 4. Tidak ada absensi dan tidak ada izin = alpha
+        // ------------------------------------------------------------------
+        // 5. Hari kerja, tidak hadir, tidak ada keterangan = alpha
+        //    jam NULL agar jika karyawan telat absen masih bisa masuk
+        // ------------------------------------------------------------------
         if (!$existingAbsensi) {
-            $jamKerjaId = $this->getJamKerjaId($karyawan, $tanggal);
-
             Absensi::create([
                 'karyawan_id'       => $karyawan->id,
                 'tanggal'           => $tanggalString,
-                'jam_kerja_id'      => $jamKerjaId,
+                'jam_kerja_id'      => $this->getJamKerjaId($karyawan, $tanggal),
                 'status_kehadiran'  => 'alpha',
-                'jam_masuk'         => $tanggalString . ' 00:00:00',
-                'jam_pulang'        => $tanggalString . ' 00:00:00',
+                'jam_masuk'         => null, // NULL = masih bisa absen meskipun sudah alpha
+                'jam_pulang'        => null,
                 'lokasi_absensi_id' => null,
-                'keterangan'        => 'Auto-generated: Tidak hadir tanpa keterangan'
+                'keterangan'        => 'Auto-generated: Tidak hadir tanpa keterangan',
             ]);
         }
 
         return 'alpha';
     }
 
-    /**
-     * Get JamKerja model untuk karyawan (untuk ambil jam_pulang)
-     */
+    // =========================================================================
+    // LIBUR NASIONAL — Yasumi (otomatis, tanpa mapping manual)
+    // =========================================================================
+
+    private function getNamaLiburNasional(Carbon $tanggal): ?string
+    {
+        try {
+            $tahun = (int) $tanggal->year;
+
+            if (!isset($this->holidayCache[$tahun])) {
+                $this->holidayCache[$tahun] = Yasumi::create('id', $tahun);
+            }
+
+            $provider = $this->holidayCache[$tahun];
+
+            if (!$provider->isHoliday($tanggal->toDateTimeImmutable())) {
+                return null;
+            }
+
+            foreach ($provider->getHolidays() as $holiday) {
+                if ($holiday->format('Y-m-d') === $tanggal->format('Y-m-d')) {
+                    return $holiday->getName();
+                }
+            }
+
+            return 'Hari Libur Nasional';
+        } catch (\Exception $e) {
+            Log::warning('Yasumi provider error, skipping holiday detection', [
+                'tanggal' => $tanggal->toDateString(),
+                'error'   => $e->getMessage(),
+            ]);
+            return null;
+        }
+    }
+
+    // =========================================================================
+    // HARI KERJA — dari tabel JamKerja DB
+    // =========================================================================
+
+    private function isHariKerja(Carbon $tanggal): bool
+    {
+        $namaHari = strtolower($tanggal->locale('id')->dayName);
+
+        return JamKerja::where('hari', $namaHari)
+            ->where('is_hari_kerja', true)
+            ->exists();
+    }
+
+    // =========================================================================
+    // HELPERS
+    // =========================================================================
+
     private function getJamKerjaModel(Karyawan $karyawan, Carbon $tanggal)
     {
         try {
@@ -183,35 +250,28 @@ class GenerateAbsensiHarian extends Command
         } catch (\Exception $e) {
             Log::warning('Jam kerja tidak ditemukan untuk auto-set jam pulang', [
                 'karyawan_id' => $karyawan->id,
-                'error'       => $e->getMessage()
+                'error'       => $e->getMessage(),
             ]);
             return null;
         }
     }
 
-    /**
-     * Get jam kerja ID untuk karyawan
-     */
     private function getJamKerjaId(Karyawan $karyawan, Carbon $tanggal)
     {
         try {
             $jenisPegawai = $this->absensiService->getJenisPegawaiFromRole($karyawan);
-            $jamKerja = $this->absensiService->getJamKerja($jenisPegawai, $tanggal);
-
+            $jamKerja     = $this->absensiService->getJamKerja($jenisPegawai, $tanggal);
             return $jamKerja?->id;
         } catch (\Exception $e) {
             Log::warning('Jam kerja tidak ditemukan', [
                 'karyawan_id' => $karyawan->id,
-                'error'       => $e->getMessage()
+                'error'       => $e->getMessage(),
             ]);
             return null;
         }
     }
 
-    /**
-     * Display statistics
-     */
-    private function displayStats(array $stats)
+    private function displayStats(array $stats): void
     {
         $this->info('📊 Hasil Generate Absensi:');
         $this->table(
@@ -221,6 +281,7 @@ class GenerateAbsensiHarian extends Command
                 ['🏖️  Cuti',                      $stats['cuti']],
                 ['📝 Izin',                       $stats['izin']],
                 ['🤒 Sakit',                      $stats['sakit']],
+                ['🎌 Libur Nasional (otomatis)',  $stats['libur_nasional']],
                 ['🛌 Libur (bukan hari kerja)',   $stats['libur']],
                 ['❌ Alpha',                      $stats['alpha']],
                 ['⚠️  Error',                     $stats['error']],
