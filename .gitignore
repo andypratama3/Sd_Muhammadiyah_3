@@ -7,8 +7,8 @@
 /storage/*.key
 /vendor
 .env
+.env*
 /public/sitemap.xml
-.env.backup
 .env.production
 .phpunit.result.cache
 Homestead.json
