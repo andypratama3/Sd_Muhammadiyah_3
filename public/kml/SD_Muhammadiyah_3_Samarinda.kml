@@ -2,7 +2,30 @@
 <kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
 <Document>
 	<name>SD Muhammadiyah 3 Samarinda</name>
-	<gx:CascadingStyle kml:id="__managed_style_07840A10EA3EE8AE398E_normal">
+	<gx:CascadingStyle kml:id="__managed_style_007D17E76D3FD35371AE_highlight">
+		<Style>
+			<IconStyle>
+				<scale>1.2</scale>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>6</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+				<displayMode>hide</displayMode>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<gx:CascadingStyle kml:id="__managed_style_007D17E76D3FD35371AE_normal">
 		<Style>
 			<IconStyle>
 				<Icon>
@@ -12,6 +35,57 @@
 			</IconStyle>
 			<LabelStyle>
 			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>4</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+				<displayMode>hide</displayMode>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<StyleMap id="__managed_style_007D17E76D3FD35371AE">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#__managed_style_007D17E76D3FD35371AE_normal</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#__managed_style_007D17E76D3FD35371AE_highlight</styleUrl>
+		</Pair>
+	</StyleMap>
+	<gx:CascadingStyle kml:id="__managed_style_07840A10EA3EE8AE398E_highlight">
+		<Style>
+			<IconStyle>
+				<scale>1.2</scale>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>9</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+				<displayMode>hide</displayMode>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<gx:CascadingStyle kml:id="__managed_style_07840A10EA3EE8AE398E_normal">
+		<Style>
+			<IconStyle>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
 			<LineStyle>
 				<color>ff2dc0fb</color>
 				<width>6</width>
@@ -44,8 +118,6 @@
 				</Icon>
 				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
 			</IconStyle>
-			<LabelStyle>
-			</LabelStyle>
 			<LineStyle>
 				<color>ff2f2fd3</color>
 				<width>9</width>
@@ -53,8 +125,6 @@
 			<PolyStyle>
 				<color>40ffffff</color>
 			</PolyStyle>
-			<BalloonStyle>
-			</BalloonStyle>
 		</Style>
 	</gx:CascadingStyle>
 	<gx:CascadingStyle kml:id="__managed_style_09513A88263EE8ADD2B7_normal">
@@ -66,8 +136,6 @@
 				</Icon>
 				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
 			</IconStyle>
-			<LabelStyle>
-			</LabelStyle>
 			<LineStyle>
 				<color>ff2f2fd3</color>
 				<width>6</width>
@@ -75,31 +143,6 @@
 			<PolyStyle>
 				<color>40ffffff</color>
 			</PolyStyle>
-			<BalloonStyle>
-			</BalloonStyle>
-		</Style>
-	</gx:CascadingStyle>
-	<gx:CascadingStyle kml:id="__managed_style_07840A10EA3EE8AE398E_highlight">
-		<Style>
-			<IconStyle>
-				<scale>1.2</scale>
-				<Icon>
-					<href>https://earth.google.com/earth/document/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
-				</Icon>
-				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
-			</IconStyle>
-			<LabelStyle>
-			</LabelStyle>
-			<LineStyle>
-				<color>ff2dc0fb</color>
-				<width>9</width>
-			</LineStyle>
-			<PolyStyle>
-				<color>40ffffff</color>
-			</PolyStyle>
-			<BalloonStyle>
-				<displayMode>hide</displayMode>
-			</BalloonStyle>
 		</Style>
 	</gx:CascadingStyle>
 	<StyleMap id="__managed_style_09513A88263EE8ADD2B7">
@@ -154,6 +197,30 @@
 				<LinearRing>
 					<coordinates>
 						117.129650927578,-0.5099189756758744,0 117.1297528569218,-0.5099152580007446,0 117.1298478567153,-0.5098852215078953,0 117.1298808155675,-0.5098618403558944,0 117.1298745144087,-0.5098184772011503,0 117.1298669699792,-0.5097755343468591,0 117.1298630235975,-0.5097287299580837,0 117.1297951731971,-0.5096086884149749,0 117.1297298409732,-0.5096152089103531,0 117.1296609795527,-0.5096345358282616,0 117.1296070003251,-0.5096710681297367,0 117.1295842624432,-0.5098567595503458,0 117.129650927578,-0.5099189756758744,0
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+	<Placemark id="000A3ACAC73FD352DF30">
+		<name>Hotel Harris</name>
+		<visibility>0</visibility>
+		<LookAt>
+			<longitude>117.1166687842355</longitude>
+			<latitude>-0.5203111532694014</latitude>
+			<altitude>4.30088933715747</altitude>
+			<heading>0</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>395.1179463913286</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_007D17E76D3FD35371AE</styleUrl>
+		<Polygon>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						117.1164891104283,-0.5196125312462937,0 117.1164167728269,-0.5206051039540022,0 117.1174182135306,-0.5207413552336952,0 117.1174922024694,-0.5197349475378703,0 117.1168631585096,-0.5196233614400669,0 117.1164891104283,-0.5196125312462937,0
 					</coordinates>
 				</LinearRing>
 			</outerBoundaryIs>
