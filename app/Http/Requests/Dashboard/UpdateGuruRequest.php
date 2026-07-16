@@ -22,15 +22,16 @@ class UpdateGuruRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'foto' => 'required',
-
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ];
     }
 
-    public function message()
+    public function messages()
     {
         return [
-            'required' => ':attribute tidak boleh kosong!',
+            'foto.image' => 'Kolom File Foto harus berupa gambar!',
+            'foto.mimes' => 'Kolom File Foto harus berformat jpg, jpeg, atau png!',
+            'foto.max' => 'Ukuran File Foto maksimal 2MB!',
         ];
     }
 }

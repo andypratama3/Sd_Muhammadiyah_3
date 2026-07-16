@@ -45,13 +45,21 @@ class StoreGuruRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'name' => 'required',
+            'foto' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'pelajarans' => 'required',
         ];
     }
 
-    public function message()
+    public function messages()
     {
         return [
-
+            'name.required' => 'Kolom Nama tidak boleh kosong!',
+            'foto.required' => 'Kolom File Foto tidak boleh kosong!',
+            'foto.image' => 'Kolom File Foto harus berupa gambar!',
+            'foto.mimes' => 'Kolom File Foto harus berformat jpg, jpeg, atau png!',
+            'foto.max' => 'Ukuran File Foto maksimal 2MB!',
+            'pelajarans.required' => 'Kolom Pelajaran tidak boleh kosong!',
         ];
     }
 }
