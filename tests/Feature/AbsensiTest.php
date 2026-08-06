@@ -156,7 +156,7 @@ class AbsensiTest extends TestCase
 
         $this->assertTrue($result['success'], $result['message'] ?? '');
         $this->assertEquals('tepat_waktu', $result['data']['status']);
-        $this->assertEquals(4000, $result['data']['rp_masuk']);
+        $this->assertEquals(11000, $result['data']['rp_masuk']);
     }
 
     /** @test */
@@ -174,7 +174,7 @@ class AbsensiTest extends TestCase
 
         $this->assertTrue($result['success'], $result['message'] ?? '');
         $this->assertEquals('tepat_waktu', $result['data']['status']);
-        $this->assertEquals(4000, $result['data']['rp_masuk']);
+        $this->assertEquals(11000, $result['data']['rp_masuk']);
     }
 
     /** @test */
@@ -324,7 +324,7 @@ class AbsensiTest extends TestCase
     }
 
     /** @test */
-    public function jika_tidak_dapat_poin_masuk_maka_pulang_juga_tidak_dapat(): void
+    public function pulang_tepat_waktu_tetap_dapat_poin_meskipun_masuk_terlambat(): void
     {
         ['user' => $user] = $this->buatKaryawanDenganRole('tenaga-pendidikan');
         $this->buatJamKerja('tenaga-pendidikan');
@@ -335,12 +335,12 @@ class AbsensiTest extends TestCase
         $resMasuk = app(AbsensiService::class)->absenMasuk($user->id, $lokasi->latitude, $lokasi->longitude, $lokasi->id);
         $this->assertEquals(0, $resMasuk['data']['rp_masuk']);
 
-        // Absen pulang tepat waktu (14:05) -> Harus tetap Rp 0 karena masuknya telat
+        // Absen pulang tepat waktu (14:05) -> Tetap dapat Rp 4000
         Carbon::setTestNow(Carbon::now('Asia/Makassar')->setTime(14, 5));
         $resPulang = app(AbsensiService::class)->absenPulang($user->id, $lokasi->latitude, $lokasi->longitude, $lokasi->id);
         
         $this->assertTrue($resPulang['success']);
-        $this->assertEquals(0, $resPulang['data']['rp_pulang']);
+        $this->assertEquals(4000, $resPulang['data']['rp_pulang']);
     }
 
     // =========================================================================

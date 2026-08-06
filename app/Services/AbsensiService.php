@@ -324,11 +324,12 @@ class AbsensiService
      *
      * Aturan per role:
      * ┌──────────────────┬────────────────────────────────────────────────────┐
-     * │ guru             │ Dapat 4000 jika now ≤ batas_masuk (07:00)         │
-     * │                  │ Toleransi penuh — selama belum diblokir = dapat   │
-     * ├──────────────────┼────────────────────────────────────────────────────┤
-     * │ tenaga-pend.     │ Dapat 4000 jika now ≤ jam_masuk (06:45)           │
+     * │ guru             │ Dapat 11000 jika now ≤ jam_masuk (06:45)          │
      * │                  │ Lewat 06:45 = terlambat, rp = 0                  │
+     * │                  │ Masih bisa absen sampai batas_masuk (07:00)       │
+     * ├──────────────────┼────────────────────────────────────────────────────┤
+     * │ tenaga-pend.     │ Dapat 11000 jika now ≤ jam_masuk (06:30)          │
+     * │                  │ Lewat 06:30 = terlambat, rp = 0                  │
      * │                  │ Masih bisa absen sampai batas_masuk (07:00)       │
      * ├──────────────────┼────────────────────────────────────────────────────┤
      * │ shadow-teacher   │ Selalu 0 — tidak mendapat poin                    │
@@ -341,17 +342,11 @@ class AbsensiService
      */
     private function hitungRpMasuk(string $jenisPegawai, Carbon $now, ?JamKerja $jamKerja): int
     {
-        if ($jenisPegawai === 'guru') {
-            // Guru: dapat 4000 selama masih lolos batas_masuk.
-            // Sudah pasti lolos karena cek batas_masuk dilakukan sebelumnya.
-            return 4000;
-        }
-
-        if ($jenisPegawai === 'tenaga-pendidikan') {
-            // Tendik: batas dapat poin adalah jam_masuk (06:45).
-            // Lewat 06:45 → rp = 0, tapi masih bisa absen sampai batas_masuk (07:00).
+        if (in_array($jenisPegawai, ['guru', 'tenaga-pendidikan']) && $jamKerja) {
+            // Guru & tendik: batas dapat poin adalah jam_masuk.
+            // Lewat jam_masuk → rp = 0, tapi masih bisa absen sampai batas_masuk.
             $jamMasuk = Carbon::parse($jamKerja->jam_masuk, 'Asia/Makassar');
-            return $now->lessThanOrEqualTo($jamMasuk) ? 4000 : 0;
+            return $now->lessThanOrEqualTo($jamMasuk) ? 11000 : 0;
         }
 
         return 0;
@@ -360,14 +355,14 @@ class AbsensiService
     /**
      * Tentukan status_masuk berdasarkan role dan waktu absen.
      *
-     * - guru      : selalu tepat_waktu jika lolos batas_masuk
-     * - tendik    : tepat_waktu jika ≤ jam_masuk (06:45), terlambat jika 06:45–07:00
+     * - guru      : tepat_waktu jika ≤ jam_masuk (06:45), terlambat jika lewat
+     * - tendik    : tepat_waktu jika ≤ jam_masuk (06:30), terlambat jika lewat
      * - shadow    : selalu tepat_waktu jika lolos batas_masuk
      * - umum      : selalu tepat_waktu (tidak ada pembatasan)
      */
     private function hitungStatusMasuk(string $jenisPegawai, Carbon $now, ?JamKerja $jamKerja): string
     {
-        if ($jenisPegawai === 'tenaga-pendidikan' && $jamKerja) {
+        if (in_array($jenisPegawai, ['guru', 'tenaga-pendidikan']) && $jamKerja) {
             $jamMasuk = Carbon::parse($jamKerja->jam_masuk, 'Asia/Makassar');
             return $now->lessThanOrEqualTo($jamMasuk) ? 'tepat_waktu' : 'terlambat';
         }
@@ -648,9 +643,7 @@ class AbsensiService
         if ($absensi->jamKerja && $absensi->jamKerja->batas_pulang) {
             $batasPulang  = Carbon::parse($absensi->jamKerja->batas_pulang, 'Asia/Makassar');
             $statusPulang = $now->lessThan($batasPulang) ? 'pulang_cepat' : 'tepat_waktu';
-            if ((int) ($absensi->rp_masuk ?? 0) > 0) {
-                $rp_pulang = ($this->isRoleDapatPoin($jenisPegawai) && $statusPulang === 'tepat_waktu') ? 4000 : 0;
-            }
+            $rp_pulang    = ($this->isRoleDapatPoin($jenisPegawai) && $statusPulang === 'tepat_waktu') ? 4000 : 0;
         }
 
         try {
